@@ -1047,9 +1047,9 @@
       line_id: "line_7f3a",
       elements: ["fire（火）", "metal（金）"],
       element_palettes: ["自然火紅 × 琉璃金"],
-      base_parents: ["類人奇幻·精靈族", "器械·武器"],
-      bases: ["精靈族·高等精靈/月光祭司", "武器·符文巨盾/塔盾護壁"],
-      appearance_palette: ["熔岩赤紅 × 炭黑硬甲 × 烈焰耀金"],
+      base_parents: ["類人奇幻·精靈族", "裝備·兵器", "科幻機械·機甲/外骨骼"],
+      bases: ["精靈族·高等精靈/月光祭司", "兵器·符文巨盾/塔盾護壁", "機甲/外骨骼·聚能屏障重型堡壘機甲"],
+      appearance_palette: ["熔岩赤紅", "炭黑硬甲", "烈焰耀金", "鍍銀鋼白"],
       timeline: "青銅神話/古典英雄時代", region: "東亞",
       size_profile: "S→M→L→XL",
       archetype: "桃太郎", archetype_type: "傳說", motifs: "桃紋飾、雙角重鎧、腰間黍糰印記",
@@ -1068,7 +1068,7 @@
         subjectId: "line_7f3a",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.7.0 catalog=1.3.0 template=creature-concept@4.0.0 task_id=cr-20261106-7f3a-2105-juvenile seed=7f3a]",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=creature-concept@5.0.0 task_id=cr-20261106-7f3a-2105-juvenile seed=7f3a]",
           task_id: "cr-20261106-7f3a-2105-juvenile",
           task_type: "creature-concept",
           subject_id: "line_7f3a",
@@ -1083,7 +1083,8 @@
           notes: "幼年型態：火角石，嬌小滾圓，頭部單一赤紅小犄角"
         },
         concept: Object.assign({}, crBaseConcept, {
-          stage: "juvenile", name_zh: "火角石", size_class: "S", height_length: "0.45 m", weight: "12 kg", body_fat: "18.0%"
+          stage: "juvenile", name_zh: "火角石", size_class: "S", height_length: "0.45 m", weight: "12 kg", body_fat: "18.0%",
+          dex_zh: "火角石嬌小滾圓，頭部單一赤紅小犄角隨地熱微光閃爍。平時喜歡趴伏於火山溫暖石縫中汲取熱能，個性好奇且不怕生。"
         }),
         images: [
           { path: "images/cr_line_7f3a_juvenile_main.png", url: createSampleSvgDataUrl("火角石 · 幼年立繪 (0.45m)", "#e67e22") },
@@ -1101,7 +1102,7 @@
         subjectId: "line_7f3a",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.7.0 catalog=1.3.0 template=creature-concept@4.0.0 task_id=cr-20261106-7f3a-2105-adolescent seed=7f3a]",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=creature-concept@5.0.0 task_id=cr-20261106-7f3a-2105-adolescent seed=7f3a]",
           task_id: "cr-20261106-7f3a-2105-adolescent",
           task_type: "creature-concept",
           subject_id: "line_7f3a",
@@ -1116,7 +1117,8 @@
           notes: "少年型態：熔脊獸，背脊隆起暗紅火山岩刺甲"
         },
         concept: Object.assign({}, crBaseConcept, {
-          stage: "adolescent", name_zh: "熔脊獸", size_class: "M", height_length: "1.10 m", weight: "85 kg", body_fat: "16.0%"
+          stage: "adolescent", name_zh: "熔脊獸", size_class: "M", height_length: "1.10 m", weight: "85 kg", body_fat: "16.0%",
+          dex_zh: "熔脊獸背脊隆起暗紅火山岩刺甲，動作敏捷矯健。遭遇強敵時會將身軀蜷成半圓，以堅硬背甲抵擋衝擊並噴發高溫蒸氣。"
         }),
         images: [
           { path: "images/cr_line_7f3a_adolescent_main.png", url: createSampleSvgDataUrl("熔脊獸 · 少年立繪 (1.10m)", "#d35400") },
@@ -1134,7 +1136,7 @@
         subjectId: "line_7f3a",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.7.0 catalog=1.3.0 template=creature-concept@4.0.0 task_id=cr-20261106-7f3a-2105-adult seed=7f3a]",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=creature-concept@5.0.0 task_id=cr-20261106-7f3a-2105-adult seed=7f3a]",
           task_id: "cr-20261106-7f3a-2105-adult",
           task_type: "creature-concept",
           subject_id: "line_7f3a",
@@ -1149,7 +1151,8 @@
           notes: "成年型態：焰甲重龍，四足重甲巨獸，雙角重鎧桃紋飾"
         },
         concept: Object.assign({}, crBaseConcept, {
-          stage: "adult", name_zh: "焰甲重龍", size_class: "L", height_length: "2.10 m", weight: "340 kg", body_fat: "15.0%"
+          stage: "adult", name_zh: "焰甲重龍", size_class: "L", height_length: "2.10 m", weight: "340 kg", body_fat: "15.0%",
+          dex_zh: "成年焰甲重龍體魄沉雄威嚴，全覆式玄鐵外甲能抵禦熔岩洗禮。雙角重鎧刻劃古老桃紋，戰鬥時作為陣線前排堡壘屹立不搖。"
         }),
         images: [
           { path: "images/cr_line_7f3a_adult_main.png", url: createSampleSvgDataUrl("焰甲重龍 · 成年立繪 (2.10m)", "#c0392b") },
@@ -1167,7 +1170,7 @@
         subjectId: "line_7f3a",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.7.0 catalog=1.3.0 template=creature-concept@4.0.0 task_id=cr-20261106-7f3a-2105-overload seed=7f3a]",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=creature-concept@5.0.0 task_id=cr-20261106-7f3a-2105-overload seed=7f3a]",
           task_id: "cr-20261106-7f3a-2105-overload",
           task_type: "creature-concept",
           subject_id: "line_7f3a",
@@ -1182,7 +1185,8 @@
           notes: "超載型態：天炎煌角甲，熔金光翼巨角，超載能量外溢"
         },
         concept: Object.assign({}, crBaseConcept, {
-          stage: "overload", name_zh: "天炎煌角甲", size_class: "XL", height_length: "3.80 m", weight: "920 kg", body_fat: "12.0%"
+          stage: "overload", name_zh: "天炎煌角甲", size_class: "XL", height_length: "3.80 m", weight: "920 kg", body_fat: "12.0%",
+          dex_zh: "當以太核心完全過載，體內岩漿沸騰噴湧化作四翼熔金光羽。巨角撕裂空氣爆發千度熾炎，踏足之處岩層盡皆融為燦金色琉璃。"
         }),
         images: [
           { path: "images/cr_line_7f3a_overload_main.png", url: createSampleSvgDataUrl("天炎煌角甲 · 超載立繪 (3.80m)", "#962d22") },
@@ -1238,7 +1242,7 @@
         subjectId: "chr_7f3a",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.7.0 catalog=1.3.0 template=character-concept@2.1.0 task_id=chr-20261106-7f3a-2105 seed=7f3a]",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-7f3a-2105 seed=7f3a]",
           task_id: "chr-20261106-7f3a-2105",
           task_type: "character-concept",
           subject_id: "chr_7f3a",
@@ -1258,12 +1262,13 @@
           role: "玩家角色預設外觀", ethnicity: "東亞體系", region: "東亞", timeline: "晶石賽博/霓虹魔導義體紀元",
           gender: "女", age_band: "青少年", age: 17, height: "163 cm", weight: "51.5 kg", body_fat: "21.5%",
           cup_size: "C",
-          outfit_palette: ["海軍藍 × 象牙白 × 霧金"],
-          hair_palette: ["純黑", "天藍挑染"],
+          outfit_palette: ["海軍深藍", "象牙米白", "黃銅金", "清透天藍"],
+          hair_palette: ["曜石純黑", "清透天藍"],
           eye_palette: ["琥珀金"],
           personality: ["熱血", "好奇"], style: "街頭機能 × 學院制服改造",
           interests: ["星際探索", "古文字解密"], likes: ["熱奶茶", "發光晶石"], dislikes: ["冗長報告"],
-          vessel: "talisman_card", vessel_zh: "符籙卡片"
+          vessel: "talisman_card", vessel_zh: "符籙卡片",
+          biography: "林晴陽自幼生活於新興的晶石賽博大都會，從小著迷於古老星圖與魔導義體技術的共生可能。身著街頭機能學院制服的她，常年攜帶改造版符籙卡片穿梭於霓虹地下市集，對未知的宙獸生命充滿無盡好奇。她以特立獨行的熱忱與果敢的行動力，誓要在浩瀚宙域中繪製屬於新時代的開拓圖鑑。"
         },
         images: [
           { path: "images/chr_7f3a_main.png", url: createSampleSvgDataUrl("角色立繪 · 晴陽 (163cm, 罩杯C)", "#2980b9") },
@@ -1554,6 +1559,23 @@
         updatedConcept.vessel_zh = "符籙卡片";
         changes.push("補齊收服媒介：符籙卡片 (talisman_card)");
       }
+      if (!updatedConcept.biography) {
+        updatedConcept.biography = `${updatedConcept.name_zh || "角色"}誕生於${updatedConcept.region || "未知星域"}，自幼在${updatedConcept.timeline || "當前文明紀元"}的環境中歷練成長。性格${(updatedConcept.personality || []).join("且") || "堅毅"}的她/他，以${updatedConcept.vessel_zh || updatedConcept.vessel || "收服道具"}作為與宙獸建立精神共鳴的關鍵媒介。在無垠星海的旅途中，始終堅定信念與夥伴共同破除迷霧。`;
+        changes.push("補齊角色生平傳記（biography，約 150–300 字小說側寫）");
+      }
+      if (updatedConcept.outfit_palette && updatedConcept.outfit_palette.length === 1 && updatedConcept.outfit_palette[0].includes("×")) {
+        updatedConcept.outfit_palette = updatedConcept.outfit_palette[0].split("×").map(s => s.trim());
+      }
+      if (!updatedConcept.outfit_palette || updatedConcept.outfit_palette.length < 4) {
+        const extraColors = ["海軍深藍", "象牙米白", "黃銅金", "珊瑚鮮橘"];
+        const cur = updatedConcept.outfit_palette || [];
+        for (const ec of extraColors) {
+          if (cur.length >= 4) break;
+          if (!cur.includes(ec)) cur.push(ec);
+        }
+        updatedConcept.outfit_palette = cur;
+        changes.push("補齊服裝色系至 4 色規格：" + cur.join("、"));
+      }
 
       const seed = pkg.manifest?.task_header?.match(/seed=([^\s\]]+)/)?.[1] || pkg.id.split("-")[2] || "7f3a";
       const header = "[COSMIMERA-TASK spec=1 tool=" + TOOL_VERSION + " catalog=" + C.version + " template=" + t.id + "@" + t.version + " task_id=" + targetTaskId + " seed=" + seed + "]";
@@ -1598,9 +1620,29 @@
         if (updatedConcept.weight_kg && !updatedConcept.weight) updatedConcept.weight = updatedConcept.weight_kg;
         if (updatedConcept.body_fat_pct && !updatedConcept.body_fat) updatedConcept.body_fat = updatedConcept.body_fat_pct;
       }
-      if (!updatedConcept.appearance_palette || !updatedConcept.appearance_palette.length) {
-        updatedConcept.appearance_palette = ["熔岩赤紅 × 炭黑硬甲 × 烈焰耀金"];
-        changes.push("補齊宙獸外觀配色庫：熔岩赤紅 × 炭黑硬甲 × 烈焰耀金");
+      if (updatedConcept.appearance_palette && updatedConcept.appearance_palette.length === 1 && updatedConcept.appearance_palette[0].includes("×")) {
+        updatedConcept.appearance_palette = updatedConcept.appearance_palette[0].split("×").map(s => s.trim());
+      }
+      if (!updatedConcept.appearance_palette || updatedConcept.appearance_palette.length < 4) {
+        const extraColors = ["熔岩赤紅", "炭黑硬甲", "烈焰耀金", "鍍銀鋼白"];
+        const cur = updatedConcept.appearance_palette || [];
+        for (const ec of extraColors) {
+          if (cur.length >= 4) break;
+          if (!cur.includes(ec)) cur.push(ec);
+        }
+        updatedConcept.appearance_palette = cur;
+        changes.push("補齊宙獸外觀配色至 4 色規格：" + cur.join("、"));
+      }
+      if (!updatedConcept.base_parents || updatedConcept.base_parents.length < 3) {
+        const curBp = updatedConcept.base_parents || ["生物·哺乳類"];
+        if (curBp.length < 3 && !curBp.includes("科幻機械·仿生機獸")) curBp.push("科幻機械·仿生機獸");
+        if (curBp.length < 3 && !curBp.includes("裝備·兵器")) curBp.push("裝備·兵器");
+        updatedConcept.base_parents = curBp;
+        changes.push("外觀基底類別擴充至 3 項規格：" + curBp.join("、"));
+      }
+      if (!updatedConcept.dex_zh) {
+        updatedConcept.dex_zh = `${updatedConcept.name_zh || "該宙獸"}常年棲息於極端自然天候之中，外觀構造與其屬性能量高度共鳴。平時性情沉著警戒，在遭遇外敵或與訓練家共鳴時，能釋放出驚人的屬性威能。`;
+        changes.push("補齊生態圖鑑解說（dex_zh，約 80–180 字）");
       }
 
       // 招式與特性圖鑑化獨立
