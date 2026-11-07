@@ -1,0 +1,71 @@
+[
+  {
+    "id": "sample_ember_strike",
+    "element": "fire",
+    "kind": "damage",
+    "power": 30,
+    "cooldown_ms": 1000,
+    "accuracy": 100,
+    "range_class": "melee",
+    "shape": "line",
+    "base_range_mm": 2000,
+    "movement": "dash"
+  },
+  {
+    "id": "sample_flame_burst",
+    "element": "fire",
+    "kind": "damage",
+    "power": 60,
+    "cooldown_ms": 3000,
+    "accuracy": 95,
+    "range_class": "mid",
+    "shape": "cone",
+    "base_range_mm": 12000
+  },
+  {
+    "id": "sample_solar_flare",
+    "element": "fire",
+    "kind": "damage",
+    "power": 110,
+    "cooldown_ms": 8000,
+    "accuracy": 85,
+    "range_class": "long",
+    "shape": "line",
+    "base_range_mm": 24000
+  },
+  {
+    "id": "sample_aqua_pulse",
+    "element": "water",
+    "kind": "damage",
+    "power": 50,
+    "cooldown_ms": 2000,
+    "accuracy": 100,
+    "range_class": "mid",
+    "shape": "burst",
+    "base_range_mm": 12000,
+    "origin": "target"
+  },
+  {
+    "id": "sample_gust_slash",
+    "element": "wind",
+    "kind": "damage",
+    "power": 40,
+    "cooldown_ms": 1500,
+    "accuracy": 90,
+    "range_class": "melee",
+    "shape": "front",
+    "base_range_mm": 2000
+  },
+  {
+    "id": "sample_thunder_jolt",
+    "element": "thunder",
+    "kind": "damage",
+    "power": 45,
+    "cooldown_ms": 1200,
+    "accuracy": 95,
+    "range_class": "mid",
+    "shape": "line",
+    "base_range_mm": 12000,
+    "movement": "dash"
+  }
+]
