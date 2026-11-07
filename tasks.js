@@ -122,7 +122,7 @@
 
   const TASKS = [
     {
-      id: "character-concept", version: "2.2.0", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
+      id: "character-concept", version: "3.0.0", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
       needs: "character", drop: "Art/_incoming",
       options: [],
       build(ctx) {
@@ -136,7 +136,8 @@
           ...(c.gender === "女" && c.cup_size && c.cup_size !== "未知" ? { cup_size: c.cup_size } : {}),
           ethnicity: c.ethnicity, region: c.region, timeline: c.timeline,
           outfit_palette: c.outfit_palette, hair_palette: c.hair_palette, eye_palette: c.eye_palette,
-          personality: c.personality, style: c.style, vessel: c.vessel?.zh || c.vessel
+          personality: c.personality, style: c.style, vessel: c.vessel?.zh || c.vessel,
+          biography: "角色生平傳記（約150–300字，包含出身轉折、性格信念、與宙獸牽絆，請依規範撰寫）"
         };
 
         const body = [
@@ -144,6 +145,13 @@
           "請為此角色創作原創姓名（中英文各一，填入 concept.json）：",
           "- 繁中姓名格式：2–4 字，符合該文化地區與人種背景，體現角色個性與時空氛圍（例：凌霄、薇爾菈、墨巡、艾希莉亞、拓跋烈、琉璃）。",
           "- 英文姓名格式：符合羅馬拼音或西洋/科幻命名美感（PascalCase，例：Linxiao, Valera, MoXun, Ashley, Tuobalie）。",
+          "",
+          "## 角色生平撰寫任務與格式規範",
+          "請為此角色編寫一段生動立體的生平故事（填入 concept.json 的 `biography` 欄位），字數約 150–300 字，必須融合其人種背景、文化時空、性格特質與戰鬥定位：",
+          "- 【出身與成長轉折】：角色的起源背景、所屬家族/聚落/組織，或使其踏上旅程的重大轉折事件。",
+          "- 【性格展現與處事信念】：核心性格特質（" + (c.personality || []).join("、") + "）如何在日常與危機決策中體現，內心堅持的信念或追求的目標。",
+          "- 【與宙獸之牽絆契機】：如何獲得主要收服道具（" + (c.vessel?.zh || c.vessel || "道具") + "）、初次邂逅宙獸的經歷，或在冒險中與宙獸夥伴建立共鳴的獨特方式。",
+          "- 【格式規範】：1–2 個段落，採小說側寫風格，具備強烈畫面感與角色靈魂，避免條列式流水帳。",
           "",
           "## 輸入概念",
           json(c),
@@ -172,7 +180,7 @@
     },
 
     {
-      id: "creature-concept", version: "4.1.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
+      id: "creature-concept", version: "5.0.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
       needs: "creature", drop: "Art/_incoming",
       options: [
         { key: "stage", type: "select", label: "宙獸型態（四型態分開產出）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult" }
@@ -210,6 +218,21 @@
           "  - 1–2 個詞根拼接之原創奇幻生物名（PascalCase，例：Mirrill, Mirravel, Voltrastorm, Nivervast, Pyraclaw）。"
         ];
 
+        const dexSection = lockedStage?.dex_zh ? [
+          "### 生態圖鑑解說（已設計定案，嚴格照抄）",
+          "- 圖鑑解說（`dex_zh`）：**" + lockedStage.dex_zh + "**",
+          "- （已有圖鑑描述者嚴格照抄，填入 concept.json 的 `dex_zh`，嚴禁任意更動）。"
+        ] : [
+          "### 宙獸生態圖鑑解說任務與格式規範（請 AI 原創編寫）",
+          "請為此宙獸（本型態）編寫一段嚴謹生動的生態圖鑑解說（填入 concept.json 的 `dex_zh` 欄位）：",
+          "- 【字數規範】：80–180 個繁體中文字，文風符合官方生態圖鑑/博物學者田野筆記。",
+          "- 【生態內容架構】（必須涵蓋以下三項要素）：",
+          "  1. 棲息環境與作息：棲息之極端氣候、地形或星域（如浮空群島、熔岩地溝、極光冰原），以及日夜活動與能量攝取/捕食習性。",
+          "  2. 生理機制與外觀屬性融合：外觀基底特徵如何體現其屬性構造（如器官散熱、磁力浮游、發光腺體、外骨骼硬化或能量過載）。",
+          "  3. 與生態系/人類之互動與性情：對人類/訓練家的警戒心或親和態度、野外遭遇時的行為反應與性情展現。",
+          "- 【禁忌與語感】：嚴禁使用玩家/遊戲數值術語（如「攻擊力很高」、「每秒造成傷害」），嚴禁第一人稱，保持自然客觀與神秘神話感。"
+        ];
+
         const body = [
           "## 本次目標型態：" + stageDef.zh + "（" + curStage + "）",
           "- 體型級距：" + curSize + "（" + szInfo.zh + "） · 面數預算約 " + szInfo.tris + " tris",
@@ -220,6 +243,8 @@
           "- 文化原型（如神祇、傳說英雄、歷史人物）僅提取其代表性的【象徵圖騰、法寶神兵、自然天象、聖獸化身、精神意義與意象元素】，必須將其完全轉化為動物、幻獸或構裝體的生理構造、羽翼、角鱗、光環或外甲特徵。",
           "",
           ...namingSection,
+          "",
+          ...dexSection,
           "",
           ...(lockedStage ? [
             "### 已設計定案規格（嚴格照抄）",
@@ -259,6 +284,7 @@
             creature_id: lockedStage ? lockedStage.creature_id : ("cr_" + S + "_" + curStage),
             name_zh: lockedStage ? lockedStage.name_zh : "宙獸繁中名（請依命名格式創作）",
             name_en: lockedStage ? lockedStage.name_en : "CreatureEnglishName (PascalCase)",
+            dex_zh: lockedStage?.dex_zh || "宙獸生態圖鑑解說（約80–180字，包含棲息作息、生理屬性機制、性情互動，請依規範撰寫）",
             size_class: curSize,
             height_length: curHeight,
             weight: curWeight,

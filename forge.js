@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "1.8.0";
+  const TOOL_VERSION = "1.9.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   const LS_KEY = "cosmimera.prompt-forge.v2";
@@ -237,7 +237,7 @@
         return [{ v: d.bodyFat, w: 1 }, { v: "18.0%", w: 1 }, { v: "22.0%", w: 1 }, { v: "未知", w: 1 }].concat(getCustom("character.body_fat").map(v => ({ v, w: 1 })));
       }, count: [{ n: 1, w: 1 }], dep: "weight", customGen: (s, rng) => sampleHumanDimensions(rng, s.character.gender?.[0], s.character.age_band?.[0], s.character.age?.[0]).bodyFat },
       { key: "cup_size", label: "罩杯（女性）", options: () => CH.cup_sizes.map(c => ({ v: c.v, w: c.w })).concat(getCustom("character.cup_size").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }], when: s => s.character.gender?.[0] === "女" },
-      { key: "outfit_palette", label: "服裝色系 (1~3色)", options: () => C.PALETTES.map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("character.outfit_palette").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 2 }, { n: 2, w: 5 }, { n: 3, w: 3 }], max: 3 },
+      { key: "outfit_palette", label: "服裝色系 (1~4色)", options: () => C.PALETTES.map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("character.outfit_palette").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 15 }, { n: 2, w: 45 }, { n: 3, w: 25 }, { n: 4, w: 15 }], max: 4 },
       { key: "hair_palette", label: "頭髮色系 (1~2色)", options: () => CH.hair_palettes.map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("character.hair_palette").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 6 }, { n: 2, w: 4 }], max: 2 },
       { key: "eye_palette", label: "瞳孔色系 (1~2色)", options: () => CH.eye_palettes.map(p => ({ v: p.v, w: p.w })).concat(getCustom("character.eye_palette").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }], max: 2 },
       { key: "personality", label: "性格特質", options: () => uniform(C.PERSONALITIES.concat(getCustom("character.personality"))), count: [{ n: 2, w: 1 }], max: 4 },
@@ -249,7 +249,7 @@
     ],
     creature: [
       { key: "elements", label: "屬性", options: () => C.ELEMENTS.map(e => ({ v: e.v, w: e.w, zh: e.zh })).concat(getCustom("creature.elements").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 2 }, { n: 2, w: 1 }], max: 2 },
-      { key: "base_parents", label: "外觀基底類別", options: () => CR.base_parents.map(b => ({ v: b.v, zh: b.zh || b.v, w: b.w })).concat(getCustom("creature.base_parents").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 55 }, { n: 2, w: 45 }], max: 2 },
+      { key: "base_parents", label: "外觀基底類別 (1~3)", options: () => CR.base_parents.map(b => ({ v: b.v, zh: b.zh || b.v, w: b.w })).concat(getCustom("creature.base_parents").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 40 }, { n: 2, w: 45 }, { n: 3, w: 15 }], max: 3 },
       { key: "bases", label: "外觀基底 (1~3)", options: s => {
         const parents = (s.creature.base_parents || []).map(traceBaseParent);
         let subs = [];
@@ -258,11 +258,11 @@
           subs = getCreatureSubBases("生物·哺乳類").concat(getCreatureSubBases("自然·星體"));
         }
         return uniform(subs.concat(["未知"]).concat(getCustom("creature.bases")));
-      }, count: [{ n: 2, w: 1 }], max: 3, dep: "base_parents" },
-      { key: "appearance_palette", label: "宙獸色系 (1~3色)", options: s => {
+      }, count: [{ n: 1, w: 25 }, { n: 2, w: 50 }, { n: 3, w: 25 }], max: 3, dep: "base_parents" },
+      { key: "appearance_palette", label: "宙獸色系 (1~4色)", options: s => {
         const pool = C.getFilteredPalettes(s.creature.elements || []);
         return pool.map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("creature.appearance_palette").map(v => ({ v, w: 1, zh: v })));
-      }, count: [{ n: 1, w: 2 }, { n: 2, w: 5 }, { n: 3, w: 3 }], max: 3, dep: "elements" },
+      }, count: [{ n: 1, w: 15 }, { n: 2, w: 45 }, { n: 3, w: 25 }, { n: 4, w: 15 }], max: 4, dep: "elements" },
       { key: "timeline", label: "文化時間線", options: () => C.TIMELINES.map(t => ({ v: t.v, zh: t.zh, w: 1 })).concat(getCustom("creature.timeline").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "region", label: "文化地區", options: () => uniform(C.CULTURE_REGIONS.concat(getCustom("creature.region"))), count: [{ n: 1, w: 1 }] },
       { key: "archetype", label: "文化原型", options: s => {
@@ -1998,7 +1998,8 @@
               el("span", { class: "prompt-k" }, "外觀風格"), el("span", { class: "prompt-v" }, c.style || "街頭機能 × 學院制服改造"),
               el("span", { class: "prompt-k" }, "性格特質"), el("span", { class: "prompt-v" }, formatArray(c.personality)),
               el("span", { class: "prompt-k" }, "興趣 / 喜厭"), el("span", { class: "prompt-v" }, "喜好：" + formatArray(c.likes) + "；討厭：" + formatArray(c.dislikes)),
-              el("span", { class: "prompt-k" }, "收服道具"), el("span", { class: "prompt-v" }, (c.vessel_zh || c.vessel || "符籙卡片") + " (" + (c.vessel || "talisman_card") + ")")
+              el("span", { class: "prompt-k" }, "收服道具"), el("span", { class: "prompt-v" }, (c.vessel_zh || c.vessel || "符籙卡片") + " (" + (c.vessel || "talisman_card") + ")"),
+              ...(c.biography ? [el("span", { class: "prompt-k" }, "角色生平"), el("span", { class: "prompt-v" }, c.biography)] : [])
             )
           )
         );
@@ -2028,7 +2029,8 @@
               el("span", { class: "prompt-k" }, "成體體格"), el("span", { class: "prompt-v" }, "長/高 " + (c.height_length || c.height_m || "2.10 m") + " · 重 " + (c.weight || c.weight_kg || "340 kg") + " · 體脂 " + (c.body_fat || c.body_fat_pct || "15.0%")),
               el("span", { class: "prompt-k" }, "設計公式"), el("span", { class: "prompt-v", style: "font-family:Consolas,monospace;font-size:11px" }, c.formula || "—"),
               el("span", { class: "prompt-k" }, "專屬招式"), el("span", { class: "prompt-v" }, typeof c.signature_move === "object" ? `${c.signature_move.name_zh} (${c.signature_move.move_id})` : (c.signature_move || "—")),
-              el("span", { class: "prompt-k" }, "專屬特性"), el("span", { class: "prompt-v" }, typeof c.trait === "object" ? `${c.trait.name_zh} (${c.trait.trait_id})` : (c.trait || "—"))
+              el("span", { class: "prompt-k" }, "專屬特性"), el("span", { class: "prompt-v" }, typeof c.trait === "object" ? `${c.trait.name_zh} (${c.trait.trait_id})` : (c.trait || "—")),
+              ...(c.dex_zh ? [el("span", { class: "prompt-k" }, "生態圖鑑"), el("span", { class: "prompt-v" }, c.dex_zh)] : [])
             )
           )
         );
