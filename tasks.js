@@ -71,7 +71,29 @@
     ].join("\n");
   }
 
-  function common(ctx, body) {
+  function common(ctx, body, isPureArt) {
+    if (isPureArt) {
+      const bgInfo = C.determineAgcBgColor(ctx.concept, ctx.task.needs === "character");
+      return [
+        ctx.header,
+        "",
+        "# 任務：" + ctx.task.zh,
+        "你是《宙獸紀 COSMIMERA》概念美術設計師。",
+        "",
+        "## 畫風要求",
+        STYLE,
+        "",
+        body,
+        "",
+        ctx.notes ? "## 使用者補充（優先於預設）\n" + ctx.notes + "\n" : null,
+        "## 自我檢查",
+        list([
+          "三張圖片均在「同一個對話」中依步驟 1 → 2 → 3 逐張輸出為各自獨立的圖片，無合圖拼貼",
+          "步驟 1 正面圖與步驟 2 三視圖背景為 " + bgInfo.toneLabel + "（" + bgInfo.hex + "，RGB三通道均為 " + bgInfo.rgb[0] + "），無動態光影汙染，利於 3D 拓撲",
+          "無文字浮水印、簽名或現有商業 IP 元素"
+        ])
+      ].filter(s => s !== null).join("\n");
+    }
     return [
       ctx.header,
       "",
@@ -122,195 +144,324 @@
 
   const TASKS = [
     {
-      id: "character-concept", version: "3.0.0", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
+      id: "character-concept", version: "4.2.0", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
       needs: "character", drop: "Art/_incoming",
-      options: [],
+      options: [
+        { key: "scene_theme", type: "select", label: "【第 3 輪主立繪】場景主題", items: () => C.SCENE_THEMES, def: "auto" },
+        { key: "scene_lighting", type: "select", label: "【第 3 輪主立繪】光影氣候", items: () => C.SCENE_LIGHTINGS, def: "auto" }
+      ],
+      buildRounds(ctx) {
+        const S = ctx.subjectId, c = ctx.concept, o = ctx.opts || {};
+        const bgInfo = C.determineAgcBgColor(c, true);
+        const sceneInfo = C.resolveDynamicScene(c, true, o);
+
+        // 第 1、2 輪基準資訊：嚴格標準生理外觀與服裝結構（無職業、無姿勢、無動態偏向，確保 T-pose 絕對平正）
+        const canonicalAppearance = [
+          "## 設計目標：角色【" + (c.name_zh || "原創角色") + "】",
+          "- 外觀特徵：" + (c.gender || "角色") + "，約 " + (c.height || "170") + " cm · " + (c.ethnicity || "人種") + " · " + (c.region || "文明") + "（" + (c.timeline || "時空") + "）",
+          "- 配色組合：服裝【" + (c.outfit_palette || []).join("、") + "】，髮色【" + (c.hair_palette || []).join("、") + "】，瞳色【" + (c.eye_palette || []).join("、") + "】",
+          c.vessel ? "- 收服道具：平靜收合配戴於身側（" + (c.vessel.zh || c.vessel) + "）" : null,
+          (c.gender === "女" && c.cup_size && c.cup_size !== "未知") ? ("- 體態特徵：罩杯 " + c.cup_size + "，維持健康勻稱卡通比例") : null
+        ].filter(Boolean).join("\n");
+
+        // 第 1 輪：正面正交基準圖
+        const r1Prompt = [
+          ctx.header,
+          "",
+          "# 任務：角色設計【第 1 輪 / 正面正交基準圖】",
+          "你是《宙獸紀 COSMIMERA》概念美術設計師。",
+          "",
+          "## 畫風要求",
+          STYLE,
+          "",
+          canonicalAppearance,
+          "",
+          "## 🎯 本輪生圖指令（建立唯一基因基準）",
+          "- **產出檔名**：`images/" + S + "_front.png`",
+          "- **畫面內容**：**正面正交基準圖 1:1**",
+          "- **姿態與視角**：T-pose 全身置中（雙臂自然張開便於 3D 拓撲）、標準平視正面正交（無透視畸變）、平光無陰影。",
+          "- **指定背景**：**" + bgInfo.promptGuide + "**。",
+          "- **核心目的**：確立面容、髮型、身形比例與服裝結構，作為後續所有圖片的唯一基準錨點。",
+          "",
+          "## ⚠️ 規則與自我檢查",
+          list([
+            "單張獨立輸出為 1:1 圖片，絕不與其他視角拼貼",
+            "背景嚴格為純中性灰（" + bgInfo.hex + "，R=G=B=" + bgInfo.rgb[0] + "），杜絕邊緣環境光色偏汙染",
+            "純粹平正 T-pose，無任何動態傾斜、戰鬥姿勢或表情誇張",
+            "無文字浮水印、無簽名、原創設計嚴禁模仿現有商業 IP"
+          ])
+        ].filter(Boolean).join("\n");
+
+        // 第 2 輪：T-pose 正交三視圖合圖
+        const r2Prompt = [
+          "# 任務：角色設計【第 2 輪 / T-pose 正交三視圖合圖】",
+          "",
+          "## 📌 核心繼承指令（依據第 1 輪基準圖）",
+          "**請嚴格參考同對話上方剛生成的「第 1 張正面基準圖」，保持完全相同的面容五官、髮型髮色、服裝結構與配色，進行多視角延伸繪製：**",
+          "",
+          "## 🎯 本輪生圖指令",
+          "- **產出檔名**：`images/" + S + "_turnaround.png`",
+          "- **畫面內容**：**T-pose 正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例水平排布）",
+          "- **姿態與視角**：自然 T-pose 站姿、嚴格正交平光（無透視畸變、無動態光影）。",
+          "- **指定背景**：維持與第 1 輪完全相同之純中性灰（" + bgInfo.hex + "，R=G=B=" + bgInfo.rgb[0] + "），利於 3D 拓撲重建。",
+          "",
+          "## ⚠️ 規則與自我檢查",
+          list([
+            "嚴格維持第 1 張基準圖確立的角色容貌與配色 Hex，不產生基因漂移",
+            "水平排布各視角，比例尺嚴格一致",
+            "維持無傾斜 T-pose，無動態陰影、無氛圍特效、無文字標籤"
+          ])
+        ].join("\n");
+
+        // 第 3 輪：動態主立繪（場景強化 + 職業與專屬姿勢演出）
+        const r3Prompt = [
+          "# 任務：角色設計【第 3 輪 / 全身性格主立繪（場景強化）】",
+          "",
+          "## 📌 核心繼承指令（依據第 1 輪基準圖）",
+          "**請重新回到同對話最上方「第 1 張正面基準圖」，維持完全相同的角色容貌、體態比例與服裝細節，繪製生動的全身性格主立繪：**",
+          "",
+          "## 🎭 角色身份與專屬演繹（僅本輪使用）",
+          "- **職業/定位**：【" + (c.role || "冒險者") + "】",
+          (c.pose && c.pose !== "未知") ? ("- **角色專屬姿態（職業子項目）**：【" + c.pose + "】") : null,
+          c.personality?.length ? ("- **性格特質**：【" + c.personality.join("、") + "】") : null,
+          c.style ? ("- **冒險風格**：【" + c.style + "】") : null,
+          c.vessel ? ("- **收服道具動態**：手持或施展【" + (c.vessel.zh || c.vessel) + "】") : null,
+          "",
+          "## 🎯 本輪生圖規格",
+          "- **產出檔名**：`images/" + S + "_main.png`",
+          "- **畫面規格**：**全身性格主立繪 3:4**（帶動態姿態、性格神韻與專屬場景氛圍）",
+          "",
+          sceneInfo.fullPromptSection,
+          "",
+          "## ⚠️ 規則與自我檢查",
+          list([
+            "主體面容與造型嚴格對齊第 1 輪基準圖",
+            "主體全身完整居中，不切頭不切腳，主體邊緣清晰且帶微弱邊緣反光",
+            "背景風格維持柔和水彩微紋理或適度景深留白，絕不與主體色調混淆",
+            "無文字、無浮水印、原創設計"
+          ])
+        ].filter(Boolean).join("\n");
+
+        return [
+          { round: 1, title: "第 1 輪：正面正交基準圖 (1:1)", filename: S + "_front.png", prompt: r1Prompt },
+          { round: 2, title: "第 2 輪：T-pose 三視圖合圖 (16:9)", filename: S + "_turnaround.png", prompt: r2Prompt },
+          { round: 3, title: "第 3 輪：動態主立繪 (場景強化)", filename: S + "_main.png", prompt: r3Prompt }
+        ];
+      },
       build(ctx) {
-        const S = ctx.subjectId, c = ctx.concept;
-        const conceptJsonSchema = {
-          id: S,
-          name_zh: "角色繁中名（請依命名格式創作）",
-          name_en: "CharacterEnglishName (PascalCase)",
-          role: c.role,
-          gender: c.gender, age: c.age, height_cm: c.height, weight_kg: c.weight, body_fat_pct: c.body_fat,
-          ...(c.gender === "女" && c.cup_size && c.cup_size !== "未知" ? { cup_size: c.cup_size } : {}),
-          ethnicity: c.ethnicity, region: c.region, timeline: c.timeline,
-          outfit_palette: c.outfit_palette, hair_palette: c.hair_palette, eye_palette: c.eye_palette,
-          personality: c.personality, style: c.style, vessel: c.vessel?.zh || c.vessel,
-          biography: "角色生平傳記（約150–300字，包含出身轉折、性格信念、與宙獸牽絆，請依規範撰寫）"
-        };
+        const S = ctx.subjectId, c = ctx.concept, o = ctx.opts || {};
+        const bgInfo = C.determineAgcBgColor(c, true);
+        const sceneInfo = C.resolveDynamicScene(c, true, o);
 
         const body = [
-          "## 角色命名任務與格式規範",
-          "請為此角色創作原創姓名（中英文各一，填入 concept.json）：",
-          "- 繁中姓名格式：2–4 字，符合該文化地區與人種背景，體現角色個性與時空氛圍（例：凌霄、薇爾菈、墨巡、艾希莉亞、拓跋烈、琉璃）。",
-          "- 英文姓名格式：符合羅馬拼音或西洋/科幻命名美感（PascalCase，例：Linxiao, Valera, MoXun, Ashley, Tuobalie）。",
+          "## 設計目標：角色【" + (c.name_zh || "原創角色") + "】",
+          "- 外觀特徵：" + (c.gender || "角色") + "，約 " + (c.height || "170") + " cm · " + (c.ethnicity || "人種") + " · " + (c.region || "文明") + "（" + (c.timeline || "時空") + "）",
+          "- 配色組合：服裝【" + (c.outfit_palette || []).join("、") + "】，髮色【" + (c.hair_palette || []).join("、") + "】，瞳色【" + (c.eye_palette || []).join("、") + "】",
+          c.vessel ? "- 收服道具：平靜收合配戴於身側（" + (c.vessel.zh || c.vessel) + "）" : null,
+          (c.gender === "女" && c.cup_size && c.cup_size !== "未知") ? ("- 體態特徵：罩杯 " + c.cup_size + "，維持健康勻稱卡通比例") : null,
           "",
-          "## 角色生平撰寫任務與格式規範",
-          "請為此角色編寫一段生動立體的生平故事（填入 concept.json 的 `biography` 欄位），字數約 150–300 字，必須融合其人種背景、文化時空、性格特質與戰鬥定位：",
-          "- 【出身與成長轉折】：角色的起源背景、所屬家族/聚落/組織，或使其踏上旅程的重大轉折事件。",
-          "- 【性格展現與處事信念】：核心性格特質（" + (c.personality || []).join("、") + "）如何在日常與危機決策中體現，內心堅持的信念或追求的目標。",
-          "- 【與宙獸之牽絆契機】：如何獲得主要收服道具（" + (c.vessel?.zh || c.vessel || "道具") + "）、初次邂逅宙獸的經歷，或在冒險中與宙獸夥伴建立共鳴的獨特方式。",
-          "- 【格式規範】：1–2 個段落，採小說側寫風格，具備強烈畫面感與角色靈魂，避免條列式流水帳。",
+          "## 🎯 三步驟生圖順序（同一對話、分輪次獨立出圖、以圖生圖保持一致性）",
+          "請在「同一個對話」中依序逐輪生成以下 3 張獨立圖片，完成一張後再生成下一張：",
           "",
-          "## 輸入概念",
-          json(c),
+          "### 步驟 1（基準錨定圖）：`images/" + S + "_front.png`",
+          "- 內容：**正面正交基準圖 1:1**",
+          "- 規範：T-pose 全身置中（雙臂自然張開便於 3D 拓撲）、標準平視正面正交（無透視畸變）、平光無陰影、純中性姿態。",
+          "- 背景：**" + bgInfo.promptGuide + "**。",
+          "- 目的：確立面容、髮型、身形比例與服裝結構，作為後續圖片的唯一基準錨點。",
           "",
-          "## 產出清單（3 種圖像 + 1 設定檔）",
-          "| 檔案 | 內容 | 層級 |",
-          "|---|---|---|",
-          "| `concept.json` | 角色設定檔（欄位見下） | L1 |",
-          "| `images/" + S + "_main.png` | 全身主立繪，3:4，展現性格姿勢與服裝 | L1 |",
-          "| `images/" + S + "_front.png` | 單張正面正交灰底 1:1，T-pose 全身置中、平光（供 Image-to-3D 建模使用） | L1 |",
-          "| `images/" + S + "_turnaround.png` | 三視圖合圖 16:9（正/側/背/3/4 同比例，T-pose，中性灰底正交、無透視） | L1 |",
+          "### 步驟 2（多視角拓撲圖）：`images/" + S + "_turnaround.png`",
+          "- 內容：**T-pose 正交三視圖合圖 16:9**（正 / 側 / 背 / 3/4 視角同比例排布）",
+          "- 規範：**嚴格以「步驟 1 正面圖」確立的容貌與服飾為唯一基準**進行多角度延伸，T-pose 正交平光，背景同為 " + bgInfo.hex + "，無透視。",
           "",
-          "### concept.json 欄位",
-          json(conceptJsonSchema),
+          "### 步驟 3（動態主立繪）：`images/" + S + "_main.png`",
+          "- 內容：**全身性格主立繪 3:4（場景氛圍與職業演繹強化）**",
+          "- **職業/定位**：【" + (c.role || "冒險者") + "】" + ((c.pose && c.pose !== "未知") ? (" · 專屬姿態【" + c.pose + "】") : "") + (c.personality?.length ? (" · 性格【" + c.personality.join("、") + "】") : ""),
+          "- 規範：**嚴格以「步驟 1 正面圖」之容貌服飾為基準**，繪製生動性格姿勢與動態氛圍：",
+          sceneInfo.fullPromptSection,
           "",
-          "## 繪製要求",
-          list([
-            "嚴格遵循輸入概念之身高體型比例與配色組合設定（三視圖附身高刻度）。",
-            (c.gender === "女" && c.cup_size && c.cup_size !== "未知") ? ("女性體態特徵：罩杯設定為 " + c.cup_size + "，立繪與三視圖保持健康勻稱之卡通比例。") : null,
-            "服裝結構適合 3D 建模：避免過多細碎飄帶；T-pose 雙臂張開不被服裝遮擋，腋下與跨下留空。",
-            "收服道具（" + (c.vessel?.zh || "道具") + "）在角色身上有固定配戴位置（腰側、背後或右手）。"
-          ].filter(Boolean))
-        ].join("\n");
-        return common(ctx, body) + "\n\n" + deliverySection(ctx, "├── concept.json\n└── images/");
+          "## ⚠️ 核心禁忌與防汙染規範",
+          "1. 【同一對話、分輪次獨立生成】：三張圖片**必須在同一個對話中依序生成（先 1 → 再 2 → 再 3）**以保持面容與服飾一致，但**必須分別輸出為 3 張獨立不同的圖片**，嚴禁合併繪製在同一張畫布中！",
+          "2. 【嚴格防汙染】：步驟 1 與步驟 2 必須維持乾淨純粹的 " + bgInfo.toneLabel + "（" + bgInfo.hex + "）與平光，**嚴禁被步驟 3 主立繪的動態光影、背景雜質或特效所汙染**。",
+          "",
+          "## 📦 成果打包規範",
+          "- 產出完成後若打包 zip 請命名為：`" + ctx.taskId + ".zip`（內部為 `" + ctx.taskId + "/images/...`）。"
+        ].filter(Boolean).join("\n");
+
+        return common(ctx, body, true);
       }
     },
 
     {
-      id: "creature-concept", version: "5.0.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
+      id: "creature-concept", version: "6.2.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
       needs: "creature", drop: "Art/_incoming",
       options: [
-        { key: "stage", type: "select", label: "宙獸型態（四型態分開產出）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult" }
+        { key: "stage", type: "select", label: "宙獸型態（四型態分開產出）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult" },
+        { key: "scene_theme", type: "select", label: "【第 3 輪主立繪】場景主題", items: () => C.SCENE_THEMES, def: "auto" },
+        { key: "scene_lighting", type: "select", label: "【第 3 輪主立繪】光影氣候", items: () => C.SCENE_LIGHTINGS, def: "auto" },
+        { key: "scene_action", type: "select", label: "【第 3 輪主立繪】動態姿態", items: () => C.SCENE_ACTIONS, def: "auto" }
       ],
-      build(ctx) {
-        const S = ctx.subjectId, c = ctx.concept;
-        const curStage = ctx.opts?.stage || "adult";
+      buildRounds(ctx) {
+        const S = ctx.subjectId, c = ctx.concept, o = ctx.opts || {};
+        const curStage = o.stage || "adult";
         const stageDef = C.STAGES.find(s => s.v === curStage) || C.STAGES[2];
+        const bgInfo = C.determineAgcBgColor(c, false);
         const sizes = (c.size_profile || "S→M→L→XL").split("→");
         const stageIdx = ["juvenile", "adolescent", "adult", "overload"].indexOf(curStage);
         const curSize = sizes[stageIdx >= 0 ? stageIdx : 2] || "L";
-        const szInfo = C.SIZE_CLASSES[curSize] || C.SIZE_CLASSES["L"];
-
-        // 鎖定資訊（若為已設計項目）
         const lockedStage = c.locked?.stages?.find(s => s.stage === curStage);
-        const lockedTrait = c.locked?.trait;
+        const curHeight = lockedStage?.height_length || (stageIdx === 2 ? c.height_length : null) || (curSize === "XS" ? "0.20 m" : curSize === "S" ? "0.45 m" : curSize === "M" ? "1.20 m" : curSize === "L" ? "2.20 m" : "4.00 m");
+        const stageFeature = curStage === "juvenile" ? "幼態小巧滾圓，動作靈動，保留核心意象特徵" :
+          curStage === "adolescent" ? "初顯成年原型輪廓，敏捷感與力量感初具" :
+          curStage === "adult" ? "成熟勻稱威嚴，文化原型主體特徵完備" :
+          "超載戰鬥極致爆發態，裝甲展開、光環浮現、能量外溢粒子流";
 
-        // 當前型態尺寸數據
-        const curHeight = lockedStage?.height_length || (stageIdx === 2 ? c.height_length : null) || (curSize === "XS" ? "0.20 m" : curSize === "S" ? "0.45 m" : curSize === "M" ? "1.20 m" : curSize === "L" ? "2.20 m" : "5.0 m");
-        const curWeight = lockedStage?.weight || (stageIdx === 2 ? c.weight : null) || (curSize === "XS" ? "0.15 kg" : curSize === "S" ? "3.5 kg" : curSize === "M" ? "35 kg" : curSize === "L" ? "220 kg" : "2500 kg");
-        const curFat = lockedStage?.body_fat || (stageIdx === 2 ? c.body_fat : null) || "15%";
+        const sceneInfo = C.resolveDynamicScene(c, false, o, curStage);
 
-        const namingSection = lockedStage ? [
-          "### 命名規範（已設計定案）",
-          "- 繁中名：**" + lockedStage.name_zh + "** · 英文名：**" + lockedStage.name_en + "** · 宙獸 ID：`" + lockedStage.creature_id + "`",
-          "- （已有名稱者原樣照抄，嚴禁任意更動）。"
-        ] : [
-          "### 宙獸命名任務與格式規範（請 AI 原創命名）",
-          "請為此宙獸（本型態）創作原創圖鑑名稱（中英文各一，填入 concept.json）：",
-          "- 繁中名稱格式：",
-          "  - 長度：2–4 個繁體中文字。",
-          "  - 格式公式：『特徵/屬性字 + 生物/外觀意象字』（例：幼年『鏡芽雀』、少年『鏡羽鷺』、成年『鏡環天鷺』、超載『鏡冕天鷺』；或『雷鬃駒』、『夜痕霜狼』、『熾晶狐』、『岩甲巨犀』）。",
-          "  - 語感：具備奇幻生物圖鑑感與自然神話韻味，嚴禁使用人類姓名、真實神祇全名或商業 IP 名稱。",
-          "- 英文名稱格式：",
-          "  - 1–2 個詞根拼接之原創奇幻生物名（PascalCase，例：Mirrill, Mirravel, Voltrastorm, Nivervast, Pyraclaw）。"
+        // 第 1、2 輪基準資訊：嚴格標準生物生理構造（無戰鬥招式特效、無動態光影）
+        const canonicalCreature = [
+          "## 設計目標：宙獸【" + (lockedStage ? lockedStage.name_zh : (c.name_zh || "原創奇幻生物")) + "】· " + stageDef.zh + "型態",
+          "- 體型尺寸：身長/高約 " + curHeight + "（" + curSize + " 級）· " + stageFeature,
+          "- 核心構造：非人形生物（獸形/幻獸/機獸），外觀基底為【" + (c.base_parents ? c.base_parents.join(" + ") + " → " : "") + (c.bases ? c.bases.join(" + ") : "") + "】",
+          "- 屬性配色：屬性【" + (c.elements || []).join("、") + "】，主色調【" + (c.appearance_palette || []).join("、") + "】",
+          c.archetype ? ("- 文化原型意象：" + c.archetype + (c.motifs ? "（象徵圖騰：" + c.motifs + "）" : "")) : null,
+          lockedStage?.look ? ("- 定案外觀細節：" + lockedStage.look) : null
+        ].filter(Boolean).join("\n");
+
+        // 第 1 輪：正面正交基準圖
+        const r1Prompt = [
+          ctx.header,
+          "",
+          "# 任務：宙獸【" + stageDef.zh + "型態】設計【第 1 輪 / 正面正交基準圖】",
+          "你是《宙獸紀 COSMIMERA》概念美術設計師。",
+          "",
+          "## 畫風要求",
+          STYLE,
+          "",
+          canonicalCreature,
+          "",
+          "## 🎯 本輪生圖指令（建立唯一基因基準）",
+          "- **產出檔名**：`images/cr_" + S + "_" + curStage + "_front.png`",
+          "- **畫面內容**：**正面正交基準圖 1:1**",
+          "- **姿態與視角**：全身置中、標準平視正面正交（無透視畸變）、自然標準站姿、平光無陰影。",
+          "- **指定背景**：**" + bgInfo.promptGuide + "**。",
+          "- **核心目的**：確立本型態的標準比例、器官構造、對稱特徵與配色分佈，作為後續圖片的唯一基準錨點。",
+          "",
+          "## ⚠️ 規則與自我檢查",
+          list([
+            "單張獨立輸出為 1:1 圖片，絕不與其他視角拼貼",
+            "背景嚴格為純中性灰（" + bgInfo.hex + "，R=G=B=" + bgInfo.rgb[0] + "），杜絕邊緣環境光色偏汙染",
+            "標準中性平正站姿，無動態攻擊姿勢、無氛圍特效",
+            "無文字浮水印、無簽名、原創設計嚴禁模仿現有商業 IP"
+          ])
+        ].filter(Boolean).join("\n");
+
+        // 第 2 輪：正交三視圖合圖
+        const r2Prompt = [
+          "# 任務：宙獸【" + stageDef.zh + "型態】設計【第 2 輪 / 正交三視圖合圖】",
+          "",
+          "## 📌 核心繼承指令（依據第 1 輪基準圖）",
+          "**請嚴格參考同對話上方剛生成的「第 1 張正面基準圖」，保持完全相同的身體構造、器官特徵、花紋分布與配色 Hex，進行多角度延伸繪製：**",
+          "",
+          "## 🎯 本輪生圖指令",
+          "- **產出檔名**：`images/cr_" + S + "_" + curStage + "_turnaround.png`",
+          "- **畫面內容**：**正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例水平排布）",
+          "- **姿態與視角**：自然站姿、嚴格正交平光（無透視畸變、無動態光影）。",
+          "- **指定背景**：維持與第 1 輪完全相同之純中性灰（" + bgInfo.hex + "，R=G=B=" + bgInfo.rgb[0] + "），利於 3D 拓撲重建。",
+          "",
+          "## ⚠️ 規則與自我檢查",
+          list([
+            "嚴格維持第 1 張基準圖確立的生物造型與配色 Hex，不產生基因漂移",
+            "水平排布各視角，比例尺嚴格一致",
+            "自然平正站姿，無動態陰影、無氛圍特效、無文字標籤"
+          ])
+        ].join("\n");
+
+        // 第 3 輪：全身戰鬥主立繪（場景強化 + 專屬招式演出）
+        const r3Prompt = [
+          "# 任務：宙獸【" + stageDef.zh + "型態】設計【第 3 輪 / 全身戰鬥主立繪（場景強化）】",
+          "",
+          "## 📌 核心繼承指令（依據第 1 輪基準圖）",
+          "**請重新回到同對話最上方「第 1 張正面基準圖」，維持完全相同的生物外觀、器官特徵與配色，繪製生動威嚴的全身戰鬥主立繪：**",
+          "",
+          "## 💥 戰鬥招式與演繹（僅本輪使用）",
+          lockedStage?.signature_move ? ("- **專屬招式演出**：" + lockedStage.signature_move.visual) : null,
+          curStage === "overload" ? "- **超載戰鬥極致爆發**：裝甲展開、核心光環浮現、高密度能量粒子流外溢" : null,
+          "",
+          "## 🎯 本輪生圖指令",
+          "- **產出檔名**：`images/cr_" + S + "_" + curStage + "_main.png`",
+          "- **畫面規格**：**全身戰鬥主立繪 1:1**（帶動態構圖、戰鬥招式氣浪與屬性場景氛圍）",
+          "",
+          sceneInfo.fullPromptSection,
+          "",
+          "## ⚠️ 規則與自我檢查",
+          list([
+            "主體造型與構造嚴格對齊第 1 輪基準圖",
+            "主體全身完整居中，不切頭不切腳，主體邊緣輪廓分明且帶微弱邊緣反光",
+            "背景風格維持柔和水彩微紋理或適度景深留白，絕不與主體色調混淆",
+            "無文字、無浮水印、原創設計"
+          ])
+        ].filter(Boolean).join("\n");
+
+        return [
+          { round: 1, title: "第 1 輪：正面正交基準圖 (1:1)", filename: "cr_" + S + "_" + curStage + "_front.png", prompt: r1Prompt },
+          { round: 2, title: "第 2 輪：正交三視圖合圖 (16:9)", filename: "cr_" + S + "_" + curStage + "_turnaround.png", prompt: r2Prompt },
+          { round: 3, title: "第 3 輪：動態主立繪 (場景強化)", filename: "cr_" + S + "_" + curStage + "_main.png", prompt: r3Prompt }
         ];
+      },
+      build(ctx) {
+        const S = ctx.subjectId, c = ctx.concept, o = ctx.opts || {};
+        const curStage = o.stage || "adult";
+        const stageDef = C.STAGES.find(s => s.v === curStage) || C.STAGES[2];
+        const bgInfo = C.determineAgcBgColor(c, false);
+        const sizes = (c.size_profile || "S→M→L→XL").split("→");
+        const stageIdx = ["juvenile", "adolescent", "adult", "overload"].indexOf(curStage);
+        const curSize = sizes[stageIdx >= 0 ? stageIdx : 2] || "L";
+        const lockedStage = c.locked?.stages?.find(s => s.stage === curStage);
+        const curHeight = lockedStage?.height_length || (stageIdx === 2 ? c.height_length : null) || (curSize === "XS" ? "0.20 m" : curSize === "S" ? "0.45 m" : curSize === "M" ? "1.20 m" : curSize === "L" ? "2.20 m" : "4.00 m");
+        const stageFeature = curStage === "juvenile" ? "幼態小巧滾圓，動作靈動，保留核心意象特徵" :
+          curStage === "adolescent" ? "初顯成年原型輪廓，敏捷感與力量感初具" :
+          curStage === "adult" ? "成熟勻稱威嚴，文化原型主體特徵完備" :
+          "超載戰鬥極致爆發態，裝甲展開、光環浮現、能量外溢粒子流";
 
-        const dexSection = lockedStage?.dex_zh ? [
-          "### 生態圖鑑解說（已設計定案，嚴格照抄）",
-          "- 圖鑑解說（`dex_zh`）：**" + lockedStage.dex_zh + "**",
-          "- （已有圖鑑描述者嚴格照抄，填入 concept.json 的 `dex_zh`，嚴禁任意更動）。"
-        ] : [
-          "### 宙獸生態圖鑑解說任務與格式規範（請 AI 原創編寫）",
-          "請為此宙獸（本型態）編寫一段嚴謹生動的生態圖鑑解說（填入 concept.json 的 `dex_zh` 欄位）：",
-          "- 【字數規範】：80–180 個繁體中文字，文風符合官方生態圖鑑/博物學者田野筆記。",
-          "- 【生態內容架構】（必須涵蓋以下三項要素）：",
-          "  1. 棲息環境與作息：棲息之極端氣候、地形或星域（如浮空群島、熔岩地溝、極光冰原），以及日夜活動與能量攝取/捕食習性。",
-          "  2. 生理機制與外觀屬性融合：外觀基底特徵如何體現其屬性構造（如器官散熱、磁力浮游、發光腺體、外骨骼硬化或能量過載）。",
-          "  3. 與生態系/人類之互動與性情：對人類/訓練家的警戒心或親和態度、野外遭遇時的行為反應與性情展現。",
-          "- 【禁忌與語感】：嚴禁使用玩家/遊戲數值術語（如「攻擊力很高」、「每秒造成傷害」），嚴禁第一人稱，保持自然客觀與神秘神話感。"
-        ];
+        const sceneInfo = C.resolveDynamicScene(c, false, o, curStage);
 
         const body = [
-          "## 本次目標型態：" + stageDef.zh + "（" + curStage + "）",
-          "- 體型級距：" + curSize + "（" + szInfo.zh + "） · 面數預算約 " + szInfo.tris + " tris",
-          "- 當前型態尺寸估算：身長/高約 " + curHeight + "、體重約 " + curWeight + "、體脂率約 " + curFat,
+          "## 設計目標：宙獸【" + (lockedStage ? lockedStage.name_zh : (c.name_zh || "原創奇幻生物")) + "】· " + stageDef.zh + "型態",
+          "- 體型尺寸：身長/高約 " + curHeight + "（" + curSize + " 級）· " + stageFeature,
+          "- 核心構造：非人形生物（獸形/幻獸/機獸），外觀基底為【" + (c.base_parents ? c.base_parents.join(" + ") + " → " : "") + (c.bases ? c.bases.join(" + ") : "") + "】",
+          "- 屬性配色：屬性【" + (c.elements || []).join("、") + "】，主色調【" + (c.appearance_palette || []).join("、") + "】",
+          c.archetype ? ("- 文化原型意象：" + c.archetype + (c.motifs ? "（象徵圖騰：" + c.motifs + "）" : "")) : null,
+          lockedStage?.look ? ("- 定案外觀細節：" + lockedStage.look) : null,
           "",
-          "## 文化原型轉化指引（避免人形化）",
-          "- 本任務目標為【宙獸（奇幻生物/魔獸/機獸）】，嚴禁生成為人形角色（除非外觀基底明確指定類人種族）。",
-          "- 文化原型（如神祇、傳說英雄、歷史人物）僅提取其代表性的【象徵圖騰、法寶神兵、自然天象、聖獸化身、精神意義與意象元素】，必須將其完全轉化為動物、幻獸或構裝體的生理構造、羽翼、角鱗、光環或外甲特徵。",
+          "## 🎯 三步驟生圖順序（同一對話、分輪次獨立出圖、以圖生圖保持一致性）",
+          "請在「同一個對話」中依序逐輪生成以下 3 張獨立圖片，完成一張後再生成下一張：",
           "",
-          ...namingSection,
+          "### 步驟 1（基準錨定圖）：`images/cr_" + S + "_" + curStage + "_front.png`",
+          "- 內容：**正面正交基準圖 1:1**",
+          "- 規範：全身置中、標準平視正面正交（無透視畸變）、自然標準站姿、平光無陰影、純中性姿態。",
+          "- 背景：**" + bgInfo.promptGuide + "**。",
+          "- 目的：確立本型態的標準比例、器官構造、對稱特徵與配色分佈，作為後續圖片的唯一基準錨點。",
           "",
-          ...dexSection,
+          "### 步驟 2（多視角拓撲圖）：`images/cr_" + S + "_" + curStage + "_turnaround.png`",
+          "- 內容：**正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例排布）",
+          "- 規範：**嚴格以「步驟 1 正面圖」確立的造型、顏色與構造為唯一基準**進行多角度延伸，自然站姿，嚴格正交平光，背景同為 " + bgInfo.hex + "，無透視。",
           "",
-          ...(lockedStage ? [
-            "### 已設計定案規格（嚴格照抄）",
-            "- 宙獸 ID：`" + lockedStage.creature_id + "` · 繁中名：**" + lockedStage.name_zh + "** · 英文名：**" + lockedStage.name_en + "**",
-            "- 外觀設定：" + lockedStage.look,
-            "- 圖鑑描述：" + lockedStage.dex_zh,
-            "- 專屬招式：`" + lockedStage.signature_move?.move_id + "`（" + lockedStage.signature_move?.name_zh + "）— " + lockedStage.signature_move?.visual,
-            lockedTrait ? "- 專屬特性：`" + lockedTrait.trait_id + "`（" + lockedTrait.name_zh + "）— " + lockedTrait.idea_zh : null,
-            ""
-          ].filter(Boolean) : []),
-          "### 概念設定（完整規格）",
-          "- 屬性：" + (c.elements || []).join("、"),
-          "- 配色組合：" + (c.appearance_palette || []).join("、"),
-          "- 外觀基底：" + (c.base_parents ? c.base_parents.join(" + ") + " → " : "") + (c.bases ? c.bases.join(" + ") : ""),
-          "- 文化原型與時空：" + (c.archetype || "自由原型") + "（" + (c.region || "未知") + "）· " + (c.timeline || "架空"),
-          c.motifs ? "- 核心文化象徵與意象：" + c.motifs + (c.meaning ? " · 精神象徵：" + c.meaning : "") : null,
-          "- 戰鬥定位與性情：" + (c.role || "戰鬥") + " · " + (c.temperament || "沉穩"),
+          "### 步驟 3（動態主立繪）：`images/cr_" + S + "_" + curStage + "_main.png`",
+          "- 內容：**全身戰鬥主立繪 1:1（場景氛圍與招式演出強化）**",
+          lockedStage?.signature_move ? ("- **專屬招式演出**：" + lockedStage.signature_move.visual) : null,
+          curStage === "overload" ? "- **超載戰鬥極致爆發**：裝甲展開、核心光環浮現、高密度能量粒子流外溢" : null,
+          "- 規範：**嚴格以「步驟 1 正面圖」之造型為基準**，繪製生動的戰鬥動態姿勢：",
+          sceneInfo.fullPromptSection,
           "",
-          "## 型態特徵指引",
-          curStage === "juvenile" ? "- 幼年型態：體型圓潤小巧（" + curSize + " 級），特徵幼態可愛，保留 1–2 個核心意象特徵，動作靈動。" :
-          curStage === "adolescent" ? "- 少年型態：介於幼年與成年之間（" + curSize + " 級），初顯原型輪廓，活力與敏捷感並重。" :
-          curStage === "adult" ? "- 成年型態：完全展現文化原型之威嚴與主體構造（" + curSize + " 級），比例成熟勻稱，特徵完備。" :
-          "- 超載型態：戰鬥中能量極致爆發之態（" + curSize + " 級），裝甲展開、光環浮現、能量外溢或粒子流，輪廓更具威嚴與壓迫感，但保留核心種族識別。",
+          "## ⚠️ 核心禁忌與防汙染規範",
+          "1. 【同一對話、分輪次獨立生成】：三張圖片**必須在同一個對話中依序生成（先 1 → 再 2 → 再 3）**以保持基因一致，但**必須分別輸出為 3 張獨立不同的圖片**，嚴禁合併繪製在同一張畫布中！",
+          "2. 【嚴格防汙染】：步驟 1 正面圖與步驟 2 三視圖必須維持乾淨純粹的 " + bgInfo.toneLabel + "（" + bgInfo.hex + "）與平光，**嚴禁被步驟 3 主立繪的動態光影、絢麗特效或複雜背景所汙染**。",
           "",
-          "## 產出清單（3 種圖像 + 1 設定檔，單獨打包）",
-          "| 檔案 | 內容 | 層級 |",
-          "|---|---|---|",
-          "| `concept.json` | 本型態設定檔（欄位見下） | L1 |",
-          "| `images/cr_" + S + "_" + curStage + "_main.png` | " + stageDef.zh + "全身主立繪 1:1，展現生動姿態與屬性氛圍 | L1 |",
-          "| `images/cr_" + S + "_" + curStage + "_front.png` | " + stageDef.zh + "正面正交 1:1，中性灰 #808080 底、平光、全身置中（供 Image-to-3D 建模使用） | L1 |",
-          "| `images/cr_" + S + "_" + curStage + "_turnaround.png` | " + stageDef.zh + "三視圖合圖 16:9（正/側/背/3/4，自然站姿，中性灰底正交、無透視） | L1 |",
-          "",
-          "### concept.json 欄位",
-          json({
-            line_id: S,
-            stage: curStage,
-            creature_id: lockedStage ? lockedStage.creature_id : ("cr_" + S + "_" + curStage),
-            name_zh: lockedStage ? lockedStage.name_zh : "宙獸繁中名（請依命名格式創作）",
-            name_en: lockedStage ? lockedStage.name_en : "CreatureEnglishName (PascalCase)",
-            dex_zh: lockedStage?.dex_zh || "宙獸生態圖鑑解說（約80–180字，包含棲息作息、生理屬性機制、性情互動，請依規範撰寫）",
-            size_class: curSize,
-            height_length: curHeight,
-            weight: curWeight,
-            body_fat: curFat,
-            elements: c.elements,
-            appearance_palette: c.appearance_palette,
-            base_parents: c.base_parents,
-            bases: c.bases,
-            region: c.region,
-            timeline: c.timeline,
-            archetype: c.archetype,
-            role: c.role,
-            temperament: c.temperament,
-            signature_move: lockedStage?.signature_move || {
-              move_id: "snake_case_move_id",
-              name_zh: "招式繁中名（請命名）",
-              name_en: "MoveEnglishName (PascalCase)",
-              element: (c.elements || ["light"])[0],
-              range_class: "melee|mid|long",
-              shape: "front|line|sweep|burst|cone|arc",
-              visual: "招式演出視覺效果描述"
-            },
-            ...(curStage === "overload" ? { overload_visual: lockedStage?.look || "超載能量外溢特徵" } : {})
-          })
+          "## 📦 成果打包規範",
+          "- 產出完成後若打包 zip 請命名為：`" + ctx.taskId + ".zip`（內部為 `" + ctx.taskId + "/images/...`）。"
         ].filter(Boolean).join("\n");
-        return common(ctx, body) + "\n\n" + deliverySection(ctx, "├── concept.json\n└── images/");
+
+        return common(ctx, body, true);
       }
     },
 

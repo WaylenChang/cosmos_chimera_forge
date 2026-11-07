@@ -27,6 +27,9 @@
   .segb.on { background: #2d3646; color: #fff; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
   .segb:disabled { color: #5d6472; cursor: not-allowed; }
 
+  .stage-forge-seg { display: inline-flex; }
+  .stage-forge-seg .segb { padding: 3px 10px; font-size: 12px; }
+
   .view-container { flex: 1; min-height: 0; display: flex; }
 
   /* ==================== 鍛造視圖 ==================== */
@@ -202,6 +205,12 @@
   .stage-pill { font-size: 10px; padding: 1px 4px; border-radius: 3px; background: #232a36; color: var(--muted); }
   .stage-pill.on { background: #1c3b5e; color: #7fd8ff; font-weight: bold; border: 1px solid #2f5a8a; }
 
+  /* 多輪次生圖切換列與複製組 */
+  .round-bar { display: flex; align-items: center; justify-content: space-between; margin: 8px 0 6px 0; }
+  .round-seg { display: inline-flex; width: 100%; gap: 2px; }
+  .round-seg .segb { flex: 1; text-align: center; font-size: 11px; padding: 5px 6px; white-space: nowrap; }
+  .round-copy-group { display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+
   /* ---- 輸入 img / 審查台立繪包選擇器 ---- */
   .pack-picker-box { display: flex; flex-direction: column; gap: 7px; width: 100%; }
   .img-picker-strip { display: flex; gap: 8px; overflow-x: auto; padding: 6px 2px; max-width: 100%; scrollbar-width: thin; }
@@ -264,10 +273,24 @@
 
     <div class="stack">
       <section>
-        <h2>Prompt 輸出</h2>
+        <div class="subhead" style="margin-bottom:8px">
+          <h2 style="margin:0">Prompt 輸出</h2>
+          <div class="seg stage-forge-seg" id="forgeStageTabs" role="tablist"></div>
+        </div>
         <div id="header"></div>
+
+        <!-- 多輪次生圖分頁切換列 -->
+        <div class="round-bar" id="roundBar" style="display:none">
+          <div class="seg round-seg" id="roundTabs" role="tablist"></div>
+        </div>
+
         <div class="actions">
-          <button class="btn" id="copy" type="button">📋 複製 prompt</button>
+          <div class="round-copy-group" id="roundCopyGroup" style="display:none">
+            <button class="btn mini" id="btnCopyR1" type="button" title="複製第 1 輪 正面正交基準圖 Prompt">📋 複製第 1 輪 (正面圖)</button>
+            <button class="btn mini ghost" id="btnCopyR2" type="button" title="複製第 2 輪 T-pose 三視圖合圖 Prompt">📋 複製第 2 輪 (三視圖)</button>
+            <button class="btn mini ghost" id="btnCopyR3" type="button" title="複製第 3 輪 全身動態主立繪 Prompt">📋 複製第 3 輪 (主立繪)</button>
+          </div>
+          <button class="btn" id="copy" type="button">📋 複製目前顯示</button>
           <button class="btn ghost" id="open" type="button">↗ 開啟平台</button>
           <button class="btn ghost" id="download" type="button">⬇ prompt.md</button>
           <button class="btn ghost" id="export" type="button">⬇ 概念 JSON</button>
@@ -376,6 +399,7 @@
           <button class="segb" id="zoomOut" type="button">－</button>
         </div>
         <button class="btn" id="btnUnpack" type="button">⚡ 一鍵解壓縮</button>
+        <button class="btn ghost" id="btnExportAlignedZip" type="button" title="下載已整合格式與圖檔的完整 Zip 壓縮包">🗜️ 下載整合 Zip</button>
         <button class="btn ghost" id="btnToImg3d" type="button" title="以此立繪包（或當前預覽圖）產出 img-to-3D Prompt">🧊 產出 3D Prompt</button>
         <button class="btn ghost" id="btnUpgradeActive" type="button" title="一鍵升級為最新版 Prompt 與規格">🔄 升級格式</button>
         <button class="btn ghost mini" id="btnBackup" type="button" title="移至備份區（自動加入時間戳）">📦 移至備份區</button>

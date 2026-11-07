@@ -133,6 +133,257 @@ window.COSMI_CATALOG = {
     });
   },
 
+  // 依角色/宙獸色系判定 2D AGC 立繪背景色（RGB 三通道嚴格均等）
+  determineAgcBgColor(concept, isCharacter) {
+    if (!concept) {
+      return {
+        hex: "#808080",
+        rgb: [128, 128, 128],
+        rgbStr: "rgb(128, 128, 128)",
+        luminance: 0.5,
+        toneType: "balanced",
+        toneLabel: "標準中性灰",
+        reason: "主體為均衡/中彩度色系，採用標準中性灰 #808080（R=G=B=128），維持無色偏平光環境",
+        promptGuide: "純中性灰 #808080 底（RGB三通道嚴格均等：R=128, G=128, B=128，杜絕邊緣環境色偏）"
+      };
+    }
+
+    const colorKeywords = [];
+    if (isCharacter) {
+      if (Array.isArray(concept.outfit_palette)) colorKeywords.push(...concept.outfit_palette);
+      if (concept.hair_palette) colorKeywords.push(...(Array.isArray(concept.hair_palette) ? concept.hair_palette : [concept.hair_palette]));
+      if (concept.eye_palette) colorKeywords.push(...(Array.isArray(concept.eye_palette) ? concept.eye_palette : [concept.eye_palette]));
+    } else {
+      if (Array.isArray(concept.appearance_palette)) colorKeywords.push(...concept.appearance_palette);
+      if (Array.isArray(concept.bases)) colorKeywords.push(...concept.bases);
+    }
+    if (Array.isArray(concept.elements)) colorKeywords.push(...concept.elements);
+
+    // 評估明度權重表 (0~1)
+    function estimateLuminance(str) {
+      if (!str || typeof str !== "string") return 0.5;
+      const s = str.toLowerCase();
+      // 極深/暗色系 (0.12)
+      if (/黑|曜石|暗|夜|幽|玄鐵|炭|煙燻|墨|虛空|shadow/.test(s)) return 0.12;
+      // 深色系 (0.28)
+      if (/深藍|深海|海軍|深酒|深栗|古銅|橄欖|灰藍|青黑|深/.test(s)) return 0.28;
+      // 極淺/白銀光系 (0.88)
+      if (/白|月華|象牙|米白|霜雪|霜|鍍銀|鋼白|透白|light/.test(s)) return 0.88;
+      // 淺亮系 (0.74)
+      if (/冰晶|純淨冰|清透天藍|薄荷|淡青|砂岩黃|晨曦|耀日|金白|淡紫|粉|ice/.test(s)) return 0.74;
+      // 亮彩色系 (0.62)
+      if (/珊瑚|鮮橘|嫩芽|黃綠|閃電熾黃|耀日光金|黃銅|琥珀|電弧|櫻花/.test(s)) return 0.62;
+      // 中彩色系 (0.48)
+      if (/赤紅|烈焰|火|陶土|磚紅|蒼翡翠|翠綠|湖水|克萊因|大地|赭石|卡其|焦糖|茶褐|雷電|曜紫|青瓷|wood|earth|water|fire|wind|thunder/.test(s)) return 0.48;
+      return 0.50;
+    }
+
+    let sum = 0, count = 0;
+    for (const kw of colorKeywords) {
+      sum += estimateLuminance(kw);
+      count++;
+    }
+
+    const avgL = count > 0 ? (sum / count) : 0.50;
+
+    // 依 2D AGC 立繪剪影分離原則判定：RGB 三通道嚴格相同
+    if (avgL < 0.38) {
+      // 主體偏深色：背景提高至淺中性灰 #c0c0c0 (R=G=B=192)
+      return {
+        hex: "#c0c0c0",
+        rgb: [192, 192, 192],
+        rgbStr: "rgb(192, 192, 192)",
+        luminance: avgL,
+        toneType: "dark_dominant",
+        toneLabel: "淺中性灰（深色主體反差）",
+        reason: "主體偏深色/暗影系，依 2D AGC 剪影分離規則採用淺中性灰 #c0c0c0（R=G=B=192），確保暗部毛髮、鱗甲與剪影邊緣清晰分離且無環境色偏",
+        promptGuide: "淺中性灰 #c0c0c0 底（RGB三通道嚴格均等：R=192, G=192, B=192，依深色主體剪影分離規則判定，杜絕邊緣色偏汙染）"
+      };
+    } else if (avgL > 0.65) {
+      // 主體偏淺色/白銀：背景降至深中性灰 #505050 (R=G=B=80)
+      return {
+        hex: "#505050",
+        rgb: [80, 80, 80],
+        rgbStr: "rgb(80, 80, 80)",
+        luminance: avgL,
+        toneType: "light_dominant",
+        toneLabel: "深中性灰（淺色主體反差）",
+        reason: "主體偏白銀/淺光/冰晶色系，依 2D AGC 剪影分離規則採用深中性灰 #505050（R=G=B=80），防止白羽、銀甲或高光與背景融和過曝，維持乾淨無色偏",
+        promptGuide: "深中性灰 #505050 底（RGB三通道嚴格均等：R=80, G=80, B=80，依淺色主體高反差對比規則判定，杜絕邊緣色偏汙染）"
+      };
+    } else {
+      // 主體均衡/中彩度：標準 50% 中性灰 #808080 (R=G=B=128)
+      return {
+        hex: "#808080",
+        rgb: [128, 128, 128],
+        rgbStr: "rgb(128, 128, 128)",
+        luminance: avgL,
+        toneType: "balanced",
+        toneLabel: "標準中性灰（均衡色系）",
+        reason: "主體為標準中彩度/均衡色系，採用標準中性灰 #808080（R=G=B=128），色溫平衡、無任何環境色偏，最適合作為 2D AGC 正交立繪與 3D 拓撲基準",
+        promptGuide: "標準中性灰 #808080 底（RGB三通道嚴格均等：R=128, G=128, B=128，依中彩度色系標準平光規則判定，杜絕邊緣色偏汙染）"
+      };
+    }
+  },
+
+  // ==================== 第 3 輪主立繪場景氛圍矩陣配置 ====================
+  SCENE_THEMES: [
+    { v: "auto", zh: "🎲 智慧匹配（依文化地區+時空+屬性推演）" },
+    { v: "sanctuary", zh: "🏛️ 神殿/古剎/儀式祭壇（莊嚴神秘）" },
+    { v: "wild_nature", zh: "🌲 奇幻秘境/原野巨石/深潭瀑布（生機宏偉）" },
+    { v: "highlands", zh: "⛰️ 雲海浮島/斷崖絕壁/險峻天峰（遼闊高遠）" },
+    { v: "settlement", zh: "🏘️ 古城聚落/市井街巷/古道驛站（人文氛圍）" },
+    { v: "cyber_neon", zh: "🏙️ 霓虹雨夜/高架天橋/賽博天台（科幻摩登）" },
+    { v: "steampunk", zh: "⚙️ 齒輪工場/以太飛艇甲板/重裝要塞（蒸氣鋼鐵）" },
+    { v: "abyss_wasteland", zh: "🌋 熔岩焦土/廢土殘垣/巨神殘骸（末日壓迫）" },
+    { v: "frost_glacier", zh: "❄️ 永凍冰河/極光冰谷/霜晶洞窟（寒冽清透）" },
+    { v: "cosmic_orbit", zh: "🌌 太空港軌道/星環浮島/星門甲板（星際浩瀚）" }
+  ],
+
+  SCENE_LIGHTINGS: [
+    { v: "auto", zh: "🎲 智慧光影（依屬性與氛圍自動推演）" },
+    { v: "dawn", zh: "🌅 破曉晨曦（柔和金粉朝霞、微逆光剪影輪廓）" },
+    { v: "noon_clear", zh: "☀️ 晴空萬里（明朗清澈、高飽和色彩、清晰陰影）" },
+    { v: "dusk_twilight", zh: "🌇 晚霞落日（金紅橙紫漸變、壯麗餘暉長影）" },
+    { v: "night_aurora", zh: "🌌 幽夜星空/極光流動（深邃冷藍背景、冷光反射）" },
+    { v: "storm_thunder", zh: "⚡ 狂風驟雨/雷雲翻湧（低沉陰雲、閃電穿透光）" },
+    { v: "particle_glow", zh: "✨ 靈光漫溢/粒子星塵（漂浮微光、夢幻丁達爾光效）" }
+  ],
+
+  SCENE_ACTIONS: [
+    { v: "auto", zh: "🎲 智慧姿態（依角色性格/宙獸型態判定）" },
+    { v: "battle_burst", zh: "💥 招式爆發/戰鬥蓄力（威嚴爆發、屬性特效呼應）" },
+    { v: "high_perch", zh: "🦅 登高俯瞰/傲立岩梢（從容威嚴、衣袍/羽翼迎風飄揚）" },
+    { v: "dynamic_leap", zh: "⚡ 凌空騰躍/疾速衝刺（極致動感、流線風壓牽引）" },
+    { v: "calm_commune", zh: "🍃 靜態共鳴/守護姿態（溫和沉穩、與環境元素交融）" }
+  ],
+
+  // 根據文化地區、文化時空、屬性與自選條件，智慧演算第 3 輪主立繪專屬場景
+  resolveDynamicScene(concept, isCharacter, opts = {}, curStage = "adult") {
+    const region = concept?.region || "未知";
+    const timeline = concept?.timeline || "架空";
+    const elements = isCharacter ? [] : (concept?.elements || ["light"]);
+    const primaryElem = elements[0] || "light";
+
+    // 1. 決定場景主題 (Theme)
+    let themeKey = opts.scene_theme || "auto";
+    if (themeKey === "auto") {
+      const regStr = String(region);
+      const timeStr = String(timeline);
+      if (/極地/.test(regStr)) themeKey = "frost_glacier";
+      else if (/星際|軌道|超弦|殖民/.test(regStr) || /太空|軌道|超弦/.test(timeStr)) themeKey = "cosmic_orbit";
+      else if (/後啟示|廢土|末日/.test(timeStr)) themeKey = "abyss_wasteland";
+      else if (/賽博|霓虹|義體/.test(timeStr)) themeKey = "cyber_neon";
+      else if (/蒸汽|柴油|工業|要塞/.test(timeStr)) themeKey = "steampunk";
+      else if (/神話|神代|英雄|古典/.test(timeStr)) {
+        if (/西亞|中東|非洲/.test(regStr)) themeKey = "settlement";
+        else if (primaryElem === "wind" || primaryElem === "light" || primaryElem === "thunder") themeKey = "highlands";
+        else if (primaryElem === "wood" || primaryElem === "water") themeKey = "wild_nature";
+        else themeKey = "sanctuary";
+      } else {
+        if (primaryElem === "ice") themeKey = "frost_glacier";
+        else if (primaryElem === "fire") themeKey = "abyss_wasteland";
+        else if (primaryElem === "wind" || primaryElem === "thunder") themeKey = "highlands";
+        else if (primaryElem === "water" || primaryElem === "wood") themeKey = "wild_nature";
+        else themeKey = "sanctuary";
+      }
+    }
+
+    // 2. 決定具體地貌環境描述
+    const sceneDescMap = {
+      sanctuary: "懸浮於雲海之上的古代莊嚴儀式神殿，刻滿古老文明符文的石柱殘垣與浮空祭壇，散發著神祕沉靜的歷史底蘊",
+      wild_nature: "巨木參天、藤蔓垂掛的奇幻原始秘境，遠處有奔騰的瀑布水霧與青苔巨石，生機盎然",
+      highlands: "群峰環抱、雲霧翻騰的險峻斷崖天峰，突出的巨岩孤立於雲海之上，視野遼闊浩瀚",
+      settlement: "具有深厚文化印記的古老驛站聚落，石板街道、古典磚石建築拱門與遠方林立的城塔，人文生活氛圍濃郁",
+      cyber_neon: "細雨霏霏的賽博摩登高架天台，全息太虛符文投影與交錯的霓虹光條在微濕地面映出彩色倒影",
+      steampunk: "蒸氣繚繞的以太重裝機械工坊要塞，巨大的黃銅齒輪、壓力管道與浮空飛艇停泊甲板交織出復古工業感",
+      abyss_wasteland: "地表龜裂、地熱微光的黑色玄武岩焦土荒原，遠方斜插著遠古巨神或機械殘骸，充滿末日壓迫感",
+      frost_glacier: "泛著幽藍微光的極地永凍冰川裂谷，垂掛著剔透霜晶的冰洞與倒映著蒼穹的如鏡冰原",
+      cosmic_orbit: "低軌道太空港的外露觀景甲板，背後是浩瀚深邃的星系星雲與巨大藍色母星的弧線地平線"
+    };
+    const sceneDesc = sceneDescMap[themeKey] || sceneDescMap.sanctuary;
+
+    // 3. 決定光影氣候 (Lighting)
+    let lightKey = opts.scene_lighting || "auto";
+    if (lightKey === "auto") {
+      if (themeKey === "cyber_neon" || themeKey === "frost_glacier" || primaryElem === "shadow") lightKey = "night_aurora";
+      else if (primaryElem === "thunder" || themeKey === "abyss_wasteland") lightKey = "storm_thunder";
+      else if (primaryElem === "fire" || themeKey === "settlement") lightKey = "dusk_twilight";
+      else if (primaryElem === "light" || primaryElem === "wind") lightKey = "dawn";
+      else lightKey = "particle_glow";
+    }
+
+    const lightDescMap = {
+      dawn: "破曉晨曦柔和灑落，天際呈現淺金與玫瑰色朝霞，主體邊緣泛著細膩的金晨微光（Rim light）",
+      noon_clear: "明澈晴空萬里，光影乾淨俐落，色塊對比鮮豔分明，充滿明朗正氣",
+      dusk_twilight: "壯麗的晚霞落日餘暉，金紅與深紫交織的天色，投射出修長溫暖的光影拉絲",
+      night_aurora: "深邃幽藍夜空，穹頂飄揚著翠綠與淡紫的極光光帶，主體輪廓帶有冷調環境光反照",
+      storm_thunder: "雷雲密布的昏暗天空，時不時劃過撕裂雲層的亮紫電光，水氣與風壓逼人，光影戲劇張力極強",
+      particle_glow: "夢幻的靈光漫溢氛圍，空氣中浮游著大量與主體屬性呼應的發光微粒與星塵，如詩如畫"
+    };
+    const lightingDesc = lightDescMap[lightKey] || lightDescMap.particle_glow;
+
+    // 4. 決定動態姿態 (Action)
+    let actionKey = opts.scene_action || "auto";
+    let actionDesc = "";
+    if (isCharacter) {
+      const vesselZh = concept?.vessel?.zh || concept?.vessel || "收服道具";
+      const styleZh = concept?.style || "冒險姿態";
+      if (concept?.pose && concept.pose !== "未知") {
+        actionDesc = concept.pose;
+      } else if (actionKey === "high_perch") {
+        actionDesc = "傲立於突出的岩石頂端，衣袍與髮絲在獵獵作響的狂風中劇烈翻飛，眼神冷靜俯瞰遠方，一手輕撫腰側的【" + vesselZh + "】";
+      } else if (actionKey === "dynamic_leap") {
+        actionDesc = "凌空側躍而下，身體成舒展的流線動態，一手前伸蓄力，一手緊扣【" + vesselZh + "】，充滿敏捷爆發力";
+      } else if (actionKey === "calm_commune") {
+        actionDesc = "雙足自然著地，神情專注溫和，雙手捧持泛光的【" + vesselZh + "】，身周環繞著微弱的守護靈光光環";
+      } else {
+        actionDesc = "呈極具張力的戰鬥迎敵架勢，單手握持【" + vesselZh + "】準備施展，髮絲與服裝披風迎風飄揚，眼神堅定，展現" + styleZh + "的魄力氣場";
+      }
+    } else {
+      if (curStage === "juvenile") {
+        actionDesc = "幼態小巧滾圓的身軀好奇地趴伏在岩塊邊緣，小爪探向漂浮的元素微光，回頭露出靈動神采，活潑可愛";
+      } else if (curStage === "adolescent") {
+        actionDesc = "少年期矯健的身姿踏在突起的地表，四足微屈蓄勢待發，周身隱隱浮現屬性元素氣旋，神情敏銳";
+      } else if (curStage === "overload") {
+        actionDesc = "戰鬥超載能量極致爆發，裝甲結構與翼羽全面展開，核心聚能光環浮現，高密度粒子流自體表劇烈外溢，展現威懾全場的破壞神魄力";
+      } else {
+        if (actionKey === "high_perch") {
+          actionDesc = "威嚴雄健地傲立於高聳岩梢之巔，胸膛微挺，尾羽在風中徐徐舒展，俯瞰領地展現王者風範";
+        } else if (actionKey === "dynamic_leap") {
+          actionDesc = "四足離地向前猛烈撲躍衝刺，利爪探出，身形劃出充滿速度感的動態弧線，帶動周遭氣流激盪";
+        } else if (actionKey === "calm_commune") {
+          actionDesc = "靜穆沉穩地盤踞於自然神殿前，身周元素能量如水波般緩緩蕩漾，神情莊嚴祥和，與天地共鳴";
+        } else {
+          actionDesc = "傲立於險峻岩石之上，昂首長嘯迎敵，身周環繞奔騰呼嘯的【" + (concept?.elements || ["光"]).join("、") + "】屬性元素光流與碎石氣浪，魄力十足";
+        }
+      }
+    }
+
+    const themeObj = this.SCENE_THEMES.find(t => t.v === themeKey) || this.SCENE_THEMES[0];
+    const lightObj = this.SCENE_LIGHTINGS.find(l => l.v === lightKey) || this.SCENE_LIGHTINGS[0];
+    const actionObj = this.SCENE_ACTIONS.find(a => a.v === actionKey) || this.SCENE_ACTIONS[0];
+
+    return {
+      theme: themeKey,
+      themeZh: themeObj.zh,
+      lighting: lightKey,
+      lightingZh: lightObj.zh,
+      action: actionKey,
+      actionZh: actionObj.zh,
+      sceneDesc,
+      lightingDesc,
+      actionDesc,
+      fullPromptSection: [
+        "### 步驟 3 主立繪專屬場景氛圍與動態演出",
+        "- **舞台環境**：【" + sceneDesc + "】",
+        "- **光影天候**：【" + lightingDesc + "】",
+        "- **主體姿態**：【" + actionDesc + "】",
+        "- **分離度與構圖**：**主體全身完整入鏡（Full-body in frame，不切頭不切腳）**，背景保持適度留白或景深水彩微紋理，主體邊緣輪廓分明，**杜絕主體被背景雜質吞沒**。"
+      ].join("\n")
+    };
+  },
+
   get PALETTES() { return this.COLOR_TONES; },
 
   // 角色性格與宙獸性情合併且共用
@@ -268,7 +519,59 @@ window.COSMI_CATALOG = {
       "過甜的油膩食物", "粗製濫造的機械", "被打斷思路", "突如其來的巨響", "繁瑣的繁文縟節", "浪費食物", "束縛感", "悶熱的封閉空間", "枯燥的長篇大論",
       "迷路", "苦澀的藥草", "沾到泥巴", "說教", "虛偽的奉承", "嚴寒凍僵的感覺", "未知"
     ],
-    role: ["玩家角色預設外觀", "隊友 NPC", "大廳 NPC：研究員", "大廳 NPC：孵蛋師", "大廳 NPC：商人", "星球原住民 NPC", "對手訓練家", "未知"]
+    role: ["玩家角色預設外觀", "隊友 NPC", "大廳 NPC：研究員", "大廳 NPC：孵蛋師", "大廳 NPC：商人", "星球原住民 NPC", "對手訓練家", "未知"],
+    role_poses: {
+      "玩家角色預設外觀": [
+        "單手握持收服道具準備投擲，身體側轉微屈，衣袍披風在風中飛揚，眼神堅毅自信",
+        "手按腰側收服道具，迎風昂首踏在岩石上，另一手遮額遠眺前方未知宙域",
+        "雙足分立沉穩戒備，右手自腰間利落抽出收服道具，周身帶有淡淡的蓄勢氣場",
+        "側身回眸自信微笑，單手比出大拇指，另一手將收服道具拋接把玩"
+      ],
+      "隊友 NPC": [
+        "背靠背掩護警戒姿態，單手前伸引導輔助法陣，神情專注沉穩支援隊友",
+        "半蹲於高處巨岩邊緣，一手握持收服道具，銳利目光搜尋周遭敵蹤",
+        "側身展開防護結界手勢，法袍斗篷翻卷，另一手緊握通訊法具回報戰況",
+        "躍步向前掩護後方，雙手握持導能長杖點地，腳下浮現防護光環"
+      ],
+      "大廳 NPC：研究員": [
+        "一手托著懸浮的全息數據晶片，另一手推著眼鏡低頭沉思記錄，學術氣息濃厚",
+        "專注凝視手中展開的多維星盤儀器，指尖撥動發光的刻度符文，身旁懸浮著掃描光束",
+        "側身展示手提箱中的發光宙獸樣本結晶，眼神充滿求知狂熱與自信解說姿態",
+        "一手抱著厚重的皮革研究筆記本，另一手握著魔導測量筆在空中記錄光軌"
+      ],
+      "大廳 NPC：孵蛋師": [
+        "雙手輕柔環抱著泛著溫潤微光的巨大宙獸蛋，低頭微笑傾聽蛋殼內的微弱心跳",
+        "半蹲於草甸上，一手拿著溫熱奶瓶，另一手溫柔撫摸依偎在身旁的小巧幼獸",
+        "腰間繫著保溫育幼袋，手持柔軟的靈絲毛刷，神情慈愛溫柔，周身散發安撫光暈",
+        "雙手托起初次破殼的幼生體宙獸，眼中充滿喜悅與驚嘆，微風吹動髮梢"
+      ],
+      "大廳 NPC：商人": [
+        "一手托著裝滿稀有宙晶的黃銅天平，另一手捻著金幣熱情招攬，面帶精明微笑",
+        "半掀開掛滿各式收服道具與藥劑的旅行披風內襯，神秘兮兮地展示珍稀商品",
+        "單手倚靠在堆滿封印箱的巨型馱獸鞍座旁，一手撥動算盤珠，悠閒抽著蒸氣菸斗",
+        "雙手攤開展示掌心璀璨耀眼的罕見宙獸核心，自信滿滿地進行價格交涉"
+      ],
+      "星球原住民 NPC": [
+        "雙手高舉圖騰戰矛，腳踏原始巨岩，昂首仰望蒼穹發出古老敬畏的祈禱長吟",
+        "壓低身形如獵豹般伏行於巨木枝椏上，單手反握骨刃，身上圖騰隨呼吸隱隱發光",
+        "盤坐於大地古陣中央，雙手貼地與星球地脈能量深度共鳴，自然之風環繞周身",
+        "迎風吹響巨大海螺/巨獸犄角號角，眼神野性深邃，披風上的獸齒羽毛隨風劇烈翻卷"
+      ],
+      "對手訓練家": [
+        "雙手插在長風衣口袋中側身佇立，下巴微抬，嘴角掛著狂妄挑釁的冷冽冷笑",
+        "單手高高拋起收服道具，眼神銳利如鷹隼直視鏡頭，周身散發強烈壓迫戰意",
+        "單手猛力甩動披肩斗篷，另一手指向前方宣告決鬥，身後氣流激盪呼嘯",
+        "背對畫面微微側頭，露出一半冷酷眼神，指尖扣在收服道具卡位蓄勢待發"
+      ],
+      "未知": [
+        "呈極具張力的冒險戰鬥架勢，右手握持收服道具，披風髮絲迎風翻卷，眼神冷靜銳利",
+        "立足於高處斷崖，側身迎風佇立，單手按住腰側道具，深邃凝視遠方天際"
+      ]
+    },
+    getRolePoses(role) {
+      if (!role) return this.role_poses["未知"];
+      return this.role_poses[role] || this.role_poses["未知"];
+    }
   },
 
   CREATURE: {

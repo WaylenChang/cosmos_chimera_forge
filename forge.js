@@ -67,7 +67,7 @@
   const state = {
     seed: "", platform: "chatgpt", taskId: TASKS[0].id, includeReview: false,
     character: {}, creature: {}, locks: {}, opts: {}, notes: "", subjectIds: {},
-    customOptions: {}, customValues: {}, activeTab: "forge",
+    customOptions: {}, customValues: {}, activeTab: "forge", currentRound: 0,
     preset: null // 已設計項目的 line_id；設定時宙獸概念改用 designed.js 的定案內容，不再隨機
   };
 
@@ -217,7 +217,12 @@
 
   const FIELDS = {
     character: [
-      { key: "role", label: "定位", options: () => uniform(CH.role.concat(getCustom("character.role"))), count: [{ n: 1, w: 1 }] },
+      { key: "role", label: "職業/定位", options: () => uniform(CH.role.concat(getCustom("character.role"))), count: [{ n: 1, w: 1 }] },
+      { key: "pose", label: "角色姿勢（職業子項目）", options: s => {
+        const curRole = s.character.role?.[0] || "玩家角色預設外觀";
+        const poses = CH.getRolePoses ? CH.getRolePoses(curRole) : (CH.role_poses?.[curRole] || CH.role_poses?.["未知"] || []);
+        return uniform(poses.concat(getCustom("character.pose")));
+      }, count: [{ n: 1, w: 1 }], dep: "role" },
       { key: "ethnicity", label: "人種", options: () => CH.ethnicity.map(e => ({ v: e.v, w: e.w, zh: e.zh })).concat(getCustom("character.ethnicity").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 1 }] },
       { key: "region", label: "文化地區", options: () => uniform(C.CULTURE_REGIONS.concat(getCustom("character.region"))), count: [{ n: 1, w: 1 }] },
       { key: "timeline", label: "文化時間線", options: () => C.TIMELINES.map(t => ({ v: t.v, zh: t.zh, w: 1 })).concat(getCustom("character.timeline").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
@@ -342,6 +347,7 @@
       res.cup_size = c.cup_size[0];
     }
     Object.assign(res, {
+      pose: c.pose?.[0] || "",
       outfit_palette: c.outfit_palette || [],
       hair_palette: c.hair_palette || [],
       eye_palette: c.eye_palette || [],
@@ -412,7 +418,11 @@
 
   function stamp() {
     const d = new Date(), p = n => String(n).padStart(2, "0");
-    return { day: d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()), hm: p(d.getHours()) + p(d.getMinutes()) };
+    return {
+      day: d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()),
+      hm: p(d.getHours()) + p(d.getMinutes()),
+      timestamp: d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" + p(d.getHours()) + p(d.getMinutes())
+    };
   }
 
   let lastBuild = null;
@@ -435,12 +445,220 @@
     let subjId = chosenPkg?.subjectId || (subj ? subjectId(subj) : t.id === "model-rig" ? "batch" : t.id === "capture-vessel" ? "vessels" : t.id === "culture-research" ? "region_" + o.region : "fx_" + o.element + "_" + o.shape);
 
     const ctx = {
-      header, taskId, task: t, opts: o, concept, notes: state.notes.trim(),
+      header, taskId, timestamp: s.day + "-" + s.hm, task: t, opts: o, concept, notes: state.notes.trim(),
       platform: state.platform, platformName: state.platform === "gemini" ? "Gemini Argon（任務模式）" : "ChatGPT（對話版）",
       subjectId: subjId
     };
-    lastBuild = { ctx, errors, text: errors.length ? "" : t.build(ctx) };
+    const rounds = (!errors.length && t.buildRounds) ? t.buildRounds(ctx) : null;
+    lastBuild = { ctx, errors, text: errors.length ? "" : t.build(ctx), rounds };
     return lastBuild;
+  }
+
+  // ==================== 時間戳格式包生成與對齊管理 ====================
+  const STAGED_LS_KEY = "cosmimera_staged_formats";
+
+  function getStagedFormats() {
+    try {
+      return JSON.parse(localStorage.getItem(STAGED_LS_KEY) || "{}");
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveStagedFormat(staged) {
+    const all = getStagedFormats();
+    all[staged.taskId] = staged;
+    if (staged.timestamp) {
+      all["ts:" + staged.timestamp + ":" + (staged.stage || "")] = staged;
+    }
+    try {
+      localStorage.setItem(STAGED_LS_KEY, JSON.stringify(all));
+    } catch (e) {
+      console.warn("Storage quota exceeded", e);
+    }
+  }
+
+  function generateAndStageFormats(b) {
+    if (!b || !b.ctx) return null;
+    const ctx = b.ctx;
+    const t = ctx.task;
+    const o = ctx.opts || {};
+    const curStage = o.stage || "adult";
+
+    // 1. 產生 concept.json
+    let conceptObj = null;
+    if (t.id === "creature-concept") {
+      const c = ctx.concept || {};
+      const sizes = (c.size_profile || "S→M→L→XL").split("→");
+      const stageIdx = ["juvenile", "adolescent", "adult", "overload"].indexOf(curStage);
+      const curSize = sizes[stageIdx >= 0 ? stageIdx : 2] || "L";
+      const lockedStage = c.locked?.stages?.find(s => s.stage === curStage);
+      const curHeight = lockedStage?.height_length || (stageIdx === 2 ? c.height_length : null) || (curSize === "XS" ? "0.20 m" : curSize === "S" ? "0.45 m" : curSize === "M" ? "1.20 m" : curSize === "L" ? "2.20 m" : "5.0 m");
+      const curWeight = lockedStage?.weight || (stageIdx === 2 ? c.weight : null) || (curSize === "XS" ? "0.15 kg" : curSize === "S" ? "3.5 kg" : curSize === "M" ? "35 kg" : curSize === "L" ? "220 kg" : "2500 kg");
+      const curFat = lockedStage?.body_fat || (stageIdx === 2 ? c.body_fat : null) || "15%";
+
+      const defaultZh = { juvenile: "幼角獸", adolescent: "曜脊獸", adult: "炎甲重龍", overload: "天炎煌角甲" };
+      const defaultEn = { juvenile: "Hornling", adolescent: "Pyrosaur", adult: "Flamedrake", overload: "Solarking" };
+
+      conceptObj = {
+        line_id: ctx.subjectId,
+        stage: curStage,
+        creature_id: lockedStage ? lockedStage.creature_id : ("cr_" + ctx.subjectId + "_" + curStage),
+        name_zh: lockedStage ? lockedStage.name_zh : (c.name_zh || defaultZh[curStage] || "宙獸"),
+        name_en: lockedStage ? lockedStage.name_en : (c.name_en || defaultEn[curStage] || "Creature"),
+        dex_zh: lockedStage?.dex_zh || c.dex_zh || "棲息於特定星域的神秘宙獸，具備獨特生理散熱與元素構造，性情沉穩且充滿神秘感。",
+        size_class: curSize,
+        height_length: curHeight,
+        weight: curWeight,
+        body_fat: curFat,
+        elements: c.elements || ["fire"],
+        appearance_palette: c.appearance_palette || [],
+        base_parents: c.base_parents || [],
+        bases: c.bases || [],
+        region: c.region || "未知",
+        timeline: c.timeline || "架空",
+        archetype: c.archetype || "自由原型",
+        role: c.role || "戰鬥",
+        temperament: c.temperament || "沉穩",
+        signature_move: lockedStage?.signature_move || {
+          move_id: "signature_move",
+          name_zh: "專屬招式",
+          name_en: "SignatureMove",
+          element: (c.elements || ["fire"])[0],
+          range_class: "melee",
+          shape: "front",
+          visual: "招式演出視覺效果"
+        },
+        ...(curStage === "overload" ? { overload_visual: lockedStage?.look || "超載能量外溢特徵" } : {})
+      };
+    } else if (t.id === "character-concept") {
+      const c = ctx.concept || {};
+      conceptObj = {
+        id: ctx.subjectId,
+        name_zh: c.name_zh || "角色",
+        name_en: c.name_en || "Character",
+        role: c.role,
+        gender: c.gender, age: c.age, height_cm: c.height, weight_kg: c.weight, body_fat_pct: c.body_fat,
+        ...(c.gender === "女" && c.cup_size && c.cup_size !== "未知" ? { cup_size: c.cup_size } : {}),
+        ethnicity: c.ethnicity, region: c.region, timeline: c.timeline,
+        outfit_palette: c.outfit_palette, hair_palette: c.hair_palette, eye_palette: c.eye_palette,
+        personality: c.personality, style: c.style, vessel: c.vessel?.zh || c.vessel,
+        biography: c.biography || "角色生平傳記。"
+      };
+    } else {
+      conceptObj = ctx.concept || {};
+    }
+
+    // 依色彩判定 2D AGC 立繪背景色（RGB 嚴格相同）
+    const isCr = (t.id === "creature-concept");
+    const bgInfo = C.determineAgcBgColor(conceptObj, !isCr);
+    conceptObj.recommended_bg_color = bgInfo.hex;
+    conceptObj.bg_color_rule = bgInfo.reason;
+
+    // 2. 產生 manifest.json
+    const filesList = isCr ? [
+      { path: `images/cr_${ctx.subjectId}_${curStage}_main.png`, kind: "main", level: "L1" },
+      { path: `images/cr_${ctx.subjectId}_${curStage}_front.png`, kind: "front", level: "L1" },
+      { path: `images/cr_${ctx.subjectId}_${curStage}_turnaround.png`, kind: "turnaround", level: "L1" }
+    ] : [
+      { path: `images/${ctx.subjectId}_main.png`, kind: "main", level: "L1" },
+      { path: `images/${ctx.subjectId}_front.png`, kind: "front", level: "L1" },
+      { path: `images/${ctx.subjectId}_turnaround.png`, kind: "turnaround", level: "L1" }
+    ];
+
+    const tsPart = ctx.timestamp || ctx.taskId.replace(/^[a-z]+-/, "").replace(/-(juvenile|adolescent|adult|overload)$/, "");
+    const manifestObj = {
+      spec: "cosmimera-art-task/1",
+      task_header: ctx.header,
+      task_id: ctx.taskId,
+      task_type: ctx.task.id,
+      subject_id: ctx.subjectId,
+      stage: isCr ? curStage : null,
+      produced_by: ctx.platformName,
+      timestamp: tsPart,
+      recommended_bg_color: bgInfo.hex,
+      bg_color_rule: bgInfo.reason,
+      files: filesList,
+      timestamp: tsPart,
+      files: filesList,
+      missing: [],
+      notes: ctx.notes || ""
+    };
+
+    const staged = {
+      taskId: ctx.taskId,
+      timestamp: tsPart,
+      stage: manifestObj.stage,
+      taskType: ctx.task.id,
+      subjectId: ctx.subjectId,
+      manifest: manifestObj,
+      concept: conceptObj,
+      prompt: b.text,
+      createdAt: Date.now()
+    };
+
+    saveStagedFormat(staged);
+    return staged;
+  }
+
+  function findMatchingStagedFormat(filename, internalPaths = []) {
+    const all = getStagedFormats();
+    const keys = Object.keys(all).filter(k => !k.startsWith("ts:"));
+    if (!keys.length) return null;
+
+    const cleanName = (filename || "").replace(/\.zip$/i, "").toLowerCase();
+
+    // 1. Exact taskId match
+    for (const k of keys) {
+      if (cleanName === k.toLowerCase()) return all[k];
+    }
+
+    // 2. filename contains taskId or vice versa
+    for (const k of keys) {
+      if (cleanName.includes(k.toLowerCase()) || k.toLowerCase().includes(cleanName)) return all[k];
+    }
+
+    // 3. Match by internal directory paths
+    for (const p of internalPaths) {
+      const topPart = p.split("/")[0].toLowerCase();
+      for (const k of keys) {
+        if (topPart === k.toLowerCase()) return all[k];
+      }
+    }
+
+    // 4. Timestamp & stage match
+    for (const k of keys) {
+      const staged = all[k];
+      if (staged.timestamp && (cleanName.includes(staged.timestamp.toLowerCase()) || internalPaths.some(p => p.toLowerCase().includes(staged.timestamp.toLowerCase())))) {
+        if (!staged.stage || cleanName.includes(staged.stage) || internalPaths.some(p => p.toLowerCase().includes(staged.stage))) {
+          return staged;
+        }
+      }
+    }
+
+    // 5. Stage & subject match from image filenames (e.g. images/cr_line_7f3a_adult_main.png)
+    for (const p of internalPaths) {
+      const m = p.match(/cr_([a-zA-Z0-9_]+)_(juvenile|adolescent|adult|overload)/i);
+      if (m) {
+        const [, subj, stg] = m;
+        for (const k of keys) {
+          const staged = all[k];
+          if (staged.stage === stg.toLowerCase() && (staged.subjectId.includes(subj) || subj.includes(staged.subjectId))) {
+            return staged;
+          }
+        }
+      }
+    }
+
+    // 6. Stage match with most recent staged format of that stage
+    const stageMatch = cleanName.match(/(juvenile|adolescent|adult|overload)/i);
+    if (stageMatch) {
+      const stg = stageMatch[1].toLowerCase();
+      const sorted = keys.map(k => all[k]).filter(s => s.stage === stg).sort((a,b) => b.createdAt - a.createdAt);
+      if (sorted.length) return sorted[0];
+    }
+
+    return null;
   }
 
   // ---- DOM 輔助 ----
@@ -475,7 +693,7 @@
     TASKS.forEach(t => {
       box.append(el("button", {
         class: "task" + (t.id === state.taskId ? " on" : ""), type: "button",
-        onclick: () => { state.taskId = t.id; renderAll(); }
+        onclick: () => { state.taskId = t.id; state.currentRound = 0; renderAll(); }
       }, el("span", { class: "tname" }, t.zh), el("span", { class: "tmeta" }, t.id + " · 建議 " + (t.platform === "gemini" ? "Gemini" : "ChatGPT"))));
     });
     renderDesigned();
@@ -484,6 +702,7 @@
   function useDesigned(lineId, taskId) {
     state.preset = lineId;
     state.taskId = taskId;
+    state.currentRound = 0;
     const o = state.opts[taskId] || (state.opts[taskId] = {});
     if (taskId === "model-rig") { o.scope = "single"; o.subject = "creature"; o.source_pack = ""; }
     renderAll();
@@ -597,6 +816,16 @@
         el("div", {}, el("b", {}, s.name_zh + " " + s.name_en), " ", el("code", {}, s.creature_id),
           el("div", { class: "muted" }, s.look), el("div", { class: "muted" }, "招式 " + s.signature_move.name_zh + "（" + s.signature_move.move_id + "）")))));
       box.append(el("p", { class: "muted" }, "特性：" + L.trait.name_zh + "（" + L.trait.trait_id + "）· 原型：" + d.concept.archetype + "（" + d.concept.region + "）· 超載：" + L.overload));
+      const bgInfo = C.determineAgcBgColor(d.concept, false);
+      box.append(el("div", { class: "field", style: "border-top:1px dashed var(--line);margin-top:6px;padding-top:6px" },
+        el("label", {}, "2D AGC 立繪背景"),
+        el("div", { style: "display:flex;align-items:center;gap:8px" },
+          el("span", { style: `width:20px;height:20px;border-radius:4px;border:1px solid var(--line);background:${bgInfo.hex};display:inline-block;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.25)` }),
+          el("code", { style: "font-weight:bold" }, bgInfo.hex),
+          el("span", { class: "muted", style: "font-size:11.5px" }, `(R=G=B=${bgInfo.rgb[0]} · ${bgInfo.toneLabel})`)
+        ),
+        el("span", { class: "muted", style: "font-size:11px", title: bgInfo.reason }, "RGB等值")
+      ));
       return;
     }
     box.append(el("div", { class: "subhead" },
@@ -611,11 +840,55 @@
       const a = CR.archetypes.find(x => x.name === state.creature.archetype?.[0]);
       if (a) box.append(el("p", { class: "muted" }, "象徵意象：" + a.motifs + (a.meaning ? " · 精神意義：" + a.meaning : "")));
     }
+    const curConcept = kind === "character" ? characterConcept() : creatureConcept();
+    const bgInfo = C.determineAgcBgColor(curConcept, kind === "character");
+    box.append(
+      el("div", { class: "field", style: "border-top:1px dashed var(--line);margin-top:6px;padding-top:6px" },
+        el("label", {}, "2D AGC 立繪背景"),
+        el("div", { style: "display:flex;align-items:center;gap:8px;flex-wrap:wrap" },
+          el("span", { style: `width:20px;height:20px;border-radius:4px;border:1px solid var(--line);background:${bgInfo.hex};display:inline-block;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.25)` }),
+          el("code", { style: "font-weight:bold" }, bgInfo.hex),
+          el("span", { class: "muted", style: "font-size:11.5px" }, `(R=G=B=${bgInfo.rgb[0]} · ${bgInfo.toneLabel})`)
+        ),
+        el("span", { class: "muted", style: "font-size:11px", title: bgInfo.reason }, "RGB等值")
+      )
+    );
+  }
+
+  function isCreatureStageTask(t, o) {
+    if (!t) t = task();
+    if (!o) o = taskOpts(t);
+    return t.id === "creature-concept" || (t.id === "model-rig" && o.subject === "creature" && o.scope !== "batch");
+  }
+
+  function renderForgeStageTabs() {
+    const tabsBox = $("#forgeStageTabs");
+    if (!tabsBox) return;
+    const t = task(), o = taskOpts(t);
+    if (!isCreatureStageTask(t, o)) {
+      tabsBox.style.display = "none";
+      return;
+    }
+    tabsBox.style.display = "inline-flex";
+    tabsBox.replaceChildren();
+    STAGE_KEYS.forEach(stKey => {
+      const isCur = (o.stage || "adult") === stKey;
+      const btn = el("button", {
+        class: "segb" + (isCur ? " on" : ""),
+        type: "button",
+        title: `切換型態至 ${STAGE_ZH[stKey]} (${stKey})`,
+        onclick: () => {
+          o.stage = stKey;
+          renderAll();
+        }
+      }, STAGE_ZH[stKey]);
+      tabsBox.append(btn);
+    });
   }
 
   function renderOptions() {
     const t = task(), o = taskOpts(t), box = $("#options"); box.replaceChildren();
-    t.options.filter(d => !d.when || d.when(o)).forEach(d => {
+    t.options.filter(d => (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
       if (t.id === "model-rig" && d.key === "source_pack") {
@@ -726,10 +999,52 @@
 
   function renderOutput() {
     const b = build(), t = b.ctx.task;
-    $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : b.text;
+    const roundBar = $("#roundBar");
+    const roundTabs = $("#roundTabs");
+    const roundCopyGroup = $("#roundCopyGroup");
+
+    let displayedText = b.text;
+
+    if (b.rounds && b.rounds.length) {
+      if (roundBar) roundBar.style.display = "flex";
+      if (roundCopyGroup) roundCopyGroup.style.display = "inline-flex";
+
+      if (roundTabs) {
+        roundTabs.replaceChildren();
+        const tabDefs = [
+          { r: 0, zh: "🎯 完整全流程" },
+          { r: 1, zh: "1️⃣ 正面基準圖 (1:1)" },
+          { r: 2, zh: "2️⃣ T-pose 三視圖 (16:9)" },
+          { r: 3, zh: "3️⃣ 動態主立繪 (場景強化)" }
+        ];
+        tabDefs.forEach(def => {
+          const btn = el("button", {
+            class: "segb" + (state.currentRound === def.r ? " on" : ""),
+            type: "button",
+            onclick: () => {
+              state.currentRound = def.r;
+              renderOutput();
+            }
+          }, def.zh);
+          roundTabs.append(btn);
+        });
+      }
+
+      if (state.currentRound === 1 && b.rounds[0]) displayedText = b.rounds[0].prompt;
+      else if (state.currentRound === 2 && b.rounds[1]) displayedText = b.rounds[1].prompt;
+      else if (state.currentRound === 3 && b.rounds[2]) displayedText = b.rounds[2].prompt;
+      else displayedText = b.text;
+    } else {
+      if (roundBar) roundBar.style.display = "none";
+      if (roundCopyGroup) roundCopyGroup.style.display = "none";
+      state.currentRound = 0;
+      displayedText = b.text;
+    }
+
+    $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : displayedText;
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
-    $("#chars").textContent = b.text.length.toLocaleString() + " 字元";
+    $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const root = state.root || DEFAULT_ROOT;
     const dest = root + "\\" + t.drop.replace(/\//g, "\\");
     const cmd = 'Expand-Archive -Path "$HOME\\Downloads\\' + b.ctx.taskId + '.zip" -DestinationPath "' + dest + '\\" -Force';
@@ -776,7 +1091,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderOutput(); renderHistory();
+    renderTasks(); renderConcepts(); renderOptions(); renderForgeStageTabs(); renderOutput(); renderHistory();
     save();
   }
 
@@ -972,7 +1287,31 @@
         try { rawPrompt = new TextDecoder().decode(files[path]); } catch (e) {}
       }
     }
-    const taskId = manifestData?.task_id || file.name.replace(/\.zip$/i, "");
+    let alignedStaged = null;
+    if (!manifestData || !conceptData) {
+      alignedStaged = findMatchingStagedFormat(file.name, Object.keys(files));
+      if (alignedStaged) {
+        if (!manifestData) manifestData = alignedStaged.manifest;
+        if (!conceptData) conceptData = alignedStaged.concept;
+        if (!rawPrompt) rawPrompt = alignedStaged.prompt;
+
+        const tid = alignedStaged.taskId;
+        const targetPrefix = prefix || (tid + "/");
+
+        // 自動將各種格式注入 files 一起打包
+        if (!files[targetPrefix + "manifest.json"]) {
+          files[targetPrefix + "manifest.json"] = new TextEncoder().encode(JSON.stringify(manifestData, null, 2));
+        }
+        if (!files[targetPrefix + "concept.json"]) {
+          files[targetPrefix + "concept.json"] = new TextEncoder().encode(JSON.stringify(conceptData, null, 2));
+        }
+        if (!files[targetPrefix + tid + ".prompt.md"]) {
+          files[targetPrefix + tid + ".prompt.md"] = new TextEncoder().encode(rawPrompt);
+        }
+      }
+    }
+
+    const taskId = manifestData?.task_id || alignedStaged?.taskId || file.name.replace(/\.zip$/i, "");
     const images = [];
     for (const path in files) {
       if (/\.(png|jpe?g|webp)$/i.test(path)) {
@@ -984,7 +1323,7 @@
     const pkg = {
       id: taskId,
       type: manifestData?.task_type || (taskId.startsWith("chr") ? "character-concept" : taskId.startsWith("cr") ? "creature-concept" : taskId.startsWith("mdl") ? "model-rig" : "unknown"),
-      subjectId: manifestData?.subject_id || "",
+      subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
       manifest: manifestData,
       concept: conceptData,
       rawPrompt,
@@ -993,6 +1332,8 @@
       fileCount: Object.keys(files).length,
       rawZip: file,
       isZip: true,
+      aligned: !!alignedStaged,
+      stagedTaskId: alignedStaged?.taskId || null,
       status: manifestData?.missing?.length ? "missing" : "pending"
     };
     addPackage(pkg);
@@ -1022,7 +1363,11 @@
       } catch (e) {
         console.error("renderReviewView failed for package " + pkg.id, e);
       }
-      toast("已載入任務包：" + pkg.id);
+      if (pkg.aligned) {
+        toast("已載入並自動對齊時間戳格式 (" + pkg.stagedTaskId + ")！已整合打包各格式檔");
+      } else {
+        toast("已載入任務包：" + pkg.id);
+      }
     }
 
   function getBackupTimestamp() {
@@ -1433,15 +1778,27 @@
         }
       }
 
+      let alignedStaged = null;
+      if (!manifestData || !conceptData) {
+        alignedStaged = findMatchingStagedFormat(taskId, entries.map(e => e.subPath || e.file.name));
+        if (alignedStaged) {
+          if (!manifestData) manifestData = alignedStaged.manifest;
+          if (!conceptData) conceptData = alignedStaged.concept;
+          if (!rawPrompt) rawPrompt = alignedStaged.prompt;
+        }
+      }
+
       const pkg = {
         id: taskId,
         type: manifestData?.task_type || (taskId.startsWith("chr") ? "character-concept" : taskId.startsWith("cr") ? "creature-concept" : taskId.startsWith("mdl") ? "model-rig" : "unknown"),
-        subjectId: manifestData?.subject_id || "",
+        subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
         manifest: manifestData,
         concept: conceptData,
         rawPrompt,
         images,
         fileCount,
+        aligned: !!alignedStaged,
+        stagedTaskId: alignedStaged?.taskId || null,
         status: manifestData?.missing?.length ? "missing" : "pending"
       };
       addPackage(pkg);
@@ -1482,16 +1839,48 @@
       }
     } catch (e) {}
 
+    let alignedStaged = null;
+    if (!manifestData || !conceptData) {
+      alignedStaged = findMatchingStagedFormat(taskId, images.map(i => i.path));
+      if (alignedStaged) {
+        if (!manifestData) manifestData = alignedStaged.manifest;
+        if (!conceptData) conceptData = alignedStaged.concept;
+        if (!rawPrompt) rawPrompt = alignedStaged.prompt;
+        try {
+          if (manifestData) {
+            const mfH = await dirHandle.getFileHandle("manifest.json", { create: true });
+            const w = await mfH.createWritable();
+            await w.write(JSON.stringify(manifestData, null, 2));
+            await w.close();
+          }
+          if (conceptData) {
+            const cpH = await dirHandle.getFileHandle("concept.json", { create: true });
+            const w = await cpH.createWritable();
+            await w.write(JSON.stringify(conceptData, null, 2));
+            await w.close();
+          }
+          if (rawPrompt) {
+            const prH = await dirHandle.getFileHandle(alignedStaged.taskId + ".prompt.md", { create: true });
+            const w = await prH.createWritable();
+            await w.write(rawPrompt);
+            await w.close();
+          }
+        } catch (e) {}
+      }
+    }
+
     const pkg = {
       id: taskId,
       type: manifestData?.task_type || (taskId.startsWith("chr") ? "character-concept" : taskId.startsWith("cr") ? "creature-concept" : taskId.startsWith("mdl") ? "model-rig" : "unknown"),
-      subjectId: manifestData?.subject_id || "",
+      subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
       manifest: manifestData,
       concept: conceptData,
       rawPrompt,
       images,
       fileCount,
       dirHandle,
+      aligned: !!alignedStaged,
+      stagedTaskId: alignedStaged?.taskId || null,
       status: manifestData?.missing?.length ? "missing" : "pending"
     };
     addPackage(pkg);
@@ -1857,7 +2246,7 @@
 
     $("#stageEmpty").style.display = "none";
     $("#stageTag").style.display = "flex";
-    $("#stId").textContent = pkg.id + (pkg.stage ? ` · ${STAGE_ZH[pkg.stage] || pkg.stage}` : "");
+    $("#stId").textContent = pkg.id + (pkg.stage ? ` · ${STAGE_ZH[pkg.stage] || pkg.stage}` : "") + (pkg.aligned ? " [🏷️ 自動對齊格式]" : "");
     const badge = $("#stBadge");
     badge.className = "badge " + pkg.status;
     badge.textContent = pkg.status === "ok" ? "已通過" : pkg.status === "reject" ? "需修改" : pkg.status === "missing" ? "有缺檔" : "待審核";
@@ -2041,6 +2430,7 @@
               el("span", { class: "prompt-k" }, "性格特質"), el("span", { class: "prompt-v" }, formatArray(c.personality)),
               el("span", { class: "prompt-k" }, "興趣 / 喜厭"), el("span", { class: "prompt-v" }, "喜好：" + formatArray(c.likes) + "；討厭：" + formatArray(c.dislikes)),
               el("span", { class: "prompt-k" }, "收服道具"), el("span", { class: "prompt-v" }, (c.vessel_zh || c.vessel || "符籙卡片") + " (" + (c.vessel || "talisman_card") + ")"),
+              el("span", { class: "prompt-k" }, "AGC 立繪背景色"), el("span", { class: "prompt-v" }, (() => { const bg = C.determineAgcBgColor(c, true); return [el("span", { style: `display:inline-block;width:12px;height:12px;background:${bg.hex};border-radius:2px;vertical-align:middle;margin-right:5px;border:1px solid #555` }), `${bg.hex} (${bg.toneLabel}, R=G=B=${bg.rgb[0]})`]; })()),
               ...(c.biography ? [el("span", { class: "prompt-k" }, "角色生平"), el("span", { class: "prompt-v" }, c.biography)] : [])
             )
           )
@@ -2061,6 +2451,7 @@
               el("span", { class: "prompt-k" }, "外觀配色"), el("span", { class: "prompt-v" }, formatArray(c.appearance_palette)),
               el("span", { class: "prompt-k" }, "文化時間線"), el("span", { class: "prompt-v" }, c.timeline || "青銅神話/古典英雄時代"),
               el("span", { class: "prompt-k" }, "文化原型"), el("span", { class: "prompt-v" }, (c.archetype?.name || c.archetype || "自由原型") + " (" + (c.region || "東亞") + ") · " + (c.motifs || "符號意象")),
+              el("span", { class: "prompt-k" }, "AGC 立繪背景色"), el("span", { class: "prompt-v" }, (() => { const bg = C.determineAgcBgColor(c, false); return [el("span", { style: `display:inline-block;width:12px;height:12px;background:${bg.hex};border-radius:2px;vertical-align:middle;margin-right:5px;border:1px solid #555` }), `${bg.hex} (${bg.toneLabel}, R=G=B=${bg.rgb[0]})`]; })()),
               el("span", { class: "prompt-k" }, "戰鬥 / 性情"), el("span", { class: "prompt-v" }, (c.role || "前排肉盾") + " · " + (c.temperament || "好鬥凶悍"))
             )
           ),
@@ -2195,6 +2586,8 @@
         if (c.timeline) table.append(el("tr", {}, el("td", {}, "文化時間線"), el("td", { class: "comp-hl" }, String(c.timeline)), el("td", {}, "歷史與未來想像")));
         if (c.region) table.append(el("tr", {}, el("td", {}, "文化地區"), el("td", { class: "comp-hl" }, String(c.region)), el("td", {}, "跨洲與星際")));
         if (c.ethnicity) table.append(el("tr", {}, el("td", {}, "人種表型"), el("td", { class: "comp-hl" }, String(c.ethnicity)), el("td", {}, "獨立生理特徵")));
+        const bg = C.determineAgcBgColor(c, pkg.type === "character-concept" || pkg.id.startsWith("chr"));
+        table.append(el("tr", {}, el("td", {}, "AGC 規範背景色"), el("td", { class: "comp-hl" }, el("span", { style: `display:inline-block;width:12px;height:12px;background:${bg.hex};border-radius:2px;vertical-align:middle;margin-right:5px;border:1px solid #555` }), `${bg.hex} (R=G=B=${bg.rgb[0]})`), el("td", {}, "RGB三通道均等 · 剪影防融")));
       }
       box.append(table);
 
@@ -2400,7 +2793,45 @@
     $("#reroll").addEventListener("click", () => reseed(newSeed(), true));
     $("#seed").addEventListener("change", e => reseed(e.target.value, true));
     $("#notes").addEventListener("input", e => { state.notes = e.target.value; renderOutput(); save(); });
-    $("#copy").addEventListener("click", () => { copyText($("#prompt").value, "已複製 prompt"); record(); });
+    $("#copy").addEventListener("click", () => {
+      const b = build();
+      if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
+      const staged = generateAndStageFormats(b);
+      copyText($("#prompt").value, `已複製 Prompt！同時產生時間戳格式包 (${staged.taskId})，供審查台自動對齊封裝`);
+      record();
+    });
+
+    // 多輪次獨立複製按鈕
+    $("#btnCopyR1")?.addEventListener("click", () => {
+      const b = build();
+      if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
+      if (!b.rounds || !b.rounds[0]) return;
+      state.currentRound = 1;
+      renderOutput();
+      const staged = generateAndStageFormats(b);
+      copyText(b.rounds[0].prompt, `已複製第 1 輪 (正面圖) Prompt！已產生時間戳對齊包 (${staged.taskId})`);
+      record();
+    });
+
+    $("#btnCopyR2")?.addEventListener("click", () => {
+      const b = build();
+      if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
+      if (!b.rounds || !b.rounds[1]) return;
+      state.currentRound = 2;
+      renderOutput();
+      copyText(b.rounds[1].prompt, `已複製第 2 輪 (三視圖) Prompt！請貼入同對話接續生成`);
+      record();
+    });
+
+    $("#btnCopyR3")?.addEventListener("click", () => {
+      const b = build();
+      if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
+      if (!b.rounds || !b.rounds[2]) return;
+      state.currentRound = 3;
+      renderOutput();
+      copyText(b.rounds[2].prompt, `已複製第 3 輪 (主立繪) Prompt！請貼入同對話接續生成`);
+      record();
+    });
     $("#download").addEventListener("click", () => { download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
     $("#export").addEventListener("click", () => {
       const b = lastBuild; if (!b.ctx.concept) { toast("此任務沒有概念"); return; }
@@ -2495,6 +2926,19 @@
       const root = state.root || DEFAULT_ROOT;
       const cmd = `Expand-Archive -Path "$HOME\\Downloads\\${pkg.id}.zip" -DestinationPath "${root}\\Art\\_incoming\\" -Force`;
       copyText(cmd, "已複製解壓指令！可在 PowerShell 直接貼上執行一鍵解壓");
+    });
+    $("#btnExportAlignedZip")?.addEventListener("click", () => {
+      const pkg = getActivePkg();
+      if (!pkg) { toast("請先選取任務包"); return; }
+      if (!pkg.rawFiles || !Object.keys(pkg.rawFiles).length) {
+        toast("此任務包沒有可打包的檔案");
+        return;
+      }
+      const blob = createZipBlob(pkg.rawFiles);
+      const a = el("a", { href: URL.createObjectURL(blob), download: pkg.id + ".zip" });
+      document.body.append(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      toast("已打包下載完整 Zip（含立繪圖檔、manifest.json、concept.json 與 prompt.md）");
     });
     $("#btnToImg3d")?.addEventListener("click", () => {
       const pkg = getActivePkg();
