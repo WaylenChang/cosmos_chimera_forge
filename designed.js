@@ -242,12 +242,12 @@ window.COSMI_DESIGNED = {
             "body_fat": "20%"
           },
           "adolescent": {
-            "height_length": "1.45 m",
+            "height_length": "1.4 m",
             "weight": "52 kg",
             "body_fat": "19%"
           },
           "adult": {
-            "height_length": "2.6 m",
+            "height_length": "2.5 m",
             "weight": "420 kg",
             "body_fat": "18%"
           },
@@ -257,7 +257,7 @@ window.COSMI_DESIGNED = {
             "body_fat": "15%"
           }
         },
-        "height_length": "2.6 m",
+        "height_length": "2.5 m",
         "weight": "420 kg",
         "body_fat": "18%",
         "formula": "shadow（影） + ice（冰，成年起） × 灰狼 + 極光電離層 + 仿生機獸·光學迷彩合金黑豹 × 阿瑪洛克·極夜霜狼",
@@ -298,7 +298,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Niverren",
               "naming_note": "夜痕成長為伏行孤狼。",
               "size_class": "M",
-              "height_length": "1.45 m",
+              "height_length": "1.4 m",
               "weight": "52 kg",
               "body_fat": "19%",
               "look": "孤狼 × 極夜冰原的星光斑紋；墨藍孤狼身上的星斑隨呼吸明滅，向前疾衝時拖出影子殘像。",
@@ -325,7 +325,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Nivervast",
               "naming_note": "霜原巨狼延續夜痕意象。",
               "size_class": "L",
-              "height_length": "2.6 m",
+              "height_length": "2.5 m",
               "weight": "420 kg",
               "body_fat": "18%",
               "look": "極夜巨狼 × 震地長尾；身形如雪丘的巨灰狼拖著震地長尾，繞背後貼地向前疾衝。",
@@ -422,7 +422,7 @@ window.COSMI_DESIGNED = {
         "meaning": "馳騁雷雲草原、衝鋒在先驅散陰霾的金色戰魂",
         "motifs": "黃金雙翼駿馬、彎月額角、疾風長鬃、無垠綠草原",
         "sensitivity": "ok",
-        "role": "衝鋒、群體壓制：近中距突進與範圍放電",
+        "role": "中距衝鋒：沿直線向前突進，以雷屬性攻擊命中路徑上的敵人。",
         "temperament": "熱血莽撞、愛衝在最前面",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -432,12 +432,12 @@ window.COSMI_DESIGNED = {
             "body_fat": "16%"
           },
           "adolescent": {
-            "height_length": "1.50 m",
+            "height_length": "1.4 m",
             "weight": "62 kg",
             "body_fat": "15%"
           },
           "adult": {
-            "height_length": "2.7 m",
+            "height_length": "2.5 m",
             "weight": "540 kg",
             "body_fat": "14%"
           },
@@ -447,7 +447,7 @@ window.COSMI_DESIGNED = {
             "body_fat": "12%"
           }
         },
-        "height_length": "2.7 m",
+        "height_length": "2.5 m",
         "weight": "540 kg",
         "body_fat": "14%",
         "formula": "thunder（雷） + wind（風，少年起） × 駿馬 + 黃金飛馬天馬 + 賽博/電子終端·超導電磁軌道發射器 × 圖爾帕·金翼神駒",
@@ -485,10 +485,10 @@ window.COSMI_DESIGNED = {
               "stage": "adolescent",
               "creature_id": "star_storm_colt",
               "name_zh": "星蹄騏",
-              "name_en": "Voltraven",
+              "name_en": "Voltrmane",
               "naming_note": "星蹄長成逐風的駿馬。",
               "size_class": "M",
-              "height_length": "1.50 m",
+              "height_length": "1.4 m",
               "weight": "62 kg",
               "body_fat": "15%",
               "look": "駿馬 × 疾風長鬃化為電弧；長鬃是持續跳動的電弧，肩胛冒出未展開的金色翼芽",
@@ -515,7 +515,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltrazent",
               "naming_note": "星蹄展翼，奔馳如天驥。",
               "size_class": "L",
-              "height_length": "2.7 m",
+              "height_length": "2.5 m",
               "weight": "540 kg",
               "body_fat": "14%",
               "look": "金翼天馬 × 彎月額角與雷雲；黃金雙翼展開時翼緣串著星點電光，額上彎月角導引落雷，衝鋒時拖出雷鳴長軌",

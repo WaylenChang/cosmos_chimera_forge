@@ -53,11 +53,11 @@ LINES = {
         "archetype_name": "阿瑪洛克·極夜霜狼",
         "archetype_type": "P5-02 考據庫·神話象徵",
         "archetype_meaning": "在終古極夜中孤行伏襲、守望冰原星光的堅韌霜魂",
-        "adult_dims": {"height_length": "2.6 m", "weight": "420 kg", "body_fat": "18%"},
+        "adult_dims": {"height_length": "2.5 m", "weight": "420 kg", "body_fat": "18%"},
         "stage_dims": {
             "juvenile": {"height_length": "0.55 m", "weight": "4.2 kg", "body_fat": "20%"},
-            "adolescent": {"height_length": "1.45 m", "weight": "52 kg", "body_fat": "19%"},
-            "adult": {"height_length": "2.6 m", "weight": "420 kg", "body_fat": "18%"},
+            "adolescent": {"height_length": "1.4 m", "weight": "52 kg", "body_fat": "19%"},
+            "adult": {"height_length": "2.5 m", "weight": "420 kg", "body_fat": "18%"},
             "overload": {"height_length": "5.6 m", "weight": "3800 kg", "body_fat": "15%"}
         }
     },
@@ -75,11 +75,11 @@ LINES = {
         "archetype_name": "圖爾帕·金翼神駒",
         "archetype_type": "P5-02 考據庫·神話象徵",
         "archetype_meaning": "馳騁雷雲草原、衝鋒在先驅散陰霾的金色戰魂",
-        "adult_dims": {"height_length": "2.7 m", "weight": "540 kg", "body_fat": "14%"},
+        "adult_dims": {"height_length": "2.5 m", "weight": "540 kg", "body_fat": "14%"},
         "stage_dims": {
             "juvenile": {"height_length": "0.58 m", "weight": "4.8 kg", "body_fat": "16%"},
-            "adolescent": {"height_length": "1.50 m", "weight": "62 kg", "body_fat": "15%"},
-            "adult": {"height_length": "2.7 m", "weight": "540 kg", "body_fat": "14%"},
+            "adolescent": {"height_length": "1.4 m", "weight": "62 kg", "body_fat": "15%"},
+            "adult": {"height_length": "2.5 m", "weight": "540 kg", "body_fat": "14%"},
             "overload": {"height_length": "6.2 m", "weight": "4600 kg", "body_fat": "12%"}
         }
     },
