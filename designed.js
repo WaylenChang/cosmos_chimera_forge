@@ -286,9 +286,9 @@ window.COSMI_DESIGNED = {
                 "shape": "front",
                 "movement": "none",
                 "naming_note": "夜色中的迅捷爪擊。",
-                "desc_zh": "揮出裹著暗影的爪擊，傷害身前近處的敵人並暫時降低其影抗性。",
-                "desc_en": "Swipe with a shadow-cloaked paw, damaging enemies close in front and briefly lowering their shadow resistance.",
-                "visual": "揮出裹著暗影的爪擊，傷害身前近處的敵人並暫時降低其影抗性。"
+                "desc_zh": "以裹著暗影的爪子向前直擊，傷害身前近處的敵人並暫時降低其影抗性。",
+                "desc_en": "Strike straight forward with a shadow-cloaked paw, damaging enemies close in front and briefly lowering their shadow resistance.",
+                "visual": "以裹著暗影的爪子向前直擊，傷害身前近處的敵人並暫時降低其影抗性。"
               }
             },
             {
@@ -341,7 +341,7 @@ window.COSMI_DESIGNED = {
                 "movement": "dash",
                 "naming_note": "孤行獵手的暗影伏擊。",
                 "desc_zh": "化作疾掠的暗影向前突襲，傷害路徑上的敵人，並暫時降低其影抗性。",
-                "desc_en": "Rush forward in a sweeping shadow, damaging enemies along the path and temporarily lowering their shadow resistance.",
+                "desc_en": "Rush straight forward as a darting shadow, damaging enemies along the path and temporarily lowering their shadow resistance.",
                 "visual": "化作疾掠的暗影向前突襲，傷害路徑上的敵人，並暫時降低其影抗性。"
               }
             },
