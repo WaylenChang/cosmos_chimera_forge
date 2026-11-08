@@ -279,8 +279,8 @@ window.COSMI_DESIGNED = {
               "dex_en": "A light glimmers at its tail tip, while its shadow stretches larger than its small body. It circles behind an opponent, strikes with its paw, and stays close to fight.",
               "signature_move": {
                 "move_id": "shadow_nightpaw_swipe",
-                "name_zh": "夜爪掠",
-                "name_en": "Nightpaw Swipe",
+                "name_zh": "夜爪擊",
+                "name_en": "Nightpaw Strike",
                 "element": "shadow",
                 "range_class": "melee",
                 "shape": "front",
