@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.1.0",
+  version: "2.2.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -1065,10 +1065,10 @@ window.COSMI_CATALOG = {
   // 體型級距設定：加入 XS（手掌/昆蟲級），上限至暴龍 (14.0m, 12000kg)
   SIZE_CLASSES: {
     XS: { zh: "XS（< 0.3 m·手掌/昆蟲級）", tris: "3–5k",   tex: 512,  len_min: 0.05, len_max: 0.30, wt_min: 0.01, wt_max: 0.60, fat_min: 5,  fat_max: 22 },
-    S:  { zh: "S（0.3–0.7 m）",           tris: "5–8k",   tex: 1024, len_min: 0.30, len_max: 0.70, wt_min: 0.60, wt_max: 6.0,  fat_min: 6,  fat_max: 24 },
-    M:  { zh: "M（0.7–1.6 m）",           tris: "8–15k",  tex: 1024, len_min: 0.70, len_max: 1.60, wt_min: 6.0,  wt_max: 75.0, fat_min: 6,  fat_max: 26 },
-    L:  { zh: "L（1.6–3.2 m）",           tris: "15–25k", tex: 2048, len_min: 1.60, len_max: 3.20, wt_min: 75.0, wt_max: 650,  fat_min: 8,  fat_max: 28 },
-    XL: { zh: "XL（3.2–14.0 m·暴龍/巨獸級）", tris: "25–35k", tex: 2048, len_min: 3.20, len_max: 14.0, wt_min: 650, wt_max: 12000, fat_min: 10, fat_max: 32 }
+    S:  { zh: "S（0.3–0.6 m）",           tris: "5–8k",   tex: 1024, len_min: 0.30, len_max: 0.60, wt_min: 0.60, wt_max: 6.0,  fat_min: 6,  fat_max: 24 },
+    M:  { zh: "M（0.6–1.4 m）",           tris: "8–15k",  tex: 1024, len_min: 0.60, len_max: 1.40, wt_min: 6.0,  wt_max: 75.0, fat_min: 6,  fat_max: 26 },
+    L:  { zh: "L（1.4–2.5 m）",           tris: "15–25k", tex: 2048, len_min: 1.40, len_max: 2.50, wt_min: 75.0, wt_max: 650,  fat_min: 8,  fat_max: 28 },
+    XL: { zh: "XL（2.5–14.0 m·暴龍/巨獸級）", tris: "25–35k", tex: 2048, len_min: 2.50, len_max: 14.0, wt_min: 650, wt_max: 12000, fat_min: 10, fat_max: 32 }
   },
   STAGES: [
     { v: "juvenile", zh: "幼年" }, { v: "adolescent", zh: "少年" },
