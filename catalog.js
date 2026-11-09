@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.4.0",
+  version: "2.5.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -1316,6 +1316,7 @@ window.COSMI_CATALOG = {
   ACTIONS: {
     character: [
       { id: "idle", zh: "待機", f: 60, loop: true },
+      { id: "idle_long", zh: "長時間靜止週期動作（深呼吸/極微幅肢體微動/定力循環）", f: 120, loop: true },
       { id: "walk", zh: "走路", f: 32, loop: true, ev: ["ev_footstep@8", "ev_footstep@24"] },
       { id: "run", zh: "奔跑", f: 22, loop: true, ev: ["ev_footstep@5", "ev_footstep@16"] },
       { id: "sneak_idle", zh: "潛行待機", f: 60, loop: true },
@@ -1350,6 +1351,7 @@ window.COSMI_CATALOG = {
     ],
     creature: [
       { id: "idle", zh: "待機", f: 60, loop: true },
+      { id: "idle_long", zh: "長時間靜止週期動作（深呼吸/輕微起伏/耳尾微動/靜止定力循環）", f: 120, loop: true },
       { id: "walk", zh: "移動", f: 32, loop: true, ev: ["ev_footstep@8"] },
       { id: "run", zh: "奔跑", f: 20, loop: true, ev: ["ev_footstep@5"] },
       { id: "sneak", zh: "潛行", f: 40, loop: true },
@@ -1391,3 +1393,5 @@ window.COSMI_CATALOG = {
     ]
   }
 };
+
+window.COSMI_CATALOG.CLIPS = window.COSMI_CATALOG.ACTIONS;

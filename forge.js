@@ -1,8 +1,9 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.2.0";
+  const TOOL_VERSION = "2.3.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
+  if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
   const LS_KEY = "cosmimera.prompt-forge.v2";
   const REVIEW_KEY = "cosmimera.prompt-forge.reviews.v1";
   const DEFAULT_ROOT = "C:\\Users\\user\\Documents\\app\\cosmos_chimera";
@@ -2465,10 +2466,10 @@
         header, taskId: targetTaskId, task: t,
         opts: isChr3d ? {
           scope: "single", source_pack: sp,
-          actions_character: ["idle","walk","run","hit","death","catch_throw"]
+          actions_character: ["idle","idle_long","walk","run","hit","death","catch_throw"]
         } : {
           scope: "single", source_pack: sp, stage: pkg.stage || "adult",
-          actions_creature: ["idle","walk","run","hit","death","atk_melee_front","atk_ranged_line"]
+          actions_creature: ["idle","idle_long","walk","run","hit","death","atk_melee_front","atk_ranged_line"]
         },
         concept: updatedConcept, notes: updatedManifest.notes || "",
         platform: "gemini", platformName: "Gemini Argon（任務模式）",
@@ -2809,9 +2810,12 @@
       if (found?.description) return found.description;
     }
     const cleanId = clipName.replace(/^(chr_|cr_)/, "");
-    const chrMatch = C.CLIPS.character.find(c => c.id === cleanId || c.id === clipName);
+    if (cleanId === "idle_long" || clipName.endsWith("idle_long")) return "長時間靜止週期動作";
+    const chrList = C.CLIPS?.character || C.ACTIONS?.character || [];
+    const chrMatch = chrList.find(c => c.id === cleanId || c.id === clipName);
     if (chrMatch) return chrMatch.zh;
-    const crMatch = C.CLIPS.creature.find(c => c.id === cleanId || c.id === clipName);
+    const crList = C.CLIPS?.creature || C.ACTIONS?.creature || [];
+    const crMatch = crList.find(c => c.id === cleanId || c.id === clipName);
     if (crMatch) return crMatch.zh;
     if (clipName.startsWith("chr_pet_xs")) return "撫摸 XS 體型（在掌心捧起）";
     if (clipName.startsWith("chr_pet_s")) return "撫摸 S 體型（蹲下摸頭）";
@@ -2838,7 +2842,7 @@
     }
     if (is3dType(pkg.type) || pkg.id.startsWith("mdl")) {
       const isChr = pkg.type === "character-model-rig" || pkg.subjectId?.startsWith("chr") || (pkg.id.startsWith("mdl") && pkg.manifest?.source_pack?.startsWith("chr"));
-      const list = isChr ? C.CLIPS.character : C.CLIPS.creature;
+      const list = isChr ? (C.CLIPS?.character || C.ACTIONS?.character || []) : (C.CLIPS?.creature || C.ACTIONS?.creature || []);
       const prefix = isChr ? "chr_" : "cr_";
       return list.map(c => ({
         clip: prefix + c.id,
@@ -3089,8 +3093,14 @@
 
     const clips = getPackageClips(pkg);
     const animClips = clips.map(c => {
-      const times = [0, c.duration_sec];
-      const values = [0, 0, 0, 0, 0.05, 0];
+      const isIdleLong = c.clip.includes("idle_long");
+      const times = isIdleLong
+        ? [0, c.duration_sec * 0.25, c.duration_sec * 0.5, c.duration_sec * 0.75, c.duration_sec]
+        : [0, c.duration_sec * 0.5, c.duration_sec];
+      const amp = isIdleLong ? 0.015 : 0.05;
+      const values = isIdleLong
+        ? [0, 0, 0, 0, amp * 0.4, 0, 0, amp, 0, 0, amp * 0.4, 0, 0, 0, 0]
+        : [0, 0, 0, 0, amp, 0, 0, 0, 0];
       const track = new THREE.VectorKeyframeTrack(".position", times, values);
       return new THREE.AnimationClip(c.clip, c.duration_sec, [track]);
     });
@@ -3348,6 +3358,7 @@
           el("span", { class: "prompt-k" }, "動作槽數量"), el("span", { class: "prompt-v" }, `${totalClips} 組剪輯 (Clips)`),
           el("span", { class: "prompt-k" }, "幀率標準"), el("span", { class: "prompt-v" }, "30 FPS · 關鍵幀均勻取樣"),
           el("span", { class: "prompt-k" }, "骨骼體系"), el("span", { class: "prompt-v" }, (targetPkg.type === "character-model-rig" || targetPkg.subjectId?.startsWith("chr")) ? "Unity Humanoid (標準人類骨架)" : "Generic (根骨骼至末端)"),
+          el("span", { class: "prompt-k" }, "靜止週期審查"), el("span", { class: "prompt-v", style: "color:var(--accent)" }, "須涵蓋一般待機 (idle) 與長時間靜止週期 (idle_long，≥120幀無縫Loop)"),
           el("span", { class: "prompt-k" }, "模型拓撲"), el("span", { class: "prompt-v" }, `${stats.faceCount.toLocaleString()} 面 (Tris) · ${stats.vertCount.toLocaleString()} 頂點`)
         ),
         el("div", { style: "display:flex;gap:6px;margin-top:10px;flex-wrap:wrap" },
@@ -3611,7 +3622,7 @@
               el("span", { class: "prompt-k" }, "來源立繪參照"), el("span", { class: "prompt-v", style: "color:var(--accent)" }, m.source_pack || "未綁定（建議一鍵升級）"),
               el("span", { class: "prompt-k" }, "管線流程"), el("span", { class: "prompt-v" }, "Image-to-3D → Blender → 減面烘焙 → 綁骨 → 動作動作槽"),
               el("span", { class: "prompt-k" }, "骨架體系"), el("span", { class: "prompt-v" }, isChr3d ? "Unity Humanoid (≤75骨骼)" : "Generic (Root→Hips→Spine, ≤60骨骼)"),
-              el("span", { class: "prompt-k" }, "動作規範"), el("span", { class: "prompt-v" }, isChr3d ? "30 fps, Humanoid 冒險與投擲槽" : "30 fps, 攻擊槽 (atk_*)、輔助槽 (sup_*)、部署槽 (field_deploy)"),
+              el("span", { class: "prompt-k" }, "動作規範"), el("span", { class: "prompt-v" }, isChr3d ? "30 fps, Humanoid 冒險與投擲槽，含一般待機 (idle) 與長時間靜止週期 (idle_long)" : "30 fps, 攻擊槽 (atk_*)、輔助槽 (sup_*)、部署槽 (field_deploy)，含一般待機 (idle) 與長時間靜止週期 (idle_long)"),
               el("span", { class: "prompt-k" }, "產出格式"), el("span", { class: "prompt-v" }, "FBX (Scale 1.0, Y-up, +Z) ＋ GLB 備用")
             )
           )
@@ -3666,7 +3677,7 @@
               el("span", { class: "prompt-k" }, "面數預算 (Tris)"), el("span", { class: "prompt-v" }, "15,000 ~ 25,000 tris (符合預算)"),
               el("span", { class: "prompt-k" }, "貼圖尺寸"), el("span", { class: "prompt-v" }, "2048 × 2048 (Base Color + Mask)"),
               el("span", { class: "prompt-k" }, "插槽骨骼數"), el("span", { class: "prompt-v" }, "Socket_Mouth / Head / Front / Core_FX 齊全"),
-              el("span", { class: "prompt-k" }, "動畫 Action"), el("span", { class: "prompt-v" }, "7 組通用招式槽 + 撫摸享受 (petted)")
+              el("span", { class: "prompt-k" }, "動畫 Action"), el("span", { class: "prompt-v" }, "基礎待機與移動＋長時間靜止週期動作 (idle_long)＋招式槽＋互動撫摸")
             )
           )
         );

@@ -421,7 +421,7 @@
 
     {
       // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、屬性、基底等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "creature-model-rig", version: "4.3.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "creature-model-rig", version: "4.4.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 cr-*.zip）" }], def: "single" },
@@ -478,6 +478,7 @@
             { path: "rig/rig_spec.json", kind: "spec" },
             { path: "anims/anim_spec.json", kind: "spec" },
             { path: `anims/cr_${stageTag}_idle.fbx`, kind: "anim" },
+            { path: `anims/cr_${stageTag}_idle_long.fbx`, kind: "anim" },
             { path: `images/${unit}_model_front.png`, kind: "view" }
           ]
         };
@@ -507,6 +508,9 @@
           "| clip | 說明 | 幀數 | loop | RM | 事件@幀 |",
           "|---|---|---|---|---|---|",
           clipLines,
+          "- **動作製作與循環規範**：",
+          "  - `idle`（標準待機）：2 秒短週期呼吸律動，適合即時探索與戰鬥過渡。",
+          "  - `idle_long`（長時間靜止週期動作）：4 秒長週期（120 幀，loop），呈現長時間定力靜止、微幅呼吸起伏、低頻眼眸/耳尾微動或重心微調，首尾幀平滑閉合無縫循環，保持姿態穩定兼具活體生命感。",
           "",
           "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
           "```",
@@ -529,7 +533,7 @@
 
     {
       // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、性別、身高、道具等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "character-model-rig", version: "4.3.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "character-model-rig", version: "4.4.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "character", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 chr-*.zip）" }], def: "single" },
@@ -568,6 +572,7 @@
             { path: "rig/rig_spec.json", kind: "spec" },
             { path: "anims/anim_spec.json", kind: "spec" },
             { path: "anims/chr_idle.fbx", kind: "anim" },
+            { path: "anims/chr_idle_long.fbx", kind: "anim" },
             { path: `images/${unit}_model_front.png`, kind: "view" }
           ]
         };
@@ -598,6 +603,9 @@
           "| clip | 說明 | 幀數 | loop | RM | 事件@幀 |",
           "|---|---|---|---|---|---|",
           clipLines,
+          "- **動作製作與循環規範**：",
+          "  - `idle`（標準待機）：2 秒短週期呼吸律動，標準 Humanoid 待機姿態。",
+          "  - `idle_long`（長時間靜止週期動作）：4 秒長週期（120 幀，loop），呈現長時間定力靜止、極小幅度胸腔呼吸、眼皮微眨或細微重心微調，首尾幀完全對齊平滑循環，避免大幅晃動以確保站姿安定感。",
           "",
           "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
           "```",
