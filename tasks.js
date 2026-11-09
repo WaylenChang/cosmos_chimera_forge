@@ -300,10 +300,16 @@
           key: "evolution_mode",
           type: "select",
           label: "【演化突變模態】50/50 辨識度守恆",
-          items: () => [
-            { v: "auto", zh: "🤖 依概念隨機項目決定" },
-            ...(C.EVOLUTION_MODES ? C.EVOLUTION_MODES.map(m => ({ v: m.id, zh: m.zh + " (" + m.desc.split("、")[0] + ")" })) : [])
-          ],
+          items: (o, env) => {
+            const curStage = o?.stage || "adult";
+            const transKey = curStage === "adolescent" ? "stage1_to_2" : curStage === "overload" ? "stage3_to_overload" : "stage2_to_3";
+            const prev = curStage === "overload" ? env?.creature?.evo_stage2_to_3?.[0] : null;
+            const modes = C.getEvolutionModesWithProbabilities ? C.getEvolutionModesWithProbabilities(transKey, prev) : (C.EVOLUTION_MODES || []);
+            return [
+              { v: "auto", zh: "🤖 依概念隨機項目決定" },
+              ...modes.map(m => ({ v: m.id, zh: m.labelWithPct || (m.zh + " (" + m.desc.split("、")[0] + ")") }))
+            ];
+          },
           def: "auto",
           when: o => (o.stage || "adult") !== "juvenile"
         },

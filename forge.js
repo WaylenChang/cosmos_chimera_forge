@@ -301,9 +301,35 @@
         const adultClass = (s.creature.size_profile?.[0] || "S→M→L→XL").split("→")[2] || "L";
         return sampleCreatureDimensions(rng, adultClass).bodyFat;
       }},
-      { key: "evo_stage1_to_2", label: "進化流程：第一階>第二階", options: () => (C.EVOLUTION_MODES || []).map(m => ({ v: m.id, zh: m.zh + "（" + m.desc.split("、")[0] + "）", w: 1 })).concat(getCustom("creature.evo_stage1_to_2").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
-      { key: "evo_stage2_to_3", label: "進化流程：第二階>第三階", options: () => (C.EVOLUTION_MODES || []).map(m => ({ v: m.id, zh: m.zh + "（" + m.desc.split("、")[0] + "）", w: 1 })).concat(getCustom("creature.evo_stage2_to_3").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
-      { key: "evo_stage3_to_overload", label: "進化流程：第三階>超載", options: () => (C.EVOLUTION_MODES || []).map(m => ({ v: m.id, zh: m.zh + "（" + m.desc.split("、")[0] + "）", w: 1 })).concat(getCustom("creature.evo_stage3_to_overload").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] }
+      {
+        key: "evo_stage1_to_2",
+        label: "進化流程：第一階>第二階",
+        options: () => {
+          const list = C.getEvolutionModesWithProbabilities ? C.getEvolutionModesWithProbabilities("stage1_to_2") : [];
+          return list.map(m => ({ v: m.id, zh: m.labelWithPct, w: m.w || 1 })).concat(getCustom("creature.evo_stage1_to_2").map(v => ({ v, zh: v, w: 1 })));
+        },
+        count: [{ n: 1, w: 1 }]
+      },
+      {
+        key: "evo_stage2_to_3",
+        label: "進化流程：第二階>第三階",
+        options: () => {
+          const list = C.getEvolutionModesWithProbabilities ? C.getEvolutionModesWithProbabilities("stage2_to_3") : [];
+          return list.map(m => ({ v: m.id, zh: m.labelWithPct, w: m.w || 1 })).concat(getCustom("creature.evo_stage2_to_3").map(v => ({ v, zh: v, w: 1 })));
+        },
+        count: [{ n: 1, w: 1 }]
+      },
+      {
+        key: "evo_stage3_to_overload",
+        label: "進化流程：第三階>超載",
+        options: s => {
+          const prev = s.creature.evo_stage2_to_3?.[0] || null;
+          const list = C.getEvolutionModesWithProbabilities ? C.getEvolutionModesWithProbabilities("stage3_to_overload", prev) : [];
+          return list.map(m => ({ v: m.id, zh: m.labelWithPct, w: m.effectiveWeight || m.w || 1 })).concat(getCustom("creature.evo_stage3_to_overload").map(v => ({ v, zh: v, w: 1 })));
+        },
+        count: [{ n: 1, w: 1 }],
+        dep: "evo_stage2_to_3"
+      }
     ]
   };
   function archetypePool(s) { return CR.archetypes.filter(a => s.includeReview || a.sensitivity === "ok"); }

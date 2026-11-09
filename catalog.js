@@ -384,48 +384,100 @@ window.COSMI_CATALOG = {
     };
   },
 
-  // ==================== 宙獸形態演化與突變模態（去識別化 13 模態精選） ====================
+  // ==================== 宙獸形態演化與突變模態（完整 13 模態體系） ====================
   EVOLUTION_MODES: [
     {
-      id: "armed_arsenal",
-      zh: "武裝著裝·攻防重構",
-      desc: "外置機械外骨骼裝甲、背載式以太砲塔或浮游神兵環繞",
-      impact: "high",
+      id: "eco_adaptation",
+      zh: "環境適應·生態異種",
+      desc: "為適應極端冷/熱/毒/重力環境，毛皮白化羽化、微氣候器官異化、體表偽裝",
+      w: 17.2,
+      impact: "med",
       retention: "high",
-      stages: ["adult", "overload"],
-      prompt_guidance: "配備符文外骨骼與重型甲冑（50%保留原生骨骼與五官，50%外裝強化），外掛武器或肩載火砲，金屬鉚釘與接縫發光導管。",
-      positive_tokens: "equipped with heavy runic exoskeleton armor plating, shoulder-mounted arcane cannons, floating runic blade armaments, interlocking power conduits, 50% retained natural anatomy, 50% armored reinforcement",
-      negative_tokens: "random floating metal junk, covering entire face, changing eye color, human hands"
+      transitions: ["stage1_to_2", "stage2_to_3"],
+      prompt_guidance: "因地理微氣候隔離演化出的異種生態亞型，毛皮替換為抗寒雪羽或散熱薄膜，局部器官長度異化，五官骨架基因仍與原種完全對應。",
+      positive_tokens: "subspecies regional ecological variant, specialized climate-adapted plumage and texture, broadened terrain paws, adapted ear and crest geometry, identical facial proportion and species eye geometry to base archetype",
+      negative_tokens: "completely new unrelated animal species, unrecognizable head structure, artificial clothing"
     },
     {
       id: "stance_reconfig",
       zh: "姿態切換·重心重整",
-      desc: "四足伏地與雙足立姿切換，或關節展開為高速巡航/防禦圓盾姿",
+      desc: "四足伏地與雙足立姿切換，或關節展開為高速巡航/防禦圓盾姿，攻防重心重整",
+      w: 15.8,
       impact: "high",
       retention: "med",
-      stages: ["adolescent", "adult", "overload"],
+      transitions: ["stage1_to_2", "stage2_to_3", "stage3_to_overload"],
       prompt_guidance: "極致動態戰鬥架勢轉移，重心下沉或拔高雙足站立，爪刃抓地，展現完全不同之戰略剪影，面部眼眸構造嚴格維持一致。",
       positive_tokens: "dramatic combat stance shift, dynamic bipedal or agile low-center martial posture, tensed muscular anatomy, ready-to-strike silhouette, signature horn and tail shape strictly preserved",
       negative_tokens: "stiff t-pose, broken spine, altered species archetype, extra limbs"
     },
     {
+      id: "specialized_hypertrophy",
+      zh: "特化重構·器官特化",
+      desc: "肢體特化為鋒利刃面、生化管線加粗、空氣動力學整流鰭擴展，局部器官機能極限放大",
+      w: 11.4,
+      impact: "high",
+      retention: "med",
+      transitions: ["stage1_to_2", "stage2_to_3"],
+      prompt_guidance: "關鍵作戰或生存器官極端發育，利爪伸展為鐮刃、尾部擴展為推進鰭或重錘，骨骼管線粗化，保留幼原種核心頭部與眼眸輪廓。",
+      positive_tokens: "anatomical specialized hypertrophy, elongated razor-sharp forelimbs, aerodynamic dorsal fin expansion, reinforced muscular conduits, signature facial DNA retained with heightened predatory focus",
+      negative_tokens: "disproportionate deformed tumors, melted anatomy, random unrelated appendages"
+    },
+    {
       id: "elemental_mantle",
       zh: "元素披覆·屬性外顯",
-      desc: "身軀裹覆半透明高溫電漿、低溫霜雲或幾何太晶能量斗篷",
+      desc: "身軀裹覆半透明高溫電漿、低溫霜雲或幾何太晶能量斗篷，以太能量自關節外溢",
+      w: 13.1,
       impact: "med",
       retention: "high",
-      stages: ["juvenile", "adolescent", "adult", "overload"],
+      transitions: ["stage1_to_2", "stage2_to_3", "stage3_to_overload"],
       prompt_guidance: "半透明元素氣場或晶格斗篷自毛皮/鱗甲關節處外溢，體表裂紋隱現流動以太光，主體輪廓透過熱浪或冷霧清晰可辨。",
       positive_tokens: "enveloped in semi-transparent blazing plasma cloak, ethereal particle trails streaming from shoulder joints, cooling magma cracked skin along extremities, interior glow pulsing beneath scales, recognizable facial features visible through heat haze",
       negative_tokens: "flat solid color swap, completely obscured body silhouette, muddy textures, loss of eye contrast"
     },
     {
+      id: "mood_metabolic_switch",
+      zh: "心緒代謝·雙重本性",
+      desc: "作戰激昂或飢餓觸發代謝失衡，眼眸黑化流光、尖齒外露、毛皮倒豎展現掠食狂暴第二本色",
+      w: 1.2,
+      impact: "med",
+      retention: "high",
+      transitions: ["stage1_to_2", "stage2_to_3"],
+      prompt_guidance: "體內能量代謝突變，原本溫和或警戒之神態轉為銳利戰意，瞳孔收縮閃爍掠食光芒，毛皮倒豎如刺，骨架比例維持不變。",
+      positive_tokens: "metabolic battle shift, fierce intense glowing irises, bristled defensive mane, sharp retracted fangs exposed, hyper-focused predator expression, exact underlying bone structure preserved",
+      negative_tokens: "completely altered face, comical cartoon rage, melted eyeballs"
+    },
+    {
+      id: "shell_break_core",
+      zh: "破殼脫落·真身暴鳴",
+      desc: "剝落外層沉重鈍質岩化裝甲，露出內部高精密靈巧晶核或脆弱高能光體，身形輕靈迅捷",
+      w: 4.7,
+      impact: "high",
+      retention: "low",
+      transitions: ["stage1_to_2", "stage2_to_3", "stage3_to_overload"],
+      prompt_guidance: "外層防護岩層或厚甲碎裂脫落，飄散於身周，裸露出內部半透明高精密發光晶核本體，身形輕靈迅捷，核心面貌保留原始眼紋。",
+      positive_tokens: "shattered containment carapace, cracking armor plating revealing incandescent crystal essence beneath, levitating fragments of broken shell, lightweight agile crystalline body, signature facial markings retained on inner core",
+      negative_tokens: "empty broken shell without creature, amorphous blob, unreadable silhouette"
+    },
+    {
+      id: "armed_arsenal",
+      zh: "武裝著裝·攻防重構",
+      desc: "外置機械外骨骼裝甲、背載式以太砲塔或浮游神兵環繞，符文甲冑嵌合",
+      w: 14.3,
+      impact: "high",
+      retention: "high",
+      transitions: ["stage2_to_3", "stage3_to_overload"],
+      prompt_guidance: "配備符文外骨骼與重型甲冑（50%保留原生骨骼與五官，50%外裝強化），外掛武器或肩載火砲，金屬鉚釘與接縫發光導管。",
+      positive_tokens: "equipped with heavy runic exoskeleton armor plating, shoulder-mounted arcane cannons, floating runic blade armaments, interlocking power conduits, 50% retained natural anatomy, 50% armored reinforcement",
+      negative_tokens: "random floating metal junk, covering entire face, changing eye color, human hands"
+    },
+    {
       id: "symbiotic_fusion",
       zh: "合體牽絆·雙生同調",
       desc: "融合宿主器具或共生靈獸，展現嵌合式外肢、多重雙生感知器官",
+      w: 6.4,
       impact: "high",
       retention: "med",
-      stages: ["adult", "overload"],
+      transitions: ["stage2_to_3", "stage3_to_overload"],
       prompt_guidance: "生物與神話器具或第二共生靈獸深度嵌合，共生雙重神經感知鰭羽，外形兼具雙方核心符號，但以主宙獸五官為認知主軸。",
       positive_tokens: "biomechanical symbiotic fusion, dual-entity hybrid features, chimeric integration, secondary neural crest, harmonious chimeric anatomy",
       negative_tokens: "disjointed pasted parts, grotesque tumorous growth, severed floating pieces"
@@ -433,48 +485,91 @@ window.COSMI_CATALOG = {
     {
       id: "atavistic_primal",
       zh: "血脈返祖·遠古神威",
-      desc: "骨刺穿透外皮逆向生長，體表開裂出流淌古代以太光的古神符文",
+      desc: "骨刺穿透外皮逆向生長，體表開裂出流淌古代以太光的古神符文，散發蠻荒巨獸威壓",
+      w: 3.2,
       impact: "med",
       retention: "high",
-      stages: ["adult", "overload"],
+      transitions: ["stage2_to_3", "stage3_to_overload"],
       prompt_guidance: "遠古狂暴基因覺醒，頭頂與背脊粗獷骨刺銳化增生，體表凹槽烙印流動金光的古代幾何符文，散發蠻荒巨獸威壓。",
       positive_tokens: "ancient atavistic reversion, primordial ossified horns erupting from skull, ancestral runic glyphs burning with golden luminescence across dorsal ridge, aggressive bestial posture, weathered fossilized texture",
       negative_tokens: "futuristic neon cyberware, robotic seams, overly cute expression"
     },
     {
-      id: "shell_break_core",
-      zh: "破殼脫落·真身暴鳴",
-      desc: "剝落外層沉重鈍質岩化裝甲，露出內部高精密靈巧晶核或脆弱高能光體",
-      impact: "high",
+      id: "swarm_aggregation",
+      zh: "群落聚合·萬生同體",
+      desc: "萬千微型自律單體以流體力學集結為單一巨型深海/高空巨獸，共鳴重組為統一巨影",
+      w: 2.3,
+      impact: "extreme",
       retention: "low",
-      stages: ["adolescent", "adult", "overload"],
-      prompt_guidance: "外層防護岩層或厚甲碎裂脫落，飄散於身周，裸露出內部半透明高精密發光晶核本體，身形輕靈迅捷，核心面貌保留原始眼紋。",
-      positive_tokens: "shattered containment carapace, cracking armor plating revealing incandescent crystal essence beneath, levitating fragments of broken shell, lightweight agile crystalline body, signature facial markings retained on inner core",
-      negative_tokens: "empty broken shell without creature, amorphous blob, unreadable silhouette"
+      transitions: ["stage2_to_3", "stage3_to_overload"],
+      prompt_guidance: "本體由無數微型自律發光魚群、納米晶蟲或以太孢子緊密咬合構成，邊緣呈現游移分離之微粒雲，整體剪影維持原種巨獸威容。",
+      positive_tokens: "composed of a massive schooling swarm, swirling luminous nano-entities forming collective monolithic beast, fluid-like outer contour, micro-elements swimming within silhouette, cohesive ocular cluster",
+      negative_tokens: "static single solid plastic statue, blurry noise texture, unorganized dust cloud"
+    },
+    {
+      id: "possession_assimilation",
+      zh: "附身同化·機關寄宿",
+      desc: "純能量/等離子靈體侵入人造星艦機關、古代遺物或生活載具，以器具為軀幹異化",
+      w: 2.0,
+      impact: "extreme",
+      retention: "med",
+      transitions: ["stage2_to_3", "stage3_to_overload"],
+      prompt_guidance: "等離子靈體核心穿透並操控古代遺物機關或高科技機械裝置，機械儀表開合亮起靈魂光暈，原生五官以能量態投射於機關核心。",
+      positive_tokens: "spectral technological possession, plasma entity infused into ancient relic mechanism, animated arcane gears and intake vents, spectral eyes glowing through machine chassis, mechanical spirit embodiment",
+      negative_tokens: "lifeless pile of scrap, generic robot without ghostly soul, broken immobile junk"
     },
     {
       id: "monument_colossus",
       zh: "地標巨化·天穹異構",
       desc: "百倍巨構化，身體局部異變為浮空神殿、生機森林微地形或吞星黑洞巨口",
+      w: 25.0,
       impact: "extreme",
       retention: "low",
-      stages: ["overload"],
+      transitions: ["stage3_to_overload"],
       prompt_guidance: "尺度暴增至數十公尺天穹巨神，背部長成古樹小森林微生態，或巨口裂開為黑洞星門，周身環繞螺旋極巨雷雲，微觀細節襯托龐大比例。",
       positive_tokens: "colossal monumental scale, towering behemoth proportions, back transforming into a micro-ecosystem with ancient flora and stone monoliths, swirling atmospheric storm clouds around shoulders, micro-scale details indicating massive scale",
       negative_tokens: "normal creature on small hill, simple closeup, blurry distant background, generic giant with no scale cues"
     },
     {
-      id: "eco_adaptation",
-      zh: "環境適應·生態異種",
-      desc: "為適應極端冷/熱/毒/重力環境，毛皮白化羽化、頸椎伸長或四肢鰭狀化",
-      impact: "med",
-      retention: "high",
-      stages: ["juvenile", "adolescent", "adult"],
-      prompt_guidance: "因地理微氣候隔離演化出的異種生態亞型，毛皮替換為抗寒雪羽或散熱薄膜，局部器官長度異化，五官骨架基因仍與原種完全對應。",
-      positive_tokens: "subspecies regional ecological variant, specialized climate-adapted plumage and texture, broadened terrain paws, adapted ear and crest geometry, identical facial proportion and species eye geometry to base archetype",
-      negative_tokens: "completely new unrelated animal species, unrecognizable head structure"
+      id: "hero_reveal",
+      zh: "超人現身·神魄覺醒",
+      desc: "徹底顛覆平庸無害之日常擬態外觀，展現肌肉爆發、雙足頂立英雄骨架與神威真容",
+      w: 20.0,
+      impact: "extreme",
+      retention: "low",
+      transitions: ["stage3_to_overload"],
+      prompt_guidance: "卸下弱小無害的幼態偽裝，爆發為傲立天地的英武神靈戰軀，胸膛與四肢神經充盈金光神能，保留原生虹膜神采與標誌性頭冠印記。",
+      positive_tokens: "dramatic heroic true form reveal, bipedal majestic demigod physique, surging champion aura, powerful defined muscular anatomy, signature facial iris and crest marking preserved on ascended face",
+      negative_tokens: "generic superhero in spandex, human face with human nose, stiff action figure"
     }
   ],
+
+  getEvolutionModesForTransition(key) {
+    if (!key) return this.EVOLUTION_MODES;
+    const trans = key === "adolescent" ? "stage1_to_2" :
+      key === "adult" ? "stage2_to_3" :
+      key === "overload" ? "stage3_to_overload" : key;
+    return this.EVOLUTION_MODES.filter(m => m.transitions && m.transitions.includes(trans));
+  },
+
+  getEvolutionModesWithProbabilities(key, excludeId = null) {
+    const trans = key === "adolescent" ? "stage1_to_2" :
+      key === "adult" ? "stage2_to_3" :
+      key === "overload" ? "stage3_to_overload" : key;
+    const modes = this.getEvolutionModesForTransition(trans).filter(m => !excludeId || m.id !== excludeId);
+    const getW = m => (m.transition_weights && m.transition_weights[trans]) ?? m.w ?? 1;
+    const totalW = modes.reduce((acc, m) => acc + getW(m), 0);
+    return modes.map(m => {
+      const w = getW(m);
+      const pct = totalW > 0 ? (w / totalW * 100).toFixed(1) : "0.0";
+      return {
+        ...m,
+        effectiveWeight: w,
+        probPct: pct,
+        labelWithPct: `${m.zh}（${m.desc.split("、")[0]} · ${pct}%）`
+      };
+    });
+  },
 
   resolveEvolutionPrompt(modeKey, stage, concept) {
     if (stage === "juvenile") return null; // 第一階段不需要演化模式
@@ -482,8 +577,8 @@ window.COSMI_CATALOG = {
     let targetKey = modeKey;
     if (!targetKey || targetKey === "auto") {
       if (stage === "adolescent") targetKey = concept?.evo_stage1_to_2 || concept?.evolution_flow?.stage1_to_2 || "stance_reconfig";
-      else if (stage === "adult") targetKey = concept?.evo_stage2_to_3 || concept?.evolution_flow?.stage2_to_3 || "elemental_mantle";
-      else if (stage === "overload") targetKey = concept?.evo_stage3_to_overload || concept?.evolution_flow?.stage3_to_overload || "armed_arsenal";
+      else if (stage === "adult") targetKey = concept?.evo_stage2_to_3 || concept?.evolution_flow?.stage2_to_3 || "armed_arsenal";
+      else if (stage === "overload") targetKey = concept?.evo_stage3_to_overload || concept?.evolution_flow?.stage3_to_overload || "monument_colossus";
       else targetKey = "elemental_mantle";
     }
     const mode = this.EVOLUTION_MODES.find(m => m.id === targetKey) || this.EVOLUTION_MODES[0];
