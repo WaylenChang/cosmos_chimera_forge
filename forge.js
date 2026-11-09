@@ -1,11 +1,15 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "1.9.0";
+  const TOOL_VERSION = "2.0.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   const LS_KEY = "cosmimera.prompt-forge.v2";
   const REVIEW_KEY = "cosmimera.prompt-forge.reviews.v1";
   const DEFAULT_ROOT = "C:\\Users\\user\\Documents\\app\\cosmos_chimera";
+
+  function is3dType(t) {
+    return t === "creature-model-rig" || t === "character-model-rig" || t === "model-rig" || (typeof t === "string" && (t.startsWith("mdl") || t.startsWith("anim")));
+  }
 
   // 舊版人形與基底父類別追溯相容（人形一律視為精靈族）
   function traceBaseParent(bp) {
@@ -118,12 +122,16 @@
 
   function sendToImgTo3D(pkg, imgPath) {
     if (!pkg) return;
-    state.taskId = "model-rig";
-    const t = TASKS.find(x => x.id === "model-rig");
+    const isChr = (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr"));
+    const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
+    state.taskId = targetTaskId;
+    const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
     const o = taskOpts(t);
     o.scope = "single";
     o.source_pack = pkg.id;
-    o.subject = (pkg.type === "character-concept" || pkg.id.startsWith("chr")) ? "character" : "creature";
+    if (!isChr && pkg.stage) {
+      o.stage = pkg.stage;
+    }
     if (imgPath) {
       o.input_img = imgPath;
     } else if (pkg.images && pkg.images.length) {
@@ -134,7 +142,7 @@
     }
     setViewMode("forge");
     renderAll();
-    toast("已將立繪包「" + pkg.id + "」" + (o.input_img ? "（指定圖：" + o.input_img + "）" : "") + " 帶入 img-to-3D 管線");
+    toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」" + (o.input_img ? "（指定圖：" + o.input_img + "）" : "") + " 帶入 " + t.zh);
   }
 
   // REQ: 使用者 2026-11-07 — 已設計的宙獸（P2-08 御三家等）直接產出立繪 / img-to-3D prompt。
@@ -430,7 +438,14 @@
     return (kind === "character" ? "chr_" : "line_") + state.seed;
   }
 
-  function task() { return TASKS.find(t => t.id === state.taskId) || TASKS[0]; }
+  function task() {
+    let t = TASKS.find(x => x.id === state.taskId);
+    if (!t && state.taskId === "model-rig") {
+      state.taskId = "creature-model-rig";
+      t = TASKS.find(x => x.id === "creature-model-rig");
+    }
+    return t || TASKS[0];
+  }
   const env = () => ({ character: state.character, creature: state.creature });
   function taskOpts(t) {
     const o = state.opts[t.id] || (state.opts[t.id] = {});
@@ -473,13 +488,14 @@
     let taskId = t.prefix + "-" + s.day + "-" + state.seed + "-" + s.hm;
     if (t.id === "creature-concept" && o.stage) {
       taskId += "-" + o.stage;
-    } else if (t.id === "model-rig" && o.subject === "creature" && o.stage) {
+    } else if ((t.id === "creature-model-rig" || t.id === "model-rig") && o.stage) {
       taskId += "-" + o.stage;
     }
     const header = "[COSMIMERA-TASK spec=" + SPEC + " tool=" + TOOL_VERSION + " catalog=" + C.version + " template=" + t.id + "@" + t.version + " task_id=" + taskId + " seed=" + state.seed + "]";
-    const chosenPkg = (t.id === "model-rig" && o.source_pack) ? reviewState.packages.find(p => p.id === o.source_pack) : null;
+    const is3dTask = is3dType(t.id);
+    const chosenPkg = (is3dTask && o.source_pack) ? reviewState.packages.find(p => p.id === o.source_pack) : null;
     let concept = chosenPkg?.concept || (subj === "character" ? characterConcept() : subj === "creature" ? creatureConcept() : null);
-    let subjId = chosenPkg?.subjectId || (subj ? subjectId(subj) : t.id === "model-rig" ? "batch" : t.id === "capture-vessel" ? "vessels" : t.id === "culture-research" ? "region_" + o.region : "fx_" + o.element + "_" + o.shape);
+    let subjId = chosenPkg?.subjectId || (subj ? subjectId(subj) : is3dTask ? "batch" : t.id === "capture-vessel" ? "vessels" : t.id === "culture-research" ? "region_" + o.region : "fx_" + o.element + "_" + o.shape);
 
     const ctx = {
       header, taskId, timestamp: s.day + "-" + s.hm, task: t, opts: o, concept, notes: state.notes.trim(),
@@ -746,7 +762,7 @@
     state.taskId = taskId;
     state.currentRound = 1;
     const o = state.opts[taskId] || (state.opts[taskId] = {});
-    if (taskId === "model-rig") { o.scope = "single"; o.subject = "creature"; o.source_pack = ""; }
+    if (taskId === "creature-model-rig" || taskId === "model-rig") { o.scope = "single"; o.source_pack = ""; }
     renderAll();
   }
 
@@ -761,7 +777,7 @@
         el("span", { class: "tmeta" }, d.line_id + " · " + d.element),
         el("div", { class: "row" },
           el("button", { type: "button", class: "btn mini" + (on && state.taskId === "creature-concept" ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-concept") }, "🎨 立繪 prompt"),
-          el("button", { type: "button", class: "btn mini" + (on && state.taskId === "model-rig" ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "model-rig") }, "🧊 img-to-3D prompt"))));
+          el("button", { type: "button", class: "btn mini" + (on && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-model-rig") }, "🧊 img-to-3D prompt"))));
     });
     if (state.preset) box.append(el("button", { type: "button", class: "btn mini ghost", onclick: () => { state.preset = null; renderAll(); } }, "✕ 取消已設計項目（回到隨機概念）"));
   }
@@ -834,7 +850,8 @@
     const box = $("#concept"); box.replaceChildren();
     if (!subj) { box.append(el("p", { class: "muted" }, "此任務不使用角色/宙獸概念。")); return; }
     const kind = subj;
-    const chosenPkg = (t.id === "model-rig" && o.source_pack) ? reviewState.packages.find(p => p.id === o.source_pack) : null;
+    const is3dTask = is3dType(t.id);
+    const chosenPkg = (is3dTask && o.source_pack) ? reviewState.packages.find(p => p.id === o.source_pack) : null;
     if (chosenPkg) {
       box.append(el("div", { class: "subhead" },
         el("h3", {}, "審查台來源立繪包：" + chosenPkg.id),
@@ -900,7 +917,7 @@
   function isCreatureStageTask(t, o) {
     if (!t) t = task();
     if (!o) o = taskOpts(t);
-    return t.id === "creature-concept" || (t.id === "model-rig" && o.subject === "creature" && o.scope !== "batch");
+    return t.id === "creature-concept" || (t.id === "creature-model-rig" && o.scope !== "batch") || (t.id === "model-rig" && o.subject === "creature" && o.scope !== "batch");
   }
 
   function renderForgeStageTabs() {
@@ -933,15 +950,22 @@
     t.options.filter(d => (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
-      if (t.id === "model-rig" && d.key === "source_pack") {
-        const conceptPkgs = reviewState.packages.filter(p => p.type === "creature-concept" || p.type === "character-concept" || p.id.startsWith("cr-") || p.id.startsWith("chr-"));
+      if (is3dType(t.id) && d.key === "source_pack") {
+        const isChr3d = t.id === "character-model-rig";
+        const isCr3d = t.id === "creature-model-rig";
+        const conceptPkgs = reviewState.packages.filter(p => {
+          if (isChr3d) return p.type === "character-concept" || p.id.startsWith("chr-");
+          if (isCr3d) return p.type === "creature-concept" || p.id.startsWith("cr-");
+          return p.type === "creature-concept" || p.type === "character-concept" || p.id.startsWith("cr-") || p.id.startsWith("chr-");
+        });
         const packSelect = el("select", {
           onchange: e => {
             const val = e.target.value;
             o.source_pack = val;
             const p = reviewState.packages.find(x => x.id === val);
             if (p) {
-              o.subject = (p.type === "character-concept" || p.id.startsWith("chr")) ? "character" : "creature";
+              if (isCr3d && p.stage) o.stage = p.stage;
+              if (t.id === "model-rig") o.subject = (p.type === "character-concept" || p.id.startsWith("chr")) ? "character" : "creature";
               if (o.input_img && p.images && !p.images.some(im => im.path === o.input_img)) {
                 o.input_img = "";
               }
@@ -949,35 +973,36 @@
             renderAll();
           }
         },
-          el("option", { value: "" }, conceptPkgs.length ? "-- 從審查台讀入的立繪包中選擇 (或手動輸入) --" : "-- 審查台尚無讀入的立繪包 (可手動輸入或載入) --"),
+          el("option", { value: "" }, conceptPkgs.length ? `-- 從審查台選擇${isChr3d ? "角色" : isCr3d ? "宙獸" : ""}立繪包 (或手動輸入) --` : `-- 審查台尚無讀入的${isChr3d ? "角色" : isCr3d ? "宙獸" : ""}立繪包 (可手動輸入或載入) --`),
           conceptPkgs.map(p => el("option", {
             value: p.id,
             selected: o.source_pack === p.id
-          }, "📦 " + p.id + " (" + (p.subjectId || "無主體") + " · " + (p.type === "character-concept" || p.id.startsWith("chr") ? "角色" : "宙獸") + " · " + (p.images ? p.images.length : 0) + " 張圖)"))
+          }, "📦 " + p.id + " (" + (p.subjectId || "無主體") + " · " + (p.type === "character-concept" || p.id.startsWith("chr") ? "角色" : "宙獸") + (p.stage ? " · " + (STAGE_ZH[p.stage] || p.stage) : "") + " · " + (p.images ? p.images.length : 0) + " 張圖)"))
         );
 
         const textInput = el("input", {
           value: o.source_pack || "",
-          placeholder: d.placeholder || "或手動輸入立繪包 ID，例 cr-20261106-7f3a-2105",
+          placeholder: d.placeholder || (isChr3d ? "或手動輸入角色立繪包 ID，例 chr-20261106-7f3a-2105" : "或手動輸入宙獸立繪包 ID，例 cr-20261106-7f3a-2105-adult"),
           onchange: e => {
             o.source_pack = e.target.value.trim();
             const p = reviewState.packages.find(x => x.id === o.source_pack);
             if (p) {
-              o.subject = (p.type === "character-concept" || p.id.startsWith("chr")) ? "character" : "creature";
+              if (isCr3d && p.stage) o.stage = p.stage;
+              if (t.id === "model-rig") o.subject = (p.type === "character-concept" || p.id.startsWith("chr")) ? "character" : "creature";
             }
             renderAll();
           }
         });
 
         const quickTools = el("div", { style: "display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;" },
-          el("span", { class: "muted", style: "font-size:11px;" }, "審查台立繪包：" + conceptPkgs.length + " 包"),
+          el("span", { class: "muted", style: "font-size:11px;" }, (isChr3d ? "角色" : isCr3d ? "宙獸" : "") + "立繪包：" + conceptPkgs.length + " 包"),
           el("button", { type: "button", class: "btn mini ghost", title: "載入系統內建測試包至審查台", onclick: () => { loadSampleFixtures(); renderAll(); } }, "🧪 載入範例包"),
           el("button", { type: "button", class: "btn mini ghost", title: "從本機選擇 Zip 載入審查台", onclick: () => $("#zipFileInput").click() }, "🗜️ 載入 Zip"),
           el("button", { type: "button", class: "btn mini ghost", title: "前往成果審查台進行立繪檢閱", onclick: () => setViewMode("review") }, "🔍 轉至審查台")
         );
 
         control = el("div", { class: "pack-picker-box" }, packSelect, textInput, quickTools);
-      } else if (t.id === "model-rig" && d.key === "input_img") {
+      } else if (is3dType(t.id) && d.key === "input_img") {
         const curPkg = reviewState.packages.find(p => p.id === o.source_pack);
         if (curPkg && curPkg.images && curPkg.images.length) {
           const imgSelect = el("select", {
@@ -1231,18 +1256,18 @@
   function getLinkedPackage(pkg) {
     if (!pkg) return null;
     const curStage = pkg.stage || reviewState.activeStage || "adult";
-    if (pkg.type === "model-rig") {
+    if (is3dType(pkg.type)) {
       // 3D 封裝往回找立繪包
       if (pkg.manifest?.source_pack) {
         const found = reviewState.packages.find(p => p.id === pkg.manifest.source_pack);
         if (found) return found;
       }
-      return reviewState.packages.find(p => p.type !== "model-rig" && (p.groupKey === pkg.groupKey || p.subjectId === pkg.subjectId) && (!p.stage || p.stage === curStage))
-        || reviewState.packages.find(p => p.type !== "model-rig" && p.subjectId && p.subjectId === pkg.subjectId) || null;
+      return reviewState.packages.find(p => !is3dType(p.type) && (p.groupKey === pkg.groupKey || p.subjectId === pkg.subjectId) && (!p.stage || p.stage === curStage))
+        || reviewState.packages.find(p => !is3dType(p.type) && p.subjectId && p.subjectId === pkg.subjectId) || null;
     } else {
       // 立繪包往下找衍生 3D 封裝
-      return reviewState.packages.find(p => p.type === "model-rig" && (p.groupKey === pkg.groupKey || p.manifest?.source_pack === pkg.id || p.subjectId === pkg.subjectId) && (!p.stage || p.stage === curStage))
-        || reviewState.packages.find(p => p.type === "model-rig" && (p.manifest?.source_pack === pkg.id || (p.subjectId && p.subjectId === pkg.subjectId))) || null;
+      return reviewState.packages.find(p => is3dType(p.type) && (p.groupKey === pkg.groupKey || p.manifest?.source_pack === pkg.id || p.subjectId === pkg.subjectId) && (!p.stage || p.stage === curStage))
+        || reviewState.packages.find(p => is3dType(p.type) && (p.manifest?.source_pack === pkg.id || (p.subjectId && p.subjectId === pkg.subjectId))) || null;
     }
   }
 
@@ -1317,6 +1342,17 @@
     return files;
   }
 
+  function inferTaskType(taskId, manifestData) {
+    if (manifestData?.task_type) return manifestData.task_type;
+    if (taskId.startsWith("chr")) return "character-concept";
+    if (taskId.startsWith("cr")) return "creature-concept";
+    if (taskId.startsWith("mdl") || taskId.startsWith("anim")) {
+      if (manifestData?.source_pack?.startsWith("chr") || manifestData?.subject_id?.startsWith("chr")) return "character-model-rig";
+      return "creature-model-rig";
+    }
+    return "unknown";
+  }
+
   // 載入 Zip 檔轉換為審查 Package 物件
   async function loadZipFile(file) {
     const buf = await file.arrayBuffer();
@@ -1367,7 +1403,7 @@
     }
     const pkg = {
       id: taskId,
-      type: manifestData?.task_type || (taskId.startsWith("chr") ? "character-concept" : taskId.startsWith("cr") ? "creature-concept" : taskId.startsWith("mdl") ? "model-rig" : "unknown"),
+      type: inferTaskType(taskId, manifestData),
       subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
       manifest: manifestData,
       concept: conceptData,
@@ -1393,7 +1429,7 @@
       }
       pkg.groupKey = (pkg.type === "creature-concept" || pkg.id.startsWith("cr"))
         ? (pkg.baseId || pkg.subjectId || pkg.id)
-        : (pkg.type === "model-rig" || pkg.id.startsWith("mdl"))
+        : (is3dType(pkg.type) || pkg.id.startsWith("mdl"))
         ? (pkg.baseId || pkg.id)
         : pkg.id;
 
@@ -1588,15 +1624,15 @@
       },
       {
         id: "mdl-20261106-7f3a-2105-adult",
-        type: "model-rig",
+        type: "creature-model-rig",
         stage: "adult",
         baseId: "mdl-20261106-7f3a-2105",
         subjectId: "line_7f3a",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.7.0 catalog=1.3.0 template=model-rig@3.1.0 task_id=mdl-20261106-7f3a-2105-adult seed=7f3a]",
+          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=1.3.0 template=creature-model-rig@4.1.0 task_id=mdl-20261106-7f3a-2105-adult seed=7f3a]",
           task_id: "mdl-20261106-7f3a-2105-adult",
-          task_type: "model-rig",
+          task_type: "creature-model-rig",
           subject_id: "line_7f3a",
           source_pack: "cr-20261106-7f3a-2105-adult",
           produced_by: "Gemini Argon",
@@ -1668,6 +1704,45 @@
         ],
         fileCount: 5,
         status: "ok"
+      },
+      {
+        id: "mdl-20261106-7f3a-2106",
+        type: "character-model-rig",
+        baseId: "mdl-20261106-7f3a-2106",
+        subjectId: "chr_7f3a",
+        manifest: {
+          spec: "cosmimera-art-task/1",
+          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=1.3.0 template=character-model-rig@4.1.0 task_id=mdl-20261106-7f3a-2106 seed=7f3a]",
+          task_id: "mdl-20261106-7f3a-2106",
+          task_type: "character-model-rig",
+          subject_id: "chr_7f3a",
+          source_pack: "chr-20261106-7f3a-2105",
+          produced_by: "Gemini Argon",
+          files: [
+            { path: "images/chr_7f3a_model_front.png", kind: "view", level: "L1" },
+            { path: "images/chr_7f3a_model_side.png", kind: "view", level: "L1" },
+            { path: "images/chr_7f3a_model_back.png", kind: "view", level: "L1" },
+            { path: "images/chr_7f3a_anim_sheet_01.png", kind: "sheet", level: "L1" },
+            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
+            { path: "rig/build_rig.py", kind: "script", level: "L1" },
+            { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
+            { path: "anims/keyframes.py", kind: "script", level: "L1" },
+            { path: "pipeline/run_all.py", kind: "script", level: "L1" },
+            { path: "pipeline/README.md", kind: "report", level: "L1" }
+          ],
+          missing: [
+            { item: "models/chr_7f3a.glb", level: "L2", reason: "no 3D generation on this platform" }
+          ],
+          notes: "由角色立繪包 chr-20261106-7f3a-2105 生成 Humanoid 3D 建模正交視圖與骨架動作規格"
+        },
+        images: [
+          { path: "images/chr_7f3a_model_front.png", url: createSampleSvgDataUrl("御靈召喚使 · 建模正交正面 2048px", "#2980b9") },
+          { path: "images/chr_7f3a_model_side.png", url: createSampleSvgDataUrl("御靈召喚使 · 建模正交側面 2048px", "#1f618d") },
+          { path: "images/chr_7f3a_model_back.png", url: createSampleSvgDataUrl("御靈召喚使 · 建模正交背面 2048px", "#154360") },
+          { path: "images/chr_7f3a_anim_sheet_01.png", url: createSampleSvgDataUrl("動作關鍵幀分鏡 · 御靈召喚使", "#16a085") }
+        ],
+        fileCount: 11,
+        status: "pending"
       }
     ];
     mockPackages.forEach(p => addPackage(p));
@@ -1835,7 +1910,7 @@
 
       const pkg = {
         id: taskId,
-        type: manifestData?.task_type || (taskId.startsWith("chr") ? "character-concept" : taskId.startsWith("cr") ? "creature-concept" : taskId.startsWith("mdl") ? "model-rig" : "unknown"),
+        type: inferTaskType(taskId, manifestData),
         subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
         manifest: manifestData,
         concept: conceptData,
@@ -1916,7 +1991,7 @@
 
     const pkg = {
       id: taskId,
-      type: manifestData?.task_type || (taskId.startsWith("chr") ? "character-concept" : taskId.startsWith("cr") ? "creature-concept" : taskId.startsWith("mdl") ? "model-rig" : "unknown"),
+      type: inferTaskType(taskId, manifestData),
       subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
       manifest: manifestData,
       concept: conceptData,
@@ -1941,12 +2016,14 @@
     const changes = [];
     const isChr = pkg.type === "character-concept" || pkg.id.startsWith("chr-");
     const isCr = pkg.type === "creature-concept" || pkg.id.startsWith("cr-");
-    const is3d = pkg.type === "model-rig" || pkg.id.startsWith("mdl-") || pkg.id.startsWith("anim-");
+    const is3d = is3dType(pkg.type) || pkg.id.startsWith("mdl-") || pkg.id.startsWith("anim-");
+    const isChr3d = is3d && (pkg.type === "character-model-rig" || pkg.manifest?.source_pack?.startsWith("chr-") || pkg.subjectId?.startsWith("chr"));
+    const isCr3d = is3d && !isChr3d;
 
     let updatedConcept = Object.assign({}, pkg.concept || {});
     let updatedManifest = Object.assign({}, pkg.manifest || {});
     let targetTaskId = pkg.id;
-    let targetTaskType = isChr ? "character-concept" : isCr ? "creature-concept" : is3d ? "model-rig" : pkg.type;
+    let targetTaskType = isChr ? "character-concept" : isCr ? "creature-concept" : isChr3d ? "character-model-rig" : isCr3d ? "creature-model-rig" : pkg.type;
 
     if (isChr) {
       const t = TASKS.find(x => x.id === "character-concept");
@@ -2114,8 +2191,10 @@
       return { pkg, changes, newConcept: updatedConcept, newManifest: updatedManifest, newPromptText, targetTaskId };
 
     } else if (is3d) {
-      const t = TASKS.find(x => x.id === "model-rig");
-      changes.push("升級至最新 3D 管線模板：template=model-rig@" + t.version + " (整合綁骨與動畫)");
+      const isChr3d = (pkg.type === "character-model-rig" || pkg.manifest?.source_pack?.startsWith("chr-") || pkg.subjectId?.startsWith("chr"));
+      const targetId = isChr3d ? "character-model-rig" : "creature-model-rig";
+      const t = TASKS.find(x => x.id === targetId) || TASKS[0];
+      changes.push("升級至最新 " + (isChr3d ? "角色" : "宙獸") + " 3D 管線模板：template=" + targetId + "@" + t.version + " (整合綁骨與動畫)");
 
       // 補齊並確保往回參照立繪包 (source_pack)
       let sp = updatedManifest.source_pack;
@@ -2126,7 +2205,7 @@
           sp = linked.id;
           changes.push("成功回溯關聯立繪包：source_pack = " + sp);
         } else {
-          sp = (pkg.id.startsWith("chr") ? "chr-" : "cr-") + pkg.id.replace(/^(mdl|anim)-/, "");
+          sp = (isChr3d ? "chr-" : "cr-") + pkg.id.replace(/^(mdl|anim)-/, "");
           changes.push("補齊來源立繪包回溯參照：source_pack = " + sp);
         }
       }
@@ -2136,16 +2215,22 @@
       const header = "[COSMIMERA-TASK spec=1 tool=" + TOOL_VERSION + " catalog=" + C.version + " template=" + t.id + "@" + t.version + " task_id=" + targetTaskId + " seed=" + seed + "]";
       const ctx = {
         header, taskId: targetTaskId, task: t,
-        opts: { scope: "single", source_pack: sp, subject: pkg.id.startsWith("chr") ? "character" : "creature", stages: ["juvenile", "adolescent", "adult", "overload"], actions_character: ["idle","walk","run","hit","death","catch_throw"], actions_creature: ["idle","walk","run","hit","death","atk_melee_front","atk_ranged_line"] },
+        opts: isChr3d ? {
+          scope: "single", source_pack: sp,
+          actions_character: ["idle","walk","run","hit","death","catch_throw"]
+        } : {
+          scope: "single", source_pack: sp, stage: pkg.stage || "adult",
+          actions_creature: ["idle","walk","run","hit","death","atk_melee_front","atk_ranged_line"]
+        },
         concept: updatedConcept, notes: updatedManifest.notes || "",
         platform: "gemini", platformName: "Gemini Argon（任務模式）",
-        subjectId: updatedManifest.subject_id || ("line_" + seed)
+        subjectId: updatedManifest.subject_id || (isChr3d ? ("chr_" + seed) : ("line_" + seed))
       };
       const newPromptText = t.build(ctx);
 
       updatedManifest.spec = "cosmimera-art-task/1";
       updatedManifest.task_header = header;
-      updatedManifest.task_type = "model-rig";
+      updatedManifest.task_type = targetId;
 
       return { pkg, changes, newConcept: updatedConcept, newManifest: updatedManifest, newPromptText, targetTaskId };
     }
@@ -2200,7 +2285,7 @@
     filtered.forEach(p => {
       const gk = (p.type === "creature-concept" || p.id.startsWith("cr"))
         ? (p.groupKey || p.baseId || p.id)
-        : (p.type === "model-rig" || p.id.startsWith("mdl"))
+        : (is3dType(p.type) || p.id.startsWith("mdl"))
         ? (p.groupKey || p.baseId || p.id)
         : p.id;
       if (!groupMap.has(gk)) {
@@ -2250,7 +2335,7 @@
       const badges = el("div", { class: "rl-badges" },
         el("span", { class: "rl-stat " + repPkg.status }, statZh),
         repPkg.manifest?.source_pack ? el("span", { class: "rl-link-tag", title: "參照立繪: " + repPkg.manifest.source_pack }, "⬅ " + repPkg.manifest.source_pack.slice(0, 10)) : null,
-        (!repPkg.manifest?.source_pack && pLinked && repPkg.type !== "model-rig") ? el("span", { class: "rl-link-tag", title: "已關聯 3D 模型" }, "➡ 3D") : null
+        (!repPkg.manifest?.source_pack && pLinked && !is3dType(repPkg.type)) ? el("span", { class: "rl-link-tag", title: "已關聯 3D 模型" }, "➡ 3D") : null
       );
 
       const item = el("div", {
@@ -2298,12 +2383,12 @@
 
     // 關聯立繪/3D 標籤
     const refTag = $("#stRefTag");
-    if (pkg.type === "model-rig" && (pkg.manifest?.source_pack || linkedPkg)) {
+    if (is3dType(pkg.type) && (pkg.manifest?.source_pack || linkedPkg)) {
       refTag.style.display = "inline-block";
       const spId = pkg.manifest?.source_pack || linkedPkg?.id;
       refTag.textContent = "⬅ 立繪參照: " + spId;
       refTag.title = "點選切換至雙欄對照或跳轉立繪包";
-    } else if (linkedPkg && pkg.type !== "model-rig") {
+    } else if (linkedPkg && !is3dType(pkg.type)) {
       refTag.style.display = "inline-block";
       refTag.textContent = "➡ 衍生 3D: " + linkedPkg.id;
       refTag.title = "點選切換至雙欄對照或跳轉 3D 包";
@@ -2355,8 +2440,8 @@
       $("#btnModeCompare").classList.add("on");
 
       // 決定 2D 與 3D 的包
-      let p2d = pkg.type === "model-rig" ? linkedPkg : pkg;
-      let p3d = pkg.type === "model-rig" ? pkg : linkedPkg;
+      let p2d = is3dType(pkg.type) ? linkedPkg : pkg;
+      let p3d = is3dType(pkg.type) ? pkg : linkedPkg;
 
       $("#cmp2dId").textContent = p2d ? p2d.id : "無參照立繪包";
       $("#cmp3dId").textContent = p3d ? p3d.id : "無衍生 3D 模型";
@@ -2515,16 +2600,17 @@
       }
 
       // 3D 建模管線完整項目
-      else if (pkg.type === "model-rig" || pkg.id.startsWith("mdl")) {
+      else if (is3dType(pkg.type) || pkg.id.startsWith("mdl")) {
         const m = pkg.manifest || {};
+        const isChr3d = pkg.type === "character-model-rig" || pkg.id.startsWith("chr") || m.source_pack?.startsWith("chr") || pkg.subjectId?.startsWith("chr");
         box.append(
           el("div", { class: "prompt-card" },
-            el("h4", {}, "3D 建模與綁骨管線規格"),
+            el("h4", {}, (isChr3d ? "角色" : "宙獸") + " 3D 建模與綁骨管線規格"),
             el("div", { class: "prompt-kv" },
               el("span", { class: "prompt-k" }, "來源立繪參照"), el("span", { class: "prompt-v", style: "color:var(--accent)" }, m.source_pack || "未綁定（建議一鍵升級）"),
               el("span", { class: "prompt-k" }, "管線流程"), el("span", { class: "prompt-v" }, "Image-to-3D → Blender → 減面烘焙 → 綁骨 → 動作動作槽"),
-              el("span", { class: "prompt-k" }, "骨架體系"), el("span", { class: "prompt-v" }, pkg.id.startsWith("chr") ? "Unity Humanoid (≤75骨骼)" : "Generic (Root→Hips→Spine, ≤60骨骼)"),
-              el("span", { class: "prompt-k" }, "動作規範"), el("span", { class: "prompt-v" }, "30 fps, 攻擊槽 (atk_*)、輔助槽 (sup_*)、部署槽 (field_deploy)"),
+              el("span", { class: "prompt-k" }, "骨架體系"), el("span", { class: "prompt-v" }, isChr3d ? "Unity Humanoid (≤75骨骼)" : "Generic (Root→Hips→Spine, ≤60骨骼)"),
+              el("span", { class: "prompt-k" }, "動作規範"), el("span", { class: "prompt-v" }, isChr3d ? "30 fps, Humanoid 冒險與投擲槽" : "30 fps, 攻擊槽 (atk_*)、輔助槽 (sup_*)、部署槽 (field_deploy)"),
               el("span", { class: "prompt-k" }, "產出格式"), el("span", { class: "prompt-v" }, "FBX (Scale 1.0, Y-up, +Z) ＋ GLB 備用")
             )
           )
@@ -2548,7 +2634,7 @@
     } else if (activeTab === "compare") {
       box.append(el("h4", {}, "立繪 ⇄ 3D 雙向關聯參照"));
 
-      if (pkg.type === "model-rig") {
+      if (is3dType(pkg.type)) {
         box.append(
           el("div", { class: "prompt-card" },
             el("h4", {}, "來源立繪壓縮包 (source_pack)"),
@@ -2585,9 +2671,11 @@
         );
       } else {
         // 立繪包
+        const isChrConcept = pkg.type === "character-concept" || pkg.id.startsWith("chr");
+        const target3dTask = isChrConcept ? "character-model-rig" : "creature-model-rig";
         box.append(
           el("div", { class: "prompt-card" },
-            el("h4", {}, "衍生 3D 模型封裝 (model-rig)"),
+            el("h4", {}, `衍生 3D 模型封裝 (${target3dTask})`),
             el("div", { class: "prompt-kv" },
               el("span", { class: "prompt-k" }, "立繪任務 ID"), el("span", { class: "prompt-v" }, pkg.id),
               el("span", { class: "prompt-k" }, "3D 模型狀態"), el("span", { class: "prompt-v" }, linkedPkg ? "✅ 已建立 3D 成果包 (" + linkedPkg.id + ")" : "⬜ 尚未進行 Image-to-3D 轉換")
@@ -2602,10 +2690,10 @@
                 renderReviewView();
               } }, "⚡ 開啟雙欄對比")
             ) : el("div", { style: "margin-top:10px" },
-              el("p", { class: "muted", style: "margin-bottom:6px" }, "可一鍵將此立繪包（及當前選取圖）帶入鍛造台，生成對應的 Image-to-3D prompt："),
+              el("p", { class: "muted", style: "margin-bottom:6px" }, `可一鍵將此立繪包（及當前選取圖）帶入鍛造台，生成對應的 Image-to-3D prompt：`),
               el("button", { class: "btn mini", type: "button", onclick: () => {
                 sendToImgTo3D(pkg, pkg.images?.[reviewState.activeImgIdx]?.path);
-              } }, "🚀 帶入鍛造台產生 3D Prompt (model-rig)")
+              } }, `🚀 帶入鍛造台產生 3D Prompt (${target3dTask})`)
             )
           )
         );

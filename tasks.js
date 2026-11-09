@@ -19,7 +19,7 @@
   function list(items) { return items.map(s => "- " + s).join("\n"); }
 
   function deliverySection(ctx, tree) {
-    const isModelRig = ctx.task.id === "model-rig";
+    const isModelRig = ctx.task.id === "creature-model-rig" || ctx.task.id === "character-model-rig" || ctx.task.id === "model-rig";
     const manifestObj = {
       spec: "cosmimera-art-task/1",
       task_header: "<原樣抄回本 prompt 第一行>",
@@ -29,7 +29,7 @@
       produced_by: ctx.platformName,
     };
     if (isModelRig) {
-      manifestObj.source_pack = ctx.opts?.source_pack || "<來源立繪包 task_id，例 cr-20261106-7f3a-2105 或 chr-20261106-7f3a-2105>";
+      manifestObj.source_pack = ctx.opts?.source_pack || (ctx.task.id === "character-model-rig" ? "<來源立繪包 task_id，例 chr-20261106-7f3a-2105>" : "<來源立繪包 task_id，例 cr-20261106-7f3a-2105-adult>");
     }
     Object.assign(manifestObj, {
       files: [{ path: "images/<檔名>.png", kind: "<main|turnaround|view|sheet|spec|script|model|anim|flipbook|storyboard|report>", level: "L1|L2" }],
@@ -419,117 +419,212 @@
     },
 
     {
-      // REQ: 使用者 2026-11-07 — image-to-3D → Blender → 綁骨 → 動作在同一管線；輸入/輸出走 Google 雲端硬碟；可批次；宙獸四型態分開處理。
-      // 取代 animation-set（已退役）。招式不在此管線：招式是獨立圖鑑條目，由 move-vfx 處理。
-      id: "model-rig", version: "3.2.0", zh: "Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
-      needs: "either", drop: "Art/_incoming", drive: true,
+      // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：完全拔除 2D 畫風、文化命名、重複交付格式與無效檢查，嚴格對齊立繪包 front/turnaround 與 concept.json。
+      id: "creature-model-rig", version: "4.1.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
-        { key: "scope", type: "select", label: "範圍", items: () => [{ v: "single", zh: "單一立繪包（目前概念）" }, { v: "batch", zh: "批次：image_in 內所有立繪包" }], def: "single" },
-        { key: "source_pack", type: "text", label: "參照立繪包 ID (source_pack)", def: "", placeholder: "例：cr-20261106-7f3a-2105-adult 或 chr-20261106-7f3a-2105", when: o => o.scope !== "batch" },
+        { key: "scope", type: "select", label: "範圍", items: () => [{ v: "single", zh: "單一立繪包（目前概念）" }, { v: "batch", zh: "批次：image_in 內所有宙獸立繪包 (cr-*.zip)" }], def: "single" },
+        { key: "source_pack", type: "text", label: "參照宙獸立繪包 ID (source_pack)", def: "", placeholder: "例：cr-20261106-7f3a-2105-adult", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
-        { key: "subject", type: "select", label: "對象", items: () => [{ v: "character", zh: "目前角色概念" }, { v: "creature", zh: "目前宙獸概念" }], def: "creature", when: o => o.scope !== "batch" },
-        { key: "stage", type: "select", label: "宙獸型態（分開處理）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult", when: o => o.scope !== "batch" && o.subject === "creature" },
-        { key: "actions_character", type: "checks", label: "角色動作", items: () => C.ACTIONS.character.map(a => ({ v: a.id, zh: a.zh })), def: "all", when: o => o.scope === "batch" || o.subject !== "creature" },
-        { key: "actions_creature", type: "checks", label: "宙獸動作", items: () => C.ACTIONS.creature.map(a => ({ v: a.id, zh: a.zh })), def: "all", when: o => o.scope === "batch" || o.subject === "creature" }
+        { key: "stage", type: "select", label: "宙獸型態（四型態分開處理）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult", when: o => o.scope !== "batch" },
+        { key: "actions_creature", type: "checks", label: "宙獸動作", items: () => C.ACTIONS.creature.map(a => ({ v: a.id, zh: a.zh })), def: "all" }
       ],
       build(ctx) {
-        const o = ctx.opts, batch = o.scope === "batch";
-        const kinds = batch ? ["character", "creature"] : [subjectOf(ctx)];
+        const o = ctx.opts, batch = o.scope === "batch", c = ctx.concept || {};
         const S = batch ? "<subject_id>" : ctx.subjectId;
         const curStage = o.stage || "adult";
         const stageDef = C.STAGES.find(s => s.v === curStage) || C.STAGES[2];
         const outId = batch ? ctx.taskId + "-<subject-id>" : ctx.taskId;
+        const unit = "cr_" + S + "_" + curStage;
 
-        const clipTable = kind => {
-          const isCr = kind === "creature";
-          const picked = isCr ? o.actions_creature : o.actions_character;
-          return C.ACTIONS[kind].filter(a => picked.includes(a.id)).map(a =>
-            "| `" + (isCr ? "cr_" + curStage + "_" : "chr_") + a.id + "` | " + a.zh + " | " + a.f + " | " + (a.loop ? "✓" : "") + " | " + (a.rm ? "✓" : "") + " | " + (a.ev || []).join(", ") + " |"
-          ).join("\n");
-        };
-        const rigRule = {
-          creature: "Generic 骨架：`Root`（地面，pivot）→ `Hips` → `Spine_01..n` → `Neck` → `Head`；四肢 `L_`/`R_` 前綴；尾巴 `Tail_01..n`、翅膀 `Wing_L_01..n`；插槽骨 `Socket_Mouth`、`Socket_Head`、`Socket_Core_FX`、`Socket_Front`、`Socket_PetTouch`、`Socket_Ground_FX`。骨骼 ≤ 60。",
-          character: "Unity Humanoid 相容命名：Hips, Spine, Chest, UpperChest, Neck, Head, Left/RightShoulder, Left/RightUpperArm, Left/RightLowerArm, Left/RightHand, 手指三節（Thumb/Index/Middle/Ring/Little）, Left/RightUpperLeg, Left/RightLowerLeg, Left/RightFoot, Left/RightToes；額外骨（頭髮/披風）用 `Extra_` 前綴；插槽骨 `Socket_HandR_Prop`、`Socket_HandL_Prop`、`Socket_Back_Pack`、`Socket_Throw`、`Socket_Head_FX`。骨骼 ≤ 75（含手指）。"
-        };
-        const sizeTable = Object.keys(C.SIZE_CLASSES).map(k => "| " + k + " | " + C.SIZE_CLASSES[k].tris + " | " + C.SIZE_CLASSES[k].tex + "² |").join("\n");
-
-        const kindBlocks = kinds.map(kind => {
-          const isCr = kind === "creature";
-          const unit = isCr ? "cr_" + S + "_" + curStage : S;
-          let src = isCr
-            ? "`images/cr_" + S + "_" + curStage + "_front.png`（單張正面正交灰底）+ `_turnaround.png`（側/背/3/4 從三視圖裁切）"
-            : "`images/" + S + "_front.png`（單張正面正交灰底）+ `_turnaround.png`（側/背/3/4 從三視圖裁切）";
-          if (o.input_img) {
-            src = "`" + o.input_img + "`（審查台指定輸入立繪，其餘視圖由三視圖裁切補齊）";
-          }
-          return [
-            "### " + (isCr ? "宙獸型態：" + stageDef.zh + "（`cr-*-" + curStage + "`）" : "角色（立繪包 task_type = character-concept，`chr-` 開頭）"),
-            "- image-to-3D 輸入圖：" + src + "。",
-            isCr
-              ? "- 目標型態：" + stageDef.zh + "（" + curStage + "），獨立模型、一套骨架與動作。面數與貼圖依該型態 size_class 查上表。"
-              : "- 面數 15–25k tris，貼圖 2048²。",
-            "- 骨架：" + rigRule[kind],
-            "- 動作（30 fps；loop＝循環；RM＝root motion）：",
-            "",
-            "| clip | 說明 | 幀數 | loop | RM | 事件@幀 |",
-            "|---|---|---|---|---|---|",
-            clipTable(kind),
-            "",
-            "產出（`<unit>` = `" + unit + "`）：",
-            "",
-            "| 檔案 | 內容 | 層級 |",
-            "|---|---|---|",
-            "| `images/<unit>_model_front.png`、`_model_side.png`、`_model_back.png` | 建模參考圖：平光、無描邊、無陰影、灰底 1:1、全身置中 2048px | L1 |",
-            "| `images/<unit>_anim_sheet_01.png` | 關鍵姿勢分鏡，每動作 3–5 格 | L1 |",
-            "| `models/<unit>.glb`、`models/<unit>.fbx` | image-to-3D 產生、減面 UV 烘焙並綁骨之模型 | L2 |",
-            "| `anims/" + (isCr ? "cr_" + curStage + "_<clip>" : "chr_<clip>") + ".fbx` | 完成動畫，每 clip 一檔 | L2 |"
-          ].join("\n");
-        }).join("\n\n");
-
-        const inputSection = batch
+        // 體型與面數規格對齊
+        const sizes = (c.size_profile || "S→M→L→XL").split("→");
+        const stageIdx = ["juvenile", "adolescent", "adult", "overload"].indexOf(curStage);
+        const curSize = sizes[stageIdx >= 0 ? stageIdx : 2] || "L";
+        const szInfo = C.SIZE_CLASSES[curSize] || C.SIZE_CLASSES.L;
+        const sizeSpec = batch
           ? [
-            "## 輸入：Google 雲端硬碟立繪包（批次）",
-            list([
-              "資料夾：`" + DRIVE_IN + "/`。處理其中所有 `chr-*.zip` 與 `cr-*.zip`。",
-              "跳過已完成的：`" + DRIVE_OUT + "/` 已有任何 `mdl-*.zip` 的 manifest.source_pack 等於該立繪包 task_id。",
-              "逐包獨立處理：每包各打包獨立 zip。"
-            ])
+            "- 體型等級面數對照（依各立繪包 stage 查表）：",
+            "  - XS: 3–5k tris, 512² | S: 5–8k tris, 1024² | M: 8–15k tris, 1024² | L: 15–25k tris, 2048² | XL: 25–35k tris, 2048²"
           ].join("\n")
-          : [
-            "## 輸入：Google 雲端硬碟立繪包",
-            list([
-              o.source_pack
-                ? "資料夾：`" + DRIVE_IN + "/`。指定來源立繪包：`" + o.source_pack + ".zip`（manifest.task_id = `" + o.source_pack + "`）。"
-                : "資料夾：`" + DRIVE_IN + "/`。找 manifest.subject_id = `" + S + "` 的立繪包。",
-              o.input_img ? "指定 image-to-3D 輸入圖：`" + o.input_img + "`。" : null,
-              "找不到就停下來告訴我，不要改用其他主體或自行生成立繪。"
-            ].filter(Boolean))
-          ].join("\n");
+          : `- 目標型態：【${stageDef.zh}（${curStage}）】· 體型等級【${curSize}】\n- 面數與貼圖：面數預算 **${szInfo.tris} tris** · 貼圖 **${szInfo.tex}² PBR** (Base Color, Normal, Metallic/Roughness)`;
 
-        const body = [
-          inputSection,
+        const src = o.input_img
+          ? `\`${o.input_img}\`（指定首要視圖，其餘由三視圖合圖裁切補齊）`
+          : `\`images/cr_${S}_${curStage}_front.png\`（正面正交基準 1:1）＋ \`images/cr_${S}_${curStage}_turnaround.png\`（正交三視圖合圖 16:9）`;
+
+        const picked = o.actions_creature || [];
+        const clipLines = C.ACTIONS.creature.filter(a => picked.includes(a.id)).map(a =>
+          "| `cr_" + curStage + "_" + a.id + "` | " + a.zh + " | " + a.f + " | " + (a.loop ? "✓" : "") + " | " + (a.rm ? "✓" : "") + " | " + (a.ev || []).join(", ") + " |"
+        ).join("\n");
+
+        const rigRule = "Generic 骨架（≤ 60 骨骼）：`Root`（地面原點 pivot）→ `Hips` → `Spine_01..n` → `Neck` → `Head`；四肢以 `L_`/`R_` 為前綴；尾部 `Tail_01..n`；翅膀 `Wing_L_01..n`；插槽骨 `Socket_Mouth`、`Socket_Head`、`Socket_Front`、`Socket_Core_FX`、`Socket_PetTouch`、`Socket_Ground_FX`。";
+
+        const manifestObj = {
+          spec: "cosmimera-art-task/1",
+          task_header: "<原樣抄回本 prompt 第一行>",
+          task_id: outId,
+          task_type: "creature-model-rig",
+          subject_id: S,
+          produced_by: ctx.platformName,
+          source_pack: o.source_pack || "<來源宙獸立繪包 task_id，例 cr-20261106-7f3a-2105-adult>",
+          files: [
+            { path: `models/${unit}.glb`, kind: "model", level: "L2" },
+            { path: `models/${unit}.fbx`, kind: "model", level: "L2" },
+            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
+            { path: "rig/build_rig.py", kind: "script", level: "L1" },
+            { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
+            { path: "anims/keyframes.py", kind: "script", level: "L1" },
+            { path: `anims/cr_${curStage}_idle.fbx`, kind: "anim", level: "L2" },
+            { path: "pipeline/run_all.py", kind: "script", level: "L1" },
+            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" },
+            { path: `images/${unit}_anim_sheet_01.png`, kind: "sheet", level: "L1" }
+          ],
+          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }],
+          notes: "3D 建模拓撲、減面與骨架綁定紀錄"
+        };
+
+        const sections = [
+          ctx.header,
           "",
-          "## 規格與產出",
-          kindBlocks,
+          "# 任務：宙獸 Image-to-3D 建模、綁骨與動作",
           "",
-          "### 共同規格腳本（L1）",
-          "| 檔案 | 內容 | 層級 |",
-          "|---|---|---|",
-          "| `rig/rig_spec.json` | 骨骼清單：name、parent、head/tail 位置、插槽骨 | L1 |",
-          "| `rig/build_rig.py` | Blender 腳本：匯入同名 mesh → 清理/減面 → 依 rig_spec 建 armature、權重、插槽骨 → 匯出 FBX/GLB | L1 |",
-          "| `anims/anim_spec.json` | 動作 clip 規格與 key_poses | L1 |",
-          "| `anims/keyframes.py` | Blender 腳本：依 anim_spec 建 Actions 並匯出 FBX | L1 |",
-          "| `pipeline/run_all.py` | 一鍵串接腳本 | L1 |",
-          "| `pipeline/README.md` | 執行步驟與參數說明 | L1 |",
+          "## 1. 輸入立繪參照",
+          batch
+            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（處理所有 \`cr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。`
+            : [
+              `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "cr-" + S + "-" + curStage + ".zip"}\``,
+              `- 核心輸入圖：${src}`,
+              c.name_zh ? `- 概念設定：【${c.name_zh}】${c.elements ? "屬性【" + c.elements.join("、") + "】" : ""}${c.bases ? " · 基底【" + c.bases.join(" + ") + "】" : ""}` : null
+            ].filter(Boolean).join("\n"),
           "",
-          "## 交付格式",
-          list([
-            "單獨打包成 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`。",
-            "manifest.json 填入 `source_pack: \"" + (o.source_pack || "<來源立繪包 task_id>") + "\"`。"
-          ])
-        ].join("\n");
-        const tree = "├── images/\n├── rig/\n├── anims/\n├── pipeline/\n└── models/      # L2";
-        return common(ctx, body) + "\n\n" + deliverySection(Object.assign({}, ctx, { taskId: outId, subjectId: S }), tree);
+          "## 2. 3D 拓撲與貼圖規格",
+          sizeSpec,
+          `- 輸出格式：\`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）`,
+          "",
+          "## 3. 骨架體系（Generic Rig）",
+          "- " + rigRule,
+          "",
+          "## 4. 動畫動作清單（30 fps）",
+          "| clip | 說明 | 幀數 | loop | RM | 事件@幀 |",
+          "|---|---|---|---|---|---|",
+          clipLines,
+          "",
+          "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          "```",
+          outId + "/",
+          "├── manifest.json",
+          "├── models/          # " + unit + ".glb, .fbx (L2: 烘焙貼圖完成模型)",
+          "├── anims/           # anim_spec.json, keyframes.py (L1), cr_" + curStage + "_*.fbx (L2)",
+          "├── rig/             # rig_spec.json, build_rig.py (L1)",
+          "├── pipeline/        # run_all.py, README.md (L1)",
+          "└── images/          # " + unit + "_model_front.png, _side.png, _back.png, _anim_sheet_01.png (L1: 正交彩現與動作分鏡)",
+          "```",
+          "manifest.json 格式：",
+          json(manifestObj),
+          "- **source_pack 必須如實填寫來源立繪包 task_id**，供技術美術與審查台 100% 雙向追溯。",
+          ctx.notes ? "\n## 使用者補充\n" + ctx.notes : null
+        ];
+
+        return sections.filter(s => s !== null && s !== undefined).join("\n");
+      }
+    },
+
+    {
+      // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：完全拔除 2D 畫風、文化命名、重複交付格式與無效檢查，嚴格對齊立繪包 front/turnaround 與 concept.json。
+      id: "character-model-rig", version: "4.1.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      needs: "character", drop: "Art/_incoming", drive: true,
+      options: [
+        { key: "scope", type: "select", label: "範圍", items: () => [{ v: "single", zh: "單一立繪包（目前概念）" }, { v: "batch", zh: "批次：image_in 內所有角色立繪包 (chr-*.zip)" }], def: "single" },
+        { key: "source_pack", type: "text", label: "參照角色立繪包 ID (source_pack)", def: "", placeholder: "例：chr-20261106-7f3a-2105", when: o => o.scope !== "batch" },
+        { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
+        { key: "actions_character", type: "checks", label: "角色動作", items: () => C.ACTIONS.character.map(a => ({ v: a.id, zh: a.zh })), def: "all" }
+      ],
+      build(ctx) {
+        const o = ctx.opts, batch = o.scope === "batch", c = ctx.concept || {};
+        const S = batch ? "<subject_id>" : ctx.subjectId;
+        const outId = batch ? ctx.taskId + "-<subject-id>" : ctx.taskId;
+        const unit = S;
+
+        const src = o.input_img
+          ? `\`${o.input_img}\`（指定首要視圖，其餘由三視圖合圖裁切補齊）`
+          : `\`images/${S}_front.png\`（正面正交基準 1:1，T-pose）＋ \`images/${S}_turnaround.png\`（T-pose 正交三視圖合圖 16:9）`;
+
+        const picked = o.actions_character || [];
+        const clipLines = C.ACTIONS.character.filter(a => picked.includes(a.id)).map(a =>
+          "| `chr_" + a.id + "` | " + a.zh + " | " + a.f + " | " + (a.loop ? "✓" : "") + " | " + (a.rm ? "✓" : "") + " | " + (a.ev || []).join(", ") + " |"
+        ).join("\n");
+
+        const rigRule = "Unity Humanoid 相容骨架（≤ 75 骨骼）：標準 Humanoid 命名（Hips, Spine, Chest, UpperChest, Neck, Head, Shoulder, Arm, Hand, 手指三節 Thumb/Index/Middle/Ring/Little, Leg, Foot, Toes）；頭髮/披風以 `Extra_*` 前綴；插槽骨 `Socket_HandR_Prop`、`Socket_HandL_Prop`、`Socket_Back_Pack`、`Socket_Throw`、`Socket_Head_FX`。";
+
+        const manifestObj = {
+          spec: "cosmimera-art-task/1",
+          task_header: "<原樣抄回本 prompt 第一行>",
+          task_id: outId,
+          task_type: "character-model-rig",
+          subject_id: S,
+          produced_by: ctx.platformName,
+          source_pack: o.source_pack || "<來源角色立繪包 task_id，例 chr-20261106-7f3a-2105>",
+          files: [
+            { path: `models/${unit}.glb`, kind: "model", level: "L2" },
+            { path: `models/${unit}.fbx`, kind: "model", level: "L2" },
+            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
+            { path: "rig/build_rig.py", kind: "script", level: "L1" },
+            { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
+            { path: "anims/keyframes.py", kind: "script", level: "L1" },
+            { path: "anims/chr_idle.fbx", kind: "anim", level: "L2" },
+            { path: "pipeline/run_all.py", kind: "script", level: "L1" },
+            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" },
+            { path: `images/${unit}_anim_sheet_01.png`, kind: "sheet", level: "L1" }
+          ],
+          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }],
+          notes: "Humanoid 建模拓撲、權重與骨架綁定紀錄"
+        };
+
+        const sections = [
+          ctx.header,
+          "",
+          "# 任務：角色 Image-to-3D 建模、綁骨與動作",
+          "",
+          "## 1. 輸入立繪參照",
+          batch
+            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（處理所有 \`chr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。`
+            : [
+              `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "chr-" + S + ".zip"}\``,
+              `- 核心輸入圖：${src}`,
+              c.name_zh ? `- 角色設定：【${c.name_zh}】${c.gender || "角色"} · 約 ${c.height || "170 cm"}${c.vessel ? " · 隨身道具【" + (c.vessel.zh || c.vessel) + "】" : ""}` : null
+            ].filter(Boolean).join("\n"),
+          "",
+          "## 2. 3D 拓撲與貼圖規格",
+          "- 面數預算：**15,000 ~ 25,000 tris**（健康卡通比例、拓撲乾淨適配變形）",
+          "- 貼圖規格：**2048 × 2048 PBR**（Base Color, Normal, Metallic/Roughness）",
+          `- 輸出格式：\`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）`,
+          "",
+          "## 3. 骨架體系（Unity Humanoid）",
+          "- " + rigRule,
+          "",
+          "## 4. 動畫動作清單（30 fps）",
+          "| clip | 說明 | 幀數 | loop | RM | 事件@幀 |",
+          "|---|---|---|---|---|---|",
+          clipLines,
+          "",
+          "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          "```",
+          outId + "/",
+          "├── manifest.json",
+          "├── models/          # " + unit + ".glb, .fbx (L2: 烘焙貼圖完成模型)",
+          "├── anims/           # anim_spec.json, keyframes.py (L1), chr_*.fbx (L2)",
+          "├── rig/             # rig_spec.json, build_rig.py (L1)",
+          "├── pipeline/        # run_all.py, README.md (L1)",
+          "└── images/          # " + unit + "_model_front.png, _side.png, _back.png, _anim_sheet_01.png (L1: 正交彩現與動作分鏡)",
+          "```",
+          "manifest.json 格式：",
+          json(manifestObj),
+          "- **source_pack 必須如實填寫來源立繪包 task_id**，供技術美術與審查台 100% 雙向追溯。",
+          ctx.notes ? "\n## 使用者補充\n" + ctx.notes : null
+        ];
+
+        return sections.filter(s => s !== null && s !== undefined).join("\n");
       }
     },
 
