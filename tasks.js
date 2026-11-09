@@ -10,6 +10,7 @@
   // REQ: 使用者 2026-11-07 — 3D 管線的輸入/輸出固定在這兩個雲端硬碟資料夾。
   const DRIVE_IN = "我的雲端硬碟/project/cosmos_chimera/image_in";
   const DRIVE_OUT = "我的雲端硬碟/project/cosmos_chimera/3D_out";
+  const DRIVE_BACKUP = "我的雲端硬碟/project/cosmos_chimera/image_backup";
 
   const CULTURE_RULES =
     "- 文化原型只擷取象徵符號與意象，不直接照搬宗教儀式紋樣，不用神祇/人物本名為角色命名。\n" +
@@ -420,10 +421,10 @@
 
     {
       // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：完全拔除 2D 畫風、文化命名、重複交付格式與無效檢查，嚴格對齊立繪包 front/turnaround 與 concept.json。
-      id: "creature-model-rig", version: "4.1.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "creature-model-rig", version: "4.2.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
-        { key: "scope", type: "select", label: "範圍", items: () => [{ v: "single", zh: "單一立繪包（目前概念）" }, { v: "batch", zh: "批次：image_in 內所有宙獸立繪包 (cr-*.zip)" }], def: "single" },
+        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 cr-*.zip）" }], def: "single" },
         { key: "source_pack", type: "text", label: "參照宙獸立繪包 ID (source_pack)", def: "", placeholder: "例：cr-20261106-7f3a-2105-adult", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
         { key: "stage", type: "select", label: "宙獸型態（四型態分開處理）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult", when: o => o.scope !== "batch" },
@@ -435,7 +436,8 @@
         const curStage = o.stage || "adult";
         const stageDef = C.STAGES.find(s => s.v === curStage) || C.STAGES[2];
         const outId = batch ? ctx.taskId + "-<subject-id>" : ctx.taskId;
-        const unit = "cr_" + S + "_" + curStage;
+        const unit = batch ? "cr_" + S + "_<stage>" : "cr_" + S + "_" + curStage;
+        const stageTag = batch ? "<stage>" : curStage;
 
         // 體型與面數規格對齊
         const sizes = (c.size_profile || "S→M→L→XL").split("→");
@@ -455,7 +457,7 @@
 
         const picked = o.actions_creature || [];
         const clipLines = C.ACTIONS.creature.filter(a => picked.includes(a.id)).map(a =>
-          "| `cr_" + curStage + "_" + a.id + "` | " + a.zh + " | " + a.f + " | " + (a.loop ? "✓" : "") + " | " + (a.rm ? "✓" : "") + " | " + (a.ev || []).join(", ") + " |"
+          "| `cr_" + stageTag + "_" + a.id + "` | " + a.zh + " | " + a.f + " | " + (a.loop ? "✓" : "") + " | " + (a.rm ? "✓" : "") + " | " + (a.ev || []).join(", ") + " |"
         ).join("\n");
 
         const rigRule = "Generic 骨架（≤ 60 骨骼）：`Root`（地面原點 pivot）→ `Hips` → `Spine_01..n` → `Neck` → `Head`；四肢以 `L_`/`R_` 為前綴；尾部 `Tail_01..n`；翅膀 `Wing_L_01..n`；插槽骨 `Socket_Mouth`、`Socket_Head`、`Socket_Front`、`Socket_Core_FX`、`Socket_PetTouch`、`Socket_Ground_FX`。";
@@ -472,16 +474,11 @@
             { path: `models/${unit}.glb`, kind: "model", level: "L2" },
             { path: `models/${unit}.fbx`, kind: "model", level: "L2" },
             { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "rig/build_rig.py", kind: "script", level: "L1" },
             { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/keyframes.py", kind: "script", level: "L1" },
-            { path: `anims/cr_${curStage}_idle.fbx`, kind: "anim", level: "L2" },
-            { path: "pipeline/run_all.py", kind: "script", level: "L1" },
-            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" },
-            { path: `images/${unit}_anim_sheet_01.png`, kind: "sheet", level: "L1" }
+            { path: `anims/cr_${stageTag}_idle.fbx`, kind: "anim", level: "L2" },
+            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" }
           ],
-          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }],
-          notes: "3D 建模拓撲、減面與骨架綁定紀錄"
+          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }]
         };
 
         const sections = [
@@ -489,12 +486,13 @@
           "",
           "# 任務：宙獸 Image-to-3D 建模、綁骨與動作",
           "",
-          "## 1. 輸入立繪參照",
+          "## 1. 輸入立繪參照與歸檔",
           batch
-            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（處理所有 \`cr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。`
+            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（批次處理所有吻合條件之 \`cr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。\n- 歸檔移動：每包處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
             : [
               `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "cr-" + S + "-" + curStage + ".zip"}\``,
               `- 核心輸入圖：${src}`,
+              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`,
               c.name_zh ? `- 概念設定：【${c.name_zh}】${c.elements ? "屬性【" + c.elements.join("、") + "】" : ""}${c.bases ? " · 基底【" + c.bases.join(" + ") + "】" : ""}` : null
             ].filter(Boolean).join("\n"),
           "",
@@ -514,11 +512,10 @@
           "```",
           outId + "/",
           "├── manifest.json",
-          "├── models/          # " + unit + ".glb, .fbx (L2: 烘焙貼圖完成模型)",
-          "├── anims/           # anim_spec.json, keyframes.py (L1), cr_" + curStage + "_*.fbx (L2)",
-          "├── rig/             # rig_spec.json, build_rig.py (L1)",
-          "├── pipeline/        # run_all.py, README.md (L1)",
-          "└── images/          # " + unit + "_model_front.png, _side.png, _back.png, _anim_sheet_01.png (L1: 正交彩現與動作分鏡)",
+          "├── models/          # " + unit + ".glb, .fbx (PBR 烘焙貼圖完成模型)",
+          "├── anims/           # anim_spec.json (L1), cr_" + stageTag + "_*.fbx (L2)",
+          "├── rig/             # rig_spec.json (L1)",
+          "└── images/          # " + unit + "_model_front.png (L1: 正交彩現檢視圖)",
           "```",
           "manifest.json 格式：",
           json(manifestObj),
@@ -532,10 +529,10 @@
 
     {
       // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：完全拔除 2D 畫風、文化命名、重複交付格式與無效檢查，嚴格對齊立繪包 front/turnaround 與 concept.json。
-      id: "character-model-rig", version: "4.1.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "character-model-rig", version: "4.2.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "character", drop: "Art/_incoming", drive: true,
       options: [
-        { key: "scope", type: "select", label: "範圍", items: () => [{ v: "single", zh: "單一立繪包（目前概念）" }, { v: "batch", zh: "批次：image_in 內所有角色立繪包 (chr-*.zip)" }], def: "single" },
+        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 chr-*.zip）" }], def: "single" },
         { key: "source_pack", type: "text", label: "參照角色立繪包 ID (source_pack)", def: "", placeholder: "例：chr-20261106-7f3a-2105", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
         { key: "actions_character", type: "checks", label: "角色動作", items: () => C.ACTIONS.character.map(a => ({ v: a.id, zh: a.zh })), def: "all" }
@@ -569,16 +566,11 @@
             { path: `models/${unit}.glb`, kind: "model", level: "L2" },
             { path: `models/${unit}.fbx`, kind: "model", level: "L2" },
             { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "rig/build_rig.py", kind: "script", level: "L1" },
             { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/keyframes.py", kind: "script", level: "L1" },
             { path: "anims/chr_idle.fbx", kind: "anim", level: "L2" },
-            { path: "pipeline/run_all.py", kind: "script", level: "L1" },
-            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" },
-            { path: `images/${unit}_anim_sheet_01.png`, kind: "sheet", level: "L1" }
+            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" }
           ],
-          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }],
-          notes: "Humanoid 建模拓撲、權重與骨架綁定紀錄"
+          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }]
         };
 
         const sections = [
@@ -586,12 +578,13 @@
           "",
           "# 任務：角色 Image-to-3D 建模、綁骨與動作",
           "",
-          "## 1. 輸入立繪參照",
+          "## 1. 輸入立繪參照與歸檔",
           batch
-            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（處理所有 \`chr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。`
+            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（批次處理所有吻合條件之 \`chr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。\n- 歸檔移動：每包處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
             : [
               `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "chr-" + S + ".zip"}\``,
               `- 核心輸入圖：${src}`,
+              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`,
               c.name_zh ? `- 角色設定：【${c.name_zh}】${c.gender || "角色"} · 約 ${c.height || "170 cm"}${c.vessel ? " · 隨身道具【" + (c.vessel.zh || c.vessel) + "】" : ""}` : null
             ].filter(Boolean).join("\n"),
           "",
@@ -612,13 +605,13 @@
           "```",
           outId + "/",
           "├── manifest.json",
-          "├── models/          # " + unit + ".glb, .fbx (L2: 烘焙貼圖完成模型)",
-          "├── anims/           # anim_spec.json, keyframes.py (L1), chr_*.fbx (L2)",
-          "├── rig/             # rig_spec.json, build_rig.py (L1)",
-          "├── pipeline/        # run_all.py, README.md (L1)",
-          "└── images/          # " + unit + "_model_front.png, _side.png, _back.png, _anim_sheet_01.png (L1: 正交彩現與動作分鏡)",
+          "├── models/          # " + unit + ".glb, .fbx (PBR 烘焙貼圖完成模型)",
+          "├── anims/           # anim_spec.json (L1), chr_*.fbx (L2)",
+          "├── rig/             # rig_spec.json (L1)",
+          "└── images/          # " + unit + "_model_front.png (L1: 正交彩現檢視圖)",
           "```",
           "manifest.json 格式：",
+          json(manifestObj),
           json(manifestObj),
           "- **source_pack 必須如實填寫來源立繪包 task_id**，供技術美術與審查台 100% 雙向追溯。",
           ctx.notes ? "\n## 使用者補充\n" + ctx.notes : null

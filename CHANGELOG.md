@@ -2,6 +2,11 @@
 
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
+- 2026-11-09 · template@(creature-model-rig@4.2.0, character-model-rig@4.2.0) · img-to-3D 管線切換指定處理與批量處理版本，並落實處理完畢自動移至相鄰 image_backup 歸檔機制：
+  - **模式切換規格化**：明確劃分「指定處理（單一立繪包）」與「批量處理（處理資料夾內吻合目標條件之全部檔案）」。
+  - **相鄰備份目錄歸檔**：無論哪種模式，立繪包處理完畢後均嚴格移動至相鄰之 `image_backup/` 目錄，避免重複讀取或遺失。
+  - **極致精簡原則**：去除所有與 3D 拓撲、貼圖、骨架及動作無關的贅詞冗述。
+
 - 2026-11-09 · tool@2.0.0 · template@(creature-model-rig@4.1.0, character-model-rig@4.1.0) · 分開宙獸與角色的 img-to-3D 管線項目並全面去冗餘重構：
   - **3D 管線解耦為獨立任務項目**：將原本共用之混合管線 `model-rig` 正式拆分為「宙獸 Image-to-3D 建模、綁骨與動作 (`creature-model-rig`)」與「角色 Image-to-3D 建模、綁骨與動作 (`character-model-rig`)」。
   - **嚴格對齊 2D 立繪開發包**：輸入圖精準對齊 2D 開發包之正面基準圖（`_front.png` 1:1）與正交三視圖合圖（`_turnaround.png` 16:9）；參數設定直接繼承來源包內之 `concept.json`（體型面數對照、屬性、身高比例等）；`source_pack` 雙向回溯綁定。

@@ -142,7 +142,19 @@
     }
     setViewMode("forge");
     renderAll();
-    toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」" + (o.input_img ? "（指定圖：" + o.input_img + "）" : "") + " 帶入 " + t.zh);
+    toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」帶入指定 3D 任務");
+  }
+
+  function sendToImgTo3DBatch(pkg) {
+    const isChr = pkg ? (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr")) : false;
+    const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
+    state.taskId = targetTaskId;
+    const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
+    const o = taskOpts(t);
+    o.scope = "batch";
+    setViewMode("forge");
+    renderAll();
+    toast("已切換至「" + t.zh + "（批量處理模式）」");
   }
 
   // REQ: 使用者 2026-11-07 — 已設計的宙獸（P2-08 御三家等）直接產出立繪 / img-to-3D prompt。
@@ -950,7 +962,19 @@
     t.options.filter(d => (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
-      if (is3dType(t.id) && d.key === "source_pack") {
+      if (d.key === "scope") {
+        control = el("div", { class: "seg", style: "display:inline-flex;width:100%;margin-bottom:2px;" },
+          items.map(i => el("button", {
+            type: "button",
+            class: "segb" + (o.scope === i.v ? " on" : ""),
+            style: "flex:1;text-align:center;padding:7px 10px;font-weight:600;font-size:12px;",
+            onclick: () => {
+              o.scope = i.v;
+              renderAll();
+            }
+          }, (i.v === "single" ? "🎯 " : "📦 ") + i.zh))
+        );
+      } else if (is3dType(t.id) && d.key === "source_pack") {
         const isChr3d = t.id === "character-model-rig";
         const isCr3d = t.id === "creature-model-rig";
         const conceptPkgs = reviewState.packages.filter(p => {
@@ -1060,6 +1084,19 @@
         control = el("input", { value: o[d.key], placeholder: d.placeholder || "", onchange: e => { o[d.key] = e.target.value; renderAll(); } });
       }
       box.append(el("div", { class: "field opt" }, el("label", {}, d.label), control));
+      if (d.key === "scope" && is3dType(t.id)) {
+        const isBatch = o.scope === "batch";
+        const isChr = t.id === "character-model-rig";
+        const banner = el("div", { class: "note-box", style: "margin:4px 0 8px 0;padding:8px 10px;background:#18202d;border:1px solid #2e3a4e;border-radius:6px;font-size:11px;line-height:1.6;" },
+          el("div", { style: "font-weight:600;color:var(--accent);margin-bottom:2px;" }, isBatch ? "📦 批量處理模式（吻合條件檔案全部處理）" : "🎯 指定處理模式（單一立繪包）"),
+          el("div", {}, isBatch
+            ? el("span", {}, "• 掃描目錄：", el("code", {}, "image_in/"), "（處理所有吻合之 ", el("code", {}, isChr ? "chr-*.zip" : "cr-*.zip"), "）")
+            : el("span", {}, "• 來源立繪：由下方清單挑選指定立繪包與核心輸入圖")),
+          el("div", {}, "• 完成歸檔：處理完成後一律移至相鄰 ", el("code", {}, "image_backup/")),
+          el("div", {}, "• 交付儲存：各模型獨立打包並上傳至 ", el("code", {}, "3D_out/"))
+        );
+        box.append(banner);
+      }
     });
     if (!box.children.length) box.append(el("p", { class: "muted" }, "此任務沒有額外選項。"));
   }
@@ -1125,6 +1162,7 @@
         el("ol", {},
           el("li", {}, "先把角色/宙獸立繪包（", el("code", {}, "chr-*.zip / cr-*.zip"), "）放到雲端硬碟 ", el("code", {}, "project/cosmos_chimera/image_in/")),
           el("li", {}, "按「複製 prompt」→「開啟 Gemini」切到任務模式貼上送出"),
+          el("li", {}, "處理完成之立繪包會自動移至相鄰之 ", el("code", {}, "project/cosmos_chimera/image_backup/"), " 歸檔，避免重複處理"),
           el("li", {}, "完成後從雲端硬碟 ", el("code", {}, "project/cosmos_chimera/3D_out/"), " 下載 ", el("code", {}, zips), " 到「下載」資料夾"),
           el("li", {}, "解壓到 ", el("code", {}, dest + "\\"), "，再到「成果審查台」審查。")
         ),
@@ -2498,11 +2536,15 @@
     // 快捷產出 3D Prompt 按鈕狀態更新
     const isConceptPkg = pkg.type === "creature-concept" || pkg.type === "character-concept" || pkg.id.startsWith("cr-") || pkg.id.startsWith("chr-");
     const btnToImg3d = $("#btnToImg3d");
+    const btnToImg3dBatch = $("#btnToImg3dBatch");
     if (btnToImg3d) {
       btnToImg3d.style.display = isConceptPkg ? "inline-block" : "none";
       const curIm = pkg.images[reviewState.activeImgIdx];
-      btnToImg3d.textContent = curIm ? "🧊 以當前圖產出 3D Prompt" : "🧊 產出 3D Prompt";
-      btnToImg3d.title = curIm ? "以目前預覽圖「" + curIm.path + "」帶入 img-to-3D 管線產出 Prompt" : "將此立繪包帶入 img-to-3D 管線產出 Prompt";
+      btnToImg3d.textContent = curIm ? "🎯 指定 3D Prompt (當前圖)" : "🎯 指定 3D Prompt";
+      btnToImg3d.title = curIm ? "以目前預覽圖「" + curIm.path + "」帶入指定 3D 任務" : "將此立繪包帶入指定 3D 任務";
+    }
+    if (btnToImg3dBatch) {
+      btnToImg3dBatch.style.display = isConceptPkg ? "inline-block" : "none";
     }
 
     // 渲染右欄分頁資訊
@@ -3079,6 +3121,10 @@
       const pkg = getActivePkg();
       if (!pkg) return;
       sendToImgTo3D(pkg, pkg.images?.[reviewState.activeImgIdx]?.path);
+    });
+    $("#btnToImg3dBatch")?.addEventListener("click", () => {
+      const pkg = getActivePkg();
+      sendToImgTo3DBatch(pkg);
     });
     $("#btnBackup")?.addEventListener("click", () => {
       const pkg = getActivePkg();
