@@ -221,6 +221,47 @@
   .img-picker-label { font-size: 10.5px; color: var(--muted); margin-top: 4px; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: Consolas, monospace; }
   .img-picker-item.on .img-picker-label { color: #7fd8ff; font-weight: bold; }
   .selected-img-badge { display: flex; align-items: center; justify-content: space-between; background: #1a2736; border: 1px solid #2b4260; border-radius: 6px; padding: 5px 10px; font-size: 11.5px; color: #a4d2ff; }
+
+  /* ==================== 3D 視圖與動作檢視專用樣式 ==================== */
+  #stage3dView { width: 100%; height: 100%; position: relative; display: none; background: radial-gradient(circle at 50% 40%, #171d2b 0%, #0d1017 100%); overflow: hidden; }
+  #stage3dCanvas { width: 100%; height: 100%; display: block; outline: none; cursor: grab; }
+  #stage3dCanvas:active { cursor: grabbing; }
+  
+  .stage3d-hud { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; align-items: center; gap: 6px; z-index: 12; background: rgba(23,26,33,.88); border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px; backdrop-filter: blur(6px); font-size: 11.5px; }
+  .stage3d-hud-title { font-weight: 600; color: #7fd8ff; font-family: Consolas, monospace; display: inline-flex; align-items: center; gap: 4px; }
+  .stage3d-hud-info { color: var(--muted); font-size: 11px; margin-left: 6px; font-family: Consolas, monospace; }
+  
+  .stage3d-timeline { position: absolute; bottom: 8px; left: 10px; right: 10px; display: flex; align-items: center; gap: 8px; z-index: 12; background: rgba(23,26,33,.92); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,0,0,.5); }
+  .stage3d-timeline-slider { flex: 1; min-width: 120px; position: relative; display: flex; align-items: center; height: 24px; }
+  .stage3d-timeline-slider input[type=range] { width: 100%; height: 5px; accent-color: var(--accent); cursor: pointer; background: #12141a; border-radius: 3px; border: 1px solid var(--line); }
+  .stage3d-events-track { position: absolute; top: 1px; left: 0; right: 0; height: 4px; pointer-events: none; }
+  .stage3d-event-marker { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--warn); transform: translate(-50%, -50%); top: 50%; box-shadow: 0 0 4px rgba(255,212,121,.8); }
+  .stage3d-time-display { font-family: Consolas, monospace; font-size: 11px; color: var(--ink); white-space: nowrap; min-width: 145px; }
+  
+  /* 動作檢驗右欄面板樣式 */
+  .anim-summary-card { background: #1d222c; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+  .anim-progress-bar { width: 100%; height: 6px; background: #12141a; border-radius: 3px; overflow: hidden; margin: 6px 0 2px; }
+  .anim-progress-fill { height: 100%; background: var(--ok); width: 0%; transition: width .2s; }
+  .anim-filter-bar { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .anim-filter-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .anim-filter-chips .segb { font-size: 11px; padding: 2px 7px; height: 24px; }
+  .anim-card { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; background: #171a21; border: 1px solid var(--line); border-radius: 6px; margin-bottom: 5px; transition: .15s; }
+  .anim-card:hover { border-color: #3b4d6a; background: #1b212c; }
+  .anim-card.active { border-color: var(--accent); background: #1c2637; box-shadow: 0 0 10px rgba(110,168,255,.15); }
+  .anim-card.verified { border-left: 3px solid var(--ok); }
+  .anim-card-left { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; cursor: pointer; }
+  .anim-play-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: #12141a; color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; flex: none; transition: .15s; }
+  .anim-play-btn:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .anim-card.active .anim-play-btn { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .anim-card-title { font-family: Consolas, monospace; font-size: 12px; font-weight: 600; color: #dfe5ee; display: flex; align-items: center; gap: 6px; }
+  .anim-card-zh { font-size: 12px; color: #9fb4d8; font-weight: normal; }
+  .anim-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .anim-meta-pill { padding: 1px 5px; border-radius: 3px; background: #12141a; border: 1px solid var(--line); font-size: 10px; font-family: Consolas, monospace; }
+  .anim-event-pill { padding: 1px 5px; border-radius: 3px; background: #2f2515; border: 1px solid #5a4522; color: var(--warn); font-size: 10px; font-family: Consolas, monospace; }
+  .anim-card-right { display: flex; align-items: center; gap: 6px; flex: none; }
+  .anim-verify-label { font-size: 11px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; color: var(--muted); }
+  .anim-verify-label input[type=checkbox] { cursor: pointer; }
+  .anim-verify-label.checked { color: var(--ok); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -380,6 +421,46 @@
             </div>
           </div>
         </div>
+
+        <!-- 3D 模型即時預覽與動作檢視舞台 -->
+        <div id="stage3dView">
+          <canvas id="stage3dCanvas"></canvas>
+          <div class="stage3d-hud" id="stage3dHud">
+            <span class="stage3d-hud-title" id="stage3dClipBadge">🎬 動作: chr_idle (待機)</span>
+            <span class="stage3d-hud-info" id="stage3dInfoBadge"></span>
+            <div style="flex:1"></div>
+            <button class="btn ghost mini" id="btn3dBones" type="button" title="切換骨骼架構顯示 (快捷鍵: B)">🦴 骨骼</button>
+            <button class="btn ghost mini" id="btn3dWireframe" type="button" title="切換拓撲布線顯示 (快捷鍵: W)">🕸️ 拓撲</button>
+            <button class="btn ghost mini" id="btn3dGrid" type="button" title="切換地面網格顯示">📏 網格</button>
+            <button class="btn ghost mini" id="btn3dCamFront" type="button" title="正面視角">正</button>
+            <button class="btn ghost mini" id="btn3dCamSide" type="button" title="側面視角">側</button>
+            <button class="btn ghost mini" id="btn3dCamBack" type="button" title="背面視角">背</button>
+            <button class="btn ghost mini" id="btn3dCamIso" type="button" title="45度透視視角">透</button>
+            <button class="btn ghost mini" id="btn3dReset" type="button" title="重設相機視角 (快捷鍵: R)">🔄 置中</button>
+          </div>
+          <div class="stage3d-timeline" id="stage3dTimeline">
+            <button class="icon" id="btn3dPrevClip" type="button" title="上一個動作 (快捷鍵: [)">⏮</button>
+            <select id="stage3dClipSelect" title="選取動作 Clip" style="width:160px;height:28px;font-size:12px;"></select>
+            <button class="icon" id="btn3dNextClip" type="button" title="下一個動作 (快捷鍵: ])">⏭</button>
+            <button class="btn mini" id="btn3dPlayPause" type="button" title="播放 / 暫停 (快捷鍵: 空白鍵)">⏸ 暫停</button>
+            
+            <div class="stage3d-timeline-slider">
+              <div class="stage3d-events-track" id="stage3dEventsTrack"></div>
+              <input type="range" id="stage3dScrubber" min="0" max="100" value="0" step="0.1" title="動作進度拖曳桿">
+            </div>
+
+            <span class="stage3d-time-display" id="stage3dTimeDisplay">0.00s / 0.00s (0F)</span>
+            
+            <div class="seg" id="stage3dSpeedSeg" style="display:inline-flex;">
+              <button class="segb mini" data-speed="0.25" type="button">0.25x</button>
+              <button class="segb mini" data-speed="0.5" type="button">0.5x</button>
+              <button class="segb on mini" data-speed="1.0" type="button">1x</button>
+              <button class="segb mini" data-speed="1.5" type="button">1.5x</button>
+            </div>
+            <button class="btn ghost mini" id="btn3dLoop" type="button" title="循環模式切換 (快捷鍵: L)">🔁 循環</button>
+          </div>
+        </div>
+
         <div id="stageCarousel"></div>
       </div>
       <div class="stagebar" id="stageBar">
@@ -388,6 +469,7 @@
           <div class="seg" id="modeSeg">
             <button class="segb on" id="btnModeSingle" data-mode="single" type="button">單圖視圖</button>
             <button class="segb" id="btnModeCompare" data-mode="compare" type="button">⚡ 2D ⇄ 3D 雙欄對照</button>
+            <button class="segb" id="btnMode3D" data-mode="3d" type="button">🧊 3D 動作檢驗</button>
           </div>
         </div>
         <div class="stagebar-group" id="viewSegGroup">
@@ -416,6 +498,7 @@
     <!-- 右欄: 分頁資訊欄 (aside#panel) -->
     <aside id="panel">
       <div id="panelTabs">
+        <button class="segb" data-tab="anims" type="button" id="tabBtnAnims">動作檢驗</button>
         <button class="segb on" data-tab="prompt" type="button">Prompt 項目</button>
         <button class="segb" data-tab="compare" type="button">立繪 ⇄ 3D 參照</button>
         <button class="segb" data-tab="spec" type="button">規格明細</button>
@@ -475,6 +558,16 @@
 
 <div id="toast" role="status"></div>
 
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="vendor/GLTFLoader.js"></script>
+<script>
+  if (typeof THREE === "undefined") {
+    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+    document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>');
+  }
+</script>
 <script src="catalog.js"></script>
 <script src="tasks.js"></script>
 <script src="designed.js"></script>

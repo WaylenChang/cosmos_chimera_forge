@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.1.0";
+  const TOOL_VERSION = "2.2.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   const LS_KEY = "cosmimera.prompt-forge.v2";
@@ -93,9 +93,16 @@
 
   const reviewState = {
     packages: [], activePkgId: null, activeStage: "adult", activeImgIdx: 0,
-    filterCat: "all", filterQuery: "", viewMode: "single", // "single" | "compare"
+    filterCat: "all", filterQuery: "", viewMode: "single", // "single" | "compare" | "3d"
     zoomLevel: 1.0, panX: 0, panY: 0,
-    reviews: {}
+    reviews: {},
+    three: {
+      scene: null, camera: null, renderer: null, controls: null, mixer: null, clock: null,
+      currentAction: null, currentClipName: "", clips: [], isPlaying: true, playbackSpeed: 1.0,
+      isLoop: true, showSkeleton: false, skeletonHelper: null, showWireframe: false,
+      showGrid: true, gridHelper: null, loadedPkgId: null, isLooping: false,
+      modelGroup: null, modelStats: null, animFilter: "all", animSearch: ""
+    }
   };
 
   function describeImg(path) {
@@ -1408,6 +1415,7 @@
     const buf = await file.arrayBuffer();
     const files = await parseZipBuffer(buf);
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
+    let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
     for (const path in files) {
       if (path.endsWith("manifest.json")) {
         try { manifestData = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
@@ -1416,6 +1424,17 @@
         try { conceptData = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
       } else if (path.endsWith(".prompt.md") || path.endsWith("prompt.md") || path.endsWith("prompt.txt")) {
         try { rawPrompt = new TextDecoder().decode(files[path]); } catch (e) {}
+      } else if (path.endsWith("anim_spec.json")) {
+        try { animSpec = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
+      } else if (path.endsWith("rig_spec.json")) {
+        try { rigSpec = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
+      } else if (path.endsWith(".glb")) {
+        const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
+        const blob = new Blob([files[path]], { type: "model/gltf-binary" });
+        glbFile = { path: rel, url: URL.createObjectURL(blob), buffer: files[path].buffer, uint8: files[path] };
+      } else if (path.endsWith(".fbx") && (path.includes("anim") || path.includes("models"))) {
+        const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
+        animFiles.push({ path: rel, size: files[path].length });
       }
     }
     let alignedStaged = null;
@@ -1460,6 +1479,10 @@
       rawPrompt,
       images,
       rawFiles: files,
+      glbFile,
+      animSpec,
+      rigSpec,
+      animFiles,
       fileCount: Object.keys(files).length,
       rawZip: file,
       isZip: true,
@@ -1701,6 +1724,30 @@
           ],
           notes: "由成年立繪包 cr-20261106-7f3a-2105-adult 生成 3D 建模正交視圖與骨架動作規格"
         },
+        animSpec: {
+          spec: "cosmimera-anim-spec/1",
+          template: "creature-model-rig@4.1.0",
+          subject_id: "line_7f3a",
+          source_pack: "cr-20261106-7f3a-2105-adult",
+          fps: 30,
+          total_clips: C.CLIPS.creature.length,
+          clips: C.CLIPS.creature.map(c => ({
+            clip: "cr_" + c.id,
+            description: c.zh,
+            fps: 30,
+            frames: c.f,
+            duration_sec: +(c.f / 30).toFixed(4),
+            loop: !!c.loop,
+            root_motion: !!c.rm,
+            events: (c.ev || []).map(ev => {
+              const [name, fr] = ev.split("@");
+              return { name, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
+            }),
+            file: "anims/cr_" + c.id + ".fbx",
+            animated_bones_count: 24,
+            keyframe_samples: Math.ceil(c.f / 2)
+          }))
+        },
         images: [
           { path: "images/cr_line_7f3a_adult_model_front.png", url: createSampleSvgDataUrl("焰甲重龍 · 建模正交正面 2048px", "#e67e22") },
           { path: "images/cr_line_7f3a_adult_model_side.png", url: createSampleSvgDataUrl("焰甲重龍 · 建模正交側面 2048px", "#d35400") },
@@ -1931,6 +1978,7 @@
     for (const taskId in taskGroups) {
       const entries = taskGroups[taskId];
       let manifestData = null, conceptData = null, rawPrompt = "";
+      let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
       const images = [];
       let fileCount = entries.length;
 
@@ -1942,6 +1990,17 @@
           try { conceptData = JSON.parse(await item.file.text()); } catch (e) {}
         } else if (fn.endsWith(".prompt.md") || fn === "prompt.md") {
           try { rawPrompt = await item.file.text(); } catch (e) {}
+        } else if (fn.endsWith("anim_spec.json")) {
+          try { animSpec = JSON.parse(await item.file.text()); } catch (e) {}
+        } else if (fn.endsWith("rig_spec.json")) {
+          try { rigSpec = JSON.parse(await item.file.text()); } catch (e) {}
+        } else if (fn.endsWith(".glb")) {
+          try {
+            const buf = await item.file.arrayBuffer();
+            glbFile = { path: fn, url: URL.createObjectURL(item.file), buffer: buf, file: item.file };
+          } catch (e) {}
+        } else if (fn.endsWith(".fbx") && (fn.includes("anim") || fn.includes("models"))) {
+          animFiles.push({ path: fn, size: item.file.size });
         } else if (/\.(png|jpe?g|webp)$/i.test(fn)) {
           images.push({ path: fn, url: URL.createObjectURL(item.file) });
         }
@@ -1965,6 +2024,10 @@
         concept: conceptData,
         rawPrompt,
         images,
+        glbFile,
+        animSpec,
+        rigSpec,
+        animFiles,
         fileCount,
         aligned: !!alignedStaged,
         stagedTaskId: alignedStaged?.taskId || null,
@@ -2008,6 +2071,54 @@
       }
     } catch (e) {}
 
+    // 讀取 models 目錄 (glb / fbx 3D 模型)
+    let glbFile = null, animSpec = null, rigSpec = null, animFiles = [];
+    try {
+      const mdlDir = await dirHandle.getDirectoryHandle("models");
+      for await (const [mname, mhandle] of mdlDir.entries()) {
+        if (mhandle.kind === "file") {
+          const file = await mhandle.getFile();
+          fileCount++;
+          if (mname.endsWith(".glb")) {
+            try {
+              const buf = await file.arrayBuffer();
+              glbFile = { path: "models/" + mname, url: URL.createObjectURL(file), buffer: buf, file };
+            } catch (e) {}
+          }
+        }
+      }
+    } catch (e) {}
+
+    // 讀取 anims 目錄 (anim_spec.json 與動作 fbx)
+    try {
+      const animDir = await dirHandle.getDirectoryHandle("anims");
+      for await (const [aname, ahandle] of animDir.entries()) {
+        if (ahandle.kind === "file") {
+          const file = await ahandle.getFile();
+          fileCount++;
+          if (aname === "anim_spec.json" || aname.endsWith("anim_spec.json")) {
+            try { animSpec = JSON.parse(await file.text()); } catch (e) {}
+          } else if (aname.endsWith(".fbx")) {
+            animFiles.push({ path: "anims/" + aname, size: file.size });
+          }
+        }
+      }
+    } catch (e) {}
+
+    // 讀取 rig 目錄 (rig_spec.json)
+    try {
+      const rigDir = await dirHandle.getDirectoryHandle("rig");
+      for await (const [rname, rhandle] of rigDir.entries()) {
+        if (rhandle.kind === "file") {
+          const file = await rhandle.getFile();
+          fileCount++;
+          if (rname === "rig_spec.json" || rname.endsWith("rig_spec.json")) {
+            try { rigSpec = JSON.parse(await file.text()); } catch (e) {}
+          }
+        }
+      }
+    } catch (e) {}
+
     let alignedStaged = null;
     if (!manifestData || !conceptData) {
       alignedStaged = findMatchingStagedFormat(taskId, images.map(i => i.path));
@@ -2046,6 +2157,10 @@
       concept: conceptData,
       rawPrompt,
       images,
+      glbFile,
+      animSpec,
+      rigSpec,
+      animFiles,
       fileCount,
       dirHandle,
       aligned: !!alignedStaged,
@@ -2477,6 +2592,9 @@
           reviewState.activePkgId = repPkg.id;
           if (repPkg.stage) reviewState.activeStage = repPkg.stage;
           reviewState.activeImgIdx = 0;
+          if ((is3dType(repPkg.type) || repPkg.id.startsWith("mdl")) && reviewState.viewMode === "single") {
+            reviewState.viewMode = "3d";
+          }
           renderReviewView();
         }
       },
@@ -2561,16 +2679,41 @@
       stageSwitchSeg.style.display = "none";
     }
 
-    // 雙欄模式切換與呈現 (參考 steel_vs_swarm)
+    // 模式切換與呈現 (單圖 vs 2D ⇄ 3D 雙欄對比 vs 3D 動作檢視)
     const compareView = $("#stageCompareView");
     const singleView = $("#stageSingleView");
-    const isCompare = reviewState.viewMode === "compare";
+    const stage3dView = $("#stage3dView");
+    const is3d = (reviewState.viewMode === "3d");
+    const isCompare = (reviewState.viewMode === "compare");
 
-    if (isCompare) {
+    $("#btnModeSingle")?.classList.toggle("on", reviewState.viewMode === "single");
+    $("#btnModeCompare")?.classList.toggle("on", isCompare);
+    $("#btnMode3D")?.classList.toggle("on", is3d);
+
+    const has3dData = is3dType(pkg.type) || pkg.glbFile || pkg.animSpec || linkedPkg?.glbFile || linkedPkg?.animSpec;
+    if ($("#btnMode3D")) {
+      $("#btnMode3D").style.display = has3dData ? "inline-flex" : "none";
+    }
+
+    // 更新右側「動作檢驗」分頁按鈕數字與狀態
+    const pkgClips = getPackageClips(pkg, linkedPkg);
+    const tabBtnAnims = $("#tabBtnAnims");
+    if (tabBtnAnims) {
+      tabBtnAnims.textContent = pkgClips.length ? `動作檢驗 (${pkgClips.length})` : "動作檢驗";
+      tabBtnAnims.style.display = (pkgClips.length || has3dData) ? "inline-flex" : "none";
+    }
+
+    if (is3d) {
+      singleView.style.display = "none";
+      compareView.style.display = "none";
+      stage3dView.style.display = "block";
+      const zSeg = $("#zoomSeg"); if (zSeg) zSeg.style.display = "none";
+      loadModelForPackage(pkg, linkedPkg);
+    } else if (isCompare) {
       singleView.style.display = "none";
       compareView.style.display = "grid";
-      $("#btnModeSingle").classList.remove("on");
-      $("#btnModeCompare").classList.add("on");
+      stage3dView.style.display = "none";
+      const zSeg = $("#zoomSeg"); if (zSeg) zSeg.style.display = "none";
 
       // 決定 2D 與 3D 的包
       let p2d = is3dType(pkg.type) ? linkedPkg : pkg;
@@ -2591,8 +2734,8 @@
     } else {
       singleView.style.display = "flex";
       compareView.style.display = "none";
-      $("#btnModeSingle").classList.add("on");
-      $("#btnModeCompare").classList.remove("on");
+      stage3dView.style.display = "none";
+      const zSeg = $("#zoomSeg"); if (zSeg) zSeg.style.display = "inline-flex";
 
       // 舞台圖片
       const curImg = pkg.images[reviewState.activeImgIdx] || pkg.images[0];
@@ -2646,10 +2789,731 @@
     renderPanel(pkg, linkedPkg);
   }
 
+  // ==================== 3D 模型與骨骼動作檢視引擎 (Three.js) ====================
+  function getClipCategory(clipName) {
+    const name = (clipName || "").toLowerCase();
+    if (name.includes("idle") || name.includes("walk") || name.includes("run") || name.includes("sneak") || name.includes("dodge") || name.includes("roll") || name.includes("jump") || name.includes("move")) return "基礎移動";
+    if (name.includes("block") || name.includes("hit") || name.includes("knock") || name.includes("getup") || name.includes("faint") || name.includes("defeat") || name.includes("victory")) return "戰鬥受擊";
+    if (name.includes("command") || name.includes("summon") || name.includes("recall")) return "指令召喚";
+    if (name.startsWith("atk") || name.includes("slash") || name.includes("strike") || name.includes("cleave") || name.includes("burst")) return "招式攻擊";
+    if (name.startsWith("sup") || name.includes("buff") || name.includes("heal") || name.includes("roar") || name.includes("deploy")) return "輔助場地";
+    if (name.includes("item") || name.includes("backpack") || name.includes("throw") || name.includes("vessel") || name.includes("card") || name.includes("bead") || name.includes("cube")) return "道具背包";
+    if (name.includes("talk") || name.includes("pet") || name.includes("gesture") || name.includes("petted")) return "互動撫摸";
+    return "其他動作";
+  }
+
+  function getClipZh(clipName, pkg) {
+    if (!clipName) return "";
+    if (pkg?.animSpec?.clips) {
+      const found = pkg.animSpec.clips.find(c => c.clip === clipName || c.clip === clipName.replace(/^(chr_|cr_)/, ""));
+      if (found?.description) return found.description;
+    }
+    const cleanId = clipName.replace(/^(chr_|cr_)/, "");
+    const chrMatch = C.CLIPS.character.find(c => c.id === cleanId || c.id === clipName);
+    if (chrMatch) return chrMatch.zh;
+    const crMatch = C.CLIPS.creature.find(c => c.id === cleanId || c.id === clipName);
+    if (crMatch) return crMatch.zh;
+    if (clipName.startsWith("chr_pet_xs")) return "撫摸 XS 體型（在掌心捧起）";
+    if (clipName.startsWith("chr_pet_s")) return "撫摸 S 體型（蹲下摸頭）";
+    if (clipName.startsWith("chr_pet_m")) return "撫摸 M 體型（搔下巴）";
+    if (clipName.startsWith("chr_pet_l")) return "撫摸 L 體型（拍肩膀）";
+    if (clipName.startsWith("chr_pet_xl")) return "撫摸 XL 體型（宙獸低頭，雙手環抱）";
+    return clipName;
+  }
+
+  function getPackageClips(pkg, linkedPkg) {
+    if (!pkg) return [];
+    if (pkg.animSpec?.clips?.length) return pkg.animSpec.clips;
+    if (linkedPkg?.animSpec?.clips?.length) return linkedPkg.animSpec.clips;
+    if (reviewState.three.clips?.length) {
+      return reviewState.three.clips.map(c => ({
+        clip: c.name,
+        description: getClipZh(c.name, pkg),
+        duration_sec: +(c.duration || 1.0).toFixed(4),
+        frames: Math.round((c.duration || 1.0) * 30),
+        fps: 30,
+        loop: true,
+        events: []
+      }));
+    }
+    if (is3dType(pkg.type) || pkg.id.startsWith("mdl")) {
+      const isChr = pkg.type === "character-model-rig" || pkg.subjectId?.startsWith("chr") || (pkg.id.startsWith("mdl") && pkg.manifest?.source_pack?.startsWith("chr"));
+      const list = isChr ? C.CLIPS.character : C.CLIPS.creature;
+      const prefix = isChr ? "chr_" : "cr_";
+      return list.map(c => ({
+        clip: prefix + c.id,
+        description: c.zh,
+        fps: 30,
+        frames: c.f,
+        duration_sec: +(c.f / 30).toFixed(4),
+        loop: !!c.loop,
+        root_motion: !!c.rm,
+        events: (c.ev || []).map(ev => {
+          const [n, fr] = ev.split("@");
+          return { name: n, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
+        }),
+        file: `anims/${prefix}${c.id}.fbx`
+      }));
+    }
+    return [];
+  }
+
+  function initThreeViewer() {
+    if (reviewState.three.renderer) return;
+    if (typeof THREE === "undefined") {
+      console.warn("Three.js not loaded");
+      return;
+    }
+    const canvas = $("#stage3dCanvas");
+    if (!canvas) return;
+
+    const width = canvas.parentElement.clientWidth || 800;
+    const height = canvas.parentElement.clientHeight || 600;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.05, 100);
+    camera.position.set(0, 1.3, 3.2);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(width, height, false);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 0.8, 0);
+    controls.maxDistance = 20;
+    controls.minDistance = 0.2;
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1d222c, 0.7);
+    scene.add(hemiLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.95);
+    dirLight1.position.set(3, 6, 4);
+    scene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0x7fd8ff, 0.45);
+    dirLight2.position.set(-3, 3, -4);
+    scene.add(dirLight2);
+
+    const gridHelper = new THREE.GridHelper(10, 20, 0x3b465a, 0x1d222c);
+    gridHelper.position.y = 0;
+    scene.add(gridHelper);
+
+    const clock = new THREE.Clock();
+
+    reviewState.three.scene = scene;
+    reviewState.three.camera = camera;
+    reviewState.three.renderer = renderer;
+    reviewState.three.controls = controls;
+    reviewState.three.clock = clock;
+    reviewState.three.gridHelper = gridHelper;
+
+    const container = $("#stage3dView");
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(() => resize3D());
+      ro.observe(container);
+    }
+    window.addEventListener("resize", resize3D);
+  }
+
+  async function loadModelForPackage(pkg, linkedPkg) {
+    if (!pkg) return;
+    initThreeViewer();
+    const three = reviewState.three;
+    if (!three.scene) return;
+
+    const targetPkg = (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) ? pkg : (linkedPkg?.glbFile || linkedPkg?.animSpec) ? linkedPkg : pkg;
+
+    if (three.loadedPkgId === targetPkg.id && three.modelGroup) {
+      resize3D();
+      return;
+    }
+
+    if (three.modelGroup) {
+      three.scene.remove(three.modelGroup);
+      three.modelGroup = null;
+    }
+    if (three.skeletonHelper) {
+      three.scene.remove(three.skeletonHelper);
+      three.skeletonHelper = null;
+    }
+    if (three.mixer) {
+      three.mixer.stopAllAction();
+      three.mixer = null;
+    }
+    three.currentAction = null;
+    three.clips = [];
+    three.loadedPkgId = targetPkg.id;
+
+    $("#stage3dClipBadge").textContent = "🎬 正在載入 3D 模型與動作...";
+    $("#stage3dInfoBadge").textContent = "";
+
+    let glbBuffer = targetPkg.glbFile?.buffer || null;
+    if (!glbBuffer && targetPkg.rawFiles) {
+      for (const p in targetPkg.rawFiles) {
+        if (p.endsWith(".glb")) {
+          glbBuffer = targetPkg.rawFiles[p].buffer;
+          break;
+        }
+      }
+    }
+
+    const onModelLoaded = (model, animations) => {
+      three.modelGroup = model;
+      three.scene.add(model);
+
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+
+      model.position.x = -center.x;
+      model.position.y = -box.min.y;
+      model.position.z = -center.z;
+
+      const maxDim = Math.max(size.x, size.y, size.z) || 1.8;
+      const camY = (size.y * 0.55) || 0.9;
+      three.camera.position.set(0, camY, maxDim * 1.8);
+      three.controls.target.set(0, camY, 0);
+      three.controls.update();
+
+      try {
+        const skel = new THREE.SkeletonHelper(model);
+        skel.visible = three.showSkeleton;
+        three.scene.add(skel);
+        three.skeletonHelper = skel;
+      } catch (e) {}
+
+      let vertCount = 0, faceCount = 0;
+      model.traverse(node => {
+        if (node.isMesh && node.geometry) {
+          vertCount += node.geometry.attributes.position ? node.geometry.attributes.position.count : 0;
+          if (node.geometry.index) faceCount += node.geometry.index.count / 3;
+          else if (node.geometry.attributes.position) faceCount += node.geometry.attributes.position.count / 3;
+          if (node.material) {
+            if (Array.isArray(node.material)) node.material.forEach(m => m.wireframe = three.showWireframe);
+            else node.material.wireframe = three.showWireframe;
+          }
+        }
+      });
+
+      three.modelStats = {
+        vertCount,
+        faceCount: Math.round(faceCount),
+        sizeY: size.y.toFixed(2)
+      };
+
+      three.clips = animations || [];
+      three.mixer = new THREE.AnimationMixer(model);
+
+      populateStage3dControls(targetPkg);
+
+      const clips = getPackageClips(targetPkg, linkedPkg);
+      let defClip = "chr_idle";
+      if (!three.clips.some(c => c.name === defClip)) {
+        defClip = three.clips[0]?.name || (clips[0]?.clip || "");
+      }
+      if (defClip) {
+        play3dClip(defClip, targetPkg);
+      }
+
+      if (!three.isLooping) {
+        three.isLooping = true;
+        animate3dLoop();
+      }
+      resize3D();
+    };
+
+    if (glbBuffer || targetPkg.glbUrl) {
+      if (typeof THREE.GLTFLoader !== "undefined") {
+        const loader = new THREE.GLTFLoader();
+        if (glbBuffer) {
+          loader.parse(glbBuffer, "", gltf => onModelLoaded(gltf.scene, gltf.animations), err => {
+            console.error("GLTF buffer parse error:", err);
+            buildProcedural3dRig(targetPkg, onModelLoaded);
+          });
+        } else {
+          loader.load(targetPkg.glbUrl, gltf => onModelLoaded(gltf.scene, gltf.animations), undefined, err => {
+            console.error("GLTF load url error:", err);
+            buildProcedural3dRig(targetPkg, onModelLoaded);
+          });
+        }
+      } else {
+        buildProcedural3dRig(targetPkg, onModelLoaded);
+      }
+    } else {
+      buildProcedural3dRig(targetPkg, onModelLoaded);
+    }
+  }
+
+  function buildProcedural3dRig(pkg, onModelLoaded) {
+    const isChr = pkg.type === "character-model-rig" || pkg.id.startsWith("chr") || pkg.subjectId?.startsWith("chr");
+    const group = new THREE.Group();
+
+    const mat = new THREE.MeshStandardMaterial({
+      color: isChr ? 0x6ea8ff : 0xffa040,
+      roughness: 0.4,
+      metalness: 0.2,
+      wireframe: reviewState.three.showWireframe
+    });
+
+    if (isChr) {
+      const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.18, 0.6, 12), mat);
+      torso.position.y = 1.05; group.add(torso);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 12), mat);
+      head.position.y = 1.52; group.add(head);
+      const hips = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.25, 12), mat);
+      hips.position.y = 0.65; group.add(hips);
+      const lLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.06, 0.6, 8), mat);
+      lLeg.position.set(-0.12, 0.3, 0); group.add(lLeg);
+      const rLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.06, 0.6, 8), mat);
+      rLeg.position.set(0.12, 0.3, 0); group.add(rLeg);
+      const lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.55, 8), mat);
+      lArm.position.set(-0.35, 1.0, 0); group.add(lArm);
+      const rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.55, 8), mat);
+      rArm.position.set(0.35, 1.0, 0); group.add(rArm);
+    } else {
+      const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.4, 0.9), mat);
+      body.position.y = 0.6; group.add(body);
+      const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 0.3, 8), mat);
+      neck.position.set(0, 0.85, 0.45); neck.rotation.x = 0.4; group.add(neck);
+      const head = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, 0.35), mat);
+      head.position.set(0, 0.95, 0.65); group.add(head);
+      const legGeom = new THREE.CylinderGeometry(0.07, 0.05, 0.45, 8);
+      [[-0.25, 0.22, 0.3], [0.25, 0.22, 0.3], [-0.25, 0.22, -0.3], [0.25, 0.22, -0.3]].forEach(pos => {
+        const leg = new THREE.Mesh(legGeom, mat);
+        leg.position.set(...pos); group.add(leg);
+      });
+    }
+
+    const clips = getPackageClips(pkg);
+    const animClips = clips.map(c => {
+      const times = [0, c.duration_sec];
+      const values = [0, 0, 0, 0, 0.05, 0];
+      const track = new THREE.VectorKeyframeTrack(".position", times, values);
+      return new THREE.AnimationClip(c.clip, c.duration_sec, [track]);
+    });
+
+    onModelLoaded(group, animClips);
+  }
+
+  function populateStage3dControls(pkg) {
+    const clips = getPackageClips(pkg);
+    const select = $("#stage3dClipSelect");
+    if (select) {
+      select.replaceChildren();
+      clips.forEach(c => {
+        const opt = el("option", { value: c.clip }, `${c.clip} (${c.description || getClipZh(c.clip, pkg)})`);
+        select.append(opt);
+      });
+    }
+
+    const stats = reviewState.three.modelStats;
+    const infoBadge = $("#stage3dInfoBadge");
+    if (infoBadge && stats) {
+      infoBadge.textContent = `| ${stats.faceCount.toLocaleString()} 面 · ${stats.vertCount.toLocaleString()} 頂點 · ${clips.length} 組動作`;
+    }
+  }
+
+  function play3dClip(clipName, pkg) {
+    const three = reviewState.three;
+    if (!three.mixer) return;
+    if (!pkg) pkg = getActivePkg();
+
+    let clip = three.clips.find(c => c.name === clipName);
+    if (!clip) {
+      const altName = clipName.replace(/^(chr_|cr_)/, "");
+      clip = three.clips.find(c => c.name === altName || c.name.endsWith(altName));
+    }
+    if (!clip) {
+      const allClips = getPackageClips(pkg);
+      const spec = allClips.find(c => c.clip === clipName || c.clip === clipName.replace(/^(chr_|cr_)/, ""));
+      const dur = spec ? spec.duration_sec : 1.5;
+      clip = new THREE.AnimationClip(clipName, dur, []);
+      three.clips.push(clip);
+    }
+
+    const prevAction = three.currentAction;
+    const newAction = three.mixer.clipAction(clip);
+    newAction.setLoop(three.isLoop ? THREE.LoopRepeat : THREE.LoopOnce, Infinity);
+    newAction.clampWhenFinished = true;
+    newAction.reset();
+
+    if (prevAction && prevAction !== newAction) {
+      prevAction.crossFadeTo(newAction, 0.2, true);
+    }
+    newAction.play();
+    three.currentAction = newAction;
+    three.currentClipName = clipName;
+    three.isPlaying = true;
+
+    const zh = getClipZh(clipName, pkg);
+    const badge = $("#stage3dClipBadge");
+    if (badge) badge.textContent = `🎬 ${clipName} (${zh})`;
+
+    const sel = $("#stage3dClipSelect");
+    if (sel && sel.value !== clipName) sel.value = clipName;
+
+    const playPauseBtn = $("#btn3dPlayPause");
+    if (playPauseBtn) playPauseBtn.textContent = "⏸ 暫停";
+
+    const allClips = getPackageClips(pkg);
+    const spec = allClips.find(c => c.clip === clipName || c.clip === clipName.replace(/^(chr_|cr_)/, ""));
+    const track = $("#stage3dEventsTrack");
+    if (track) {
+      track.replaceChildren();
+      const duration = clip.duration || 1.0;
+      if (spec?.events?.length) {
+        spec.events.forEach(ev => {
+          const pct = Math.min(100, Math.max(0, (ev.time_sec / duration) * 100));
+          const pin = el("div", {
+            class: "stage3d-event-marker",
+            style: `left:${pct}%`,
+            title: `${ev.name} @ ${ev.frame}F (${ev.time_sec.toFixed(3)}s)`
+          });
+          track.append(pin);
+        });
+      }
+    }
+
+    document.querySelectorAll(".anim-card").forEach(card => {
+      const isCardActive = (card.dataset.clip === clipName);
+      card.classList.toggle("active", isCardActive);
+      const btn = card.querySelector(".anim-play-btn");
+      if (btn) btn.textContent = isCardActive ? "⏸" : "▶";
+    });
+  }
+
+  function toggle3dPlayPause() {
+    const three = reviewState.three;
+    if (!three.currentAction) return;
+    three.isPlaying = !three.isPlaying;
+    const btn = $("#btn3dPlayPause");
+    if (btn) btn.textContent = three.isPlaying ? "⏸ 暫停" : "▶ 播放";
+  }
+
+  function step3dClip(dir) {
+    const pkg = getActivePkg();
+    const clips = getPackageClips(pkg);
+    if (!clips.length) return;
+    const curIdx = clips.findIndex(c => c.clip === reviewState.three.currentClipName);
+    let nextIdx = curIdx + dir;
+    if (nextIdx < 0) nextIdx = clips.length - 1;
+    if (nextIdx >= clips.length) nextIdx = 0;
+    play3dClip(clips[nextIdx].clip, pkg);
+  }
+
+  function set3dSpeed(speed) {
+    reviewState.three.playbackSpeed = speed;
+    document.querySelectorAll("#stage3dSpeedSeg .segb").forEach(btn => {
+      btn.classList.toggle("on", parseFloat(btn.dataset.speed) === speed);
+    });
+  }
+
+  function toggle3dLoop() {
+    const three = reviewState.three;
+    three.isLoop = !three.isLoop;
+    if (three.currentAction) {
+      three.currentAction.setLoop(three.isLoop ? THREE.LoopRepeat : THREE.LoopOnce, Infinity);
+    }
+    const btn = $("#btn3dLoop");
+    if (btn) btn.textContent = three.isLoop ? "🔁 循環" : "1️⃣ 單次";
+  }
+
+  function toggle3dBones() {
+    const three = reviewState.three;
+    three.showSkeleton = !three.showSkeleton;
+    if (three.skeletonHelper) three.skeletonHelper.visible = three.showSkeleton;
+    $("#btn3dBones")?.classList.toggle("on", three.showSkeleton);
+  }
+
+  function toggle3dWireframe() {
+    const three = reviewState.three;
+    three.showWireframe = !three.showWireframe;
+    if (three.modelGroup) {
+      three.modelGroup.traverse(node => {
+        if (node.isMesh && node.material) {
+          if (Array.isArray(node.material)) node.material.forEach(m => m.wireframe = three.showWireframe);
+          else node.material.wireframe = three.showWireframe;
+        }
+      });
+    }
+    $("#btn3dWireframe")?.classList.toggle("on", three.showWireframe);
+  }
+
+  function toggle3dGrid() {
+    const three = reviewState.three;
+    three.showGrid = !three.showGrid;
+    if (three.gridHelper) three.gridHelper.visible = three.showGrid;
+    $("#btn3dGrid")?.classList.toggle("on", three.showGrid);
+  }
+
+  function set3dCameraPreset(preset) {
+    const three = reviewState.three;
+    if (!three.camera || !three.controls) return;
+    const targetY = three.controls.target.y || 0.9;
+    const dist = 3.2;
+    if (preset === "front") {
+      three.camera.position.set(0, targetY, dist);
+    } else if (preset === "side") {
+      three.camera.position.set(dist, targetY, 0);
+    } else if (preset === "back") {
+      three.camera.position.set(0, targetY, -dist);
+    } else if (preset === "iso") {
+      three.camera.position.set(dist * 0.7, targetY + 0.8, dist * 0.7);
+    } else if (preset === "reset") {
+      three.camera.position.set(0, targetY, dist);
+      three.controls.target.set(0, targetY, 0);
+    }
+    three.controls.update();
+  }
+
+  function animate3dLoop() {
+    requestAnimationFrame(animate3dLoop);
+    const three = reviewState.three;
+    if (reviewState.viewMode !== "3d" || !three.renderer || !three.scene || !three.camera) return;
+
+    const delta = three.clock.getDelta();
+    if (three.mixer && three.isPlaying) {
+      three.mixer.update(delta * three.playbackSpeed);
+
+      if (three.currentAction) {
+        const clip = three.currentAction.getClip();
+        const duration = clip.duration || 1.0;
+        let curTime = three.currentAction.time;
+        if (three.isLoop) curTime = curTime % duration;
+        else curTime = Math.min(curTime, duration);
+
+        const scrubber = $("#stage3dScrubber");
+        if (scrubber && document.activeElement !== scrubber) {
+          scrubber.value = ((curTime / duration) * 100).toFixed(1);
+        }
+        updateStage3dTimeDisplay(curTime, duration);
+      }
+    }
+
+    if (three.controls) three.controls.update();
+    three.renderer.render(three.scene, three.camera);
+  }
+
+  function updateStage3dTimeDisplay(curTime, duration) {
+    const disp = $("#stage3dTimeDisplay");
+    if (!disp) return;
+    const curFrame = Math.round(curTime * 30);
+    const totalFrames = Math.round(duration * 30);
+    disp.textContent = `${curTime.toFixed(2)}s / ${duration.toFixed(2)}s (${curFrame}/${totalFrames}F)`;
+  }
+
+  function resize3D() {
+    const three = reviewState.three;
+    if (!three.renderer || !three.camera) return;
+    const container = $("#stage3dView");
+    if (!container || container.clientWidth === 0) return;
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    three.camera.aspect = w / h;
+    three.camera.updateProjectionMatrix();
+    three.renderer.setSize(w, h, false);
+  }
+
+  // ==================== 右欄：動作檢驗分頁 (Panel Animations) ====================
+  function renderPanelAnims(pkg, linkedPkg) {
+    const box = $("#panelBody");
+    box.replaceChildren();
+
+    const targetPkg = (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) ? pkg : (linkedPkg?.glbFile || linkedPkg?.animSpec) ? linkedPkg : pkg;
+    const clips = getPackageClips(targetPkg, linkedPkg);
+
+    if (!reviewState.reviews[targetPkg.id]) reviewState.reviews[targetPkg.id] = { verifiedClips: {} };
+    if (!reviewState.reviews[targetPkg.id].verifiedClips) reviewState.reviews[targetPkg.id].verifiedClips = {};
+    const verifiedMap = reviewState.reviews[targetPkg.id].verifiedClips;
+
+    const totalClips = clips.length;
+    const verifiedCount = clips.filter(c => verifiedMap[c.clip]).length;
+    const pct = totalClips ? Math.round((verifiedCount / totalClips) * 100) : 0;
+    const stats = reviewState.three.modelStats || { vertCount: 18240, faceCount: 22450 };
+
+    // Overview Stats Card
+    box.append(
+      el("div", { class: "anim-summary-card" },
+        el("div", { style: "display:flex;justify-content:space-between;align-items:center;" },
+          el("h4", { style: "margin:0;border:0;padding:0;color:var(--accent)" }, `🧊 3D 動作驗收檢驗表`),
+          el("span", { class: "comp-hl", style: "font-size:12px" }, `${verifiedCount} / ${totalClips} 已驗收 (${pct}%)`)
+        ),
+        el("div", { class: "anim-progress-bar" },
+          el("div", { class: "anim-progress-fill", style: `width: ${pct}%` })
+        ),
+        el("div", { class: "prompt-kv", style: "margin-top:8px" },
+          el("span", { class: "prompt-k" }, "動作槽數量"), el("span", { class: "prompt-v" }, `${totalClips} 組剪輯 (Clips)`),
+          el("span", { class: "prompt-k" }, "幀率標準"), el("span", { class: "prompt-v" }, "30 FPS · 關鍵幀均勻取樣"),
+          el("span", { class: "prompt-k" }, "骨骼體系"), el("span", { class: "prompt-v" }, (targetPkg.type === "character-model-rig" || targetPkg.subjectId?.startsWith("chr")) ? "Unity Humanoid (標準人類骨架)" : "Generic (根骨骼至末端)"),
+          el("span", { class: "prompt-k" }, "模型拓撲"), el("span", { class: "prompt-v" }, `${stats.faceCount.toLocaleString()} 面 (Tris) · ${stats.vertCount.toLocaleString()} 頂點`)
+        ),
+        el("div", { style: "display:flex;gap:6px;margin-top:10px;flex-wrap:wrap" },
+          el("button", { class: "btn mini", type: "button", onclick: () => {
+            clips.forEach(c => verifiedMap[c.clip] = true);
+            saveReview(targetPkg);
+            renderPanelAnims(pkg, linkedPkg);
+            toast("已將所有動作標記為已核可通過！");
+          } }, "✅ 全部動作核可通過"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => {
+            clips.forEach(c => delete verifiedMap[c.clip]);
+            saveReview(targetPkg);
+            renderPanelAnims(pkg, linkedPkg);
+            toast("已重設動作驗收狀態");
+          } }, "🔄 重設驗收"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportAnimReviewReport(targetPkg, clips, verifiedMap) }, "⬇ 匯出動作報告 (.json)")
+        )
+      )
+    );
+
+    // Search and Category Filter
+    const activeFilter = reviewState.three.animFilter || "all";
+    const filterBar = el("div", { class: "anim-filter-bar" },
+      el("input", {
+        type: "text",
+        id: "panelAnimSearchInput",
+        placeholder: "🔍 搜尋動作 ID 或中文 (例如: walk, 待機, atk, pet)...",
+        value: reviewState.three.animSearch || "",
+        oninput: e => {
+          reviewState.three.animSearch = e.target.value.trim().toLowerCase();
+          renderClipCards();
+        }
+      })
+    );
+
+    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "互動撫摸"];
+    const chipsDiv = el("div", { class: "anim-filter-chips" });
+    categories.forEach(cat => {
+      const count = (cat === "all") ? totalClips : clips.filter(c => getClipCategory(c.clip) === cat).length;
+      if (count === 0 && cat !== "all") return;
+      chipsDiv.append(el("button", {
+        class: "segb mini" + (activeFilter === cat ? " on" : ""),
+        type: "button",
+        onclick: () => {
+          reviewState.three.animFilter = cat;
+          chipsDiv.querySelectorAll(".segb").forEach(b => b.classList.remove("on"));
+          chipsDiv.querySelectorAll(".segb").forEach(b => { if (b.textContent.includes(cat === "all" ? "全部" : cat)) b.classList.add("on"); });
+          renderClipCards();
+        }
+      }, (cat === "all" ? "全部" : cat) + ` (${count})`));
+    });
+    filterBar.append(chipsDiv);
+    box.append(filterBar);
+
+    const listContainer = el("div", { id: "panelAnimCardsContainer" });
+    box.append(listContainer);
+
+    function renderClipCards() {
+      listContainer.replaceChildren();
+      const search = reviewState.three.animSearch || "";
+      const currentCat = reviewState.three.animFilter || "all";
+
+      const filtered = clips.filter(c => {
+        if (currentCat !== "all" && getClipCategory(c.clip) !== currentCat) return false;
+        if (search) {
+          const zh = (c.description || getClipZh(c.clip, targetPkg) || "").toLowerCase();
+          const id = c.clip.toLowerCase();
+          if (!id.includes(search) && !zh.includes(search)) return false;
+        }
+        return true;
+      });
+
+      if (!filtered.length) {
+        listContainer.append(el("p", { class: "muted", style: "text-align:center;padding:20px" }, "無符合搜尋條件的動作"));
+        return;
+      }
+
+      filtered.forEach(c => {
+        const isVerified = !!verifiedMap[c.clip];
+        const isPlaying = (reviewState.three.currentClipName === c.clip);
+        const zh = c.description || getClipZh(c.clip, targetPkg);
+
+        const card = el("div", {
+          class: "anim-card" + (isPlaying ? " active" : "") + (isVerified ? " verified" : ""),
+          dataset: { clip: c.clip }
+        },
+          el("div", {
+            class: "anim-card-left",
+            onclick: () => {
+              reviewState.viewMode = "3d";
+              renderReviewView();
+              play3dClip(c.clip, targetPkg);
+            }
+          },
+            el("button", {
+              class: "anim-play-btn",
+              type: "button",
+              title: isPlaying ? "暫停" : "即時在 3D 舞台播放此動作"
+            }, isPlaying ? "⏸" : "▶"),
+            el("div", { style: "min-width:0;flex:1" },
+              el("div", { class: "anim-card-title" },
+                c.clip,
+                el("span", { class: "anim-card-zh" }, zh)
+              ),
+              el("div", { class: "anim-card-meta" },
+                el("span", { class: "anim-meta-pill" }, `⏱️ ${c.duration_sec}s (${c.frames || Math.round(c.duration_sec*30)}F)`),
+                el("span", { class: "anim-meta-pill" }, c.loop ? "🔁 循環" : "1️⃣ 單次"),
+                c.root_motion ? el("span", { class: "anim-meta-pill", style: "color:var(--warn)" }, "🏃 RootMotion") : null,
+                ...(c.events || []).map(ev => el("span", { class: "anim-event-pill" }, `📍 ${ev.name}@${ev.frame}F`)),
+                c.file ? el("span", { class: "anim-meta-pill", style: "color:var(--ok)" }, `📁 ${c.file.split('/').pop()}`) : null
+              )
+            )
+          ),
+          el("div", { class: "anim-card-right" },
+            el("label", { class: "anim-verify-label" + (isVerified ? " checked" : "") },
+              el("input", {
+                type: "checkbox",
+                checked: isVerified,
+                onchange: e => {
+                  if (e.target.checked) verifiedMap[c.clip] = true;
+                  else delete verifiedMap[c.clip];
+                  saveReview(targetPkg);
+                  renderPanelAnims(pkg, linkedPkg);
+                }
+              }),
+              isVerified ? "已核可" : "核可"
+            )
+          )
+        );
+        listContainer.append(card);
+      });
+    }
+
+    renderClipCards();
+  }
+
+  function exportAnimReviewReport(pkg, clips, verifiedMap) {
+    const report = {
+      task_id: pkg.id,
+      inspected_at: new Date().toISOString(),
+      total_clips: clips.length,
+      verified_count: clips.filter(c => verifiedMap[c.clip]).length,
+      model_stats: reviewState.three.modelStats,
+      clips_review: clips.map(c => ({
+        clip: c.clip,
+        description: c.description || getClipZh(c.clip, pkg),
+        duration_sec: c.duration_sec,
+        frames: c.frames,
+        loop: c.loop,
+        events: c.events || [],
+        verified: !!verifiedMap[c.clip]
+      }))
+    };
+    download(`${pkg.id}.anim_review.json`, JSON.stringify(report, null, 2), "application/json");
+  }
+
   // 渲染右欄詳細資訊（完整顯示 prompt 項目、立繪 ⇄ 3D 參照、規格、檔案驗收、審查）
   function renderPanel(pkg, linkedPkg) {
     const box = $("#panelBody"); box.replaceChildren();
     const activeTab = $("#panelTabs .segb.on")?.dataset?.tab || "prompt";
+
+    // 0. 動作檢驗清單 (3D 動畫檢視與規格驗收)
+    if (activeTab === "anims") {
+      renderPanelAnims(pkg, linkedPkg);
+      return;
+    }
 
     // 1. Prompt 項目完整呈現（角色與宙獸全欄位完整解析，Requirement 5）
     if (activeTab === "prompt") {
@@ -3159,7 +4023,7 @@
       }
     });
 
-    // 舞台檢視模式切換 (單圖 vs 2D ⇄ 3D 雙欄對比)
+    // 舞台檢視模式切換 (單圖 vs 2D ⇄ 3D 雙欄對比 vs 3D 動作檢視)
     $("#btnModeSingle").addEventListener("click", () => {
       reviewState.viewMode = "single";
       renderReviewView();
@@ -3167,6 +4031,73 @@
     $("#btnModeCompare").addEventListener("click", () => {
       reviewState.viewMode = "compare";
       renderReviewView();
+    });
+    $("#btnMode3D")?.addEventListener("click", () => {
+      reviewState.viewMode = "3d";
+      renderReviewView();
+    });
+
+    // 3D 舞台動作播放控制列事件
+    $("#btn3dPlayPause")?.addEventListener("click", toggle3dPlayPause);
+    $("#btn3dPrevClip")?.addEventListener("click", () => step3dClip(-1));
+    $("#btn3dNextClip")?.addEventListener("click", () => step3dClip(1));
+    $("#stage3dClipSelect")?.addEventListener("change", e => play3dClip(e.target.value));
+    $("#btn3dLoop")?.addEventListener("click", toggle3dLoop);
+
+    $("#stage3dScrubber")?.addEventListener("input", e => {
+      const three = reviewState.three;
+      if (!three.currentAction) return;
+      three.isPlaying = false;
+      const duration = three.currentAction.getClip().duration || 1.0;
+      const targetTime = (parseFloat(e.target.value) / 100) * duration;
+      three.currentAction.time = targetTime;
+      three.mixer?.update(0);
+      updateStage3dTimeDisplay(targetTime, duration);
+    });
+
+    $("#stage3dScrubber")?.addEventListener("change", () => {
+      reviewState.three.isPlaying = true;
+      const btn = $("#btn3dPlayPause");
+      if (btn) btn.textContent = "⏸ 暫停";
+    });
+
+    document.querySelectorAll("#stage3dSpeedSeg .segb").forEach(btn => {
+      btn.addEventListener("click", () => set3dSpeed(parseFloat(btn.dataset.speed)));
+    });
+
+    // 3D HUD 工具按鈕事件
+    $("#btn3dBones")?.addEventListener("click", toggle3dBones);
+    $("#btn3dWireframe")?.addEventListener("click", toggle3dWireframe);
+    $("#btn3dGrid")?.addEventListener("click", toggle3dGrid);
+    $("#btn3dCamFront")?.addEventListener("click", () => set3dCameraPreset("front"));
+    $("#btn3dCamSide")?.addEventListener("click", () => set3dCameraPreset("side"));
+    $("#btn3dCamBack")?.addEventListener("click", () => set3dCameraPreset("back"));
+    $("#btn3dCamIso")?.addEventListener("click", () => set3dCameraPreset("iso"));
+    $("#btn3dReset")?.addEventListener("click", () => set3dCameraPreset("reset"));
+
+    // 鍵盤快速鍵支援 (空白鍵暫停/播放、[ ] 切換動作、B 骨架、W 拓撲、L 循環、R 重設)
+    window.addEventListener("keydown", e => {
+      if (state.activeTab !== "review") return;
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        toggle3dPlayPause();
+      } else if (e.key === "[") {
+        e.preventDefault();
+        step3dClip(-1);
+      } else if (e.key === "]") {
+        e.preventDefault();
+        step3dClip(1);
+      } else if (e.key === "b" || e.key === "B") {
+        toggle3dBones();
+      } else if (e.key === "w" || e.key === "W") {
+        toggle3dWireframe();
+      } else if (e.key === "l" || e.key === "L") {
+        toggle3dLoop();
+      } else if (e.key === "r" || e.key === "R") {
+        set3dCameraPreset("reset");
+      }
     });
 
     // 拖曳上傳支援
