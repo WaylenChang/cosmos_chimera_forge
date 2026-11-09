@@ -477,18 +477,24 @@ window.COSMI_CATALOG = {
   ],
 
   resolveEvolutionPrompt(modeKey, stage, concept) {
-    let targetKey = modeKey || "auto";
-    if (targetKey === "auto") {
-      if (stage === "overload") targetKey = "armed_arsenal";
-      else if (stage === "adolescent") targetKey = "stance_reconfig";
-      else if (stage === "juvenile") targetKey = "eco_adaptation";
+    if (stage === "juvenile") return null; // 第一階段不需要演化模式
+
+    let targetKey = modeKey;
+    if (!targetKey || targetKey === "auto") {
+      if (stage === "adolescent") targetKey = concept?.evo_stage1_to_2 || concept?.evolution_flow?.stage1_to_2 || "stance_reconfig";
+      else if (stage === "adult") targetKey = concept?.evo_stage2_to_3 || concept?.evolution_flow?.stage2_to_3 || "elemental_mantle";
+      else if (stage === "overload") targetKey = concept?.evo_stage3_to_overload || concept?.evolution_flow?.stage3_to_overload || "armed_arsenal";
       else targetKey = "elemental_mantle";
     }
     const mode = this.EVOLUTION_MODES.find(m => m.id === targetKey) || this.EVOLUTION_MODES[0];
+    const stageTransLabel = stage === "adolescent" ? "【第一階 ➔ 第二階】" :
+      stage === "adult" ? "【第二階 ➔ 第三階】" :
+      stage === "overload" ? "【第三階 ➔ 超載】" : "";
+
     return {
       mode,
       guideSection: [
-        "## 🧬 形態演化與 50/50 辨識度守恆指引（" + mode.zh + "）",
+        "## 🧬 形態演化與 50/50 辨識度守恆指引" + stageTransLabel + "（" + mode.zh + "）",
         "- **演化模式定位**：" + mode.desc,
         "- **【50% 絕對鎖定錨點】**：嚴格保留本宙獸的面部五官結構、眼眸幾何形狀與瞳色、標誌性頭身比例特徵、核心雙色調，確保一眼即可認出所屬原型家族。",
         "- **【50% 劇烈破局突變】**：" + mode.prompt_guidance,

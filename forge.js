@@ -67,7 +67,7 @@
   const state = {
     seed: "", platform: "chatgpt", taskId: TASKS[0].id, includeReview: false,
     character: {}, creature: {}, locks: {}, opts: {}, notes: "", subjectIds: {},
-    customOptions: {}, customValues: {}, activeTab: "forge", currentRound: 0,
+    customOptions: {}, customValues: {}, activeTab: "forge", currentRound: 1,
     preset: null // 已設計項目的 line_id；設定時宙獸概念改用 designed.js 的定案內容，不再隨機
   };
 
@@ -300,7 +300,10 @@
       }, count: [{ n: 1, w: 1 }], dep: "size_profile", customGen: (s, rng) => {
         const adultClass = (s.creature.size_profile?.[0] || "S→M→L→XL").split("→")[2] || "L";
         return sampleCreatureDimensions(rng, adultClass).bodyFat;
-      }}
+      }},
+      { key: "evo_stage1_to_2", label: "進化流程：第一階>第二階", options: () => (C.EVOLUTION_MODES || []).map(m => ({ v: m.id, zh: m.zh + "（" + m.desc.split("、")[0] + "）", w: 1 })).concat(getCustom("creature.evo_stage1_to_2").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
+      { key: "evo_stage2_to_3", label: "進化流程：第二階>第三階", options: () => (C.EVOLUTION_MODES || []).map(m => ({ v: m.id, zh: m.zh + "（" + m.desc.split("、")[0] + "）", w: 1 })).concat(getCustom("creature.evo_stage2_to_3").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
+      { key: "evo_stage3_to_overload", label: "進化流程：第三階>超載", options: () => (C.EVOLUTION_MODES || []).map(m => ({ v: m.id, zh: m.zh + "（" + m.desc.split("、")[0] + "）", w: 1 })).concat(getCustom("creature.evo_stage3_to_overload").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] }
     ]
   };
   function archetypePool(s) { return CR.archetypes.filter(a => s.includeReview || a.sensitivity === "ok"); }
@@ -381,6 +384,14 @@
       height_length: c.height_length?.[0] || "未知",
       weight: c.weight?.[0] || "未知",
       body_fat: c.body_fat?.[0] || "未知",
+      evo_stage1_to_2: c.evo_stage1_to_2?.[0] || "stance_reconfig",
+      evo_stage2_to_3: c.evo_stage2_to_3?.[0] || "elemental_mantle",
+      evo_stage3_to_overload: c.evo_stage3_to_overload?.[0] || "armed_arsenal",
+      evolution_flow: {
+        stage1_to_2: c.evo_stage1_to_2?.[0] || "stance_reconfig",
+        stage2_to_3: c.evo_stage2_to_3?.[0] || "elemental_mantle",
+        stage3_to_overload: c.evo_stage3_to_overload?.[0] || "armed_arsenal"
+      },
       formula: (c.elements || []).join("+") + " × " + (c.bases || []).join("+") + " × " + (c.archetype?.[0] || "原型") + "（" + (c.timeline?.[0] || "時空") + "）"
     };
   }
@@ -520,6 +531,11 @@
         archetype: c.archetype || "自由原型",
         role: c.role || "戰鬥",
         temperament: c.temperament || "沉穩",
+        evolution_flow: c.evolution_flow || {
+          stage1_to_2: c.evo_stage1_to_2 || "stance_reconfig",
+          stage2_to_3: c.evo_stage2_to_3 || "elemental_mantle",
+          stage3_to_overload: c.evo_stage3_to_overload || "armed_arsenal"
+        },
         signature_move: lockedStage?.signature_move || {
           move_id: "signature_move",
           name_zh: "專屬招式",
@@ -693,7 +709,7 @@
     TASKS.forEach(t => {
       box.append(el("button", {
         class: "task" + (t.id === state.taskId ? " on" : ""), type: "button",
-        onclick: () => { state.taskId = t.id; state.currentRound = 0; renderAll(); }
+        onclick: () => { state.taskId = t.id; state.currentRound = 1; renderAll(); }
       }, el("span", { class: "tname" }, t.zh), el("span", { class: "tmeta" }, t.id + " · 建議 " + (t.platform === "gemini" ? "Gemini" : "ChatGPT"))));
     });
     renderDesigned();
@@ -702,7 +718,7 @@
   function useDesigned(lineId, taskId) {
     state.preset = lineId;
     state.taskId = taskId;
-    state.currentRound = 0;
+    state.currentRound = 1;
     const o = state.opts[taskId] || (state.opts[taskId] = {});
     if (taskId === "model-rig") { o.scope = "single"; o.subject = "creature"; o.source_pack = ""; }
     renderAll();
@@ -1006,16 +1022,19 @@
     let displayedText = b.text;
 
     if (b.rounds && b.rounds.length) {
+      if (state.currentRound === undefined || state.currentRound === null) {
+        state.currentRound = 1;
+      }
       if (roundBar) roundBar.style.display = "flex";
       if (roundCopyGroup) roundCopyGroup.style.display = "inline-flex";
 
       if (roundTabs) {
         roundTabs.replaceChildren();
         const tabDefs = [
-          { r: 0, zh: "🎯 完整全流程" },
           { r: 1, zh: "1️⃣ 正面基準圖 (1:1)" },
           { r: 2, zh: "2️⃣ T-pose 三視圖 (16:9)" },
-          { r: 3, zh: "3️⃣ 動態主立繪 (場景強化)" }
+          { r: 3, zh: "3️⃣ 動態主立繪 (場景強化)" },
+          { r: 0, zh: "🎯 完整全流程" }
         ];
         tabDefs.forEach(def => {
           const btn = el("button", {

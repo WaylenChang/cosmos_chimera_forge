@@ -301,10 +301,11 @@
           type: "select",
           label: "【演化突變模態】50/50 辨識度守恆",
           items: () => [
-            { v: "auto", zh: "🤖 智慧決定（依階級自動匹配）" },
+            { v: "auto", zh: "🤖 依概念隨機項目決定" },
             ...(C.EVOLUTION_MODES ? C.EVOLUTION_MODES.map(m => ({ v: m.id, zh: m.zh + " (" + m.desc.split("、")[0] + ")" })) : [])
           ],
-          def: "auto"
+          def: "auto",
+          when: o => (o.stage || "adult") !== "juvenile"
         },
         { key: "scene_theme", type: "select", label: "【第 3 輪主立繪】場景主題", items: () => C.SCENE_THEMES, def: "auto" },
         { key: "scene_lighting", type: "select", label: "【第 3 輪主立繪】光影氣候", items: () => C.SCENE_LIGHTINGS, def: "auto" },
