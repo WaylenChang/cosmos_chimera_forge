@@ -318,8 +318,9 @@
     <nav id="rail">
       <div class="rail-top">
         <div class="rail-tools">
-          <button class="btn" id="btnScanDir" type="button" title="選取專案或 Art/_incoming 目錄進行自動掃描">📂 掃描 Art/_incoming</button>
+          <button class="btn" id="btnScanDir" type="button" title="選取本專案 Art/_incoming 目錄進行自動掃描審查">📂 掃描本專案審查目錄</button>
           <div class="rail-tools-sub">
+            <button class="btn ghost" id="btnDirectUnpackZip" type="button" title="選取 Zip 載入審查並解壓至本專案">⚡ 一鍵解壓 Zip</button>
             <button class="btn ghost" id="btnLoadZip" type="button" title="選擇本機下載的 .zip 或解壓檔案">🗜️ 載入 Zip</button>
             <button class="btn ghost" id="btnLoadFixtures" type="button" title="載入系統內建測試包快速體驗">🧪 載入範例</button>
             <button class="btn ghost" id="btnUpgradeZip" type="button" title="一鍵升級舊版立繪或3D壓縮包格式">🔄 升級舊包</button>
@@ -327,6 +328,7 @@
         </div>
         <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display:none">
         <input type="file" id="zipFileInput" accept=".zip,application/zip" multiple style="display:none">
+        <input type="file" id="directUnpackFileInput" accept=".zip,application/zip" multiple style="display:none">
         <input type="file" id="upgradeFileInput" accept=".zip,application/zip" style="display:none">
         <div class="seg" id="catSeg">
           <button class="segb on" data-cat="all" type="button">全部</button>
@@ -351,7 +353,7 @@
       <div id="stageViewport">
         <div id="stageEmpty">
           <p>📦 尚未選取交付任務</p>
-          <p class="muted" style="margin-top:6px">點選左側「📂 掃描 Art/_incoming」或直接拖曳 <code>&lt;task_id&gt;.zip</code> 到此處進行一鍵檢閱。</p>
+          <p class="muted" style="margin-top:6px">點選左側「📂 掃描本專案審查目錄」或直接拖曳 <code>&lt;task_id&gt;.zip</code> 到此處進行審查。</p>
         </div>
         <!-- 單圖視圖 -->
         <div id="stageSingleView" style="display:none">
@@ -399,7 +401,8 @@
           <button class="segb" id="zoomIn" type="button">＋</button>
           <button class="segb" id="zoomOut" type="button">－</button>
         </div>
-        <button class="btn" id="btnUnpack" type="button">⚡ 一鍵解壓縮</button>
+        <button class="btn" id="btnUnpack" type="button" title="實體解壓縮至本專案 Art/_incoming 目錄以供審查">⚡ 一鍵解壓至本專案</button>
+        <button class="btn ghost" id="btnDeployGame" type="button" title="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案">🚀 交付至 cosmos_chimera</button>
         <button class="btn ghost" id="btnExportAlignedZip" type="button" title="下載已整合格式與圖檔的完整 Zip 壓縮包">🗜️ 下載整合 Zip</button>
         <button class="btn ghost" id="btnToImg3d" type="button" title="以此立繪包產出指定 img-to-3D Prompt">🎯 指定 3D Prompt</button>
         <button class="btn ghost" id="btnToImg3dBatch" type="button" title="產出批量 img-to-3D Prompt（處理 image_in 內吻合條件之全部立繪包）">📦 批量 3D Prompt</button>

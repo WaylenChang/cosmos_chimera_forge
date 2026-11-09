@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.0.0";
+  const TOOL_VERSION = "2.1.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   const LS_KEY = "cosmimera.prompt-forge.v2";
@@ -1158,31 +1158,39 @@
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const root = state.root || DEFAULT_ROOT;
     const dest = root + "\\" + t.drop.replace(/\//g, "\\");
-    const cmd = 'Expand-Archive -Path "$HOME\\Downloads\\' + b.ctx.taskId + '.zip" -DestinationPath "' + dest + '\\" -Force';
+    const cmd = 'powershell unpack_incoming.ps1 -Pattern "' + b.ctx.taskId + '*"';
     if (t.drive) {
       const zips = b.ctx.taskId + (b.ctx.opts.scope === "batch" ? "*" : "") + ".zip";
-      const dcmd = 'Get-ChildItem "$HOME\\Downloads\\' + zips + '" | ForEach-Object { Expand-Archive -Path $_.FullName -DestinationPath "' + dest + '\\" -Force }';
+      const dcmd = 'powershell unpack_incoming.ps1 -Pattern "' + b.ctx.taskId + '*"';
       $("#deliver").replaceChildren(
         el("ol", {},
           el("li", {}, "先把角色/宙獸立繪包（", el("code", {}, "chr-*.zip / cr-*.zip"), "）放到雲端硬碟 ", el("code", {}, "project/cosmos_chimera/image_in/")),
           el("li", {}, "按「複製 prompt」→「開啟 Gemini」切到任務模式貼上送出"),
           el("li", {}, "處理完成之立繪包會自動移至相鄰之 ", el("code", {}, "project/cosmos_chimera/image_backup/"), " 歸檔，避免重複處理"),
-          el("li", {}, "完成後從雲端硬碟 ", el("code", {}, "project/cosmos_chimera/3D_out/"), " 下載 ", el("code", {}, zips), " 到「下載」資料夾"),
-          el("li", {}, "解壓到 ", el("code", {}, dest + "\\"), "，再到「成果審查台」審查。")
+          el("li", {}, "完成後從雲端硬碟 ", el("code", {}, "project/cosmos_chimera/3D_out/"), " 下載 ", el("code", {}, zips), " 到本專案 ", el("code", {}, "Art/_incoming/"), "（審查檔案均放在本專案）"),
+          el("li", {}, "進入本專案「成果審查台」進行 3D 與立繪對比審查，審查確認後解壓至 ", el("code", {}, dest + "\\"), "。")
         ),
-        el("div", { class: "cmd" }, el("code", {}, dcmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(dcmd, "已複製解壓指令") }, "複製"))
+        el("div", { class: "cmd" }, el("code", {}, dcmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(dcmd, "已複製解壓指令") }, "複製")),
+        el("div", { style: "margin-top:8px;display:flex;gap:8px;align-items:center;" },
+          el("button", { type: "button", class: "btn mini", onclick: () => { setViewMode("review"); $("#directUnpackFileInput")?.click(); } }, "⚡ 轉至審查台解壓至 cosmos_chimera"),
+          el("span", { class: "muted" }, "或在終端機執行 unpack_incoming.ps1 批次解壓")
+        )
       );
       return;
     }
     $("#deliver").replaceChildren(
       el("ol", {},
         el("li", {}, "按「複製 prompt」→「開啟 " + (state.platform === "gemini" ? "Gemini" : "ChatGPT") + "」貼上送出", state.platform === "gemini" ? "（先切到任務/Agent 模式）" : "", "。後續任務（3D/動作）可把前一包的概念圖、concept.json、rig_spec.json 一起附上。"),
-        el("li", {}, "下載 ", el("code", {}, b.ctx.taskId + ".zip"), " 到「下載」資料夾"),
-        el("li", {}, "解壓到 ", el("code", {}, dest + "\\"), "，結果應為 ", el("code", {}, t.drop + "/" + b.ctx.taskId + "/manifest.json")),
-        el("li", {}, "進入「成果審查台」點選「📂 掃描 Art/_incoming」或一鍵解壓縮進行審查。"),
+        el("li", {}, "下載 ", el("code", {}, b.ctx.taskId + ".zip"), " 存放到本專案 ", el("code", {}, "Art/_incoming/"), "（立繪與 3D 審查檔案均統一放在本專案）。"),
+        el("li", {}, "進入「成果審查台」點選「📂 掃描本專案審查目錄」進行檢閱與覆核。"),
+        el("li", {}, "審查通過後，點選「⚡ 解壓至 cosmos_chimera」解壓至遊戲專案（", el("code", {}, dest + "\\"), "）。")
       ),
       el("div", { class: "cmd" }, el("code", {}, cmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(cmd, "已複製解壓指令") }, "複製")),
-      el("p", { class: "muted" }, "若圖片沒有被打包進 zip：照 manifest.files 的檔名手動存到 ", el("code", {}, t.drop + "/" + b.ctx.taskId + "/images/"), "。")
+      el("div", { style: "margin-top:8px;display:flex;gap:8px;align-items:center;" },
+        el("button", { type: "button", class: "btn mini", onclick: () => { setViewMode("review"); $("#directUnpackFileInput")?.click(); } }, "⚡ 轉至審查台解壓至 cosmos_chimera"),
+        el("span", { class: "muted" }, "或在終端機執行 unpack_incoming.ps1 批次解壓")
+      ),
+      el("p", { class: "muted" }, "若圖片沒有被打包進 zip：照 manifest.files 的檔名手動存到本專案 ", el("code", {}, "Art/_incoming/" + b.ctx.taskId + "/images/"), " 進行審查。")
     );
   }
 
@@ -1503,9 +1511,7 @@
     if (!pkg) pkg = getActivePkg();
     if (!pkg) { toast("請先選取要備份的任務包"); return; }
     const ts = getBackupTimestamp();
-    const root = state.root || DEFAULT_ROOT;
-    const dest = `${root}\\Art\\_backup\\${pkg.id}_${ts}`;
-    const cmd = `Move-Item -Path "${root}\\Art\\_incoming\\${pkg.id}" -Destination "${dest}" -Force`;
+    const cmd = `if (Test-Path "Art\\_incoming\\${pkg.id}.zip") { Move-Item -Path "Art\\_incoming\\${pkg.id}.zip" -Destination "Art\\_backup\\${pkg.id}_${ts}.zip" -Force } elseif (Test-Path "Art\\_incoming\\${pkg.id}") { Move-Item -Path "Art\\_incoming\\${pkg.id}" -Destination "Art\\_backup\\${pkg.id}_${ts}" -Force }`;
     copyText(cmd, `已複製備份指令（目標：Art\\_backup\\${pkg.id}_${ts}）！可直接在 PowerShell 貼上執行`);
   }
 
@@ -1816,22 +1822,22 @@
     });
   }
 
-  async function saveDirectoryHandle(handle) {
+  async function saveDirectoryHandle(handle, key = "reviewIncomingDir") {
     try {
       const db = await getDb();
       if (!db) return;
       const tx = db.transaction("handles", "readwrite");
-      tx.objectStore("handles").put(handle, "incomingDir");
+      tx.objectStore("handles").put(handle, key);
     } catch (e) {}
   }
 
-  async function getSavedDirectoryHandle() {
+  async function getSavedDirectoryHandle(key = "reviewIncomingDir") {
     try {
       const db = await getDb();
       if (!db) return null;
       return new Promise((resolve) => {
         const tx = db.transaction("handles", "readonly");
-        const req = tx.objectStore("handles").get("incomingDir");
+        const req = tx.objectStore("handles").get(key);
         req.onsuccess = () => resolve(req.result || null);
         req.onerror = () => resolve(null);
       });
@@ -1858,7 +1864,7 @@
 
   // 嘗試自動掃描已記憶授權的目錄
   async function tryAutoScanIncoming() {
-    const handle = await getSavedDirectoryHandle();
+    const handle = (await getSavedDirectoryHandle("reviewIncomingDir")) || (await getSavedDirectoryHandle("incomingDir"));
     if (!handle) return false;
     try {
       let perm = await handle.queryPermission({ mode: "readwrite" });
@@ -1876,16 +1882,17 @@
     return false;
   }
 
-  // 掃描 Art/_incoming 目錄（File System Access API）
+  // 掃描本專案 Art/_incoming 目錄（File System Access API）
   async function scanIncomingDirectory() {
     if (!window.showDirectoryPicker) {
       $("#folderFileInput").click();
       return;
     }
     try {
+      toast("請選取本專案 (cosmos_chimera_forge) 的 Art/_incoming 目錄進行審查掃描...");
       const dirHandle = await window.showDirectoryPicker({ mode: "readwrite" });
-      await saveDirectoryHandle(dirHandle);
-      toast("正在掃描目錄...");
+      await saveDirectoryHandle(dirHandle, "reviewIncomingDir");
+      toast("正在掃描本專案審查目錄...");
       const foundCount = await performScanDirectory(dirHandle);
       toast("掃描完成，已載入 " + foundCount + " 個交付包");
     } catch (e) {
@@ -2050,6 +2057,90 @@
 
   function getActivePkg() {
     return reviewState.packages.find(p => p.id === reviewState.activePkgId) || reviewState.packages[0] || null;
+  }
+
+  // ==================== 實體一鍵解壓縮引擎（解壓至本專案 Art/_incoming） ====================
+  async function unpackPackageToDisk(pkg) {
+    if (!pkg) { toast("請先選取任務包"); return false; }
+    const cmd = `powershell unpack_incoming.ps1 -Pattern "${pkg.id}*"`;
+
+    if (!pkg.rawFiles || !Object.keys(pkg.rawFiles).length) {
+      copyText(cmd, "此任務包無記憶體檔案，已複製本專案解壓指令至剪貼簿！可在終端機貼上執行");
+      return false;
+    }
+
+    if (window.showDirectoryPicker) {
+      try {
+        let dirHandle = await getSavedDirectoryHandle("reviewIncomingDir");
+        let needPick = !dirHandle;
+        if (dirHandle) {
+          try {
+            let perm = await dirHandle.queryPermission({ mode: "readwrite" });
+            if (perm !== "granted") {
+              perm = await dirHandle.requestPermission({ mode: "readwrite" });
+              if (perm !== "granted") needPick = true;
+            }
+          } catch (e) {
+            needPick = true;
+          }
+        }
+        if (needPick) {
+          toast("請在彈出視窗選取本專案 (cosmos_chimera_forge) 的 Art/_incoming 目錄以進行解壓...");
+          dirHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+          await saveDirectoryHandle(dirHandle, "reviewIncomingDir");
+        }
+
+        toast(`⚡ 正在將 ${pkg.id} 實體解壓縮至本專案 (${dirHandle.name})...`);
+
+        // 建立或取得本專案 Art/_incoming/<task_id>/ 目錄 handle
+        const targetDir = await dirHandle.getDirectoryHandle(pkg.id, { create: true });
+
+        for (const filePath in pkg.rawFiles) {
+          let rel = filePath;
+          if (rel.startsWith(pkg.id + "/") || rel.startsWith(pkg.id + "\\")) {
+            rel = rel.slice(pkg.id.length + 1);
+          }
+          if (!rel || rel.endsWith("/") || rel.endsWith("\\")) continue;
+
+          const parts = rel.replace(/\\/g, "/").split("/").filter(Boolean);
+          if (!parts.length) continue;
+
+          let curDir = targetDir;
+          for (let i = 0; i < parts.length - 1; i++) {
+            curDir = await curDir.getDirectoryHandle(parts[i], { create: true });
+          }
+
+          const fileHandle = await curDir.getFileHandle(parts[parts.length - 1], { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(pkg.rawFiles[filePath]);
+          await writable.close();
+        }
+
+        pkg.isZip = false;
+        pkg.localExtracted = true;
+        pkg.dirHandle = targetDir;
+        toast(`✅ 已成功解壓至本專案: ${dirHandle.name}/${pkg.id}/！`);
+        renderReviewView();
+        return true;
+      } catch (e) {
+        if (e.name === "AbortError") return false;
+        console.warn("Direct disk unpack failed, falling back to command:", e);
+      }
+    }
+
+    // 瀏覽器不支援 File System API 或授權取消時，安全退回複製指令
+    copyText(cmd, "已複製本專案解壓指令！可在 PowerShell 直接貼上執行一鍵解壓");
+    return false;
+  }
+
+  // ==================== 審查通過，交付至 cosmos_chimera ====================
+  async function deployPackageToGame(pkg) {
+    if (!pkg) pkg = getActivePkg();
+    if (!pkg) { toast("請先選取要交付的任務包"); return false; }
+    const cmd = `powershell unpack_incoming.ps1 -Pattern "${pkg.id}*" -DeployToGame`;
+    copyText(cmd, `已複製交付至 cosmos_chimera 指令！可在終端機貼上執行`);
+    toast(`已複製交付至 cosmos_chimera 指令！`);
+    return true;
   }
 
   // ==================== 一鍵舊版 Prompt 內容格式升級引擎 ====================
@@ -2818,18 +2909,25 @@
 
     // 6. 指令部署與解壓
     } else if (activeTab === "cli") {
-      box.append(el("h4", {}, "解壓與管線部署"));
+      box.append(el("h4", {}, "解壓審查與交付至 cosmos_chimera 管線"));
       const root = state.root || DEFAULT_ROOT;
       const ts = getBackupTimestamp();
-      const psCmd = `Expand-Archive -Path "$HOME\\Downloads\\${pkg.id}.zip" -DestinationPath "${root}\\Art\\_incoming\\" -Force`;
+      const psUnpackCmd = `powershell unpack_incoming.ps1 -Pattern "${pkg.id}*"`;
+      const psDeployCmd = `powershell unpack_incoming.ps1 -Pattern "${pkg.id}*" -DeployToGame`;
       const valCmd = `python tools/validate_art.py Art/_incoming/${pkg.id} --apply`;
-      const backupCmd = `Move-Item -Path "${root}\\Art\\_incoming\\${pkg.id}" -Destination "${root}\\Art\\_backup\\${pkg.id}_${ts}" -Force`;
+      const backupCmd = `Move-Item -Path "Art\\_incoming\\${pkg.id}.zip" -Destination "Art\\_backup\\${pkg.id}_${ts}.zip" -Force`;
       box.append(
-        el("p", { class: "muted" }, "一鍵解壓指令（PowerShell）："),
-        el("div", { class: "cmd" }, el("code", {}, psCmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(psCmd, "已複製解壓指令") }, "複製")),
-        el("p", { class: "muted", style: "margin-top:10px" }, "驗收搬入管線指令（validate-art）："),
+        el("div", { style: "display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;" },
+          el("button", { class: "btn mini", type: "button", onclick: () => unpackPackageToDisk(pkg) }, "⚡ 實體解壓至本專案審查目錄"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => deployPackageToGame(pkg) }, "🚀 交付至 cosmos_chimera")
+        ),
+        el("p", { class: "muted" }, "本專案解壓審查指令（PowerShell）："),
+        el("div", { class: "cmd" }, el("code", {}, psUnpackCmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(psUnpackCmd, "已複製本專案解壓指令") }, "複製")),
+        el("p", { class: "muted", style: "margin-top:10px" }, "審查核可，交付部署至 cosmos_chimera 指令："),
+        el("div", { class: "cmd" }, el("code", {}, psDeployCmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(psDeployCmd, "已複製交付至 cosmos_chimera 指令") }, "複製")),
+        el("p", { class: "muted", style: "margin-top:10px" }, "遊戲專案驗收搬入管線指令（在 cosmos_chimera 目錄執行）："),
         el("div", { class: "cmd" }, el("code", {}, valCmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(valCmd, "已複製驗收指令") }, "複製")),
-        el("p", { class: "muted", style: "margin-top:10px" }, "移至備份區指令（含時間戳）："),
+        el("p", { class: "muted", style: "margin-top:10px" }, "本專案審查備份指令（含時間戳）："),
         el("div", { class: "cmd" }, el("code", {}, backupCmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(backupCmd, "已複製備份指令") }, "複製"))
       );
     }
@@ -3027,6 +3125,20 @@
     // 審查台控制列事件
     $("#btnScanDir").addEventListener("click", scanIncomingDirectory);
     $("#folderFileInput")?.addEventListener("change", e => handleFolderUpload(e.target.files));
+    $("#btnDirectUnpackZip")?.addEventListener("click", () => $("#directUnpackFileInput").click());
+    $("#directUnpackFileInput")?.addEventListener("change", async e => {
+      const files = e.target.files;
+      if (!files || !files.length) return;
+      for (const f of files) {
+        if (f.name.endsWith(".zip")) {
+          toast("正在讀取並解析 " + f.name + "...");
+          const pkg = await loadZipFile(f);
+          if (pkg) {
+            await unpackPackageToDisk(pkg);
+          }
+        }
+      }
+    });
     $("#btnLoadZip").addEventListener("click", () => $("#zipFileInput").click());
     $("#zipFileInput").addEventListener("change", async e => {
       const files = e.target.files;
@@ -3100,13 +3212,17 @@
       });
     });
 
-    // 一鍵解壓縮 / 複製
+    // 一鍵解壓縮（解壓至本專案 Art/_incoming 目錄以供審查）
     $("#btnUnpack").addEventListener("click", () => {
       const pkg = getActivePkg();
-      if (!pkg) return;
-      const root = state.root || DEFAULT_ROOT;
-      const cmd = `Expand-Archive -Path "$HOME\\Downloads\\${pkg.id}.zip" -DestinationPath "${root}\\Art\\_incoming\\" -Force`;
-      copyText(cmd, "已複製解壓指令！可在 PowerShell 直接貼上執行一鍵解壓");
+      if (!pkg) { toast("請先選取任務包"); return; }
+      unpackPackageToDisk(pkg);
+    });
+    // 審查通過，交付部署至 cosmos_chimera
+    $("#btnDeployGame")?.addEventListener("click", () => {
+      const pkg = getActivePkg();
+      if (!pkg) { toast("請先選取任務包"); return; }
+      deployPackageToGame(pkg);
     });
     $("#btnExportAlignedZip")?.addEventListener("click", () => {
       const pkg = getActivePkg();

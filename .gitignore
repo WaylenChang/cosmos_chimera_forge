@@ -8,3 +8,8 @@ pokemon_data/
 crawl_pokemon_data.py
 crawl_characters.py
 crawl_*.py
+
+# Review deliverables (立繪與 3D 審查包)
+/Art/_incoming/*
+!/Art/_incoming/README.md
+*.zip

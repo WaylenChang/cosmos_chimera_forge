@@ -6,9 +6,10 @@
 - **線上版（GitHub Pages）**：部署於本倉庫的 GitHub Pages
 - **離線單頁**：直接用瀏覽器開 `index.html`（零外部依賴、純前端）。
 
-> **解壓目標路徑**：
-> 一鍵解壓、一鍵備份及管線驗收指令預設指向主遊戲專案路徑：
-> `C:\Users\user\Documents\app\cosmos_chimera`（可在介面右上角自訂覆蓋）。
+> **專案審查與解壓規範**：
+> - **審查檔案均放在本專案**：無論是立繪（`chr-*`、`cr-*`）或 3D（`mdl-*`、`anim-*`），交付之壓縮包與待審檔案統一存放於本專案 `Art/_incoming/`，並於「成果審查台」進行 2D 畫風檢閱、3D 模型/拓撲檢視、2D⇄3D 雙欄對比與審查覆核。
+> - **解壓再到 cosmos_chimera 專案**：審查核可後，點選「⚡ 解壓至 cosmos_chimera」或執行 `powershell unpack_incoming.ps1`，成果實體解壓至遊戲主專案路徑：`C:\Users\user\Documents\app\cosmos_chimera\Art\_incoming/<task_id>/`。
+> - **遊戲專案驗收管線**：解壓完成後，至 `cosmos_chimera` 專案執行 `python tools/validate_art.py Art/_incoming/<task_id> --apply` 完成驗收與資產入庫。
 
 ## 核心檔案架構
 

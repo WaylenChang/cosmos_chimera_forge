@@ -2,6 +2,11 @@
 
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
+- 2026-11-09 · tool@2.1.0 · 確立「本專案解壓審查、核可後交付至 cosmos_chimera」雙階段工作流：
+  - **一鍵解壓解壓在本專案（`Art/_incoming/<task_id>/`）**：點選「⚡ 一鍵解壓至本專案」或在終端機執行 `powershell unpack_incoming.ps1`，成果完整實體解壓至本專案審查目錄，解壓後的圖檔、3D 模型與 manifest.json 即刻供成果審查台完整檢閱、3D 預覽與審查註記。
+  - **審查核可後交付至 cosmos_chimera**：審查覆核確認通過後，透過「🚀 交付至 cosmos_chimera」按鈕或 `powershell unpack_incoming.ps1 -DeployToGame`，將成果推送到主遊戲專案（`cosmos_chimera/Art/_incoming/<task_id>/`）接續執行 Unity 入庫驗收管線（`validate_art.py`）。
+  - **名冊欄快速解壓**：名冊欄「⚡ 一鍵解壓 Zip」解壓目標同步預設為本專案審查區，維持純粹且乾淨的審查沙盒邊界。
+
 - 2026-11-09 · template@(creature-model-rig@4.3.0, character-model-rig@4.3.0) · img-to-3D Prompt 全面去冗餘精簡：
   - **立繪包既有資料不再重複**：徹底拔除來源立繪壓縮包內已有的概念設定（名稱、屬性、外觀基底、性別、身高、道具等文本描述）與型態標註，不向 3D AI 重複灌輸無關幾何重建之企劃資訊。
   - **精簡 3D 規格專注工程數值**：直接給定拓撲面數預算與貼圖解析度規格，去除過渡冗贅。
