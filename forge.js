@@ -2709,12 +2709,14 @@
       compareView.style.display = "none";
       stage3dView.style.display = "block";
       const zSeg = $("#zoomSeg"); if (zSeg) zSeg.style.display = "none";
+      const cEl = $("#stageCarousel"); if (cEl) cEl.style.bottom = "58px";
       loadModelForPackage(pkg, linkedPkg);
     } else if (isCompare) {
       singleView.style.display = "none";
       compareView.style.display = "grid";
       stage3dView.style.display = "none";
       const zSeg = $("#zoomSeg"); if (zSeg) zSeg.style.display = "none";
+      const cEl = $("#stageCarousel"); if (cEl) cEl.style.bottom = "8px";
 
       // 決定 2D 與 3D 的包
       let p2d = is3dType(pkg.type) ? linkedPkg : pkg;
@@ -2737,6 +2739,7 @@
       compareView.style.display = "none";
       stage3dView.style.display = "none";
       const zSeg = $("#zoomSeg"); if (zSeg) zSeg.style.display = "inline-flex";
+      const cEl = $("#stageCarousel"); if (cEl) cEl.style.bottom = "8px";
 
       // 舞台圖片
       const curImg = pkg.images[reviewState.activeImgIdx] || pkg.images[0];
@@ -2757,7 +2760,11 @@
         class: "c-thumb" + (idx === reviewState.activeImgIdx ? " on" : ""),
         src: im.url,
         title: im.path,
-        onclick: () => { reviewState.activeImgIdx = idx; renderReviewView(); }
+        onclick: () => {
+          reviewState.activeImgIdx = idx;
+          if (reviewState.viewMode === "3d") reviewState.viewMode = "single";
+          renderReviewView();
+        }
       }));
     });
 
@@ -2768,7 +2775,11 @@
         class: "segb" + (idx === reviewState.activeImgIdx ? " on" : ""),
         type: "button",
         title: im.path,
-        onclick: () => { reviewState.activeImgIdx = idx; renderReviewView(); }
+        onclick: () => {
+          reviewState.activeImgIdx = idx;
+          if (reviewState.viewMode === "3d") reviewState.viewMode = "single";
+          renderReviewView();
+        }
       }, describeImg(im.path)));
     });
 
