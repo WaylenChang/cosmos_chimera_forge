@@ -420,8 +420,8 @@
     },
 
     {
-      // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：完全拔除 2D 畫風、文化命名、重複交付格式與無效檢查，嚴格對齊立繪包 front/turnaround 與 concept.json。
-      id: "creature-model-rig", version: "4.2.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、屬性、基底等）不再重複，去除對 3D 無關緊要的贅詞。
+      id: "creature-model-rig", version: "4.3.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 cr-*.zip）" }], def: "single" },
@@ -434,7 +434,6 @@
         const o = ctx.opts, batch = o.scope === "batch", c = ctx.concept || {};
         const S = batch ? "<subject_id>" : ctx.subjectId;
         const curStage = o.stage || "adult";
-        const stageDef = C.STAGES.find(s => s.v === curStage) || C.STAGES[2];
         const outId = batch ? ctx.taskId + "-<subject-id>" : ctx.taskId;
         const unit = batch ? "cr_" + S + "_<stage>" : "cr_" + S + "_" + curStage;
         const stageTag = batch ? "<stage>" : curStage;
@@ -446,10 +445,13 @@
         const szInfo = C.SIZE_CLASSES[curSize] || C.SIZE_CLASSES.L;
         const sizeSpec = batch
           ? [
-            "- 體型等級面數對照（依各立繪包 stage 查表）：",
+            "- 體型等級面數規格（依各立繪包 stage 對照）：",
             "  - XS: 3–5k tris, 512² | S: 5–8k tris, 1024² | M: 8–15k tris, 1024² | L: 15–25k tris, 2048² | XL: 25–35k tris, 2048²"
           ].join("\n")
-          : `- 目標型態：【${stageDef.zh}（${curStage}）】· 體型等級【${curSize}】\n- 面數與貼圖：面數預算 **${szInfo.tris} tris** · 貼圖 **${szInfo.tex}² PBR** (Base Color, Normal, Metallic/Roughness)`;
+          : [
+            `- 面數預算：**${szInfo.tris} tris**（健康卡通比例、拓撲乾淨適配變形）`,
+            `- 貼圖規格：**${szInfo.tex} × ${szInfo.tex} PBR**（Base Color, Normal, Metallic/Roughness）`
+          ].join("\n");
 
         const src = o.input_img
           ? `\`${o.input_img}\`（指定首要視圖，其餘由三視圖合圖裁切補齊）`
@@ -471,14 +473,13 @@
           produced_by: ctx.platformName,
           source_pack: o.source_pack || "<來源宙獸立繪包 task_id，例 cr-20261106-7f3a-2105-adult>",
           files: [
-            { path: `models/${unit}.glb`, kind: "model", level: "L2" },
-            { path: `models/${unit}.fbx`, kind: "model", level: "L2" },
-            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
-            { path: `anims/cr_${stageTag}_idle.fbx`, kind: "anim", level: "L2" },
-            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" }
-          ],
-          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }]
+            { path: `models/${unit}.glb`, kind: "model" },
+            { path: `models/${unit}.fbx`, kind: "model" },
+            { path: "rig/rig_spec.json", kind: "spec" },
+            { path: "anims/anim_spec.json", kind: "spec" },
+            { path: `anims/cr_${stageTag}_idle.fbx`, kind: "anim" },
+            { path: `images/${unit}_model_front.png`, kind: "view" }
+          ]
         };
 
         const sections = [
@@ -492,9 +493,8 @@
             : [
               `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "cr-" + S + "-" + curStage + ".zip"}\``,
               `- 核心輸入圖：${src}`,
-              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`,
-              c.name_zh ? `- 概念設定：【${c.name_zh}】${c.elements ? "屬性【" + c.elements.join("、") + "】" : ""}${c.bases ? " · 基底【" + c.bases.join(" + ") + "】" : ""}` : null
-            ].filter(Boolean).join("\n"),
+              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
+            ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
           sizeSpec,
@@ -528,8 +528,8 @@
     },
 
     {
-      // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：完全拔除 2D 畫風、文化命名、重複交付格式與無效檢查，嚴格對齊立繪包 front/turnaround 與 concept.json。
-      id: "character-model-rig", version: "4.2.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、性別、身高、道具等）不再重複，去除對 3D 無關緊要的贅詞。
+      id: "character-model-rig", version: "4.3.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "character", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 chr-*.zip）" }], def: "single" },
@@ -563,14 +563,13 @@
           produced_by: ctx.platformName,
           source_pack: o.source_pack || "<來源角色立繪包 task_id，例 chr-20261106-7f3a-2105>",
           files: [
-            { path: `models/${unit}.glb`, kind: "model", level: "L2" },
-            { path: `models/${unit}.fbx`, kind: "model", level: "L2" },
-            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/chr_idle.fbx", kind: "anim", level: "L2" },
-            { path: `images/${unit}_model_front.png`, kind: "view", level: "L1" }
-          ],
-          missing: [{ item: `models/${unit}.glb`, level: "L2", reason: "平台若無原生 3D 匯出能力則列入 missing" }]
+            { path: `models/${unit}.glb`, kind: "model" },
+            { path: `models/${unit}.fbx`, kind: "model" },
+            { path: "rig/rig_spec.json", kind: "spec" },
+            { path: "anims/anim_spec.json", kind: "spec" },
+            { path: "anims/chr_idle.fbx", kind: "anim" },
+            { path: `images/${unit}_model_front.png`, kind: "view" }
+          ]
         };
 
         const sections = [
@@ -584,9 +583,8 @@
             : [
               `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "chr-" + S + ".zip"}\``,
               `- 核心輸入圖：${src}`,
-              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`,
-              c.name_zh ? `- 角色設定：【${c.name_zh}】${c.gender || "角色"} · 約 ${c.height || "170 cm"}${c.vessel ? " · 隨身道具【" + (c.vessel.zh || c.vessel) + "】" : ""}` : null
-            ].filter(Boolean).join("\n"),
+              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
+            ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
           "- 面數預算：**15,000 ~ 25,000 tris**（健康卡通比例、拓撲乾淨適配變形）",
@@ -611,7 +609,6 @@
           "└── images/          # " + unit + "_model_front.png (L1: 正交彩現檢視圖)",
           "```",
           "manifest.json 格式：",
-          json(manifestObj),
           json(manifestObj),
           "- **source_pack 必須如實填寫來源立繪包 task_id**，供技術美術與審查台 100% 雙向追溯。",
           ctx.notes ? "\n## 使用者補充\n" + ctx.notes : null
