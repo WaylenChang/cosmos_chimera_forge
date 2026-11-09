@@ -2854,7 +2854,9 @@
       state.currentRound = 1;
       renderOutput();
       const staged = generateAndStageFormats(b);
-      copyText(b.rounds[0].prompt, `已複製第 1 輪 (正面圖) Prompt！已產生時間戳對齊包 (${staged.taskId})`);
+      const isEvo = b.ctx.opts?.stage && b.ctx.opts.stage !== "juvenile" && b.ctx.task.id === "creature-concept";
+      const hint = isEvo ? `已複製第 1 輪 (正面圖) Prompt！請先上傳前一階正面圖再貼入生成` : `已複製第 1 輪 (正面圖) Prompt！已產生時間戳對齊包 (${staged.taskId})`;
+      copyText(b.rounds[0].prompt, hint);
       record();
     });
 

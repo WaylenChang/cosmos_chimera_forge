@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.3.0",
+  version: "2.4.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -144,7 +144,7 @@ window.COSMI_CATALOG = {
         toneType: "balanced",
         toneLabel: "標準中性灰",
         reason: "主體為均衡/中彩度色系，採用標準中性灰 #808080（R=G=B=128），維持無色偏平光環境",
-        promptGuide: "純中性灰 #808080 底（RGB三通道嚴格均等：R=128, G=128, B=128，杜絕邊緣環境色偏）"
+        promptGuide: "純中性灰 #808080 純色背景，平光無陰影、無色偏"
       };
     }
 
@@ -196,8 +196,8 @@ window.COSMI_CATALOG = {
         luminance: avgL,
         toneType: "dark_dominant",
         toneLabel: "淺中性灰（深色主體反差）",
-        reason: "主體偏深色/暗影系，依 2D AGC 剪影分離規則採用淺中性灰 #c0c0c0（R=G=B=192），確保暗部毛髮、鱗甲與剪影邊緣清晰分離且無環境色偏",
-        promptGuide: "淺中性灰 #c0c0c0 底（RGB三通道嚴格均等：R=192, G=192, B=192，依深色主體剪影分離規則判定，杜絕邊緣色偏汙染）"
+        reason: "主體偏深色/暗影系，採用淺中性灰 #c0c0c0 確保剪影邊緣分離且無環境色偏",
+        promptGuide: "淺中性灰 #c0c0c0 純色背景（深色主體反差），平光無陰影、無色偏"
       };
     } else if (avgL > 0.65) {
       // 主體偏淺色/白銀：背景降至深中性灰 #505050 (R=G=B=80)
@@ -208,8 +208,8 @@ window.COSMI_CATALOG = {
         luminance: avgL,
         toneType: "light_dominant",
         toneLabel: "深中性灰（淺色主體反差）",
-        reason: "主體偏白銀/淺光/冰晶色系，依 2D AGC 剪影分離規則採用深中性灰 #505050（R=G=B=80），防止白羽、銀甲或高光與背景融和過曝，維持乾淨無色偏",
-        promptGuide: "深中性灰 #505050 底（RGB三通道嚴格均等：R=80, G=80, B=80，依淺色主體高反差對比規則判定，杜絕邊緣色偏汙染）"
+        reason: "主體偏淺光/白銀色系，採用深中性灰 #505050 防止邊緣過曝，維持乾淨無色偏",
+        promptGuide: "深中性灰 #505050 純色背景（淺色主體反差），平光無陰影、無色偏"
       };
     } else {
       // 主體均衡/中彩度：標準 50% 中性灰 #808080 (R=G=B=128)
@@ -220,8 +220,8 @@ window.COSMI_CATALOG = {
         luminance: avgL,
         toneType: "balanced",
         toneLabel: "標準中性灰（均衡色系）",
-        reason: "主體為標準中彩度/均衡色系，採用標準中性灰 #808080（R=G=B=128），色溫平衡、無任何環境色偏，最適合作為 2D AGC 正交立繪與 3D 拓撲基準",
-        promptGuide: "標準中性灰 #808080 底（RGB三通道嚴格均等：R=128, G=128, B=128，依中彩度色系標準平光規則判定，杜絕邊緣色偏汙染）"
+        reason: "主體為標準中彩度色系，採用標準中性灰 #808080，色溫平衡無色偏",
+        promptGuide: "純中性灰 #808080 純色背景，平光無陰影、無色偏"
       };
     }
   },
@@ -355,7 +355,8 @@ window.COSMI_CATALOG = {
         } else if (actionKey === "calm_commune") {
           actionDesc = "靜穆沉穩地盤踞於自然神殿前，身周元素能量如水波般緩緩蕩漾，神情莊嚴祥和，與天地共鳴";
         } else {
-          actionDesc = "傲立於險峻岩石之上，昂首長嘯迎敵，身周環繞奔騰呼嘯的【" + (concept?.elements || ["光"]).join("、") + "】屬性元素光流與碎石氣浪，魄力十足";
+          const elemZh = (concept?.elements || ["light"]).map(e => typeof e === "string" ? (this.ELEMENTS.find(el => el.v === e)?.zh || e) : (e.zh || e)).join("、");
+          actionDesc = "傲立於險峻岩石之上，昂首長嘯迎敵，身周環繞奔騰呼嘯的【" + elemZh + "】元素光流與碎石氣浪，魄力十足";
         }
       }
     }
@@ -375,11 +376,11 @@ window.COSMI_CATALOG = {
       lightingDesc,
       actionDesc,
       fullPromptSection: [
-        "### 步驟 3 主立繪專屬場景氛圍與動態演出",
-        "- **舞台環境**：【" + sceneDesc + "】",
-        "- **光影天候**：【" + lightingDesc + "】",
-        "- **主體姿態**：【" + actionDesc + "】",
-        "- **分離度與構圖**：**主體全身完整入鏡（Full-body in frame，不切頭不切腳）**，背景保持適度留白或景深水彩微紋理，主體邊緣輪廓分明，**杜絕主體被背景雜質吞沒**。"
+        "## 動態與場景氛圍",
+        "- **姿態演繹**：" + actionDesc,
+        "- **舞台環境**：" + sceneDesc,
+        "- **光影天候**：" + lightingDesc,
+        "- **構圖規範**：主體全身完整入鏡（不切頭腳），輪廓分明帶微弱邊緣反光，背景適度留白或景深虛化，杜絕主體與背景融色。無文字、無浮水印。"
       ].join("\n")
     };
   },
@@ -571,8 +572,27 @@ window.COSMI_CATALOG = {
     });
   },
 
-  resolveEvolutionPrompt(modeKey, stage, concept) {
+  resolveEvolutionPrompt(modeKey, stage, concept, subjectId) {
     if (stage === "juvenile") return null; // 第一階段不需要演化模式
+
+    const PREV_STAGE_MAP = {
+      adolescent: "juvenile",
+      adult: "adolescent",
+      overload: "adult"
+    };
+    const STAGE_ZH_MAP = {
+      juvenile: "第一階（幼年）",
+      adolescent: "第二階（少年）",
+      adult: "第三階（成年）",
+      overload: "超載型態"
+    };
+
+    const prevStage = PREV_STAGE_MAP[stage];
+    if (!prevStage) return null;
+
+    const prevStageZh = STAGE_ZH_MAP[prevStage] || prevStage;
+    const S = subjectId || concept?.id || "<id>";
+    const prevFrontImg = "images/cr_" + S + "_" + prevStage + "_front.png";
 
     let targetKey = modeKey;
     if (!targetKey || targetKey === "auto") {
@@ -588,13 +608,16 @@ window.COSMI_CATALOG = {
 
     return {
       mode,
+      prevStage,
+      prevStageZh,
+      prevFrontImg,
       guideSection: [
-        "## 🧬 形態演化與 50/50 辨識度守恆指引" + stageTransLabel + "（" + mode.zh + "）",
-        "- **演化模式定位**：" + mode.desc,
-        "- **【50% 絕對鎖定錨點】**：嚴格保留本宙獸的面部五官結構、眼眸幾何形狀與瞳色、標誌性頭身比例特徵、核心雙色調，確保一眼即可認出所屬原型家族。",
-        "- **【50% 劇烈破局突變】**：" + mode.prompt_guidance,
-        "- **正向提示詞注入**：`" + mode.positive_tokens + "`",
-        "- **負向排除約束**：`" + mode.negative_tokens + "`"
+        "## 參考圖與演化設定（基於前階正面圖 · " + mode.zh + "）",
+        "- **輸入參考圖**：先上傳前一階正面基準圖 `" + prevFrontImg + "`（" + prevStageZh + "正面圖）作為本輪唯一視覺基底（Image-to-Image）。",
+        "- **保留特徵（50% 鎖定）**：嚴格保留原生物面部五官結構、眼眸幾何特徵與瞳色、核心標誌特徵與雙色調，確保家族辨識度。",
+        "- **本階進化（50% 突變）**：" + mode.prompt_guidance,
+        "- **提示詞注入**：`" + mode.positive_tokens + "`",
+        "- **負向排除**：`" + mode.negative_tokens + "`"
       ].join("\n")
     };
   },
