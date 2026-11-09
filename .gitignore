@@ -6,3 +6,5 @@ Thumbs.db
 # Pokemon research & crawling data
 pokemon_data/
 crawl_pokemon_data.py
+crawl_characters.py
+crawl_*.py
