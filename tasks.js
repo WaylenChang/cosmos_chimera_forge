@@ -292,10 +292,20 @@
     },
 
     {
-      id: "creature-concept", version: "6.2.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
+      id: "creature-concept", version: "6.3.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
       needs: "creature", drop: "Art/_incoming",
       options: [
         { key: "stage", type: "select", label: "宙獸型態（四型態分開產出）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult" },
+        {
+          key: "evolution_mode",
+          type: "select",
+          label: "【演化突變模態】50/50 辨識度守恆",
+          items: () => [
+            { v: "auto", zh: "🤖 智慧決定（依階級自動匹配）" },
+            ...(C.EVOLUTION_MODES ? C.EVOLUTION_MODES.map(m => ({ v: m.id, zh: m.zh + " (" + m.desc.split("、")[0] + ")" })) : [])
+          ],
+          def: "auto"
+        },
         { key: "scene_theme", type: "select", label: "【第 3 輪主立繪】場景主題", items: () => C.SCENE_THEMES, def: "auto" },
         { key: "scene_lighting", type: "select", label: "【第 3 輪主立繪】光影氣候", items: () => C.SCENE_LIGHTINGS, def: "auto" },
         { key: "scene_action", type: "select", label: "【第 3 輪主立繪】動態姿態", items: () => C.SCENE_ACTIONS, def: "auto" }
@@ -316,6 +326,7 @@
           "超載戰鬥極致爆發態，裝甲展開、光環浮現、能量外溢粒子流";
 
         const sceneInfo = C.resolveDynamicScene(c, false, o, curStage);
+        const evoInfo = C.resolveEvolutionPrompt ? C.resolveEvolutionPrompt(o.evolution_mode, curStage, c) : null;
 
         // 第 1、2 輪基準資訊：嚴格標準生物生理構造（無戰鬥招式特效、無動態光影）
         const canonicalCreature = [
@@ -324,7 +335,8 @@
           "- 核心構造：非人形生物（獸形/幻獸/機獸），外觀基底為【" + (c.base_parents ? c.base_parents.join(" + ") + " → " : "") + (c.bases ? c.bases.join(" + ") : "") + "】",
           "- 屬性配色：屬性【" + (c.elements || []).join("、") + "】，主色調【" + (c.appearance_palette || []).join("、") + "】",
           c.archetype ? ("- 文化原型意象：" + c.archetype + (c.motifs ? "（象徵圖騰：" + c.motifs + "）" : "")) : null,
-          lockedStage?.look ? ("- 定案外觀細節：" + lockedStage.look) : null
+          lockedStage?.look ? ("- 定案外觀細節：" + lockedStage.look) : null,
+          evoInfo ? evoInfo.guideSection : null
         ].filter(Boolean).join("\n");
 
         // 第 1 輪：正面正交基準圖
@@ -424,6 +436,7 @@
           "超載戰鬥極致爆發態，裝甲展開、光環浮現、能量外溢粒子流";
 
         const sceneInfo = C.resolveDynamicScene(c, false, o, curStage);
+        const evoInfo = C.resolveEvolutionPrompt ? C.resolveEvolutionPrompt(o.evolution_mode, curStage, c) : null;
 
         const body = [
           "## 設計目標：宙獸【" + (lockedStage ? lockedStage.name_zh : (c.name_zh || "原創奇幻生物")) + "】· " + stageDef.zh + "型態",
@@ -432,6 +445,7 @@
           "- 屬性配色：屬性【" + (c.elements || []).join("、") + "】，主色調【" + (c.appearance_palette || []).join("、") + "】",
           c.archetype ? ("- 文化原型意象：" + c.archetype + (c.motifs ? "（象徵圖騰：" + c.motifs + "）" : "")) : null,
           lockedStage?.look ? ("- 定案外觀細節：" + lockedStage.look) : null,
+          evoInfo ? evoInfo.guideSection : null,
           "",
           "## 🎯 三步驟生圖順序（同一對話、分輪次獨立出圖、以圖生圖保持一致性）",
           "請在「同一個對話」中依序逐輪生成以下 3 張獨立圖片，完成一張後再生成下一張：",

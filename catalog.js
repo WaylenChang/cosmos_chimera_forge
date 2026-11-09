@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.2.0",
+  version: "2.3.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -380,6 +380,120 @@ window.COSMI_CATALOG = {
         "- **光影天候**：【" + lightingDesc + "】",
         "- **主體姿態**：【" + actionDesc + "】",
         "- **分離度與構圖**：**主體全身完整入鏡（Full-body in frame，不切頭不切腳）**，背景保持適度留白或景深水彩微紋理，主體邊緣輪廓分明，**杜絕主體被背景雜質吞沒**。"
+      ].join("\n")
+    };
+  },
+
+  // ==================== 宙獸形態演化與突變模態（去識別化 13 模態精選） ====================
+  EVOLUTION_MODES: [
+    {
+      id: "armed_arsenal",
+      zh: "武裝著裝·攻防重構",
+      desc: "外置機械外骨骼裝甲、背載式以太砲塔或浮游神兵環繞",
+      impact: "high",
+      retention: "high",
+      stages: ["adult", "overload"],
+      prompt_guidance: "配備符文外骨骼與重型甲冑（50%保留原生骨骼與五官，50%外裝強化），外掛武器或肩載火砲，金屬鉚釘與接縫發光導管。",
+      positive_tokens: "equipped with heavy runic exoskeleton armor plating, shoulder-mounted arcane cannons, floating runic blade armaments, interlocking power conduits, 50% retained natural anatomy, 50% armored reinforcement",
+      negative_tokens: "random floating metal junk, covering entire face, changing eye color, human hands"
+    },
+    {
+      id: "stance_reconfig",
+      zh: "姿態切換·重心重整",
+      desc: "四足伏地與雙足立姿切換，或關節展開為高速巡航/防禦圓盾姿",
+      impact: "high",
+      retention: "med",
+      stages: ["adolescent", "adult", "overload"],
+      prompt_guidance: "極致動態戰鬥架勢轉移，重心下沉或拔高雙足站立，爪刃抓地，展現完全不同之戰略剪影，面部眼眸構造嚴格維持一致。",
+      positive_tokens: "dramatic combat stance shift, dynamic bipedal or agile low-center martial posture, tensed muscular anatomy, ready-to-strike silhouette, signature horn and tail shape strictly preserved",
+      negative_tokens: "stiff t-pose, broken spine, altered species archetype, extra limbs"
+    },
+    {
+      id: "elemental_mantle",
+      zh: "元素披覆·屬性外顯",
+      desc: "身軀裹覆半透明高溫電漿、低溫霜雲或幾何太晶能量斗篷",
+      impact: "med",
+      retention: "high",
+      stages: ["juvenile", "adolescent", "adult", "overload"],
+      prompt_guidance: "半透明元素氣場或晶格斗篷自毛皮/鱗甲關節處外溢，體表裂紋隱現流動以太光，主體輪廓透過熱浪或冷霧清晰可辨。",
+      positive_tokens: "enveloped in semi-transparent blazing plasma cloak, ethereal particle trails streaming from shoulder joints, cooling magma cracked skin along extremities, interior glow pulsing beneath scales, recognizable facial features visible through heat haze",
+      negative_tokens: "flat solid color swap, completely obscured body silhouette, muddy textures, loss of eye contrast"
+    },
+    {
+      id: "symbiotic_fusion",
+      zh: "合體牽絆·雙生同調",
+      desc: "融合宿主器具或共生靈獸，展現嵌合式外肢、多重雙生感知器官",
+      impact: "high",
+      retention: "med",
+      stages: ["adult", "overload"],
+      prompt_guidance: "生物與神話器具或第二共生靈獸深度嵌合，共生雙重神經感知鰭羽，外形兼具雙方核心符號，但以主宙獸五官為認知主軸。",
+      positive_tokens: "biomechanical symbiotic fusion, dual-entity hybrid features, chimeric integration, secondary neural crest, harmonious chimeric anatomy",
+      negative_tokens: "disjointed pasted parts, grotesque tumorous growth, severed floating pieces"
+    },
+    {
+      id: "atavistic_primal",
+      zh: "血脈返祖·遠古神威",
+      desc: "骨刺穿透外皮逆向生長，體表開裂出流淌古代以太光的古神符文",
+      impact: "med",
+      retention: "high",
+      stages: ["adult", "overload"],
+      prompt_guidance: "遠古狂暴基因覺醒，頭頂與背脊粗獷骨刺銳化增生，體表凹槽烙印流動金光的古代幾何符文，散發蠻荒巨獸威壓。",
+      positive_tokens: "ancient atavistic reversion, primordial ossified horns erupting from skull, ancestral runic glyphs burning with golden luminescence across dorsal ridge, aggressive bestial posture, weathered fossilized texture",
+      negative_tokens: "futuristic neon cyberware, robotic seams, overly cute expression"
+    },
+    {
+      id: "shell_break_core",
+      zh: "破殼脫落·真身暴鳴",
+      desc: "剝落外層沉重鈍質岩化裝甲，露出內部高精密靈巧晶核或脆弱高能光體",
+      impact: "high",
+      retention: "low",
+      stages: ["adolescent", "adult", "overload"],
+      prompt_guidance: "外層防護岩層或厚甲碎裂脫落，飄散於身周，裸露出內部半透明高精密發光晶核本體，身形輕靈迅捷，核心面貌保留原始眼紋。",
+      positive_tokens: "shattered containment carapace, cracking armor plating revealing incandescent crystal essence beneath, levitating fragments of broken shell, lightweight agile crystalline body, signature facial markings retained on inner core",
+      negative_tokens: "empty broken shell without creature, amorphous blob, unreadable silhouette"
+    },
+    {
+      id: "monument_colossus",
+      zh: "地標巨化·天穹異構",
+      desc: "百倍巨構化，身體局部異變為浮空神殿、生機森林微地形或吞星黑洞巨口",
+      impact: "extreme",
+      retention: "low",
+      stages: ["overload"],
+      prompt_guidance: "尺度暴增至數十公尺天穹巨神，背部長成古樹小森林微生態，或巨口裂開為黑洞星門，周身環繞螺旋極巨雷雲，微觀細節襯托龐大比例。",
+      positive_tokens: "colossal monumental scale, towering behemoth proportions, back transforming into a micro-ecosystem with ancient flora and stone monoliths, swirling atmospheric storm clouds around shoulders, micro-scale details indicating massive scale",
+      negative_tokens: "normal creature on small hill, simple closeup, blurry distant background, generic giant with no scale cues"
+    },
+    {
+      id: "eco_adaptation",
+      zh: "環境適應·生態異種",
+      desc: "為適應極端冷/熱/毒/重力環境，毛皮白化羽化、頸椎伸長或四肢鰭狀化",
+      impact: "med",
+      retention: "high",
+      stages: ["juvenile", "adolescent", "adult"],
+      prompt_guidance: "因地理微氣候隔離演化出的異種生態亞型，毛皮替換為抗寒雪羽或散熱薄膜，局部器官長度異化，五官骨架基因仍與原種完全對應。",
+      positive_tokens: "subspecies regional ecological variant, specialized climate-adapted plumage and texture, broadened terrain paws, adapted ear and crest geometry, identical facial proportion and species eye geometry to base archetype",
+      negative_tokens: "completely new unrelated animal species, unrecognizable head structure"
+    }
+  ],
+
+  resolveEvolutionPrompt(modeKey, stage, concept) {
+    let targetKey = modeKey || "auto";
+    if (targetKey === "auto") {
+      if (stage === "overload") targetKey = "armed_arsenal";
+      else if (stage === "adolescent") targetKey = "stance_reconfig";
+      else if (stage === "juvenile") targetKey = "eco_adaptation";
+      else targetKey = "elemental_mantle";
+    }
+    const mode = this.EVOLUTION_MODES.find(m => m.id === targetKey) || this.EVOLUTION_MODES[0];
+    return {
+      mode,
+      guideSection: [
+        "## 🧬 形態演化與 50/50 辨識度守恆指引（" + mode.zh + "）",
+        "- **演化模式定位**：" + mode.desc,
+        "- **【50% 絕對鎖定錨點】**：嚴格保留本宙獸的面部五官結構、眼眸幾何形狀與瞳色、標誌性頭身比例特徵、核心雙色調，確保一眼即可認出所屬原型家族。",
+        "- **【50% 劇烈破局突變】**：" + mode.prompt_guidance,
+        "- **正向提示詞注入**：`" + mode.positive_tokens + "`",
+        "- **負向排除約束**：`" + mode.negative_tokens + "`"
       ].join("\n")
     };
   },

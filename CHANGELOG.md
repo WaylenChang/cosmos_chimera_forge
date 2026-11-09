@@ -2,6 +2,10 @@
 
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
+- 2026-11-09 · catalog@2.3.0 · template@(creature-concept@6.3.0) · 導入去識別化宙獸形態演化突變模態（EVOLUTION_MODES）與 50/50 辨識度守恆 Prompt 指導規範：
+  - **演化突變模態池（catalog@2.3.0）**：抽象出武裝著裝、姿態切換、元素披覆、合體牽絆、血脈返祖、破殼脫落、地標巨化、環境適應 8 大核心模態及對應正負向 Prompt 標籤，並實作 `C.resolveEvolutionPrompt()` 智慧推演函式。
+  - **宙獸立繪任務選項與提示詞升級（creature-concept@6.3.0）**：任務新增 `evolution_mode` 下拉選項，Prompt 自動注入「50/50 辨識度守恆指引」（50% 鎖定面部五官/虹膜/原型剪影錨點，50% 劇烈破局外骨骼/氣場/肢體尺度）。
+
 - 2026-11-08 · catalog@2.2.0 · 體型身長界線改以 cosmos_chimera `docs/design/creatures.md#體型級距` 為準（P5-08 A9）：S 0.3–0.6 m、M 0.6–1.4 m、L 1.4–2.5 m、XL > 2.5 m（上限 14.0 m 不變）；XS < 0.3 m 不變。體重／體脂範圍與 `forge.js` 抽樣中位數未改（中位數仍落在新區間內）。
 
 - 2026-11-07 · tool@1.9.0 · catalog@2.1.0 · template@(creature-concept@5.0.0, character-concept@3.0.0) · 色系與基底上限調升、科幻機械父子類別追加、角色生平與宙獸生態圖鑑解說規範加入：
