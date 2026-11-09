@@ -3,6 +3,7 @@
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
 - 2026-11-09 · tool@2.1.0 · 確立「本專案解壓審查、核可後交付至 cosmos_chimera」雙階段工作流：
+  - **審查工具與資料包全數遷移至本專案**：完整遷移 `validate_art.py`、`validate-art`、單元測試 `test_validate_art.py` 與 `fixtures/art`、歷史資料包 `Art/_backup_v1/` 及所有未審查 ZIP 與工作目錄至本專案。主遊戲專案 `cosmos_chimera` 徹底淨空，僅保留審查通過後入庫之資產與遊戲本體代碼。
   - **一鍵解壓解壓在本專案（`Art/_incoming/<task_id>/`）**：點選「⚡ 一鍵解壓至本專案」或在終端機執行 `powershell unpack_incoming.ps1`，成果完整實體解壓至本專案審查目錄，解壓後的圖檔、3D 模型與 manifest.json 即刻供成果審查台完整檢閱、3D 預覽與審查註記。
   - **審查核可後交付至 cosmos_chimera**：審查覆核確認通過後，透過「🚀 交付至 cosmos_chimera」按鈕或 `powershell unpack_incoming.ps1 -DeployToGame`，將成果推送到主遊戲專案（`cosmos_chimera/Art/_incoming/<task_id>/`）接續執行 Unity 入庫驗收管線（`validate_art.py`）。
   - **名冊欄快速解壓**：名冊欄「⚡ 一鍵解壓 Zip」解壓目標同步預設為本專案審查區，維持純粹且乾淨的審查沙盒邊界。
