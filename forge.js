@@ -932,6 +932,35 @@
     return t.id === "creature-concept" || (t.id === "creature-model-rig" && o.scope !== "batch") || (t.id === "model-rig" && o.subject === "creature" && o.scope !== "batch");
   }
 
+  function renderForge3dModeTabs() {
+    const tabsBox = $("#forge3dModeTabs");
+    if (!tabsBox) return;
+    const t = task(), o = taskOpts(t);
+    if (!is3dType(t.id)) {
+      tabsBox.style.display = "none";
+      return;
+    }
+    tabsBox.style.display = "inline-flex";
+    tabsBox.replaceChildren();
+    const modes = [
+      { v: "single", zh: "🎯 指定處理模式" },
+      { v: "batch", zh: "📦 批量處理模式" }
+    ];
+    modes.forEach(m => {
+      const isCur = (o.scope || "single") === m.v;
+      const btn = el("button", {
+        class: "segb" + (isCur ? " on" : ""),
+        type: "button",
+        title: `切換為 ${m.zh}`,
+        onclick: () => {
+          o.scope = m.v;
+          renderAll();
+        }
+      }, m.zh);
+      tabsBox.append(btn);
+    });
+  }
+
   function renderForgeStageTabs() {
     const tabsBox = $("#forgeStageTabs");
     if (!tabsBox) return;
@@ -959,22 +988,10 @@
 
   function renderOptions() {
     const t = task(), o = taskOpts(t), box = $("#options"); box.replaceChildren();
-    t.options.filter(d => (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
+    t.options.filter(d => d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
-      if (d.key === "scope") {
-        control = el("div", { class: "seg", style: "display:inline-flex;width:100%;margin-bottom:2px;" },
-          items.map(i => el("button", {
-            type: "button",
-            class: "segb" + (o.scope === i.v ? " on" : ""),
-            style: "flex:1;text-align:center;padding:7px 10px;font-weight:600;font-size:12px;",
-            onclick: () => {
-              o.scope = i.v;
-              renderAll();
-            }
-          }, (i.v === "single" ? "🎯 " : "📦 ") + i.zh))
-        );
-      } else if (is3dType(t.id) && d.key === "source_pack") {
+      if (is3dType(t.id) && d.key === "source_pack") {
         const isChr3d = t.id === "character-model-rig";
         const isCr3d = t.id === "creature-model-rig";
         const conceptPkgs = reviewState.packages.filter(p => {
@@ -1084,19 +1101,6 @@
         control = el("input", { value: o[d.key], placeholder: d.placeholder || "", onchange: e => { o[d.key] = e.target.value; renderAll(); } });
       }
       box.append(el("div", { class: "field opt" }, el("label", {}, d.label), control));
-      if (d.key === "scope" && is3dType(t.id)) {
-        const isBatch = o.scope === "batch";
-        const isChr = t.id === "character-model-rig";
-        const banner = el("div", { class: "note-box", style: "margin:4px 0 8px 0;padding:8px 10px;background:#18202d;border:1px solid #2e3a4e;border-radius:6px;font-size:11px;line-height:1.6;" },
-          el("div", { style: "font-weight:600;color:var(--accent);margin-bottom:2px;" }, isBatch ? "📦 批量處理模式（吻合條件檔案全部處理）" : "🎯 指定處理模式（單一立繪包）"),
-          el("div", {}, isBatch
-            ? el("span", {}, "• 掃描目錄：", el("code", {}, "image_in/"), "（處理所有吻合之 ", el("code", {}, isChr ? "chr-*.zip" : "cr-*.zip"), "）")
-            : el("span", {}, "• 來源立繪：由下方清單挑選指定立繪包與核心輸入圖")),
-          el("div", {}, "• 完成歸檔：處理完成後一律移至相鄰 ", el("code", {}, "image_backup/")),
-          el("div", {}, "• 交付儲存：各模型獨立打包並上傳至 ", el("code", {}, "3D_out/"))
-        );
-        box.append(banner);
-      }
     });
     if (!box.children.length) box.append(el("p", { class: "muted" }, "此任務沒有額外選項。"));
   }
@@ -1199,7 +1203,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForgeStageTabs(); renderOutput(); renderHistory();
+    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory();
     save();
   }
 
