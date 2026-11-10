@@ -874,6 +874,90 @@
     toast(`已載入角色「${charId}」至 Prompt 鍛造台`);
   }
 
+  // ==================== cosmos_chimera 外部資產讀取管線 ====================
+  const COSMOS_CHIMERA_BASE = "../cosmos_chimera/Assets/_Project/Art";
+
+  function getCharacterAssetUrls(charId) {
+    const views = ["main", "turnaround", "front", "side", "back", "expressions", "props"];
+    const viewLabels = {
+      main: "主立繪 (Main)",
+      turnaround: "三視圖 (Turnaround)",
+      front: "正交正面 (Front)",
+      side: "正交側面 (Side)",
+      back: "正交背面 (Back)",
+      expressions: "表情集 (Expressions)",
+      props: "道具板 (Props)"
+    };
+
+    const conceptDir = `${COSMOS_CHIMERA_BASE}/Characters/${charId}/Concept`;
+    const modelDir = `${COSMOS_CHIMERA_BASE}/Characters/${charId}/Model`;
+
+    const pack = (reviewState.packages || []).find(p => (p.subjectId || p.manifest?.subject_id) === charId && !is3dType(p.type));
+    const mdlPack = (reviewState.packages || []).find(p => is3dType(p.type) && ((p.manifest?.source_pack && pack && p.manifest.source_pack === pack.id) || p.subjectId === charId));
+
+    const images = views.map(v => {
+      const primaryUrl = `${conceptDir}/${charId}_${v}.png`;
+      let fallbackUrl = null;
+      if (pack && pack.images) {
+        const found = pack.images.find(img => img.path.includes(`_${v}.png`) || img.path.endsWith(`${v}.png`));
+        if (found) fallbackUrl = found.url;
+      }
+      if (!fallbackUrl) {
+        fallbackUrl = `Art/_incoming/${pack?.id || ""}/images/${charId}_${v}.png`;
+      }
+      return {
+        view: v,
+        label: viewLabels[v] || v,
+        primaryUrl,
+        fallbackUrl
+      };
+    });
+
+    const modelFront = {
+      primaryUrl: `${modelDir}/${charId}_model_front.png`,
+      fallbackUrl: mdlPack?.images?.[0]?.url || `Art/_incoming/${mdlPack?.id || ""}/images/${mdlPack?.manifest?.subject_id || "chr"}_model_front.png`
+    };
+
+    const glbUrl = `${modelDir}/${charId}.glb`;
+    const fbxUrl = `${modelDir}/${charId}.fbx`;
+
+    return {
+      conceptDir,
+      modelDir,
+      images,
+      modelFront,
+      glbUrl,
+      fbxUrl,
+      pack,
+      mdlPack
+    };
+  }
+
+  function getCreatureStageAssetUrls(lineId, stage) {
+    const stageDir = `${COSMOS_CHIMERA_BASE}/Creatures/${lineId}/${stage}/Concept`;
+    const primaryUrl = `${stageDir}/cr_${lineId}_${stage}_main.png`;
+
+    const pack = (reviewState.packages || []).find(p => (p.subjectId || p.concept?.line_id) === lineId && p.stage === stage && !is3dType(p.type));
+    let fallbackUrl = pack?.images?.find(i => i.path.includes("main"))?.url || `Art/_incoming/${pack?.id || ""}/images/cr_${lineId}_${stage}_main.png`;
+
+    return {
+      primaryUrl,
+      fallbackUrl,
+      turnaroundUrl: `${stageDir}/cr_${lineId}_${stage}_turnaround.png`,
+      frontUrl: `${stageDir}/cr_${lineId}_${stage}_front.png`
+    };
+  }
+
+  function getCreatureOverviewAssetUrls(lineId) {
+    const overviewDir = `${COSMOS_CHIMERA_BASE}/Creatures/${lineId}/Overview`;
+    return {
+      lineupUrl: `${overviewDir}/cr_${lineId}_lineup.png`,
+      scaleUrl: `${overviewDir}/cr_${lineId}_scale.png`,
+      fallbackLineupUrl: `Art/_incoming/cr-20261107-4a9a-2022/images/cr_${lineId}_lineup.png`,
+      fallbackScaleUrl: `Art/_incoming/cr-20261107-4a9a-2022/images/cr_${lineId}_scale.png`
+    };
+  }
+
   function renderDesigned() {
     const box = $("#designed"); if (!box) return;
     box.replaceChildren();
@@ -1043,12 +1127,25 @@
         const isForging = state.preset === d.line_id;
         const matches = getReviewMatches(d.line_id);
 
+        const crThumbUrl = `${COSMOS_CHIMERA_BASE}/Creatures/${d.line_id}/adult/Concept/cr_${d.line_id}_adult_main.png`;
+        const crThumbImg = el("img", {
+          src: crThumbUrl,
+          alt: d.title_zh,
+          style: "width:100%;height:100%;object-fit:cover;object-position:center;",
+          onerror: function() {
+            this.style.display = "none";
+            if (this.nextElementSibling) this.nextElementSibling.style.display = "flex";
+          }
+        });
+        const crIconSpan = el("span", { style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;" }, ELEM_ICONS[d.element] || "🐾");
+        const rlThumbCr = el("div", { class: "rl-thumb", style: "background:#1e2532;overflow:hidden;position:relative;" }, crThumbImg, crIconSpan);
+
         const row = el("button", {
           class: "rl" + (isSelected ? " on" : ""),
           type: "button",
           onclick: () => selectDesignedItem(d.line_id, "creature")
         },
-          el("div", { class: "rl-thumb", style: "background:#1e2532" }, ELEM_ICONS[d.element] || "🐾"),
+          rlThumbCr,
           el("div", { class: "rl-txt" },
             el("div", { class: "rl-id" }, `${d.code_zh} · ${d.title_zh}`),
             el("div", { class: "rl-sub" }, `${d.line_id} · ${d.element}`),
@@ -1071,12 +1168,25 @@
         const isForging = state.presetChar === c.id;
         const matches = getReviewMatches(c.id);
 
+        const charThumbUrl = `${COSMOS_CHIMERA_BASE}/Characters/${c.id}/Concept/${c.id}_main.png`;
+        const charThumbImg = el("img", {
+          src: charThumbUrl,
+          alt: c.name_zh,
+          style: "width:100%;height:100%;object-fit:cover;object-position:top;",
+          onerror: function() {
+            this.style.display = "none";
+            if (this.nextElementSibling) this.nextElementSibling.style.display = "flex";
+          }
+        });
+        const charIconSpan = el("span", { style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;" }, "👤");
+        const rlThumbChar = el("div", { class: "rl-thumb", style: "background:#262035;overflow:hidden;position:relative;" }, charThumbImg, charIconSpan);
+
         const row = el("button", {
           class: "rl" + (isSelected ? " on" : ""),
           type: "button",
           onclick: () => selectDesignedItem(c.id, "character")
         },
-          el("div", { class: "rl-thumb", style: "background:#262035" }, "👤"),
+          rlThumbChar,
           el("div", { class: "rl-txt" },
             el("div", { class: "rl-id" }, `${c.name_zh} · ${c.name_en}`),
             el("div", { class: "rl-sub" }, `${c.id} · ${c.role}`),
@@ -1159,6 +1269,156 @@
         )
       );
       bodyEl.append(toolCard);
+
+      // Visual Assets Showcase (2D Concept & 3D Renders from cosmos_chimera)
+      const assetData = getCharacterAssetUrls(c.id);
+
+      const artShowcaseCard = el("div", {
+        class: "designed-detail-card",
+        style: "border: 1px solid rgba(58,173,200,0.3); background: linear-gradient(180deg, rgba(23,26,33,0.95) 0%, rgba(18,20,26,0.98) 100%); margin-bottom: 12px;"
+      },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;flex-wrap:wrap;gap:8px" },
+          el("div", { style: "display:flex;align-items:center;gap:8px" },
+            el("span", { style: "font-size:16px" }, "🖼️"),
+            el("b", { style: "font-size:13.5px;color:#fff" }, "角色 2D 概念立繪與 3D 成果視圖"),
+            el("span", { class: "f-badge ok", style: "font-size:10.5px" }, "cosmos_chimera 外部資產連線")
+          ),
+          el("div", { style: "display:flex;gap:6px;align-items:center" },
+            el("code", { style: "color:var(--accent);font-size:11px" }, `Assets/_Project/Art/Characters/${c.id}/`)
+          )
+        ),
+
+        el("div", { style: "display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:16px;align-items:start;" },
+          // Col 1: 2D Concept Showcase
+          el("div", { style: "background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;" },
+            el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px" },
+              el("span", { style: "font-weight:600;font-size:12.5px;color:var(--accent)" }, `🎨 2D 概念原畫 (${assetData.images.length} 視圖)`),
+              el("span", { id: "charViewLabel", class: "muted", style: "font-size:11.5px" }, assetData.images[0].label)
+            ),
+
+            // Main Preview Image Frame
+            el("div", {
+              id: "charMainImgBox",
+              style: "width:100%;height:380px;background:#101319;border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px;"
+            },
+              el("img", {
+                id: "charMainImg",
+                src: assetData.images[0].primaryUrl,
+                alt: c.name_zh,
+                style: "max-width:100%;max-height:100%;object-fit:contain;",
+                onerror: function() {
+                  if (assetData.images[0].fallbackUrl && this.src !== assetData.images[0].fallbackUrl) {
+                    this.src = assetData.images[0].fallbackUrl;
+                  }
+                }
+              }),
+              el("a", {
+                id: "charImgDownload",
+                href: assetData.images[0].primaryUrl,
+                target: "_blank",
+                class: "btn mini ghost",
+                style: "position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);",
+                title: "在新分頁檢視原尺寸大圖"
+              }, "🔍 原圖")
+            ),
+
+            // Thumbnail Strip / View Switcher
+            el("div", { style: "display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;" },
+              assetData.images.map((im, idx) => {
+                const thumbBtn = el("button", {
+                  type: "button",
+                  class: "segb" + (idx === 0 ? " on" : ""),
+                  style: "display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 6px;min-width:60px;border-radius:6px;border:1px solid " + (idx === 0 ? "var(--accent)" : "rgba(255,255,255,0.1)") + ";background:" + (idx === 0 ? "rgba(58,173,200,0.2)" : "rgba(0,0,0,0.2)") + ";cursor:pointer;",
+                  onclick: () => {
+                    const allThumbs = thumbBtn.parentElement.children;
+                    for (let i = 0; i < allThumbs.length; i++) {
+                      allThumbs[i].style.background = "rgba(0,0,0,0.2)";
+                      allThumbs[i].style.borderColor = "rgba(255,255,255,0.1)";
+                    }
+                    thumbBtn.style.background = "rgba(58,173,200,0.2)";
+                    thumbBtn.style.borderColor = "var(--accent)";
+
+                    const mImg = $("#charMainImg");
+                    const mLabel = $("#charViewLabel");
+                    const mDl = $("#charImgDownload");
+                    if (mImg) {
+                      mImg.src = im.primaryUrl;
+                      mImg.onerror = function() {
+                        if (im.fallbackUrl && this.src !== im.fallbackUrl) this.src = im.fallbackUrl;
+                      };
+                    }
+                    if (mLabel) mLabel.textContent = im.label;
+                    if (mDl) mDl.href = im.primaryUrl;
+                  }
+                },
+                  el("img", {
+                    src: im.primaryUrl,
+                    alt: im.view,
+                    style: "width:44px;height:44px;object-fit:cover;border-radius:4px;background:#151821;",
+                    onerror: function() {
+                      if (im.fallbackUrl && this.src !== im.fallbackUrl) this.src = im.fallbackUrl;
+                    }
+                  }),
+                  el("span", { style: "font-size:10px;white-space:nowrap;color:var(--text)" }, im.view)
+                );
+                return thumbBtn;
+              })
+            )
+          ),
+
+          // Col 2: 3D Model & Renders
+          el("div", { style: "background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;display:flex;flex-direction:column;" },
+            el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px" },
+              el("span", { style: "font-weight:600;font-size:12.5px;color:#a9d9df" }, "🧊 3D 成果視圖與模型"),
+              el("span", { class: "f-badge ok" }, "LOD0 Humanoid")
+            ),
+
+            // 3D Front Render Preview
+            el("div", {
+              style: "width:100%;height:260px;background:#101319;border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px;"
+            },
+              el("img", {
+                src: assetData.modelFront.primaryUrl,
+                alt: `${c.name_zh} 3D 正面正交`,
+                style: "max-width:100%;max-height:100%;object-fit:contain;",
+                onerror: function() {
+                  if (assetData.modelFront.fallbackUrl && this.src !== assetData.modelFront.fallbackUrl) {
+                    this.src = assetData.modelFront.fallbackUrl;
+                  }
+                }
+              }),
+              el("span", {
+                style: "position:absolute;top:6px;left:6px;font-size:10.5px;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;color:#a9d9df"
+              }, "正交正面 1024px")
+            ),
+
+            // 3D Asset Files Info
+            el("div", { style: "display:flex;flex-direction:column;gap:6px;font-size:11.5px;margin-bottom:12px;" },
+              el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+                el("span", { class: "muted" }, "3D 模型 (GLB)"),
+                el("span", { style: "color:var(--ok);font-family:monospace" }, `${c.id}.glb`)
+              ),
+              el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+                el("span", { class: "muted" }, "骨架規格 (Rig)"),
+                el("span", { style: "color:var(--ok)" }, "Unity Humanoid 28 骨")
+              ),
+              el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+                el("span", { class: "muted" }, "動作動畫 (Anim)"),
+                el("span", { style: "color:var(--ok)" }, "32 支完整動態 FBX")
+              )
+            ),
+
+            // Action button to open in 3D viewer
+            el("button", {
+              type: "button",
+              class: "btn ok",
+              style: "width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;",
+              onclick: () => jumpToReview(c.id)
+            }, "🔍 在成果審查台 3D 檢視器旋轉與播放動作")
+          )
+        )
+      );
+      bodyEl.append(artShowcaseCard);
 
       // Section 1: Specs
       const hexSwatches = el("div", { style: "display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px" });
@@ -1309,6 +1569,57 @@
       );
       bodyEl.append(toolCard);
 
+      // Section: Overview Banner (Lineup & Scale from cosmos_chimera)
+      const ovData = getCreatureOverviewAssetUrls(d.line_id);
+      const ovCard = el("div", {
+        class: "designed-detail-card",
+        style: "display:none;background:rgba(0,0,0,0.25);border:1px solid rgba(58,173,200,0.25);margin-bottom:12px;"
+      },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px" },
+          el("div", { style: "display:flex;align-items:center;gap:8px" },
+            el("span", { style: "font-size:16px" }, "🐾"),
+            el("b", { style: "font-size:13px;color:#fff" }, "演化陣容全貌 (Evolution Lineup & Scale)"),
+            el("span", { class: "f-badge ok", style: "font-size:10px" }, "cosmos_chimera Overview")
+          ),
+          el("code", { style: "color:var(--accent);font-size:11px" }, `Assets/_Project/Art/Creatures/${d.line_id}/Overview/`)
+        ),
+        el("div", { style: "display:flex;gap:12px;flex-wrap:wrap" },
+          el("div", { style: "flex:1;min-width:280px;height:180px;background:#101319;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;" },
+            el("img", {
+              src: ovData.lineupUrl,
+              alt: `${d.title_zh} 演化排列`,
+              style: "max-width:100%;max-height:100%;object-fit:contain;",
+              onload: function() { ovCard.style.display = "block"; },
+              onerror: function() {
+                if (ovData.fallbackLineupUrl && this.src !== ovData.fallbackLineupUrl) {
+                  this.src = ovData.fallbackLineupUrl;
+                } else {
+                  this.style.display = "none";
+                }
+              }
+            }),
+            el("span", { style: "position:absolute;bottom:6px;left:6px;font-size:10.5px;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;color:#fff" }, "四階演化排列 (Lineup)")
+          ),
+          el("div", { style: "flex:1;min-width:280px;height:180px;background:#101319;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;" },
+            el("img", {
+              src: ovData.scaleUrl,
+              alt: `${d.title_zh} 體型對照`,
+              style: "max-width:100%;max-height:100%;object-fit:contain;",
+              onload: function() { ovCard.style.display = "block"; },
+              onerror: function() {
+                if (ovData.fallbackScaleUrl && this.src !== ovData.fallbackScaleUrl) {
+                  this.src = ovData.fallbackScaleUrl;
+                } else {
+                  this.style.display = "none";
+                }
+              }
+            }),
+            el("span", { style: "position:absolute;bottom:6px;left:6px;font-size:10.5px;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;color:#fff" }, "體型比例對照 (Scale)")
+          )
+        )
+      );
+      bodyEl.append(ovCard);
+
       // Section 1: Concept summary
       const specCard = el("div", { class: "designed-detail-card" },
         el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text)" }, "🧬 演化線核心設定與世界觀"),
@@ -1348,6 +1659,32 @@
           el("b", { style: "color:#fff;font-size:13px" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
           el("span", { class: "f-badge" }, st.size_class || "—")
         );
+
+        // Stage 2D Concept Art Frame
+        const stAssets = getCreatureStageAssetUrls(d.line_id, st.stage);
+        const stImgBox = el("div", {
+          style: "width:100%;height:140px;background:#101319;border:1px solid rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;position:relative;margin:4px 0 8px;display:flex;align-items:center;justify-content:center;"
+        });
+        const stImg = el("img", {
+          src: stAssets.primaryUrl,
+          alt: `${st.name_zh} 立繪`,
+          style: "max-width:100%;max-height:100%;object-fit:contain;",
+          onerror: function() {
+            if (stAssets.fallbackUrl && this.src !== stAssets.fallbackUrl) {
+              this.src = stAssets.fallbackUrl;
+            } else {
+              this.style.display = "none";
+              if (this.nextElementSibling) this.nextElementSibling.style.display = "flex";
+            }
+          }
+        });
+        const stPlaceholder = el("div", {
+          style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;color:var(--muted);font-size:11px;gap:4px;"
+        },
+          el("span", { style: "font-size:22px;opacity:0.5;" }, ELEM_ICONS[d.element] || "🐾"),
+          el("span", {}, "待鍛造立繪")
+        );
+        stImgBox.append(stImg, stPlaceholder);
 
         const stIdRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;margin:2px 0 4px" },
           el("code", { style: "color:var(--accent)" }, st.creature_id),
@@ -1396,7 +1733,7 @@
           }, "⭐ 收藏")
         );
 
-        stageCard.append(stHeader, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
+        stageCard.append(stHeader, stImgBox, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
         stagesGrid.append(stageCard);
       });
 
@@ -2118,6 +2455,32 @@
             el("span", { class: "f-badge" }, st.size_class || "—")
           );
 
+          // Stage 2D Image Thumbnail from cosmos_chimera
+          const stAssets = getCreatureStageAssetUrls(d.line_id, st.stage);
+          const stImgBox = el("div", {
+            style: "width:100%;height:100px;background:#101319;border-radius:4px;overflow:hidden;position:relative;margin:4px 0;display:flex;align-items:center;justify-content:center;"
+          });
+          const stImg = el("img", {
+            src: stAssets.primaryUrl,
+            alt: st.name_zh,
+            style: "max-width:100%;max-height:100%;object-fit:contain;",
+            onerror: function() {
+              if (stAssets.fallbackUrl && this.src !== stAssets.fallbackUrl) {
+                this.src = stAssets.fallbackUrl;
+              } else {
+                this.style.display = "none";
+                if (this.nextElementSibling) this.nextElementSibling.style.display = "flex";
+              }
+            }
+          });
+          const stPlaceholder = el("div", {
+            style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;color:var(--muted);font-size:10.5px;gap:4px;"
+          },
+            el("span", { style: "font-size:16px;opacity:0.6" }, ELEM_ICONS[d.element] || "🐾"),
+            el("span", {}, "待鍛造立繪")
+          );
+          stImgBox.append(stImg, stPlaceholder);
+
           // Stage Meta
           const stIdRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px" },
             el("code", {}, st.creature_id),
@@ -2171,7 +2534,7 @@
             }, "⭐ 收藏")
           );
 
-          stageCard.append(stHeader, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
+          stageCard.append(stHeader, stImgBox, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
           stagesGrid.append(stageCard);
         });
 
@@ -2205,6 +2568,55 @@
               ? el("span", { class: "f-badge warn" }, "⚠️ 文化複審")
               : el("span", { class: "f-badge ok" }, "✅ 文化審查"),
             isPresetActive ? el("span", { class: "f-badge ok" }, "目前鍛造中") : null
+          )
+        );
+
+        // 1.5. Visual Assets Showcase Row (2D Concept & 3D Model from cosmos_chimera)
+        const charAssets = getCharacterAssetUrls(c.id);
+        const visualRow = el("div", {
+          style: "display:flex;gap:12px;margin:8px 0;padding:8px 10px;background:rgba(0,0,0,0.22);border-radius:6px;align-items:center;flex-wrap:wrap;"
+        },
+          el("div", { style: "display:flex;align-items:center;gap:8px" },
+            el("img", {
+              src: charAssets.images[0].primaryUrl,
+              alt: `${c.name_zh} 主立繪`,
+              style: "width:54px;height:68px;object-fit:cover;object-position:top;border-radius:4px;border:1px solid rgba(255,255,255,0.12);background:#101319;",
+              onerror: function() {
+                if (charAssets.images[0].fallbackUrl && this.src !== charAssets.images[0].fallbackUrl) this.src = charAssets.images[0].fallbackUrl;
+              }
+            }),
+            el("div", {},
+              el("div", { style: "font-size:11px;color:var(--accent);font-weight:600" }, "🎨 2D 主立繪"),
+              el("div", { style: "font-size:10.5px;color:var(--text)" }, `${c.name_zh}`)
+            )
+          ),
+          el("div", { style: "display:flex;align-items:center;gap:8px" },
+            el("img", {
+              src: charAssets.images[1].primaryUrl,
+              alt: `${c.name_zh} 三視圖`,
+              style: "width:80px;height:68px;object-fit:cover;object-position:center;border-radius:4px;border:1px solid rgba(255,255,255,0.12);background:#101319;",
+              onerror: function() {
+                if (charAssets.images[1].fallbackUrl && this.src !== charAssets.images[1].fallbackUrl) this.src = charAssets.images[1].fallbackUrl;
+              }
+            }),
+            el("div", {},
+              el("div", { style: "font-size:11px;color:var(--accent);font-weight:600" }, "📐 三視圖"),
+              el("div", { style: "font-size:10.5px;color:var(--muted)" }, "T-pose 灰底")
+            )
+          ),
+          el("div", { style: "display:flex;align-items:center;gap:8px" },
+            el("img", {
+              src: charAssets.modelFront.primaryUrl,
+              alt: `${c.name_zh} 3D 正面正交`,
+              style: "width:54px;height:68px;object-fit:cover;object-position:center;border-radius:4px;border:1px solid rgba(255,255,255,0.12);background:#101319;",
+              onerror: function() {
+                if (charAssets.modelFront.fallbackUrl && this.src !== charAssets.modelFront.fallbackUrl) this.src = charAssets.modelFront.fallbackUrl;
+              }
+            }),
+            el("div", {},
+              el("div", { style: "font-size:11px;color:#a9d9df;font-weight:600" }, "🧊 3D 建模"),
+              el("div", { style: "font-size:10.5px;color:var(--ok)" }, "GLB + 32 動畫")
+            )
           )
         );
 
@@ -2297,7 +2709,7 @@
           }, "✕ 取消已設計（回隨機）") : null
         );
 
-        card.append(titleRow, metaRow, detailRow, bioRow, reviewRow, actionsRow);
+        card.append(titleRow, visualRow, metaRow, detailRow, bioRow, reviewRow, actionsRow);
         box.append(card);
       });
     }
@@ -3612,6 +4024,40 @@
           { path: "images/chr_3d04_model_front.png", url: "Art/_incoming/mdl-20261109-f048-1847-chr_3d04/images/chr_3d04_model_front.png" }
         ],
         fileCount: 36,
+        status: "ok"
+      },
+      {
+        id: "cr-20261107-4a9a-2022",
+        type: "creature-concept",
+        subjectId: "starter_sun_line",
+        manifest: {
+          spec: "cosmimera-art-task/1",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=creature-concept@5.0.0 task_id=cr-20261107-4a9a-2022 seed=4a9a]",
+          task_id: "cr-20261107-4a9a-2022",
+          task_type: "creature-concept",
+          subject_id: "starter_sun_line",
+          produced_by: "ChatGPT（對話版）",
+          files: [
+            { path: "concept.json", kind: "spec", level: "L1" },
+            { path: "images/cr_starter_sun_line_juvenile_main.png", kind: "main", level: "L1" },
+            { path: "images/cr_starter_sun_line_adolescent_main.png", kind: "main", level: "L1" },
+            { path: "images/cr_starter_sun_line_adult_main.png", kind: "main", level: "L1" },
+            { path: "images/cr_starter_sun_line_overload_main.png", kind: "main", level: "L1" },
+            { path: "images/cr_starter_sun_line_lineup.png", kind: "sheet", level: "L1" },
+            { path: "images/cr_starter_sun_line_scale.png", kind: "sheet", level: "L1" }
+          ],
+          missing: [],
+          notes: "已設計首選宙獸：煌冠日冕獸 / 曜羽龍 / 耀日輝冕凰，四階型態演化全套立繪"
+        },
+        images: [
+          { path: "images/cr_starter_sun_line_juvenile_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_juvenile_main.png" },
+          { path: "images/cr_starter_sun_line_adolescent_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_adolescent_main.png" },
+          { path: "images/cr_starter_sun_line_adult_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_adult_main.png" },
+          { path: "images/cr_starter_sun_line_overload_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_overload_main.png" },
+          { path: "images/cr_starter_sun_line_lineup.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_lineup.png" },
+          { path: "images/cr_starter_sun_line_scale.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_scale.png" }
+        ],
+        fileCount: 14,
         status: "ok"
       }
     ];
