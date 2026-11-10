@@ -624,15 +624,25 @@ window.COSMI_CATALOG = {
 
   get PALETTES() { return this.COLOR_TONES; },
 
-  // 角色性格與宙獸性情合併且共用
+  // 角色性格與宙獸文學側寫（用於 Prompt 描繪與外觀側寫）
   PERSONALITIES: [
     "熱血", "冷靜", "害羞", "毒舌", "樂天", "好奇", "傲嬌", "沉穩", "衝動", "溫柔",
     "腹黑", "迷糊", "正義感強", "憤世嫉俗", "慵懶", "完美主義", "話很多", "寡言", "膽小但堅強", "自信過剩",
-    "愛照顧人", "愛惡作劇", "堅毅不拔", "重情重義", "散漫隨性", "不拘小節", "好勝心切", "心軟善良", "謹慎過度", "狂妄不羈",
+    "愛照顧人", "愛惡作劇", "堅毅不拔", "重情重義", "散漫隨性", "不拘不節", "好勝心切", "心軟善良", "謹慎過度", "狂妄不羈",
     "古靈精怪", "熱心腸", "死板認真", "隨遇而安", "護短", "深思熟慮", "機敏狡黠", "率真耿直", "愛操心", "豁達大度",
     "執著專注", "善解人意", "幽默風趣", "孤傲清冷", "自來熟",
     "溫順黏人", "好鬥凶悍", "膽怯機警", "高傲尊貴", "頑皮搗蛋", "沉默孤僻", "暴躁易怒", "警惕敏銳", "忠勇護主", "霸氣威嚴",
     "神秘莫測", "貪吃嗜睡", "狡詐靈動", "嗜好閃耀之物", "暴烈瘋狂", "護巢護崽", "好奇心過剩", "未知"
+  ],
+
+  // 宙獸野生領域性情（規則層級，對應 balance.json#ai.territory_mm 領域半徑）
+  TEMPERAMENTS: [
+    { v: "timid", zh: "膽怯/溫馴", radius_m: 0, desc: "0m 領域：被動防衛，只在被攻擊或被集火時反擊" },
+    { v: "cautious", zh: "警惕/謹慎", radius_m: 4, desc: "4m 領域：近身自衛警戒，侵入極近距離時反擊" },
+    { v: "normal", zh: "沉穩/常規", radius_m: 8, desc: "8m 領域：標準野生感應與常規巡邏領域" },
+    { v: "territorial", zh: "領地/敏銳", radius_m: 14, desc: "14m 領域：中遠距地盤意識強，主動迎擊" },
+    { v: "fierce", zh: "凶悍/侵略", radius_m: 20, desc: "20m 領域：遠距主動鎖定衝鋒，掠食性極強" },
+    { v: "apex", zh: "霸主/狂暴", radius_m: 28, desc: "28m 領域：超遠域霸主威壓，近視距極限追獵" }
   ],
 
   CHARACTER: {
@@ -1152,7 +1162,9 @@ window.COSMI_CATALOG = {
       "輔助治療/生命共鳴", "團隊增益/光環守護", "場地佈署/陣地構築", "空中游擊/截擊", "高速突襲/破陣先鋒",
       "干擾削弱/詛咒削弱", "自爆/致命反傷護衛", "指揮/僕從群體召喚", "未知"
     ],
-    get temperament() { return window.COSMI_CATALOG.PERSONALITIES; },
+    get temperaments() { return window.COSMI_CATALOG.TEMPERAMENTS; },
+    get temperament() { return window.COSMI_CATALOG.TEMPERAMENTS.map(t => ({ v: t.v, zh: `${t.zh}（${t.radius_m}m 領域）` })); },
+    get disposition() { return window.COSMI_CATALOG.PERSONALITIES; },
 
     // 體型變化組合（加入 XS，並擴充多樣化階梯組合）
     size_profile: [

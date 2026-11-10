@@ -303,7 +303,8 @@
         return pool.map(a => ({ v: a.name, w: 1, zh: a.name + "（" + a.region + "·" + a.type + (a.sensitivity === "review" ? "・需審" : "") + "）" })).concat(getCustom("creature.archetype").map(v => ({ v, w: 1, zh: v })));
       }, count: [{ n: 1, w: 1 }] },
       { key: "role", label: "戰鬥定位", options: () => uniform(CR.role.concat(getCustom("creature.role"))), count: [{ n: 1, w: 1 }] },
-      { key: "temperament", label: "性情", options: () => uniform(C.PERSONALITIES.concat(getCustom("creature.temperament"))), count: [{ n: 1, w: 1 }] },
+      { key: "temperament", label: "領域性情（開戰半徑）", options: () => uniform(C.TEMPERAMENTS.map(t => ({ v: t.v, zh: `${t.zh}（${t.radius_m}m 領域）` })).concat(getCustom("creature.temperament"))), count: [{ n: 1, w: 1 }] },
+      { key: "disposition", label: "神態性格（外貌側寫）", options: () => uniform(C.PERSONALITIES.concat(getCustom("creature.disposition"))), count: [{ n: 1, w: 1 }] },
       { key: "size_profile", label: "體型（幼→少→成→超載）", options: () => CR.size_profile.map(p => ({ v: p.v, w: p.w })).concat(getCustom("creature.size_profile").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "height_length", label: "成體身長/高 (m)", options: s => {
         const adultClass = (s.creature.size_profile?.[0] || "S→M→L→XL").split("→")[2] || "L";
@@ -433,7 +434,9 @@
       archetype_type: a.type || "自由原型",
       motifs: a.motifs || "",
       meaning: a.meaning || "",
-      sensitivity: a.sensitivity || "ok", role: c.role?.[0] || "未知", temperament: c.temperament?.[0] || "未知",
+      sensitivity: a.sensitivity || "ok", role: c.role?.[0] || "未知",
+      temperament: c.temperament?.[0] || "normal",
+      disposition: c.disposition?.[0] || "沉穩",
       size_profile: c.size_profile?.[0] || "未知",
       height_length: c.height_length?.[0] || "未知",
       weight: c.weight?.[0] || "未知",
@@ -592,7 +595,8 @@
         timeline: c.timeline || "架空",
         archetype: c.archetype || "自由原型",
         role: c.role || "戰鬥",
-        temperament: c.temperament || "沉穩",
+        temperament: lockedStage?.temperament || c.temperament || (curStage === "juvenile" ? "timid" : curStage === "adolescent" ? "normal" : curStage === "overload" ? "apex" : "fierce"),
+        disposition: c.disposition || "沉穩專注",
         evolution_flow: c.evolution_flow || {
           stage1_to_2: c.evo_stage1_to_2 || "stance_reconfig",
           stage2_to_3: c.evo_stage2_to_3 || "elemental_mantle",
@@ -4215,7 +4219,12 @@
               el("span", { class: "prompt-k" }, "文化時間線"), el("span", { class: "prompt-v" }, c.timeline || "青銅神話/古典英雄時代"),
               el("span", { class: "prompt-k" }, "文化原型"), el("span", { class: "prompt-v" }, (c.archetype?.name || c.archetype || "自由原型") + " (" + (c.region || "東亞") + ") · " + (c.motifs || "符號意象")),
               el("span", { class: "prompt-k" }, "AGC 立繪背景色"), el("span", { class: "prompt-v" }, (() => { const bg = C.determineAgcBgColor(c, false); return [el("span", { style: `display:inline-block;width:12px;height:12px;background:${bg.hex};border-radius:2px;vertical-align:middle;margin-right:5px;border:1px solid #555` }), `${bg.hex} (${bg.toneLabel}, R=G=B=${bg.rgb[0]})`]; })()),
-              el("span", { class: "prompt-k" }, "戰鬥 / 性情"), el("span", { class: "prompt-v" }, (c.role || "前排肉盾") + " · " + (c.temperament || "好鬥凶悍"))
+              el("span", { class: "prompt-k" }, "戰鬥 / 性情領域"), el("span", { class: "prompt-v" }, (() => {
+                const tempObj = (C.TEMPERAMENTS || []).find(t => t.v === c.temperament) || { zh: c.temperament || "常規", radius_m: 8 };
+                const tempLabel = `${tempObj.zh}（${tempObj.radius_m}m 領域）`;
+                const disp = c.disposition ? ` · ${c.disposition}` : "";
+                return (c.role || "前排肉盾") + " · " + tempLabel + disp;
+              })())
             )
           ),
           el("div", { class: "prompt-card" },

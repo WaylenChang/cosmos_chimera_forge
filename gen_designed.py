@@ -90,6 +90,7 @@ OVERLOADS = {
     "starter_sun_line": {
         "stage": "overload",
         "creature_id": "sun_coronavault_skyheron",
+        "temperament": "apex",
         "name_zh": "鏡冕天鷺",
         "name_en": "Mirracorona",
         "naming_note": "鏡陣大成，日冕登冠。",
@@ -117,6 +118,7 @@ OVERLOADS = {
     "starter_moon_line": {
         "stage": "overload",
         "creature_id": "moon_eclipsvast_wolf",
+        "temperament": "apex",
         "name_zh": "夜痕蝕月狼",
         "name_en": "Niverclis",
         "naming_note": "極夜化身，蝕月生寒。",
@@ -144,6 +146,7 @@ OVERLOADS = {
     "starter_star_line": {
         "stage": "overload",
         "creature_id": "star_tempest_celestial",
+        "temperament": "apex",
         "name_zh": "星蹄雷皇驥",
         "name_en": "Voltrastorm",
         "naming_note": "雷皇踏空，星霆撼野。",
@@ -209,6 +212,7 @@ def main() -> int:
                 "name_en": cp.get("name_en", ""),
                 "naming_note": cp.get("naming_note", ""),
                 "size_class": c["size_class"],
+                "temperament": c.get("temperament", "normal"),
                 "height_length": s_dims["height_length"],
                 "weight": s_dims["weight"],
                 "body_fat": s_dims["body_fat"],
