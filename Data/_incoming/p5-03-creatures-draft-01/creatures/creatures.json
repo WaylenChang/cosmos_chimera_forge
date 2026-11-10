@@ -5,9 +5,10 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
+    "temperament": "timid",
     "evolves_to": "metal_gear_strider",
     "evolution": {
-      "exp": 100,
+      "level": 28,
       "materials": [
         {
           "element": "metal",
@@ -59,9 +60,10 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "hold",
+    "temperament": "cautious",
     "evolves_to": "metal_chronos_engine",
     "evolution": {
-      "exp": 300,
+      "level": 48,
       "materials": [
         {
           "element": "metal",
@@ -113,6 +115,7 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "charge",
+    "temperament": "territorial",
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -159,9 +162,10 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "charge",
+    "temperament": "timid",
     "evolves_to": "wood_plume_peafowl",
     "evolution": {
-      "exp": 100,
+      "level": 24,
       "materials": [
         {
           "element": "wood",
@@ -213,9 +217,10 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "keep_distance",
+    "temperament": "cautious",
     "evolves_to": "wood_canopy_regent",
     "evolution": {
-      "exp": 300,
+      "level": 40,
       "materials": [
         {
           "element": "wood",
@@ -267,6 +272,7 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "hold",
+    "temperament": "territorial",
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -312,9 +318,10 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
+    "temperament": "timid",
     "evolves_to": "water_skiff_eel",
     "evolution": {
-      "exp": 100,
+      "level": 22,
       "materials": [
         {
           "element": "water",
@@ -366,9 +373,10 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "hold",
+    "temperament": "normal",
     "evolves_to": "water_catamaran_serpent",
     "evolution": {
-      "exp": 300,
+      "level": 38,
       "materials": [
         {
           "element": "water",
@@ -420,6 +428,7 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
+    "temperament": "territorial",
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -466,9 +475,10 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
+    "temperament": "cautious",
     "evolves_to": "fire_mane_stalker",
     "evolution": {
-      "exp": 100,
+      "level": 26,
       "materials": [
         {
           "element": "fire",
@@ -520,9 +530,10 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "charge",
+    "temperament": "territorial",
     "evolves_to": "fire_pyre_monarch",
     "evolution": {
-      "exp": 300,
+      "level": 44,
       "materials": [
         {
           "element": "fire",
@@ -574,6 +585,7 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
+    "temperament": "apex",
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -619,9 +631,10 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
+    "temperament": "timid",
     "evolves_to": "earth_gilded_warden",
     "evolution": {
-      "exp": 100,
+      "level": 30,
       "materials": [
         {
           "element": "earth",
@@ -673,9 +686,10 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "hold",
+    "temperament": "normal",
     "evolves_to": "earth_auric_sovereign",
     "evolution": {
-      "exp": 300,
+      "level": 50,
       "materials": [
         {
           "element": "earth",
@@ -727,6 +741,7 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "charge",
+    "temperament": "territorial",
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -772,9 +787,10 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
+    "temperament": "timid",
     "evolves_to": "ice_rime_strider",
     "evolution": {
-      "exp": 100,
+      "level": 25,
       "materials": [
         {
           "element": "ice",
@@ -826,9 +842,10 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "keep_distance",
+    "temperament": "territorial",
     "evolves_to": "ice_tundra_dreadnought",
     "evolution": {
-      "exp": 300,
+      "level": 43,
       "materials": [
         {
           "element": "ice",
@@ -880,6 +897,7 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
+    "temperament": "fierce",
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -926,9 +944,10 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "flank",
+    "temperament": "timid",
     "evolves_to": "wind_flute_cruiser",
     "evolution": {
-      "exp": 100,
+      "level": 20,
       "materials": [
         {
           "element": "wind",
@@ -980,9 +999,10 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "keep_distance",
+    "temperament": "cautious",
     "evolves_to": "wind_monsoon_galeon",
     "evolution": {
-      "exp": 300,
+      "level": 35,
       "materials": [
         {
           "element": "wind",
@@ -1034,6 +1054,7 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
+    "temperament": "normal",
     "evolves_to": null,
     "evolution": null,
     "resist": {

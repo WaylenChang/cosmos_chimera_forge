@@ -2,6 +2,12 @@
 
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
+- 2026-11-10 · data@1.1.0 · tool@2.4.1 · 角色與宙獸數據格式對齊 cosmos_chimera，雙向同步與共同維護：
+  - **角色數據格式標準化 (`character.schema.json`)**：新增與 `catalog.js`、`tasks.js` 及交付包 `concept.json` 完全一致之 `Data/schemas/character.schema.json`，涵蓋身分身形、族裔性別、年齡數值（整數 cm）、個性故事與收服道具。
+  - **宙獸數據與六階領域性情同步**：同步 `Data/balance.json`（6 階開戰半徑 0m~28m 與玩家平衡數值）、`creatures.json`（進化等級門檻、草稿性情調整）與 `relation.schema.json`。
+  - **資料驗證工具與測試移植**：引入 `tools/validate-data` 與 `tools/tests/test_validate_data.py`，支援本專案對 `Data/` 獨立執行嚴格 JSON Schema 與 cross-reference 驗收。
+  - **重產 `designed.js`**：更新御三家日、月、星三線型態之領域性情標籤，確保立繪與 3D 任務組裝規格一致。
+
 - 2026-11-10 · tool@2.4.0 · Prompt Forge 新增「我的最愛 Prompt 清單」與「已設計項目清單」同頁區塊及審查雙向跳轉：
   - **我的最愛 Prompt 清單功能**：在鍛造台 Prompt 輸出區新增「⭐ 收藏此 Prompt」功能，可將當前 Prompt 文本、任務模式、主體 ID、型態階級、種子與完整參數快照加入本地收藏（支援持久化於 localStorage）。提供即時過濾搜尋、一鍵「📋 複製 Prompt」、「⚡ 載入至鍛造」完整還原設定，以及「🗑️ 移除收藏」。
   - **已設計項目清單獨立區塊**：將 `designed.js` 的定案宙獸（日、月、星三線御三家）建立為同頁之專屬清單區塊，完整呈現四階進化型態（幼年、少年、成年、超載）、數值規格、外觀設定與招式。支援整線與個別型態一鍵鍛造立繪／3D Prompt，並可將任意型態一鍵加入「我的最愛」。

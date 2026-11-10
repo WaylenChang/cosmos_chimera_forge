@@ -21,7 +21,7 @@
 | `tasks.js` | 各任務的 prompt 模板（產出清單、檔名、JSON 欄位） | 新任務、改交付規格 |
 | `designed.js` | 已設計項目（**產生檔，勿手改**） | 改 `Data/_incoming` 批次後跑 `python gen_designed.py` |
 | `gen_designed.py` | 從 `Data/` 批次資料產生 `designed.js` | 新增已設計的進化線或修改欄位 |
-| `tools/` | 驗收腳本 (`validate_art.py`)、一鍵解壓腳本 (`unpack_incoming.ps1`) 與單元測試 | 修改交付驗收規範或解壓邏輯 |
+| `tools/` | 驗收腳本 (`validate_art.py`)、資料驗證 (`validate_data.py`)、一鍵解壓腳本 (`unpack_incoming.ps1`) 與單元測試 | 修改交付驗收規範、資料驗證或解壓邏輯 |
 | `Art/_incoming/` | 待審查與解壓的立繪與 3D 交付包（本專案審查沙盒） | 存放/解壓新交付包 |
 | `Art/_backup_v1/` | 歷史版本美術交付包備份封存 | 封存/追溯舊包 |
 | `Data/` | 宙獸、角色、招式、特性與原型圖鑑資料庫 | 兩邊專案同步保留的圖鑑資料 |
