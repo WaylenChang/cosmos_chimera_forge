@@ -1474,12 +1474,49 @@
       const pSub = (p.subjectId || p.manifest?.subject_id || "").toLowerCase();
       const pGrp = (p.groupKey || "").toLowerCase();
       const pId = (p.id || "").toLowerCase();
+      const pSrc = (p.manifest?.source_pack || "").toLowerCase();
       const pLine = (p.concept?.line_id || "").toLowerCase();
       const pCreature = (p.concept?.creature_id || "").toLowerCase();
       const pConceptId = (p.concept?.id || "").toLowerCase();
       const pName = (p.concept?.name_zh || "").toLowerCase();
 
-      const matchedSubject = (pSub === s || pGrp === s || pLine === s || pCreature === s || pConceptId === s || pName === s || pId.includes(s));
+      let matchedSourcePack = false;
+      if (pSrc) {
+        if (pSrc === s || pSrc.includes(s)) {
+          matchedSourcePack = true;
+        } else {
+          const srcPkg = reviewState.packages.find(x => (x.id || "").toLowerCase() === pSrc);
+          if (srcPkg) {
+            const srcSub = (srcPkg.subjectId || srcPkg.manifest?.subject_id || "").toLowerCase();
+            const srcConceptId = (srcPkg.concept?.id || "").toLowerCase();
+            const srcName = (srcPkg.concept?.name_zh || "").toLowerCase();
+            if (srcSub === s || srcConceptId === s || srcName === s || srcSub.includes(s)) {
+              matchedSourcePack = true;
+            }
+          }
+        }
+      }
+
+      let matchedTargetPack = false;
+      const refPkg = reviewState.packages.find(x => (x.manifest?.source_pack || "").toLowerCase() === pId);
+      if (refPkg) {
+        const refSub = (refPkg.subjectId || refPkg.manifest?.subject_id || "").toLowerCase();
+        if (refSub === s || refSub.includes(s)) {
+          matchedTargetPack = true;
+        }
+      }
+
+      const matchedSubject = (
+        pSub === s ||
+        pGrp === s ||
+        pLine === s ||
+        pCreature === s ||
+        pConceptId === s ||
+        pName === s ||
+        pId.includes(s) ||
+        matchedSourcePack ||
+        matchedTargetPack
+      );
       if (!matchedSubject) return false;
       if (stage && p.stage && p.stage !== stage) return false;
       return true;
@@ -2535,7 +2572,7 @@
 
         const textInput = el("input", {
           value: o.source_pack || "",
-          placeholder: d.placeholder || (isChr3d ? "或手動輸入角色立繪包 ID，例 chr-20261106-7f3a-2105" : "或手動輸入宙獸立繪包 ID，例 cr-20261106-7f3a-2105-adult"),
+          placeholder: d.placeholder || (isChr3d ? "或手動輸入角色立繪包 ID，例 chr-20261106-1286-1855" : "或手動輸入宙獸立繪包 ID，例 cr-20261106-7f3a-2105-adult"),
           onchange: e => {
             o.source_pack = e.target.value.trim();
             const p = reviewState.packages.find(x => x.id === o.source_pack);
@@ -3266,86 +3303,316 @@
         status: "pending"
       },
       {
-        id: "chr-20261106-7f3a-2105",
+        id: "chr-20261106-1286-1855",
         type: "character-concept",
-        subjectId: "chr_7f3a",
+        subjectId: "chr_amemori_sumiha",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-7f3a-2105 seed=7f3a]",
-          task_id: "chr-20261106-7f3a-2105",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-1286-1855 seed=1286]",
+          task_id: "chr-20261106-1286-1855",
           task_type: "character-concept",
-          subject_id: "chr_7f3a",
-          produced_by: "ChatGPT",
+          subject_id: "chr_amemori_sumiha",
+          produced_by: "ChatGPT（對話版）",
           files: [
             { path: "concept.json", kind: "spec", level: "L1" },
-            { path: "images/chr_7f3a_main.png", kind: "main", level: "L1" },
-            { path: "images/chr_7f3a_turnaround.png", kind: "turnaround", level: "L1" },
-            { path: "images/chr_7f3a_expressions.png", kind: "sheet", level: "L1" },
-            { path: "images/chr_7f3a_props.png", kind: "sheet", level: "L1" }
+            { path: "images/chr_amemori_sumiha_main.png", kind: "main", level: "L1" },
+            { path: "images/chr_amemori_sumiha_turnaround.png", kind: "turnaround", level: "L1" },
+            { path: "images/chr_amemori_sumiha_front.png", kind: "view", level: "L1" },
+            { path: "images/chr_amemori_sumiha_side.png", kind: "view", level: "L1" },
+            { path: "images/chr_amemori_sumiha_back.png", kind: "view", level: "L1" },
+            { path: "images/chr_amemori_sumiha_expressions.png", kind: "sheet", level: "L1" },
+            { path: "images/chr_amemori_sumiha_props.png", kind: "sheet", level: "L1" }
           ],
           missing: [],
-          notes: "服裝符合機能風格，各插槽骨掛點清楚"
+          notes: "大廳 NPC 孵蛋師，傳統日式層疊線條融合現代剪裁，配有卵形孵化背包與符籙卡片"
         },
         concept: {
-          id: "chr_7f3a", name_zh: "林晴陽", name_en: "Haruhi",
-          role: "玩家角色預設外觀", ethnicity: "東亞體系", region: "東亞", timeline: "晶石賽博/霓虹魔導義體紀元",
-          gender: "女", age_band: "青少年", age: 17, height: "163 cm", weight: "51.5 kg", body_fat: "21.5%",
+          id: "chr_amemori_sumiha", name_zh: "雨森澄羽", name_en: "Amemori Sumiha",
+          role: "大廳 NPC：孵蛋師", ethnicity: "東亞體系", region: "日本",
+          timeline: "晶石賽博/霓虹魔導義體紀元",
+          gender: "女", age_band: "青年", age: 22, height: "163 cm", height_cm: 163, weight: "48 kg", weight_kg: 48, body_fat: "17.5%",
           cup_size: "C",
-          outfit_palette: ["海軍深藍", "象牙米白", "黃銅金", "清透天藍"],
+          body_type: "纖細結實；窄肩、長腿，重心穩定，適合長時間巡檢孵化艙",
+          outfit_palette: ["海軍深藍", "象牙米白", "黃銅金", "珊瑚鮮橘", "以太水藍"],
           hair_palette: ["曜石純黑", "清透天藍"],
           eye_palette: ["琥珀金"],
-          personality: ["熱血", "好奇"], style: "街頭機能 × 學院制服改造",
-          interests: ["星際探索", "古文字解密"], likes: ["熱奶茶", "發光晶石"], dislikes: ["冗長報告"],
+          personality: ["冷靜", "好奇"], style: "傳統民族服融合現代剪裁",
+          interests: ["釣魚", "電子遊戲"], likes: ["毛茸茸的生物", "辣的食物"], dislikes: ["等待", "被小看"],
           vessel: "talisman_card", vessel_zh: "符籙卡片",
-          biography: "林晴陽自幼生活於新興的晶石賽博大都會，從小著迷於古老星圖與魔導義體技術的共生可能。身著街頭機能學院制服的她，常年攜帶改造版符籙卡片穿梭於霓虹地下市集，對未知的宙獸生命充滿無盡好奇。她以特立獨行的熱忱與果敢的行動力，誓要在浩瀚宙域中繪製屬於新時代的開拓圖鑑。"
+          biography: "雨森澄羽誕生於霓虹交織的小行星軌道孵化基地，家族代代皆是專注於以太生命律動的調律技師。在漫天數據流與冰冷機房中長大的她，年少時便能單憑指尖微觸感知卵殼內最纖細的以太震顫。面對外界對其年輕資歷的質疑，她以近乎偏執的冷靜與釣魚般的耐性，研發出將古老符籙轉譯為微電路脈衝的校準卡片。平日看似寡言疏離、行事雷厲風行，唯獨在破殼而出的毛茸茸幼獸將溫熱鼻尖湊向掌心時，澄羽才會卸下心防，露出只屬於守護者的溫柔笑意。"
         },
         images: [
-          { path: "images/chr_7f3a_main.png", url: createSampleSvgDataUrl("角色立繪 · 晴陽 (163cm, 罩杯C)", "#2980b9") },
-          { path: "images/chr_7f3a_turnaround.png", url: createSampleSvgDataUrl("角色三視圖 · T-pose 灰底", "#7f8c8d") },
-          { path: "images/chr_7f3a_expressions.png", url: createSampleSvgDataUrl("表情集 2×3", "#8e44ad") },
-          { path: "images/chr_7f3a_props.png", url: createSampleSvgDataUrl("道具板 · 符籙卡片與背包", "#16a085") }
+          { path: "images/chr_amemori_sumiha_main.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_main.png" },
+          { path: "images/chr_amemori_sumiha_turnaround.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_turnaround.png" },
+          { path: "images/chr_amemori_sumiha_front.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_front.png" },
+          { path: "images/chr_amemori_sumiha_side.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_side.png" },
+          { path: "images/chr_amemori_sumiha_back.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_back.png" },
+          { path: "images/chr_amemori_sumiha_expressions.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_expressions.png" },
+          { path: "images/chr_amemori_sumiha_props.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_props.png" }
         ],
-        fileCount: 5,
+        fileCount: 8,
         status: "ok"
       },
       {
-        id: "mdl-20261106-7f3a-2106",
+        id: "mdl-20261109-f048-1847-chr_1286_1855",
         type: "character-model-rig",
-        baseId: "mdl-20261106-7f3a-2106",
-        subjectId: "chr_7f3a",
+        baseId: "mdl-20261109-f048-1847-chr_1286_1855",
+        subjectId: "chr_amemori_sumiha",
         manifest: {
           spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=1.3.0 template=character-model-rig@4.1.0 task_id=mdl-20261106-7f3a-2106 seed=7f3a]",
-          task_id: "mdl-20261106-7f3a-2106",
+          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=2.4.0 template=character-model-rig@4.3.0 task_id=mdl-20261109-f048-1847 seed=f048]",
+          task_id: "mdl-20261109-f048-1847-chr_1286_1855",
           task_type: "character-model-rig",
-          subject_id: "chr_7f3a",
-          source_pack: "chr-20261106-7f3a-2105",
-          produced_by: "Gemini Argon",
+          subject_id: "chr_amemori_sumiha",
+          source_pack: "chr-20261106-1286-1855",
+          produced_by: "Gemini Argon（任務模式）",
           files: [
-            { path: "images/chr_7f3a_model_front.png", kind: "view", level: "L1" },
-            { path: "images/chr_7f3a_model_side.png", kind: "view", level: "L1" },
-            { path: "images/chr_7f3a_model_back.png", kind: "view", level: "L1" },
-            { path: "images/chr_7f3a_anim_sheet_01.png", kind: "sheet", level: "L1" },
+            { path: "images/chr_1286_model_front.png", kind: "view", level: "L1" },
+            { path: "models/chr_1286.glb", kind: "model", level: "L1" },
+            { path: "models/chr_1286.fbx", kind: "model", level: "L1" },
             { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "rig/build_rig.py", kind: "script", level: "L1" },
-            { path: "anims/anim_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/keyframes.py", kind: "script", level: "L1" },
-            { path: "pipeline/run_all.py", kind: "script", level: "L1" },
-            { path: "pipeline/README.md", kind: "report", level: "L1" }
+            { path: "anims/anim_spec.json", kind: "spec", level: "L1" }
           ],
-          missing: [
-            { item: "models/chr_7f3a.glb", level: "L2", reason: "no 3D generation on this platform" }
-          ],
-          notes: "由角色立繪包 chr-20261106-7f3a-2105 生成 Humanoid 3D 建模正交視圖與骨架動作規格"
+          missing: [],
+          notes: "由角色立繪包 chr-20261106-1286-1855 生成 Humanoid 3D 建模與 32 支動作骨架規格"
+        },
+        animSpec: {
+          spec: "cosmimera-anim-spec/1",
+          template: "character-model-rig@4.3.0",
+          subject_id: "chr_amemori_sumiha",
+          source_pack: "chr-20261106-1286-1855",
+          fps: 30,
+          total_clips: C.CLIPS.humanoid.length,
+          clips: C.CLIPS.humanoid.map(c => ({
+            clip: "chr_" + c.id,
+            description: c.zh,
+            fps: 30,
+            frames: c.f,
+            duration_sec: +(c.f / 30).toFixed(4),
+            loop: !!c.loop,
+            root_motion: !!c.rm,
+            events: (c.ev || []).map(ev => {
+              const [name, fr] = ev.split("@");
+              return { name, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
+            }),
+            file: "anims/chr_" + c.id + ".fbx",
+            animated_bones_count: 28,
+            keyframe_samples: Math.ceil(c.f / 2)
+          }))
         },
         images: [
-          { path: "images/chr_7f3a_model_front.png", url: createSampleSvgDataUrl("御靈召喚使 · 建模正交正面 2048px", "#2980b9") },
-          { path: "images/chr_7f3a_model_side.png", url: createSampleSvgDataUrl("御靈召喚使 · 建模正交側面 2048px", "#1f618d") },
-          { path: "images/chr_7f3a_model_back.png", url: createSampleSvgDataUrl("御靈召喚使 · 建模正交背面 2048px", "#154360") },
-          { path: "images/chr_7f3a_anim_sheet_01.png", url: createSampleSvgDataUrl("動作關鍵幀分鏡 · 御靈召喚使", "#16a085") }
+          { path: "images/chr_1286_model_front.png", url: "Art/_incoming/mdl-20261109-f048-1847-chr_1286_1855/images/chr_1286_model_front.png" }
         ],
-        fileCount: 11,
-        status: "pending"
+        fileCount: 36,
+        status: "ok"
+      },
+      {
+        id: "chr-20261106-1286-2039",
+        type: "character-concept",
+        subjectId: "chr_yeh_chengxi",
+        manifest: {
+          spec: "cosmimera-art-task/1",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-1286-2039 seed=1286]",
+          task_id: "chr-20261106-1286-2039",
+          task_type: "character-concept",
+          subject_id: "chr_yeh_chengxi",
+          produced_by: "ChatGPT（對話版）",
+          files: [
+            { path: "concept.json", kind: "spec", level: "L1" },
+            { path: "images/chr_yeh_chengxi_main.png", kind: "main", level: "L1" },
+            { path: "images/chr_yeh_chengxi_turnaround.png", kind: "turnaround", level: "L1" },
+            { path: "images/chr_yeh_chengxi_front.png", kind: "view", level: "L1" },
+            { path: "images/chr_yeh_chengxi_side.png", kind: "view", level: "L1" },
+            { path: "images/chr_yeh_chengxi_back.png", kind: "view", level: "L1" },
+            { path: "images/chr_yeh_chengxi_expressions.png", kind: "sheet", level: "L1" },
+            { path: "images/chr_yeh_chengxi_props.png", kind: "sheet", level: "L1" }
+          ],
+          missing: [],
+          notes: "玩家角色預設外觀，海洋水手風格，配備跑酷機能短褲與琉璃珠"
+        },
+        concept: {
+          id: "chr_yeh_chengxi", name_zh: "葉澄汐", name_en: "Chengxi Yeh",
+          role: "玩家角色預設外觀", ethnicity: "東亞體系", region: "台灣漢人",
+          timeline: "晶石賽博/霓虹魔導義體紀元",
+          gender: "女", age_band: "青年", age: 23, height: "165 cm", height_cm: 165, weight: "50 kg", weight_kg: 50, body_fat: "18.2%",
+          cup_size: "C",
+          body_type: "精實輕盈的跑酷體型，約 7.3 頭身；窄肩、修長四肢與穩定核心，重視攀躍和低重心落地",
+          outfit_palette: ["深海湛藍", "月華純白", "珊瑚鮮橘", "黃銅金", "晴空冰藍"],
+          hair_palette: ["曜石純黑", "清透天藍", "濃茶褐"],
+          eye_palette: ["琥珀金"],
+          personality: ["腹黑", "衝動"], style: "海洋水手",
+          interests: ["跑酷", "料理"], likes: ["閃亮的礦石", "星空"], dislikes: ["吵雜", "高處"],
+          vessel: "glass_bead", vessel_zh: "琉璃珠",
+          biography: "葉澄汐自幼在巨艦穿梭的繁忙海港船塢中奔跑成長，跟隨老船匠攀爬於高聳龍骨與窄甲板之間。一次深入廢棄沉船底艙探險時，她偶然在古老以太動力核心殘骸中拾得一枚流轉著星雲光斑的琉璃珠，初次喚醒了深海宙獸的共鳴之音。自此，澄汐踏上了追尋深空星海與未知巨獸的航程。性格熱烈果敢、敢作敢當的她，總是掛著一抹狡黠自信的笑意躍向危險前線；縱使內心深處對無垠深淵的失重高處仍有著不易察覺的畏懼，她也絕不允許自己後退半步。平時將琉璃珠穩妥掛扣於右腰座，遭遇危機時瞬息摘珠啟動以太光泡。"
+        },
+        images: [
+          { path: "images/chr_yeh_chengxi_main.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_main.png" },
+          { path: "images/chr_yeh_chengxi_turnaround.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_turnaround.png" },
+          { path: "images/chr_yeh_chengxi_front.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_front.png" },
+          { path: "images/chr_yeh_chengxi_side.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_side.png" },
+          { path: "images/chr_yeh_chengxi_back.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_back.png" },
+          { path: "images/chr_yeh_chengxi_expressions.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_expressions.png" },
+          { path: "images/chr_yeh_chengxi_props.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_props.png" }
+        ],
+        fileCount: 8,
+        status: "ok"
+      },
+      {
+        id: "mdl-20261109-f048-1847-chr_1286",
+        type: "character-model-rig",
+        baseId: "mdl-20261109-f048-1847-chr_1286",
+        subjectId: "chr_yeh_chengxi",
+        manifest: {
+          spec: "cosmimera-art-task/1",
+          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=2.4.0 template=character-model-rig@4.3.0 task_id=mdl-20261109-f048-1847 seed=f048]",
+          task_id: "mdl-20261109-f048-1847-chr_1286",
+          task_type: "character-model-rig",
+          subject_id: "chr_yeh_chengxi",
+          source_pack: "chr-20261106-1286-2039",
+          produced_by: "Gemini Argon（任務模式）",
+          files: [
+            { path: "images/chr_1286_model_front.png", kind: "view", level: "L1" },
+            { path: "models/chr_1286.glb", kind: "model", level: "L1" },
+            { path: "models/chr_1286.fbx", kind: "model", level: "L1" },
+            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
+            { path: "anims/anim_spec.json", kind: "spec", level: "L1" }
+          ],
+          missing: [],
+          notes: "由角色立繪包 chr-20261106-1286-2039 生成 Humanoid 3D 建模與 32 支動作骨架規格"
+        },
+        animSpec: {
+          spec: "cosmimera-anim-spec/1",
+          template: "character-model-rig@4.3.0",
+          subject_id: "chr_yeh_chengxi",
+          source_pack: "chr-20261106-1286-2039",
+          fps: 30,
+          total_clips: C.CLIPS.humanoid.length,
+          clips: C.CLIPS.humanoid.map(c => ({
+            clip: "chr_" + c.id,
+            description: c.zh,
+            fps: 30,
+            frames: c.f,
+            duration_sec: +(c.f / 30).toFixed(4),
+            loop: !!c.loop,
+            root_motion: !!c.rm,
+            events: (c.ev || []).map(ev => {
+              const [name, fr] = ev.split("@");
+              return { name, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
+            }),
+            file: "anims/chr_" + c.id + ".fbx",
+            animated_bones_count: 28,
+            keyframe_samples: Math.ceil(c.f / 2)
+          }))
+        },
+        images: [
+          { path: "images/chr_1286_model_front.png", url: "Art/_incoming/mdl-20261109-f048-1847-chr_1286/images/chr_1286_model_front.png" }
+        ],
+        fileCount: 36,
+        status: "ok"
+      },
+      {
+        id: "chr-20261106-3d04-2100",
+        type: "character-concept",
+        subjectId: "chr_roen",
+        manifest: {
+          spec: "cosmimera-art-task/1",
+          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-3d04-2100 seed=3d04]",
+          task_id: "chr-20261106-3d04-2100",
+          task_type: "character-concept",
+          subject_id: "chr_roen",
+          produced_by: "ChatGPT（對話版）",
+          files: [
+            { path: "concept.json", kind: "spec", level: "L1" },
+            { path: "images/chr_roen_main.png", kind: "main", level: "L1" },
+            { path: "images/chr_roen_turnaround.png", kind: "turnaround", level: "L1" },
+            { path: "images/chr_roen_front.png", kind: "view", level: "L1" },
+            { path: "images/chr_roen_side.png", kind: "view", level: "L1" },
+            { path: "images/chr_roen_back.png", kind: "view", level: "L1" },
+            { path: "images/chr_roen_expressions.png", kind: "sheet", level: "L1" },
+            { path: "images/chr_roen_props.png", kind: "sheet", level: "L1" }
+          ],
+          missing: [],
+          notes: "玩家角色預設外觀，地中海賽博市集風格，手持發光多維魔方"
+        },
+        concept: {
+          id: "chr_roen", name_zh: "洛恩", name_en: "Roen",
+          role: "玩家角色預設外觀", ethnicity: "白人", region: "南歐地中海",
+          timeline: "晶石賽博/霓虹魔導義體紀元",
+          gender: "男", age_band: "青少年", age: 15, height: "172 cm", height_cm: 172, weight: "61 kg", weight_kg: 61, body_fat: "13.8%",
+          cup_size: null,
+          body_type: "偏瘦、靈活的青少年體型；肩寬適中、四肢修長，頭身比約 1:7",
+          outfit_palette: ["象牙米白", "炭煙燻灰", "珊瑚鮮橘", "克萊因藍"],
+          hair_palette: ["炭煙燻灰", "月華純白"],
+          eye_palette: ["清透天藍"],
+          personality: ["冷靜", "寡言"], style: "賽博市集",
+          interests: ["電子遊戲", "機械改裝"], likes: ["安靜的清晨", "甜食"], dislikes: ["輸", "擁擠人群"],
+          vessel: "magic_cube", vessel_zh: "魔術方塊",
+          biography: "洛恩成長於地中海暖風穿行的軌道浮空市集，在老舊機械與二手義體零件堆中度過了整個童年。比起同齡少年的嬉鬧狂歡，他更偏愛在晨曦微光尚未喧囂時，獨自拆解精密發條與光子回路。他手中那枚能解鎖能量牢籠的多維魔術方塊，正是他親手將祖父留下的遺物機巧改造而成。在初次面對狂暴的晶石幼獸時，洛恩沒有絲毫慌亂，而是以驚人的幾何洞察力瞬息轉動方塊矩陣完成了完美捕捉。寡言冷靜的他習慣以嚴密的邏輯剖析戰局，誓要在無垠星海中印證自己的每一步推演。"
+        },
+        images: [
+          { path: "images/chr_roen_main.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_main.png" },
+          { path: "images/chr_roen_turnaround.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_turnaround.png" },
+          { path: "images/chr_roen_front.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_front.png" },
+          { path: "images/chr_roen_side.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_side.png" },
+          { path: "images/chr_roen_back.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_back.png" },
+          { path: "images/chr_roen_expressions.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_expressions.png" },
+          { path: "images/chr_roen_props.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_props.png" }
+        ],
+        fileCount: 8,
+        status: "ok"
+      },
+      {
+        id: "mdl-20261109-f048-1847-chr_3d04",
+        type: "character-model-rig",
+        baseId: "mdl-20261109-f048-1847-chr_3d04",
+        subjectId: "chr_roen",
+        manifest: {
+          spec: "cosmimera-art-task/1",
+          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=2.4.0 template=character-model-rig@4.3.0 task_id=mdl-20261109-f048-1847 seed=f048]",
+          task_id: "mdl-20261109-f048-1847-chr_3d04",
+          task_type: "character-model-rig",
+          subject_id: "chr_roen",
+          source_pack: "chr-20261106-3d04-2100",
+          produced_by: "Gemini Argon（任務模式）",
+          files: [
+            { path: "images/chr_3d04_model_front.png", kind: "view", level: "L1" },
+            { path: "models/chr_3d04.glb", kind: "model", level: "L1" },
+            { path: "models/chr_3d04.fbx", kind: "model", level: "L1" },
+            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
+            { path: "anims/anim_spec.json", kind: "spec", level: "L1" }
+          ],
+          missing: [],
+          notes: "由角色立繪包 chr-20261106-3d04-2100 生成 Humanoid 3D 建模與 32 支動作骨架規格"
+        },
+        animSpec: {
+          spec: "cosmimera-anim-spec/1",
+          template: "character-model-rig@4.3.0",
+          subject_id: "chr_roen",
+          source_pack: "chr-20261106-3d04-2100",
+          fps: 30,
+          total_clips: C.CLIPS.humanoid.length,
+          clips: C.CLIPS.humanoid.map(c => ({
+            clip: "chr_" + c.id,
+            description: c.zh,
+            fps: 30,
+            frames: c.f,
+            duration_sec: +(c.f / 30).toFixed(4),
+            loop: !!c.loop,
+            root_motion: !!c.rm,
+            events: (c.ev || []).map(ev => {
+              const [name, fr] = ev.split("@");
+              return { name, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
+            }),
+            file: "anims/chr_" + c.id + ".fbx",
+            animated_bones_count: 28,
+            keyframe_samples: Math.ceil(c.f / 2)
+          }))
+        },
+        images: [
+          { path: "images/chr_3d04_model_front.png", url: "Art/_incoming/mdl-20261109-f048-1847-chr_3d04/images/chr_3d04_model_front.png" }
+        ],
+        fileCount: 36,
+        status: "ok"
       }
     ];
     mockPackages.forEach(p => addPackage(p));
