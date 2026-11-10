@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.3.0";
+  const TOOL_VERSION = "2.4.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -777,13 +777,16 @@
     renderDesigned();
   }
 
-  function useDesigned(lineId, taskId) {
+  function useDesigned(lineId, taskId, stage = null) {
     state.preset = lineId;
     state.taskId = taskId;
     state.currentRound = 1;
     const o = state.opts[taskId] || (state.opts[taskId] = {});
+    if (stage) o.stage = stage;
     if (taskId === "creature-model-rig" || taskId === "model-rig") { o.scope = "single"; o.source_pack = ""; }
     renderAll();
+    const promptEl = $("#prompt");
+    if (promptEl) promptEl.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function renderDesigned() {
@@ -800,6 +803,610 @@
           el("button", { type: "button", class: "btn mini" + (on && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-model-rig") }, "🧊 img-to-3D prompt"))));
     });
     if (state.preset) box.append(el("button", { type: "button", class: "btn mini ghost", onclick: () => { state.preset = null; renderAll(); } }, "✕ 取消已設計項目（回到隨機概念）"));
+    if ($("#designedList")) renderDesignedList();
+  }
+
+  // ==================== 我的最愛 Prompt 與已設計清單管理 ====================
+  const FAVORITES_KEY = "cosmimera_forge_favorites";
+  let favorites = [];
+
+  function loadFavorites() {
+    try {
+      favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+      if (!Array.isArray(favorites)) favorites = [];
+    } catch (e) {
+      favorites = [];
+    }
+  }
+
+  function saveFavorites() {
+    try {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+    } catch (e) {
+      console.warn("Storage quota exceeded", e);
+    }
+  }
+
+  function getReviewMatches(subjectId, stage = null) {
+    if (!reviewState.packages || !reviewState.packages.length) return [];
+    const s = (subjectId || "").trim().toLowerCase();
+    if (!s) return [];
+    return reviewState.packages.filter(p => {
+      const pSub = (p.subjectId || p.manifest?.subject_id || "").toLowerCase();
+      const pGrp = (p.groupKey || "").toLowerCase();
+      const pId = (p.id || "").toLowerCase();
+      const pLine = (p.concept?.line_id || "").toLowerCase();
+      const pCreature = (p.concept?.creature_id || "").toLowerCase();
+
+      const matchedSubject = (pSub === s || pGrp === s || pLine === s || pCreature === s || pId.includes(s));
+      if (!matchedSubject) return false;
+      if (stage && p.stage && p.stage !== stage) return false;
+      return true;
+    });
+  }
+
+  async function jumpToReview(pkgIdOrSubject, stage = null) {
+    await setViewMode("review");
+    const s = (pkgIdOrSubject || "").trim().toLowerCase();
+
+    // 1. Exact match by package ID
+    let targetPkg = reviewState.packages.find(p => p.id.toLowerCase() === s);
+
+    // 2. Match by subject and stage
+    if (!targetPkg && stage) {
+      targetPkg = reviewState.packages.find(p => {
+        const pSub = (p.subjectId || p.manifest?.subject_id || "").toLowerCase();
+        const pGrp = (p.groupKey || "").toLowerCase();
+        const pLine = (p.concept?.line_id || "").toLowerCase();
+        const pCreature = (p.concept?.creature_id || "").toLowerCase();
+        const matchesSub = (pSub === s || pGrp === s || pLine === s || pCreature === s || p.id.toLowerCase().includes(s));
+        return matchesSub && p.stage === stage;
+      });
+    }
+
+    // 3. Match by subject general
+    if (!targetPkg) {
+      targetPkg = reviewState.packages.find(p => {
+        const pSub = (p.subjectId || p.manifest?.subject_id || "").toLowerCase();
+        const pGrp = (p.groupKey || "").toLowerCase();
+        const pLine = (p.concept?.line_id || "").toLowerCase();
+        const pCreature = (p.concept?.creature_id || "").toLowerCase();
+        return (pSub === s || pGrp === s || pLine === s || pCreature === s || p.id.toLowerCase().includes(s));
+      });
+    }
+
+    if (targetPkg) {
+      reviewState.activePkgId = targetPkg.id;
+      if (stage) reviewState.activeStage = stage;
+      else if (targetPkg.stage) reviewState.activeStage = targetPkg.stage;
+      reviewState.activeImgIdx = 0;
+      renderReviewView();
+      toast(`已跳轉至審查項目：${targetPkg.id}${targetPkg.stage ? " (" + (STAGE_ZH[targetPkg.stage] || targetPkg.stage) + ")" : ""}`);
+    } else {
+      reviewState.filterQuery = pkgIdOrSubject || "";
+      const railSearch = $("#railSearch");
+      if (railSearch) railSearch.value = pkgIdOrSubject || "";
+      renderReviewView();
+      toast(`已切換至審查台（搜尋過濾：${pkgIdOrSubject}）。可點選「📂 掃描本專案審查目錄」載入實體包。`);
+    }
+  }
+
+  function addCurrentToFavorites() {
+    const b = build();
+    if (b.errors.length) {
+      toast("Prompt 存在錯誤，無法加入我的最愛");
+      return;
+    }
+    const t = b.ctx.task;
+    const curStage = b.ctx.opts?.stage || null;
+    let title = "";
+    if (state.preset) {
+      const d = designedItem();
+      title = `${d ? d.code_zh + " · " + d.title_zh : state.preset}`;
+      if (curStage) title += ` (${STAGE_ZH[curStage] || curStage})`;
+    } else if (b.ctx.concept?.name_zh) {
+      title = `${b.ctx.concept.name_zh} (${state.seed})`;
+      if (curStage) title += ` (${STAGE_ZH[curStage] || curStage})`;
+    } else if (state.creature?.name_zh) {
+      title = `${state.creature.name_zh} (${state.seed})`;
+      if (curStage) title += ` (${STAGE_ZH[curStage] || curStage})`;
+    } else if (state.character?.name_zh) {
+      title = `${state.character.name_zh} (${state.seed})`;
+    } else {
+      title = `${t.zh} (${state.seed})`;
+      if (curStage) title += ` (${STAGE_ZH[curStage] || curStage})`;
+    }
+
+    const curPrompt = $("#prompt").value || b.text;
+    const existingIdx = favorites.findIndex(f => 
+      f.task === t.id && f.subjectId === b.ctx.subjectId && f.seed === state.seed && f.stage === curStage && f.prompt === curPrompt
+    );
+
+    if (existingIdx >= 0) {
+      toast("此 Prompt 已在我的最愛清單中！");
+      updateFavButton();
+      return;
+    }
+
+    const favItem = {
+      id: "fav_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+      title,
+      task: t.id,
+      taskZh: t.zh,
+      subjectId: b.ctx.subjectId,
+      stage: curStage,
+      stageZh: curStage ? (STAGE_ZH[curStage] || curStage) : null,
+      seed: state.seed,
+      platform: state.platform,
+      prompt: curPrompt,
+      notes: state.notes || "",
+      createdAt: new Date().toLocaleString(),
+      stateSnapshot: {
+        taskId: state.taskId,
+        seed: state.seed,
+        platform: state.platform,
+        preset: state.preset,
+        opts: JSON.parse(JSON.stringify(state.opts || {})),
+        creature: JSON.parse(JSON.stringify(state.creature || {})),
+        character: JSON.parse(JSON.stringify(state.character || {})),
+        locks: JSON.parse(JSON.stringify(state.locks || {})),
+        notes: state.notes || "",
+        currentRound: state.currentRound || 1
+      }
+    };
+
+    favorites.unshift(favItem);
+    saveFavorites();
+    renderFavorites();
+    updateFavButton();
+    toast("⭐ 已加入我的最愛 Prompt 清單！");
+  }
+
+  function addDesignedToFavorites(lineId, stage = null) {
+    const d = DESIGNED.find(x => x.line_id === lineId);
+    if (!d) return;
+
+    const prevPreset = state.preset, prevTaskId = state.taskId;
+    state.preset = lineId;
+    state.taskId = "creature-concept";
+    const o = state.opts["creature-concept"] || (state.opts["creature-concept"] = {});
+    const prevStage = o.stage;
+    if (stage) o.stage = stage;
+
+    const b = build();
+    const curStage = stage || o.stage || "adult";
+    const stObj = d.concept?.locked?.stages?.find(s => s.stage === curStage);
+    const stageTitle = stObj ? `${stObj.name_zh} (${STAGE_ZH[curStage] || curStage})` : (STAGE_ZH[curStage] || curStage);
+    const title = `${d.code_zh} · ${d.title_zh} — ${stageTitle}`;
+
+    state.preset = prevPreset;
+    state.taskId = prevTaskId;
+    if (prevStage !== undefined) o.stage = prevStage;
+
+    if (!b || b.errors.length) {
+      toast("無法產生已設計項目之 Prompt");
+      return;
+    }
+
+    const curPrompt = b.text;
+    const existing = favorites.find(f => f.subjectId === lineId && f.stage === curStage);
+    if (existing) {
+      toast(`「${title}」已在我的最愛清單中！`);
+      return;
+    }
+
+    const favItem = {
+      id: "fav_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+      title,
+      task: "creature-concept",
+      taskZh: "宙獸概念立繪",
+      subjectId: lineId,
+      stage: curStage,
+      stageZh: STAGE_ZH[curStage] || curStage,
+      seed: state.seed,
+      platform: state.platform,
+      prompt: curPrompt,
+      notes: "",
+      createdAt: new Date().toLocaleString(),
+      stateSnapshot: {
+        taskId: "creature-concept",
+        seed: state.seed,
+        platform: state.platform,
+        preset: lineId,
+        opts: { "creature-concept": { stage: curStage } },
+        creature: JSON.parse(JSON.stringify(d.concept)),
+        character: {},
+        locks: {},
+        notes: "",
+        currentRound: 1
+      }
+    };
+
+    favorites.unshift(favItem);
+    saveFavorites();
+    renderFavorites();
+    updateFavButton();
+    toast(`⭐ 已收藏已設計項目：「${title}」！`);
+  }
+
+  function applyFavorite(fav) {
+    if (!fav) return;
+    state.taskId = fav.task;
+    state.seed = fav.seed || state.seed;
+    state.platform = fav.platform || "chatgpt";
+    if (fav.stateSnapshot) {
+      state.preset = fav.stateSnapshot.preset || null;
+      state.opts = JSON.parse(JSON.stringify(fav.stateSnapshot.opts || {}));
+      state.creature = JSON.parse(JSON.stringify(fav.stateSnapshot.creature || {}));
+      state.character = JSON.parse(JSON.stringify(fav.stateSnapshot.character || {}));
+      state.locks = JSON.parse(JSON.stringify(fav.stateSnapshot.locks || {}));
+      state.notes = fav.stateSnapshot.notes || fav.notes || "";
+      state.currentRound = fav.stateSnapshot.currentRound || 1;
+    } else {
+      state.preset = null;
+      state.notes = fav.notes || "";
+    }
+    renderAll();
+    const promptEl = $("#prompt");
+    if (promptEl) promptEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast("⚡ 已載入收藏的 Prompt 設定：「" + fav.title + "」");
+  }
+
+  function removeFavorite(id) {
+    const idx = favorites.findIndex(f => f.id === id);
+    if (idx >= 0) {
+      const title = favorites[idx].title;
+      favorites.splice(idx, 1);
+      saveFavorites();
+      renderFavorites();
+      updateFavButton();
+      toast("已自我的最愛移除：「" + title + "」");
+    }
+  }
+
+  function updateFavButton() {
+    const btn = $("#btnFavPrompt"); if (!btn) return;
+    const b = lastBuild;
+    if (!b || !b.ctx || b.errors.length) {
+      btn.textContent = "⭐ 收藏此 Prompt";
+      btn.classList.remove("on");
+      return;
+    }
+    const t = b.ctx.task;
+    const curStage = b.ctx.opts?.stage || null;
+    const curPrompt = $("#prompt") ? $("#prompt").value : b.text;
+    const isFav = favorites.some(f => 
+      f.task === t.id && f.subjectId === b.ctx.subjectId && f.seed === state.seed && f.stage === curStage && f.prompt === curPrompt
+    );
+    if (isFav) {
+      btn.textContent = "★ 已在最愛";
+      btn.classList.add("on");
+    } else {
+      btn.textContent = "⭐ 收藏此 Prompt";
+      btn.classList.remove("on");
+    }
+  }
+
+  function renderFavorites() {
+    const box = $("#favList"); if (!box) return;
+    box.replaceChildren();
+
+    const searchInput = $("#favSearch");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+    const filtered = favorites.filter(f => {
+      if (!query) return true;
+      const t = (f.title || "").toLowerCase();
+      const p = (f.prompt || "").toLowerCase();
+      const s = (f.subjectId || "").toLowerCase();
+      const seed = (f.seed || "").toLowerCase();
+      const task = (f.taskZh || f.task || "").toLowerCase();
+      return t.includes(query) || p.includes(query) || s.includes(query) || seed.includes(query) || task.includes(query);
+    });
+
+    const countEl = $("#favCount");
+    if (countEl) countEl.textContent = `(${favorites.length}${query ? "，符合 " + filtered.length : ""})`;
+
+    if (!filtered.length) {
+      const msg = favorites.length ? "沒有符合搜尋條件的收藏項目。" : "目前尚無收藏的 Prompt。可點選上方「⭐ 收藏此 Prompt」將當前設定加入最愛。";
+      box.append(el("div", { class: "muted", style: "padding:16px;text-align:center;border:1px dashed var(--line);border-radius:6px;font-size:12.5px" }, msg));
+      return;
+    }
+
+    filtered.forEach(fav => {
+      const card = el("div", { class: "forge-list-card" });
+      
+      // 1. Header row
+      const titleRow = el("div", { class: "card-title-row" },
+        el("div", { class: "card-title" },
+          el("span", { style: "color:var(--warn);font-size:14px" }, "⭐"),
+          el("span", {}, fav.title)
+        ),
+        el("div", { class: "card-badges" },
+          el("span", { class: "f-badge accent" }, fav.taskZh || fav.task),
+          fav.stageZh ? el("span", { class: "f-badge" }, fav.stageZh) : null,
+          el("span", { class: "f-badge" }, fav.platform === "gemini" ? "Gemini" : "ChatGPT")
+        )
+      );
+
+      // 2. Meta row
+      const metaRow = el("div", { class: "card-meta-row" },
+        el("span", {}, "主體: " + (fav.subjectId || "—")),
+        el("span", {}, "Seed: " + (fav.seed || "—")),
+        el("span", {}, "收藏時間: " + fav.createdAt)
+      );
+
+      // 3. Prompt Preview
+      const promptBox = el("pre", { class: "card-prompt-box" }, fav.prompt);
+      const toggleExpand = el("button", {
+        type: "button", class: "btn mini ghost", style: "font-size:10.5px;padding:1px 6px;margin-left:auto",
+        onclick: (e) => {
+          promptBox.classList.toggle("expanded");
+          e.currentTarget.textContent = promptBox.classList.contains("expanded") ? "收合" : "展開全文";
+        }
+      }, "展開全文");
+
+      // 4. 對應審查欄位 (Review Row)
+      const matches = getReviewMatches(fav.subjectId, fav.stage);
+      const reviewRow = el("div", { class: "card-review-row" });
+      const reviewInfo = el("div", { class: "card-review-info" });
+      
+      if (matches.length > 0) {
+        const topMatch = matches[0];
+        const statusMap = {
+          approved: { zh: "✅ 已核准通過", cls: "ok" },
+          reject: { zh: "❌ 退回拒絕", cls: "danger" },
+          pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
+        };
+        const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
+        reviewInfo.append(
+          el("span", { class: "prompt-k" }, "審查欄位："),
+          el("span", { class: "f-badge " + stInfo.cls }, stInfo.zh),
+          el("code", {}, topMatch.id)
+        );
+        reviewRow.append(
+          reviewInfo,
+          el("button", {
+            class: "btn mini", type: "button",
+            title: `跳轉至審查台檢視此任務成果 (${topMatch.id})`,
+            onclick: () => jumpToReview(topMatch.id, fav.stage)
+          }, "🔍 跳轉審查台")
+        );
+      } else {
+        reviewInfo.append(
+          el("span", { class: "prompt-k" }, "審查欄位："),
+          el("span", { class: "f-badge" }, "審查台暫無對應包"),
+          el("span", { class: "muted" }, `(主體 ${fav.subjectId})`)
+        );
+        reviewRow.append(
+          reviewInfo,
+          el("button", {
+            class: "btn mini ghost", type: "button",
+            title: `前往成果審查台搜尋主體 ${fav.subjectId}`,
+            onclick: () => jumpToReview(fav.subjectId, fav.stage)
+          }, "🔍 轉至審查搜尋")
+        );
+      }
+
+      // 5. Actions row
+      const actionsRow = el("div", { class: "card-actions" },
+        el("button", {
+          class: "btn mini", type: "button",
+          onclick: () => copyText(fav.prompt, `已複製收藏 Prompt：「${fav.title}」`)
+        }, "📋 複製 Prompt"),
+        el("button", {
+          class: "btn mini ghost", type: "button",
+          onclick: () => applyFavorite(fav)
+        }, "⚡ 載入至鍛造"),
+        el("button", {
+          class: "btn mini ghost", type: "button", style: "color:var(--danger)",
+          onclick: () => removeFavorite(fav.id)
+        }, "🗑️ 移除")
+      );
+
+      const promptWrap = el("div", { style: "display:flex;flex-direction:column;gap:3px" },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between" },
+          el("span", { class: "prompt-k" }, "Prompt 預覽："),
+          toggleExpand
+        ),
+        promptBox
+      );
+
+      card.append(titleRow, metaRow, promptWrap, reviewRow, actionsRow);
+      box.append(card);
+    });
+  }
+
+  function renderDesignedList() {
+    const box = $("#designedList"); if (!box) return;
+    box.replaceChildren();
+
+    const searchInput = $("#designedSearch");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+    const filtered = DESIGNED.filter(d => {
+      if (!query) return true;
+      const id = (d.line_id || "").toLowerCase();
+      const code = (d.code_zh || "").toLowerCase();
+      const title = (d.title_zh || "").toLowerCase();
+      const elem = (d.element || "").toLowerCase();
+      const arch = (d.concept?.archetype || "").toLowerCase();
+      const stagesStr = (d.concept?.locked?.stages || []).map(s => s.name_zh + " " + s.name_en + " " + s.creature_id).join(" ").toLowerCase();
+      return id.includes(query) || code.includes(query) || title.includes(query) || elem.includes(query) || arch.includes(query) || stagesStr.includes(query);
+    });
+
+    const countEl = $("#designedCount");
+    if (countEl) countEl.textContent = `(${DESIGNED.length}${query ? "，符合 " + filtered.length : ""})`;
+
+    if (!filtered.length) {
+      box.append(el("div", { class: "muted", style: "padding:16px;text-align:center;border:1px dashed var(--line);border-radius:6px;font-size:12.5px" }, "沒有符合搜尋條件的已設計項目。"));
+      return;
+    }
+
+    filtered.forEach(d => {
+      const isPresetActive = state.preset === d.line_id;
+      const card = el("div", { class: "forge-list-card" + (isPresetActive ? " active" : "") });
+
+      // 1. Line Title Row
+      const titleRow = el("div", { class: "card-title-row" },
+        el("div", { class: "card-title" },
+          el("span", { style: "color:var(--warn)" }, d.code_zh === "日" ? "☀️" : d.code_zh === "月" ? "🌙" : "🌟"),
+          el("span", {}, d.code_zh + " · " + d.title_zh)
+        ),
+        el("div", { class: "card-badges" },
+          el("span", { class: "f-badge accent" }, d.line_id),
+          el("span", { class: "f-badge" }, d.element),
+          isPresetActive ? el("span", { class: "f-badge ok" }, "目前鍛造中") : null
+        )
+      );
+
+      // 2. Line Meta Row
+      const metaRow = el("div", { class: "card-meta-row" },
+        el("span", {}, "原型: " + (d.concept?.archetype || "—")),
+        el("span", {}, "時空: " + (d.concept?.timeline || "—")),
+        el("span", {}, "體型軸: " + (d.concept?.size_profile || "S→M→L→XL")),
+        el("span", {}, "來源: " + d.source)
+      );
+
+      // 3. Line Review Row (整線審查欄位)
+      const lineMatches = getReviewMatches(d.line_id);
+      const reviewRow = el("div", { class: "card-review-row" });
+      const reviewInfo = el("div", { class: "card-review-info" });
+      
+      if (lineMatches.length > 0) {
+        const topMatch = lineMatches[0];
+        const statusMap = {
+          approved: { zh: "✅ 已核准通過", cls: "ok" },
+          reject: { zh: "❌ 退回拒絕", cls: "danger" },
+          pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
+        };
+        const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
+        reviewInfo.append(
+          el("span", { class: "prompt-k" }, "審查欄位："),
+          el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.zh} (共收錄 ${lineMatches.length} 包)`),
+          el("code", {}, topMatch.id)
+        );
+        reviewRow.append(
+          reviewInfo,
+          el("button", {
+            class: "btn mini", type: "button",
+            title: `跳轉至審查台檢視此線成果 (${topMatch.id})`,
+            onclick: () => jumpToReview(topMatch.id)
+          }, "🔍 跳轉審查台")
+        );
+      } else {
+        reviewInfo.append(
+          el("span", { class: "prompt-k" }, "審查欄位："),
+          el("span", { class: "f-badge" }, "審查台尚未載入此線審查包"),
+          el("span", { class: "muted" }, `(${d.line_id})`)
+        );
+        reviewRow.append(
+          reviewInfo,
+          el("button", {
+            class: "btn mini ghost", type: "button",
+            title: `前往成果審查台搜尋此線 ${d.line_id}`,
+            onclick: () => jumpToReview(d.line_id)
+          }, "🔍 轉至審查搜尋")
+        );
+      }
+
+      // 4. Line Actions Row
+      const lineActions = el("div", { class: "card-actions" },
+        el("button", {
+          class: "btn mini" + (isPresetActive && state.taskId === "creature-concept" ? "" : " ghost"),
+          type: "button",
+          onclick: () => useDesigned(d.line_id, "creature-concept")
+        }, "🎨 載入立繪鍛造"),
+        el("button", {
+          class: "btn mini" + (isPresetActive && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
+          type: "button",
+          onclick: () => useDesigned(d.line_id, "creature-model-rig")
+        }, "🧊 載入 3D 鍛造"),
+        el("button", {
+          class: "btn mini ghost", type: "button",
+          title: "將此線成年型態加入我的最愛",
+          onclick: () => addDesignedToFavorites(d.line_id, "adult")
+        }, "⭐ 收藏整線 (成年)"),
+        isPresetActive ? el("button", {
+          class: "btn mini ghost", type: "button",
+          onclick: () => { state.preset = null; renderAll(); }
+        }, "✕ 取消已設計（回隨機）") : null
+      );
+
+      // 5. Four Stages Grid (四階型態卡片)
+      const stages = d.concept?.locked?.stages || [];
+      const stagesGrid = el("div", { class: "designed-stages-grid" });
+
+      stages.forEach(st => {
+        const isCurStage = isPresetActive && state.opts[state.taskId]?.stage === st.stage;
+        const stageCard = el("div", { class: "stage-mini-card" + (isCurStage ? " active" : "") });
+        
+        // Stage Header
+        const stHeader = el("div", { class: "stage-mini-header" },
+          el("b", { style: "color:#fff" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
+          el("span", { class: "f-badge" }, st.size_class || "—")
+        );
+
+        // Stage Meta
+        const stIdRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px" },
+          el("code", {}, st.creature_id),
+          el("span", {}, `${st.height_length || "—"} / ${st.weight || "—"}`)
+        );
+
+        // Stage Look & Move
+        const stDesc = el("div", { class: "muted", style: "font-size:11px;line-height:1.3;max-height:38px;overflow:hidden;text-overflow:ellipsis" }, st.look);
+        const stMove = el("div", { style: "font-size:11px;color:var(--warn)" }, `招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`);
+
+        // Stage 審查跳轉檢查
+        const stMatches = getReviewMatches(d.line_id, st.stage);
+        const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:rgba(0,0,0,0.2);border-radius:4px;font-size:11px;margin-top:2px" });
+        if (stMatches.length > 0) {
+          const m = stMatches[0];
+          stReviewDiv.append(
+            el("span", { style: "color:var(--ok)" }, "✅ 審查包收錄"),
+            el("button", {
+              class: "btn mini", type: "button", style: "height:20px;padding:0 5px;font-size:10px",
+              title: `跳轉審查 ${m.id}`,
+              onclick: () => jumpToReview(m.id, st.stage)
+            }, "🔍 跳轉")
+          );
+        } else {
+          stReviewDiv.append(
+            el("span", { class: "muted" }, "審查：未載入包"),
+            el("button", {
+              class: "btn mini ghost", type: "button", style: "height:20px;padding:0 5px;font-size:10px",
+              title: `至審查台搜尋`,
+              onclick: () => jumpToReview(d.line_id, st.stage)
+            }, "🔍 搜尋")
+          );
+        }
+
+        // Stage buttons
+        const stBtns = el("div", { style: "display:flex;gap:4px;margin-top:4px;flex-wrap:wrap" },
+          el("button", {
+            class: "btn mini" + (isCurStage && state.taskId === "creature-concept" ? "" : " ghost"),
+            type: "button", style: "flex:1;font-size:10.5px;padding:1px 4px",
+            onclick: () => useDesigned(d.line_id, "creature-concept", st.stage)
+          }, "🎨 立繪"),
+          el("button", {
+            class: "btn mini" + (isCurStage && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
+            type: "button", style: "flex:1;font-size:10.5px;padding:1px 4px",
+            onclick: () => useDesigned(d.line_id, "creature-model-rig", st.stage)
+          }, "🧊 3D"),
+          el("button", {
+            class: "btn mini ghost", type: "button", style: "font-size:10.5px;padding:1px 4px",
+            title: `收藏 ${st.name_zh} (${STAGE_ZH[st.stage]}) 的立繪 Prompt`,
+            onclick: () => addDesignedToFavorites(d.line_id, st.stage)
+          }, "⭐ 收藏")
+        );
+
+        stageCard.append(stHeader, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
+        stagesGrid.append(stageCard);
+      });
+
+      card.append(titleRow, metaRow, reviewRow, lineActions, stagesGrid);
+      box.append(card);
+    });
   }
 
   function fieldRow(kind, f) {
@@ -1200,6 +1807,7 @@
       ),
       el("p", { class: "muted" }, "若圖片沒有被打包進 zip：照 manifest.files 的檔名手動存到本專案 ", el("code", {}, "Art/_incoming/" + b.ctx.taskId + "/images/"), " 進行審查。")
     );
+    updateFavButton();
   }
 
   function renderHistory() {
@@ -1219,7 +1827,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory();
+    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedList(); updateFavButton();
     save();
   }
 
@@ -1518,6 +2126,8 @@
       } catch (e) {
         console.error("renderReviewView failed for package " + pkg.id, e);
       }
+      if ($("#favList")) renderFavorites();
+      if ($("#designedList")) renderDesignedList();
       if (pkg.aligned) {
         toast("已載入並自動對齊時間戳格式 (" + pkg.stagedTaskId + ")！已整合打包各格式檔");
       } else {
@@ -3838,6 +4448,8 @@
   function saveReview(pkg, note) {
     reviewState.reviews[pkg.id] = { status: pkg.status, note: note ?? getReviewNote(pkg), time: new Date().toLocaleString() };
     try { localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewState.reviews)); } catch (e) {}
+    if ($("#favList")) renderFavorites();
+    if ($("#designedList")) renderDesignedList();
   }
   function exportReviewReport(pkg) {
     const report = {
@@ -3919,6 +4531,7 @@
     try {
       const revs = JSON.parse(localStorage.getItem(REVIEW_KEY) || "{}");
       reviewState.reviews = revs;
+      loadFavorites();
       const d = JSON.parse(localStorage.getItem(LS_KEY) || "null");
       if (!d) return false;
       const sameMajor = (d.catalog || "").split(".")[0] === C.version.split(".")[0];
@@ -3947,7 +4560,27 @@
     // 視圖切換事件
     $("#viewBtnForge").addEventListener("click", () => setViewMode("forge"));
     $("#viewBtnReview").addEventListener("click", () => setViewMode("review"));
-    $("#toReview").addEventListener("click", () => setViewMode("review"));
+    $("#toReview").addEventListener("click", () => {
+      const b = lastBuild;
+      const curSubject = b?.ctx?.subjectId || subjectId(task().subject);
+      const curStage = b?.ctx?.opts?.stage || null;
+      jumpToReview(curSubject, curStage);
+    });
+
+    // 我的最愛與已設計清單事件綁定
+    $("#btnFavPrompt")?.addEventListener("click", () => addCurrentToFavorites());
+    $("#btnClearFavs")?.addEventListener("click", () => {
+      if (!favorites.length) return;
+      if (confirm("確定要清空所有收藏的 Prompt 嗎？此動作無法復原。")) {
+        favorites = [];
+        saveFavorites();
+        renderFavorites();
+        updateFavButton();
+        toast("已清空我的最愛 Prompt 清單");
+      }
+    });
+    $("#favSearch")?.addEventListener("input", () => renderFavorites());
+    $("#designedSearch")?.addEventListener("input", () => renderDesignedList());
 
     // 平台切換按鈕事件
     $("#platChatgpt").addEventListener("click", () => { state.platform = "chatgpt"; renderAll(); });

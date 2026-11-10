@@ -264,6 +264,143 @@
   .anim-verify-label { font-size: 11px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; color: var(--muted); }
   .anim-verify-label input[type=checkbox] { cursor: pointer; }
   .anim-verify-label.checked { color: var(--ok); font-weight: 600; }
+
+  /* ---- 我的最愛 & 已設計清單專用樣式 ---- */
+  .forge-list-card {
+    background: #171b24;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: .15s;
+  }
+  .forge-list-card:hover {
+    border-color: #3b465a;
+    background: #191e28;
+  }
+  .forge-list-card.active {
+    border-color: var(--accent);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .card-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card-title {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-badges {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .f-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #232b38;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: Consolas, monospace;
+  }
+  .f-badge.ok { background: #182b20; color: var(--ok); border-color: #294833; }
+  .f-badge.warn { background: #2f2716; color: var(--warn); border-color: #4e4020; }
+  .f-badge.accent { background: #1b283d; color: var(--accent); border-color: #2a4165; }
+  .f-badge.danger { background: #331919; color: var(--danger); border-color: #552727; }
+  .card-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-family: Consolas, monospace;
+  }
+  .card-review-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 10px;
+    background: rgba(0,0,0,.25);
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .card-review-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .card-prompt-box {
+    width: 100%;
+    max-height: 80px;
+    font: 11px/1.4 Consolas, "Noto Sans Mono CJK TC", monospace;
+    background: var(--code);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 6px 8px;
+    color: var(--muted);
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    user-select: text;
+  }
+  .card-prompt-box.expanded {
+    max-height: 260px;
+    color: var(--ink);
+  }
+  .designed-stages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .stage-mini-card {
+    background: #13161e;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 11.5px;
+    transition: .15s;
+  }
+  .stage-mini-card:hover {
+    border-color: #3b465a;
+  }
+  .stage-mini-card.active {
+    border-color: var(--accent);
+    background: #182230;
+  }
+  .stage-mini-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
 </style>
 </head>
 <body>
@@ -291,7 +428,10 @@
     <section>
       <h2>任務清單</h2>
       <div id="tasks"></div>
-      <h2 style="margin-top:14px">已設計項目</h2>
+      <div class="subhead" style="margin-top:14px;margin-bottom:4px">
+        <h2 style="margin:0">已設計項目</h2>
+        <a href="#designedListSection" style="font-size:11px;color:var(--accent);text-decoration:none">完整清單 ↓</a>
+      </div>
       <div id="designed"></div>
       <details style="margin-top:12px">
         <summary class="muted" style="cursor:pointer">專案路徑設定</summary>
@@ -335,6 +475,7 @@
             <button class="btn mini ghost" id="btnCopyR3" type="button" title="複製第 3 輪 全身動態主立繪 Prompt">📋 複製第 3 輪 (主立繪)</button>
           </div>
           <button class="btn" id="copy" type="button">📋 複製目前顯示</button>
+          <button class="btn ghost" id="btnFavPrompt" type="button" title="將目前 Prompt 與設定加入我的最愛清單">⭐ 收藏此 Prompt</button>
           <button class="btn ghost" id="open" type="button">↗ 開啟平台</button>
           <button class="btn ghost" id="download" type="button">⬇ prompt.md</button>
           <button class="btn ghost" id="export" type="button">⬇ 概念 JSON</button>
@@ -343,6 +484,31 @@
           <span class="muted" id="chars"></span>
         </div>
         <textarea id="prompt" spellcheck="false" aria-label="產生的 prompt"></textarea>
+      </section>
+
+      <!-- 我的最愛 Prompt 清單區塊 -->
+      <section id="favoritesSection">
+        <div class="subhead">
+          <h2 style="margin:0">⭐ 我的最愛 Prompt 清單 <span class="muted" id="favCount">(0)</span></h2>
+          <div style="display:inline-flex;gap:6px;align-items:center">
+            <button class="btn mini ghost" id="btnClearFavs" type="button" title="清空所有收藏">清空全部</button>
+          </div>
+        </div>
+        <div style="margin-bottom:8px">
+          <input type="text" id="favSearch" placeholder="🔍 搜尋收藏標題、Prompt 關鍵字、主體 ID 或種子..." style="width:100%">
+        </div>
+        <div id="favList"></div>
+      </section>
+
+      <!-- 已設計項目清單區塊 -->
+      <section id="designedListSection">
+        <div class="subhead">
+          <h2 style="margin:0">📋 已設計項目清單 <span class="muted" id="designedCount">(3)</span></h2>
+        </div>
+        <div style="margin-bottom:8px">
+          <input type="text" id="designedSearch" placeholder="🔍 搜尋已設計宙獸名稱、屬性或 line_id..." style="width:100%">
+        </div>
+        <div id="designedList"></div>
       </section>
       <section>
         <h2>交付與放置</h2>
