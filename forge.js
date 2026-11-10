@@ -430,6 +430,7 @@
         outfit_palette: dc.outfit_palette || [],
         hair_palette: dc.hair_palette || [],
         eye_palette: dc.eye_palette || [],
+        silhouette_keywords: dc.silhouette_keywords || [],
         personality: dc.personality || [],
         style: dc.style || "",
         interests: dc.interests || [],
@@ -438,7 +439,10 @@
         vessel: vz,
         vessel_key: dc.vessel,
         vessel_zh: vz,
-        biography: dc.biography || ""
+        biography: dc.biography || "",
+        backstory_zh: dc.backstory_zh || "",
+        sensitivity: dc.sensitivity || "",
+        sensitivity_note: dc.sensitivity_note || ""
       });
       return res;
     }
@@ -677,8 +681,11 @@
         ...(c.gender === "女" && c.cup_size && c.cup_size !== "未知" ? { cup_size: c.cup_size } : {}),
         ethnicity: c.ethnicity, region: c.region, timeline: c.timeline,
         outfit_palette: c.outfit_palette, hair_palette: c.hair_palette, eye_palette: c.eye_palette,
+        ...(c.silhouette_keywords && c.silhouette_keywords.length ? { silhouette_keywords: c.silhouette_keywords } : {}),
         personality: c.personality, style: c.style, vessel: c.vessel?.zh || c.vessel,
-        biography: c.biography || "角色生平傳記。"
+        biography: c.biography || "角色生平傳記。",
+        ...(c.backstory_zh ? { backstory_zh: c.backstory_zh } : {}),
+        ...(c.sensitivity ? { sensitivity: c.sensitivity, sensitivity_note: c.sensitivity_note || "" } : {})
       };
     } else {
       conceptObj = ctx.concept || {};
@@ -798,6 +805,7 @@
 
   // ---- DOM 輔助 ----
   const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
   function el(tag, attrs, ...kids) {
     const e = document.createElement(tag);
     for (const k in attrs || {}) {
@@ -842,9 +850,11 @@
     const o = state.opts[taskId] || (state.opts[taskId] = {});
     if (stage) o.stage = stage;
     if (taskId === "creature-model-rig" || taskId === "model-rig") { o.scope = "single"; o.source_pack = ""; }
+    setViewMode("forge");
     renderAll();
     const promptEl = $("#prompt");
     if (promptEl) promptEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast(`已載入宙獸演化線「${lineId}」至 Prompt 鍛造台`);
   }
 
   function useDesignedCharacter(charId, taskId) {
@@ -857,43 +867,581 @@
       o.scope = "single";
       o.source_pack = "";
     }
+    setViewMode("forge");
     renderAll();
     const promptEl = $("#prompt");
     if (promptEl) promptEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast(`已載入角色「${charId}」至 Prompt 鍛造台`);
   }
 
   function renderDesigned() {
     const box = $("#designed"); if (!box) return;
     box.replaceChildren();
-    if (!DESIGNED.length && !DESIGNED_CHARACTERS.length) { box.append(el("p", { class: "muted" }, "沒有已設計項目（designed.js 未載入）。")); return; }
-    
-    if (DESIGNED.length) {
-      box.append(el("div", { style: "font-weight:600;font-size:12px;margin:2px 0 4px;color:var(--text)" }, `🐾 已設計宙獸 (${DESIGNED.length} 線)`));
-      DESIGNED.forEach(d => {
-        const on = state.preset === d.line_id;
-        box.append(el("div", { class: "designed" + (on ? " on" : "") },
-          el("span", { class: "tname" }, `${ELEM_ICONS[d.element] || "🐾"} ${d.code_zh} · ${d.title_zh}`),
-          el("span", { class: "tmeta" }, d.line_id + " · " + d.element),
-          el("div", { class: "row" },
-            el("button", { type: "button", class: "btn mini" + (on && state.taskId === "creature-concept" ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-concept") }, "🎨 立繪 prompt"),
-            el("button", { type: "button", class: "btn mini" + (on && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-model-rig") }, "🧊 img-to-3D prompt"))));
+
+    if (state.preset) {
+      const d = DESIGNED.find(x => x.line_id === state.preset);
+      const name = d ? `${ELEM_ICONS[d.element] || "🐾"} ${d.code_zh} · ${d.title_zh}` : state.preset;
+      const banner = el("div", { class: "designed-active-box" },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:4px" },
+          el("span", { class: "f-badge ok" }, "已載入設計線"),
+          el("button", {
+            type: "button", class: "btn mini ghost", style: "padding:1px 5px;font-size:11px",
+            onclick: () => { state.preset = null; renderAll(); toast("已取消設計線，回復隨機概念"); }
+          }, "✕ 取消")
+        ),
+        el("div", { style: "font-weight:600;font-size:12px;color:#fff" }, name),
+        el("div", { class: "muted", style: "font-size:11px;margin-top:2px" }, `${state.preset} · ${d?.element || ""}`),
+        el("button", {
+          type: "button", class: "btn mini ghost", style: "width:100%;margin-top:6px;font-size:11px",
+          onclick: () => {
+            selectDesignedItem(state.preset, "creature");
+            setViewMode("designed");
+          }
+        }, "📋 前往已設計項目台檢閱 →")
+      );
+      box.append(banner);
+      return;
+    }
+
+    if (state.presetChar) {
+      const c = DESIGNED_CHARACTERS.find(x => x.id === state.presetChar);
+      const name = c ? `👤 ${c.name_zh} (${c.name_en})` : state.presetChar;
+      const banner = el("div", { class: "designed-active-box" },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:4px" },
+          el("span", { class: "f-badge ok" }, "已載入設計角色"),
+          el("button", {
+            type: "button", class: "btn mini ghost", style: "padding:1px 5px;font-size:11px",
+            onclick: () => { state.presetChar = null; renderAll(); toast("已取消設計角色，回復隨機概念"); }
+          }, "✕ 取消")
+        ),
+        el("div", { style: "font-weight:600;font-size:12px;color:#fff" }, name),
+        el("div", { class: "muted", style: "font-size:11px;margin-top:2px" }, `${state.presetChar} · ${c?.role || ""}`),
+        el("button", {
+          type: "button", class: "btn mini ghost", style: "width:100%;margin-top:6px;font-size:11px",
+          onclick: () => {
+            selectDesignedItem(state.presetChar, "character");
+            setViewMode("designed");
+          }
+        }, "📋 前往已設計項目台檢閱 →")
+      );
+      box.append(banner);
+      return;
+    }
+
+    // 當前無 preset 時，顯示精簡快速導覽卡片
+    const gotoCard = el("div", { class: "designed-nav-card", onclick: () => setViewMode("designed") },
+      el("div", { style: "display:flex;align-items:center;justify-content:space-between" },
+        el("span", { style: "font-weight:600;font-size:12px;color:var(--text)" }, "📋 已設計項目庫"),
+        el("span", { class: "f-badge accent" }, `${DESIGNED.length} 線 · ${DESIGNED_CHARACTERS.length} 位`)
+      ),
+      el("div", { class: "muted", style: "font-size:11px;margin-top:4px" }, "點選前往已設計項目審查台，檢閱各階設定、關聯審查包並一鍵鍛造。"),
+      el("div", { style: "display:flex;justify-content:flex-end;margin-top:6px" },
+        el("span", { style: "color:var(--accent);font-size:11.5px;font-weight:600" }, "前往已設計頁籤 →")
+      )
+    );
+    box.append(gotoCard);
+  }
+
+  // ==================== 已設計項目台 (二欄審查檢閱工作台) ====================
+  const designedState = {
+    cat: "all", // "all" | "creature" | "character"
+    selectedId: null, // line_id or char_id
+    selectedType: "creature", // "creature" | "character"
+    mode: "detail" // "detail" | "cards"
+  };
+
+  function selectDesignedItem(id, type) {
+    designedState.selectedId = id;
+    designedState.selectedType = type;
+    renderDesignedRail();
+    renderDesignedDetail();
+  }
+
+  function getDesignedFilteredItems() {
+    const searchInput = $("#designedSearch");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+    let lines = [];
+    if (designedState.cat === "all" || designedState.cat === "creature") {
+      lines = DESIGNED.filter(d => {
+        if (!query) return true;
+        const id = (d.line_id || "").toLowerCase();
+        const code = (d.code_zh || "").toLowerCase();
+        const title = (d.title_zh || "").toLowerCase();
+        const elem = (d.element || "").toLowerCase();
+        const arch = (d.concept?.archetype || "").toLowerCase();
+        const stagesStr = (d.concept?.locked?.stages || []).map(s => s.name_zh + " " + s.name_en + " " + s.creature_id).join(" ").toLowerCase();
+        return id.includes(query) || code.includes(query) || title.includes(query) || elem.includes(query) || arch.includes(query) || stagesStr.includes(query);
       });
     }
 
-    if (DESIGNED_CHARACTERS.length) {
-      box.append(el("div", { style: "font-weight:600;font-size:12px;margin:8px 0 4px;color:var(--text)" }, `👤 已設計角色 (${DESIGNED_CHARACTERS.length} 位)`));
-      DESIGNED_CHARACTERS.forEach(c => {
-        const on = state.presetChar === c.id;
-        box.append(el("div", { class: "designed" + (on ? " on" : "") },
-          el("span", { class: "tname" }, `👤 ${c.name_zh} (${c.name_en})`),
-          el("span", { class: "tmeta" }, c.id + " · " + c.role),
-          el("div", { class: "row" },
-            el("button", { type: "button", class: "btn mini" + (on && state.taskId === "character-concept" ? "" : " ghost"), onclick: () => useDesignedCharacter(c.id, "character-concept") }, "🎨 立繪 prompt"),
-            el("button", { type: "button", class: "btn mini" + (on && state.taskId === "character-model-rig" ? "" : " ghost"), onclick: () => useDesignedCharacter(c.id, "character-model-rig") }, "🧊 3D prompt"))));
+    let chars = [];
+    if (designedState.cat === "all" || designedState.cat === "character") {
+      chars = DESIGNED_CHARACTERS.filter(c => {
+        if (!query) return true;
+        const id = (c.id || "").toLowerCase();
+        const nameZh = (c.name_zh || "").toLowerCase();
+        const nameEn = (c.name_en || "").toLowerCase();
+        const role = (c.role || "").toLowerCase();
+        const region = (c.region || "").toLowerCase();
+        const ethnicity = (c.ethnicity || "").toLowerCase();
+        const vessel = (c.vessel || "").toLowerCase();
+        const bio = (c.biography || "").toLowerCase();
+        return id.includes(query) || nameZh.includes(query) || nameEn.includes(query) || role.includes(query) || region.includes(query) || ethnicity.includes(query) || vessel.includes(query) || bio.includes(query);
       });
     }
 
-    if (state.preset || state.presetChar) box.append(el("button", { type: "button", class: "btn mini ghost", onclick: () => { state.preset = null; state.presetChar = null; renderAll(); } }, "✕ 取消已設計項目（回到隨機概念）"));
+    return { lines, chars };
+  }
+
+  function renderDesignedRail() {
+    const listEl = $("#designedRailList");
+    if (!listEl) return;
+    listEl.replaceChildren();
+
+    const { lines, chars } = getDesignedFilteredItems();
+    const countEl = $("#designedRailCount");
+    if (countEl) {
+      countEl.textContent = `共 ${DESIGNED.length} 宙獸線 · ${DESIGNED_CHARACTERS.length} 角色 (符合 ${lines.length + chars.length})`;
+    }
+
+    // 確保有預設選取項目
+    if (designedState.selectedType === "character") {
+      if (!chars.some(c => c.id === designedState.selectedId)) {
+        if (chars.length > 0) {
+          designedState.selectedId = chars[0].id;
+        } else if (lines.length > 0) {
+          designedState.selectedId = lines[0].line_id;
+          designedState.selectedType = "creature";
+        } else {
+          designedState.selectedId = null;
+        }
+      }
+    } else {
+      if (!lines.some(l => l.line_id === designedState.selectedId)) {
+        if (lines.length > 0) {
+          designedState.selectedId = lines[0].line_id;
+          designedState.selectedType = "creature";
+        } else if (chars.length > 0) {
+          designedState.selectedId = chars[0].id;
+          designedState.selectedType = "character";
+        } else {
+          designedState.selectedId = null;
+        }
+      }
+    }
+
+    if (!lines.length && !chars.length) {
+      listEl.append(el("div", { class: "muted", style: "padding:16px;text-align:center;font-size:12px" }, "無符合搜尋條件的項目"));
+      return;
+    }
+
+    if (lines.length > 0) {
+      listEl.append(el("div", { class: "muted", style: "font-size:11px;font-weight:600;padding:4px 8px;margin-top:2px" }, `🐾 宙獸演化線 (${lines.length})`));
+      lines.forEach(d => {
+        const isSelected = designedState.selectedType === "creature" && designedState.selectedId === d.line_id;
+        const isForging = state.preset === d.line_id;
+        const matches = getReviewMatches(d.line_id);
+
+        const row = el("button", {
+          class: "rl" + (isSelected ? " on" : ""),
+          type: "button",
+          onclick: () => selectDesignedItem(d.line_id, "creature")
+        },
+          el("div", { class: "rl-thumb", style: "background:#1e2532" }, ELEM_ICONS[d.element] || "🐾"),
+          el("div", { class: "rl-txt" },
+            el("div", { class: "rl-id" }, `${d.code_zh} · ${d.title_zh}`),
+            el("div", { class: "rl-sub" }, `${d.line_id} · ${d.element}`),
+            el("div", { class: "rl-badges" },
+              matches.length > 0
+                ? el("span", { class: "rl-stat ok" }, `✅ 審查 (${matches.length})`)
+                : el("span", { class: "rl-stat pending" }, "⏳ 待載審查"),
+              isForging ? el("span", { class: "rl-stat ok", style: "border:1px solid var(--ok)" }, "⚡ 鍛造中") : null
+            )
+          )
+        );
+        listEl.append(row);
+      });
+    }
+
+    if (chars.length > 0) {
+      listEl.append(el("div", { class: "muted", style: "font-size:11px;font-weight:600;padding:8px 8px 4px" }, `👤 角色 (${chars.length})`));
+      chars.forEach(c => {
+        const isSelected = designedState.selectedType === "character" && designedState.selectedId === c.id;
+        const isForging = state.presetChar === c.id;
+        const matches = getReviewMatches(c.id);
+
+        const row = el("button", {
+          class: "rl" + (isSelected ? " on" : ""),
+          type: "button",
+          onclick: () => selectDesignedItem(c.id, "character")
+        },
+          el("div", { class: "rl-thumb", style: "background:#262035" }, "👤"),
+          el("div", { class: "rl-txt" },
+            el("div", { class: "rl-id" }, `${c.name_zh} · ${c.name_en}`),
+            el("div", { class: "rl-sub" }, `${c.id} · ${c.role}`),
+            el("div", { class: "rl-badges" },
+              matches.length > 0
+                ? el("span", { class: "rl-stat ok" }, `✅ 審查 (${matches.length})`)
+                : el("span", { class: "rl-stat pending" }, "⏳ 待載審查"),
+              isForging ? el("span", { class: "rl-stat ok", style: "border:1px solid var(--ok)" }, "⚡ 鍛造中") : null
+            )
+          )
+        );
+        listEl.append(row);
+      });
+    }
+  }
+
+  function renderDesignedDetail() {
+    const headerEl = $("#designedStageHeader");
+    const bodyEl = $("#designedDetailView");
+    if (!headerEl || !bodyEl) return;
+
+    headerEl.replaceChildren();
+    bodyEl.replaceChildren();
+
+    if (!designedState.selectedId) {
+      bodyEl.append(el("div", { class: "muted", style: "padding:32px;text-align:center;font-size:13px" }, "請從左側名冊欄選取已設計項目進行審查檢驗。"));
+      return;
+    }
+
+    if (designedState.selectedType === "character") {
+      const c = DESIGNED_CHARACTERS.find(x => x.id === designedState.selectedId);
+      if (!c) return;
+
+      const isForging = state.presetChar === c.id;
+
+      // Header row
+      headerEl.append(
+        el("span", { style: "font-size:18px" }, "👤"),
+        el("b", { style: "font-size:14px;color:#fff" }, `${c.name_zh} · ${c.name_en}`),
+        el("span", { class: "f-badge accent" }, c.id),
+        el("span", { class: "f-badge" }, c.role),
+        el("span", { class: "f-badge" }, `${c.gender} · ${c.age_band} (${c.age}歲)`),
+        c.sensitivity === "review"
+          ? el("span", { class: "f-badge warn", title: c.sensitivity_note || "文化顧問審核" }, "⚠️ 文化複審 (review)")
+          : el("span", { class: "f-badge ok" }, "✅ 文化審查 (ok)"),
+        isForging ? el("span", { class: "f-badge ok" }, "⚡ 目前鍛造中") : null
+      );
+
+      // Top Toolbar Card
+      const toolCard = el("div", { class: "designed-detail-card", style: "margin-bottom:12px" },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px" },
+          el("div", { style: "display:flex;gap:6px;flex-wrap:wrap" },
+            el("button", {
+              class: "btn mini" + (isForging && state.taskId === "character-concept" ? "" : " ghost"),
+              type: "button",
+              onclick: () => useDesignedCharacter(c.id, "character-concept")
+            }, "🎨 載入角色立繪鍛造"),
+            el("button", {
+              class: "btn mini" + (isForging && state.taskId === "character-model-rig" ? "" : " ghost"),
+              type: "button",
+              onclick: () => useDesignedCharacter(c.id, "character-model-rig")
+            }, "🧊 載入角色 3D 鍛造"),
+            el("button", {
+              class: "btn mini ghost", type: "button",
+              onclick: () => addDesignedCharToFavorites(c.id)
+            }, "⭐ 收藏立繪 Prompt"),
+            el("button", {
+              class: "btn mini ghost", type: "button",
+              onclick: () => jumpToReview(c.id)
+            }, "🔍 轉至成果審查台"),
+            el("button", {
+              class: "btn mini ghost", type: "button",
+              onclick: () => download(`${c.id}.json`, JSON.stringify(c, null, 2), "application/json")
+            }, "⬇ 匯出 JSON")
+          ),
+          isForging ? el("button", {
+            class: "btn mini ghost", type: "button",
+            onclick: () => { state.presetChar = null; renderAll(); renderDesignedRail(); renderDesignedDetail(); toast("已取消設計角色"); }
+          }, "✕ 取消設計（回隨機）") : null
+        )
+      );
+      bodyEl.append(toolCard);
+
+      // Section 1: Specs
+      const hexSwatches = el("div", { style: "display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px" });
+      (c.palette_hex || []).forEach(hex => {
+        hexSwatches.append(
+          el("span", {
+            style: `display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.06);font-size:11px;font-family:monospace;border:1px solid rgba(255,255,255,0.1)`
+          },
+            el("span", { style: `display:inline-block;width:10px;height:10px;border-radius:2px;background:${hex};border:1px solid #222` }),
+            hex
+          )
+        );
+      });
+
+      const silTags = el("div", { style: "display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px" });
+      (c.silhouette_keywords || []).forEach(k => {
+        silTags.append(el("span", { class: "f-badge", style: "background:rgba(58,173,200,0.15);border-color:rgba(58,173,200,0.3);color:#a9d9df" }, `✦ ${k}`));
+      });
+
+      const specCard = el("div", { class: "designed-detail-card" },
+        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px" },
+          el("span", {}, "👤 體態與規格屬性")
+        ),
+        el("div", { class: "designed-detail-grid" },
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "身高 / 體重"), el("div", { class: "v" }, `${c.height_cm} cm / ${c.weight_kg} kg`)),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "體脂 / 罩杯"), el("div", { class: "v" }, `${c.body_fat} ${c.cup_size ? "/ " + c.cup_size : ""}`)),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "時空背景"), el("div", { class: "v" }, c.timeline || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "所屬地區 / 族裔"), el("div", { class: "v" }, `${c.region} (${c.ethnicity})`)),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "專屬器物 (Vessel)"), el("div", { class: "v" }, zhOf(C.VESSELS, c.vessel) || c.vessel || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "服裝風格"), el("div", { class: "v" }, c.style || "—"))
+        ),
+        el("div", { class: "designed-detail-grid", style: "margin-top:8px" },
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "體型特徵"), el("div", { class: "v" }, c.body_type || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "個性特質"), el("div", { class: "v" }, (c.personality || []).join("、") || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "興趣 / 喜好"), el("div", { class: "v" }, `${(c.interests || []).join("、")} · 偏好 ${(c.likes || []).join("、")}`)),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "髮色 / 瞳色"), el("div", { class: "v" }, `髮：${(c.hair_palette || []).join("、")} / 瞳：${(c.eye_palette || []).join("、")}`))
+        ),
+        (c.silhouette_keywords && c.silhouette_keywords.length) ? el("div", { style: "margin-top:10px;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;" },
+          el("div", { class: "k", style: "color:var(--muted);font-size:11px;margin-bottom:4px" }, "3 秒剪影識別特徵 (Silhouette Keywords)"),
+          silTags
+        ) : null,
+        (c.palette_hex && c.palette_hex.length) ? el("div", { style: "margin-top:8px;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;" },
+          el("div", { class: "k", style: "color:var(--muted);font-size:11px;margin-bottom:4px" }, `標準色盤 (服飾配色：${(c.outfit_palette || []).join("、")})`),
+          hexSwatches
+        ) : null
+      );
+      bodyEl.append(specCard);
+
+      // Section 2: Bio & Backstory
+      const bioCard = el("div", { class: "designed-detail-card" },
+        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text)" }, "📖 角色背景與人設傳記"),
+        c.backstory_zh ? el("div", { style: "font-size:12px;line-height:1.5;color:var(--accent);background:rgba(58,173,200,0.08);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:8px 10px;margin-bottom:8px" },
+          el("b", { style: "display:block;margin-bottom:2px" }, "人設提要"),
+          c.backstory_zh
+        ) : null,
+        el("div", { style: "font-size:12.5px;line-height:1.6;color:var(--text);background:rgba(0,0,0,0.25);border-radius:6px;padding:12px;" },
+          c.biography || "尚無背景傳記資料。"
+        ),
+        c.sensitivity_note ? el("div", { style: "font-size:11.5px;line-height:1.5;color:var(--warn);background:rgba(217,182,109,0.08);border:1px solid rgba(217,182,109,0.2);border-radius:6px;padding:8px 10px;margin-top:8px" },
+          el("b", {}, "文化審查備忘 (Cultural Sensitivity)："),
+          c.sensitivity_note
+        ) : null
+      );
+      bodyEl.append(bioCard);
+
+      // Section 3: Linked Review Packages
+      const matches = getReviewMatches(c.id);
+      const revCard = el("div", { class: "designed-detail-card" },
+        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px" },
+          el("span", {}, "📦 關聯成果審查包"),
+          el("span", { class: "f-badge " + (matches.length > 0 ? "ok" : "") }, `${matches.length} 個包`)
+        )
+      );
+      if (matches.length > 0) {
+        matches.forEach(pkg => {
+          const statusMap = {
+            approved: { zh: "✅ 已核准", cls: "ok" },
+            reject: { zh: "❌ 退回", cls: "danger" },
+            pending: { zh: "🟨 待審", cls: "warn" }
+          };
+          const st = statusMap[pkg.status] || { zh: "📦 已收錄", cls: "ok" };
+          const pRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;margin-bottom:6px" },
+            el("div", { style: "display:flex;align-items:center;gap:8px" },
+              el("code", { style: "font-size:12px;color:var(--accent)" }, pkg.id),
+              el("span", { class: "f-badge " + st.cls }, st.zh),
+              el("span", { class: "muted", style: "font-size:11px" }, pkg.type || "character")
+            ),
+            el("button", {
+              class: "btn mini", type: "button",
+              onclick: () => jumpToReview(pkg.id)
+            }, "🔍 跳轉審查台檢驗")
+          );
+          revCard.append(pRow);
+        });
+      } else {
+        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此角色的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或「⚡ 一鍵解壓 Zip」。"));
+      }
+      bodyEl.append(revCard);
+
+    } else {
+      // Creature Line
+      const d = DESIGNED.find(x => x.line_id === designedState.selectedId);
+      if (!d) return;
+
+      const isForging = state.preset === d.line_id;
+
+      // Header row
+      headerEl.append(
+        el("span", { style: "font-size:18px" }, ELEM_ICONS[d.element] || "🐾"),
+        el("b", { style: "font-size:14px;color:#fff" }, `${d.code_zh} · ${d.title_zh}`),
+        el("span", { class: "f-badge accent" }, d.line_id),
+        el("span", { class: "f-badge" }, d.element),
+        isForging ? el("span", { class: "f-badge ok" }, "⚡ 目前鍛造中") : null
+      );
+
+      // Top Toolbar Card
+      const toolCard = el("div", { class: "designed-detail-card", style: "margin-bottom:12px" },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px" },
+          el("div", { style: "display:flex;gap:6px;flex-wrap:wrap" },
+            el("button", {
+              class: "btn mini" + (isForging && state.taskId === "creature-concept" ? "" : " ghost"),
+              type: "button",
+              onclick: () => useDesigned(d.line_id, "creature-concept")
+            }, "🎨 載入全線立繪鍛造"),
+            el("button", {
+              class: "btn mini" + (isForging && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
+              type: "button",
+              onclick: () => useDesigned(d.line_id, "creature-model-rig")
+            }, "🧊 載入全線 3D 鍛造"),
+            el("button", {
+              class: "btn mini ghost", type: "button",
+              onclick: () => addDesignedToFavorites(d.line_id, "adult")
+            }, "⭐ 收藏整線 (成年)"),
+            el("button", {
+              class: "btn mini ghost", type: "button",
+              onclick: () => jumpToReview(d.line_id)
+            }, "🔍 轉至成果審查台"),
+            el("button", {
+              class: "btn mini ghost", type: "button",
+              onclick: () => download(`${d.line_id}.json`, JSON.stringify(d, null, 2), "application/json")
+            }, "⬇ 匯出 JSON")
+          ),
+          isForging ? el("button", {
+            class: "btn mini ghost", type: "button",
+            onclick: () => { state.preset = null; renderAll(); renderDesignedRail(); renderDesignedDetail(); toast("已取消設計線（回隨機）"); }
+          }, "✕ 取消設計（回隨機）") : null
+        )
+      );
+      bodyEl.append(toolCard);
+
+      // Section 1: Concept summary
+      const specCard = el("div", { class: "designed-detail-card" },
+        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text)" }, "🧬 演化線核心設定與世界觀"),
+        el("div", { class: "designed-detail-grid" },
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "原型生物 (Archetype)"), el("div", { class: "v" }, d.concept?.archetype || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "時空背景 (Timeline)"), el("div", { class: "v" }, d.concept?.timeline || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "體型軸 (Size Profile)"), el("div", { class: "v" }, d.concept?.size_profile || "S→M→L→XL")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "資料出處 (Source)"), el("div", { class: "v" }, d.source || "—"))
+        ),
+        el("div", { class: "designed-detail-grid", style: "margin-top:8px" },
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "元素屬性"), el("div", { class: "v" }, (d.concept?.elements || []).join("、") || d.element)),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "光環配色"), el("div", { class: "v" }, (d.concept?.element_palettes || []).join("；") || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "基底特徵"), el("div", { class: "v" }, (d.concept?.bases || []).join("；") || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "親本來源"), el("div", { class: "v" }, (d.concept?.base_parents || []).join("；") || "—"))
+        )
+      );
+      bodyEl.append(specCard);
+
+      // Section 2: Four Stages
+      const stages = d.concept?.locked?.stages || [];
+      const stageCardSection = el("div", { class: "designed-detail-card" },
+        el("h3", { style: "margin:0 0 10px;font-size:13px;color:var(--text);display:flex;align-items:center;justify-content:space-between" },
+          el("span", {}, `🐾 四階型態演化檢驗 (${stages.length} 階)`),
+          el("span", { class: "muted", style: "font-size:11px" }, "點選各階按鈕可單獨載入該階立繪或 3D 鍛造")
+        )
+      );
+
+      const stagesGrid = el("div", { class: "designed-stages-grid", style: "grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));" });
+
+      stages.forEach(st => {
+        const isCurStage = isForging && state.opts[state.taskId]?.stage === st.stage;
+        const stMatches = getReviewMatches(d.line_id, st.stage);
+
+        const stageCard = el("div", { class: "stage-mini-card" + (isCurStage ? " active" : "") });
+
+        const stHeader = el("div", { class: "stage-mini-header" },
+          el("b", { style: "color:#fff;font-size:13px" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
+          el("span", { class: "f-badge" }, st.size_class || "—")
+        );
+
+        const stIdRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;margin:2px 0 4px" },
+          el("code", { style: "color:var(--accent)" }, st.creature_id),
+          el("span", {}, `${st.height_length || "—"} / ${st.weight || "—"}`)
+        );
+
+        const stDesc = el("div", { class: "muted", style: "font-size:11.5px;line-height:1.4;margin-bottom:4px" }, st.look);
+        const stMove = el("div", { style: "font-size:11.5px;color:var(--warn);margin-bottom:6px" }, `專屬招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`);
+
+        const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.25);border-radius:4px;font-size:11px;margin-bottom:6px" });
+        if (stMatches.length > 0) {
+          const m = stMatches[0];
+          stReviewDiv.append(
+            el("span", { style: "color:var(--ok)" }, `✅ 審查包收錄 (${m.id})`),
+            el("button", {
+              class: "btn mini", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
+              title: `跳轉審查 ${m.id}`,
+              onclick: () => jumpToReview(m.id, st.stage)
+            }, "🔍 跳轉")
+          );
+        } else {
+          stReviewDiv.append(
+            el("span", { class: "muted" }, "審查：未載入包"),
+            el("button", {
+              class: "btn mini ghost", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
+              onclick: () => jumpToReview(d.line_id, st.stage)
+            }, "🔍 搜尋")
+          );
+        }
+
+        const stBtns = el("div", { style: "display:flex;gap:4px;flex-wrap:wrap" },
+          el("button", {
+            class: "btn mini" + (isCurStage && state.taskId === "creature-concept" ? "" : " ghost"),
+            type: "button", style: "flex:1;font-size:11px",
+            onclick: () => useDesigned(d.line_id, "creature-concept", st.stage)
+          }, "🎨 立繪鍛造"),
+          el("button", {
+            class: "btn mini" + (isCurStage && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
+            type: "button", style: "flex:1;font-size:11px",
+            onclick: () => useDesigned(d.line_id, "creature-model-rig", st.stage)
+          }, "🧊 3D 鍛造"),
+          el("button", {
+            class: "btn mini ghost", type: "button", style: "font-size:11px",
+            title: `收藏 ${st.name_zh} (${STAGE_ZH[st.stage]}) 的立繪 Prompt`,
+            onclick: () => addDesignedToFavorites(d.line_id, st.stage)
+          }, "⭐ 收藏")
+        );
+
+        stageCard.append(stHeader, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
+        stagesGrid.append(stageCard);
+      });
+
+      stageCardSection.append(stagesGrid);
+      bodyEl.append(stageCardSection);
+
+      // Section 3: Linked Review Packages
+      const lineMatches = getReviewMatches(d.line_id);
+      const revCard = el("div", { class: "designed-detail-card" },
+        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px" },
+          el("span", {}, "📦 關聯成果審查包"),
+          el("span", { class: "f-badge " + (lineMatches.length > 0 ? "ok" : "") }, `${lineMatches.length} 個包`)
+        )
+      );
+      if (lineMatches.length > 0) {
+        lineMatches.forEach(pkg => {
+          const statusMap = {
+            approved: { zh: "✅ 已核准", cls: "ok" },
+            reject: { zh: "❌ 退回", cls: "danger" },
+            pending: { zh: "🟨 待審", cls: "warn" }
+          };
+          const st = statusMap[pkg.status] || { zh: "📦 已收錄", cls: "ok" };
+          const pRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;margin-bottom:6px" },
+            el("div", { style: "display:flex;align-items:center;gap:8px" },
+              el("code", { style: "font-size:12px;color:var(--accent)" }, pkg.id),
+              el("span", { class: "f-badge " + st.cls }, st.zh),
+              el("span", { class: "muted", style: "font-size:11px" }, pkg.type || "creature")
+            ),
+            el("button", {
+              class: "btn mini", type: "button",
+              onclick: () => jumpToReview(pkg.id)
+            }, "🔍 跳轉審查台檢驗")
+          );
+          revCard.append(pRow);
+        });
+      } else {
+        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此演化線的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或「⚡ 一鍵解壓 Zip」。"));
+      }
+      bodyEl.append(revCard);
+    }
+  }
+
+  function renderDesignedDesk() {
+    renderDesignedRail();
+    renderDesignedDetail();
     if ($("#designedList")) renderDesignedList();
   }
 
@@ -928,8 +1476,10 @@
       const pId = (p.id || "").toLowerCase();
       const pLine = (p.concept?.line_id || "").toLowerCase();
       const pCreature = (p.concept?.creature_id || "").toLowerCase();
+      const pConceptId = (p.concept?.id || "").toLowerCase();
+      const pName = (p.concept?.name_zh || "").toLowerCase();
 
-      const matchedSubject = (pSub === s || pGrp === s || pLine === s || pCreature === s || pId.includes(s));
+      const matchedSubject = (pSub === s || pGrp === s || pLine === s || pCreature === s || pConceptId === s || pName === s || pId.includes(s));
       if (!matchedSubject) return false;
       if (stage && p.stage && p.stage !== stage) return false;
       return true;
@@ -950,7 +1500,9 @@
         const pGrp = (p.groupKey || "").toLowerCase();
         const pLine = (p.concept?.line_id || "").toLowerCase();
         const pCreature = (p.concept?.creature_id || "").toLowerCase();
-        const matchesSub = (pSub === s || pGrp === s || pLine === s || pCreature === s || p.id.toLowerCase().includes(s));
+        const pConceptId = (p.concept?.id || "").toLowerCase();
+        const pName = (p.concept?.name_zh || "").toLowerCase();
+        const matchesSub = (pSub === s || pGrp === s || pLine === s || pCreature === s || pConceptId === s || pName === s || p.id.toLowerCase().includes(s));
         return matchesSub && p.stage === stage;
       });
     }
@@ -962,7 +1514,9 @@
         const pGrp = (p.groupKey || "").toLowerCase();
         const pLine = (p.concept?.line_id || "").toLowerCase();
         const pCreature = (p.concept?.creature_id || "").toLowerCase();
-        return (pSub === s || pGrp === s || pLine === s || pCreature === s || p.id.toLowerCase().includes(s));
+        const pConceptId = (p.concept?.id || "").toLowerCase();
+        const pName = (p.concept?.name_zh || "").toLowerCase();
+        return (pSub === s || pGrp === s || pLine === s || pCreature === s || pConceptId === s || pName === s || p.id.toLowerCase().includes(s));
       });
     }
 
@@ -1610,6 +2164,9 @@
             el("span", { class: "f-badge accent" }, c.id),
             el("span", { class: "f-badge" }, c.role),
             el("span", { class: "f-badge" }, `${c.gender} · ${c.age_band} (${c.age}歲)`),
+            c.sensitivity === "review"
+              ? el("span", { class: "f-badge warn" }, "⚠️ 文化複審")
+              : el("span", { class: "f-badge ok" }, "✅ 文化審查"),
             isPresetActive ? el("span", { class: "f-badge ok" }, "目前鍛造中") : null
           )
         );
@@ -1629,12 +2186,14 @@
           el("span", {}, `風格: ${c.style || "—"}`),
           el("span", {}, `個性: ${(c.personality || []).join("、")}`),
           el("span", {}, `喜好: ${(c.likes || []).join("、")}`),
-          el("span", {}, `服色: ${(c.outfit_palette || []).join("、")}`)
+          el("span", {}, `服色: ${(c.outfit_palette || []).join("、")}`),
+          (c.silhouette_keywords && c.silhouette_keywords.length) ? el("span", { style: "color:var(--accent)" }, `剪影: ${c.silhouette_keywords.join(" · ")}`) : null
         );
 
         // 4. Bio Row
-        const bioRow = el("div", { class: "muted", style: "font-size:11.5px;line-height:1.4;margin:4px 0;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px" },
-          c.biography || "—"
+        const bioRow = el("div", { class: "muted", style: "font-size:11.5px;line-height:1.4;margin:4px 0;padding:6px 8px;background:rgba(0,0,0,0.2);border-radius:4px" },
+          c.backstory_zh ? el("div", { style: "color:var(--accent);margin-bottom:2px" }, `✦ ${c.backstory_zh}`) : null,
+          el("div", {}, c.biography || "—")
         );
 
         // 5. Review Row
@@ -2165,7 +2724,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedList(); updateFavButton();
+    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedList(); renderDesignedDesk(); updateFavButton();
     save();
   }
 
@@ -4811,8 +5370,10 @@
     state.activeTab = mode;
     if (mode === "review") {
       $("#forgeView").style.display = "none";
+      $("#designedView")?.classList.remove("active");
       $("#reviewView").classList.add("active");
       $("#viewBtnForge").classList.remove("on");
+      $("#viewBtnDesigned")?.classList.remove("on");
       $("#viewBtnReview").classList.add("on");
       $("#forgeHeaderControls").style.display = "none";
       if (!reviewState.packages.length) {
@@ -4823,10 +5384,21 @@
       } else {
         renderReviewView();
       }
+    } else if (mode === "designed") {
+      $("#forgeView").style.display = "none";
+      $("#reviewView").classList.remove("active");
+      $("#designedView")?.classList.add("active");
+      $("#viewBtnForge").classList.remove("on");
+      $("#viewBtnDesigned")?.classList.add("on");
+      $("#viewBtnReview").classList.remove("on");
+      $("#forgeHeaderControls").style.display = "none";
+      renderDesignedDesk();
     } else {
       $("#forgeView").style.display = "grid";
       $("#reviewView").classList.remove("active");
+      $("#designedView")?.classList.remove("active");
       $("#viewBtnForge").classList.add("on");
+      $("#viewBtnDesigned")?.classList.remove("on");
       $("#viewBtnReview").classList.remove("on");
       $("#forgeHeaderControls").style.display = "inline-flex";
       renderAll();
@@ -4903,7 +5475,37 @@
 
     // 視圖切換事件
     $("#viewBtnForge").addEventListener("click", () => setViewMode("forge"));
+    $("#viewBtnDesigned")?.addEventListener("click", () => setViewMode("designed"));
     $("#viewBtnReview").addEventListener("click", () => setViewMode("review"));
+    $("#btnGoDesignedFromSubhead")?.addEventListener("click", () => setViewMode("designed"));
+
+    // 已設計台分類切換
+    $$("#designedCatSeg .segb").forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$("#designedCatSeg .segb").forEach(b => b.classList.remove("on"));
+        btn.classList.add("on");
+        designedState.cat = btn.dataset.cat || "all";
+        renderDesignedDesk();
+      });
+    });
+
+    // 已設計台檢視模式切換 (詳細檢閱 vs 完整卡片清單)
+    $("#btnDesignedModeDetail")?.addEventListener("click", () => {
+      designedState.mode = "detail";
+      $("#btnDesignedModeDetail")?.classList.add("on");
+      $("#btnDesignedModeCards")?.classList.remove("on");
+      $("#designedDetailView").style.display = "block";
+      $("#designedCardsView").style.display = "none";
+    });
+    $("#btnDesignedModeCards")?.addEventListener("click", () => {
+      designedState.mode = "cards";
+      $("#btnDesignedModeDetail")?.classList.remove("on");
+      $("#btnDesignedModeCards")?.classList.add("on");
+      $("#designedDetailView").style.display = "none";
+      $("#designedCardsView").style.display = "block";
+      renderDesignedList();
+    });
+
     $("#toReview").addEventListener("click", () => {
       const b = lastBuild;
       const curSubject = b?.ctx?.subjectId || subjectId(task().subject);
@@ -4924,7 +5526,7 @@
       }
     });
     $("#favSearch")?.addEventListener("input", () => renderFavorites());
-    $("#designedSearch")?.addEventListener("input", () => renderDesignedList());
+    $("#designedSearch")?.addEventListener("input", () => renderDesignedDesk());
 
     // 平台切換按鈕事件
     $("#platChatgpt").addEventListener("click", () => { state.platform = "chatgpt"; renderAll(); });

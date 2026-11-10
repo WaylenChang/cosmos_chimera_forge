@@ -104,7 +104,8 @@ LINES = {
         "stage_dims": {
             "juvenile": {"height_length": "0.48 m", "weight": "14 kg", "body_fat": "10%"},
             "adolescent": {"height_length": "1.30 m", "weight": "95 kg", "body_fat": "9%"},
-            "adult": {"height_length": "2.40 m", "weight": "650 kg", "body_fat": "8%"}
+            "adult": {"height_length": "2.40 m", "weight": "650 kg", "body_fat": "8%"},
+            "overload": {"height_length": "5.2 m", "weight": "5800 kg", "body_fat": "6%"}
         }
     },
     "line_wood_vinecrest": {
@@ -126,7 +127,8 @@ LINES = {
         "stage_dims": {
             "juvenile": {"height_length": "0.42 m", "weight": "2.2 kg", "body_fat": "14%"},
             "adolescent": {"height_length": "1.15 m", "weight": "18 kg", "body_fat": "12%"},
-            "adult": {"height_length": "2.10 m", "weight": "65 kg", "body_fat": "11%"}
+            "adult": {"height_length": "2.10 m", "weight": "65 kg", "body_fat": "11%"},
+            "overload": {"height_length": "4.6 m", "weight": "850 kg", "body_fat": "9%"}
         }
     },
     "line_water_tidecraft": {
@@ -148,7 +150,8 @@ LINES = {
         "stage_dims": {
             "juvenile": {"height_length": "0.55 m", "weight": "3.5 kg", "body_fat": "18%"},
             "adolescent": {"height_length": "1.35 m", "weight": "32 kg", "body_fat": "16%"},
-            "adult": {"height_length": "2.45 m", "weight": "120 kg", "body_fat": "15%"}
+            "adult": {"height_length": "2.45 m", "weight": "120 kg", "body_fat": "15%"},
+            "overload": {"height_length": "6.8 m", "weight": "2800 kg", "body_fat": "13%"}
         }
     },
     "line_fire_blazelion": {
@@ -170,7 +173,8 @@ LINES = {
         "stage_dims": {
             "juvenile": {"height_length": "0.50 m", "weight": "6.5 kg", "body_fat": "17%"},
             "adolescent": {"height_length": "1.30 m", "weight": "68 kg", "body_fat": "15%"},
-            "adult": {"height_length": "2.30 m", "weight": "310 kg", "body_fat": "13%"}
+            "adult": {"height_length": "2.30 m", "weight": "310 kg", "body_fat": "13%"},
+            "overload": {"height_length": "5.4 m", "weight": "3600 kg", "body_fat": "11%"}
         }
     },
     "line_earth_gildedgolem": {
@@ -192,7 +196,8 @@ LINES = {
         "stage_dims": {
             "juvenile": {"height_length": "0.48 m", "weight": "12 kg", "body_fat": "12%"},
             "adolescent": {"height_length": "1.25 m", "weight": "95 kg", "body_fat": "10%"},
-            "adult": {"height_length": "2.25 m", "weight": "480 kg", "body_fat": "9%"}
+            "adult": {"height_length": "2.25 m", "weight": "480 kg", "body_fat": "9%"},
+            "overload": {"height_length": "5.8 m", "weight": "6400 kg", "body_fat": "7%"}
         }
     },
     "line_ice_frostbeast": {
@@ -214,7 +219,8 @@ LINES = {
         "stage_dims": {
             "juvenile": {"height_length": "0.52 m", "weight": "5.0 kg", "body_fat": "18%"},
             "adolescent": {"height_length": "1.35 m", "weight": "58 kg", "body_fat": "16%"},
-            "adult": {"height_length": "2.40 m", "weight": "380 kg", "body_fat": "14%"}
+            "adult": {"height_length": "2.40 m", "weight": "380 kg", "body_fat": "14%"},
+            "overload": {"height_length": "5.5 m", "weight": "3900 kg", "body_fat": "12%"}
         }
     },
     "line_wind_fluteglider": {
@@ -236,12 +242,13 @@ LINES = {
         "stage_dims": {
             "juvenile": {"height_length": "0.46 m", "weight": "2.8 kg", "body_fat": "15%"},
             "adolescent": {"height_length": "1.20 m", "weight": "22 kg", "body_fat": "12%"},
-            "adult": {"height_length": "2.20 m", "weight": "85 kg", "body_fat": "10%"}
+            "adult": {"height_length": "2.20 m", "weight": "85 kg", "body_fat": "10%"},
+            "overload": {"height_length": "6.0 m", "weight": "1150 kg", "body_fat": "8%"}
         }
     }
 }
 
-# 御三家超載型態（Overload）定案設定
+# 十大宙獸演化線超載型態（Overload）定案設定
 OVERLOADS = {
     "starter_sun_line": {
         "stage": "overload",
@@ -328,6 +335,209 @@ OVERLOADS = {
             "desc_zh": "雙翼聚斂百萬伏特雷暴，以超音速突進引發全場範圍的金色雷暴轟鳴。",
             "desc_en": "Gathers a million-volt storm in its wings and charges at supersonic speed, igniting field-wide golden thunderclaps.",
             "visual": "雙翼聚斂百萬伏特雷暴，以超音速突進引發全場範圍的金色雷暴轟鳴。"
+        }
+    },
+    "line_metal_gearclock": {
+        "stage": "overload",
+        "creature_id": "metal_chronos_colossus",
+        "temperament": "apex",
+        "disposition": "萬古恆準、破山裂陣",
+        "name_zh": "漏輪天樞象",
+        "name_en": "Clepsarchon",
+        "naming_note": "水鐘化天樞，發條鎮乾坤。",
+        "size_class": "XL",
+        "height_length": "5.2 m",
+        "weight": "5800 kg",
+        "body_fat": "6%",
+        "look": "青銅象鐘發條全功率超載運轉；背部水力平衡浮碗激發為多重星空報時齒輪天環，四足裝甲化為城壁般的黃銅金剛岩柱，象鼻化為噴射高壓青銅蒸氣與電離磁針的聚能炮塔",
+        "dex_zh": "當體內的漏刻水流與發條能量突破臨界，巨象身軀化作鎮壓大地的金屬要塞。背後旋轉的天樞齒輪每轉一刻度，便在大地引發劇烈的重力共鳴與音波衝擊。",
+        "dex_en": "Overloading its inner water clock and springs, the colossus transforms into an unyielding bronze fortress. Each turn of its celestial gear rings unleashes deep gravitational resonance and seismic tremors across the earth.",
+        "signature_move": {
+            "move_id": "metal_celestial_clockquake",
+            "name_zh": "天樞時輪震天破",
+            "name_en": "Celestial Clockquake",
+            "element": "metal",
+            "range_class": "melee",
+            "shape": "burst",
+            "movement": "forward",
+            "naming_note": "萬齒齊鳴，時空崩裂。",
+            "desc_zh": "全身青銅齒輪急轉蓄力，象足重踏大地引發全周金屬音波與環形地震波，重創全場敵方。",
+            "desc_en": "Spins every bronze gear at maximum speed and stomps the earth, unleashing field-wide seismic shockwaves and deafening metallic chimes.",
+            "visual": "全身青銅齒輪急轉蓄力，象足重踏大地引發全周金屬音波與環形地震波，重創全場敵方。"
+        }
+    },
+    "line_wood_vinecrest": {
+        "stage": "overload",
+        "creature_id": "wood_canopy_sovereign",
+        "temperament": "apex",
+        "disposition": "神聖祥和、庇蔭萬木",
+        "name_zh": "蔓冠天彩鳳",
+        "name_en": "Virelimperial",
+        "naming_note": "雙虹耀天，萬木來朝。",
+        "size_class": "XL",
+        "height_length": "4.6 m",
+        "weight": "850 kg",
+        "body_fat": "9%",
+        "look": "薩里馬諾克熱帶彩鳳超載爆發；頭頂蔓冠舒展為通天巨樹般的光質翡翠神木，雙重虹彩長羽化作如極光瀑布般的七色光帶，足下黃銅底座完全熔鑄為凌空懸浮的符文靈盤，口銜的神話光靈之魚化為高能以太光核",
+        "dex_zh": "超載激發的翠玉生機使天際化作七彩祥雲。振翅間灑落的翡翠光塵能活化整片林海，口中光魚引導的蒼穹虹光更可將一切侵蝕生機的邪穢淨化殆盡。",
+        "dex_en": "Overloaded life energy paints the heavens in iridescent aurorae. Gliding on radiant rainbow plumage, it showers forests with revitalizing emerald spores and focuses a purifying solar beam through its sacred spirit fish.",
+        "signature_move": {
+            "move_id": "wood_aurora_canopy_bloom",
+            "name_zh": "虹彩天幕森羅綻",
+            "name_en": "Aurora Canopy Bloom",
+            "element": "wood",
+            "range_class": "long",
+            "shape": "burst",
+            "movement": "none",
+            "naming_note": "虹光鋪天，生靈盛放。",
+            "desc_zh": "振起七彩虹羽鋪展覆天樹冠，降下狂暴的翡翠荊棘雨與神聖虹光波，引發大範圍以太生機引爆。",
+            "desc_en": "Spreads seven-colored wings into a celestial canopy, raining down surging emerald briars and radiant rainbow flares across the entire field.",
+            "visual": "振起七彩虹羽鋪展覆天樹冠，降下狂暴的翡翠荊棘雨與神聖虹光波，引發大範圍以太生機引爆。"
+        }
+    },
+    "line_water_tidecraft": {
+        "stage": "overload",
+        "creature_id": "water_oceanvoyage_leviathan",
+        "temperament": "apex",
+        "disposition": "翻江倒海、吞吐狂瀾",
+        "name_zh": "潮帆天海巨鰻",
+        "name_en": "Brinavirat",
+        "naming_note": "萬里破浪，海天合一。",
+        "size_class": "XL",
+        "height_length": "6.8 m",
+        "weight": "2800 kg",
+        "body_fat": "13%",
+        "look": "雙體巨舟風帆與遠古海鰻融為一體；背脊生長出如戰列旗艦般的重層光翼蟹爪帆，船體外甲陶紋亮起高純度水以太脈衝，周身環繞著狂暴的迴旋引力潮汐水環",
+        "dex_zh": "巨鰻身軀在超載時膨脹為能載動城邦的碧海神舟。破浪游動時隨身掀起遮天蔽日的暴風海嘯，蟹爪主帆聚斂的狂濤能在瞬間淹沒整片群島要塞。",
+        "dex_en": "Swelling to the scale of a floating fortress in overload, it charges through storm-tossed waters beneath towering light-wing sails. Waves swirling around its flanks can drown entire coastal bastions in a single surge.",
+        "signature_move": {
+            "move_id": "water_tidal_deluge_tsunami",
+            "name_zh": "萬重潮瀾破天浪",
+            "name_en": "Sovereign Tidal Tsunami",
+            "element": "water",
+            "range_class": "long",
+            "shape": "line",
+            "movement": "forward",
+            "naming_note": "季風合一，萬浪齊崩。",
+            "desc_zh": "張開全重光翼蟹爪帆激引深海暗湧，以驚天之勢朝前方轟射吞沒長空的狂瀾水龍卷衝擊波。",
+            "desc_en": "Unfurls all light-weave crab-claw sails to command the deep ocean trench, unleashing a massive forward surge of swirling tidal waters that engulfs the front line.",
+            "visual": "張開全重光翼蟹爪帆激引深海暗湧，以驚天之勢朝前方轟射吞沒長空的狂瀾水龍卷衝擊波。"
+        }
+    },
+    "line_fire_blazelion": {
+        "stage": "overload",
+        "creature_id": "fire_sunpharaoh_lion",
+        "temperament": "apex",
+        "disposition": "焚天滅世、神威君臨",
+        "name_zh": "燼鬃炎皇霸獅",
+        "name_en": "Cindraxus",
+        "naming_note": "砂岩化熔爐，神炎臨天下。",
+        "size_class": "XL",
+        "height_length": "5.4 m",
+        "weight": "3600 kg",
+        "body_fat": "11%",
+        "look": "砂岩雄獅超載化身為四臂焰鎧戰神之姿；背脊砂岩方尖碑崩解重組為高熱熔岩王座光環，烈焰長鬃燃成三千度耀白電漿，胸前蛇紋口中吞吐純淨熔金核火",
+        "dex_zh": "超載讓戰神獅王完全解放太陽熔爐。牠立足之處砂石瞬間化為流淌岩漿，仰天長嘯時噴發的滔天烈焰足以將天空染成永恆黃昏。",
+        "dex_en": "Overloading unleashes the solar reactor within the lion king. Sand and rock liquefy into flowing magma beneath its paws, and its skyward roar erupts in apocalyptic plasma that dyes the sky in eternal dawn.",
+        "signature_move": {
+            "move_id": "fire_solar_pharaoh_eruption",
+            "name_zh": "炎皇日輪焚天怒",
+            "name_en": "Solar Pharaoh Eruption",
+            "element": "fire",
+            "range_class": "long",
+            "shape": "burst",
+            "movement": "none",
+            "naming_note": "金烏墜地，萬物焦土。",
+            "desc_zh": "背部熔岩王座全開聚集百萬度電漿核焰，向目標區域轟落核爆級別的環形烈焰日冕。",
+            "desc_en": "Ignites the dorsal magma throne into a million-degree plasma flare, detonating a cataclysmic solar corona over the target sector.",
+            "visual": "背部熔岩王座全開聚集百萬度電漿核焰，向目標區域轟落核爆級別的環形烈焰日冕。"
+        }
+    },
+    "line_earth_gildedgolem": {
+        "stage": "overload",
+        "creature_id": "earth_eldorado_colossus",
+        "temperament": "apex",
+        "disposition": "不動如山、威鎮八荒",
+        "name_zh": "金塵天聖岩神",
+        "name_en": "Gildumactor",
+        "naming_note": "聖湖化金身，萬仞鎮八荒。",
+        "size_class": "XL",
+        "height_length": "5.8 m",
+        "weight": "6400 kg",
+        "body_fat": "7%",
+        "look": "巨石魔像完全沉浸於黃金國祭典神能中；體表生成千層高純黃金重甲與菱形祖母綠以太陣列，胸口聖湖寶石化為旋轉引力星核，雙臂生長出厚重金剛岩柱巨盾",
+        "dex_zh": "超載使金塵巨像化為黃金之國的守護神。任何物理與能量衝擊撞上其金晶外殼皆如微風拂面，踏步間能引動整片大陸構造板塊的沉凝防護重壓。",
+        "dex_en": "Overloaded gold and emerald matrices crown this figure as the supreme guardian titan of El Dorado. Physical and energetic blows bounce harmlessly from its auric chassis while each step shifts tectonic plates.",
+        "signature_move": {
+            "move_id": "earth_eldorado_tectonic_slam",
+            "name_zh": "黃金天國地動破",
+            "name_en": "Eldorado Tectonic Slam",
+            "element": "earth",
+            "range_class": "melee",
+            "shape": "burst",
+            "movement": "forward",
+            "naming_note": "萬仞金山，鎮壓萬物。",
+            "desc_zh": "雙臂金晶巨柱以崩山之勢重砸地面，激起沖天黃金晶柱與連鎖地裂地震波，重創全場敵軍。",
+            "desc_en": "Slams its gold-crystal pillar arms into the earth with mountain-cleaving force, erupting towering auric spires and shattering seismic faults across the zone.",
+            "visual": "雙臂金晶巨柱以崩山之勢重砸地面，激起沖天黃金晶柱與連鎖地裂地震波，重創全場敵軍。"
+        }
+    },
+    "line_ice_frostbeast": {
+        "stage": "overload",
+        "creature_id": "ice_permafrost_griffin",
+        "temperament": "apex",
+        "disposition": "凌寒肅殺、極北主宰",
+        "name_zh": "霜角極凍天獸",
+        "name_en": "Rimbrathorn",
+        "naming_note": "永凍千尋，鹿角破冥。",
+        "size_class": "XL",
+        "height_length": "5.5 m",
+        "weight": "3900 kg",
+        "body_fat": "12%",
+        "look": "永凍冰塚守護神獸超載覺醒；一對巨型金屬鹿角生長為覆蓋天際的結晶冰珊瑚樹，鍛鐵羽翼覆上絕對零度的幽藍玄冰，金箔鞍軛散發刺骨幽靈星光",
+        "dex_zh": "超載降臨的瞬間，整座荒原的溫度降至絕對零度。巨獸鹿角間跳躍的零度冰魄電弧能在一瞬間將暴風雨凍結成靜止的冰雕，振翼掀起的寒潮令萬物歸於寂靜。",
+        "dex_en": "At the moment of overload, temperatures plunge toward absolute zero. Crystalline arcs leaping across its colossal antler canopy freeze blizzards mid-air into silent ice sculptures.",
+        "signature_move": {
+            "move_id": "ice_absolute_permafrost_howl",
+            "name_zh": "萬古霜冥極寒劫",
+            "name_en": "Absolute Permafrost Howl",
+            "element": "ice",
+            "range_class": "long",
+            "shape": "sweep",
+            "movement": "none",
+            "naming_note": "絕對零度，萬籟俱寂。",
+            "desc_zh": "鹿角匯聚極北永凍寒髓，仰天引吭咆哮，釋放橫掃全場的零度冰風暴與極地碎冰潮。",
+            "desc_en": "Channels the core frost of eternal glaciers through its antlers and unleashes an all-encompassing blizzard gale that entombs the battlefield in permafrost.",
+            "visual": "鹿角匯聚極北永凍寒髓，仰天引吭咆哮，釋放橫掃全場的零度冰風暴與極地碎冰潮。"
+        }
+    },
+    "line_wind_fluteglider": {
+        "stage": "overload",
+        "creature_id": "wind_zephyr_archcruiser",
+        "temperament": "apex",
+        "disposition": "乘風破浪、縹緲天籟",
+        "name_zh": "笛風太虛神舟",
+        "name_en": "Reeviloque",
+        "naming_note": "九天仙籟，風御萬里。",
+        "size_class": "XL",
+        "height_length": "6.0 m",
+        "weight": "1150 kg",
+        "body_fat": "8%",
+        "look": "傳奇風舟在超載中幻化為空靈雲海巨艦；幾何刺繡風帆化作千層半透明光羽流雲翼，舟身百孔排笛在以太狂風中演奏出撕裂長空的音波風暴，周身環繞著高速平流層氣流環",
+        "dex_zh": "超載讓笛舟徹底融入大氣平流層。其所過之處天籟交鳴、狂風隨其指揮若定，百孔排笛共振釋放的超高壓風刃甚至能在雲海中斬開長達數十里的無雲天塹。",
+        "dex_en": "Fusing completely into stratospheric air currents during overload, the archcruiser plays a symphony of tempests. Resonating high-pressure sonic wind blades carve massive clear ravines through endless seas of clouds.",
+        "signature_move": {
+            "move_id": "wind_stratosphere_symphony",
+            "name_zh": "九天笛音裂空風",
+            "name_en": "Stratospheric Symphony Gale",
+            "element": "wind",
+            "range_class": "long",
+            "shape": "line",
+            "movement": "forward",
+            "naming_note": "萬管齊鳴，天塹破雲。",
+            "desc_zh": "全船百組竹笛共振激發音爆颶風，在超高速巡航中沿直線向前轟出撕裂大氣的狂暴螺旋風壓波。",
+            "desc_en": "Vibrates hundred-flute arrays into a sonic tempest, projecting a spiraling atmospheric vacuum cannon forward in supersonic flight.",
+            "visual": "全船百組竹笛共振激發音爆颶風，在超高速巡航中沿直線向前轟出撕裂大氣的狂暴螺旋風壓波。"
         }
     }
 }

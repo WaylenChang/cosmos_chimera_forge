@@ -594,7 +594,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_metal_gearclock",
       "code_zh": "金",
       "element": "metal",
-      "title_zh": "漏輪雛 → 漏輪衛 → 漏輪巨象",
+      "title_zh": "漏輪雛 → 漏輪衛 → 漏輪巨象 → 漏輪天樞象",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_metal_gearclock",
@@ -630,7 +630,7 @@ window.COSMI_DESIGNED = {
         "role": "前排坦克：遠距直線突進破陣，常駐金抗換取移速",
         "temperament": "territorial",
         "disposition": "沉穩厚重、分秒不差",
-        "size_profile": "S→M→L",
+        "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
             "height_length": "0.48 m",
@@ -646,6 +646,11 @@ window.COSMI_DESIGNED = {
             "height_length": "2.40 m",
             "weight": "650 kg",
             "body_fat": "8%"
+          },
+          "overload": {
+            "height_length": "5.2 m",
+            "weight": "5800 kg",
+            "body_fat": "6%"
           }
         },
         "height_length": "2.40 m",
@@ -738,6 +743,35 @@ window.COSMI_DESIGNED = {
                 "desc_en": "Drive forward with a riveted lance, damaging enemies along the straight path.",
                 "visual": "架起鉚接長槍沿直線向前突進，傷害路徑上的敵人。"
               }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "metal_chronos_colossus",
+              "temperament": "apex",
+              "disposition": "萬古恆準、破山裂陣",
+              "name_zh": "漏輪天樞象",
+              "name_en": "Clepsarchon",
+              "naming_note": "水鐘化天樞，發條鎮乾坤。",
+              "size_class": "XL",
+              "height_length": "5.2 m",
+              "weight": "5800 kg",
+              "body_fat": "6%",
+              "look": "青銅象鐘發條全功率超載運轉；背部水力平衡浮碗激發為多重星空報時齒輪天環，四足裝甲化為城壁般的黃銅金剛岩柱，象鼻化為噴射高壓青銅蒸氣與電離磁針的聚能炮塔",
+              "dex_zh": "當體內的漏刻水流與發條能量突破臨界，巨象身軀化作鎮壓大地的金屬要塞。背後旋轉的天樞齒輪每轉一刻度，便在大地引發劇烈的重力共鳴與音波衝擊。",
+              "dex_en": "Overloading its inner water clock and springs, the colossus transforms into an unyielding bronze fortress. Each turn of its celestial gear rings unleashes deep gravitational resonance and seismic tremors across the earth.",
+              "signature_move": {
+                "move_id": "metal_celestial_clockquake",
+                "name_zh": "天樞時輪震天破",
+                "name_en": "Celestial Clockquake",
+                "element": "metal",
+                "range_class": "melee",
+                "shape": "burst",
+                "movement": "forward",
+                "naming_note": "萬齒齊鳴，時空崩裂。",
+                "desc_zh": "全身青銅齒輪急轉蓄力，象足重踏大地引發全周金屬音波與環形地震波，重創全場敵方。",
+                "desc_en": "Spins every bronze gear at maximum speed and stomps the earth, unleashing field-wide seismic shockwaves and deafening metallic chimes.",
+                "visual": "全身青銅齒輪急轉蓄力，象足重踏大地引發全周金屬音波與環形地震波，重創全場敵方。"
+              }
             }
           ],
           "trait": {
@@ -745,7 +779,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "密金軀",
             "idea_zh": "金屬緊密包覆身軀，常駐提高金抗性十五點，但移動速度降低百分之八。"
           },
-          "overload": "暫無超載型態"
+          "overload": "漏輪天樞象（metal_chronos_colossus · XL）：青銅象鐘發條全功率超載運轉；背部水力平衡浮碗激發為多重星空報時齒輪天環，四足裝甲化為城壁般的黃銅金剛岩柱，象鼻化為噴射高壓青銅蒸氣與電離磁針的聚能炮塔"
         }
       }
     },
@@ -753,7 +787,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_wood_vinecrest",
       "code_zh": "木",
       "element": "wood",
-      "title_zh": "蔓冠雛 → 蔓冠翎 → 蔓冠虹禽",
+      "title_zh": "蔓冠雛 → 蔓冠翎 → 蔓冠虹禽 → 蔓冠天彩鳳",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_wood_vinecrest",
@@ -789,7 +823,7 @@ window.COSMI_DESIGNED = {
         "role": "中排輸出：高精神，中距指定點範圍爆發，上場時自我治療",
         "temperament": "territorial",
         "disposition": "高貴敏銳、警覺守望",
-        "size_profile": "S→M→L",
+        "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
             "height_length": "0.42 m",
@@ -805,6 +839,11 @@ window.COSMI_DESIGNED = {
             "height_length": "2.10 m",
             "weight": "65 kg",
             "body_fat": "11%"
+          },
+          "overload": {
+            "height_length": "4.6 m",
+            "weight": "850 kg",
+            "body_fat": "9%"
           }
         },
         "height_length": "2.10 m",
@@ -897,6 +936,35 @@ window.COSMI_DESIGNED = {
                 "desc_en": "Unleash the canopy at the chosen point, damaging enemies around that target.",
                 "visual": "在指定目標周圍引爆翠綠樹冠之力，傷害範圍內的敵人。"
               }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "wood_canopy_sovereign",
+              "temperament": "apex",
+              "disposition": "神聖祥和、庇蔭萬木",
+              "name_zh": "蔓冠天彩鳳",
+              "name_en": "Virelimperial",
+              "naming_note": "雙虹耀天，萬木來朝。",
+              "size_class": "XL",
+              "height_length": "4.6 m",
+              "weight": "850 kg",
+              "body_fat": "9%",
+              "look": "薩里馬諾克熱帶彩鳳超載爆發；頭頂蔓冠舒展為通天巨樹般的光質翡翠神木，雙重虹彩長羽化作如極光瀑布般的七色光帶，足下黃銅底座完全熔鑄為凌空懸浮的符文靈盤，口銜的神話光靈之魚化為高能以太光核",
+              "dex_zh": "超載激發的翠玉生機使天際化作七彩祥雲。振翅間灑落的翡翠光塵能活化整片林海，口中光魚引導的蒼穹虹光更可將一切侵蝕生機的邪穢淨化殆盡。",
+              "dex_en": "Overloaded life energy paints the heavens in iridescent aurorae. Gliding on radiant rainbow plumage, it showers forests with revitalizing emerald spores and focuses a purifying solar beam through its sacred spirit fish.",
+              "signature_move": {
+                "move_id": "wood_aurora_canopy_bloom",
+                "name_zh": "虹彩天幕森羅綻",
+                "name_en": "Aurora Canopy Bloom",
+                "element": "wood",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "虹光鋪天，生靈盛放。",
+                "desc_zh": "振起七彩虹羽鋪展覆天樹冠，降下狂暴的翡翠荊棘雨與神聖虹光波，引發大範圍以太生機引爆。",
+                "desc_en": "Spreads seven-colored wings into a celestial canopy, raining down surging emerald briars and radiant rainbow flares across the entire field.",
+                "visual": "振起七彩虹羽鋪展覆天樹冠，降下狂暴的翡翠荊棘雨與神聖虹光波，引發大範圍以太生機引爆。"
+              }
             }
           ],
           "trait": {
@@ -904,7 +972,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "初陽滋養",
             "idea_zh": "召喚上場時汲取光能，立即恢復自身最大生命值的百分之八。"
           },
-          "overload": "暫無超載型態"
+          "overload": "蔓冠天彩鳳（wood_canopy_sovereign · XL）：薩里馬諾克熱帶彩鳳超載爆發；頭頂蔓冠舒展為通天巨樹般的光質翡翠神木，雙重虹彩長羽化作如極光瀑布般的七色光帶，足下黃銅底座完全熔鑄為凌空懸浮的符文靈盤，口銜的神話光靈之魚化為高能以太光核"
         }
       }
     },
@@ -912,7 +980,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_water_tidecraft",
       "code_zh": "水",
       "element": "water",
-      "title_zh": "潮帆鰻 → 潮帆舟鰻 → 潮帆巨鰻",
+      "title_zh": "潮帆鰻 → 潮帆舟鰻 → 潮帆巨鰻 → 潮帆天海巨鰻",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_water_tidecraft",
@@ -948,7 +1016,7 @@ window.COSMI_DESIGNED = {
         "role": "遠距砲台：高力量，遠距指定點範圍爆發，連續施放水招縮短 CD",
         "temperament": "territorial",
         "disposition": "隨波逐流、暗藏殺機",
-        "size_profile": "S→M→L",
+        "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
             "height_length": "0.55 m",
@@ -964,6 +1032,11 @@ window.COSMI_DESIGNED = {
             "height_length": "2.45 m",
             "weight": "120 kg",
             "body_fat": "15%"
+          },
+          "overload": {
+            "height_length": "6.8 m",
+            "weight": "2800 kg",
+            "body_fat": "13%"
           }
         },
         "height_length": "2.45 m",
@@ -1056,6 +1129,35 @@ window.COSMI_DESIGNED = {
                 "desc_en": "Burst a deluge around the chosen point, damaging enemies caught in its radius.",
                 "visual": "在指定目標周圍引爆洶湧水流，傷害範圍內的敵人。"
               }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "water_oceanvoyage_leviathan",
+              "temperament": "apex",
+              "disposition": "翻江倒海、吞吐狂瀾",
+              "name_zh": "潮帆天海巨鰻",
+              "name_en": "Brinavirat",
+              "naming_note": "萬里破浪，海天合一。",
+              "size_class": "XL",
+              "height_length": "6.8 m",
+              "weight": "2800 kg",
+              "body_fat": "13%",
+              "look": "雙體巨舟風帆與遠古海鰻融為一體；背脊生長出如戰列旗艦般的重層光翼蟹爪帆，船體外甲陶紋亮起高純度水以太脈衝，周身環繞著狂暴的迴旋引力潮汐水環",
+              "dex_zh": "巨鰻身軀在超載時膨脹為能載動城邦的碧海神舟。破浪游動時隨身掀起遮天蔽日的暴風海嘯，蟹爪主帆聚斂的狂濤能在瞬間淹沒整片群島要塞。",
+              "dex_en": "Swelling to the scale of a floating fortress in overload, it charges through storm-tossed waters beneath towering light-wing sails. Waves swirling around its flanks can drown entire coastal bastions in a single surge.",
+              "signature_move": {
+                "move_id": "water_tidal_deluge_tsunami",
+                "name_zh": "萬重潮瀾破天浪",
+                "name_en": "Sovereign Tidal Tsunami",
+                "element": "water",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "季風合一，萬浪齊崩。",
+                "desc_zh": "張開全重光翼蟹爪帆激引深海暗湧，以驚天之勢朝前方轟射吞沒長空的狂瀾水龍卷衝擊波。",
+                "desc_en": "Unfurls all light-weave crab-claw sails to command the deep ocean trench, unleashing a massive forward surge of swirling tidal waters that engulfs the front line.",
+                "visual": "張開全重光翼蟹爪帆激引深海暗湧，以驚天之勢朝前方轟射吞沒長空的狂瀾水龍卷衝擊波。"
+              }
             }
           ],
           "trait": {
@@ -1063,7 +1165,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "水脈迴轉",
             "idea_zh": "使用水屬性招式後四秒內，水屬性招式冷卻時間減少百分之二十。"
           },
-          "overload": "暫無超載型態"
+          "overload": "潮帆天海巨鰻（water_oceanvoyage_leviathan · XL）：雙體巨舟風帆與遠古海鰻融為一體；背脊生長出如戰列旗艦般的重層光翼蟹爪帆，船體外甲陶紋亮起高純度水以太脈衝，周身環繞著狂暴的迴旋引力潮汐水環"
         }
       }
     },
@@ -1071,7 +1173,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_fire_blazelion",
       "code_zh": "火",
       "element": "fire",
-      "title_zh": "燼鬃仔 → 燼鬃獅 → 燼鬃焰獅",
+      "title_zh": "燼鬃仔 → 燼鬃獅 → 燼鬃焰獅 → 燼鬃炎皇霸獅",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_fire_blazelion",
@@ -1107,7 +1209,7 @@ window.COSMI_DESIGNED = {
         "role": "重砲手：高力量，遠距指定點範圍爆發，受火屬性攻擊後縮短火招 CD",
         "temperament": "apex",
         "disposition": "兇悍霸烈、主動進攻",
-        "size_profile": "S→M→L",
+        "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
             "height_length": "0.50 m",
@@ -1123,6 +1225,11 @@ window.COSMI_DESIGNED = {
             "height_length": "2.30 m",
             "weight": "310 kg",
             "body_fat": "13%"
+          },
+          "overload": {
+            "height_length": "5.4 m",
+            "weight": "3600 kg",
+            "body_fat": "11%"
           }
         },
         "height_length": "2.30 m",
@@ -1215,6 +1322,35 @@ window.COSMI_DESIGNED = {
                 "desc_en": "Erupt in fierce flame around the chosen point, damaging enemies within the blast.",
                 "visual": "在指定目標周圍引爆熾烈火焰，傷害範圍內的敵人。"
               }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "fire_sunpharaoh_lion",
+              "temperament": "apex",
+              "disposition": "焚天滅世、神威君臨",
+              "name_zh": "燼鬃炎皇霸獅",
+              "name_en": "Cindraxus",
+              "naming_note": "砂岩化熔爐，神炎臨天下。",
+              "size_class": "XL",
+              "height_length": "5.4 m",
+              "weight": "3600 kg",
+              "body_fat": "11%",
+              "look": "砂岩雄獅超載化身為四臂焰鎧戰神之姿；背脊砂岩方尖碑崩解重組為高熱熔岩王座光環，烈焰長鬃燃成三千度耀白電漿，胸前蛇紋口中吞吐純淨熔金核火",
+              "dex_zh": "超載讓戰神獅王完全解放太陽熔爐。牠立足之處砂石瞬間化為流淌岩漿，仰天長嘯時噴發的滔天烈焰足以將天空染成永恆黃昏。",
+              "dex_en": "Overloading unleashes the solar reactor within the lion king. Sand and rock liquefy into flowing magma beneath its paws, and its skyward roar erupts in apocalyptic plasma that dyes the sky in eternal dawn.",
+              "signature_move": {
+                "move_id": "fire_solar_pharaoh_eruption",
+                "name_zh": "炎皇日輪焚天怒",
+                "name_en": "Solar Pharaoh Eruption",
+                "element": "fire",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "金烏墜地，萬物焦土。",
+                "desc_zh": "背部熔岩王座全開聚集百萬度電漿核焰，向目標區域轟落核爆級別的環形烈焰日冕。",
+                "desc_en": "Ignites the dorsal magma throne into a million-degree plasma flare, detonating a cataclysmic solar corona over the target sector.",
+                "visual": "背部熔岩王座全開聚集百萬度電漿核焰，向目標區域轟落核爆級別的環形烈焰日冕。"
+              }
             }
           ],
           "trait": {
@@ -1222,7 +1358,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "受焰回充",
             "idea_zh": "受到火屬性攻擊後五秒內，火屬性招式冷卻時間減少百分之二十五。"
           },
-          "overload": "暫無超載型態"
+          "overload": "燼鬃炎皇霸獅（fire_sunpharaoh_lion · XL）：砂岩雄獅超載化身為四臂焰鎧戰神之姿；背脊砂岩方尖碑崩解重組為高熱熔岩王座光環，烈焰長鬃燃成三千度耀白電漿，胸前蛇紋口中吞吐純淨熔金核火"
         }
       }
     },
@@ -1230,7 +1366,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_earth_gildedgolem",
       "code_zh": "土",
       "element": "earth",
-      "title_zh": "金塵偶 → 金塵衛 → 金塵岩偶",
+      "title_zh": "金塵偶 → 金塵衛 → 金塵岩偶 → 金塵天聖岩神",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_earth_gildedgolem",
@@ -1266,7 +1402,7 @@ window.COSMI_DESIGNED = {
         "role": "前排：遠距直線突進，受擊後提高土專精",
         "temperament": "territorial",
         "disposition": "沉默威儀、堅不可摧",
-        "size_profile": "S→M→L",
+        "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
             "height_length": "0.48 m",
@@ -1282,6 +1418,11 @@ window.COSMI_DESIGNED = {
             "height_length": "2.25 m",
             "weight": "480 kg",
             "body_fat": "9%"
+          },
+          "overload": {
+            "height_length": "5.8 m",
+            "weight": "6400 kg",
+            "body_fat": "7%"
           }
         },
         "height_length": "2.25 m",
@@ -1374,6 +1515,35 @@ window.COSMI_DESIGNED = {
                 "desc_en": "Dash straight forward clad in dense stone, damaging enemies along the path.",
                 "visual": "裹著厚重岩力沿直線向前突進，傷害路徑上的敵人。"
               }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "earth_eldorado_colossus",
+              "temperament": "apex",
+              "disposition": "不動如山、威鎮八荒",
+              "name_zh": "金塵天聖岩神",
+              "name_en": "Gildumactor",
+              "naming_note": "聖湖化金身，萬仞鎮八荒。",
+              "size_class": "XL",
+              "height_length": "5.8 m",
+              "weight": "6400 kg",
+              "body_fat": "7%",
+              "look": "巨石魔像完全沉浸於黃金國祭典神能中；體表生成千層高純黃金重甲與菱形祖母綠以太陣列，胸口聖湖寶石化為旋轉引力星核，雙臂生長出厚重金剛岩柱巨盾",
+              "dex_zh": "超載使金塵巨像化為黃金之國的守護神。任何物理與能量衝擊撞上其金晶外殼皆如微風拂面，踏步間能引動整片大陸構造板塊的沉凝防護重壓。",
+              "dex_en": "Overloaded gold and emerald matrices crown this figure as the supreme guardian titan of El Dorado. Physical and energetic blows bounce harmlessly from its auric chassis while each step shifts tectonic plates.",
+              "signature_move": {
+                "move_id": "earth_eldorado_tectonic_slam",
+                "name_zh": "黃金天國地動破",
+                "name_en": "Eldorado Tectonic Slam",
+                "element": "earth",
+                "range_class": "melee",
+                "shape": "burst",
+                "movement": "forward",
+                "naming_note": "萬仞金山，鎮壓萬物。",
+                "desc_zh": "雙臂金晶巨柱以崩山之勢重砸地面，激起沖天黃金晶柱與連鎖地裂地震波，重創全場敵軍。",
+                "desc_en": "Slams its gold-crystal pillar arms into the earth with mountain-cleaving force, erupting towering auric spires and shattering seismic faults across the zone.",
+                "visual": "雙臂金晶巨柱以崩山之勢重砸地面，激起沖天黃金晶柱與連鎖地裂地震波，重創全場敵軍。"
+              }
             }
           ],
           "trait": {
@@ -1381,7 +1551,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "地脈回應",
             "idea_zh": "受到任意屬性攻擊後，土專精提高十五點，持續四秒。"
           },
-          "overload": "暫無超載型態"
+          "overload": "金塵天聖岩神（earth_eldorado_colossus · XL）：巨石魔像完全沉浸於黃金國祭典神能中；體表生成千層高純黃金重甲與菱形祖母綠以太陣列，胸口聖湖寶石化為旋轉引力星核，雙臂生長出厚重金剛岩柱巨盾"
         }
       }
     },
@@ -1389,7 +1559,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_ice_frostbeast",
       "code_zh": "冰",
       "element": "ice",
-      "title_zh": "霜角雛 → 霜角獵獸 → 霜角巨獸",
+      "title_zh": "霜角雛 → 霜角獵獸 → 霜角巨獸 → 霜角極凍天獸",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_ice_frostbeast",
@@ -1425,7 +1595,7 @@ window.COSMI_DESIGNED = {
         "role": "遠距砲台：高敏捷，遠距指定點範圍爆發，上場時暫時提高冰抗",
         "temperament": "fierce",
         "disposition": "傲骨凌霜、極地伏擊",
-        "size_profile": "S→M→L",
+        "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
             "height_length": "0.52 m",
@@ -1441,6 +1611,11 @@ window.COSMI_DESIGNED = {
             "height_length": "2.40 m",
             "weight": "380 kg",
             "body_fat": "14%"
+          },
+          "overload": {
+            "height_length": "5.5 m",
+            "weight": "3900 kg",
+            "body_fat": "12%"
           }
         },
         "height_length": "2.40 m",
@@ -1533,6 +1708,35 @@ window.COSMI_DESIGNED = {
                 "desc_en": "Unleash whirling snow around the chosen point, damaging enemies within the burst.",
                 "visual": "在指定目標周圍引爆飛旋冰雪，傷害範圍內的敵人。"
               }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "ice_permafrost_griffin",
+              "temperament": "apex",
+              "disposition": "凌寒肅殺、極北主宰",
+              "name_zh": "霜角極凍天獸",
+              "name_en": "Rimbrathorn",
+              "naming_note": "永凍千尋，鹿角破冥。",
+              "size_class": "XL",
+              "height_length": "5.5 m",
+              "weight": "3900 kg",
+              "body_fat": "12%",
+              "look": "永凍冰塚守護神獸超載覺醒；一對巨型金屬鹿角生長為覆蓋天際的結晶冰珊瑚樹，鍛鐵羽翼覆上絕對零度的幽藍玄冰，金箔鞍軛散發刺骨幽靈星光",
+              "dex_zh": "超載降臨的瞬間，整座荒原的溫度降至絕對零度。巨獸鹿角間跳躍的零度冰魄電弧能在一瞬間將暴風雨凍結成靜止的冰雕，振翼掀起的寒潮令萬物歸於寂靜。",
+              "dex_en": "At the moment of overload, temperatures plunge toward absolute zero. Crystalline arcs leaping across its colossal antler canopy freeze blizzards mid-air into silent ice sculptures.",
+              "signature_move": {
+                "move_id": "ice_absolute_permafrost_howl",
+                "name_zh": "萬古霜冥極寒劫",
+                "name_en": "Absolute Permafrost Howl",
+                "element": "ice",
+                "range_class": "long",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "絕對零度，萬籟俱寂。",
+                "desc_zh": "鹿角匯聚極北永凍寒髓，仰天引吭咆哮，釋放橫掃全場的零度冰風暴與極地碎冰潮。",
+                "desc_en": "Channels the core frost of eternal glaciers through its antlers and unleashes an all-encompassing blizzard gale that entombs the battlefield in permafrost.",
+                "visual": "鹿角匯聚極北永凍寒髓，仰天引吭咆哮，釋放橫掃全場的零度冰風暴與極地碎冰潮。"
+              }
             }
           ],
           "trait": {
@@ -1540,7 +1744,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "初霜護性",
             "idea_zh": "召喚上場時凝聚霜氣，冰抗性提高三十五點，持續四秒。"
           },
-          "overload": "暫無超載型態"
+          "overload": "霜角極凍天獸（ice_permafrost_griffin · XL）：永凍冰塚守護神獸超載覺醒；一對巨型金屬鹿角生長為覆蓋天際的結晶冰珊瑚樹，鍛鐵羽翼覆上絕對零度的幽藍玄冰，金箔鞍軛散發刺骨幽靈星光"
         }
       }
     },
@@ -1548,7 +1752,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_wind_fluteglider",
       "code_zh": "風",
       "element": "wind",
-      "title_zh": "笛風舟 → 笛風巡舟 → 笛風天舟",
+      "title_zh": "笛風舟 → 笛風巡舟 → 笛風天舟 → 笛風太虛神舟",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_wind_fluteglider",
@@ -1584,7 +1788,7 @@ window.COSMI_DESIGNED = {
         "role": "游擊砲台：最高敏捷，遠距指定點範圍爆發，換手上場時加速",
         "temperament": "normal",
         "disposition": "自由不羈、隨風起舞",
-        "size_profile": "S→M→L",
+        "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
             "height_length": "0.46 m",
@@ -1600,6 +1804,11 @@ window.COSMI_DESIGNED = {
             "height_length": "2.20 m",
             "weight": "85 kg",
             "body_fat": "10%"
+          },
+          "overload": {
+            "height_length": "6.0 m",
+            "weight": "1150 kg",
+            "body_fat": "8%"
           }
         },
         "height_length": "2.20 m",
@@ -1692,6 +1901,35 @@ window.COSMI_DESIGNED = {
                 "desc_en": "Burst a gathered wind around the chosen point, damaging enemies within its radius.",
                 "visual": "在指定目標周圍引爆凝聚的旋風，傷害範圍內的敵人。"
               }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "wind_zephyr_archcruiser",
+              "temperament": "apex",
+              "disposition": "乘風破浪、縹緲天籟",
+              "name_zh": "笛風太虛神舟",
+              "name_en": "Reeviloque",
+              "naming_note": "九天仙籟，風御萬里。",
+              "size_class": "XL",
+              "height_length": "6.0 m",
+              "weight": "1150 kg",
+              "body_fat": "8%",
+              "look": "傳奇風舟在超載中幻化為空靈雲海巨艦；幾何刺繡風帆化作千層半透明光羽流雲翼，舟身百孔排笛在以太狂風中演奏出撕裂長空的音波風暴，周身環繞著高速平流層氣流環",
+              "dex_zh": "超載讓笛舟徹底融入大氣平流層。其所過之處天籟交鳴、狂風隨其指揮若定，百孔排笛共振釋放的超高壓風刃甚至能在雲海中斬開長達數十里的無雲天塹。",
+              "dex_en": "Fusing completely into stratospheric air currents during overload, the archcruiser plays a symphony of tempests. Resonating high-pressure sonic wind blades carve massive clear ravines through endless seas of clouds.",
+              "signature_move": {
+                "move_id": "wind_stratosphere_symphony",
+                "name_zh": "九天笛音裂空風",
+                "name_en": "Stratospheric Symphony Gale",
+                "element": "wind",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "萬管齊鳴，天塹破雲。",
+                "desc_zh": "全船百組竹笛共振激發音爆颶風，在超高速巡航中沿直線向前轟出撕裂大氣的狂暴螺旋風壓波。",
+                "desc_en": "Vibrates hundred-flute arrays into a sonic tempest, projecting a spiraling atmospheric vacuum cannon forward in supersonic flight.",
+                "visual": "全船百組竹笛共振激發音爆颶風，在超高速巡航中沿直線向前轟出撕裂大氣的狂暴螺旋風壓波。"
+              }
             }
           ],
           "trait": {
@@ -1699,7 +1937,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "換風輕行",
             "idea_zh": "換手上場時借風加速，移動速度提高百分之二十，持續六秒。"
           },
-          "overload": "暫無超載型態"
+          "overload": "笛風太虛神舟（wind_zephyr_archcruiser · XL）：傳奇風舟在超載中幻化為空靈雲海巨艦；幾何刺繡風帆化作千層半透明光羽流雲翼，舟身百孔排笛在以太狂風中演奏出撕裂長空的音波風暴，周身環繞著高速平流層氣流環"
         }
       }
     }
@@ -1712,13 +1950,14 @@ window.COSMI_DESIGNED = {
       "role": "大廳 NPC：孵蛋師",
       "ethnicity": "東亞體系",
       "region": "日本",
-      "timeline": "架空奇幻",
+      "timeline": "晶石賽博/霓虹魔導義體紀元",
       "gender": "女",
       "age_band": "青年",
       "age": 22,
       "height_cm": 163,
       "weight_kg": 48,
       "body_fat": "17.5%",
+      "cup_size": "C",
       "body_type": "纖細結實；窄肩、長腿，重心穩定，適合長時間巡檢孵化艙",
       "personality": [
         "冷靜",
@@ -1738,7 +1977,6 @@ window.COSMI_DESIGNED = {
         "被小看"
       ],
       "vessel": "talisman_card",
-      "cup_size": "C",
       "palette_hex": [
         "#383049",
         "#F4E9D9",
@@ -1747,18 +1985,30 @@ window.COSMI_DESIGNED = {
         "#A9D9DF"
       ],
       "outfit_palette": [
-        "黑曜石",
-        "雲白",
-        "朱砂赤",
-        "晨金"
+        "海軍深藍",
+        "象牙米白",
+        "黃銅金",
+        "珊瑚鮮橘",
+        "以太水藍"
       ],
       "hair_palette": [
-        "自然黑"
+        "曜石純黑",
+        "清透天藍"
       ],
       "eye_palette": [
-        "深褐"
+        "琥珀金"
       ],
-      "biography": "雨森澄羽自幼生長於東亞群島的水邊神社，在古老神道咒術與以太能量探測儀器包圍中長大。她天生對以太能量的微弱脈動具有超乎常人的直覺，十四歲時便獨立修復了失落的符籙孵化法陣。成年後加入星海開拓先遣隊，擔任大廳總孵蛋師。性格冷靜而極度專注，日常對待宙獸蛋如同珍寶，但一旦有人輕蔑她的精密度，便會展現出意外強勢好勝的一面。身側常年佩戴以太符籙卡片，能精確以符陣為初生宙獸引導本命靈光。"
+      "silhouette_keywords": [
+        "側後高髮髻與短散髮",
+        "外擴短版寬袖",
+        "大型卵形孵化背包",
+        "高腰短褲與雙側短垂片",
+        "厚底短靴與右腰卡匣"
+      ],
+      "biography": "雨森澄羽誕生於霓虹交織的小行星軌道孵化基地，家族代代皆是專注於以太生命律動的調律技師。在漫天數據流與冰冷機房中長大的她，年少時便能單憑指尖微觸感知卵殼內最纖細的以太震顫。面對外界對其年輕資歷的質疑，她以近乎偏執的冷靜與釣魚般的耐性，研發出將古老符籙轉譯為微電路脈衝的校準卡片。平日看似寡言疏離、行事雷厲風行，唯獨在破殼而出的毛茸茸幼獸將溫熱鼻尖湊向掌心時，澄羽才會卸下心防，露出只屬於守護者的溫柔笑意。",
+      "backstory_zh": "澄羽在小行星孵化站長大，習慣用釣魚時的耐性觀察卵殼微光，卻總嫌機器等待太久。她把遊戲中的連鎖操作改成孵化卡校準法；看似冷淡，遇上毛茸茸的幼宙獸就會不自覺放柔聲音。",
+      "sensitivity": "review",
+      "sensitivity_note": "僅取日本層疊服裝線條、日常結繩與配色意象；不借用神社儀式服、神祇名、護符文字或宗教符號。符籙卡片以孵化電路與蛋形圓環取代可辨識的神聖書符。主立繪局部印花、攜帶配件請文化顧問於量產前再次審閱。"
     },
     {
       "id": "chr_yeh_chengxi",
@@ -1766,104 +2016,133 @@ window.COSMI_DESIGNED = {
       "name_en": "Chengxi Yeh",
       "role": "玩家角色預設外觀",
       "ethnicity": "東亞體系",
-      "region": "台灣",
-      "timeline": "架空奇幻",
+      "region": "台灣漢人",
+      "timeline": "晶石賽博/霓虹魔導義體紀元",
       "gender": "女",
       "age_band": "青年",
       "age": 23,
       "height_cm": 165,
       "weight_kg": 50,
       "body_fat": "18.2%",
-      "body_type": "高挑勻稱；手腕靈活，步伐輕快",
+      "cup_size": "C",
+      "body_type": "精實輕盈的跑酷體型，約 7.3 頭身；窄肩、修長四肢與穩定核心，重視攀躍和低重心落地",
       "personality": [
         "腹黑",
         "衝動"
       ],
-      "style": "都會休閒與機能運動融合",
+      "style": "海洋水手",
       "interests": [
-        "登山攀岩",
-        "攝影紀錄"
+        "跑酷",
+        "料理"
       ],
       "likes": [
-        "薄荷茶",
-        "夜間星空"
+        "閃亮的礦石",
+        "星空"
       ],
       "dislikes": [
-        "潮濕悶熱",
-        "冗長會議"
+        "吵雜",
+        "高處"
       ],
       "vessel": "glass_bead",
-      "cup_size": "B",
       "palette_hex": [
-        "#1E2A38",
-        "#E6F0FA",
-        "#4A90E2",
-        "#50E3C2"
+        "#293D60",
+        "#5E83B4",
+        "#F0EAE1",
+        "#D8A761",
+        "#77C6DE"
       ],
       "outfit_palette": [
-        "海軍深藍",
-        "冰藍",
-        "石墨灰"
+        "深海湛藍",
+        "月華純白",
+        "珊瑚鮮橘",
+        "黃銅金",
+        "晴空冰藍"
       ],
       "hair_palette": [
-        "深栗褐"
+        "曜石純黑",
+        "清透天藍",
+        "濃茶褐"
       ],
       "eye_palette": [
-        "琥珀"
+        "琥珀金"
       ],
-      "biography": "葉澄汐出身海島山林，從小穿梭於高山斷崖與海岸潮間帶，鍛造出無所畏懼的攀爬身手與敏銳直覺。表面上是個笑容明朗、講話幽默的先鋒斥候，但在戰鬥與冒險時常出其不意採取大膽奇策，甚至略帶腹黑地誘使對手落入陷阱。她手腕懸掛一枚晶瑩剔透的特製琉璃珠，能將捕捉到的宙獸收納入流動的星雲光泡中，在星際原野上總是一馬當先衝入未知的地貌探查。"
+      "silhouette_keywords": [
+        "側上方束起的濃茶色高馬尾、蓬鬆側瀏海與藍色珠狀束髮扣",
+        "米白短版寬袖海員上衣與深海藍寬船領",
+        "短琥珀黃領結形成胸口三角焦點",
+        "深藍高腰機能短褲與裸腿、厚底藍白短靴",
+        "背後扁平藍白航行背包、右腰藍色琉璃珠掛座"
+      ],
+      "biography": "葉澄汐自幼在巨艦穿梭的繁忙海港船塢中奔跑成長，跟隨老船匠攀爬於高聳龍骨與窄甲板之間。一次深入廢棄沉船底艙探險時，她偶然在古老以太動力核心殘骸中拾得一枚流轉著星雲光斑的琉璃珠，初次喚醒了深海宙獸的共鳴之音。自此，澄汐踏上了追尋深空星海與未知巨獸的航程。性格熱烈果敢、敢作敢當的她，總是掛著一抹狡黠自信的笑意躍向危險前線；縱使內心深處對無垠深淵的失重高處仍有著不易察覺的畏懼，她也絕不允許自己後退半步。平時將琉璃珠穩妥掛扣於右腰座，遭遇危機時瞬息摘珠啟動以太光泡。",
+      "backstory_zh": "在海港船塢長大的修補學徒，擅長沿窄甲板翻躍，也愛把星礦當料理靈感。拾得能呼應宙獸的琉璃珠後踏上旅途。她嘴角總掛著算計的笑，卻常因一時衝動先跳再想；明明怕高，偏不肯承認。",
+      "sensitivity": "ok",
+      "sensitivity_note": "文化參考僅限普遍海港生活、航海機能、夜空與礦石色彩。領結、背包航海徽記和琉璃珠採原創簡化幾何；未採用特定台灣族群祭儀服飾、宗教珠紋或神祇名。"
     },
     {
       "id": "chr_roen",
       "name_zh": "洛恩",
       "name_en": "Roen",
       "role": "玩家角色預設外觀",
-      "ethnicity": "北歐/日耳曼體系",
-      "region": "極地冰原",
-      "timeline": "架空奇幻",
+      "ethnicity": "白人",
+      "region": "南歐地中海",
+      "timeline": "晶石賽博/霓虹魔導義體紀元",
       "gender": "男",
       "age_band": "青少年",
       "age": 15,
       "height_cm": 172,
       "weight_kg": 61,
       "body_fat": "13.8%",
-      "body_type": "身形俐落結實；肩背微寬，重心微前傾，習慣風雪抗阻步伐",
+      "body_type": "偏瘦、靈活的青少年體型；肩寬適中、四肢修長，頭身比約 1:7",
       "personality": [
         "冷靜",
         "寡言"
       ],
-      "style": "防寒機能大衣與輕量合金扣帶",
+      "style": "賽博市集",
       "interests": [
-        "機械組裝",
-        "星圖繪製"
+        "電子遊戲",
+        "機械改裝"
       ],
       "likes": [
-        "熱可可",
-        "金屬打磨聲"
+        "安靜的清晨",
+        "甜食"
       ],
       "dislikes": [
-        "嘈雜人群",
-        "甜膩食物"
+        "輸",
+        "擁擠人群"
       ],
       "vessel": "magic_cube",
       "palette_hex": [
-        "#22252A",
-        "#D0D7DE",
-        "#3A7BD5",
-        "#FFD166"
+        "#F2E9DF",
+        "#F28A32",
+        "#30313D",
+        "#3AADC8",
+        "#745447"
       ],
       "outfit_palette": [
-        "石墨灰",
-        "銀白",
-        "極光藍"
+        "象牙米白",
+        "炭煙燻灰",
+        "珊瑚鮮橘",
+        "克萊因藍"
       ],
       "hair_palette": [
-        "銀白"
+        "炭煙燻灰",
+        "月華純白"
       ],
       "eye_palette": [
-        "淺藍"
+        "清透天藍"
       ],
-      "biography": "洛恩在永夜籠罩的極北邊境哨站長大，習慣了在風雪呼嘯與金屬齒輪轉動聲中獨立生活。十五歲時以優異的幾何空間計算才能通過星航學院考核，成為最年輕的開拓者之一。他不擅長繁複的客套寒暄，但對夥伴有著沉默而不可動搖的守護決心。他隨身攜帶一枚六面刻滿屬性古代符印的超載魔術方塊，指尖旋動間便能解鎖幾何矩陣，精準投擲構築出牢不可破的光學能量力場。"
+      "silhouette_keywords": [
+        "蓬鬆短髮與額上護目鏡",
+        "立領短版米白外套",
+        "肩背硬殼探索包",
+        "深色多袋機能褲",
+        "厚底模組鞋",
+        "手持發光方塊"
+      ],
+      "biography": "洛恩成長於地中海暖風穿行的軌道浮空市集，在老舊機械與二手義體零件堆中度過了整個童年。比起同齡少年的嬉鬧狂歡，他更偏愛在晨曦微光尚未喧囂時，獨自拆解精密發條與光子回路。他手中那枚能解鎖能量牢籠的多維魔術方塊，正是他親手將祖父留下的遺物機巧改造而成。在初次面對狂暴的晶石幼獸時，洛恩沒有絲毫慌亂，而是以驚人的幾何洞察力瞬息轉動方塊矩陣完成了完美捕捉。寡言冷靜的他習慣以嚴密的邏輯剖析戰局，誓要在無垠星海中印證自己的每一步推演。",
+      "backstory_zh": "成長於海風穿行的軌道市集，洛恩習慣在清晨替舊裝置換上新零件。他把改造過的魔方當作宙獸的收服媒介，旅途中寧可用觀察和準備取勝，也不喜歡在嘈雜人群裡炫耀成果。",
+      "sensitivity": "ok",
+      "sensitivity_note": "地中海僅取海風、市集晨光與暖色材質的環境意象；服飾符號均為原創幾何記號，未使用真實宗教儀式紋樣或傳統神聖服飾。"
     }
   ]
 };
