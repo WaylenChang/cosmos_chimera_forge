@@ -73,7 +73,8 @@
     seed: "", platform: "chatgpt", taskId: TASKS[0].id, includeReview: false,
     character: {}, creature: {}, locks: {}, opts: {}, notes: "", subjectIds: {},
     customOptions: {}, customValues: {}, activeTab: "forge", currentRound: 1,
-    preset: null // 已設計項目的 line_id；設定時宙獸概念改用 designed.js 的定案內容，不再隨機
+    preset: null, // 已設計項目的 line_id；設定時宙獸概念改用 designed.js 的定案內容，不再隨機
+    presetChar: null // 已設計角色的 id；設定時角色概念改用 designed.js 的定案內容，不再隨機
   };
 
   // ==================== 成果審查台狀態與跨管線工具 ====================
@@ -165,9 +166,16 @@
     toast("已切換至「" + t.zh + "（批量處理模式）」");
   }
 
-  // REQ: 使用者 2026-11-07 — 已設計的宙獸（P2-08 御三家等）直接產出立繪 / img-to-3D prompt。
+  // REQ: 使用者 2026-11-07 — 已設計的宙獸（P2-08 御三家、P5-03 七元素等）與角色直接產出立繪 / img-to-3D prompt。
   const DESIGNED = (window.COSMI_DESIGNED && window.COSMI_DESIGNED.items) || [];
+  const DESIGNED_CHARACTERS = (window.COSMI_DESIGNED && window.COSMI_DESIGNED.characters) || [];
+  const ELEM_ICONS = {
+    light: "☀️", dark: "🌙", aether: "🌟",
+    metal: "⚙️", wood: "🌿", water: "🌊",
+    fire: "🔥", earth: "⛰️", ice: "❄️", wind: "🌪️"
+  };
   function designedItem() { return state.preset ? DESIGNED.find(d => d.line_id === state.preset) || null : null; }
+  function designedCharItem() { return state.presetChar ? DESIGNED_CHARACTERS.find(c => c.id === state.presetChar) || null : null; }
 
   function getCustom(key) { return state.customOptions[key] || []; }
   function addCustom(key, val) {
@@ -394,6 +402,46 @@
   // ---- 概念輸出（prompt 內的 JSON） ----
   function zhOf(list, v) { const o = list.find(x => x.v === v); return o ? o.zh : v; }
   function characterConcept() {
+    const dc = designedCharItem();
+    if (dc) {
+      const vz = (C.VESSELS.find(x => x.v === dc.vessel) || {}).zh || dc.vessel;
+      const res = {
+        id: dc.id,
+        name_zh: dc.name_zh,
+        name_en: dc.name_en,
+        role: dc.role,
+        ethnicity: dc.ethnicity,
+        region: dc.region,
+        timeline: dc.timeline,
+        gender: dc.gender,
+        age: dc.age,
+        age_band: dc.age_band,
+        height: dc.height_cm ? `${dc.height_cm}` : "165",
+        weight: dc.weight_kg ? `${dc.weight_kg} kg` : "未知",
+        body_fat: dc.body_fat || "未知",
+        body_type: dc.body_type || ""
+      };
+      if (dc.gender === "女" && dc.cup_size) {
+        res.cup_size = dc.cup_size;
+      }
+      Object.assign(res, {
+        pose: dc.pose || "自然立姿，兼顧輪廓與剪裁細節",
+        palette_hex: dc.palette_hex || [],
+        outfit_palette: dc.outfit_palette || [],
+        hair_palette: dc.hair_palette || [],
+        eye_palette: dc.eye_palette || [],
+        personality: dc.personality || [],
+        style: dc.style || "",
+        interests: dc.interests || [],
+        likes: dc.likes || [],
+        dislikes: dc.dislikes || [],
+        vessel: vz,
+        vessel_key: dc.vessel,
+        vessel_zh: vz,
+        biography: dc.biography || ""
+      });
+      return res;
+    }
     const c = state.character;
     const res = {
       id: subjectId("character"), role: c.role?.[0] || "未知", ethnicity: c.ethnicity?.[0] || "未知",
@@ -454,8 +502,13 @@
   }
 
   function subjectId(kind) {
-    const d = kind === "creature" ? designedItem() : null;
-    if (d) return d.line_id;
+    if (kind === "creature") {
+      const d = designedItem();
+      if (d) return d.line_id;
+    } else if (kind === "character") {
+      const dc = designedCharItem();
+      if (dc) return dc.id;
+    }
     const custom = state.subjectIds[kind];
     if (custom) return custom;
     return (kind === "character" ? "chr_" : "line_") + state.seed;
@@ -783,6 +836,7 @@
 
   function useDesigned(lineId, taskId, stage = null) {
     state.preset = lineId;
+    state.presetChar = null;
     state.taskId = taskId;
     state.currentRound = 1;
     const o = state.opts[taskId] || (state.opts[taskId] = {});
@@ -793,20 +847,53 @@
     if (promptEl) promptEl.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
+  function useDesignedCharacter(charId, taskId) {
+    state.preset = null;
+    state.presetChar = charId;
+    state.taskId = taskId || "character-concept";
+    state.currentRound = 1;
+    const o = state.opts[state.taskId] || (state.opts[state.taskId] = {});
+    if (state.taskId === "character-model-rig") {
+      o.scope = "single";
+      o.source_pack = "";
+    }
+    renderAll();
+    const promptEl = $("#prompt");
+    if (promptEl) promptEl.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   function renderDesigned() {
     const box = $("#designed"); if (!box) return;
     box.replaceChildren();
-    if (!DESIGNED.length) { box.append(el("p", { class: "muted" }, "沒有已設計項目（designed.js 未載入）。")); return; }
-    DESIGNED.forEach(d => {
-      const on = state.preset === d.line_id;
-      box.append(el("div", { class: "designed" + (on ? " on" : "") },
-        el("span", { class: "tname" }, d.code_zh + " · " + d.title_zh),
-        el("span", { class: "tmeta" }, d.line_id + " · " + d.element),
-        el("div", { class: "row" },
-          el("button", { type: "button", class: "btn mini" + (on && state.taskId === "creature-concept" ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-concept") }, "🎨 立繪 prompt"),
-          el("button", { type: "button", class: "btn mini" + (on && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-model-rig") }, "🧊 img-to-3D prompt"))));
-    });
-    if (state.preset) box.append(el("button", { type: "button", class: "btn mini ghost", onclick: () => { state.preset = null; renderAll(); } }, "✕ 取消已設計項目（回到隨機概念）"));
+    if (!DESIGNED.length && !DESIGNED_CHARACTERS.length) { box.append(el("p", { class: "muted" }, "沒有已設計項目（designed.js 未載入）。")); return; }
+    
+    if (DESIGNED.length) {
+      box.append(el("div", { style: "font-weight:600;font-size:12px;margin:2px 0 4px;color:var(--text)" }, `🐾 已設計宙獸 (${DESIGNED.length} 線)`));
+      DESIGNED.forEach(d => {
+        const on = state.preset === d.line_id;
+        box.append(el("div", { class: "designed" + (on ? " on" : "") },
+          el("span", { class: "tname" }, `${ELEM_ICONS[d.element] || "🐾"} ${d.code_zh} · ${d.title_zh}`),
+          el("span", { class: "tmeta" }, d.line_id + " · " + d.element),
+          el("div", { class: "row" },
+            el("button", { type: "button", class: "btn mini" + (on && state.taskId === "creature-concept" ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-concept") }, "🎨 立繪 prompt"),
+            el("button", { type: "button", class: "btn mini" + (on && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"), onclick: () => useDesigned(d.line_id, "creature-model-rig") }, "🧊 img-to-3D prompt"))));
+      });
+    }
+
+    if (DESIGNED_CHARACTERS.length) {
+      box.append(el("div", { style: "font-weight:600;font-size:12px;margin:8px 0 4px;color:var(--text)" }, `👤 已設計角色 (${DESIGNED_CHARACTERS.length} 位)`));
+      DESIGNED_CHARACTERS.forEach(c => {
+        const on = state.presetChar === c.id;
+        box.append(el("div", { class: "designed" + (on ? " on" : "") },
+          el("span", { class: "tname" }, `👤 ${c.name_zh} (${c.name_en})`),
+          el("span", { class: "tmeta" }, c.id + " · " + c.role),
+          el("div", { class: "row" },
+            el("button", { type: "button", class: "btn mini" + (on && state.taskId === "character-concept" ? "" : " ghost"), onclick: () => useDesignedCharacter(c.id, "character-concept") }, "🎨 立繪 prompt"),
+            el("button", { type: "button", class: "btn mini" + (on && state.taskId === "character-model-rig" ? "" : " ghost"), onclick: () => useDesignedCharacter(c.id, "character-model-rig") }, "🧊 3D prompt"))));
+      });
+    }
+
+    if (state.preset || state.presetChar) box.append(el("button", { type: "button", class: "btn mini ghost", onclick: () => { state.preset = null; state.presetChar = null; renderAll(); } }, "✕ 取消已設計項目（回到隨機概念）"));
     if ($("#designedList")) renderDesignedList();
   }
 
@@ -908,6 +995,9 @@
       const d = designedItem();
       title = `${d ? d.code_zh + " · " + d.title_zh : state.preset}`;
       if (curStage) title += ` (${STAGE_ZH[curStage] || curStage})`;
+    } else if (state.presetChar) {
+      const dc = designedCharItem();
+      title = `${dc ? dc.name_zh + " (" + dc.name_en + ")" : state.presetChar}`;
     } else if (b.ctx.concept?.name_zh) {
       title = `${b.ctx.concept.name_zh} (${state.seed})`;
       if (curStage) title += ` (${STAGE_ZH[curStage] || curStage})`;
@@ -950,6 +1040,7 @@
         seed: state.seed,
         platform: state.platform,
         preset: state.preset,
+        presetChar: state.presetChar,
         opts: JSON.parse(JSON.stringify(state.opts || {})),
         creature: JSON.parse(JSON.stringify(state.creature || {})),
         character: JSON.parse(JSON.stringify(state.character || {})),
@@ -1033,6 +1124,69 @@
     toast(`⭐ 已收藏已設計項目：「${title}」！`);
   }
 
+  function addDesignedCharToFavorites(charId) {
+    const c = DESIGNED_CHARACTERS.find(x => x.id === charId);
+    if (!c) return;
+
+    const prevPreset = state.preset, prevPresetChar = state.presetChar, prevTaskId = state.taskId;
+    state.preset = null;
+    state.presetChar = charId;
+    state.taskId = "character-concept";
+
+    const b = build();
+    const title = `${c.name_zh} (${c.name_en}) — 角色立繪`;
+
+    state.preset = prevPreset;
+    state.presetChar = prevPresetChar;
+    state.taskId = prevTaskId;
+
+    if (!b || b.errors.length) {
+      toast("無法產生已設計角色之 Prompt");
+      return;
+    }
+
+    const curPrompt = b.text;
+    const existing = favorites.find(f => f.subjectId === charId);
+    if (existing) {
+      toast(`「${title}」已在我的最愛清單中！`);
+      return;
+    }
+
+    const favItem = {
+      id: "fav_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+      title,
+      task: "character-concept",
+      taskZh: "角色設計概念與立繪",
+      subjectId: charId,
+      stage: null,
+      stageZh: "全貌",
+      seed: state.seed,
+      platform: state.platform,
+      prompt: curPrompt,
+      notes: "",
+      createdAt: new Date().toLocaleString(),
+      stateSnapshot: {
+        taskId: "character-concept",
+        seed: state.seed,
+        platform: state.platform,
+        preset: null,
+        presetChar: charId,
+        opts: {},
+        creature: {},
+        character: JSON.parse(JSON.stringify(c)),
+        locks: {},
+        notes: "",
+        currentRound: 1
+      }
+    };
+
+    favorites.unshift(favItem);
+    saveFavorites();
+    renderFavorites();
+    updateFavButton();
+    toast(`⭐ 已收藏已設計角色：「${title}」！`);
+  }
+
   function applyFavorite(fav) {
     if (!fav) return;
     state.taskId = fav.task;
@@ -1040,6 +1194,7 @@
     state.platform = fav.platform || "chatgpt";
     if (fav.stateSnapshot) {
       state.preset = fav.stateSnapshot.preset || null;
+      state.presetChar = fav.stateSnapshot.presetChar || null;
       state.opts = JSON.parse(JSON.stringify(fav.stateSnapshot.opts || {}));
       state.creature = JSON.parse(JSON.stringify(fav.stateSnapshot.creature || {}));
       state.character = JSON.parse(JSON.stringify(fav.stateSnapshot.character || {}));
@@ -1048,6 +1203,7 @@
       state.currentRound = fav.stateSnapshot.currentRound || 1;
     } else {
       state.preset = null;
+      state.presetChar = null;
       state.notes = fav.notes || "";
     }
     renderAll();
@@ -1228,7 +1384,7 @@
     const searchInput = $("#designedSearch");
     const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
-    const filtered = DESIGNED.filter(d => {
+    const filteredLines = DESIGNED.filter(d => {
       if (!query) return true;
       const id = (d.line_id || "").toLowerCase();
       const code = (d.code_zh || "").toLowerCase();
@@ -1239,178 +1395,316 @@
       return id.includes(query) || code.includes(query) || title.includes(query) || elem.includes(query) || arch.includes(query) || stagesStr.includes(query);
     });
 
-    const countEl = $("#designedCount");
-    if (countEl) countEl.textContent = `(${DESIGNED.length}${query ? "，符合 " + filtered.length : ""})`;
+    const filteredChars = DESIGNED_CHARACTERS.filter(c => {
+      if (!query) return true;
+      const id = (c.id || "").toLowerCase();
+      const nameZh = (c.name_zh || "").toLowerCase();
+      const nameEn = (c.name_en || "").toLowerCase();
+      const role = (c.role || "").toLowerCase();
+      const region = (c.region || "").toLowerCase();
+      const ethnicity = (c.ethnicity || "").toLowerCase();
+      const vessel = (c.vessel || "").toLowerCase();
+      const bio = (c.biography || "").toLowerCase();
+      return id.includes(query) || nameZh.includes(query) || nameEn.includes(query) || role.includes(query) || region.includes(query) || ethnicity.includes(query) || vessel.includes(query) || bio.includes(query);
+    });
 
-    if (!filtered.length) {
+    const countEl = $("#designedCount");
+    if (countEl) countEl.textContent = `(${DESIGNED.length} 宙獸線 · ${DESIGNED_CHARACTERS.length} 角色${query ? "，符合 " + (filteredLines.length + filteredChars.length) : ""})`;
+
+    if (!filteredLines.length && !filteredChars.length) {
       box.append(el("div", { class: "muted", style: "padding:16px;text-align:center;border:1px dashed var(--line);border-radius:6px;font-size:12.5px" }, "沒有符合搜尋條件的已設計項目。"));
       return;
     }
 
-    filtered.forEach(d => {
-      const isPresetActive = state.preset === d.line_id;
-      const card = el("div", { class: "forge-list-card" + (isPresetActive ? " active" : "") });
+    // 1. 宙獸演化線清單
+    if (filteredLines.length > 0) {
+      box.append(el("h3", { style: "margin:10px 0 8px;font-size:14px;color:var(--text);display:flex;align-items:center;gap:6px" },
+        el("span", {}, "🐾 已設計宙獸演化線"),
+        el("span", { class: "f-badge accent" }, `${filteredLines.length} 線 / ${filteredLines.length * 3 + (filteredLines.filter(x => (x.concept?.locked?.stages || []).length > 3).length)} 階`)
+      ));
 
-      // 1. Line Title Row
-      const titleRow = el("div", { class: "card-title-row" },
-        el("div", { class: "card-title" },
-          el("span", { style: "color:var(--warn)" }, d.code_zh === "日" ? "☀️" : d.code_zh === "月" ? "🌙" : "🌟"),
-          el("span", {}, d.code_zh + " · " + d.title_zh)
-        ),
-        el("div", { class: "card-badges" },
-          el("span", { class: "f-badge accent" }, d.line_id),
-          el("span", { class: "f-badge" }, d.element),
-          isPresetActive ? el("span", { class: "f-badge ok" }, "目前鍛造中") : null
-        )
-      );
+      filteredLines.forEach(d => {
+        const isPresetActive = state.preset === d.line_id;
+        const card = el("div", { class: "forge-list-card" + (isPresetActive ? " active" : "") });
 
-      // 2. Line Meta Row
-      const metaRow = el("div", { class: "card-meta-row" },
-        el("span", {}, "原型: " + (d.concept?.archetype || "—")),
-        el("span", {}, "時空: " + (d.concept?.timeline || "—")),
-        el("span", {}, "體型軸: " + (d.concept?.size_profile || "S→M→L→XL")),
-        el("span", {}, "來源: " + d.source)
-      );
-
-      // 3. Line Review Row (整線審查欄位)
-      const lineMatches = getReviewMatches(d.line_id);
-      const reviewRow = el("div", { class: "card-review-row" });
-      const reviewInfo = el("div", { class: "card-review-info" });
-      
-      if (lineMatches.length > 0) {
-        const topMatch = lineMatches[0];
-        const statusMap = {
-          approved: { zh: "✅ 已核准通過", cls: "ok" },
-          reject: { zh: "❌ 退回拒絕", cls: "danger" },
-          pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
-        };
-        const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
-        reviewInfo.append(
-          el("span", { class: "prompt-k" }, "審查欄位："),
-          el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.zh} (共收錄 ${lineMatches.length} 包)`),
-          el("code", {}, topMatch.id)
+        // 1. Line Title Row
+        const titleRow = el("div", { class: "card-title-row" },
+          el("div", { class: "card-title" },
+            el("span", { style: "color:var(--warn)" }, ELEM_ICONS[d.element] || "🐾"),
+            el("span", {}, d.code_zh + " · " + d.title_zh)
+          ),
+          el("div", { class: "card-badges" },
+            el("span", { class: "f-badge accent" }, d.line_id),
+            el("span", { class: "f-badge" }, d.element),
+            isPresetActive ? el("span", { class: "f-badge ok" }, "目前鍛造中") : null
+          )
         );
-        reviewRow.append(
-          reviewInfo,
-          el("button", {
-            class: "btn mini", type: "button",
-            title: `跳轉至審查台檢視此線成果 (${topMatch.id})`,
-            onclick: () => jumpToReview(topMatch.id)
-          }, "🔍 跳轉審查台")
-        );
-      } else {
-        reviewInfo.append(
-          el("span", { class: "prompt-k" }, "審查欄位："),
-          el("span", { class: "f-badge" }, "審查台尚未載入此線審查包"),
-          el("span", { class: "muted" }, `(${d.line_id})`)
-        );
-        reviewRow.append(
-          reviewInfo,
-          el("button", {
-            class: "btn mini ghost", type: "button",
-            title: `前往成果審查台搜尋此線 ${d.line_id}`,
-            onclick: () => jumpToReview(d.line_id)
-          }, "🔍 轉至審查搜尋")
-        );
-      }
 
-      // 4. Line Actions Row
-      const lineActions = el("div", { class: "card-actions" },
-        el("button", {
-          class: "btn mini" + (isPresetActive && state.taskId === "creature-concept" ? "" : " ghost"),
-          type: "button",
-          onclick: () => useDesigned(d.line_id, "creature-concept")
-        }, "🎨 載入立繪鍛造"),
-        el("button", {
-          class: "btn mini" + (isPresetActive && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
-          type: "button",
-          onclick: () => useDesigned(d.line_id, "creature-model-rig")
-        }, "🧊 載入 3D 鍛造"),
-        el("button", {
-          class: "btn mini ghost", type: "button",
-          title: "將此線成年型態加入我的最愛",
-          onclick: () => addDesignedToFavorites(d.line_id, "adult")
-        }, "⭐ 收藏整線 (成年)"),
-        isPresetActive ? el("button", {
-          class: "btn mini ghost", type: "button",
-          onclick: () => { state.preset = null; renderAll(); }
-        }, "✕ 取消已設計（回隨機）") : null
-      );
+        // 2. Line Meta Row
+        const metaRow = el("div", { class: "card-meta-row" },
+          el("span", {}, "原型: " + (d.concept?.archetype || "—")),
+          el("span", {}, "時空: " + (d.concept?.timeline || "—")),
+          el("span", {}, "體型軸: " + (d.concept?.size_profile || "S→M→L→XL")),
+          el("span", {}, "來源: " + d.source)
+        );
 
-      // 5. Four Stages Grid (四階型態卡片)
-      const stages = d.concept?.locked?.stages || [];
-      const stagesGrid = el("div", { class: "designed-stages-grid" });
-
-      stages.forEach(st => {
-        const isCurStage = isPresetActive && state.opts[state.taskId]?.stage === st.stage;
-        const stageCard = el("div", { class: "stage-mini-card" + (isCurStage ? " active" : "") });
+        // 3. Line Review Row (整線審查欄位)
+        const lineMatches = getReviewMatches(d.line_id);
+        const reviewRow = el("div", { class: "card-review-row" });
+        const reviewInfo = el("div", { class: "card-review-info" });
         
-        // Stage Header
-        const stHeader = el("div", { class: "stage-mini-header" },
-          el("b", { style: "color:#fff" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
-          el("span", { class: "f-badge" }, st.size_class || "—")
-        );
-
-        // Stage Meta
-        const stIdRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px" },
-          el("code", {}, st.creature_id),
-          el("span", {}, `${st.height_length || "—"} / ${st.weight || "—"}`)
-        );
-
-        // Stage Look & Move
-        const stDesc = el("div", { class: "muted", style: "font-size:11px;line-height:1.3;max-height:38px;overflow:hidden;text-overflow:ellipsis" }, st.look);
-        const stMove = el("div", { style: "font-size:11px;color:var(--warn)" }, `招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`);
-
-        // Stage 審查跳轉檢查
-        const stMatches = getReviewMatches(d.line_id, st.stage);
-        const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:rgba(0,0,0,0.2);border-radius:4px;font-size:11px;margin-top:2px" });
-        if (stMatches.length > 0) {
-          const m = stMatches[0];
-          stReviewDiv.append(
-            el("span", { style: "color:var(--ok)" }, "✅ 審查包收錄"),
+        if (lineMatches.length > 0) {
+          const topMatch = lineMatches[0];
+          const statusMap = {
+            approved: { zh: "✅ 已核准通過", cls: "ok" },
+            reject: { zh: "❌ 退回拒絕", cls: "danger" },
+            pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
+          };
+          const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
+          reviewInfo.append(
+            el("span", { class: "prompt-k" }, "審查欄位："),
+            el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.zh} (共收錄 ${lineMatches.length} 包)`),
+            el("code", {}, topMatch.id)
+          );
+          reviewRow.append(
+            reviewInfo,
             el("button", {
-              class: "btn mini", type: "button", style: "height:20px;padding:0 5px;font-size:10px",
-              title: `跳轉審查 ${m.id}`,
-              onclick: () => jumpToReview(m.id, st.stage)
-            }, "🔍 跳轉")
+              class: "btn mini", type: "button",
+              title: `跳轉至審查台檢視此線成果 (${topMatch.id})`,
+              onclick: () => jumpToReview(topMatch.id)
+            }, "🔍 跳轉審查台")
           );
         } else {
-          stReviewDiv.append(
-            el("span", { class: "muted" }, "審查：未載入包"),
+          reviewInfo.append(
+            el("span", { class: "prompt-k" }, "審查欄位："),
+            el("span", { class: "f-badge" }, "審查台尚未載入此線審查包"),
+            el("span", { class: "muted" }, `(${d.line_id})`)
+          );
+          reviewRow.append(
+            reviewInfo,
             el("button", {
-              class: "btn mini ghost", type: "button", style: "height:20px;padding:0 5px;font-size:10px",
-              title: `至審查台搜尋`,
-              onclick: () => jumpToReview(d.line_id, st.stage)
-            }, "🔍 搜尋")
+              class: "btn mini ghost", type: "button",
+              title: `前往成果審查台搜尋此線 ${d.line_id}`,
+              onclick: () => jumpToReview(d.line_id)
+            }, "🔍 轉至審查搜尋")
           );
         }
 
-        // Stage buttons
-        const stBtns = el("div", { style: "display:flex;gap:4px;margin-top:4px;flex-wrap:wrap" },
+        // 4. Line Actions Row
+        const lineActions = el("div", { class: "card-actions" },
           el("button", {
-            class: "btn mini" + (isCurStage && state.taskId === "creature-concept" ? "" : " ghost"),
-            type: "button", style: "flex:1;font-size:10.5px;padding:1px 4px",
-            onclick: () => useDesigned(d.line_id, "creature-concept", st.stage)
-          }, "🎨 立繪"),
+            class: "btn mini" + (isPresetActive && state.taskId === "creature-concept" ? "" : " ghost"),
+            type: "button",
+            onclick: () => useDesigned(d.line_id, "creature-concept")
+          }, "🎨 載入立繪鍛造"),
           el("button", {
-            class: "btn mini" + (isCurStage && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
-            type: "button", style: "flex:1;font-size:10.5px;padding:1px 4px",
-            onclick: () => useDesigned(d.line_id, "creature-model-rig", st.stage)
-          }, "🧊 3D"),
+            class: "btn mini" + (isPresetActive && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
+            type: "button",
+            onclick: () => useDesigned(d.line_id, "creature-model-rig")
+          }, "🧊 載入 3D 鍛造"),
           el("button", {
-            class: "btn mini ghost", type: "button", style: "font-size:10.5px;padding:1px 4px",
-            title: `收藏 ${st.name_zh} (${STAGE_ZH[st.stage]}) 的立繪 Prompt`,
-            onclick: () => addDesignedToFavorites(d.line_id, st.stage)
-          }, "⭐ 收藏")
+            class: "btn mini ghost", type: "button",
+            title: "將此線成年型態加入我的最愛",
+            onclick: () => addDesignedToFavorites(d.line_id, "adult")
+          }, "⭐ 收藏整線 (成年)"),
+          isPresetActive ? el("button", {
+            class: "btn mini ghost", type: "button",
+            onclick: () => { state.preset = null; renderAll(); }
+          }, "✕ 取消已設計（回隨機）") : null
         );
 
-        stageCard.append(stHeader, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
-        stagesGrid.append(stageCard);
-      });
+        // 5. Four Stages Grid (四階型態卡片)
+        const stages = d.concept?.locked?.stages || [];
+        const stagesGrid = el("div", { class: "designed-stages-grid" });
 
-      card.append(titleRow, metaRow, reviewRow, lineActions, stagesGrid);
-      box.append(card);
-    });
+        stages.forEach(st => {
+          const isCurStage = isPresetActive && state.opts[state.taskId]?.stage === st.stage;
+          const stageCard = el("div", { class: "stage-mini-card" + (isCurStage ? " active" : "") });
+          
+          // Stage Header
+          const stHeader = el("div", { class: "stage-mini-header" },
+            el("b", { style: "color:#fff" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
+            el("span", { class: "f-badge" }, st.size_class || "—")
+          );
+
+          // Stage Meta
+          const stIdRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px" },
+            el("code", {}, st.creature_id),
+            el("span", {}, `${st.height_length || "—"} / ${st.weight || "—"}`)
+          );
+
+          // Stage Look & Move
+          const stDesc = el("div", { class: "muted", style: "font-size:11px;line-height:1.3;max-height:38px;overflow:hidden;text-overflow:ellipsis" }, st.look);
+          const stMove = el("div", { style: "font-size:11px;color:var(--warn)" }, `招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`);
+
+          // Stage 審查跳轉檢查
+          const stMatches = getReviewMatches(d.line_id, st.stage);
+          const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:rgba(0,0,0,0.2);border-radius:4px;font-size:11px;margin-top:2px" });
+          if (stMatches.length > 0) {
+            const m = stMatches[0];
+            stReviewDiv.append(
+              el("span", { style: "color:var(--ok)" }, "✅ 審查包收錄"),
+              el("button", {
+                class: "btn mini", type: "button", style: "height:20px;padding:0 5px;font-size:10px",
+                title: `跳轉審查 ${m.id}`,
+                onclick: () => jumpToReview(m.id, st.stage)
+              }, "🔍 跳轉")
+            );
+          } else {
+            stReviewDiv.append(
+              el("span", { class: "muted" }, "審查：未載入包"),
+              el("button", {
+                class: "btn mini ghost", type: "button", style: "height:20px;padding:0 5px;font-size:10px",
+                title: `至審查台搜尋`,
+                onclick: () => jumpToReview(d.line_id, st.stage)
+              }, "🔍 搜尋")
+            );
+          }
+
+          // Stage buttons
+          const stBtns = el("div", { style: "display:flex;gap:4px;margin-top:4px;flex-wrap:wrap" },
+            el("button", {
+              class: "btn mini" + (isCurStage && state.taskId === "creature-concept" ? "" : " ghost"),
+              type: "button", style: "flex:1;font-size:10.5px;padding:1px 4px",
+              onclick: () => useDesigned(d.line_id, "creature-concept", st.stage)
+            }, "🎨 立繪"),
+            el("button", {
+              class: "btn mini" + (isCurStage && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
+              type: "button", style: "flex:1;font-size:10.5px;padding:1px 4px",
+              onclick: () => useDesigned(d.line_id, "creature-model-rig", st.stage)
+            }, "🧊 3D"),
+            el("button", {
+              class: "btn mini ghost", type: "button", style: "font-size:10.5px;padding:1px 4px",
+              title: `收藏 ${st.name_zh} (${STAGE_ZH[st.stage]}) 的立繪 Prompt`,
+              onclick: () => addDesignedToFavorites(d.line_id, st.stage)
+            }, "⭐ 收藏")
+          );
+
+          stageCard.append(stHeader, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
+          stagesGrid.append(stageCard);
+        });
+
+        card.append(titleRow, metaRow, reviewRow, lineActions, stagesGrid);
+        box.append(card);
+      });
+    }
+
+    // 2. 角色清單
+    if (filteredChars.length > 0) {
+      box.append(el("h3", { style: "margin:20px 0 8px;font-size:14px;color:var(--text);display:flex;align-items:center;gap:6px" },
+        el("span", {}, "👤 已設計角色"),
+        el("span", { class: "f-badge accent" }, `${filteredChars.length} 位`)
+      ));
+
+      filteredChars.forEach(c => {
+        const isPresetActive = state.presetChar === c.id;
+        const card = el("div", { class: "forge-list-card" + (isPresetActive ? " active" : "") });
+
+        // 1. Title Row
+        const titleRow = el("div", { class: "card-title-row" },
+          el("div", { class: "card-title" },
+            el("span", { style: "color:var(--accent)" }, "👤"),
+            el("span", {}, `${c.name_zh} · ${c.name_en}`)
+          ),
+          el("div", { class: "card-badges" },
+            el("span", { class: "f-badge accent" }, c.id),
+            el("span", { class: "f-badge" }, c.role),
+            el("span", { class: "f-badge" }, `${c.gender} · ${c.age_band} (${c.age}歲)`),
+            isPresetActive ? el("span", { class: "f-badge ok" }, "目前鍛造中") : null
+          )
+        );
+
+        // 2. Meta Row
+        const metaRow = el("div", { class: "card-meta-row" },
+          el("span", {}, `體型: ${c.height_cm} cm / ${c.weight_kg} kg`),
+          el("span", {}, `體脂: ${c.body_fat}`),
+          c.cup_size ? el("span", {}, `罩杯: ${c.cup_size}`) : null,
+          el("span", {}, `時空: ${c.timeline}`),
+          el("span", {}, `地區: ${c.region} (${c.ethnicity})`),
+          el("span", {}, `器物: ${zhOf(C.VESSELS, c.vessel) || c.vessel}`)
+        );
+
+        // 3. Detail Row
+        const detailRow = el("div", { class: "card-meta-row", style: "margin-top:2px;font-size:11.5px;color:var(--muted)" },
+          el("span", {}, `風格: ${c.style || "—"}`),
+          el("span", {}, `個性: ${(c.personality || []).join("、")}`),
+          el("span", {}, `喜好: ${(c.likes || []).join("、")}`),
+          el("span", {}, `服色: ${(c.outfit_palette || []).join("、")}`)
+        );
+
+        // 4. Bio Row
+        const bioRow = el("div", { class: "muted", style: "font-size:11.5px;line-height:1.4;margin:4px 0;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px" },
+          c.biography || "—"
+        );
+
+        // 5. Review Row
+        const chrMatches = getReviewMatches(c.id);
+        const reviewRow = el("div", { class: "card-review-row" });
+        const reviewInfo = el("div", { class: "card-review-info" });
+        if (chrMatches.length > 0) {
+          const topMatch = chrMatches[0];
+          const statusMap = {
+            approved: { zh: "✅ 已核准通過", cls: "ok" },
+            reject: { zh: "❌ 退回拒絕", cls: "danger" },
+            pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
+          };
+          const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
+          reviewInfo.append(
+            el("span", { class: "prompt-k" }, "審查欄位："),
+            el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.zh} (共收錄 ${chrMatches.length} 包)`),
+            el("code", {}, topMatch.id)
+          );
+          reviewRow.append(
+            reviewInfo,
+            el("button", {
+              class: "btn mini", type: "button",
+              title: `跳轉至審查台檢視此角色成果 (${topMatch.id})`,
+              onclick: () => jumpToReview(topMatch.id)
+            }, "🔍 跳轉審查台")
+          );
+        } else {
+          reviewInfo.append(
+            el("span", { class: "prompt-k" }, "審查欄位："),
+            el("span", { class: "f-badge" }, "審查台尚未載入此角色審查包"),
+            el("span", { class: "muted" }, `(${c.id})`)
+          );
+          reviewRow.append(
+            reviewInfo,
+            el("button", {
+              class: "btn mini ghost", type: "button",
+              title: `前往成果審查台搜尋此角色 ${c.id}`,
+              onclick: () => jumpToReview(c.id)
+            }, "🔍 轉至審查搜尋")
+          );
+        }
+
+        // 6. Action Row
+        const actionsRow = el("div", { class: "card-actions" },
+          el("button", {
+            class: "btn mini" + (isPresetActive && state.taskId === "character-concept" ? "" : " ghost"),
+            type: "button",
+            onclick: () => useDesignedCharacter(c.id, "character-concept")
+          }, "🎨 載入角色立繪鍛造"),
+          el("button", {
+            class: "btn mini" + (isPresetActive && state.taskId === "character-model-rig" ? "" : " ghost"),
+            type: "button",
+            onclick: () => useDesignedCharacter(c.id, "character-model-rig")
+          }, "🧊 載入角色 3D 鍛造"),
+          el("button", {
+            class: "btn mini ghost", type: "button",
+            title: `將 ${c.name_zh} 加入我的最愛`,
+            onclick: () => addDesignedCharToFavorites(c.id)
+          }, "⭐ 收藏立繪 Prompt"),
+          isPresetActive ? el("button", {
+            class: "btn mini ghost", type: "button",
+            onclick: () => { state.presetChar = null; renderAll(); }
+          }, "✕ 取消已設計（回隨機）") : null
+        );
+
+        card.append(titleRow, metaRow, detailRow, bioRow, reviewRow, actionsRow);
+        box.append(card);
+      });
+    }
   }
 
   function fieldRow(kind, f) {
@@ -1507,6 +1801,46 @@
           el("div", { class: "muted" }, s.look), el("div", { class: "muted" }, "招式 " + s.signature_move.name_zh + "（" + s.signature_move.move_id + "）")))));
       box.append(el("p", { class: "muted" }, "特性：" + L.trait.name_zh + "（" + L.trait.trait_id + "）· 原型：" + d.concept.archetype + "（" + d.concept.region + "）· 超載：" + L.overload));
       const bgInfo = C.determineAgcBgColor(d.concept, false);
+      box.append(el("div", { class: "field", style: "border-top:1px dashed var(--line);margin-top:6px;padding-top:6px" },
+        el("label", {}, "2D AGC 立繪背景"),
+        el("div", { style: "display:flex;align-items:center;gap:8px" },
+          el("span", { style: `width:20px;height:20px;border-radius:4px;border:1px solid var(--line);background:${bgInfo.hex};display:inline-block;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.25)` }),
+          el("code", { style: "font-weight:bold" }, bgInfo.hex),
+          el("span", { class: "muted", style: "font-size:11.5px" }, `(R=G=B=${bgInfo.rgb[0]} · ${bgInfo.toneLabel})`)
+        ),
+        el("span", { class: "muted", style: "font-size:11px", title: bgInfo.reason }, "RGB等值")
+      ));
+      return;
+    }
+    const dc = kind === "character" ? designedCharItem() : null;
+    if (dc) {
+      box.append(el("div", { class: "subhead" },
+        el("h3", {}, `已設計角色：${dc.name_zh} (${dc.name_en})`),
+        el("code", {}, dc.id)
+      ));
+      box.append(el("p", { class: "muted" }, "內容來自 Data/_incoming/p0-05-samples/valid/characters（designed.js），不隨機、不可在此修改。"));
+      box.append(el("div", { class: "field" },
+        el("label", {}, "基本資訊"),
+        el("div", {},
+          el("b", {}, `${dc.role} · ${dc.ethnicity} · ${dc.region} · ${dc.gender} (${dc.age_band} ${dc.age} 歲)`),
+          el("div", { class: "muted" }, `身型：${dc.height_cm} cm / ${dc.weight_kg} kg · 體脂 ${dc.body_fat}${dc.cup_size ? ` · 罩杯 ${dc.cup_size}` : ""}`),
+          el("div", { class: "muted" }, `體態：${dc.body_type || "—"}`)
+        )
+      ));
+      box.append(el("div", { class: "field" },
+        el("label", {}, "器物與風格"),
+        el("div", {},
+          el("span", { class: "f-badge accent" }, `宙獸器物: ${zhOf(C.VESSELS, dc.vessel) || dc.vessel}`),
+          el("div", { class: "muted", style: "margin-top:4px" }, `風格：${dc.style || "—"} · 個性：${(dc.personality || []).join("、")}`),
+          el("div", { class: "muted" }, `服裝色系：${(dc.outfit_palette || []).join("、")} · 髮色：${(dc.hair_palette || []).join("、")} · 瞳色：${(dc.eye_palette || []).join("、")}`)
+        )
+      ));
+      box.append(el("div", { class: "field" },
+        el("label", {}, "人物傳記"),
+        el("div", { class: "muted", style: "line-height:1.4" }, dc.biography || "—")
+      ));
+      const curConcept = characterConcept();
+      const bgInfo = C.determineAgcBgColor(curConcept, true);
       box.append(el("div", { class: "field", style: "border-top:1px dashed var(--line);margin-top:6px;padding-top:6px" },
         el("label", {}, "2D AGC 立繪背景"),
         el("div", { style: "display:flex;align-items:center;gap:8px" },
@@ -4532,7 +4866,7 @@
         catalog: C.version, seed: state.seed, platform: state.platform, taskId: state.taskId, includeReview: state.includeReview,
         character: state.character, creature: state.creature, locks: state.locks, opts: state.opts, notes: state.notes,
         subjectIds: state.subjectIds, history: state.history, root: state.root, customOptions: state.customOptions,
-        preset: state.preset
+        preset: state.preset, presetChar: state.presetChar
       }));
     } catch (e) {}
   }
@@ -4547,7 +4881,8 @@
       Object.assign(state, {
         platform: d.platform || "chatgpt", history: d.history || [], root: d.root || "", notes: d.notes || "",
         customOptions: d.customOptions || {},
-        preset: DESIGNED.some(x => x.line_id === d.preset) ? d.preset : null
+        preset: DESIGNED.some(x => x.line_id === d.preset) ? d.preset : null,
+        presetChar: DESIGNED_CHARACTERS.some(x => x.id === d.presetChar) ? d.presetChar : null
       });
       if (TASKS.some(t => t.id === d.taskId)) state.taskId = d.taskId;
       if (sameMajor) {
