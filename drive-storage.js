@@ -1,166 +1,199 @@
-// All asset paths are relative to the configured, private Drive project folder.
+// Private Drive assets use directories; archives are import-only.
 (function () {
-  "use strict";
-  const config = window.COSMI_DRIVE_CONFIG;
-  const API = "https://www.googleapis.com/drive/v3/files";
-  let accessToken = "", expiry = 0, expiryTimer, tokenClient, initialized = false;
-  const folders = new Map();
-  const $ = id => document.getElementById(id);
-  function relative(path) {
-    if (typeof path !== "string" || !path || path.includes("\\") || /[:?#\x00-\x1f]/.test(path)) throw new Error("請使用 Drive 專案內的相對路徑");
-    const parts = path.split("/");
-    if (parts.some(p => !p || p === "." || p === "..")) throw new Error("不允許空白或上層目錄路徑");
-    return parts;
-  }
-  function lock(message) {
-    accessToken = ""; expiry = 0; folders.clear(); clearTimeout(expiryTimer);
-    $("driveApp").hidden = true;
-    $("driveGate").hidden = false;
-    $("driveGateStatus").textContent = message;
-    // Clear private blobs and in-flight review data when an existing session ends.
-    if (initialized) window.location.reload();
-  }
-  async function request(url, options = {}) {
-    if (!accessToken || Date.now() >= expiry) { lock("登入已到期，請重新登入 Google"); throw new Error("請先登入 Google"); }
-    const headers = new Headers(options.headers);
-    headers.set("Authorization", "Bearer " + accessToken);
-    const response = await fetch(url, { ...options, headers, cache: "no-store" });
-    if (response.status === 401) lock("登入已到期，請重新登入 Google");
-    if (!response.ok) {
-      const detail = await response.json().catch(() => ({}));
-      throw new Error(detail.error?.message || `Google Drive HTTP ${response.status}`);
-    }
-    return response;
-  }
-  const escapeQuery = s => s.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-  async function list(parent, extra = "") {
-    const files = []; let pageToken = "";
-    do {
-      const params = new URLSearchParams({
-        q: `'${escapeQuery(parent)}' in parents and trashed = false${extra ? " and " + extra : ""}`,
-        fields: "nextPageToken,files(id,name,mimeType,modifiedTime,size)", pageSize: "1000"
-      });
-      if (pageToken) params.set("pageToken", pageToken);
-      const data = await (await request(`${API}?${params}`)).json();
-      files.push(...data.files); pageToken = data.nextPageToken || "";
-    } while (pageToken);
-    return files;
-  }
-  async function folder(path) {
-    if (!path) return config.rootId;
-    const parts = relative(path); let parent = config.rootId, prefix = "";
-    for (const part of parts) {
-      prefix = prefix ? prefix + "/" + part : part;
-      if (!folders.has(prefix)) {
-        const matches = await list(parent, `name = '${escapeQuery(part)}' and mimeType = 'application/vnd.google-apps.folder'`);
-        if (matches.length !== 1) throw new Error(`${prefix} 資料夾${matches.length ? "名稱重複" : "不存在"}`);
-        folders.set(prefix, matches[0].id);
-      }
-      parent = folders.get(prefix);
-    }
-    return parent;
-  }
-  async function find(path) {
-    const parts = relative(path), name = parts.pop(), parent = await folder(parts.join("/"));
-    const matches = await list(parent, `name = '${escapeQuery(name)}'`);
-    if (matches.length > 1) throw new Error(`${path} 名稱重複，請先在 Drive 整理`);
-    return { file: matches[0], parent, name };
-  }
-  async function read(path) {
-    const { file } = await find(path);
-    if (!file) throw new Error(`${path} 不存在`);
-    return (await request(`${API}/${encodeURIComponent(file.id)}?alt=media`)).blob();
-  }
-  async function write(path, blob) {
-    const { file, parent, name } = await find(path);
-    const metadata = file ? { name } : { name, parents: [parent] };
-    const boundary = "cosmi_" + crypto.randomUUID();
-    const body = new Blob([
-      `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`,
-      `--${boundary}\r\nContent-Type: ${blob.type || "application/octet-stream"}\r\n\r\n`, blob,
-      `\r\n--${boundary}--`
-    ]);
-    const url = `https://www.googleapis.com/upload/drive/v3/files${file ? "/" + encodeURIComponent(file.id) : ""}?uploadType=multipart&fields=id,name,size`;
-    return (await request(url, { method: file ? "PATCH" : "POST", headers: { "Content-Type": `multipart/related; boundary=${boundary}` }, body })).json();
-  }
-  let syncing;
-  async function syncPackages() {
-    if (syncing) return syncing;
-    syncing = (async () => {
-      const errors = []; let count = 0;
-      $("driveStatus").textContent = "正在讀取 Drive 立繪與 3D 包…";
-      for (const dir of ["image_backup", "image_in", "3D_out"]) {
-        const files = await list(await folder(dir));
-        for (const file of files.filter(f => /\.zip$/i.test(f.name))) {
-          try {
-            const blob = await (await request(`${API}/${encodeURIComponent(file.id)}?alt=media`)).blob();
-            const pkg = await window.COSMI_FORGE.loadZipFile(new File([blob], file.name, { type: "application/zip" }));
-            pkg.drivePath = dir + "/" + file.name;
-            count++;
-          } catch (e) { errors.push(`${file.name}: ${e.message}`); }
-        }
-      }
-      window.COSMI_FORGE.refresh();
-      $("driveStatus").textContent = `Drive 已載入 ${count} 包` + (errors.length ? `；${errors.length} 包失敗：${errors.join("；")}` : "");
-      return count;
-    })().finally(() => { syncing = null; });
-    return syncing;
-  }
-  async function run(action) {
-    try { return await action(); } catch (e) { $("driveStatus").textContent = e.message; }
-  }
-  async function authorize(response) {
-    if (response.error || !response.access_token) {
-      $("driveGateStatus").textContent = response.error_description || response.error || "Google 登入失敗"; return;
-    }
-    try {
-      accessToken = response.access_token;
-      expiry = Date.now() + Number(response.expires_in || 3600) * 1000;
-      const root = await (await request(`${API}/${encodeURIComponent(config.rootId)}?fields=id,name,mimeType,trashed`)).json();
-      if (root.trashed || root.mimeType !== "application/vnd.google-apps.folder") throw new Error("Drive 專案資料夾無法存取");
-      // Access is decided by Google's Drive ACL, not an email check in JavaScript.
-      expiryTimer = setTimeout(() => lock("登入已到期，請重新登入 Google"), Math.max(0, expiry - Date.now()));
-      if (!initialized) { window.dispatchEvent(new Event("cosmi:authorized")); initialized = true; }
-      $("driveGate").hidden = true; $("driveApp").hidden = false;
-      await run(syncPackages);
-    } catch (e) { lock(e.message); }
-  }
-  window.COSMI_DRIVE = Object.freeze({ relative, read, write, syncPackages,
-    rootPath: config.rootPath,
-    packageDir: type => /model|rig|anim/.test(type) ? "3D_out" : "image_in"
-  });
-  document.addEventListener("DOMContentLoaded", () => {
-    $("driveSignIn").addEventListener("click", () => {
-      if (!config.clientId) { $("driveGateStatus").textContent = "尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。"; return; }
-      if (!window.google?.accounts?.oauth2) { $("driveGateStatus").textContent = "Google 登入元件尚未載入，請稍後重試。"; return; }
-      tokenClient ||= google.accounts.oauth2.initTokenClient({
-        client_id: config.clientId, scope: "https://www.googleapis.com/auth/drive", callback: authorize,
-        error_callback: e => { $("driveGateStatus").textContent = e.type === "popup_closed" ? "登入視窗已關閉" : "Google 登入視窗無法開啟"; }
-      });
-      tokenClient.requestAccessToken({ prompt: "select_account" });
-    });
-    $("driveSignOut").addEventListener("click", () => lock("已登出"));
-    $("driveSync").addEventListener("click", () => run(syncPackages));
-    $("driveSavePrompt").addEventListener("click", () => run(async () => {
-      const { path, text } = window.COSMI_FORGE.currentPrompt();
-      await write(path, new Blob([text], { type: "text/markdown" }));
-      $("driveStatus").textContent = `已儲存 ${path}`;
-    }));
-    $("driveLoadPrompt").addEventListener("click", () => run(async () => {
-      const path = $("drivePromptPath").value.trim();
-      if (!path.startsWith("prompts/") || !path.endsWith(".prompt.md")) throw new Error("請輸入 prompts/<task_id>.prompt.md");
-      const text = await (await read(path)).text();
-      window.COSMI_FORGE.showPrompt(text);
-      $("driveStatus").textContent = `已讀取 ${path}（文字預覽，可複製或下載）`;
-    }));
-    $("driveUploadPackage").addEventListener("click", () => run(async () => {
-      const pkg = window.COSMI_FORGE.activePackage();
-      if (!pkg?.rawFiles) throw new Error("請先在審查台載入成果包");
-      const path = window.COSMI_DRIVE.packageDir(pkg.type) + "/" + pkg.id + ".zip";
-      await write(path, window.COSMI_FORGE.packageBlob(pkg));
-      pkg.drivePath = path;
-      $("driveStatus").textContent = `已儲存 ${path}`;
-    }));
-    $("driveGateStatus").textContent = config.clientId ? "登入後可讀取你有權限的專案資產。" : "尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";
-  });
+"use strict";
+const config=window.COSMI_DRIVE_CONFIG, API="https://www.googleapis.com/drive/v3/files", MIME="application/vnd.google-apps.folder";
+let accessToken="",expiry=0,expiryTimer,tokenClient,initialized=false,syncing,busy=false;
+const folders=new Map(), $=id=>document.getElementById(id);
+const dirs=["01_portraits","02_3d/colab","02_3d/ai_blender","02_3d/legacy","03_completed/portraits","03_completed/models"];
+function relative(path) {
+ if(typeof path!=="string"||!path||path.includes("\\")||/[:?#\x00-\x1f]/.test(path)) throw Error("請使用 Drive 專案內的相對路徑");
+ const parts=path.split("/"); if(parts.some(p=>!p||p==="."||p===".."))throw Error("不允許空白或上層目錄路徑"); return parts;
+}
+function lock(message) {
+ accessToken="";expiry=0;folders.clear();clearTimeout(expiryTimer);
+ $("driveApp").hidden=true;$("driveGate").hidden=false;$("driveGateStatus").textContent=message;
+ if(initialized)window.location.reload();
+}
+async function request(url,options={}) {
+ if(!accessToken||Date.now()>=expiry){lock("登入已到期，請重新登入 Google");throw Error("請先登入 Google");}
+ const headers=new Headers(options.headers);headers.set("Authorization","Bearer "+accessToken);
+ const r=await fetch(url,{...options,headers,cache:"no-store"});
+ if(r.status===401)lock("登入已到期，請重新登入 Google");
+ if(!r.ok){const d=await r.json().catch(()=>({}));throw Error(d.error?.message||"Google Drive HTTP "+r.status);}return r;
+}
+const escapeQuery=s=>s.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+async function list(parent,extra="") {
+ const files=[];let pageToken="";
+ do{const p=new URLSearchParams({q:"'"+escapeQuery(parent)+"' in parents and trashed = false"+(extra?" and "+extra:""),
+ fields:"nextPageToken,files(id,name,mimeType,modifiedTime,size,parents)",pageSize:"1000"});
+ if(pageToken)p.set("pageToken",pageToken);
+ const d=await(await request(API+"?"+p)).json();files.push(...d.files);pageToken=d.nextPageToken||"";}while(pageToken);return files;
+}
+async function folder(path,create=false) {
+ if(!path)return config.rootId;let parent=config.rootId,prefix="";
+ for(const part of relative(path)){
+ prefix=prefix?prefix+"/"+part:part;
+ if(!folders.has(prefix)){
+ let m=await list(parent,"name = '"+escapeQuery(part)+"' and mimeType = '"+MIME+"'");
+ if(!m.length&&create)m=[await(await request(API+"?fields=id,name",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:part,mimeType:MIME,parents:[parent]})})).json()];
+ if(m.length!==1)throw Error(prefix+" 資料夾"+(m.length?"名稱重複":"不存在"));folders.set(prefix,m[0].id);
+ }parent=folders.get(prefix);}return parent;
+}
+async function find(path,create=false){
+ const parts=relative(path),name=parts.pop(),parent=await folder(parts.join("/"),create),m=await list(parent,"name = '"+escapeQuery(name)+"'");
+ if(m.length>1)throw Error(path+" 名稱重複，請先在 Drive 整理");return{file:m[0],parent,name};
+}
+async function read(path){
+ const{file}=await find(path);if(!file)throw Error(path+" 不存在");return(await request(API+"/"+file.id+"?alt=media")).blob();
+}
+async function write(path,blob){
+ const{file,parent,name}=await find(path,true),boundary="cosmi_"+crypto.randomUUID();
+ const body=new Blob(["--"+boundary+"\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n"+JSON.stringify(file?{name}:{name,parents:[parent]})+"\r\n",
+ "--"+boundary+"\r\nContent-Type: "+(blob.type||"application/octet-stream")+"\r\n\r\n",blob,"\r\n--"+boundary+"--"]);
+ return(await request("https://www.googleapis.com/upload/drive/v3/files"+(file?"/"+file.id:"")+"?uploadType=multipart&fields=id,name,size",
+ {method:file?"PATCH":"POST",headers:{"Content-Type":"multipart/related; boundary="+boundary},body})).json();
+}
+const jsonWrite=(path,data)=>write(path,new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
+async function walk(id,prefix="",depth=0){
+ if(depth>12)throw Error("資產目錄超過 12 層");
+ const result=[],names=new Set();
+ for(const f of await list(id)){
+ if(names.has(f.name))throw Error(prefix+f.name+" 名稱重複");names.add(f.name);
+ if(/\.zip$/i.test(f.name))continue;
+ if(f.mimeType===MIME)result.push(...await walk(f.id,prefix+f.name+"/",depth+1));else result.push({...f,path:prefix+f.name});
+ }return result;
+}
+async function record(id){const{file}=await find("reviews/"+id+".json");return file?JSON.parse(await(await request(API+"/"+file.id+"?alt=media")).text()):null;}
+async function syncPackages(){
+ if(syncing)return syncing;if(busy)throw Error("審查寫入中，請稍後重新載入");
+ syncing=(async()=>{
+ const errors=[];let count=0;const ids=new Set();
+ $("driveStatus").textContent="正在讀取 Drive 資產目錄…";window.COSMI_FORGE.clearDrivePackages?.();
+ for(const dir of dirs){try{
+ for(const entry of(await list(await folder(dir))).filter(f=>f.mimeType===MIME&&!f.name.startsWith("_"))){try{
+ const files=await walk(entry.id),raw={};
+ for(const f of files.filter(f=>/\.(json|md|png|jpe?g|webp|glb)$/i.test(f.name)&&!f.mimeType.startsWith("application/vnd.google-apps.")))
+ raw[entry.name+"/"+f.path]=new Uint8Array(await(await request(API+"/"+f.id+"?alt=media")).arrayBuffer());
+ if(!Object.keys(raw).length)continue;
+ const pkg=await window.COSMI_FORGE.loadAssetFiles(raw,{name:entry.name});
+ if(ids.has(pkg.id))throw Error(pkg.id+" 在多個目錄重複");ids.add(pkg.id);
+ pkg.drivePath=dir+"/"+entry.name;pkg.driveFolderId=entry.id;pkg.driveFiles=files;
+ const r=await record(pkg.id);if(r){pkg.status=r.status;pkg.sourcePack=r.source_pack;pkg.reviewRecord=r;}
+ if(dir.startsWith("03_completed/"))pkg.completed=true;count++;
+ }catch(e){errors.push(entry.name+": "+e.message);}}
+ }catch(e){errors.push(dir+": "+e.message);}}
+ window.COSMI_FORGE.refresh();$("driveStatus").textContent="Drive 已載入 "+count+" 個資產目錄"+(errors.length?"；"+errors.join("；"):"");return count;
+ })().finally(()=>{syncing=null;});return syncing;
+}
+const modelType=p=>/model|rig|anim/.test(p.type);
+async function metadata(id){return(await request(API+"/"+encodeURIComponent(id)+"?fields=id,name,mimeType,parents,trashed")).json();}
+async function move(id,from,to){
+ const m=await metadata(id);if(m.trashed||!m.parents?.includes(from))throw Error("來源已移動，請重新載入 Drive");
+ const p=new URLSearchParams({addParents:to,removeParents:from,fields:"id,name,parents"});
+ const r=await(await request(API+"/"+encodeURIComponent(id)+"?"+p,{method:"PATCH"})).json();
+ if(!r.parents?.includes(to)||r.parents?.includes(from))throw Error("Drive 移動結果未確認");folders.clear();return r;
+}
+async function review(pkg,status,note=""){
+ if(!pkg?.driveFolderId)throw Error("請先將資產資料夾儲存至 Drive");
+ if(syncing||busy)throw Error("Drive 處理中，請稍後重試");
+ if(!["ok","pending","reject"].includes(status))throw Error("無效審查狀態");
+ if(pkg.completed)throw Error("資產已完成，請建立新版本後審查");
+ busy=true;
+ try{
+ const isModel=modelType(pkg),sourceId=pkg.sourcePack||pkg.manifest?.source_pack||"",ops=[];
+ const r={task_id:pkg.id,status,source_pack:sourceId,note,time:new Date().toISOString()};
+ if(status==="ok"&&!isModel&&!pkg.images?.length)throw Error("立繪必須具有可預覽影像");
+ if(status==="reject"){
+ const dir="backup/"+(isModel?"rejected_3d":"rejected_portraits")+"/"+pkg.id+"_"+Date.now();
+ ops.push({pkg,from:await folder(pkg.drivePath.split("/").slice(0,-1).join("/")),to:await folder(dir,true),path:dir+"/"+pkg.drivePath.split("/").pop()});
+ }else if(status==="ok"&&isModel){
+ const src=window.COSMI_FORGE.packages().find(p=>p.id===sourceId);
+ if(!src||modelType(src)||src.status!=="ok"||!src.images?.length||!src.driveFolderId)throw Error("請先綁定已核准的來源立繪；prompt 建模需補立繪並審查通過");
+ if(pkg.glbLoadError)throw Error("GLB 載入失敗，修復後才能完成");
+ if(!pkg.glbFile||!pkg.driveFiles.some(f=>f.path.toLowerCase().endsWith(".blend")))throw Error("3D 需同時具有可預覽 GLB 與 .blend 原檔");
+ if(pkg.stage&&src.stage&&pkg.stage!==src.stage&&!src.images.some(im=>im.path.includes(pkg.stage)))throw Error("來源立繪與模型型態不符");
+ for(const[asset,dir]of[[pkg,"03_completed/models"],[src,"03_completed/portraits"]]){
+ if(asset.completed)continue;
+ const name=asset.drivePath.split("/").pop(),to=await folder(dir);
+ if((await list(to,"name = '"+escapeQuery(name)+"'")).length)throw Error("完成區已有同名資產，請使用新版本 ID");
+ ops.push({pkg:asset,from:await folder(asset.drivePath.split("/").slice(0,-1).join("/")),to,path:dir+"/"+name});
+ }}
+ const done=[];
+ try{
+ for(const op of ops){await move(op.pkg.driveFolderId,op.from,op.to);done.push(op);}
+ r.drive_path=ops.find(o=>o.pkg===pkg)?.path||pkg.drivePath;await jsonWrite("reviews/"+pkg.id+".json",r);
+ }catch(e){
+ const failures=[];for(const op of done.reverse()){try{await move(op.pkg.driveFolderId,op.to,op.from);}catch(err){failures.push(err.message);}}
+ if(failures.length)throw Error(e.message+"；回復未完成，請重新載入核對："+failures.join("；"));throw e;
+ }
+ for(const op of ops){op.pkg.drivePath=op.path;if(status==="ok")op.pkg.completed=true;}
+ pkg.status=status;pkg.reviewRecord=r;window.COSMI_FORGE.persistReview?.(pkg,note);
+ if(status==="reject")window.COSMI_FORGE.removePackage?.(pkg.id);
+ window.COSMI_FORGE.refresh();
+ $("driveStatus").textContent=status==="reject"?"已退件並移至 "+pkg.drivePath:isModel&&status==="ok"?"已核准並將立繪與 3D 移入完成區":"已儲存審查；立繪留在原位";
+ return r;
+ }finally{busy=false;}
+}
+async function saveNote(pkg,note){
+ if(!pkg?.driveFolderId)throw Error("請先將資產儲存至 Drive");
+ if(syncing||busy)throw Error("Drive 處理中，請稍後重試");
+ busy=true;
+ try{
+ const r={...pkg.reviewRecord,task_id:pkg.id,status:pkg.status,source_pack:pkg.sourcePack||pkg.manifest?.source_pack||"",drive_path:pkg.drivePath,note,time:new Date().toISOString()};
+ await jsonWrite("reviews/"+pkg.id+".json",r);pkg.reviewRecord=r;window.COSMI_FORGE.persistReview?.(pkg,note);return r;
+ }finally{busy=false;}
+}
+async function uploadAsset(pkg){
+ if(!pkg?.rawFiles)throw Error("請先載入資產資料夾");if(pkg.driveFolderId)return pkg.drivePath;
+ const dir=modelType(pkg)?"02_3d/"+($("pipelineStage")?.value==="colab"?"colab":"ai_blender"):"01_portraits",path=dir+"/"+pkg.id;
+ if((await find(path)).file)throw Error("已有同名資產，請重新載入或使用新版本 ID");
+ const keys=Object.keys(pkg.rawFiles),rooted=keys.every(k=>k.startsWith(pkg.id+"/"));
+ for(const key of keys){const rel=rooted?key.slice(pkg.id.length+1):key;relative(rel);if(/\.zip$/i.test(rel))throw Error("正式目錄不接受 ZIP");}
+ const id=await folder(path,true);
+ for(const key of keys){const rel=rooted?key.slice(pkg.id.length+1):key;await write(path+"/"+rel,new Blob([pkg.rawFiles[key]]));}
+ pkg.drivePath=path;pkg.driveFolderId=id;pkg.driveFiles=await walk(id);return path;
+}
+async function run(action){try{return await action();}catch(e){$("driveStatus").textContent=e.message;}}
+async function authorize(response){
+ if(response.error||!response.access_token){$("driveGateStatus").textContent=response.error_description||response.error||"Google 登入失敗";return;}
+ try{
+ accessToken=response.access_token;expiry=Date.now()+Number(response.expires_in||3600)*1000;
+ const root=await metadata(config.rootId);if(root.trashed||root.mimeType!==MIME)throw Error("Drive 專案資料夾無法存取");
+ expiryTimer=setTimeout(()=>lock("登入已到期，請重新登入 Google"),Math.max(0,expiry-Date.now()));
+ if(window.COSMI_PIPELINE)await window.COSMI_PIPELINE.loadTemplates();
+ if(!initialized){window.dispatchEvent(new Event("cosmi:authorized"));initialized=true;}
+ $("driveGate").hidden=true;$("driveApp").hidden=false;await run(syncPackages);
+ }catch(e){lock(e.message);}
+}
+window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,rootPath:config.rootPath,
+ packageDir:type=>/model|rig|anim/.test(type)?"02_3d/ai_blender":"01_portraits"});
+document.addEventListener("DOMContentLoaded",()=>{
+ $("driveSignIn").addEventListener("click",()=>{
+ if(!config.clientId){$("driveGateStatus").textContent="尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";return;}
+ if(!window.google?.accounts?.oauth2){$("driveGateStatus").textContent="Google 登入元件尚未載入，請稍後重試。";return;}
+ tokenClient ||= google.accounts.oauth2.initTokenClient({client_id:config.clientId,scope:"https://www.googleapis.com/auth/drive",callback:authorize,
+ error_callback:e=>{$("driveGateStatus").textContent=e.type==="popup_closed"?"登入視窗已關閉":"Google 登入視窗無法開啟";}});
+ tokenClient.requestAccessToken({prompt:"select_account"});
+ });
+ $("driveSignOut").addEventListener("click",()=>lock("已登出"));
+ $("driveSync").addEventListener("click",()=>run(syncPackages));
+ $("driveSavePrompt").addEventListener("click",()=>run(async()=>{const{path,text}=window.COSMI_FORGE.currentPrompt();await write(path,new Blob([text],{type:"text/markdown"}));$("driveStatus").textContent="已儲存 "+path;}));
+ $("driveLoadPrompt").addEventListener("click",()=>run(async()=>{const path=$("drivePromptPath").value.trim();if(!path.startsWith("prompts/")||!path.endsWith(".md"))throw Error("請輸入 prompts/ 下的 Markdown 相對路徑");window.COSMI_FORGE.showPrompt(await(await read(path)).text());$("driveStatus").textContent="已讀取 "+path;}));
+ $("pipelineRead").addEventListener("click",()=>run(async()=>{const key=$("pipelineStage").value,name=window.COSMI_PIPELINE.stages[key];window.COSMI_PIPELINE.templates[key]=await(await read("prompts/"+name+".prompt.md")).text();window.COSMI_FORGE.refresh();window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);}));
+ $("pipelineSaveSettings").addEventListener("click",()=>run(async()=>{
+ const d=window.COSMI_FORGE.settings(),p=window.COSMI_PIPELINE.parameters();
+ await write("00_settings/"+d.assetId+".appearance.md",new Blob([d.appearance],{type:"text/markdown"}));await jsonWrite("00_settings/"+d.assetId+".parameters.json",{...p,delivery:d.delivery});$("driveStatus").textContent="已分別儲存外觀設定與格式參數";
+ }));
+ $("pipelineLoadSettings").addEventListener("click",()=>run(async()=>{
+ const id=window.COSMI_FORGE.settings().assetId,a=await(await read("00_settings/"+id+".appearance.md")).text(),p=await(await read("00_settings/"+id+".parameters.json")).text();
+ JSON.parse(p);$("pipelineAppearance").value=a;$("pipelineParameters").value=p;window.COSMI_PIPELINE.parameters();window.COSMI_FORGE.refresh();$("driveStatus").textContent="已載入外觀與參數";
+ }));
+ $("pipelineBindSource").addEventListener("click",()=>run(async()=>{
+ const pkg=window.COSMI_FORGE.activePackage(),id=$("pipelineSource").value.trim(),src=window.COSMI_FORGE.packages().find(p=>p.id===id&&!modelType(p));
+ if(!pkg?.driveFolderId||!modelType(pkg)||pkg.completed||!src)throw Error("請選取待審 3D 並填入已載入的立繪資產 ID");
+ await jsonWrite("reviews/"+pkg.id+".json",{task_id:pkg.id,status:pkg.status,source_pack:id,time:new Date().toISOString()});pkg.sourcePack=id;window.COSMI_FORGE.refresh();$("driveStatus").textContent="已綁定來源立繪 "+id;
+ }));
+ $("driveUploadPackage").addEventListener("click",()=>run(async()=>{$("driveStatus").textContent="已儲存資產目錄 "+await uploadAsset(window.COSMI_FORGE.activePackage());}));
+ $("driveGateStatus").textContent=config.clientId?"登入後可讀取你有權限的專案資產。":"尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";
+});
 })();

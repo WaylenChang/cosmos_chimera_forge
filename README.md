@@ -7,11 +7,23 @@
 - **資產儲存**：Google Drive `project/cosmos_chimera_forge/`。Prompt 與包內參照使用相對目錄；網頁不再從相鄰遊戲倉庫讀取圖片與模型。
 - Google 登入需要 HTTP(S) 網站來源，不支援直接以 `file://` 開啟後完整使用。
 
-> **專案審查與解壓規範**：
-> - **Drive 是正式存放位置**：立繪放 `image_in/`，已處理立繪放 `image_backup/`，3D 包放 `3D_out/`，Prompt 放 `prompts/<task_id>.prompt.md`。以上均相對於 Drive 專案根目錄。
-> - **登入載入與讀寫**：登入後自動讀取三個成果目錄的 ZIP。可重新載入、將本機載入的審查包存回 Drive、儲存完整 Prompt，或輸入相對路徑讀取既有 Prompt。讀取 Prompt 會開啟文字預覽，不會修改目前鍛造參數。
-> - **本機匯出**：`Art/_incoming/` 僅作下載／解壓暫存，審查通過後可交付至相對遊戲目錄 `../cosmos_chimera/Art/_incoming/<task_id>/`；不再使用固定 Windows 使用者路徑。
-> - **遊戲專案驗收管線**：解壓完成後，至 `cosmos_chimera` 專案執行 `python tools/validate_art.py Art/_incoming/<task_id> --apply` 完成驗收與資產入庫。
+## 角色／宙獸管線（2026-11-11）
+
+正式資產使用 Google Drive 深層資料夾，逐檔讀取與交付。每個資產版本以唯一 asset_id 建目錄，保留 manifest.json、concept.json、images/ 或 models/、rig/、animations/、previews/。角色與宙獸共用結構，以 task_type 區分。
+
+1. HTML 隨機／圖鑑設定或 AI 生成基礎外觀；外觀 Markdown 與格式參數 JSON 分開保存於 `00_settings/`。
+2. 立繪輸出至 `01_portraits/<asset_id>/`。主用 ChatGPT／Codex，Gemini／Antigravity 輔助。
+3. 審查台核准立繪時原位保存；退件時整個目錄搬到 `backup/rejected_portraits/<revision>/`。
+4. Colab GPU 路線輸出至 `02_3d/colab/<asset_id>/`；AI Blender（Argon／Codex）輸出至 `02_3d/ai_blender/<asset_id>/`。歷史待審模型在 `02_3d/legacy/`。Colab 模型與修復細節尚待實機決定。
+5. 最終人工核准前須有已核准的來源立繪及 .glb／.blend。核准後模型與立繪分別移至 `03_completed/models/`、`03_completed/portraits/`；模型退件搬到 `backup/rejected_3d/`，保留立繪原位。純 prompt 建模須補立繪後綁定 source_pack。
+
+審查結果存 `reviews/<asset_id>.json`。目錄移動保留 Drive ID，搬移或寫入失敗時嘗試回復；回復失敗會明示需重新載入核對。不同資產版本不得同名。歷史 ZIP 僅留在 `backup/legacy_archives/`，不再用於正式交付。
+
+`prompts/` 存六個互相獨立的單步驟 `.prompt.md`、`TRIGGERS.md` 與 `DIRECTORY.md`；已填入資產路徑的版本另存 `prompts/jobs/`。舊的跨步驟長 prompt 放 `backup/legacy_prompts/`。本機同步來源見 [docs/pipeline](docs/pipeline/DIRECTORY.md)。
+
+HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
+
+本機匯入／匯出亦使用展開後的資產目錄。遊戲交付仍可逐檔交給相鄰遊戲專案驗收。Google OAuth 登入需 HTTP(S) 網站來源，無法直接用 file:// 啟用 Drive 功能。
 
 ## 核心檔案架構
 
@@ -24,8 +36,9 @@
 | `designed.js` | 已設計項目（**產生檔，勿手改**） | 改 `Data/_incoming` 批次後跑 `python gen_designed.py` |
 | `gen_designed.py` | 從 `Data/` 批次資料產生 `designed.js` | 新增已設計的進化線或修改欄位 |
 | `tools/` | 驗收腳本 (`validate_art.py`)、資料驗證 (`validate_data.py`)、一鍵解壓腳本 (`unpack_incoming.ps1`) 與單元測試 | 修改交付驗收規範、資料驗證或解壓邏輯 |
+| `pipeline.js` | 單步驟 prompt 組裝、外觀與參數隔離 | 修改角色／宙獸管線 |
 | `drive-config.js` | OAuth Web Client ID、Drive 根目錄 ID 與根路徑 | 更換 Google 登入或 Drive 專案 |
-| `drive-storage.js` | Google 授權、相對路徑讀寫、成果包載入 | 修改雲端存取 |
+| `drive-storage.js` | Google 授權、遞迴目錄讀寫、審查與搬移 | 修改雲端存取 |
 | `Art/_incoming/` | 本機下載／解壓暫存，正式資產位於 Drive | 本機匯出與遊戲交付 |
 | `Data/` | 宙獸、角色、招式、特性與原型圖鑑資料庫 | 兩邊專案同步保留的圖鑑資料 |
 
@@ -46,10 +59,8 @@
 1. **Google 設定**：在 OAuth 所屬 Google Cloud 專案啟用 Google Drive API；OAuth 類型須為 Web application，Authorized JavaScript origins 加入 `https://changweilin.github.io`（不含路徑）。若使用本機測試，也需加入實際的 HTTP localhost 來源。Consent screen 若仍為 Testing，需加入使用者為測試帳號。
 2. **Client ID**：已在 `drive-config.js` 設定網站專用 Client ID；可用 GitHub Actions repository variable `GOOGLE_OAUTH_CLIENT_ID` 覆寫。Client ID 是公開設定，請勿放入 Client Secret。授權使用 Drive scope，因需讀取／更新既有成果包；Google Cloud 的應用程式發布與驗證要求依帳號設定辦理。
 3. **自動部署**：推送至 `main` 觸發 `.github/workflows/deploy.yml`，先執行存取測試，再執行 `node tools/build-site.mjs`。只上傳 `_site/` 的明確檔案清單；不包含 `Art/`、`Data/`、原始 Prompt 或 ZIP。
-4. **驗證**：`node --test tools/tests/test_drive_storage.cjs`；`node tools/build-site.mjs`。正式 OAuth 登入、同意授權與 Drive 寫入仍需在已允許的網站來源，以有權限的 Google 帳號驗證。
+4. **驗證**：`node --test tools/tests/test_drive_storage.cjs tools/tests/test_pipeline.cjs tools/tests/test_asset_directories.cjs`；`node tools/build-site.mjs`。正式 OAuth 登入、同意授權與 Drive 寫入仍需在已允許的網站來源，以有權限的 Google 帳號驗證。
 
 GitHub Pages 提供公開的 HTML／JavaScript 殼層，前端登入畫面不是伺服器端存取控制；私人資產只由帶有 OAuth Bearer token 的 Drive API 讀取，實際授權由 Drive ACL 執行。Token 僅保存在記憶體，不寫入 localStorage、網址或部署成品，登出／到期後重載清除私人 blob。鍛造參數與收藏仍保存在目前瀏覽器的本機儲存空間，並非 Drive 同步資料。
-
-2026-11-11 搬移：`image_in/`、`image_backup/`、`3D_out/` 已從 `project/cosmos_chimera/` 移至 `project/cosmos_chimera_forge/`，保留資料夾與檔案 ID；4 份既有 Prompt 搬至 `prompts/`。`argon_blender` 依使用者指示保留原位。
 
 參考：[Google Web 授權](https://developers.google.com/identity/oauth2/web/guides/use-token-model)、[GitHub Pages 存取控制](https://docs.github.com/en/enterprise-cloud%40latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site)。

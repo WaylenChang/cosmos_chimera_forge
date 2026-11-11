@@ -72,7 +72,7 @@ test('authorized project access unlocks, and expiry clears the session', async (
   const h = harness(); await h.login();
   assert.equal(h.node('driveApp').hidden, false);
   assert.deepEqual(h.events, ['cosmi:authorized']);
-  assert.match(h.node('driveStatus').textContent, /0 包/);
+  assert.match(h.node('driveStatus').textContent, /0 個資產目錄/);
   h.timers[0]();
   assert.equal(h.node('driveApp').hidden, true);
   assert.equal(h.reloaded, true);
@@ -126,4 +126,95 @@ test('production build excludes asset and prompt directories and requires OAuth 
   assert.match(fs.readFileSync(path.join(root, '_site/drive-config.js'), 'utf8'), /123-test.apps.googleusercontent.com/);
   assert.match(fs.readFileSync(path.join(root, '_site/index.html'), 'utf8'), /id="driveApp" hidden/);
   fs.rmSync(path.join(root, '_site'), { recursive: true });
+});
+
+function reviewHarness({failSource=false, failRecord=false}={}) {
+  const assets = [
+    {id:'model',type:'creature-model-rig',driveFolderId:'model-folder',drivePath:'02_3d/legacy/model',sourcePack:'portrait',stage:'adult',glbFile:{},driveFiles:[{path:'models/x.glb'},{path:'models/x.blend'}],status:'pending'},
+    {id:'portrait',type:'creature-concept',driveFolderId:'portrait-folder',drivePath:'01_portraits/portrait',stage:'adult',images:[{path:'images/front.png'}],status:'ok'}
+  ];
+  const parents={'model-folder':'legacy-id','portrait-folder':'01_portraits-id'};
+  const h=harness({handle:(u,o)=>{
+    const q=u.searchParams.get('q')||'';
+    if(q.includes("name = 'model'")||q.includes("name = 'portrait'"))return Response.json({files:[]});
+    const id=u.pathname.split('/').pop();
+    if(id in parents) {
+      if(o.method==='PATCH') {
+        if(failSource&&id==='portrait-folder')return Response.json({error:{message:'move failed'}},{status:503});
+        parents[id]=u.searchParams.get('addParents');
+        return Response.json({id,parents:[parents[id]]});
+      }
+      return Response.json({id,parents:[parents[id]]});
+    }
+    if(u.pathname.includes('/upload/'))return failRecord?Response.json({error:{message:'record failed'}},{status:503}):Response.json({id:'record'});
+  }});
+  h.context.COSMI_FORGE.packages=()=>assets;
+  h.context.COSMI_FORGE.removePackage=id=>{const at=assets.findIndex(p=>p.id===id);if(at>=0)assets.splice(at,1);};
+  return {h,assets,parents};
+}
+
+test('portrait approval persists review without moving the portrait',async()=>{
+ const {h,assets,parents}=reviewHarness();await h.login();
+ await h.context.COSMI_DRIVE.review(assets[1],'ok','passed');
+ assert.equal(parents['portrait-folder'],'01_portraits-id');
+ assert.equal(h.calls.filter(c=>c.options.method==='PATCH'&&!c.url.pathname.includes('/upload/')).length,0);
+ assert.ok(h.calls.some(c=>c.url.pathname.includes('/upload/')));
+});
+
+test('final approval moves model and approved source directories and preserves file identity',async()=>{
+ const {h,assets,parents}=reviewHarness();await h.login();
+ await h.context.COSMI_DRIVE.review(assets[0],'ok');
+ assert.equal(parents['model-folder'],'models-id');assert.equal(parents['portrait-folder'],'portraits-id');
+ assert.equal(assets[0].drivePath,'03_completed/models/model');assert.equal(assets[1].completed,true);
+});
+
+test('prompt-only model cannot complete until an approved portrait is bound',async()=>{
+ const {h,assets,parents}=reviewHarness();await h.login();assets[0].sourcePack='';
+ await assert.rejects(h.context.COSMI_DRIVE.review(assets[0],'ok'),/綁定已核准/);
+ assert.equal(parents['model-folder'],'legacy-id');assert.equal(assets[0].status,'pending');
+});
+
+test('missing blend prevents completion',async()=>{
+ const {h,assets}=reviewHarness();await h.login();assets[0].driveFiles=[{path:'models/x.glb'}];
+ await assert.rejects(h.context.COSMI_DRIVE.review(assets[0],'ok'),/blend/);
+});
+
+test('second move failure rolls back the first move and leaves status pending',async()=>{
+ const {h,assets,parents}=reviewHarness({failSource:true});await h.login();
+ await assert.rejects(h.context.COSMI_DRIVE.review(assets[0],'ok'),/move failed/);
+ assert.equal(parents['model-folder'],'legacy-id');assert.equal(parents['portrait-folder'],'01_portraits-id');assert.equal(assets[0].status,'pending');
+});
+
+test('review record failure rolls back both directory moves',async()=>{
+ const {h,assets,parents}=reviewHarness({failRecord:true});await h.login();
+ await assert.rejects(h.context.COSMI_DRIVE.review(assets[0],'ok'),/record failed/);
+ assert.equal(parents['model-folder'],'legacy-id');assert.equal(parents['portrait-folder'],'01_portraits-id');
+});
+
+test('rejection moves only the rejected directory to backup',async()=>{
+ const {h,assets,parents}=reviewHarness();await h.login();const p=assets[0];
+ await h.context.COSMI_DRIVE.review(p,'reject','bad anatomy');
+ assert.match(p.drivePath,/^backup\/rejected_3d\//);assert.equal(parents['portrait-folder'],'01_portraits-id');
+ assert.equal(assets.length,1);assert.equal(p.status,'reject');
+});
+
+
+test('sync reads nested asset directories, ignores ZIP, and keeps blend metadata without preview download', async()=>{
+ let loaded;
+ const h=harness({handle:u=>{
+  const q=u.searchParams.get('q')||'';
+  if(q.includes("name = 'asset.json'"))return Response.json({files:[]});
+  if(q==="'01_portraits-id' in parents and trashed = false")return Response.json({files:[{id:'asset-folder',name:'asset',mimeType:'application/vnd.google-apps.folder'},{id:'old-zip',name:'old.zip',mimeType:'application/zip'}]});
+  if(q==="'asset-folder' in parents and trashed = false")return Response.json({files:[{id:'mf',name:'manifest.json',mimeType:'application/json'},{id:'imgs',name:'images',mimeType:'application/vnd.google-apps.folder'},{id:'blend',name:'model.blend',mimeType:'application/octet-stream'}]});
+  if(q==="'imgs' in parents and trashed = false")return Response.json({files:[{id:'png',name:'front.png',mimeType:'image/png'}]});
+  if(u.searchParams.get('alt')==='media')return u.pathname.endsWith('/mf')?Response.json({task_id:'asset',task_type:'character-concept'}):new Response(new Uint8Array([1,2,3]));
+ }});
+ h.context.COSMI_FORGE.loadAssetFiles=async(raw,file)=>{loaded={raw,file,pkg:{id:'asset',type:'character-concept',images:[],status:'pending'}};return loaded.pkg;};
+ await h.login();
+ assert.equal(loaded.file.name,'asset');
+ assert.ok(loaded.raw['asset/images/front.png']);
+ assert.equal(loaded.pkg.driveFolderId,'asset-folder');
+ assert.equal(loaded.pkg.driveFiles.length,3);
+ assert.ok(!h.calls.some(c=>c.url.searchParams.get('alt')==='media'&&/(blend|old-zip)$/.test(c.url.pathname)));
+ assert.match(h.node('driveStatus').textContent,/1 個資產目錄/);
 });

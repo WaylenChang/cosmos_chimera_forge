@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark"><title>AI Agent × Google Colab｜賽璐璐 3D 全自動管線規格</title>
+<meta name="description" content="六類日系賽璐璐3D資產的AI Agent與Colab自動建模、骨架、動作、Toon材質、驗收及匯出手冊，含官方API流程與程式範例。">
+<style>
+:root{color-scheme:light;--bg:#f3f5f8;--paper:#ffffff;--surface:#f7f9fc;--ink:#172233;--muted:#59687c;--line:#e1e7ef;--accent:#2f68b7;--accent-soft:#eaf2ff;--teal:#008d82;--teal-soft:#e8f7f2;--shadow:0 14px 40px rgba(26,44,76,.055);--code:#102036;--codeink:#d8e7f2;}
+html{scroll-behavior:smooth;scroll-padding-top:25px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif;font-size:15px;line-height:1.8}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}strong{font-weight:680}p{margin:0 0 14px}ul,ol{padding-left:1.45em;margin:10px 0 18px}li{margin:6px 0}li>ul{margin:5px 0}hr{border:0;border-top:1px solid var(--line);margin:38px 0}code{background:#edf2f9;border:1px solid #e1e8f2;border-radius:5px;padding:2px 5px;color:#9c305e;font:0.88em ui-monospace,"SFMono-Regular",Consolas,monospace;overflow-wrap:anywhere}.code-pre{background:var(--code);color:var(--codeink);border:1px solid #203953;border-radius:13px;padding:20px 18px;white-space:pre;overflow:auto;margin:13px 0 22px;font-size:12.5px;line-height:1.65;box-shadow:0 7px 20px rgba(11,30,55,.10)}.code-pre code{background:transparent;border:0;color:inherit;padding:0;font-size:inherit;overflow-wrap:normal}.copy-code{float:right;position:relative;z-index:1;margin:20px 17px -55px 0;background:#2b4059;color:#fff;border:1px solid #455d78;padding:4px 10px;border-radius:7px;cursor:pointer;font-size:12px}.copy-code:hover{background:#3d5876}.table-scroll{overflow:auto;margin:16px 0 23px;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 4px rgba(10,24,48,.02)}table{border-collapse:collapse;width:100%;min-width:700px;font-size:13.3px;line-height:1.6;background:#fff}thead{background:#eaf2fb}th,td{border-bottom:1px solid #e6ebf2;padding:11px 13px;text-align:left;vertical-align:top}th{font-weight:700;color:#284361;white-space:nowrap}tbody tr:nth-child(even){background:#fafbfd}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#f2f8ff}blockquote.callout{margin:17px 0 20px;padding:14px 17px;border:1px solid #cadff8;border-left:4px solid var(--accent);background:#f0f6ff;border-radius:0 11px 11px 0;color:#304460}blockquote p:last-child{margin:0}
+.site-top{height:5px;background:linear-gradient(90deg,#1c5baf 0%,#2a94b0 50%,#50a484 100%);position:fixed;top:0;left:0;right:0;z-index:99}.reading-bar{position:fixed;top:0;left:0;height:5px;background:#f6c05e;z-index:100;transition:width .08s linear;width:0}.shell{max-width:1540px;margin:auto;display:grid;grid-template-columns:290px minmax(0,1fr);gap:24px;padding:28px 38px 65px}.sidebar{position:sticky;top:24px;height:calc(100vh - 48px);overflow:auto;align-self:start;background:var(--paper);border:1px solid var(--line);border-radius:19px;padding:20px 14px 16px;box-shadow:var(--shadow);scrollbar-width:thin}.sidebrand{padding:8px 12px 16px;border-bottom:1px solid var(--line);margin-bottom:11px}.sidebrand .tiny{letter-spacing:1.8px;text-transform:uppercase;color:var(--teal);font-weight:850;font-size:10px}.sidebrand .brandname{font-size:17px;font-weight:780;line-height:1.4;margin:5px 0}.sidebrand .brandmeta{font-size:11px;color:var(--muted)}.toc-label{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;font-weight:750;color:var(--muted);margin:18px 12px 8px}.toc-item{display:block;padding:8px 11px;margin:2px 0;border-radius:8px;font-size:12px;line-height:1.5;color:#526276;border-left:3px solid transparent}.toc-item.sub{padding-left:26px;font-size:11.5px}.toc-item:hover{background:var(--surface);text-decoration:none}.toc-item.active{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent);font-weight:720}.toc-item[hidden]{display:none}.search{width:100%;margin-top:14px;padding:10px 12px;border:1px solid var(--line);background:var(--surface);border-radius:9px;font-size:12px;outline-color:var(--accent);color:var(--ink)}.side-actions{display:flex;gap:7px;padding:0 9px}.small-button{font-size:11px;cursor:pointer;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:6px 9px}.small-button:hover{background:var(--accent-soft);color:var(--accent)}.main{min-width:0}.hero{position:relative;overflow:hidden;background:#12243d;border-radius:22px;color:white;padding:45px 46px 40px;margin-bottom:22px;box-shadow:0 16px 36px rgba(23,48,80,.13)}.hero:before{content:"";position:absolute;right:-130px;top:-160px;width:530px;height:530px;border-radius:50%;border:1px solid #3b5c7c;background:radial-gradient(circle,rgba(53,138,147,.24),transparent 68%)}.hero:after{content:"";position:absolute;right:11%;bottom:-125px;width:310px;height:310px;border-radius:50%;border:1px solid rgba(144,219,229,.17)}.hero>*{position:relative;z-index:2}.overline{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:2px;font-weight:800;color:#9ed7ca;text-transform:uppercase;margin-bottom:13px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#78cfbb}.hero h1{font-size:clamp(26px,3.3vw,43px);line-height:1.32;letter-spacing:-.6px;max-width:790px;margin:0 0 18px;font-weight:760}.subtitle{color:#c4d5e8;font-size:15px;line-height:1.75;max-width:750px}.chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:23px}.chip{background:#1e3854;color:#d6e4f6;padding:6px 11px;border-radius:99px;font-size:11px;border:1px solid #345069}.hero-bottom{display:flex;gap:12px;align-items:center;margin-top:27px}.hero-button{background:#72d5be;border:none;padding:9px 15px;font-size:12px;font-weight:750;border-radius:8px;color:#113c38;cursor:pointer;text-decoration:none}.hero-button:hover{background:#9aecd8;text-decoration:none}.date{font-size:11px;color:#a5bdd2}.summarybox{padding:23px 25px;background:var(--paper);border:1px solid var(--line);border-radius:18px;margin-bottom:22px;box-shadow:var(--shadow)}.section-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px}.section-top h2{font-size:19px;margin:0;color:var(--ink)}.section-top .minor{color:var(--muted);font-size:11px}.journey{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:0}.step{background:var(--surface);padding:8px 11px;border:1px solid #dce8f5;border-radius:9px;font-size:12px;font-weight:650;color:#29425e}.arrow{font-size:14px;color:#7ba4b4}.cat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.category{display:flex;flex-direction:column;gap:4px;padding:18px 17px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(160deg,#fff,#f8fbff);color:var(--ink);min-height:147px;transition:transform .15s,border-color .15s,box-shadow .15s}.category:hover{text-decoration:none;border-color:#9dc8e4;transform:translateY(-2px);box-shadow:0 8px 18px rgba(33,77,115,.08)}.emoji{font-size:25px;margin-bottom:3px}.cat-title{font-size:14px;font-weight:760}.cat-caption{font-size:11.5px;color:var(--muted)}.cat-link{margin-top:auto;color:var(--accent);font-size:11px;font-weight:700}.document{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px 43px 60px;box-shadow:var(--shadow)}.document>h2{margin:46px 0 17px;padding-top:14px;padding-bottom:13px;border-bottom:2px solid #e5edf5;font-size:22px;color:#18314b;letter-spacing:-.3px}.document>h2:first-child{margin-top:5px}.document h3{font-size:18px;margin:33px 0 13px;color:#1e536c}.document h4{font-size:15px;margin:22px 0 9px}.document p,.document ul,.document ol{max-width:1050px}.document li::marker{color:#6e9db8}.document h3:before{content:"";display:inline-block;width:5px;height:17px;background:#50af9b;border-radius:4px;margin-right:9px;vertical-align:-2px}.footer{color:#68788a;font-size:11px;text-align:center;padding:18px 4px 0}.toplink{position:fixed;right:27px;bottom:23px;background:#173d5d;color:white;padding:10px 14px;border-radius:99px;box-shadow:0 6px 19px rgba(18,43,75,.25);font-size:12px;z-index:20}.toplink:hover{background:#245b80;text-decoration:none}.mobile-menu{display:none}.tag{color:#1a756f;font-weight:700;font-size:11px;background:#e9f8f4;border-radius:6px;padding:3px 7px}.section-anchor{scroll-margin-top:28px}
+body.dark{color-scheme:dark;--bg:#0d1725;--paper:#142337;--surface:#1a2d43;--ink:#e6effa;--muted:#a7b9cf;--line:#2c4260;--accent:#9cc7ff;--accent-soft:#193754;--teal:#78cebd;--teal-soft:#164138;--code:#091521;--codeink:#d5e5f5;--shadow:none}body.dark .summarybox,body.dark .category,body.dark .document{background:var(--paper)}body.dark table{background:#18283d}body.dark thead{background:#233d5a}body.dark th{color:#d8e9fb}body.dark tbody tr:nth-child(even){background:#172c42}body.dark tbody tr:hover{background:#1c3852}body.dark .document>h2{color:#d7e9ff;border-color:#314961}body.dark .document h3{color:#9ce2da}body.dark code{background:#213a54;border-color:#2c4862;color:#ffc0d4}body.dark .callout{background:#19344e;color:#cde1f7;border-color:#39698b}body.dark .hero{box-shadow:none}
+@media(max-width:1100px){.shell{grid-template-columns:250px minmax(0,1fr);padding:20px;gap:16px}.document{padding:22px 27px 45px}.hero{padding:36px 30px}.cat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:800px){.shell{display:block;padding:14px}.sidebar{display:none;position:fixed;z-index:80;top:0;left:0;bottom:0;height:100vh;width:min(310px,92vw);border-radius:0;background:var(--paper)}.sidebar.show{display:block}.mobile-menu{display:inline-block;position:fixed;right:16px;top:15px;background:#173d5d;color:white;border:0;border-radius:9px;padding:8px 12px;z-index:50;font-size:12px}.hero{padding:34px 24px;margin-top:10px}.hero h1{font-size:29px}.document{padding:20px 20px 42px}.cat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.summarybox{padding:20px}.toplink{right:16px;bottom:13px}}
+@media(max-width:530px){.cat-grid{grid-template-columns:1fr 1fr;gap:8px}.category{padding:14px 11px;min-height:157px}.hero h1{font-size:26px}.journey{gap:4px}.step{font-size:10px;padding:6px 7px}.arrow{font-size:11px}.hero-bottom{flex-wrap:wrap}.document h2{font-size:19px}.document h3{font-size:16px}}
+@media print{body{background:white!important;color:black!important}.site-top,.reading-bar,.sidebar,.mobile-menu,.toplink,.small-button,.copy-code,.hero-bottom{display:none!important}.shell{display:block;padding:0;max-width:none}.hero{background:#f6f8fa!important;color:#111!important;padding:25px;box-shadow:none;border:1px solid #ddd}.hero .subtitle,.date{color:#333!important}.hero .overline,.hero .chip{color:#444!important}.hero .chip{background:#eee!important}.summarybox,.document{border:0;box-shadow:none;padding:13px 0}.category{break-inside:avoid;box-shadow:none}.document h2,.document h3{break-after:avoid}.table-scroll{overflow:visible;border:0}.table-scroll table{min-width:0;font-size:10px;table-layout:fixed}.table-scroll th,.table-scroll td{overflow-wrap:anywhere;padding:5px}pre{white-space:pre-wrap!important;overflow:visible;break-inside:avoid}.document h2{break-before:page}a{color:#235b96;text-decoration:underline}}
+</style></head><body>
+<div class="site-top" aria-hidden="true"></div><div class="reading-bar" aria-hidden="true"></div>
+<button type="button" class="mobile-menu" id="mobile-menu" aria-label="打開目錄">☰ 目錄</button>
+<div class="shell"><aside class="sidebar" id="side" aria-label="章節導覽"><div class="sidebrand"><div class="tiny">AI / 3D / PIPELINE</div><div class="brandname">Colab 自動化系統規格</div><div class="brandmeta">v1.0 · 2026-11-11 · 繁體中文</div><input class="search" id="toc-search" type="search" placeholder="搜尋章節（Ctrl / ⌘ + K）" aria-label="搜尋目錄"></div>
+<div class="side-actions"><button type="button" class="small-button" id="theme">切換深色／淺色</button><button type="button" class="small-button" onclick="window.print()">列印</button></div>
+<div class="toc-label">內容導覽</div><nav><a class="toc-item main" href="#section-01" data-label="0. 先看結論：推薦的系統架構">0. 先看結論：推薦的系統架構</a><a class="toc-item sub" href="#section-02" data-label="0.1 六類資產的預設路由">0.1 六類資產的預設路由</a><a class="toc-item main" href="#section-03" data-label="1. 端到端 agent 工作流">1. 端到端 Agent 工作流</a><a class="toc-item sub" href="#section-04" data-label="1.1 agent 職責切分">1.1 Agent 職責切分</a><a class="toc-item main" href="#section-05" data-label="2. colab 專案結構與 notebook 分工">2. Colab 專案結構與 Notebook 分工</a><a class="toc-item sub" href="#section-06" data-label="2.1 建議 google drive 目錄">2.1 建議 Google Drive 目錄</a><a class="toc-item sub" href="#section-07" data-label="2.2 執行環境建議">2.2 執行環境建議</a><a class="toc-item sub" href="#section-08" data-label="2.3 asset_spec.json ：所有 agent 的共用介面">2.3 asset_spec.json ：所有 Agent 的共用介面</a><a class="toc-item main" href="#section-09" data-label="3. 各類資產的 colab 管線細節">3. 各類資產的 Colab 管線細節</a><a class="toc-item sub" href="#section-10" data-label="a. 人形／npc：日系動漫角色、村民、戰鬥角色">A. 人形／NPC：日系動漫角色、村民、戰鬥角色</a><a class="toc-item sub" href="#section-11" data-label="b. 怪物：獸人、哥布林、惡魔、多臂怪、異形">B. 怪物：獸人、哥布林、惡魔、多臂怪、異形</a><a class="toc-item sub" href="#section-12" data-label="c. 動物：貓犬狼馬、鳥、魚等">C. 動物：貓犬狼馬、鳥、魚等</a><a class="toc-item sub" href="#section-13" data-label="d. 奇幻生物：巨龍、翼獸、蛇形魔獸、昆蟲、奇美拉">D. 奇幻生物：巨龍、翼獸、蛇形魔獸、昆蟲、奇美拉</a><a class="toc-item sub" href="#section-14" data-label="e. 機械：武器、載具、艙門、齒輪、炮塔、可動機構">E. 機械：武器、載具、艙門、齒輪、炮塔、可動機構</a><a class="toc-item sub" href="#section-15" data-label="f. 機器人／機甲：人形戰鬥機器人、四足機器人、巨型機甲">F. 機器人／機甲：人形戰鬥機器人、四足機器人、巨型機甲</a><a class="toc-item main" href="#section-16" data-label="4. 動畫路由表：分清「官方現成」與「要自行補」">4. 動畫路由表：分清「官方現成」與「要自行補」</a><a class="toc-item main" href="#section-17" data-label="5. colab gpu、費用及環境分配">5. Colab GPU、費用及環境分配</a><a class="toc-item main" href="#section-18" data-label="6. 能開始建置的 colab api 範例：人形從圖片到 rig 與動作">6. 能開始建置的 Colab API 範例：人形從圖片到 Rig 與動作</a><a class="toc-item main" href="#section-19" data-label="7. 日式賽璐璐 toon／npr 標準">7. 日式賽璐璐 Toon／NPR 標準</a><a class="toc-item sub" href="#section-20" data-label="7.1 風格合約 toon_profile">7.1 風格合約 toon_profile</a><a class="toc-item sub" href="#section-21" data-label="7.2 建議輸出：一個資產至少五件">7.2 建議輸出：一個資產至少五件</a><a class="toc-item main" href="#section-22" data-label="8. 品質驗收：自動測、可重試、可人工接手">8. 品質驗收：自動測、可重試、可人工接手</a><a class="toc-item sub" href="#section-23" data-label="8.1 qa gates（建議預設；非官方通用門檻）">8.1 QA gates（建議預設；非官方通用門檻）</a><a class="toc-item sub" href="#section-24" data-label="8.2 自動修復策略">8.2 自動修復策略</a><a class="toc-item main" href="#section-25" data-label="9. 最小可行實驗（mvp）與擴建順序">9. 最小可行實驗（MVP）與擴建順序</a><a class="toc-item sub" href="#section-26" data-label="建議追蹤 kpi">建議追蹤 KPI</a><a class="toc-item main" href="#section-27" data-label="10. 風險、商用與不得省略的邊界">10. 風險、商用與不得省略的邊界</a><a class="toc-item main" href="#section-28" data-label="11. 官方來源與核對連結">11. 官方來源與核對連結</a><a class="toc-item sub" href="#section-29" data-label="本文件的交付定位">本文件的交付定位</a></nav></aside>
+<main class="main" id="top"><header class="hero"><div class="overline"><span class="dot"></span> IMPLEMENTATION BLUEPRINT · V1.0</div>
+<h1>AI Agent × Google Colab<br>日式賽璐璐 3D 全自動管線</h1>
+<div class="subtitle">針對人形、怪物、動物、奇幻生物、機械與機器人的建模、骨架、動作、Toon 材質、品質驗收與資產交付流程。全自動優先，人工僅處理例外。</div>
+<div class="chips"><span class="chip">API 優先</span><span class="chip">Colab + Drive 續跑</span><span class="chip">六類自動分流</span><span class="chip">Rig & Animation</span><span class="chip">Blender QA</span><span class="chip">Toon / NPR</span></div>
+<div class="hero-bottom"><a href="#section-01" class="hero-button">開始閱讀規格</a><span class="date">查核日 2026-11-11 · 離線可瀏覽 · 內附官方資料連結</span></div></header>
+<section class="summarybox" aria-label="工作流程"><div class="section-top"><h2>系統主流程</h2><span class="tag">API-first / Human-on-exception</span></div><div class="journey"><span class="step">圖片／Brief</span><span class="arrow">→</span><span class="step">Agent 分類</span><span class="arrow">→</span><span class="step">3D 生成</span><span class="arrow">→</span><span class="step">Rig／關節</span><span class="arrow">→</span><span class="step">動畫</span><span class="arrow">→</span><span class="step">Blender QA</span><span class="arrow">→</span><span class="step">Toon + GLB</span></div></section>
+<section class="summarybox" aria-label="六類資產管線"><div class="section-top"><h2>六類資產，六種路由</h2><span class="minor">點選直接查看對應方案</span></div><div class="cat-grid"><a class="category" href="#section-10"><span class="emoji">👤</span><span class="cat-title">人形 / NPC</span><span class="cat-caption">角色建模、骨架與人形動作</span><span class="cat-link">查看管線 <span aria-hidden="true">↗</span></span></a><a class="category" href="#section-11"><span class="emoji">👹</span><span class="cat-title">怪物</span><span class="cat-caption">兩足與異形分流</span><span class="cat-link">查看管線 <span aria-hidden="true">↗</span></span></a><a class="category" href="#section-12"><span class="emoji">🐺</span><span class="cat-title">動物</span><span class="cat-caption">四足、鳥類、魚類</span><span class="cat-link">查看管線 <span aria-hidden="true">↗</span></span></a><a class="category" href="#section-13"><span class="emoji">🐉</span><span class="cat-title">奇幻生物</span><span class="cat-caption">翅膀、尾巴、多足骨鏈</span><span class="cat-link">查看管線 <span aria-hidden="true">↗</span></span></a><a class="category" href="#section-14"><span class="emoji">⚙️</span><span class="cat-title">機械</span><span class="cat-caption">分件、樞紐與剛體動畫</span><span class="cat-link">查看管線 <span aria-hidden="true">↗</span></span></a><a class="category" href="#section-15"><span class="emoji">🤖</span><span class="cat-title">機器人 / 機甲</span><span class="cat-caption">裝甲、機械關節與動作</span><span class="cat-link">查看管線 <span aria-hidden="true">↗</span></span></a></div></section>
+<article class="document" id="manual"><blockquote class="callout">
+<p><strong>版本</strong>：v1.0｜<strong>查核日</strong>：2026-11-11｜<strong>語言</strong>：繁體中文<br/>
+<strong>適用</strong>：人形／NPC、怪物、動物、奇幻生物、機械、機器人<br/>
+<strong>目標</strong>：概念圖或角色設定圖 → 3D 網格 → 骨架／機構 → 動作 → 日系 NPR／Toon → GLB／FBX／VRM（視需求）→ 品質報告<br/>
+<strong>原則</strong>：<strong>Agent 全自動優先、Colab 為控制中心、人工介入為異常分支</strong>；以可追蹤、可續跑、可替換後端的資產生產系統為目標。</p>
+</blockquote>
+<h2 class="doc-heading" id="section-01">0. 先看結論：推薦的系統架構</h2>
+<p><strong>MVP 主幹：<code>Tripo API（Image→3D / Rig Check / Rig / Retarget） → Colab Agent → Blender Headless QA／修復 → Toon 設定 → 匯出</code>。</strong> 當非人形動作不足、角色結構特殊、或需要分離機械零件時，採用類型化分支；不要把所有資產套入同一種軟性蒙皮。</p>
+<ul>
+<li><strong>API 先行</strong>：批次量產先走 Tripo v3 API。Colab 可使用 CPU runtime 控制非 GPU API，節省本機 GPU 用量；Tripo／Meshy 費用另外計算，<strong>不包含在 Google AI Pro 的 Colab Compute Units 內</strong>。</li>
+<li><strong>開源備援</strong>：人形／怪物加入 Pixal3D + SkinTokens；動物／奇幻生物加入 AniGen；硬表面機械／機器人加入 PartCrafter。研究模型須<strong>隔離環境</strong>，不要共用一個 pip 安裝環境。</li>
+<li><strong>動畫分流</strong>：標準人形優先用 Tripo 預設或 Meshy 動畫 API；四足先求正確行走；翼、蛇、觸手、多足及機械的額外動畫使用骨架模板、IK、參數化關節曲線，必要時轉人工修正。</li>
+<li><strong>風格收尾</strong>：固定日系 Toon 美術規格，不靠模型生成時寫死的陰影。<strong>GLB 不等同 Unity Toon Shader</strong>；Unity 的 Toon 材質須在目標引擎再套用，Colab 只輸出材質設定檔、模型與可選預覽。</li>
+<li><strong>Human-in-the-loop</strong>：只在自動修復最多兩輪後仍未通過硬門檻、商用授權不明或美術關鍵品質不可接受時才介入。</li>
+</ul>
+<h3 class="doc-heading" id="section-02">0.1 六類資產的預設路由</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>類別</th>
+<th>預設建模</th>
+<th>預設骨架／機構</th>
+<th>預設動作</th>
+<th>開源／替代後端</th>
+<th>自動化成熟度（工程判斷）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>日系人形／NPC</strong></td>
+<td>Tripo P2（低面數）或 H v3.1（精細）</td>
+<td>Tripo Rig v3.0，<code>biped</code>，<code>spec=unity/vrm/mixamo</code></td>
+<td><code>preset:idle/walk/run/jump/...</code></td>
+<td>Pixal3D → SkinTokens；Meshy 人形 API</td>
+<td><strong>高</strong>（但表情／髮飾需檢查）</td>
+</tr>
+<tr>
+<td><strong>怪物</strong></td>
+<td>Tripo P2/H；複雜輪廓可 Pixal3D</td>
+<td>兩足用 v3.0 <code>biped</code>；非標準骨架用 <code>others</code>／AniGen</td>
+<td>兩足沿用人形；特異肢體用模板動畫</td>
+<td>AniGen、SkinTokens</td>
+<td><strong>中</strong>（特殊身形易漏骨）</td>
+</tr>
+<tr>
+<td><strong>動物</strong></td>
+<td>Tripo P2/H</td>
+<td>Rig v2.5／v3.0，依 <code>quadruped/avian/aquatic</code></td>
+<td>四足官方有 <code>preset:quadruped:walk</code>；其餘靠專用動作／程序化</td>
+<td>AniGen</td>
+<td><strong>中</strong>（不同物種動作差異大）</td>
+</tr>
+<tr>
+<td><strong>奇幻生物</strong></td>
+<td>Tripo 多視角／Pixal3D 多視角</td>
+<td><code>others</code> + 解剖骨架模板，或 AniGen</td>
+<td>翅膀、尾巴、蛇身、多足的程序化動畫</td>
+<td>AniGen、SkinTokens + 自訂骨架</td>
+<td><strong>中低</strong>（形體依賴高）</td>
+</tr>
+<tr>
+<td><strong>機械</strong>（道具／載具／機構）</td>
+<td>Tripo 靜態模型或 PartCrafter 分件</td>
+<td><strong>Rigid part hierarchy／旋轉平移軸</strong>，不使用皮膚式變形</td>
+<td>關節曲線、活塞、艙門、輪轉</td>
+<td>PartCrafter／Blender 程序化</td>
+<td><strong>中</strong>（零件辨識較易，機構關係較難）</td>
+</tr>
+<tr>
+<td><strong>機器人／機甲</strong></td>
+<td>Tripo／PartCrafter</td>
+<td>人形骨架驅動<strong>剛性裝甲</strong>；非人形用零件式機構</td>
+<td>人形動作 + 關節約束；變形結構另建狀態機</td>
+<td>PartCrafter + 機械 IK</td>
+<td><strong>中低</strong>（裝甲穿插、軸心難全自動）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout">
+<p><strong>判讀說明</strong>：上表「高／中／中低」是建置優先級，不是官方 Benchmark；生物自動 Rig／蒙皮不等於自動得到該物種全部動畫。Tripo v3.0 官方列出人形 11 種新預設，非人形列出的現成預設較少，未列入的動作不得假設有 API 支援。[S1–S4]</p>
+</blockquote>
+<hr/>
+<h2 class="doc-heading" id="section-03">1. 端到端 Agent 工作流</h2>
+<button aria-label="複製程式碼" class="copy-code" type="button">複製</button><pre class="code-pre"><code class="language-text">[圖片 / 多視角圖 / 角色 brief / 動作需求]
+        |
+        v
+ N00 Ingest &amp; Cache  ──&gt; 版權/授權/圖片品質檢查
+        |
+ N01 Visual Planner  ──&gt; 類型、肢體數、硬／軟表面、預算、目標引擎
+        |
+ N02 Route Selector ──&gt; Tripo API  |  Pixal3D  |  AniGen  |  PartCrafter
+        |
+ N03 Mesh QA &amp; Repair ──&gt; 尺寸、法線、面數、材質、UV、破洞/零件
+        |
+ N04 Rig Decision ────&gt; 生物：Tripo / SkinTokens / AniGen
+        |                 機械：Part-Hierarchy + Pivot + Joint Constraints
+        v
+ N05 Motion Planner ──&gt; API preset / 動作庫 retarget / 程序化 IK
+        |
+ N06 Headless Blender ─&gt; pose sweep / 渲染預覽 / 碰撞與權重測試
+        |
+ N07 Toon Formatter ──&gt; Palette + shadow bands + outline/profile metadata
+        |
+ N08 Export &amp; QA ─────&gt; GLB / FBX / VRM(選配) / JSON / 轉台圖 / 影片
+        |
+  PASS → publish                 FAIL → retry/fallback → REVIEW_REQUIRED
+</code></pre>
+<p><strong>必要的狀態機</strong>：<code>QUEUED → RUNNING → QA_PENDING → PASSED / RETRY / FALLBACK / REVIEW_REQUIRED / FAILED</code>。每個節點落盤 <code>manifest.json</code>、原始輸入、模型版本、task ID、時間、費用、VRAM、品質報告；重啟只接續未完成節點，<strong>不重跑成功且內容雜湊不變的步驟</strong>。</p>
+<h3 class="doc-heading" id="section-04">1.1 Agent 職責切分</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>輸入</th>
+<th>輸出</th>
+<th>可以自主處理</th>
+<th>轉人工條件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Planner</strong></td>
+<td>原圖、角色 brief</td>
+<td><code>asset_spec.json</code>、路由</td>
+<td>辨識人形、獸形、多足、機械、所需動作</td>
+<td>分類歧義且會導致錯誤 Rig</td>
+</tr>
+<tr>
+<td><strong>Generator</strong></td>
+<td>規格、模型清單</td>
+<td>靜態 3D</td>
+<td>選 Tripo P/H、重生成、改用 Pixal3D/AniGen</td>
+<td>重試後仍缺核心肢體</td>
+</tr>
+<tr>
+<td><strong>Rigger</strong></td>
+<td>GLB、解剖模板</td>
+<td>Rigged GLB、骨架映射</td>
+<td>Rig Check、換 Rig type、SkinTokens 或剛體分件</td>
+<td>關節層級不合理且無法修補</td>
+</tr>
+<tr>
+<td><strong>Animator</strong></td>
+<td>Rig、動作目錄</td>
+<td>Clips、controller metadata</td>
+<td>套預設、IK、機械關節曲線、循環修補</td>
+<td>沒有可合法使用的動作來源／無法達成動作</td>
+</tr>
+<tr>
+<td><strong>QA／Stylist</strong></td>
+<td>資產與 clips</td>
+<td>測試報告、Toon profile</td>
+<td>自動檢驗、縮面、校正比例、出預覽</td>
+<td>嚴重變形、表情失真、商業授權問題</td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 class="doc-heading" id="section-05">2. Colab 專案結構與 Notebook 分工</h2>
+<h3 class="doc-heading" id="section-06">2.1 建議 Google Drive 目錄</h3>
+<button aria-label="複製程式碼" class="copy-code" type="button">複製</button><pre class="code-pre"><code class="language-text">MyDrive/Anime3D_Agent/
+├── notebooks/
+│   ├── 00_bootstrap.ipynb            # Secrets、依賴與硬體檢查
+│   ├── 01_ingest_plan.ipynb          # 圖片、asset_spec、分類與路由
+│   ├── 02_tripo_api.ipynb            # 官方 API 建模 / rig check / rig
+│   ├── 03_open_models.ipynb          # Pixal3D、SkinTokens、AniGen、PartCrafter 的獨立執行入口
+│   ├── 04_motion.ipynb               # Preset、retarget、程序化動畫
+│   ├── 05_blender_qa.ipynb           # Headless Blender 驗證與預覽
+│   ├── 06_toon_export.ipynb          # Toon profile、貼圖／輸出
+│   └── 07_batch_runner.ipynb         # 工作佇列、續跑、報表
+├── configs/
+│   ├── routing.yaml
+│   ├── skeleton_templates/
+│   ├── motion_library.json
+│   └── toon_profiles/
+├── scripts/                         # Python Adapter / Blender -b scripts
+├── inputs/&lt;asset_id&gt;/                # source.png、views/、brief.json
+├── cache/                            # 依 hash 存推論結果；模型 checkpoint 不建議重複下載
+├── jobs/&lt;asset_id&gt;/
+│   ├── manifest.json
+│   ├── mesh/source.glb
+│   ├── rig/rigged.glb
+│   ├── anim/*.glb
+│   ├── renders/turntable/*.png
+│   ├── qa/metrics.json
+│   ├── qa/report.html
+│   └── logs/*.jsonl
+└── exports/&lt;asset_id&gt;/
+    ├── character.glb
+    ├── character.fbx                   # 需要時才產生
+    ├── material_profile.json
+    ├── animations_manifest.json
+    └── preview.mp4
+</code></pre>
+<p><strong>注意</strong>：以上 <code>.ipynb</code> 與 <code>scripts/</code> 是<strong>待建立的建議模組</strong>，不是已隨本文件提供的可執行 Notebook。本文件提供建置規格與可改寫的 API 範例，不宣稱整套工作流已完成 Colab 整合實測。</p>
+<h3 class="doc-heading" id="section-07">2.2 執行環境建議</h3>
+<ol>
+<li><strong><code>00_bootstrap</code>（CPU 也能用）</strong>：掛載 Drive → 從 Colab Secrets 取得 <code>TRIPO_API_KEY</code>／其他金鑰 → 檢查 <code>nvidia-smi</code> → 建立目錄 → 載入 <code>routing.yaml</code> → 做 API 連線及剩餘額度測試。</li>
+<li><strong><code>01_ingest_plan</code></strong>：圖檔校驗（PNG/JPEG/WebP、可見完整肢體、無過大遮擋）、去背、朝向判斷；必要時由 VLM 產生 <code>asset_spec</code>。若原圖僅正面且角色有翅膀／尾巴，標註 <code>multiview_recommended=true</code>。</li>
+<li><strong><code>02_tripo_api</code>（主要推薦）</strong>：用原圖的 <code>file_token</code> 或授權 URL 呼叫 <code>POST /v3/generation/image-to-model</code>；輪詢 <code>GET /v3/tasks/{id}</code>；有骨架需求才做 <code>POST /v3/animations/rig-check</code> → <code>POST /v3/animations/rig</code>。<strong>不要跳過 rig-check，也不要把 rig 的預設模型誤當最新版</strong>。[S1–S3]</li>
+<li><strong><code>03_open_models</code>（高成本備援）</strong>：單一 Notebook 只管理調度；每套研究模型在自己可重建的專用環境執行，完成後寫出統一 GLB。不同 Torch／CUDA 不共用執行環境。</li>
+<li><strong><code>04_motion</code></strong>：查詢骨架拓撲，選合法的動作來源；能用 Tripo preset 就呼叫 <code>POST /v3/animations/retarget</code>，其他使用經過授權的動作庫或程式生成。</li>
+<li><strong><code>05_blender_qa</code></strong>：Colab 以 <code>blender -b --python scripts/qa_asset.py -- &lt;args&gt;</code> 無介面處理；輸出面數、材質、骨骼、權重及 pose sweep。<strong>無 GPU 或 Eevee 無法渲染時，幾何／骨架 QA 仍可跑，渲染改為降級模式。</strong></li>
+<li><strong><code>06_toon_export</code></strong>：套用日系色票，輸出 toon 材質規格與 Blender 預覽；輸出 GLB／FBX；Unity Toon Shader 在 Unity 專案由 importer 套用，<strong>非 GLB 的標準內建特性</strong>。</li>
+<li><strong><code>07_batch_runner</code></strong>：根據 <code>manifest.json</code> 狀態逐項執行，限制最大重試數、每日供應商 API 額度、每作業的 GPU 預算，生成 Batch Summary。</li>
+</ol>
+<h3 class="doc-heading" id="section-08">2.3 <code>asset_spec.json</code>：所有 Agent 的共用介面</h3>
+<button aria-label="複製程式碼" class="copy-code" type="button">複製</button><pre class="code-pre"><code class="language-json">{
+  "asset_id": "dragon_001",
+  "source_image": "inputs/dragon_001/source.png",
+  "asset_class": "fantasy_creature",
+  "anatomy": "quadruped_with_wings",
+  "limbs": {"legs": 4, "arms": 0, "wings": 2, "tails": 1},
+  "surface_mode": "organic",
+  "priority": "animation_ready",
+  "target_engine": "unity",
+  "toon_profile": "anime_cel_2band",
+  "requested_clips": ["idle", "walk", "fly", "attack"],
+  "poly_budget_triangles": 35000,
+  "texture_budget": 2048,
+  "prefer_api": true,
+  "max_auto_retries": 2,
+  "manual_review_only_on_failure": true,
+  "license_status": "unverified"
+}
+</code></pre>
+<p><strong>數值為示例</strong>：35,000 triangles、2,048 px 不代表所有平台標準；依行動裝置、桌面或影片用途另調。<code>license_status=unverified</code> 應阻止<strong>商用發佈</strong>，但不一定阻止純內部 POC。</p>
+<hr/>
+<h2 class="doc-heading" id="section-09">3. 各類資產的 Colab 管線細節</h2>
+<h3 class="doc-heading" id="section-10">A. 人形／NPC：日系動漫角色、村民、戰鬥角色</h3>
+<p><strong>預設（API 主幹）</strong></p>
+<ol>
+<li><code>01</code>：VLM 確認 <code>biped</code>、完整手腳、標準 A/T pose 趨勢；如需多角色一致性，固定風格 prompt、seed、色票與衣飾規範。</li>
+<li><code>02</code>：以 <strong>Tripo P2-20260801</strong>（低面數、遊戲用）為首輪；英雄／特寫可改 <strong>H v3.1-20260211</strong>，保留 texture／UV，必要時 retopo 後再 Rig。[S1]</li>
+<li><code>02</code>：Rig Check 通過後，呼叫 <code>model=v3.0-20260909</code>, <code>rig_type=biped</code>, <code>spec=unity</code>（Unity）或 <code>spec=vrm</code>（VRM）或 <code>mixamo</code>（對應動作庫）。[S2]</li>
+<li><code>04</code>：優先呼叫人形預設 <code>preset:idle</code>, <code>preset:walk</code>, <code>preset:run</code>, <code>preset:jump</code>, <code>preset:slash</code>, <code>preset:shoot</code>；另外建立合法動作庫的骨架映射。[S3]</li>
+<li><code>05</code>：檢查肩、肘、膝、髖、裙襬／長髮與道具穿插；臉部表情需另用 Shape Keys 或表情控制，不可由 Auto Rig 推定已存在。</li>
+<li><code>06</code>：按角色團隊色票轉成 toon profile，匯出多段 animation clips。</li>
+</ol>
+<p><strong>備援</strong>：Pixal3D（<code>--low_vram</code> 或多視角）→ SkinTokens（<code>--use_transfer</code>）→ Blender；API 若需文字動作，可研究 Meshy 人形 Text-to-Motion／Animations，但不應假設支援非人形。[S5–S8]</p>
+<p><strong>人工例外</strong>：臉型嚴重跑版、衣物穿模、髮飾骨架錯位、表情需求屬主角等級。</p>
+<h3 class="doc-heading" id="section-11">B. 怪物：獸人、哥布林、惡魔、多臂怪、異形</h3>
+<p><strong>先分類，不可直接把所有怪物標成 biped。</strong></p>
+<ol>
+<li><code>01</code>：辨識兩足／四足／多臂／無腿／觸手，記錄是否保留武器、尾巴、翅膀與角。</li>
+<li><code>02</code>：建模先用 Tripo H/P；強烈特殊剪影時，改用 Pixal3D 多視角以檢查輪廓。</li>
+<li><code>02/03</code>：<strong>標準兩手兩腳</strong>：Tripo Rig v3.0 <code>biped</code>；<strong>多臂、異形</strong>：Rig v3.0 <code>others</code> 或 AniGen，經骨架模板檢查；不能把 <code>others</code> 視為保證能產生正確動作。</li>
+<li><code>04</code>：兩足使用人形 walk/attack/hurt；異形採骨鏈控制、觸手波、尾巴擺動、程序化攻擊。</li>
+<li><code>05</code>：檢查多餘手臂是否對上不同骨鏈、武器握點、尾部彎曲、角與肩部穿模。</li>
+<li><code>06</code>：高對比陰影與粗線條維持怪物辨識度。</li>
+</ol>
+<p><strong>備援</strong>：AniGen 直接 Image → rigged mesh；有手動定義好骨架時可試 SkinTokens <code>--use_skeleton --use_transfer</code>。[S6–S7]</p>
+<p><strong>人工例外</strong>：核心肢體缺失、骨骼階層錯誤、3D 形體與概念圖不符。</p>
+<h3 class="doc-heading" id="section-12">C. 動物：貓犬狼馬、鳥、魚等</h3>
+<ol>
+<li><code>01</code>：標記 <code>quadruped</code>、<code>avian</code>、<code>aquatic</code>；不可把鳥的翅膀等同於兩隻前腳。</li>
+<li><code>02</code>：Tripo P/H 生成；Rig Check 建議類型；用 <code>model=v2.5-20260210</code> 或 <code>v3.0-20260909</code> 與明確的 <code>rig_type</code>。[S2]</li>
+<li><code>04</code>：四足可先用 <strong><code>preset:quadruped:walk</code></strong> 交出最低可用版本；獵犬奔跑、貓躍、馬步態、鳥拍翼／魚游動由模板曲線和 IK 補完。<strong>官方未列出的預設不要自行捏造。</strong>[S3]</li>
+<li><code>05</code>：趾尖／蹄子接地、髖肩方向、脊椎起伏、頭尾擺動；對貓／馬不能只縮放同一種步態就算完成。</li>
+<li><code>06</code>：固定 stylized base color、眼睛高光規則、背腹色塊邊界。</li>
+</ol>
+<p><strong>備援</strong>：AniGen（Image → coherent mesh/skeleton/skin）→ 四足／鳥模板，適合骨架更重要的任務。[S7]</p>
+<p><strong>人工例外</strong>：前後腳反關節、腿數錯誤、鳥翼骨鏈缺失、某物種重要動作無可用模板。</p>
+<h3 class="doc-heading" id="section-13">D. 奇幻生物：巨龍、翼獸、蛇形魔獸、昆蟲、奇美拉</h3>
+<ol>
+<li><code>01</code>：產生解剖描述，例如 <code>4 legs + 2 wings + 1 tail</code>；將「翅膀」與「前肢」分開標記；若單張圖背面不明，建議先完成一致多視角條件圖。</li>
+<li><code>02/03</code>：Tripo 多視角或 Pixal3D <code>inference_mv.py</code>；若骨架一致性優先，可直接試 AniGen。[S5,S7]</li>
+<li><code>02/03</code>：Tripo rig-check；若拓撲無法完整表達，選 <code>others</code> + 模板骨架或直接切換 AniGen。不要假定 <code>others</code> 有通用飛行／攻擊動作預設。</li>
+<li><code>04</code>：模組化動作：腿部 gait、翅膀 key pose／拍翼頻率、尾巴 spline wave、蛇身曲線、頭／頸 IK，按解剖類型組合。</li>
+<li><code>05</code>：至少掃描 <code>rest / 30% / 60% / 90%</code> 翅膀展開、尾巴轉彎、落地、攻擊四種關鍵姿勢；檢查翅膀根部是否裂開、腿與翼是否錯綁。</li>
+<li><code>06</code>：用輪廓分層與 cel color ramp 提高複雜形體辨識度。</li>
+</ol>
+<p><strong>備援</strong>：Pixal3D → SkinTokens <code>--use_transfer</code>；非人形 Rig 成功後仍須自行提供動作模板。[S5–S7]</p>
+<p><strong>人工例外</strong>：飛行動作必須符合特定設定、四足＋雙翼解剖不能自動對應、奇美拉多頭控制失敗。</p>
+<h3 class="doc-heading" id="section-14">E. 機械：武器、載具、艙門、齒輪、炮塔、可動機構</h3>
+<blockquote class="callout">
+<p><strong>核心原則</strong>：分件、樞紐、旋轉軸、平移軸及約束；<strong>不使用生物式軟性蒙皮作為預設</strong>。</p>
+</blockquote>
+<ol>
+<li><code>01</code>：由 VLM 標註可動／固定零件及自由度，如 <code>door:hinge</code>, <code>piston:slider</code>, <code>wheel:rotation</code>。</li>
+<li><code>02/03</code>：靜態機械用 Tripo P/H；可動機械走 <strong>PartCrafter</strong>，輸出分離零件。<code>--part_suggest</code> 可用 VLM 建議分件數，但數量≠真實機構分解。[S9]</li>
+<li><code>05</code>：Blender 以零件幾何中心、估計關節樞紐、父子關係建立 Rigid Hierarchy；添加 rotation/translation limits。</li>
+<li><code>04</code>：由 deterministic animation template 生成艙門開合、車輪轉動、炮塔旋轉、活塞伸縮、反覆運動循環。</li>
+<li><code>05</code>：檢查零件相對位置、最小間距、軸向、穿透、樞紐不穩定或不合理彎曲。</li>
+<li><code>06</code>：使用硬邊法線、裝甲分色、深色縫線與有限陰影色階。</li>
+</ol>
+<p><strong>備援</strong>：Tripo Mesh Segmentation／Blender mesh islands 分割（需驗證語義），再由 Agent 補零件階層。<strong>PartCrafter 分件本身不會自動提供工程上正確的關節運動學</strong>。</p>
+<p><strong>人工例外</strong>：機構運動互鎖、可動軸心未知、零件穿模或特殊可變形機關。</p>
+<h3 class="doc-heading" id="section-15">F. 機器人／機甲：人形戰鬥機器人、四足機器人、巨型機甲</h3>
+<ol>
+<li><code>01</code>：判斷 <code>humanoid_robot</code>、<code>quadruped_robot</code>、<code>multi_leg_mecha</code>、<code>transforming_mecha</code>，並列出裝甲、關節、武器與驅動器。</li>
+<li><code>02/03</code>：Tripo 或 PartCrafter 建模；對裝甲／肢體切件，保留硬表面輪廓。</li>
+<li><code>05</code>：<strong>人形機甲採 Humanoid 運動控制骨架 + 裝甲零件剛性附著</strong>；軟質管線／布料等少數部位才使用蒙皮。非人形機器人採專用機構鏈與 IK。</li>
+<li><code>04</code>：人形 walk/run/attack 動作映射到主控制骨架，之後用軸向約束修補裝甲行為；履帶、輪足、四足機甲用機械 gait 模板。</li>
+<li><code>05</code>：驗證肩／髖裝甲相互穿插、肘膝轉動方向、關節角上限、腳底落地與重心。</li>
+<li><code>06</code>：輸出硬邊 toon 法線、metal accent 色票與輪廓層。若需變形（飛機↔機器人），另建立具體機構狀態圖，不保證純 Image-to-3D 自動完成。</li>
+</ol>
+<p><strong>備援</strong>：PartCrafter 分件 → Blender 關節建構；人形型可用 Tripo <code>biped</code> 輔助找到主骨架，再<strong>替換錯誤的軟蒙皮為剛體配屬</strong>。</p>
+<p><strong>人工例外</strong>：裝甲難切分、零件自穿透、高複雜度變形機甲。</p>
+<hr/>
+<h2 class="doc-heading" id="section-16">4. 動畫路由表：分清「官方現成」與「要自行補」</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>拓撲</th>
+<th>可直接使用的 Tripo v3/v2.5 API 預設（官方列出）</th>
+<th>其他需建置的動作</th>
+<th>自動生成策略</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>biped</code> v3.0</td>
+<td><code>idle</code>, <code>walk</code>, <code>run</code>, <code>dive</code>, <code>climb</code>, <code>jump</code>, <code>slash</code>, <code>shoot</code>, <code>hurt</code>, <code>fall</code>, <code>turn</code>（前綴 <code>preset:</code>）</td>
+<td>表演、技能連招、面部表情、布料次級動畫</td>
+<td>API preset + 動作重定向 + pose sweep</td>
+</tr>
+<tr>
+<td><code>quadruped</code></td>
+<td><code>preset:quadruped:walk</code></td>
+<td>trot、gallop、pounce、sit</td>
+<td>gait cycles + leg IK + head/tail</td>
+</tr>
+<tr>
+<td><code>hexapod</code></td>
+<td><code>preset:hexapod:walk</code></td>
+<td>爬牆、攻擊、跳躍</td>
+<td>tripod gait + leg IK</td>
+</tr>
+<tr>
+<td><code>octopod</code></td>
+<td><code>preset:octopod:walk</code></td>
+<td>攀爬、抓取、攻擊</td>
+<td>wave gait + IK</td>
+</tr>
+<tr>
+<td><code>serpentine</code></td>
+<td><code>preset:serpentine:march</code></td>
+<td>盤繞、咬擊、游泳</td>
+<td>spline IK + phase offsets</td>
+</tr>
+<tr>
+<td><code>aquatic</code></td>
+<td><code>preset:aquatic:march</code></td>
+<td>迴轉、上浮下沉、攻擊</td>
+<td>spine wave + fin joints</td>
+</tr>
+<tr>
+<td><code>avian</code>／<code>others</code></td>
+<td><strong>目前文件未提供對應普適 preset 清單</strong></td>
+<td>翼拍、滑翔、落地、特殊混合肢體</td>
+<td>專用動作模板；無模板才轉人工</td>
+</tr>
+<tr>
+<td>硬質機械零件</td>
+<td>非此 API 的預設對象</td>
+<td>齒輪／樞紐／車輪／活塞／艙門</td>
+<td>Blender Constraint + deterministic animation</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>重要</strong>：Tripo Retarget 的 <code>animation</code>（單一）與 <code>animations</code>（陣列，最多 5 個）互斥。新建管線不要傳已廢棄且被忽略的 <code>bake_animation</code>。<code>spec</code> 的命名慣例只對 <code>biped</code> 有效。[S3]</p>
+<p>若改採 <strong>Meshy</strong>：其 Rigging API 官方主要適合標準人形；其 Animations API 支援單一／多個 preset <code>action_id(s)</code>，或由其 Text-to-Motion 產生的 <code>motion_task_id</code>，後者限 biped。<strong>不能用這點推論 Meshy API 已全面支援所有動物或奇幻生物。</strong>[S10,S11]</p>
+<hr/>
+<h2 class="doc-heading" id="section-17">5. Colab GPU、費用及環境分配</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>後端</th>
+<th>官方基本需求</th>
+<th>Colab 選擇（工程建議）</th>
+<th>工作類型</th>
+<th>風險</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tripo／Meshy API</td>
+<td>Colab 端無需生成 GPU</td>
+<td><strong>CPU</strong> 即可呼叫／輪詢</td>
+<td>建模、Rig、動作 API</td>
+<td>外部點數費／網路／任務逾時</td>
+</tr>
+<tr>
+<td>PartCrafter</td>
+<td>NVIDIA CUDA <strong>≥8 GB VRAM</strong></td>
+<td>T4 16GB 起；調整分件／token</td>
+<td>機械分件</td>
+<td>複雜度高、VLM 分件數≠關節</td>
+</tr>
+<tr>
+<td>SkinTokens</td>
+<td>NVIDIA GPU <strong>≥14 GB</strong></td>
+<td>T4 16GB 起嘗試</td>
+<td>自動骨架與蒙皮</td>
+<td>CUDA／flash-attn、輸出品質</td>
+</tr>
+<tr>
+<td>AniGen</td>
+<td>NVIDIA GPU <strong>≥18 GB</strong></td>
+<td>L4 24GB 起；A100 較穩</td>
+<td>自帶 Rig 的生成</td>
+<td>官方主要驗證 A800／RTX3090，Colab 相容性未保證</td>
+</tr>
+<tr>
+<td>TRELLIS.2</td>
+<td>NVIDIA GPU <strong>≥24 GB</strong></td>
+<td>A100 40GB 較穩</td>
+<td>高細節 3D</td>
+<td>24GB 只是最低需求，L4 可能 OOM</td>
+</tr>
+<tr>
+<td>Pixal3D</td>
+<td>官方提供 <code>--low_vram</code>（預設 1024）</td>
+<td>T4 可試低顯存；高精度優先 A100</td>
+<td>高還原靜態模型</td>
+<td>依賴 TRELLIS.2、編譯 NATTEN 等</td>
+</tr>
+<tr>
+<td>Blender QA（無介面）</td>
+<td>依算圖功能不同</td>
+<td>CPU 幾何 QA；渲染按 GPU／驅動</td>
+<td>轉檔、權重、骨架、預覽</td>
+<td>Eevee/headless 支援需驗證</td>
+</tr>
+</tbody>
+</table></div>
+<p>Google AI Pro 官方列出 <strong>Colab 每月 200 Compute Units</strong>（2026-11 查核），不是 200 GPU 小時，也不保證固定供應 T4、L4 或 A100。應在 Notebook 開頭執行 <code>!nvidia-smi</code>、<code>!free -h</code>；API 開發和日常排程盡量用 CPU，只有執行自架生成模型才切換 GPU。[S12]</p>
+<p><strong>費用控制規則</strong>：每項資產有 <code>max_api_credits</code>／<code>max_gpu_minutes</code>、重試次數上限；重試前先查是否已有 <code>task_id</code> 成功完成；失敗不要無限重送付費 API。每輪記錄 <code>estimated_cost</code> 和最終 <code>credits_consumed</code>（若供應商提供）。</p>
+<hr/>
+<h2 class="doc-heading" id="section-18">6. 能開始建置的 Colab API 範例：人形從圖片到 Rig 與動作</h2>
+<p>此範例只覆蓋 <strong>Tripo 人形路徑</strong>，示範合法 API 順序；不包含輸入圖片上傳、Blender 腳本及多種類型的完整封裝。先把圖片透過 Tripo Files API 上傳取得 <code>file_token</code>，或使用你有權公開存取的 HTTPS 直連圖片 URL。[S1–S4]</p>
+<button aria-label="複製程式碼" class="copy-code" type="button">複製</button><pre class="code-pre"><code class="language-python"># Colab cells：pip install requests；從 Colab Secrets 讀取金鑰（不要寫死／印出）
+import time, requests
+from google.colab import userdata
+
+API_KEY = userdata.get("TRIPO_API_KEY")
+BASE = "https://openapi.tripo3d.ai/v3"
+SESSION = requests.Session()
+SESSION.headers.update({
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json",
+})
+
+def start_task(path, payload):
+    r = SESSION.post(BASE + path, json=payload, timeout=60)
+    r.raise_for_status()
+    body = r.json()
+    if body.get("code") != 0 or not body.get("data", {}).get("task_id"):
+        raise RuntimeError(f"API rejected request: {body.get('code')}")
+    return body["data"]["task_id"]
+
+def poll_task(task_id, timeout_s=900, interval_s=8):
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() &lt; deadline:
+        r = SESSION.get(f"{BASE}/tasks/{task_id}", timeout=30)
+        r.raise_for_status()
+        body = r.json()
+        if body.get("code") != 0:
+            raise RuntimeError(f"Task query failed: {body.get('code')}")
+        data = body.get("data", {})
+        status = data.get("status")
+        if status == "success":
+            return data
+        if status in ("failed", "cancelled", "expired", "banned"):
+            raise RuntimeError(f"Task {task_id}: {status}, {data.get('error_message')}")
+        time.sleep(interval_s)
+    raise TimeoutError(f"Task still pending: {task_id}; save ID and resume polling")
+
+# 1. 前置：請以真正取得的 token 取代範例字串；不可直接運行假 token
+image_token = "YOUR_UPLOADED_IMAGE_FILE_TOKEN"
+gen_id = start_task("/generation/image-to-model", {
+    "input": image_token, "model": "P2-20260801",
+    "texture": True, "pbr": True,
+})
+gen = poll_task(gen_id)
+
+# 2. 先做 Rig Check
+check_id = start_task("/animations/rig-check", {"input": gen_id})
+check = poll_task(check_id)
+if not check.get("output", {}).get("riggable"):
+    raise RuntimeError("Not riggable: route to mesh repair or fallback")
+if check["output"].get("rig_type") != "biped":
+    raise RuntimeError("Unexpected topology: send back to Agent router")
+
+# 3. 人形 Rig v3.0（不要省略 model，預設版本仍是舊版）
+rig_id = start_task("/animations/rig", {
+    "input": gen_id, "model": "v3.0-20260909",
+    "rig_type": "biped", "spec": "unity", "out_format": "glb",
+})
+rig = poll_task(rig_id)
+
+# 4. 動作重定向，最多五段 preset；可拆任務
+anim_id = start_task("/animations/retarget", {
+    "input": rig_id,
+    "animations": ["preset:idle", "preset:walk", "preset:run"],
+    "out_format": "glb",
+})
+anim = poll_task(anim_id)
+print({
+    "generate_task": gen_id, "rig_task": rig_id, "anim_task": anim_id,
+    "animated_model_url": anim.get("output", {}).get("model_url"),
+})
+</code></pre>
+<p><strong>準備投入批量運行前要加上</strong>：上傳 Files API adapter、<code>429/5xx</code> 指數退避（以 <code>Retry-After</code> 為準）、下載簽章 URL、API response schema 驗證、request idempotency／任務 ID 存檔、費用限額、網路斷線恢復及安全日誌。此碼為<strong>參考骨架</strong>，不是開箱即用的一鍵完整專案。</p>
+<p><strong>開源後端官方命令（各自的專用環境中執行）</strong>：</p>
+<button aria-label="複製程式碼" class="copy-code" type="button">複製</button><pre class="code-pre"><code class="language-bash"># Pixal3D：單圖／低顯存；需先依官方 README 安裝 TRELLIS.2 基底與額外依賴
+python inference.py --image /path/source.png --output /path/mesh.glb --low_vram
+# Pixal3D：多視角
+python inference_mv.py --views_dir /path/views --output /path/mesh_mv.glb
+
+# SkinTokens：保留原貼圖與比例；需要下載模型及 flash-attn 等依賴
+python demo.py --input /path/mesh.glb --output /path/rigged.glb --use_transfer
+
+# AniGen：直接產生 rigged mesh；參考官方模型下載及 example.py 設定
+python example.py --image_path /path/source.png
+
+# PartCrafter：例子為 4 件機構；機構樞紐仍要 Blender 後處理
+python scripts/inference_partcrafter.py --image_path /path/source.png \
+  --num_parts 4 --tag mechanism --rmbg
+</code></pre>
+<hr/>
+<h2 class="doc-heading" id="section-19">7. 日式賽璐璐 Toon／NPR 標準</h2>
+<h3 class="doc-heading" id="section-20">7.1 風格合約 <code>toon_profile</code></h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>建議策略</th>
+<th>QA 判準</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>色票／Base Color</td>
+<td>限定角色主色、暗面色、點綴色；去除 PBR 貼圖內烘焙陰影</td>
+<td>角色跨轉台視角顏色一致</td>
+</tr>
+<tr>
+<td>陰影階梯</td>
+<td>2 段或 3 段 cell shading（不是高頻寫實 AO）</td>
+<td>光源轉動時暗面形狀穩定</td>
+</tr>
+<tr>
+<td>描邊</td>
+<td>輪廓線寬按畫面尺寸調整；必要時面部／髮束分層</td>
+<td>邊緣清楚、沒有細節線條過量</td>
+</tr>
+<tr>
+<td>法線</td>
+<td>人臉與頭髮可使用特殊 normals；機械保留硬邊</td>
+<td>臉部不出現不自然的鼻翼黑塊</td>
+</tr>
+<tr>
+<td>表情</td>
+<td>主角人形另存 shape keys、eye/mouth controls</td>
+<td>不能只靠自動 Rig 假設有口型</td>
+</tr>
+<tr>
+<td>動畫節奏</td>
+<td>強調 key pose、anticipation、exaggeration；必要時抽格</td>
+<td>不犧牲實際骨架變形品質</td>
+</tr>
+<tr>
+<td>格式</td>
+<td>GLB 保存幾何／骨架／clips；<code>material_profile.json</code> 保存專用 Toon 規則</td>
+<td>於目標引擎重現指定效果</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>重要格式界線</strong>：glTF 有 <code>KHR_materials_unlit</code> 可呈現不受燈光影響的平塗風格，<strong>但不提供完整的二／三階 cel shading 和 outline 能力</strong>；Unity 的 UTS3／其他 Toon Shader 須在引擎中套用；VRM 的 MToon 亦有自己的匯出規範。[S13,S14]</p>
+<h3 class="doc-heading" id="section-21">7.2 建議輸出：一個資產至少五件</h3>
+<ol>
+<li><code>character.glb</code>：Mesh + Rig／Part Hierarchy + UV + 貼圖 + 可輸出的 Animation Clips。</li>
+<li><code>material_profile.json</code>：palette、toon bands、outline width、normal policy、目標 shader 名稱。</li>
+<li><code>animations_manifest.json</code>：動作名、來源、骨架規格、FPS、duration、loop/root-motion、授權。</li>
+<li><code>qa/metrics.json</code> + <code>qa/report.html</code>：各 QA gate 與影像、人工介入原因（若有）。</li>
+<li><code>preview.mp4</code>／轉台 PNG：至少正面、側面、背面及動畫關鍵影格。</li>
+</ol>
+<hr/>
+<h2 class="doc-heading" id="section-22">8. 品質驗收：自動測、可重試、可人工接手</h2>
+<h3 class="doc-heading" id="section-23">8.1 QA gates（建議預設；非官方通用門檻）</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>自動檢查</th>
+<th>自動修復</th>
+<th>仍失敗時</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>G0 來源與授權</strong></td>
+<td>圖片來源、模型權重與動作資料可否用於預定用途</td>
+<td>改用授權清楚來源</td>
+<td><code>REVIEW_REQUIRED</code>；商用輸出不可發佈</td>
+</tr>
+<tr>
+<td><strong>G1 Mesh</strong></td>
+<td>是否可載入、非零頂點、合理尺寸、面數預算、孔洞/非流形</td>
+<td>mesh repair／decimate／regen</td>
+<td>切模型後端</td>
+</tr>
+<tr>
+<td><strong>G2 Rig</strong></td>
+<td>Armature 存在、無循環骨架、骨鏈覆蓋肢體、權重有限且正規化</td>
+<td>改 rig_type／補模板骨鏈／重 Rig</td>
+<td>人工調骨</td>
+</tr>
+<tr>
+<td><strong>G3 動作</strong></td>
+<td>clip 存在、關節角限、循環跳動、足部穿地、裝甲自穿透</td>
+<td>IK／foot lock／joint clamp／替換 clip</td>
+<td>人工改動畫</td>
+</tr>
+<tr>
+<td><strong>G4 Toon</strong></td>
+<td>色票限制、描邊、法線、材質是否可在目標引擎重現</td>
+<td>貼圖調色／shader profile 調整</td>
+<td>人工美術驗收</td>
+</tr>
+<tr>
+<td><strong>G5 匯出</strong></td>
+<td>glTF validator、動畫 clip 名稱、檔案存在、相依貼圖</td>
+<td>再匯出／重新封裝</td>
+<td>工程審核</td>
+</tr>
+</tbody>
+</table></div>
+<h3 class="doc-heading" id="section-24">8.2 自動修復策略</h3>
+<button aria-label="複製程式碼" class="copy-code" type="button">複製</button><pre class="code-pre"><code class="language-text">失敗 → 讀取 qa.failure_codes
+    ├─ G1：先 repair mesh，不能修就換 Tripo P/H 或 Pixal3D
+    ├─ G2：先修分類/rig_type，再換 SkinTokens 或 AniGen
+    ├─ G3：先 IK/constraints，再換授權動作來源/程序化模板
+    ├─ G4：先改 toon profile、貼圖減色與法線設定
+    └─ G0/G5：不可繞過來源授權與驗證檢查
+  每個 gate 最多自動修復 2 次；超限 → REVIEW_REQUIRED
+</code></pre>
+<p><strong>人工交接包</strong>：<code>source.png</code>、最新 <code>rigged.glb</code>／parts、最近兩次 <code>qa/metrics.json</code>、失敗關鍵影格、Agent 的修復歷程與具體待辦。人工修完把 <code>manual_override.glb</code> 放回 job，Agent <strong>從後續節點繼續</strong>，不重做先前所有階段。</p>
+<hr/>
+<h2 class="doc-heading" id="section-25">9. 最小可行實驗（MVP）與擴建順序</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>階段</th>
+<th>目標</th>
+<th>成功定義</th>
+<th>不做的事</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sprint 0：環境</strong></td>
+<td>Drive、Secrets、Tripo adapter、manifest、CPU API 任務</td>
+<td>斷線能續查 task_id、輸出 GLB</td>
+<td>一開始裝五套大模型</td>
+</tr>
+<tr>
+<td><strong>Sprint 1：人形</strong></td>
+<td>1 位 NPC 完整 <code>image→GLB→rig→idle/walk/run→QA</code></td>
+<td>三段動作與 Toon profile 可檢視</td>
+<td>主角級臉部精修</td>
+</tr>
+<tr>
+<td><strong>Sprint 2：動物</strong></td>
+<td>1 隻狼，先 walk，再加 run</td>
+<td>四足步態、足部接地、循環平順</td>
+<td>把人形 clip 直接套用</td>
+</tr>
+<tr>
+<td><strong>Sprint 3：機械</strong></td>
+<td>1 台砲塔或 1 扇機械門</td>
+<td>零件不軟變形，軸心正確，可開合</td>
+<td>複雜機甲變形</td>
+</tr>
+<tr>
+<td><strong>Sprint 4：異形</strong></td>
+<td>1 隻帶尾怪物及 1 隻有翼生物</td>
+<td>解剖骨架完整、至少一個專用動作</td>
+<td>假定官方提供飛行 preset</td>
+</tr>
+<tr>
+<td><strong>Sprint 5：批次</strong></td>
+<td>六類各 3 件，跨 GPU/API 後端 A/B</td>
+<td>成功率、成本／件、人工介入率可統計</td>
+<td>沒有 QA 報告就宣稱 game-ready</td>
+</tr>
+</tbody>
+</table></div>
+<h3 class="doc-heading" id="section-26">建議追蹤 KPI</h3>
+<ul>
+<li><strong>Autonomous completion rate</strong>：通過 G0–G5 且完全不需人工修正的資產比例。</li>
+<li><strong>Playable asset rate</strong>：具有至少一段可用且符合需求之動畫的比例（<strong>不只看 Rig 是否存在</strong>）。</li>
+<li><strong>Cost per accepted asset</strong>：包含 API 失敗重送、GPU、貼圖、渲染與人工修復成本。</li>
+<li><strong>Category-level failure codes</strong>：每類資產的缺腿、骨架錯誤、穿模、動作缺失與色彩不符統計。</li>
+<li><strong>Style consistency</strong>：同一 Toon profile、同一色票及同光源轉台下的視覺一致性。</li>
+</ul>
+<hr/>
+<h2 class="doc-heading" id="section-27">10. 風險、商用與不得省略的邊界</h2>
+<ol>
+<li><strong>AI Pro ≠ 免費 Tripo／Meshy／Gemini Developer API</strong>。Google AI Pro 的 Colab CU 和第三方 API 為不同計費系統；相關免費額度或付費資格以個別帳戶為準。[S12]</li>
+<li><strong>輸入圖版權</strong>：僅使用擁有授權的角色設定圖；盡量保留來源、作者及使用範圍於 <code>asset_spec</code>。</li>
+<li><strong>AniGen code MIT 不等於所有第三方元件可商用</strong>：官方指出其 <code>extensions/CUBVH/</code> 有來自 NVIDIA instant-ngp 的非商用／研究限制。即使推論不需要它，也要清點實際部署／散布涉及的元件，必要時替換實作或取得許可。[S7]</li>
+<li><strong>模型／權重／資料集授權需分別核對</strong>：GitHub 程式碼授權、預訓練 checkpoint、下載貼圖、動作庫、第三方套件各有條款；不得只看 Repo 的 MIT 標記。</li>
+<li><strong>圖片到 3D 不是自動得到完善遊戲拓撲</strong>：對關節變形不佳、內部重疊、非流形、布料或髮絲，Agent 應先自動修補再評估是否轉人工。</li>
+<li><strong>Colab 會中斷</strong>：所有 API task ID、下載 URL、manifest 和 checkpoint 寫到 Drive；輪詢不是在 Colab 關閉後持續執行的背景服務。需要可靠 24/7 排程應由具備持久性的外部 orchestrator 接手。</li>
+<li><strong>機械零件生成≠CAD／正確運動學</strong>：PartCrafter 可以分件，但不能自動保證精確樞紐、機構自由度或無碰撞。</li>
+<li><strong>Toon Shader 不會自然打包在 GLB</strong>：引擎側需要材質轉換／重建；對 Unity 專案應額外準備 importer（在有 Unity Editor 的環境執行）。</li>
+</ol>
+<hr/>
+<h2 class="doc-heading" id="section-28">11. 官方來源與核對連結</h2>
+<blockquote class="callout">
+<p>下列連結是本規格的功能依據；以<strong>官方說明</strong>為優先。部署前重新檢查版本、定價及授權，因 API 與 Colab 配額可變。</p>
+</blockquote>
+<ul>
+<li><strong>[S1] Tripo Image → 3D（H／P 系列）</strong>：<a href="https://developers.tripo3d.ai/en/docs/generation-image-to-model/standard" rel="noopener noreferrer" target="_blank">https://developers.tripo3d.ai/en/docs/generation-image-to-model/standard</a> 、<a href="https://developers.tripo3d.ai/en/docs/generation-image-to-model/p" rel="noopener noreferrer" target="_blank">https://developers.tripo3d.ai/en/docs/generation-image-to-model/p</a></li>
+<li><strong>[S2] Tripo Rig Check / Auto Rig</strong>：<a href="https://developers.tripo3d.ai/en/docs/animations-rig-check" rel="noopener noreferrer" target="_blank">https://developers.tripo3d.ai/en/docs/animations-rig-check</a> 、<a href="https://developers.tripo3d.ai/en/docs/animations-rig" rel="noopener noreferrer" target="_blank">https://developers.tripo3d.ai/en/docs/animations-rig</a></li>
+<li><strong>[S3] Tripo Animation Retarget</strong>：<a href="https://developers.tripo3d.ai/en/docs/animations-retarget" rel="noopener noreferrer" target="_blank">https://developers.tripo3d.ai/en/docs/animations-retarget</a></li>
+<li><strong>[S4] Tripo Tasks / 檔案上傳</strong>：<a href="https://developers.tripo3d.ai/en/docs/task-query" rel="noopener noreferrer" target="_blank">https://developers.tripo3d.ai/en/docs/task-query</a> 、<a href="https://developers.tripo3d.ai/en/docs/files" rel="noopener noreferrer" target="_blank">https://developers.tripo3d.ai/en/docs/files</a></li>
+<li><strong>[S5] Pixal3D</strong>（2026 新版含多視角、<code>--low_vram</code>；主分支依賴 TRELLIS.2）：<a href="https://github.com/TencentARC/Pixal3D" rel="noopener noreferrer" target="_blank">https://github.com/TencentARC/Pixal3D</a></li>
+<li><strong>[S6] SkinTokens</strong>（≥14 GB、<code>--use_transfer</code> 與 <code>--use_skeleton</code>）：<a href="https://github.com/VAST-AI-Research/SkinTokens" rel="noopener noreferrer" target="_blank">https://github.com/VAST-AI-Research/SkinTokens</a></li>
+<li><strong>[S7] AniGen</strong>（≥18 GB；image→mesh+skeleton+skin；第三方授權警示）：<a href="https://github.com/VAST-AI-Research/AniGen" rel="noopener noreferrer" target="_blank">https://github.com/VAST-AI-Research/AniGen</a></li>
+<li><strong>[S8] TRELLIS.2</strong>（≥24 GB）：<a href="https://github.com/microsoft/TRELLIS.2" rel="noopener noreferrer" target="_blank">https://github.com/microsoft/TRELLIS.2</a></li>
+<li><strong>[S9] PartCrafter</strong>（≥8 GB；分件與 VLM 建議部件數）：<a href="https://github.com/wgsxm/PartCrafter" rel="noopener noreferrer" target="_blank">https://github.com/wgsxm/PartCrafter</a></li>
+<li><strong>[S10] Meshy Rigging API（標準人形）</strong>：<a href="https://docs.meshy.ai/en/api/rigging" rel="noopener noreferrer" target="_blank">https://docs.meshy.ai/en/api/rigging</a></li>
+<li><strong>[S11] Meshy Animation API／Library</strong>：<a href="https://docs.meshy.ai/en/api/animation" rel="noopener noreferrer" target="_blank">https://docs.meshy.ai/en/api/animation</a> 、<a href="https://docs.meshy.ai/en/api/animation-library" rel="noopener noreferrer" target="_blank">https://docs.meshy.ai/en/api/animation-library</a></li>
+<li><strong>[S12] Google AI 方案 Colab CU</strong>：<a href="https://one.google.com/intl/zh-tw/about/google-ai-plans/" rel="noopener noreferrer" target="_blank">https://one.google.com/intl/zh-tw/about/google-ai-plans/</a></li>
+<li><strong>[S13] Unity Toon Shader</strong>：<a href="https://github.com/Unity-Technologies/com.unity.toonshader" rel="noopener noreferrer" target="_blank">https://github.com/Unity-Technologies/com.unity.toonshader</a></li>
+<li><strong>[S14] glTF <code>KHR_materials_unlit</code></strong>：<a href="https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_unlit/README.md" rel="noopener noreferrer" target="_blank">https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_unlit/README.md</a></li>
+<li><strong>[S15] Blender VRM Add-on / MToon</strong>：<a href="https://github.com/saturday06/VRM-Addon-for-Blender" rel="noopener noreferrer" target="_blank">https://github.com/saturday06/VRM-Addon-for-Blender</a></li>
+</ul>
+<hr/>
+<h3 class="doc-heading" id="section-29">本文件的交付定位</h3>
+<p>這是一份<strong>可交付給 AI coding agent 建置 Notebook 的系統規格、路由設計、官方 API 最小範例與驗收清單</strong>，並非聲稱所有六類、所有後端的 Colab Notebook 已完成實測或能零介入百分之百成功。最務實的第一個可運轉目標是：<strong>一張人形圖片 → Tripo P2 → Rig v3 → 三段動畫 → Blender QA → Toon Profile → GLB + 報告</strong>，再逐步加入動物、奇幻生物、機械與機甲的例外路由。</p>
+</article>
+<div class="footer">此文件是實作規格與參考範例，不是已完成執行的 Colab 專案。所有外部模型／API 的授權、額度和相容性，請在實作前再次確認。</div></main></div>
+<a class="toplink" href="#top" aria-label="回到頂端">↑ TOP</a>
+<script>
+(()=>{
+const doc=document.documentElement,side=document.getElementById('side'),query=document.getElementById('toc-search');
+const links=[...document.querySelectorAll('.toc-item')];
+const themeButton=document.getElementById('theme');
+const saved=(()=>{try{return localStorage.getItem('anime3d-theme')}catch(e){return null}})();
+if(saved==='dark')document.body.classList.add('dark');
+function toggleTheme(){document.body.classList.toggle('dark');try{localStorage.setItem('anime3d-theme',document.body.classList.contains('dark')?'dark':'light')}catch(e){}}
+themeButton.addEventListener('click',toggleTheme);
+query.addEventListener('input',()=>{const v=query.value.trim().toLowerCase();for(const link of links)link.hidden=!!v&&!link.dataset.label.includes(v)});
+document.getElementById('mobile-menu').addEventListener('click',()=>side.classList.toggle('show'));
+links.forEach(link=>link.addEventListener('click',()=>side.classList.remove('show')));
+const allHeadings=links.map(a=>document.getElementById(a.hash.slice(1))).filter(Boolean);
+if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{
+ for(const ent of entries){if(ent.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.hash==='#'+ent.target.id))}}
+},{rootMargin:'-10% 0px -78% 0px',threshold:0});allHeadings.forEach(h=>observer.observe(h));}
+function readProgress(){const max=doc.scrollHeight-window.innerHeight;document.querySelector('.reading-bar').style.width=(max>0?Math.max(0,Math.min(100,100*window.scrollY/max)):0)+'%'}
+window.addEventListener('scroll',readProgress,{passive:true});readProgress();
+window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();side.classList.add('show');query.focus();query.select()}});
+document.querySelectorAll('.copy-code').forEach(btn=>btn.addEventListener('click',async()=>{const pre=btn.nextElementSibling;const original=btn.textContent;try{await navigator.clipboard.writeText(pre.innerText);btn.textContent='已複製'}catch(e){btn.textContent='無法複製'}setTimeout(()=>btn.textContent=original,1300)}));
+})();
+</script></body></html>

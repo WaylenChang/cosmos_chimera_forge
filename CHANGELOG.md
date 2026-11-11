@@ -2,6 +2,8 @@
 
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
+- 2026-11-12 · tool@2.6.0 · 角色／宙獸改用 Drive 深層目錄與六個獨立步驟 Markdown prompt，外觀與格式參數分開；審查支援原位核准、退件備份及立繪／3D 成對移入完成區，移動失敗嘗試回復；主流程逐檔匯入／匯出。
+
 - 2026-11-11 · template@(creature-model-rig@5.0.1, character-model-rig@5.0.1) · Image-to-3D 提示詞增加原型判斷與資料搜尋，將研究結果用於原創外觀、骨架及動作設計。
 
 - 2026-11-11 · template@(creature-model-rig@5.0.0, character-model-rig@5.0.0) · Image-to-3D 提示詞要求依立繪全新建模，使用 Blender 直接交付可編輯 .blend 與匯出 .glb，並於交付前檢查臉部遮擋、破圖、穿透及軀幹與身體連接。

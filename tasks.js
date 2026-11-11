@@ -8,9 +8,9 @@
     "柔和卡通著色（2–3 階明暗）、乾淨深色描邊、色塊分明、剪影鮮明、微弱邊緣光；純色平光背景，主體不與背景融合。無文字、無簽名浮水印、原創設計。";
 
   // All paths below are relative to project/cosmos_chimera_forge on Google Drive.
-  const DRIVE_IN = "image_in";
-  const DRIVE_OUT = "3D_out";
-  const DRIVE_BACKUP = "image_backup";
+  const DRIVE_IN = "01_portraits";
+  const DRIVE_OUT = "02_3d/ai_blender";
+  const DRIVE_BACKUP = "backup/image_backup";
 
   function storageSection(ctx) {
     const dir = /model|rig|anim/.test(ctx.task.id) ? DRIVE_OUT : DRIVE_IN;
@@ -448,7 +448,7 @@
       id: "creature-model-rig", version: "5.0.1", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
-        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 cr-*.zip）" }], def: "single" },
+        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（01_portraits 內宙獸目錄）" }], def: "single" },
         { key: "source_pack", type: "text", label: "參照宙獸立繪包 ID (source_pack)", def: "", placeholder: "例：cr-20261106-7f3a-2105-adult", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
         { key: "stage", type: "select", label: "宙獸型態（四型態分開處理）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult", when: o => o.scope !== "batch" },
@@ -565,7 +565,7 @@
       id: "character-model-rig", version: "5.0.1", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "character", drop: "Art/_incoming", drive: true,
       options: [
-        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 chr-*.zip）" }], def: "single" },
+        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（01_portraits 內角色目錄）" }], def: "single" },
         { key: "source_pack", type: "text", label: "參照角色立繪包 ID (source_pack)", def: "", placeholder: "例：chr-20261106-7f3a-2105", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
         { key: "actions_character", type: "checks", label: "角色動作", items: () => C.ACTIONS.character.map(a => ({ v: a.id, zh: a.zh })), def: "all" }
@@ -811,6 +811,7 @@
   TASKS.forEach(t => {
     const build = t.build;
     t.build = ctx => {
+      if (window.COSMI_PIPELINE?.supports(ctx)) return window.COSMI_PIPELINE.build(ctx);
       const text = build(ctx), newline = text.indexOf("\n");
       return text.slice(0, newline + 1) + "\n" + storageSection(ctx) + "\n" + text.slice(newline + 1);
     };
@@ -819,5 +820,6 @@
       t.buildRounds = ctx => buildRounds(ctx).map(round => ({ ...round, prompt: round.prompt + "\n\n" + storageSection(ctx) }));
     }
   });
+  TASKS.filter(t => ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(t.id)).forEach(t => { t.version = (Number(t.version.split(".")[0]) + 1) + ".0.0"; });
   window.COSMI_TASKS = TASKS;
 })();

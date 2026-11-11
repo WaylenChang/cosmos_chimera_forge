@@ -455,14 +455,38 @@
 </section>
 <div id="driveApp" hidden>
 <div id="driveToolbar">
-  <button class="btn ghost mini" id="driveSync" type="button">重新載入 Drive 成果包</button>
-  <button class="btn ghost mini" id="driveUploadPackage" type="button">儲存審查包至 Drive</button>
-  <button class="btn ghost mini" id="driveSavePrompt" type="button">儲存完整 Prompt 至 Drive</button>
-  <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/&lt;task_id&gt;.prompt.md">
+  <button class="btn ghost mini" id="driveSync" type="button">重新載入 Drive 資產</button>
+  <button class="btn ghost mini" id="driveUploadPackage" type="button">儲存資產目錄至 Drive</button>
+  <button class="btn ghost mini" id="driveSavePrompt" type="button">儲存本步驟 Prompt</button>
+  <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/01_portrait.prompt.md">
   <button class="btn ghost mini" id="driveLoadPrompt" type="button">讀取 Prompt</button>
   <button class="btn ghost mini" id="driveSignOut" type="button">登出</button>
   <span id="driveStatus" role="status"></span>
 </div>
+<details id="pipelineControls" open style="padding:12px 20px;border-bottom:1px solid var(--line)">
+  <summary>角色／宙獸管線 · 設定 → 立繪 → 審查 → Colab／AI Blender → 審查完成</summary>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+    <label>目前步驟 <select id="pipelineStage">
+      <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
+      <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
+      <option value="review_portrait">2 · 立繪審查</option>
+      <option value="colab">3-a · Colab GPU</option>
+      <option value="blender">3-b · AI Blender（Argon／Codex）</option>
+      <option value="review_3d">4 · 立繪與 3D 最終審查</option>
+    </select></label>
+    <button id="pipelineRead" class="btn mini" type="button">讀取本步驟 .md／複製執行</button>
+    <button id="pipelineSaveSettings" class="btn ghost mini" type="button">儲存外觀 .md ＋ 參數 .json</button>
+    <button id="pipelineLoadSettings" class="btn ghost mini" type="button">讀取外觀與參數</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+    <label>外觀設定（留空使用 HTML 隨機／圖鑑設定；可貼入 AI 生成結果）<textarea id="pipelineAppearance" rows="5" placeholder="僅填外觀：輪廓、比例、五官、配色、服裝／肢體、辨識特徵"></textarea></label>
+    <label>格式參數（另存 JSON，不混入外觀 prompt）<textarea id="pipelineParameters" rows="5" spellcheck="false"></textarea></label>
+  </div>
+  <label>來源立繪資產 ID <input id="pipelineSource" placeholder="cr-… 或 chr-…"></label>
+  <button id="pipelineBindSource" class="btn ghost mini" type="button">綁定目前 3D 的來源立繪</button>
+  <p class="muted">以資產目錄直接交付。立繪通過留在原位，退件移至 backup；3D 通過時連同已核准立繪移至 03_completed。只有 prompt 建模時須補立繪。讀取 .md 後由你在所選 AI 執行。</p>
+</details>
+
 <header>
   <h1>宙獸紀 · Prompt Forge<small id="ver"></small></h1>
   <div class="seg" role="tablist">
@@ -539,7 +563,7 @@
           <button class="btn ghost" id="open" type="button">↗ 開啟平台</button>
           <button class="btn ghost" id="download" type="button">⬇ prompt.md</button>
           <button class="btn ghost" id="export" type="button">⬇ 概念 JSON</button>
-          <button class="btn ghost" id="btnUpgradeForge" type="button">🔄 升級舊版包</button>
+          <button class="btn ghost" id="btnUpgradeForge" hidden type="button">🔄 升級舊版包</button>
           <button class="btn ghost" id="toReview" type="button">🔍 轉至審查台</button>
           <span class="muted" id="chars"></span>
         </div>
@@ -618,10 +642,10 @@
         <div class="rail-tools">
           <button class="btn" id="btnScanDir" type="button" title="選取本專案 Art/_incoming 目錄進行自動掃描審查">📂 掃描本專案審查目錄</button>
           <div class="rail-tools-sub">
-            <button class="btn ghost" id="btnDirectUnpackZip" type="button" title="選取 Zip 載入審查並解壓至本專案">⚡ 一鍵解壓 Zip</button>
-            <button class="btn ghost" id="btnLoadZip" type="button" title="選擇本機下載的 .zip 或解壓檔案">🗜️ 載入 Zip</button>
+            <button class="btn ghost" id="btnDirectUnpackZip" hidden type="button" title="選取 Zip 載入審查並解壓至本專案">⚡ 一鍵解壓 Zip</button>
+            <button class="btn ghost" id="btnLoadZip" hidden type="button" title="選擇本機下載的 .zip 或解壓檔案">🗜️ 載入 Zip</button>
             <button class="btn ghost" id="btnLoadFixtures" type="button" title="載入系統內建測試包快速體驗">🧪 載入範例</button>
-            <button class="btn ghost" id="btnUpgradeZip" type="button" title="一鍵升級舊版立繪或3D壓縮包格式">🔄 升級舊包</button>
+            <button class="btn ghost" id="btnUpgradeZip" hidden type="button" title="一鍵升級舊版立繪或3D壓縮包格式">🔄 升級舊包</button>
           </div>
         </div>
         <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display:none">
@@ -651,7 +675,7 @@
       <div id="stageViewport">
         <div id="stageEmpty">
           <p>📦 尚未選取交付任務</p>
-          <p class="muted" style="margin-top:6px">點選左側「📂 掃描本專案審查目錄」或直接拖曳 <code>&lt;task_id&gt;.zip</code> 到此處進行審查。</p>
+          <p class="muted" style="margin-top:6px">點選左側「📂 掃描本專案審查目錄」並選取展開後的資產資料夾進行審查。</p>
         </div>
         <!-- 單圖視圖 -->
         <div id="stageSingleView" style="display:none">
@@ -740,15 +764,15 @@
           <button class="segb" id="zoomIn" type="button">＋</button>
           <button class="segb" id="zoomOut" type="button">－</button>
         </div>
-        <button class="btn" id="btnUnpack" type="button" title="實體解壓縮至本專案 Art/_incoming 目錄以供審查">⚡ 一鍵解壓至本專案</button>
+        <button class="btn" id="btnUnpack" type="button" title="逐檔寫入選定的本機目錄">匯出至本機目錄</button>
         <button class="btn ghost" id="btnDeployGame" type="button" title="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案">🚀 交付至 cosmos_chimera</button>
-        <button class="btn ghost" id="btnExportAlignedZip" type="button" title="下載已整合格式與圖檔的完整 Zip 壓縮包">🗜️ 下載整合 Zip</button>
+        <button class="btn ghost" id="btnExportAlignedZip" type="button" title="將資產逐檔匯出至選定目錄">匯出資產目錄</button>
         <button class="btn ghost" id="btnToImg3d" type="button" title="以此立繪包產出指定 img-to-3D Prompt">🎯 指定 3D Prompt</button>
-        <button class="btn ghost" id="btnToImg3dBatch" type="button" title="產出批量 img-to-3D Prompt（處理 image_in 內吻合條件之全部立繪包）">📦 批量 3D Prompt</button>
-        <button class="btn ghost" id="btnUpgradeActive" type="button" title="一鍵升級為最新版 Prompt 與規格">🔄 升級格式</button>
+        <button class="btn ghost" id="btnToImg3dBatch" hidden type="button" title="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）">📦 批量 3D Prompt</button>
+        <button class="btn ghost" id="btnUpgradeActive" hidden type="button" title="一鍵升級為最新版 Prompt 與規格">🔄 升級格式</button>
         <button class="btn ghost mini" id="btnBackup" type="button" title="移至備份區（自動加入時間戳）">📦 移至備份區</button>
         <button class="btn ghost mini" id="btnCopyPath" type="button">📋 複製路徑</button>
-        <button class="btn ghost mini" id="btnCopyPs" type="button">💻 PowerShell</button>
+        <button class="btn ghost mini" id="btnCopyPs" hidden type="button">💻 PowerShell</button>
       </div>
     </div>
 
@@ -802,7 +826,7 @@
           <button class="btn ghost mini" id="btnDlUpgPrompt" type="button">⬇ prompt.md</button>
           <button class="btn ghost mini" id="btnDlUpgConcept" type="button">⬇ concept.json</button>
           <button class="btn ghost mini" id="btnDlUpgManifest" type="button">⬇ manifest.json</button>
-          <button class="btn ghost mini" id="btnDlUpgZip" type="button">🗜️ 升級後 Zip 包</button>
+          <button class="btn ghost mini" id="btnDlUpgZip" hidden type="button">🗜️ 升級後 Zip 包</button>
           <button class="btn ghost mini" id="btnLoadInForge" type="button">⚡ 帶入 Prompt 鍛造台編輯</button>
         </div>
       </div>
@@ -818,6 +842,7 @@
 
 <script src="drive-config.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="pipeline.js"></script>
 <script src="drive-storage.js"></script>
 <script src="vendor/three.min.js"></script>
 <script src="vendor/OrbitControls.js"></script>

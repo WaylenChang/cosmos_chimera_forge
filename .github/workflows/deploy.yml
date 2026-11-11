@@ -30,7 +30,7 @@ jobs:
           node-version: '22'
 
       - name: Verify Drive integration
-        run: node --test tools/tests/test_drive_storage.cjs
+        run: node --test tools/tests/test_drive_storage.cjs tools/tests/test_pipeline.cjs tools/tests/test_asset_directories.cjs
 
       - name: Build login-gated site
         env:

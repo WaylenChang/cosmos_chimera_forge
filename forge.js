@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.5.0";
+  const TOOL_VERSION = "2.6.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -87,6 +87,7 @@
     if (m) {
       return { stage: m[1].toLowerCase(), baseId: pkgId.slice(0, m.index) };
     }
+    if (manifest?.stage && STAGE_KEYS.includes(manifest.stage)) return {stage: manifest.stage, baseId: pkgId};
     if (concept?.stage && STAGE_KEYS.includes(concept.stage)) {
       return { stage: concept.stage, baseId: pkgId };
     }
@@ -149,6 +150,8 @@
     } else {
       o.input_img = "";
     }
+    const pipelineStage = document.getElementById("pipelineStage");
+    if (pipelineStage && !["colab", "blender"].includes(pipelineStage.value)) pipelineStage.value = "blender";
     setViewMode("forge");
     renderAll();
     toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」帶入指定 3D 任務");
@@ -558,11 +561,12 @@
   }
 
   let lastBuild = null;
+  const pipelineTaskIds = new Map();
   function build() {
     const t = task(), o = taskOpts(t), subj = resolveSubject(t, o);
     const errors = [];
     t.options
-      .filter(d => d.type === "checks" && !d.optional && (!d.when || d.when(o)) && (o[d.key] || []).length === 0)
+      .filter(d => !window.COSMI_PIPELINE?.supports({task:t}) && d.type === "checks" && !d.optional && (!d.when || d.when(o)) && (o[d.key] || []).length === 0)
       .forEach(d => errors.push("至少勾選一個「" + d.label + "」"));
     const s = stamp();
     let taskId = t.prefix + "-" + s.day + "-" + state.seed + "-" + s.hm;
@@ -571,19 +575,30 @@
     } else if ((t.id === "creature-model-rig" || t.id === "model-rig") && o.stage) {
       taskId += "-" + o.stage;
     }
-    const header = "[COSMIMERA-TASK spec=" + SPEC + " tool=" + TOOL_VERSION + " catalog=" + C.version + " template=" + t.id + "@" + t.version + " task_id=" + taskId + " seed=" + state.seed + "]";
+    let header = "[COSMIMERA-TASK spec=" + SPEC + " tool=" + TOOL_VERSION + " catalog=" + C.version + " template=" + t.id + "@" + t.version + " task_id=" + taskId + " seed=" + state.seed + "]";
     const is3dTask = is3dType(t.id);
     const chosenPkg = (is3dTask && o.source_pack) ? reviewState.packages.find(p => p.id === o.source_pack) : null;
     let concept = chosenPkg?.concept || (subj === "character" ? characterConcept() : subj === "creature" ? creatureConcept() : null);
     let subjId = chosenPkg?.subjectId || (subj ? subjectId(subj) : is3dTask ? "batch" : t.id === "capture-vessel" ? "vessels" : t.id === "culture-research" ? "region_" + o.region : "fx_" + o.element + "_" + o.shape);
 
+    if (["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(t.id)) {
+      const key = [subjId, t.id, o.stage || "", state.seed, o.source_pack || ""].join(":");
+      const previousId = taskId;
+      if (pipelineTaskIds.has(key)) taskId = pipelineTaskIds.get(key);
+      else pipelineTaskIds.set(key, taskId);
+      header = header.replace("task_id=" + previousId, "task_id=" + taskId);
+    }
     const ctx = {
       header, taskId, timestamp: s.day + "-" + s.hm, task: t, opts: o, concept, notes: state.notes.trim(),
       platform: state.platform, platformName: state.platform === "gemini" ? "Gemini Argon（任務模式）" : "ChatGPT（對話版）",
       subjectId: subjId
     };
-    const rounds = (!errors.length && t.buildRounds) ? t.buildRounds(ctx) : null;
-    lastBuild = { ctx, errors, text: errors.length ? "" : t.build(ctx), rounds };
+    const pipeline = window.COSMI_PIPELINE?.supports(ctx);
+    const pipelineStage = document.getElementById("pipelineStage")?.value;
+    if (pipeline && pipelineStage === "colab" && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("Colab 需先選取已通過審查的來源立繪");
+    if (pipeline && pipelineStage === "blender" && o.source_pack && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("指定的來源立繪尚未通過審查；純文字建模請取消圖片來源");
+    const rounds = (!pipeline && !errors.length && t.buildRounds) ? t.buildRounds(ctx) : null;
+    lastBuild = { ctx, errors, text: errors.length ? "" : pipeline ? window.COSMI_PIPELINE.build(ctx) : t.build(ctx), rounds };
     return lastBuild;
   }
 
@@ -885,7 +900,7 @@
     });
     const front = mdlPack?.images?.[0]?.url || "";
     return {
-      conceptDir: pack?.drivePath || "image_in/", modelDir: mdlPack?.drivePath || "3D_out/",
+      conceptDir: pack?.drivePath || "01_portraits/", modelDir: mdlPack?.drivePath || "02_3d/legacy/",
       images, modelFront: { primaryUrl: front, fallbackUrl: front },
       glbUrl: mdlPack?.glbFile?.url || "", fbxUrl: "", pack, mdlPack
     };
@@ -1459,7 +1474,7 @@
           revCard.append(pRow);
         });
       } else {
-        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此角色的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或「⚡ 一鍵解壓 Zip」。"));
+        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此角色的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或選取資產資料夾。"));
       }
       bodyEl.append(revCard);
 
@@ -1715,7 +1730,7 @@
           revCard.append(pRow);
         });
       } else {
-        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此演化線的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或「⚡ 一鍵解壓 Zip」。"));
+        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此演化線的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或選取資產資料夾。"));
       }
       bodyEl.append(revCard);
     }
@@ -2852,7 +2867,8 @@
       { v: "single", zh: "🎯 指定處理模式" },
       { v: "batch", zh: "📦 批量處理模式" }
     ];
-    modes.forEach(m => {
+    if (window.COSMI_PIPELINE?.supports({task:t})) o.scope = "single";
+    modes.filter(m => !window.COSMI_PIPELINE?.supports({task:t}) || m.v === "single").forEach(m => {
       const isCur = (o.scope || "single") === m.v;
       const btn = el("button", {
         class: "segb" + (isCur ? " on" : ""),
@@ -2894,7 +2910,7 @@
 
   function renderOptions() {
     const t = task(), o = taskOpts(t), box = $("#options"); box.replaceChildren();
-    t.options.filter(d => d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
+    t.options.filter(d => (!window.COSMI_PIPELINE?.supports({task:t}) || ["source_pack", "stage"].includes(d.key)) && d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
       if (is3dType(t.id) && d.key === "source_pack") {
@@ -2944,7 +2960,7 @@
         const quickTools = el("div", { style: "display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;" },
           el("span", { class: "muted", style: "font-size:11px;" }, (isChr3d ? "角色" : isCr3d ? "宙獸" : "") + "立繪包：" + conceptPkgs.length + " 包"),
           el("button", { type: "button", class: "btn mini ghost", title: "載入系統內建測試包至審查台", onclick: () => { loadSampleFixtures(); renderAll(); } }, "🧪 載入範例包"),
-          el("button", { type: "button", class: "btn mini ghost", title: "從本機選擇 Zip 載入審查台", onclick: () => $("#zipFileInput").click() }, "🗜️ 載入 Zip"),
+          el("button", { type: "button", class: "btn mini ghost", title: "從本機選取資產資料夾", onclick: () => $("#folderFileInput").click() }, "載入資料夾"),
           el("button", { type: "button", class: "btn mini ghost", title: "前往成果審查台進行立繪檢閱", onclick: () => setViewMode("review") }, "🔍 轉至審查台")
         );
 
@@ -3066,9 +3082,9 @@
     $("#deliver").replaceChildren(
       el("p", {}, "Google Drive 根目錄：", el("code", {}, "project/cosmos_chimera_forge/")),
       el("ol", {},
-        el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/" + b.ctx.taskId + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + ".zip"), "。下載成果包後可載入審查台，按「儲存審查包至 Drive」。"),
-        el("li", {}, "立繪參考：", el("code", {}, "image_in/"), " 或 ", el("code", {}, "image_backup/"), "；3D 成果與參考：", el("code", {}, "3D_out/"), "。"),
+        el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
+        el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + "/"), "。逐檔存入資產目錄，或載入本機資料夾後按「儲存資產目錄至 Drive」。"),
+        el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
     );
@@ -3189,8 +3205,8 @@
     const curStage = pkg.stage || reviewState.activeStage || "adult";
     if (is3dType(pkg.type)) {
       // 3D 封裝往回找立繪包
-      if (pkg.manifest?.source_pack) {
-        const found = reviewState.packages.find(p => p.id === pkg.manifest.source_pack);
+      if ((pkg.sourcePack || pkg.manifest?.source_pack)) {
+        const found = reviewState.packages.find(p => p.id === (pkg.sourcePack || pkg.manifest.source_pack));
         if (found) return found;
       }
       return reviewState.packages.find(p => !is3dType(p.type) && (p.groupKey === pkg.groupKey || p.subjectId === pkg.subjectId) && (!p.stage || p.stage === curStage))
@@ -3288,6 +3304,10 @@
   async function loadZipFile(file) {
     const buf = await file.arrayBuffer();
     const files = await parseZipBuffer(buf);
+    return loadAssetFiles(files, file);
+  }
+
+  async function loadAssetFiles(files, file) {
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
     let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
     for (const path in files) {
@@ -3312,7 +3332,7 @@
       }
     }
     let alignedStaged = null;
-    if (!manifestData || !conceptData) {
+    if (/\.zip$/i.test(file.name) && (!manifestData || !conceptData)) {
       alignedStaged = findMatchingStagedFormat(file.name, Object.keys(files));
       if (alignedStaged) {
         if (!manifestData) manifestData = alignedStaged.manifest;
@@ -3359,7 +3379,7 @@
       animFiles,
       fileCount: Object.keys(files).length,
       rawZip: file,
-      isZip: true,
+      isZip: /\.zip$/i.test(file.name),
       aligned: !!alignedStaged,
       stagedTaskId: alignedStaged?.taskId || null,
       status: manifestData?.missing?.length ? "missing" : "pending"
@@ -3377,7 +3397,7 @@
       pkg.groupKey = (pkg.type === "creature-concept" || pkg.id.startsWith("cr"))
         ? (pkg.baseId || pkg.subjectId || pkg.id)
         : (is3dType(pkg.type) || pkg.id.startsWith("mdl"))
-        ? (pkg.baseId || pkg.id)
+        ? (pkg.manifest?.source_pack || pkg.subjectId || pkg.baseId || pkg.id)
         : pkg.id;
 
       const idx = reviewState.packages.findIndex(p => p.id === pkg.id);
@@ -3407,6 +3427,7 @@
   }
 
   function backupActivePackage(pkg) {
+    if (pkg?.driveFolderId) return reviewPackage(pkg, "reject");
     if (!pkg) pkg = getActivePkg();
     if (!pkg) { toast("請先選取要備份的任務包"); return; }
     const ts = getBackupTimestamp();
@@ -3691,12 +3712,8 @@
   async function performScanDirectory(dirHandle) {
     let foundCount = 0;
     for await (const [name, handle] of dirHandle.entries()) {
-      if (handle.kind === "directory" && (name.startsWith("chr-") || name.startsWith("cr-") || name.startsWith("mdl-") || name.startsWith("anim-") || name.startsWith("fx-") || name.startsWith("vsl-"))) {
+      if (handle.kind === "directory") {
         await loadFromDirHandle(name, handle);
-        foundCount++;
-      } else if (handle.kind === "file" && name.endsWith(".zip")) {
-        const file = await handle.getFile();
-        await loadZipFile(file);
         foundCount++;
       }
     }
@@ -3743,229 +3760,54 @@
 
   // 透過標準 webkitdirectory 上傳批次資料夾解析
   async function handleFolderUpload(fileList) {
-    if (!fileList || !fileList.length) return;
-    toast("正在讀取資料夾檔案...");
-    const taskGroups = {};
-    for (let i = 0; i < fileList.length; i++) {
-      const file = fileList[i];
-      const rel = file.webkitRelativePath || file.name;
-      const parts = rel.split("/");
-      // 判斷是否直接選中了 Art/_incoming 目錄，或者選中了某個 task 資料夾
-      let taskId = "";
-      let subPath = "";
-      for (let p = 0; p < parts.length; p++) {
-        if (/^(chr-|cr-|mdl-|anim-|fx-|vsl-)/.test(parts[p])) {
-          taskId = parts[p];
-          subPath = parts.slice(p + 1).join("/");
-          break;
-        }
-      }
-      if (taskId) {
-        if (!taskGroups[taskId]) taskGroups[taskId] = [];
-        taskGroups[taskId].push({ file, subPath });
-      } else if (file.name.endsWith(".zip")) {
-        await loadZipFile(file);
-      }
+    const files = Array.from(fileList || []), groups = new Map();
+    for (const file of files) {
+      if (/\.zip$/i.test(file.name)) { toast("請選取展開後的資產目錄"); continue; }
+      const parts = (file.webkitRelativePath || file.name).split("/");
+      let at = parts.findIndex(p => /^(chr-|cr-|mdl-|anim-|asset_)/.test(p));
+      if (at < 0) at = 0;
+      const id = parts[at];
+      if (!groups.has(id)) groups.set(id, {});
+      groups.get(id)[parts.slice(at).join("/")] = new Uint8Array(await file.arrayBuffer());
     }
-
-    let loadedCount = 0;
-    for (const taskId in taskGroups) {
-      const entries = taskGroups[taskId];
-      let manifestData = null, conceptData = null, rawPrompt = "";
-      let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
-      const images = [];
-      let fileCount = entries.length;
-
-      for (const item of entries) {
-        const fn = item.subPath || item.file.name;
-        if (fn.endsWith("manifest.json")) {
-          try { manifestData = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith("concept.json")) {
-          try { conceptData = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith(".prompt.md") || fn === "prompt.md") {
-          try { rawPrompt = await item.file.text(); } catch (e) {}
-        } else if (fn.endsWith("anim_spec.json")) {
-          try { animSpec = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith("rig_spec.json")) {
-          try { rigSpec = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith(".glb")) {
-          try {
-            const buf = await item.file.arrayBuffer();
-            glbFile = { path: fn, url: URL.createObjectURL(item.file), buffer: buf, file: item.file };
-          } catch (e) {}
-        } else if (fn.endsWith(".fbx") && (fn.includes("anim") || fn.includes("models"))) {
-          animFiles.push({ path: fn, size: item.file.size });
-        } else if (/\.(png|jpe?g|webp)$/i.test(fn)) {
-          images.push({ path: fn, url: URL.createObjectURL(item.file) });
-        }
-      }
-
-      let alignedStaged = null;
-      if (!manifestData || !conceptData) {
-        alignedStaged = findMatchingStagedFormat(taskId, entries.map(e => e.subPath || e.file.name));
-        if (alignedStaged) {
-          if (!manifestData) manifestData = alignedStaged.manifest;
-          if (!conceptData) conceptData = alignedStaged.concept;
-          if (!rawPrompt) rawPrompt = alignedStaged.prompt;
-        }
-      }
-
-      const pkg = {
-        id: taskId,
-        type: inferTaskType(taskId, manifestData),
-        subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
-        manifest: manifestData,
-        concept: conceptData,
-        rawPrompt,
-        images,
-        glbFile,
-        animSpec,
-        rigSpec,
-        animFiles,
-        fileCount,
-        aligned: !!alignedStaged,
-        stagedTaskId: alignedStaged?.taskId || null,
-        status: manifestData?.missing?.length ? "missing" : "pending"
-      };
-      addPackage(pkg);
-      loadedCount++;
-    }
-    toast(`已讀取 ${loadedCount} 個任務資料夾`);
+    for (const [name, raw] of groups) await loadAssetFiles(raw, {name});
+    renderReviewView();
   }
 
   async function loadFromDirHandle(taskId, dirHandle) {
-    let manifestData = null, conceptData = null, rawPrompt = "";
-    const images = [];
-    let fileCount = 0;
-    try {
-      const mfFile = await (await dirHandle.getFileHandle("manifest.json")).getFile();
-      manifestData = JSON.parse(await mfFile.text());
-    } catch (e) {}
-    try {
-      const cpFile = await (await dirHandle.getFileHandle("concept.json")).getFile();
-      conceptData = JSON.parse(await cpFile.text());
-    } catch (e) {}
-
-    // 嘗試讀取 prompt.md
-    for await (const [pname, phandle] of dirHandle.entries()) {
-      if (phandle.kind === "file" && (pname.endsWith(".prompt.md") || pname === "prompt.md")) {
-        try { rawPrompt = await (await phandle.getFile()).text(); } catch (e) {}
+    const raw = {};
+    async function collect(handle, prefix) {
+      for await (const [name, child] of handle.entries()) {
+        window.COSMI_DRIVE.relative(name);
+        if (child.kind === "directory") await collect(child, prefix + name + "/");
+        else if (!/\.zip$/i.test(name)) raw[prefix + name] = new Uint8Array(await (await child.getFile()).arrayBuffer());
       }
     }
-
-    // 讀取 images 目錄
-    try {
-      const imgDir = await dirHandle.getDirectoryHandle("images");
-      for await (const [iname, ihandle] of imgDir.entries()) {
-        if (ihandle.kind === "file" && /\.(png|jpe?g|webp)$/i.test(iname)) {
-          const file = await ihandle.getFile();
-          images.push({ path: "images/" + iname, url: URL.createObjectURL(file) });
-          fileCount++;
-        }
-      }
-    } catch (e) {}
-
-    // 讀取 models 目錄 (glb / fbx 3D 模型)
-    let glbFile = null, animSpec = null, rigSpec = null, animFiles = [];
-    try {
-      const mdlDir = await dirHandle.getDirectoryHandle("models");
-      for await (const [mname, mhandle] of mdlDir.entries()) {
-        if (mhandle.kind === "file") {
-          const file = await mhandle.getFile();
-          fileCount++;
-          if (mname.endsWith(".glb")) {
-            try {
-              const buf = await file.arrayBuffer();
-              glbFile = { path: "models/" + mname, url: URL.createObjectURL(file), buffer: buf, file };
-            } catch (e) {}
-          }
-        }
-      }
-    } catch (e) {}
-
-    // 讀取 anims 目錄 (anim_spec.json 與動作 fbx)
-    try {
-      const animDir = await dirHandle.getDirectoryHandle("anims");
-      for await (const [aname, ahandle] of animDir.entries()) {
-        if (ahandle.kind === "file") {
-          const file = await ahandle.getFile();
-          fileCount++;
-          if (aname === "anim_spec.json" || aname.endsWith("anim_spec.json")) {
-            try { animSpec = JSON.parse(await file.text()); } catch (e) {}
-          } else if (aname.endsWith(".fbx")) {
-            animFiles.push({ path: "anims/" + aname, size: file.size });
-          }
-        }
-      }
-    } catch (e) {}
-
-    // 讀取 rig 目錄 (rig_spec.json)
-    try {
-      const rigDir = await dirHandle.getDirectoryHandle("rig");
-      for await (const [rname, rhandle] of rigDir.entries()) {
-        if (rhandle.kind === "file") {
-          const file = await rhandle.getFile();
-          fileCount++;
-          if (rname === "rig_spec.json" || rname.endsWith("rig_spec.json")) {
-            try { rigSpec = JSON.parse(await file.text()); } catch (e) {}
-          }
-        }
-      }
-    } catch (e) {}
-
-    let alignedStaged = null;
-    if (!manifestData || !conceptData) {
-      alignedStaged = findMatchingStagedFormat(taskId, images.map(i => i.path));
-      if (alignedStaged) {
-        if (!manifestData) manifestData = alignedStaged.manifest;
-        if (!conceptData) conceptData = alignedStaged.concept;
-        if (!rawPrompt) rawPrompt = alignedStaged.prompt;
-        try {
-          if (manifestData) {
-            const mfH = await dirHandle.getFileHandle("manifest.json", { create: true });
-            const w = await mfH.createWritable();
-            await w.write(JSON.stringify(manifestData, null, 2));
-            await w.close();
-          }
-          if (conceptData) {
-            const cpH = await dirHandle.getFileHandle("concept.json", { create: true });
-            const w = await cpH.createWritable();
-            await w.write(JSON.stringify(conceptData, null, 2));
-            await w.close();
-          }
-          if (rawPrompt) {
-            const prH = await dirHandle.getFileHandle(alignedStaged.taskId + ".prompt.md", { create: true });
-            const w = await prH.createWritable();
-            await w.write(rawPrompt);
-            await w.close();
-          }
-        } catch (e) {}
-      }
-    }
-
-    const pkg = {
-      id: taskId,
-      type: inferTaskType(taskId, manifestData),
-      subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
-      manifest: manifestData,
-      concept: conceptData,
-      rawPrompt,
-      images,
-      glbFile,
-      animSpec,
-      rigSpec,
-      animFiles,
-      fileCount,
-      dirHandle,
-      aligned: !!alignedStaged,
-      stagedTaskId: alignedStaged?.taskId || null,
-      status: manifestData?.missing?.length ? "missing" : "pending"
-    };
-    addPackage(pkg);
+    await collect(dirHandle, taskId + "/");
+    const pkg = await loadAssetFiles(raw, {name: taskId});
+    pkg.dirHandle = dirHandle; return pkg;
   }
 
   function getActivePkg() {
     return reviewState.packages.find(p => p.id === reviewState.activePkgId) || reviewState.packages[0] || null;
+  }
+
+  async function exportAssetDirectory(pkg) {
+    if (!pkg) return toast("請先選取資產");
+    if (!window.showDirectoryPicker) return toast("請使用支援資料夾寫入的瀏覽器，或直接在 Drive 下載個別檔案");
+    try {
+      const root = await window.showDirectoryPicker({mode: "readwrite"});
+      const target = await root.getDirectoryHandle(pkg.id, {create: true});
+      const entries = pkg.driveFiles || Object.keys(pkg.rawFiles || {}).map(path => ({path: path.startsWith(pkg.id + "/") ? path.slice(pkg.id.length + 1) : path, key: path}));
+      for (const f of entries) {
+        const parts = window.COSMI_DRIVE.relative(f.path), name = parts.pop(); let dir = target;
+        for (const part of parts) dir = await dir.getDirectoryHandle(part, {create: true});
+        const blob = pkg.driveFolderId ? await window.COSMI_DRIVE.read(pkg.drivePath + "/" + f.path) : new Blob([pkg.rawFiles[f.key]]);
+        const h = await dir.getFileHandle(name, {create: true}), w = await h.createWritable();
+        await w.write(blob); await w.close();
+      }
+      toast("已逐檔匯出資產目錄");
+    } catch (e) { if (e.name !== "AbortError") toast(e.message); }
   }
 
   // ==================== 實體一鍵解壓縮引擎（解壓至本專案 Art/_incoming） ====================
@@ -4769,6 +4611,7 @@
     }
 
     const onModelLoaded = (model, animations) => {
+      targetPkg.glbLoadError = false;
       three.modelGroup = model;
       three.scene.add(model);
 
@@ -4839,19 +4682,35 @@
         if (glbBuffer) {
           loader.parse(glbBuffer, "", gltf => onModelLoaded(gltf.scene, gltf.animations), err => {
             console.error("GLTF buffer parse error:", err);
-            buildProcedural3dRig(targetPkg, onModelLoaded);
+            if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
           });
         } else {
           loader.load(targetPkg.glbUrl, gltf => onModelLoaded(gltf.scene, gltf.animations), undefined, err => {
             console.error("GLTF load url error:", err);
-            buildProcedural3dRig(targetPkg, onModelLoaded);
+            if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
           });
         }
       } else {
-        buildProcedural3dRig(targetPkg, onModelLoaded);
+        if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
       }
     } else {
-      buildProcedural3dRig(targetPkg, onModelLoaded);
+      if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
     }
   }
 
@@ -5578,13 +5437,13 @@
       box.append(el("h4", {}, "審查覆核意見"));
       const reviewBox = el("div", { class: "review-box" },
         el("div", { class: "seg" },
-          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => { pkg.status = "ok"; saveReview(pkg); renderReviewView(); } }, "✅ 核准通過"),
-          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => { pkg.status = "pending"; saveReview(pkg); renderReviewView(); } }, "🟨 待修改"),
-          el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => { pkg.status = "reject"; saveReview(pkg); renderReviewView(); } }, "❌ 退回拒絕")
+          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "✅ 核准通過"),
+          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "🟨 待修改"),
+          el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "reject") }, "❌ 退回拒絕")
         ),
         el("textarea", { id: "revNote", placeholder: "填寫人工審查意見（例如：身高比例良好，但服裝配色需微調；臉部表情需更生動...）", onchange: e => { saveReview(pkg, e.target.value); } }, getReviewNote(pkg)),
         el("div", { style: "display:flex;gap:6px;margin-top:6px;flex-wrap:wrap" },
-          el("button", { class: "btn mini", type: "button", onclick: () => { saveReview(pkg, $("#revNote")?.value); toast("已儲存審查結果"); } }, "💾 儲存審查意見"),
+          el("button", { class: "btn mini", type: "button", onclick: async () => { try { await window.COSMI_DRIVE.saveNote(pkg, $("#revNote")?.value || ""); toast("已將審查意見儲存至 Drive"); } catch(e) { toast(e.message); } } }, "💾 儲存審查意見"),
           el("button", { class: "btn ghost mini", type: "button", onclick: () => exportReviewReport(pkg) }, "⬇ 下載審查報告 (.json)"),
           el("button", { class: "btn ghost mini", type: "button", title: "移至備份區（自動加入時間戳）", onclick: () => backupActivePackage(pkg) }, "📦 移至備份區 (含時間戳)")
         )
@@ -5630,11 +5489,17 @@
     return upg ? upg.newPromptText : (pkg.manifest?.task_header || "無可用 Prompt 資訊");
   }
 
+  async function reviewPackage(pkg, status) {
+    try {
+      await window.COSMI_DRIVE.review(pkg, status, $("#revNote")?.value || getReviewNote(pkg));
+    } catch (e) { const status = document.getElementById("driveStatus"); if (status) status.textContent = e.message; toast(e.message); }
+  }
+
   function getReviewNote(pkg) {
-    return reviewState.reviews[pkg.id]?.note || "";
+    return pkg.reviewRecord?.note || reviewState.reviews[pkg.id]?.note || "";
   }
   function saveReview(pkg, note) {
-    reviewState.reviews[pkg.id] = { status: pkg.status, note: note ?? getReviewNote(pkg), time: new Date().toLocaleString() };
+    reviewState.reviews[pkg.id] = { ...reviewState.reviews[pkg.id], status: pkg.status, note: note ?? getReviewNote(pkg), time: new Date().toLocaleString() };
     try { localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewState.reviews)); } catch (e) {}
     if ($("#favList")) renderFavorites();
     if ($("#designedList")) renderDesignedList();
@@ -5817,8 +5682,8 @@
     $("#copy").addEventListener("click", () => {
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
-      const staged = generateAndStageFormats(b);
-      copyText($("#prompt").value, `已複製 Prompt！同時產生時間戳格式包 (${staged.taskId})，供審查台自動對齊封裝`);
+      const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
+      copyText($("#prompt").value, `已複製本步驟 Prompt (${staged.taskId})；格式參數請另存 JSON`);
       record();
     });
 
@@ -5829,7 +5694,7 @@
       if (!b.rounds || !b.rounds[0]) return;
       state.currentRound = 1;
       renderOutput();
-      const staged = generateAndStageFormats(b);
+      const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
       const isEvo = b.ctx.opts?.stage && b.ctx.opts.stage !== "juvenile" && b.ctx.task.id === "creature-concept";
       const hint = isEvo ? `已複製第 1 輪 (正面圖) Prompt！請先上傳前一階正面圖再貼入生成` : `已複製第 1 輪 (正面圖) Prompt！已產生時間戳對齊包 (${staged.taskId})`;
       copyText(b.rounds[0].prompt, hint);
@@ -6031,7 +5896,7 @@
     $("#btnUnpack").addEventListener("click", () => {
       const pkg = getActivePkg();
       if (!pkg) { toast("請先選取任務包"); return; }
-      unpackPackageToDisk(pkg);
+      exportAssetDirectory(pkg);
     });
     // 審查通過，交付部署至 cosmos_chimera
     $("#btnDeployGame")?.addEventListener("click", () => {
@@ -6039,19 +5904,7 @@
       if (!pkg) { toast("請先選取任務包"); return; }
       deployPackageToGame(pkg);
     });
-    $("#btnExportAlignedZip")?.addEventListener("click", () => {
-      const pkg = getActivePkg();
-      if (!pkg) { toast("請先選取任務包"); return; }
-      if (!pkg.rawFiles || !Object.keys(pkg.rawFiles).length) {
-        toast("此任務包沒有可打包的檔案");
-        return;
-      }
-      const blob = createZipBlob(pkg.rawFiles);
-      const a = el("a", { href: URL.createObjectURL(blob), download: pkg.id + ".zip" });
-      document.body.append(a); a.click();
-      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-      toast("已打包下載完整 Zip（含立繪圖檔、manifest.json、concept.json 與 prompt.md）");
-    });
+    $("#btnExportAlignedZip")?.addEventListener("click", () => exportAssetDirectory(getActivePkg()));
     $("#btnToImg3d")?.addEventListener("click", () => {
       const pkg = getActivePkg();
       if (!pkg) return;
@@ -6168,11 +6021,33 @@
     if (had) renderAll(); else reseed(newSeed(), true);
   }
   window.COSMI_FORGE = Object.freeze({
-    loadZipFile,
+    loadZipFile, loadAssetFiles,
+    packages: () => reviewState.packages,
+    removePackage: id => { reviewState.packages = reviewState.packages.filter(p => p.id !== id); },
+    clearDrivePackages: () => { reviewState.packages = reviewState.packages.filter(p => !p.driveFolderId); },
+    persistReview: saveReview,
+    setPipelineStage: stage => {
+      const isCharacter = task().id.startsWith("character");
+      if (["appearance", "portrait"].includes(stage)) state.taskId = isCharacter ? "character-concept" : "creature-concept";
+      if (["colab", "blender"].includes(stage)) {
+        const pkg = getActivePkg();
+        const chr = pkg && !is3dType(pkg.type) ? pkg.type === "character-concept" : isCharacter;
+        state.taskId = chr ? "character-model-rig" : "creature-model-rig";
+        if (pkg && !is3dType(pkg.type)) {
+          const opts = taskOpts(task()); opts.source_pack = pkg.id; opts.scope = "single";
+          if (pkg.stage) opts.stage = pkg.stage;
+        }
+      }
+      renderAll();
+    },
+    settings: () => ({assetId: lastBuild.ctx.taskId, subjectId: lastBuild.ctx.subjectId, appearance: window.COSMI_PIPELINE.appearance(lastBuild.ctx),
+      delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
+        task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
+        produced_by: "", files: [], missing: []}}),
     refresh: () => { renderAll(); renderReviewView(); },
     activePackage: getActivePkg,
     packageBlob: pkg => createZipBlob(pkg.rawFiles),
-    currentPrompt: () => ({ path: "prompts/" + lastBuild.ctx.taskId + ".prompt.md", text: lastBuild.text }),
+    currentPrompt: () => { if (lastBuild.errors.length) throw Error(lastBuild.errors.join("；")); return ({ path: "prompts/jobs/" + lastBuild.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md", text: $("#prompt")?.value || lastBuild.text }); },
     showPrompt: text => {
       const dialog = document.createElement("dialog");
       const textarea = document.createElement("textarea");
