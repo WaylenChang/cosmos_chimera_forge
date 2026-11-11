@@ -11,7 +11,8 @@
     --danger: #ff8a80; --ok: #8fd8a0; --code: #161922;
   }
   * { box-sizing: border-box; margin: 0; }
-  html, body { height: 100%; overflow: hidden; }
+  html { min-height: 100%; overflow-x: hidden; overflow-y: auto; }
+  body { min-height: 100%; height: auto; overflow-x: hidden; overflow-y: auto; }
   body { display: flex; flex-direction: column; background: var(--bg); color: var(--ink); font: 14px/1.5 "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif; }
 
   /* ---- Header ---- */
@@ -30,7 +31,14 @@
   .stage-forge-seg { display: inline-flex; }
   .stage-forge-seg .segb { padding: 3px 10px; font-size: 12px; }
 
-  .view-container { flex: 1; min-height: 0; display: flex; }
+  #driveApp:not([hidden]) { display: flex; flex-direction: column; min-height: 100dvh; width: 100%; }
+  .view-container { flex: 1; min-height: clamp(520px, 72dvh, 920px); display: flex; }
+  #designedDetailView, #designedCardsView, #designedRailList, #railList, #panelBody { min-height: 0; overscroll-behavior-y: auto; scrollbar-width: thin; }
+  #designedStageHost { min-height: 0; }
+  .btn.icon-only, .segb.icon-only { width: 32px; min-width: 32px; height: 32px; padding: 0; font-size: 16px; }
+  .btn.icon-only.mini { width: 29px; min-width: 29px; height: 29px; }
+  button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #uiTooltip { position: fixed; display: none; max-width: min(320px, calc(100vw - 24px)); background: #30394b; color: #fff; border: 1px solid #536481; padding: 6px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 22px rgba(0,0,0,.55); pointer-events: none; z-index: 9999; white-space: normal; overflow-wrap: anywhere; }
 
   /* ==================== 鍛造視圖 ==================== */
   #forgeView { flex: 1; display: grid; grid-template-columns: 220px minmax(360px, 1.1fr) minmax(380px, 1.2fr); gap: 12px; padding: 12px; min-height: 0; overflow: auto; }
@@ -448,23 +456,21 @@
 </style>
 <section id="driveGate" aria-labelledby="driveGateTitle">
   <h1 id="driveGateTitle">COSMIMERA · Prompt Forge</h1>
-  <p>請登入 Google 帳號以開啟完整鍛造台與成果審查台。</p>
-  <p>專案資產：<code>project/cosmos_chimera_forge</code></p>
   <button class="btn" id="driveSignIn" type="button">使用 Google 帳號登入</button>
   <p id="driveGateStatus" role="status">正在載入 Google 登入設定…</p>
 </section>
 <div id="driveApp" hidden>
 <div id="driveToolbar">
-  <button class="btn ghost mini" id="driveSync" type="button">重新載入 Drive 資產</button>
-  <button class="btn ghost mini" id="driveUploadPackage" type="button">儲存資產目錄至 Drive</button>
-  <button class="btn ghost mini" id="driveSavePrompt" type="button">儲存本步驟 Prompt</button>
+  <button class="btn ghost mini icon-only" id="driveSync" type="button" aria-label="重新載入 Drive 資產" data-tip="重新載入 Drive 資產">⟳</button>
+  <button class="btn ghost mini icon-only" id="driveUploadPackage" type="button" aria-label="儲存資產目錄至 Drive" data-tip="儲存資產目錄至 Drive">⤴</button>
+  <button class="btn ghost mini icon-only" id="driveSavePrompt" type="button" aria-label="儲存本步驟 Prompt" data-tip="儲存本步驟 Prompt">💾</button>
   <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/01_portrait.prompt.md">
-  <button class="btn ghost mini" id="driveLoadPrompt" type="button">讀取 Prompt</button>
-  <button class="btn ghost mini" id="driveSignOut" type="button">登出</button>
-  <span id="driveStatus" role="status"></span>
+  <button class="btn ghost mini icon-only" id="driveLoadPrompt" type="button" aria-label="讀取 Prompt" data-tip="讀取 Prompt">📖</button>
+  <button class="btn ghost mini icon-only" id="driveSignOut" type="button" aria-label="登出" data-tip="登出">⏻</button>
+  <span id="driveStatus" role="status" aria-live="polite"></span>
 </div>
-<details id="pipelineControls" open style="padding:12px 20px;border-bottom:1px solid var(--line)">
-  <summary>角色／宙獸管線 · 設定 → 立繪 → 審查 → Colab／AI Blender → 審查完成</summary>
+<details id="pipelineControls" style="padding:8px 16px;border-bottom:1px solid var(--line)">
+  <summary title="外觀、立繪、3D、審查與交付設定">⚙ 管線設定</summary>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
     <label>目前步驟 <select id="pipelineStage">
       <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
@@ -474,35 +480,34 @@
       <option value="blender">3-b · AI Blender（Argon／Codex）</option>
       <option value="review_3d">4 · 立繪與 3D 最終審查</option>
     </select></label>
-    <button id="pipelineRead" class="btn mini" type="button">讀取本步驟 .md／複製執行</button>
-    <button id="pipelineSaveSettings" class="btn ghost mini" type="button">儲存外觀 .md ＋ 參數 .json</button>
-    <button id="pipelineLoadSettings" class="btn ghost mini" type="button">讀取外觀與參數</button>
+    <button id="pipelineRead" class="btn mini icon-only" type="button" aria-label="讀取本步驟 .md／複製執行" data-tip="讀取本步驟 .md／複製執行">📋</button>
+    <button id="pipelineSaveSettings" class="btn ghost mini icon-only" type="button" aria-label="儲存外觀 .md ＋ 參數 .json" data-tip="儲存外觀 .md ＋ 參數 .json">💾</button>
+    <button id="pipelineLoadSettings" class="btn ghost mini icon-only" type="button" aria-label="讀取外觀與參數" data-tip="讀取外觀與參數">📂</button>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
     <label>外觀設定（留空使用 HTML 隨機／圖鑑設定；可貼入 AI 生成結果）<textarea id="pipelineAppearance" rows="5" placeholder="僅填外觀：輪廓、比例、五官、配色、服裝／肢體、辨識特徵"></textarea></label>
     <label>格式參數（另存 JSON，不混入外觀 prompt）<textarea id="pipelineParameters" rows="5" spellcheck="false"></textarea></label>
   </div>
   <label>來源立繪資產 ID <input id="pipelineSource" placeholder="cr-… 或 chr-…"></label>
-  <button id="pipelineBindSource" class="btn ghost mini" type="button">綁定目前 3D 的來源立繪</button>
-  <p class="muted">以資產目錄直接交付。立繪通過留在原位，退件移至 backup；3D 通過時連同已核准立繪移至 03_completed。只有 prompt 建模時須補立繪。讀取 .md 後由你在所選 AI 執行。</p>
+  <button id="pipelineBindSource" class="btn ghost mini icon-only" type="button" aria-label="綁定目前 3D 的來源立繪" data-tip="綁定目前 3D 的來源立繪">🔗</button>
 </details>
 
 <header>
-  <h1>宙獸紀 · Prompt Forge<small id="ver"></small></h1>
+  <h1>COSMIMERA<small id="ver"></small></h1>
   <div class="seg" role="tablist">
-    <button class="segb on" id="viewBtnForge" type="button">⚡ Prompt 鍛造</button>
-    <button class="segb" id="viewBtnDesigned" type="button">📋 已設計項目</button>
-    <button class="segb" id="viewBtnReview" type="button">🔍 成果審查台</button>
+    <button class="segb on icon-only" id="viewBtnForge" type="button" aria-label="⚡ Prompt 鍛造" data-tip="⚡ Prompt 鍛造">⚡</button>
+    <button class="segb icon-only" id="viewBtnDesigned" type="button" aria-label="📋 已設計項目" data-tip="📋 已設計項目">📚</button>
+    <button class="segb icon-only" id="viewBtnReview" type="button" aria-label="🔍 成果審查台" data-tip="🔍 成果審查台">🔍</button>
   </div>
   <span class="grow"></span>
   <div id="forgeHeaderControls" style="display:inline-flex;align-items:center;gap:10px;">
     <div class="seg" role="radiogroup" aria-label="執行平台" id="platformSeg">
-      <button class="segb on" data-plat="chatgpt" id="platChatgpt" type="button">ChatGPT 對話版</button>
-      <button class="segb" data-plat="gemini" id="platGemini" type="button">Gemini Argon</button>
+      <button class="segb on icon-only" data-plat="chatgpt" id="platChatgpt" type="button" aria-label="ChatGPT 對話版" data-tip="ChatGPT 對話版">🤖</button>
+      <button class="segb icon-only" data-plat="gemini" id="platGemini" type="button" aria-label="Gemini Argon" data-tip="Gemini Argon">✦</button>
     </div>
     <span class="muted" id="rec"></span>
     <label class="inline">seed <input id="seed" style="width:75px;font-family:Consolas,monospace" spellcheck="false"></label>
-    <button class="btn" id="reroll" type="button">🎲 全部隨機</button>
+    <button class="btn icon-only" id="reroll" type="button" aria-label="🎲 全部隨機" data-tip="🎲 全部隨機">🎲</button>
   </div>
 </header>
 
@@ -514,7 +519,7 @@
       <div id="tasks"></div>
       <div class="subhead" style="margin-top:14px;margin-bottom:4px">
         <h2 style="margin:0">已設計項目</h2>
-        <button class="btn mini ghost" type="button" id="btnGoDesignedFromSubhead" style="font-size:11px;padding:1px 6px;">開啟頁籤 →</button>
+        <button class="btn mini ghost icon-only" type="button" id="btnGoDesignedFromSubhead" aria-label="📂" data-tip="📂">📂</button>
       </div>
       <div id="designed"></div>
       <details style="margin-top:12px">
@@ -554,17 +559,17 @@
 
         <div class="actions">
           <div class="round-copy-group" id="roundCopyGroup" style="display:none">
-            <button class="btn mini" id="btnCopyR1" type="button" title="複製第 1 輪 正面正交基準圖 Prompt">📋 複製第 1 輪 (正面圖)</button>
-            <button class="btn mini ghost" id="btnCopyR2" type="button" title="複製第 2 輪 T-pose 三視圖合圖 Prompt">📋 複製第 2 輪 (三視圖)</button>
-            <button class="btn mini ghost" id="btnCopyR3" type="button" title="複製第 3 輪 全身動態主立繪 Prompt">📋 複製第 3 輪 (主立繪)</button>
+            <button class="btn mini icon-only" id="btnCopyR1" type="button" aria-label="複製第 1 輪 正面正交基準圖 Prompt" data-tip="複製第 1 輪 正面正交基準圖 Prompt">①</button>
+            <button class="btn mini ghost icon-only" id="btnCopyR2" type="button" aria-label="複製第 2 輪 T-pose 三視圖合圖 Prompt" data-tip="複製第 2 輪 T-pose 三視圖合圖 Prompt">②</button>
+            <button class="btn mini ghost icon-only" id="btnCopyR3" type="button" aria-label="複製第 3 輪 全身動態主立繪 Prompt" data-tip="複製第 3 輪 全身動態主立繪 Prompt">③</button>
           </div>
-          <button class="btn" id="copy" type="button">📋 複製目前顯示</button>
-          <button class="btn ghost" id="btnFavPrompt" type="button" title="將目前 Prompt 與設定加入我的最愛清單">⭐ 收藏此 Prompt</button>
-          <button class="btn ghost" id="open" type="button">↗ 開啟平台</button>
-          <button class="btn ghost" id="download" type="button">⬇ prompt.md</button>
-          <button class="btn ghost" id="export" type="button">⬇ 概念 JSON</button>
-          <button class="btn ghost" id="btnUpgradeForge" hidden type="button">🔄 升級舊版包</button>
-          <button class="btn ghost" id="toReview" type="button">🔍 轉至審查台</button>
+          <button class="btn icon-only" id="copy" type="button" aria-label="📋 複製目前顯示" data-tip="📋 複製目前顯示">📋</button>
+          <button class="btn ghost icon-only" id="btnFavPrompt" type="button" aria-label="將目前 Prompt 與設定加入我的最愛清單" data-tip="將目前 Prompt 與設定加入我的最愛清單">⭐</button>
+          <button class="btn ghost icon-only" id="open" type="button" aria-label="↗ 開啟平台" data-tip="↗ 開啟平台">↗</button>
+          <button class="btn ghost icon-only" id="download" type="button" aria-label="⬇ prompt.md" data-tip="⬇ prompt.md">⬇</button>
+          <button class="btn ghost icon-only" id="export" type="button" aria-label="⬇ 概念 JSON" data-tip="⬇ 概念 JSON">{}</button>
+          <button class="btn ghost icon-only" id="btnUpgradeForge" hidden type="button" aria-label="🔄 升級舊版包" data-tip="🔄 升級舊版包">🔄</button>
+          <button class="btn ghost icon-only" id="toReview" type="button" aria-label="🔍 轉至審查台" data-tip="🔍 轉至審查台">🔍</button>
           <span class="muted" id="chars"></span>
         </div>
         <textarea id="prompt" spellcheck="false" aria-label="產生的 prompt"></textarea>
@@ -575,7 +580,7 @@
         <div class="subhead">
           <h2 style="margin:0">⭐ 我的最愛 Prompt 清單 <span class="muted" id="favCount">(0)</span></h2>
           <div style="display:inline-flex;gap:6px;align-items:center">
-            <button class="btn mini ghost" id="btnClearFavs" type="button" title="清空所有收藏">清空全部</button>
+            <button class="btn mini ghost icon-only" id="btnClearFavs" type="button" aria-label="清空所有收藏" data-tip="清空所有收藏">🗑</button>
           </div>
         </div>
         <div style="margin-bottom:8px">
@@ -619,16 +624,16 @@
         <div style="display:flex;align-items:center;gap:8px" id="designedStageHeader"></div>
         <span class="grow"></span>
         <div class="seg" id="designedModeSeg" role="tablist">
-          <button class="segb on" id="btnDesignedModeDetail" data-mode="detail" type="button">🔍 詳細檢閱</button>
-          <button class="segb" id="btnDesignedModeCards" data-mode="cards" type="button">📑 完整卡片清單</button>
+          <button class="segb on icon-only" id="btnDesignedModeDetail" data-mode="detail" type="button" aria-label="🔍 詳細檢閱" data-tip="🔍 詳細檢閱">🔎</button>
+          <button class="segb icon-only" id="btnDesignedModeCards" data-mode="cards" type="button" aria-label="📑 完整卡片清單" data-tip="📑 完整卡片清單">▦</button>
         </div>
       </div>
 
       <!-- 單項詳細檢閱舞台 -->
-      <div id="designedDetailView" style="flex:1;overflow-y:auto;padding:16px;"></div>
+      <div id="designedDetailView" style="flex:1;min-height:0;overflow-y:auto;padding:12px;"></div>
 
       <!-- 完整平鋪卡片清單視圖 -->
-      <div id="designedCardsView" style="flex:1;overflow-y:auto;padding:16px;display:none;">
+      <div id="designedCardsView" style="flex:1;min-height:0;overflow-y:auto;padding:12px;display:none;">
         <div id="designedList"></div>
       </div>
     </div>
@@ -640,12 +645,12 @@
     <nav id="rail">
       <div class="rail-top">
         <div class="rail-tools">
-          <button class="btn" id="btnScanDir" type="button" title="選取本專案 Art/_incoming 目錄進行自動掃描審查">📂 掃描本專案審查目錄</button>
+          <button class="btn icon-only" id="btnScanDir" type="button" aria-label="選取本專案 Art/_incoming 目錄進行自動掃描審查" data-tip="選取本專案 Art/_incoming 目錄進行自動掃描審查">📂</button>
           <div class="rail-tools-sub">
-            <button class="btn ghost" id="btnDirectUnpackZip" hidden type="button" title="選取 Zip 載入審查並解壓至本專案">⚡ 一鍵解壓 Zip</button>
-            <button class="btn ghost" id="btnLoadZip" hidden type="button" title="選擇本機下載的 .zip 或解壓檔案">🗜️ 載入 Zip</button>
-            <button class="btn ghost" id="btnLoadFixtures" type="button" title="載入系統內建測試包快速體驗">🧪 載入範例</button>
-            <button class="btn ghost" id="btnUpgradeZip" hidden type="button" title="一鍵升級舊版立繪或3D壓縮包格式">🔄 升級舊包</button>
+            <button class="btn ghost icon-only" id="btnDirectUnpackZip" hidden type="button" aria-label="選取 Zip 載入審查並解壓至本專案" data-tip="選取 Zip 載入審查並解壓至本專案">⚡</button>
+            <button class="btn ghost icon-only" id="btnLoadZip" hidden type="button" aria-label="選擇本機下載的 .zip 或解壓檔案" data-tip="選擇本機下載的 .zip 或解壓檔案">🗜</button>
+            <button class="btn ghost icon-only" id="btnLoadFixtures" type="button" aria-label="載入系統內建測試包快速體驗" data-tip="載入系統內建測試包快速體驗">🧪</button>
+            <button class="btn ghost icon-only" id="btnUpgradeZip" hidden type="button" aria-label="一鍵升級舊版立繪或3D壓縮包格式" data-tip="一鍵升級舊版立繪或3D壓縮包格式">🔄</button>
           </div>
         </div>
         <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display:none">
@@ -710,20 +715,20 @@
             <span class="stage3d-hud-title" id="stage3dClipBadge">🎬 動作: chr_idle (待機)</span>
             <span class="stage3d-hud-info" id="stage3dInfoBadge"></span>
             <div style="flex:1"></div>
-            <button class="btn ghost mini" id="btn3dBones" type="button" title="切換骨骼架構顯示 (快捷鍵: B)">🦴 骨骼</button>
-            <button class="btn ghost mini" id="btn3dWireframe" type="button" title="切換拓撲布線顯示 (快捷鍵: W)">🕸️ 拓撲</button>
-            <button class="btn ghost mini" id="btn3dGrid" type="button" title="切換地面網格顯示">📏 網格</button>
-            <button class="btn ghost mini" id="btn3dCamFront" type="button" title="正面視角">正</button>
-            <button class="btn ghost mini" id="btn3dCamSide" type="button" title="側面視角">側</button>
-            <button class="btn ghost mini" id="btn3dCamBack" type="button" title="背面視角">背</button>
-            <button class="btn ghost mini" id="btn3dCamIso" type="button" title="45度透視視角">透</button>
-            <button class="btn ghost mini" id="btn3dReset" type="button" title="重設相機視角 (快捷鍵: R)">🔄 置中</button>
+            <button class="btn ghost mini icon-only" id="btn3dBones" type="button" aria-label="切換骨骼架構顯示 (快捷鍵: B)" data-tip="切換骨骼架構顯示 (快捷鍵: B)">🦴</button>
+            <button class="btn ghost mini icon-only" id="btn3dWireframe" type="button" aria-label="切換拓撲布線顯示 (快捷鍵: W)" data-tip="切換拓撲布線顯示 (快捷鍵: W)">▦</button>
+            <button class="btn ghost mini icon-only" id="btn3dGrid" type="button" aria-label="切換地面網格顯示" data-tip="切換地面網格顯示">▥</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamFront" type="button" aria-label="正面視角" data-tip="正面視角">↑</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamSide" type="button" aria-label="側面視角" data-tip="側面視角">→</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamBack" type="button" aria-label="背面視角" data-tip="背面視角">↓</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamIso" type="button" aria-label="45度透視視角" data-tip="45度透視視角">◇</button>
+            <button class="btn ghost mini icon-only" id="btn3dReset" type="button" aria-label="重設相機視角 (快捷鍵: R)" data-tip="重設相機視角 (快捷鍵: R)">⟳</button>
           </div>
           <div class="stage3d-timeline" id="stage3dTimeline">
             <button class="icon" id="btn3dPrevClip" type="button" title="上一個動作 (快捷鍵: [)">⏮</button>
             <select id="stage3dClipSelect" title="選取動作 Clip" style="width:160px;height:28px;font-size:12px;"></select>
             <button class="icon" id="btn3dNextClip" type="button" title="下一個動作 (快捷鍵: ])">⏭</button>
-            <button class="btn mini" id="btn3dPlayPause" type="button" title="播放 / 暫停 (快捷鍵: 空白鍵)">⏸ 暫停</button>
+            <button class="btn mini icon-only" id="btn3dPlayPause" type="button" aria-label="播放 / 暫停 (快捷鍵: 空白鍵)" data-tip="播放 / 暫停 (快捷鍵: 空白鍵)">⏯</button>
             
             <div class="stage3d-timeline-slider">
               <div class="stage3d-events-track" id="stage3dEventsTrack"></div>
@@ -738,7 +743,7 @@
               <button class="segb on mini" data-speed="1.0" type="button">1x</button>
               <button class="segb mini" data-speed="1.5" type="button">1.5x</button>
             </div>
-            <button class="btn ghost mini" id="btn3dLoop" type="button" title="循環模式切換 (快捷鍵: L)">🔁 循環</button>
+            <button class="btn ghost mini icon-only" id="btn3dLoop" type="button" aria-label="循環模式切換 (快捷鍵: L)" data-tip="循環模式切換 (快捷鍵: L)">🔁</button>
           </div>
         </div>
 
@@ -748,9 +753,9 @@
         <div class="stagebar-group">
           <span class="muted">檢視模式：</span>
           <div class="seg" id="modeSeg">
-            <button class="segb on" id="btnModeSingle" data-mode="single" type="button">單圖視圖</button>
-            <button class="segb" id="btnModeCompare" data-mode="compare" type="button">⚡ 2D ⇄ 3D 雙欄對照</button>
-            <button class="segb" id="btnMode3D" data-mode="3d" type="button">🧊 3D 動作檢驗</button>
+            <button class="segb on icon-only" id="btnModeSingle" data-mode="single" type="button" aria-label="單圖視圖" data-tip="單圖視圖">▣</button>
+            <button class="segb icon-only" id="btnModeCompare" data-mode="compare" type="button" aria-label="⚡ 2D ⇄ 3D 雙欄對照" data-tip="⚡ 2D ⇄ 3D 雙欄對照">◫</button>
+            <button class="segb icon-only" id="btnMode3D" data-mode="3d" type="button" aria-label="🧊 3D 動作檢驗" data-tip="🧊 3D 動作檢驗">🧊</button>
           </div>
         </div>
         <div class="stagebar-group" id="viewSegGroup">
@@ -759,20 +764,20 @@
         </div>
         <span class="grow"></span>
         <div class="seg" id="zoomSeg">
-          <button class="segb" id="zoomFit" type="button">適應</button>
-          <button class="segb" id="zoom1x" type="button">1:1</button>
-          <button class="segb" id="zoomIn" type="button">＋</button>
-          <button class="segb" id="zoomOut" type="button">－</button>
+          <button class="segb icon-only" id="zoomFit" type="button" aria-label="適應" data-tip="適應">⛶</button>
+          <button class="segb icon-only" id="zoom1x" type="button" aria-label="1:1" data-tip="1:1">1:1</button>
+          <button class="segb icon-only" id="zoomIn" type="button" aria-label="＋" data-tip="＋">+</button>
+          <button class="segb icon-only" id="zoomOut" type="button" aria-label="－" data-tip="－">−</button>
         </div>
-        <button class="btn" id="btnUnpack" type="button" title="逐檔寫入選定的本機目錄">匯出至本機目錄</button>
-        <button class="btn ghost" id="btnDeployGame" type="button" title="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案">🚀 交付至 cosmos_chimera</button>
-        <button class="btn ghost" id="btnExportAlignedZip" type="button" title="將資產逐檔匯出至選定目錄">匯出資產目錄</button>
-        <button class="btn ghost" id="btnToImg3d" type="button" title="以此立繪包產出指定 img-to-3D Prompt">🎯 指定 3D Prompt</button>
-        <button class="btn ghost" id="btnToImg3dBatch" hidden type="button" title="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）">📦 批量 3D Prompt</button>
-        <button class="btn ghost" id="btnUpgradeActive" hidden type="button" title="一鍵升級為最新版 Prompt 與規格">🔄 升級格式</button>
-        <button class="btn ghost mini" id="btnBackup" type="button" title="移至備份區（自動加入時間戳）">📦 移至備份區</button>
-        <button class="btn ghost mini" id="btnCopyPath" type="button">📋 複製路徑</button>
-        <button class="btn ghost mini" id="btnCopyPs" hidden type="button">💻 PowerShell</button>
+        <button class="btn icon-only" id="btnUnpack" type="button" aria-label="逐檔寫入選定的本機目錄" data-tip="逐檔寫入選定的本機目錄">⤓</button>
+        <button class="btn ghost icon-only" id="btnDeployGame" type="button" aria-label="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案" data-tip="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案">🚀</button>
+        <button class="btn ghost icon-only" id="btnExportAlignedZip" type="button" aria-label="將資產逐檔匯出至選定目錄" data-tip="將資產逐檔匯出至選定目錄">📦</button>
+        <button class="btn ghost icon-only" id="btnToImg3d" type="button" aria-label="以此立繪包產出指定 img-to-3D Prompt" data-tip="以此立繪包產出指定 img-to-3D Prompt">🎯</button>
+        <button class="btn ghost icon-only" id="btnToImg3dBatch" hidden type="button" aria-label="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）" data-tip="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）">▦</button>
+        <button class="btn ghost icon-only" id="btnUpgradeActive" hidden type="button" aria-label="一鍵升級為最新版 Prompt 與規格" data-tip="一鍵升級為最新版 Prompt 與規格">🔄</button>
+        <button class="btn ghost mini icon-only" id="btnBackup" type="button" aria-label="移至備份區（自動加入時間戳）" data-tip="移至備份區（自動加入時間戳）">📦</button>
+        <button class="btn ghost mini icon-only" id="btnCopyPath" type="button" aria-label="📋 複製路徑" data-tip="📋 複製路徑">📋</button>
+        <button class="btn ghost mini icon-only" id="btnCopyPs" hidden type="button" aria-label="💻 PowerShell" data-tip="💻 PowerShell">💻</button>
       </div>
     </div>
 
@@ -858,5 +863,46 @@
 <script src="tasks.js"></script>
 <script src="designed.js"></script>
 <script src="forge.js"></script>
+
+<script>
+(() => {
+  const tip = document.createElement("div");
+  tip.id = "uiTooltip";
+  tip.setAttribute("role", "tooltip");
+  document.body.append(tip);
+  let current = null;
+  const selector = "button[data-tip], button[title], a[title], summary[title]";
+  function hide() { current = null; tip.style.display = "none"; }
+  function show(target) {
+    const message = target?.dataset.tip || target?.getAttribute("title");
+    if (!message) return hide();
+    if (target.hasAttribute("title")) {
+      if (!target.dataset.tip) target.dataset.tip = message;
+      target.removeAttribute("title");
+    }
+    if (target.tagName === "BUTTON" && !target.getAttribute("aria-label")) target.setAttribute("aria-label", message);
+    current = target; tip.textContent = message; tip.style.display = "block";
+    const rect = target.getBoundingClientRect();
+    const x = Math.max(8, Math.min(rect.left + rect.width / 2 - tip.offsetWidth / 2, innerWidth - tip.offsetWidth - 8));
+    const bottom = rect.bottom + 8;
+    const top = bottom + tip.offsetHeight > innerHeight ? rect.top - tip.offsetHeight - 8 : bottom;
+    tip.style.left = x + "px"; tip.style.top = Math.max(8, top) + "px";
+  }
+  document.addEventListener("pointerover", e => {
+    const target = e.target.closest?.(selector);
+    if (target && target !== current) show(target);
+  });
+  document.addEventListener("pointerout", e => {
+    if (current && e.target.closest?.(selector) === current && !current.contains(e.relatedTarget)) hide();
+  });
+  document.addEventListener("focusin", e => {
+    const target = e.target.closest?.(selector);
+    if (target) show(target);
+  });
+  document.addEventListener("focusout", hide);
+  document.addEventListener("scroll", hide, true);
+  window.addEventListener("resize", hide);
+})();
+</script>
 </body>
 </html>
