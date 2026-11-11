@@ -1,0 +1,129 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const vm = require('node:vm');
+const fs = require('node:fs');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
+const root = path.resolve(__dirname, '../..');
+const source = fs.readFileSync(path.join(root, 'drive-storage.js'), 'utf8');
+
+function harness({ clientId = '123-test.apps.googleusercontent.com', handle } = {}) {
+  const nodes = {}, calls = [], events = [], timers = [];
+  let callback, requested = false, reloaded = false;
+  function node(id) {
+    return nodes[id] ||= { hidden: id === 'driveApp', textContent: '', value: '', listeners: {},
+      addEventListener(event, fn) { this.listeners[event] = fn; } };
+  }
+  const context = {
+    Blob, File, Headers, URLSearchParams, Event, crypto, Date,
+    setTimeout(fn) { timers.push(fn); return timers.length; }, clearTimeout() {},
+    document: { getElementById: node, addEventListener(_, fn) { fn(); } },
+    COSMI_DRIVE_CONFIG: { clientId, rootId: 'project-root', rootPath: 'project/cosmos_chimera_forge' },
+    COSMI_FORGE: { refresh() {}, loadZipFile() { throw Error('unexpected ZIP'); } },
+    dispatchEvent(event) { events.push(event.type); },
+    location: { reload() { reloaded = true; } },
+    google: { accounts: { oauth2: { initTokenClient(options) {
+      callback = options.callback;
+      return { requestAccessToken() { requested = true; } };
+    } } } },
+    async fetch(url, options) {
+      const parsed = new URL(url); calls.push({ url: parsed, options });
+      assert.equal(options.headers.get('Authorization'), 'Bearer test-token');
+      assert.equal(parsed.searchParams.has('access_token'), false);
+      const result = handle?.(parsed, options, calls.length);
+      if (result) return result;
+      if (parsed.pathname.endsWith('/project-root')) return Response.json({ id: 'project-root', mimeType: 'application/vnd.google-apps.folder' });
+      const q = parsed.searchParams.get('q') || '';
+      const match = q.match(/name = '([^']+)'/);
+      if (match) return Response.json({ files: [{ id: match[1] + '-id', name: match[1] }] });
+      return Response.json({ files: [] });
+    }
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  return { context, node, calls, events, timers,
+    get requested() { return requested; }, get reloaded() { return reloaded; },
+    async login() { node('driveSignIn').listeners.click(); await callback({ access_token: 'test-token', expires_in: 3600 }); }
+  };
+}
+
+test('unauthenticated requests never reach Drive and leave the app hidden', async () => {
+  const h = harness();
+  await assert.rejects(h.context.COSMI_DRIVE.read('prompts/test.prompt.md'), /登入/);
+  assert.equal(h.calls.length, 0);
+  assert.equal(h.node('driveApp').hidden, true);
+  assert.equal(h.requested, false);
+});
+test('missing OAuth configuration stays locked', () => {
+  const h = harness({ clientId: '' });
+  h.node('driveSignIn').listeners.click();
+  assert.equal(h.requested, false);
+  assert.equal(h.node('driveApp').hidden, true);
+  assert.match(h.node('driveGateStatus').textContent, /GOOGLE_OAUTH_CLIENT_ID/);
+});
+test('Google account without project permission cannot unlock the app', async () => {
+  const h = harness({ handle: u => u.pathname.endsWith('/project-root') ? Response.json({ error: { message: 'Forbidden' } }, { status: 403 }) : null });
+  await h.login();
+  assert.equal(h.node('driveApp').hidden, true);
+  assert.deepEqual(h.events, []);
+  assert.match(h.node('driveGateStatus').textContent, /Forbidden/);
+});
+test('authorized project access unlocks, and expiry clears the session', async () => {
+  const h = harness(); await h.login();
+  assert.equal(h.node('driveApp').hidden, false);
+  assert.deepEqual(h.events, ['cosmi:authorized']);
+  assert.match(h.node('driveStatus').textContent, /0 包/);
+  h.timers[0]();
+  assert.equal(h.node('driveApp').hidden, true);
+  assert.equal(h.reloaded, true);
+  const count = h.calls.length;
+  await assert.rejects(h.context.COSMI_DRIVE.read('prompts/test.prompt.md'), /登入/);
+  assert.equal(h.calls.length, count);
+});
+test('relative paths reject absolute paths, traversal and empty components', () => {
+  const h = harness();
+  for (const name of ['../secret', '/secret', 'C:/secret', 'a/../secret', 'a//b', 'a\\b', 'a?b', 'a/./b']) {
+    assert.throws(() => h.context.COSMI_DRIVE.relative(name));
+  }
+  assert.equal(h.context.COSMI_DRIVE.relative('prompts/a.prompt.md').join('/'), 'prompts/a.prompt.md');
+});
+test('Drive pagination is followed when resolving an existing prompt', async () => {
+  const h = harness({ handle: u => {
+    if ((u.searchParams.get('q') || '').includes("name = 'page.prompt.md'")) {
+      return u.searchParams.has('pageToken') ? Response.json({ files: [{ id: 'prompt-file' }] }) : Response.json({ files: [], nextPageToken: 'second-page' });
+    }
+    if (u.searchParams.get('alt') === 'media') return new Response('private prompt');
+  } });
+  await h.login();
+  assert.equal(await (await h.context.COSMI_DRIVE.read('prompts/page.prompt.md')).text(), 'private prompt');
+  assert.ok(h.calls.some(c => c.url.searchParams.get('pageToken') === 'second-page'));
+});
+test('prompt writes replace the existing file rather than creating duplicates', async () => {
+  const h = harness({ handle: (u, options) => {
+    if (u.pathname.includes('/upload/')) return Response.json({ id: 'save.prompt.md-id' });
+  } });
+  await h.login();
+  await h.context.COSMI_DRIVE.write('prompts/save.prompt.md', new Blob(['new prompt'], { type: 'text/markdown' }));
+  const upload = h.calls.find(c => c.url.pathname.includes('/upload/'));
+  assert.equal(upload.options.method, 'PATCH');
+  assert.equal(upload.url.pathname, '/upload/drive/v3/files/save.prompt.md-id');
+  assert.match(await upload.options.body.text(), /new prompt/);
+});
+test('ambiguous duplicate Drive names fail instead of overwriting arbitrary data', async () => {
+  const h = harness({ handle: u => (u.searchParams.get('q') || '').includes("name = 'duplicate.prompt.md'") ? Response.json({ files: [{ id: 'a' }, { id: 'b' }] }) : null });
+  await h.login();
+  await assert.rejects(h.context.COSMI_DRIVE.write('prompts/duplicate.prompt.md', new Blob(['x'])), /名稱重複/);
+  assert.ok(!h.calls.some(c => c.url.pathname.includes('/upload/')));
+});
+test('production build excludes asset and prompt directories and requires OAuth config', () => {
+  const env = { ...process.env, GOOGLE_OAUTH_CLIENT_ID: 'invalid-client-id' };
+  assert.notEqual(spawnSync(process.execPath, ['tools/build-site.mjs'], { cwd: root, env }).status, 0);
+  env.GOOGLE_OAUTH_CLIENT_ID = '123-test.apps.googleusercontent.com';
+  const result = spawnSync(process.execPath, ['tools/build-site.mjs'], { cwd: root, env });
+  assert.equal(result.status, 0, result.stderr.toString());
+  const names = fs.readdirSync(path.join(root, '_site'));
+  assert.ok(!names.includes('Art') && !names.includes('Data') && !names.includes('.git'));
+  assert.match(fs.readFileSync(path.join(root, '_site/drive-config.js'), 'utf8'), /123-test.apps.googleusercontent.com/);
+  assert.match(fs.readFileSync(path.join(root, '_site/index.html'), 'utf8'), /id="driveApp" hidden/);
+  fs.rmSync(path.join(root, '_site'), { recursive: true });
+});

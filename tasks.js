@@ -7,10 +7,21 @@
   const STYLE =
     "柔和卡通著色（2–3 階明暗）、乾淨深色描邊、色塊分明、剪影鮮明、微弱邊緣光；純色平光背景，主體不與背景融合。無文字、無簽名浮水印、原創設計。";
 
-  // REQ: 使用者 2026-11-07 — 3D 管線的輸入/輸出固定在這兩個雲端硬碟資料夾。
-  const DRIVE_IN = "我的雲端硬碟/project/cosmos_chimera/image_in";
-  const DRIVE_OUT = "我的雲端硬碟/project/cosmos_chimera/3D_out";
-  const DRIVE_BACKUP = "我的雲端硬碟/project/cosmos_chimera/image_backup";
+  // All paths below are relative to project/cosmos_chimera_forge on Google Drive.
+  const DRIVE_IN = "image_in";
+  const DRIVE_OUT = "3D_out";
+  const DRIVE_BACKUP = "image_backup";
+
+  function storageSection(ctx) {
+    const dir = /model|rig|anim/.test(ctx.task.id) ? DRIVE_OUT : DRIVE_IN;
+    return [
+      "## Google Drive 讀寫與存放",
+      "- 專案根目錄：`project/cosmos_chimera_forge/`；以下路徑皆相對於此根目錄，不使用本機絕對路徑。",
+      "- 本次 prompt：`prompts/" + ctx.taskId + ".prompt.md`；參考立繪：`image_in/` 或已歸檔的 `image_backup/`；3D 參考及輸出：`3D_out/`。",
+      "- 成果包儲存為 `" + dir + "/" + ctx.taskId + ".zip`，包內參照仍相對於 task_id 資料夾（例如 `images/`、`models/`）。",
+      "- 無法直接寫入 Drive 時，提供下載並指明上述相對存放位置；不要宣稱已上傳。"
+    ].join("\n");
+  }
 
   const CULTURE_RULES =
     "- 文化原型只擷取象徵符號與意象，不直接照搬宗教儀式紋樣，不用神祇/人物本名為角色命名。\n" +
@@ -136,7 +147,7 @@
 
   const TASKS = [
     {
-      id: "character-concept", version: "4.3.0", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
+      id: "character-concept", version: "4.3.1", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
       needs: "character", drop: "Art/_incoming",
       options: [
         { key: "scene_theme", type: "select", label: "【第 3 輪主立繪】場景主題", items: () => C.SCENE_THEMES, def: "auto" },
@@ -233,7 +244,7 @@
     },
 
     {
-      id: "creature-concept", version: "6.5.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
+      id: "creature-concept", version: "6.5.1", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
       needs: "creature", drop: "Art/_incoming",
       options: [
         { key: "stage", type: "select", label: "宙獸型態（四型態分開產出）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult" },
@@ -421,7 +432,7 @@
 
     {
       // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、屬性、基底等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "creature-model-rig", version: "4.4.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "creature-model-rig", version: "4.4.1", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 cr-*.zip）" }], def: "single" },
@@ -533,7 +544,7 @@
 
     {
       // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、性別、身高、道具等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "character-model-rig", version: "4.4.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "character-model-rig", version: "4.4.1", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "character", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 chr-*.zip）" }], def: "single" },
@@ -627,7 +638,7 @@
     },
 
     {
-      id: "move-vfx", version: "1.1.0", zh: "招式效果動畫（特效）", prefix: "fx", platform: "chatgpt",
+      id: "move-vfx", version: "1.1.1", zh: "招式效果動畫（特效）", prefix: "fx", platform: "chatgpt",
       needs: null, drop: "Art/_incoming",
       options: [
         { key: "use_creature", type: "select", label: "示範施放者", items: () => [{ v: "yes", zh: "以目前宙獸概念示範" }, { v: "no", zh: "不指定（通用示範）" }], def: "yes" },
@@ -688,7 +699,7 @@
     },
 
     {
-      id: "capture-vessel", version: "1.0.0", zh: "收服道具設計", prefix: "vsl", platform: "chatgpt",
+      id: "capture-vessel", version: "1.0.1", zh: "收服道具設計", prefix: "vsl", platform: "chatgpt",
       needs: null, drop: "Art/_incoming",
       options: [
         { key: "vessels", type: "checks", label: "道具類別", items: () => C.VESSELS.map(v => ({ v: v.v, zh: v.zh + "（副手提供" + v.sub + "）" })), def: ["talisman_card", "glass_bead", "magic_cube"] },
@@ -732,7 +743,7 @@
     },
 
     {
-      id: "culture-research", version: "1.0.0", zh: "文化原型考據", prefix: "res", platform: "gemini",
+      id: "culture-research", version: "1.0.1", zh: "文化原型考據", prefix: "res", platform: "gemini",
       needs: null, drop: "Data/_incoming",
       options: [
         { key: "region", type: "select", label: "地區", items: () => C.RESEARCH_REGIONS.map(r => ({ v: r, zh: r })), def: "rand" },
@@ -773,5 +784,17 @@
     }
   ];
 
+  // Apply the same storage contract to every full prompt and every image round.
+  TASKS.forEach(t => {
+    const build = t.build;
+    t.build = ctx => {
+      const text = build(ctx), newline = text.indexOf("\n");
+      return text.slice(0, newline + 1) + "\n" + storageSection(ctx) + "\n" + text.slice(newline + 1);
+    };
+    if (t.buildRounds) {
+      const buildRounds = t.buildRounds;
+      t.buildRounds = ctx => buildRounds(ctx).map(round => ({ ...round, prompt: round.prompt + "\n\n" + storageSection(ctx) }));
+    }
+  });
   window.COSMI_TASKS = TASKS;
 })();

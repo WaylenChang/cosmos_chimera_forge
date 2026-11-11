@@ -2,6 +2,8 @@
 
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
+- 2026-11-11 · tool@2.5.0 · 將立繪／3D 目錄與既有 Prompt 搬至 Google Drive `project/cosmos_chimera_forge/`（`argon_blender` 保留原位）；所有任務模板修訂版新增統一相對路徑規範。網頁加入 Google OAuth 與 Drive ACL 檢查、雲端成果包載入及 Prompt 讀寫；Pages 改為明確清單建置，排除私人資產，移除本機絕對路徑與內嵌真實成果測試資料。
+
 - 2026-11-10 · data@1.1.0 · tool@2.4.1 · 角色與宙獸數據格式對齊 cosmos_chimera，雙向同步與共同維護：
   - **角色數據格式標準化 (`character.schema.json`)**：新增與 `catalog.js`、`tasks.js` 及交付包 `concept.json` 完全一致之 `Data/schemas/character.schema.json`，涵蓋身分身形、族裔性別、年齡數值（整數 cm）、個性故事與收服道具。
   - **宙獸數據與六階領域性情同步**：同步 `Data/balance.json`（6 階開戰半徑 0m~28m 與玩家平衡數值）、`creatures.json`（進化等級門檻、草稿性情調整）與 `relation.schema.json`。

@@ -440,6 +440,29 @@
 </style>
 </head>
 <body>
+<style>
+  [hidden] { display: none !important; }
+  #driveGate { max-width: 520px; margin: 12vh auto; padding: 32px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+  #driveToolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+  #drivePromptPath { min-width: 230px; flex: 1; }
+</style>
+<section id="driveGate" aria-labelledby="driveGateTitle">
+  <h1 id="driveGateTitle">COSMIMERA · Prompt Forge</h1>
+  <p>請登入 Google 帳號以開啟完整鍛造台與成果審查台。</p>
+  <p>專案資產：<code>project/cosmos_chimera_forge</code></p>
+  <button class="btn" id="driveSignIn" type="button">使用 Google 帳號登入</button>
+  <p id="driveGateStatus" role="status">正在載入 Google 登入設定…</p>
+</section>
+<div id="driveApp" hidden>
+<div id="driveToolbar">
+  <button class="btn ghost mini" id="driveSync" type="button">重新載入 Drive 成果包</button>
+  <button class="btn ghost mini" id="driveUploadPackage" type="button">儲存審查包至 Drive</button>
+  <button class="btn ghost mini" id="driveSavePrompt" type="button">儲存完整 Prompt 至 Drive</button>
+  <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/&lt;task_id&gt;.prompt.md">
+  <button class="btn ghost mini" id="driveLoadPrompt" type="button">讀取 Prompt</button>
+  <button class="btn ghost mini" id="driveSignOut" type="button">登出</button>
+  <span id="driveStatus" role="status"></span>
+</div>
 <header>
   <h1>宙獸紀 · Prompt Forge<small id="ver"></small></h1>
   <div class="seg" role="tablist">
@@ -471,7 +494,7 @@
       </div>
       <div id="designed"></div>
       <details style="margin-top:12px">
-        <summary class="muted" style="cursor:pointer">專案路徑設定</summary>
+        <summary class="muted" style="cursor:pointer">遊戲交付相對目錄（本機匯出用）</summary>
         <input id="root" style="width:100%;margin-top:6px;font-family:Consolas,monospace" spellcheck="false">
       </details>
     </section>
@@ -791,7 +814,11 @@
 </div>
 
 <div id="toast" role="status"></div>
+</div>
 
+<script src="drive-config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="drive-storage.js"></script>
 <script src="vendor/three.min.js"></script>
 <script src="vendor/OrbitControls.js"></script>
 <script src="vendor/GLTFLoader.js"></script>
