@@ -891,30 +891,59 @@
 
   // ==================== cosmos_chimera 外部資產讀取管線 ====================
   // Asset URLs are private in-memory blobs loaded through the authenticated Drive API.
-  function getCharacterAssetUrls(charId) {
-    const pack = reviewState.packages.find(p => p.subjectId === charId && !is3dType(p.type));
-    const mdlPack = reviewState.packages.find(p => is3dType(p.type) && (p.subjectId === charId || (pack && p.manifest?.source_pack === pack.id)));
-    const images = ["main", "turnaround", "front", "side", "back", "expressions", "props"].map(view => {
-      const url = pack?.images?.find(i => i.path.endsWith("_" + view + ".png"))?.url || "";
-      return { view, label: view, primaryUrl: url, fallbackUrl: url };
+  function assetName(path) {
+    return String(path || "").split("/").pop().replace(/\\/g, "/").split("/").pop().replace(/\.[^.]+$/, "").toLowerCase();
+  }
+  function linkedAssetPackages(subject) {
+    const key = String(subject || "").toLowerCase();
+    return reviewState.packages.filter(p => {
+      const ids = [p.subjectId, p.manifest?.subject_id, p.concept?.id, p.concept?.line_id, p.concept?.creature_id, p.id]
+        .filter(Boolean).map(s => String(s).toLowerCase());
+      if (ids.includes(key)) return true;
+      const source = reviewState.packages.find(x => x.id === (p.sourcePack || p.manifest?.source_pack));
+      return !!source && [source.subjectId, source.manifest?.subject_id, source.concept?.id, source.concept?.line_id]
+        .some(s => String(s || "").toLowerCase() === key);
     });
-    const front = mdlPack?.images?.[0]?.url || "";
+  }
+  function imageForView(images, view) {
+    const all = images || [], pattern = new RegExp("(?:^|[_\\\\-])" + view + "$", "i");
+    return all.find(i => pattern.test(assetName(i.path)) && i.url) || null;
+  }
+  function getCharacterAssetUrls(charId) {
+    // Asset folders contain versioned names; manifest subject_id or concept.id links them to the catalog.
+    const matches = linkedAssetPackages(charId);
+    const pack = matches.find(p => !is3dType(p.type) && p.images?.length);
+    const mdlPack = matches.find(p => is3dType(p.type) && (p.images?.length || p.glbFile));
+    const all = pack?.images || [];
+    const order = ["main", "turnaround", "front", "side", "back", "expressions", "props"];
+    const images = order.map(view => {
+      const match = imageForView(all, view);
+      return match ? { view, label: view, primaryUrl: match.url, fallbackUrl: match.url } : null;
+    }).filter(Boolean);
+    const used = new Set(images.map(x => x.primaryUrl));
+    all.forEach(i => { if (i.url && !used.has(i.url)) images.push({
+      view: assetName(i.path), label: assetName(i.path), primaryUrl: i.url, fallbackUrl: i.url
+    }); });
+    if (!images.length) images.push({ view: "missing", label: "尚無立繪", primaryUrl: "", fallbackUrl: "" });
+    const modelFront = imageForView(mdlPack?.images, "front") || mdlPack?.images?.[0] || null;
     return {
       conceptDir: pack?.drivePath || "01_portraits/", modelDir: mdlPack?.drivePath || "02_3d/legacy/",
-      images, modelFront: { primaryUrl: front, fallbackUrl: front },
+      images, modelFront: { primaryUrl: modelFront?.url || "", fallbackUrl: modelFront?.url || "" },
       glbUrl: mdlPack?.glbFile?.url || "", fbxUrl: "", pack, mdlPack
     };
   }
   function getCreatureStageAssetUrls(lineId, stage) {
-    const packs = reviewState.packages.filter(p => (p.subjectId === lineId || p.concept?.line_id === lineId) && !is3dType(p.type));
-    const image = suffix => packs.flatMap(p => p.images || []).find(i => i.path.includes("_" + stage + "_") && i.path.endsWith(suffix + ".png"))?.url || "";
-    const url = image("main");
+    const packs = linkedAssetPackages(lineId).filter(p => !is3dType(p.type));
+    const images = packs.flatMap(p => p.images || []);
+    const forStage = images.filter(i => new RegExp("(?:^|[_\\\\-])" + stage + "(?:[_\\\\-]|$)", "i").test(assetName(i.path)));
+    const image = suffix => imageForView(forStage, suffix)?.url || "";
+    const url = image("main") || forStage[0]?.url || "";
     return { primaryUrl: url, fallbackUrl: url, turnaroundUrl: image("turnaround"), frontUrl: image("front") };
   }
   function getCreatureOverviewAssetUrls(lineId) {
-    const images = reviewState.packages.filter(p => p.subjectId === lineId || p.concept?.line_id === lineId).flatMap(p => p.images || []);
-    const lineupUrl = images.find(i => i.path.includes("lineup"))?.url || "";
-    const scaleUrl = images.find(i => i.path.includes("scale"))?.url || "";
+    const images = linkedAssetPackages(lineId).flatMap(p => p.images || []);
+    const lineupUrl = imageForView(images, "lineup")?.url || "";
+    const scaleUrl = imageForView(images, "scale")?.url || "";
     return { lineupUrl, scaleUrl, fallbackLineupUrl: lineupUrl, fallbackScaleUrl: scaleUrl };
   }
 
@@ -1045,9 +1074,7 @@
 
     const { lines, chars } = getDesignedFilteredItems();
     const countEl = $("#designedRailCount");
-    if (countEl) {
-      countEl.textContent = `共 ${DESIGNED.length} 宙獸線 · ${DESIGNED_CHARACTERS.length} 角色 (符合 ${lines.length + chars.length})`;
-    }
+    if (countEl) countEl.textContent = `${lines.length + chars.length} / ${DESIGNED.length + DESIGNED_CHARACTERS.length}`;
 
     // 確保有預設選取項目
     if (designedState.selectedType === "character") {
@@ -1130,15 +1157,15 @@
 
         const charThumbUrl = getCharacterAssetUrls(c.id).images[0].primaryUrl;
         const charThumbImg = el("img", {
-          src: charThumbUrl,
+          src: charThumbUrl || undefined,
           alt: c.name_zh,
-          style: "width:100%;height:100%;object-fit:cover;object-position:top;",
+          style: "width:100%;height:100%;object-fit:cover;object-position:top;" + (charThumbUrl ? "" : "display:none;"),
           onerror: function() {
             this.style.display = "none";
             if (this.nextElementSibling) this.nextElementSibling.style.display = "flex";
           }
         });
-        const charIconSpan = el("span", { style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;" }, "👤");
+        const charIconSpan = el("span", { style: "display:" + (charThumbUrl ? "none" : "flex") + ";width:100%;height:100%;align-items:center;justify-content:center;" }, "👤");
         const rlThumbChar = el("div", { class: "rl-thumb", style: "background:#262035;overflow:hidden;position:relative;" }, charThumbImg, charIconSpan);
 
         const row = el("button", {
@@ -1263,28 +1290,29 @@
             },
               el("img", {
                 id: "charMainImg",
-                src: assetData.images[0].primaryUrl,
+                src: assetData.images[0].primaryUrl || undefined,
                 alt: c.name_zh,
-                style: "max-width:100%;max-height:100%;object-fit:contain;",
+                style: "max-width:100%;max-height:100%;object-fit:contain;" + (assetData.images[0].primaryUrl ? "" : "display:none;"),
                 onerror: function() {
                   if (assetData.images[0].fallbackUrl && this.src !== assetData.images[0].fallbackUrl) {
                     this.src = assetData.images[0].fallbackUrl;
                   }
                 }
               }),
+              !assetData.images[0].primaryUrl ? el("span", { class: "muted" }, "Drive 尚無此角色立繪") : null,
               el("a", {
                 id: "charImgDownload",
-                href: assetData.images[0].primaryUrl,
+                href: assetData.images[0].primaryUrl || "#",
                 target: "_blank",
                 class: "btn mini ghost",
-                style: "position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);",
+                style: "position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);" + (assetData.images[0].primaryUrl ? "" : "display:none;"),
                 title: "在新分頁檢視原尺寸大圖"
               }, "🔍 原圖")
             ),
 
             // Thumbnail Strip / View Switcher
             el("div", { style: "display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;" },
-              assetData.images.map((im, idx) => {
+              assetData.images.filter(im => im.primaryUrl).map((im, idx) => {
                 const thumbBtn = el("button", {
                   type: "button",
                   class: "segb" + (idx === 0 ? " on" : ""),
@@ -1338,18 +1366,16 @@
               style: "width:100%;height:260px;background:#101319;border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px;"
             },
               el("img", {
-                src: assetData.modelFront.primaryUrl,
+                src: assetData.modelFront.primaryUrl || undefined,
                 alt: `${c.name_zh} 3D 正面正交`,
-                style: "max-width:100%;max-height:100%;object-fit:contain;",
+                style: "max-width:100%;max-height:100%;object-fit:contain;" + (assetData.modelFront.primaryUrl ? "" : "display:none;"),
                 onerror: function() {
                   if (assetData.modelFront.fallbackUrl && this.src !== assetData.modelFront.fallbackUrl) {
                     this.src = assetData.modelFront.fallbackUrl;
                   }
                 }
               }),
-              el("span", {
-                style: "position:absolute;top:6px;left:6px;font-size:10.5px;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;color:#a9d9df"
-              }, "正交正面 1024px")
+              !assetData.modelFront.primaryUrl ? el("span", { class: "muted" }, "Drive 尚無 3D 預覽圖") : null
             ),
 
             // 3D Asset Files Info
