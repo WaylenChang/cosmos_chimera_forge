@@ -30,6 +30,19 @@
   function json(o) { return "```json\n" + JSON.stringify(o, null, 2) + "\n```"; }
   function list(items) { return items.map(s => "- " + s).join("\n"); }
 
+  function modelQualityRules() {
+    return [
+      "## 5. 最終品質檢查（交付前逐項確認）",
+      "- 從正面、側面、背面及旋轉視角詳細檢查模型與匯出的 GLB：臉部清楚可見，不被頭髮、配件或其他物件遮擋。",
+      "- 修復破圖、網格破洞、穿透或透視露空、貼圖與法線錯誤；確認軀幹完整存在，頭部、四肢及其他身體部位與軀幹自然且完整連接，無斷裂或懸空。",
+      "- 在 Blender 重新開啟 .blend，並重新載入 .glb 檢查幾何、材質和姿態；修正問題後再交付。"
+    ].join("\n");
+  }
+
+  function modelResearchRules() {
+    return "- **原型研究與設計**：先判斷立繪的設計原型屬於何種人形、怪物、生物、奇幻生物或超自然物件，搜尋相關的解剖、結構、運動方式與視覺資料；綜合研究結果與本次立繪，再原創設計外觀、適合該原型的骨架及各種自然可信的動作。若無法搜尋，須如實說明，不得虛構資料來源。";
+  }
+
   function deliverySection(ctx, tree) {
     const isModelRig = ctx.task.id === "creature-model-rig" || ctx.task.id === "character-model-rig" || ctx.task.id === "model-rig";
     const manifestObj = {
@@ -432,7 +445,7 @@
 
     {
       // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、屬性、基底等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "creature-model-rig", version: "4.4.1", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "creature-model-rig", version: "5.0.1", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 cr-*.zip）" }], def: "single" },
@@ -485,6 +498,7 @@
           source_pack: o.source_pack || "<來源宙獸立繪包 task_id，例 cr-20261106-7f3a-2105-adult>",
           files: [
             { path: `models/${unit}.glb`, kind: "model" },
+            { path: `models/${unit}.blend`, kind: "model" },
             { path: `models/${unit}.fbx`, kind: "model" },
             { path: "rig/rig_spec.json", kind: "spec" },
             { path: "anims/anim_spec.json", kind: "spec" },
@@ -509,8 +523,10 @@
             ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
+          modelResearchRules(),
           sizeSpec,
-          `- 輸出格式：\`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）`,
+          "- **原創製作**：以本次輸入立繪為依據全新設計並建模；不得參考、複製或修改舊模型檔直接充當新作品。",
+          `- **Blender 直接交付**：使用 Blender 製作並儲存可編輯的 \`models/${unit}.blend\`，由 Blender 直接匯出 \`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）。`,
           "",
           "## 3. 骨架體系（Generic Rig）",
           "- " + rigRule,
@@ -523,11 +539,13 @@
           "  - `idle`（標準待機）：2 秒短週期呼吸律動，適合即時探索與戰鬥過渡。",
           "  - `idle_long`（長時間靜止週期動作）：4 秒長週期（120 幀，loop），呈現長時間定力靜止、微幅呼吸起伏、低頻眼眸/耳尾微動或重心微調，首尾幀平滑閉合無縫循環，保持姿態穩定兼具活體生命感。",
           "",
-          "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          modelQualityRules(),
+          "",
+          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
           "```",
           outId + "/",
           "├── manifest.json",
-          "├── models/          # " + unit + ".glb, .fbx (PBR 烘焙貼圖完成模型)",
+          "├── models/          # " + unit + ".glb, .blend, .fbx (Blender 可編輯原檔與 PBR 烘焙貼圖完成模型)",
           "├── anims/           # anim_spec.json (L1), cr_" + stageTag + "_*.fbx (L2)",
           "├── rig/             # rig_spec.json (L1)",
           "└── images/          # " + unit + "_model_front.png (L1: 正交彩現檢視圖)",
@@ -544,7 +562,7 @@
 
     {
       // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、性別、身高、道具等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "character-model-rig", version: "4.4.1", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "character-model-rig", version: "5.0.1", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "character", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 chr-*.zip）" }], def: "single" },
@@ -579,6 +597,7 @@
           source_pack: o.source_pack || "<來源角色立繪包 task_id，例 chr-20261106-7f3a-2105>",
           files: [
             { path: `models/${unit}.glb`, kind: "model" },
+            { path: `models/${unit}.blend`, kind: "model" },
             { path: `models/${unit}.fbx`, kind: "model" },
             { path: "rig/rig_spec.json", kind: "spec" },
             { path: "anims/anim_spec.json", kind: "spec" },
@@ -603,9 +622,11 @@
             ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
+          modelResearchRules(),
           "- 面數預算：**15,000 ~ 25,000 tris**（健康卡通比例、拓撲乾淨適配變形）",
           "- 貼圖規格：**2048 × 2048 PBR**（Base Color, Normal, Metallic/Roughness）",
-          `- 輸出格式：\`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）`,
+          "- **原創製作**：以本次輸入立繪為依據全新設計並建模；不得參考、複製或修改舊模型檔直接充當新作品。",
+          `- **Blender 直接交付**：使用 Blender 製作並儲存可編輯的 \`models/${unit}.blend\`，由 Blender 直接匯出 \`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）。`,
           "",
           "## 3. 骨架體系（Unity Humanoid）",
           "- " + rigRule,
@@ -618,11 +639,13 @@
           "  - `idle`（標準待機）：2 秒短週期呼吸律動，標準 Humanoid 待機姿態。",
           "  - `idle_long`（長時間靜止週期動作）：4 秒長週期（120 幀，loop），呈現長時間定力靜止、極小幅度胸腔呼吸、眼皮微眨或細微重心微調，首尾幀完全對齊平滑循環，避免大幅晃動以確保站姿安定感。",
           "",
-          "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          modelQualityRules(),
+          "",
+          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
           "```",
           outId + "/",
           "├── manifest.json",
-          "├── models/          # " + unit + ".glb, .fbx (PBR 烘焙貼圖完成模型)",
+          "├── models/          # " + unit + ".glb, .blend, .fbx (Blender 可編輯原檔與 PBR 烘焙貼圖完成模型)",
           "├── anims/           # anim_spec.json (L1), chr_*.fbx (L2)",
           "├── rig/             # rig_spec.json (L1)",
           "└── images/          # " + unit + "_model_front.png (L1: 正交彩現檢視圖)",

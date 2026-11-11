@@ -2,6 +2,10 @@
 
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
 
+- 2026-11-11 · template@(creature-model-rig@5.0.1, character-model-rig@5.0.1) · Image-to-3D 提示詞增加原型判斷與資料搜尋，將研究結果用於原創外觀、骨架及動作設計。
+
+- 2026-11-11 · template@(creature-model-rig@5.0.0, character-model-rig@5.0.0) · Image-to-3D 提示詞要求依立繪全新建模，使用 Blender 直接交付可編輯 .blend 與匯出 .glb，並於交付前檢查臉部遮擋、破圖、穿透及軀幹與身體連接。
+
 - 2026-11-11 · tool@2.5.0 · 將立繪／3D 目錄與既有 Prompt 搬至 Google Drive `project/cosmos_chimera_forge/`（`argon_blender` 保留原位）；所有任務模板修訂版新增統一相對路徑規範。網頁加入 Google OAuth 與 Drive ACL 檢查、雲端成果包載入及 Prompt 讀寫；Pages 改為明確清單建置，排除私人資產，移除本機絕對路徑與內嵌真實成果測試資料。
 
 - 2026-11-10 · data@1.1.0 · tool@2.4.1 · 角色與宙獸數據格式對齊 cosmos_chimera，雙向同步與共同維護：
