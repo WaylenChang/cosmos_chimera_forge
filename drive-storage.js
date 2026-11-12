@@ -345,11 +345,13 @@ document.addEventListener("DOMContentLoaded",()=>{
  });
  $("pipelineSaveSettings").addEventListener("click",()=>run(async()=>{
  const d=window.COSMI_FORGE.settings(),p=window.COSMI_PIPELINE.parameters();
- await write("00_settings/"+d.assetId+".appearance.md",new Blob([d.appearance],{type:"text/markdown"}));await jsonWrite("00_settings/"+d.assetId+".parameters.json",{...p,delivery:d.delivery});$("driveStatus").textContent="已分別儲存外觀設定與格式參數";
+ await jsonWrite("00_settings/"+d.assetId+".parameters.json",{...p,delivery:d.delivery});
+ $("driveStatus").textContent="已儲存格式參數（外觀由概念參數提供）";
  }));
  $("pipelineLoadSettings").addEventListener("click",()=>run(async()=>{
- const id=window.COSMI_FORGE.settings().assetId,a=await(await read("00_settings/"+id+".appearance.md")).text(),p=await(await read("00_settings/"+id+".parameters.json")).text();
- JSON.parse(p);$("pipelineAppearance").value=a;$("pipelineParameters").value=p;window.COSMI_PIPELINE.parameters();window.COSMI_FORGE.refresh();$("driveStatus").textContent="已載入外觀與參數";
+ const id=window.COSMI_FORGE.settings().assetId,p=await(await read("00_settings/"+id+".parameters.json")).text();
+ JSON.parse(p);$("pipelineParameters").value=p;window.COSMI_PIPELINE.parameters();
+ window.COSMI_FORGE.refresh();$("driveStatus").textContent="已載入格式參數";
  }));
  $("pipelineBindSource").addEventListener("click",()=>run(async()=>{
  const pkg=window.COSMI_FORGE.activePackage(),id=$("pipelineSource").value.trim(),src=window.COSMI_FORGE.packages().find(p=>p.id===id&&!modelType(p));
