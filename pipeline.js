@@ -64,9 +64,11 @@
     const kind = ctx.task.id.startsWith("character") ? "character" : "creature";
     const route = stage === "colab" || ctx.opts?.source_pack || ctx.opts?.input_img ? "image" : "text";
     const anatomy = window.COSMI_ANATOMY?.plan(kind, ctx.concept, route);
-    return anatomy ? filled + "\n解剖分類：" + anatomy.anatomy +
+    const typed = anatomy ? filled + "\n解剖分類：" + anatomy.anatomy +
       "；骨架／機構策略：" + anatomy.rig +
       "。依指定原型與實際肢體建立專用動作，混合／不明拓撲先審查，不可擅套人形 Rig。" : filled;
+    return stage === "blender" && route === "text" && kind === "creature"
+      ? typed + "\n純文字宙獸建模須同時產生原創 bestiary.md，含四階外觀、生態與演化；圖片建模與角色不產生圖鑑。" : typed;
   }
   async function loadTemplates() {
     const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
