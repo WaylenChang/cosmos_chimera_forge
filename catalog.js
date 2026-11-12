@@ -53,6 +53,151 @@ window.COSMI_CATALOG = {
     { v: "未知", zh: "未知", desc: "自由發揮未來或架空時空" }
   ],
 
+  // 軟性機率配對：欄位互不綁定、所有跨地區/跨時代組合皆可抽到；只調整相對權重。
+  // 數字是倍數而非機率百分比；「未知」不套用偏好，以利跨文化、移居和架空世界設定。
+  CULTURE_NEIGHBORS: {
+    "東亞": ["東南亞", "中亞/北亞"],
+    "南亞": ["東南亞", "西亞/中東", "中亞/北亞"],
+    "東南亞": ["東亞", "南亞", "大洋洲"],
+    "西亞/中東": ["南亞", "中亞/北亞", "非洲", "歐洲"],
+    "非洲": ["西亞/中東", "歐洲"],
+    "歐洲": ["西亞/中東", "中亞/北亞", "非洲"],
+    "美洲": ["大洋洲", "極地"],
+    "大洋洲": ["東南亞", "美洲"],
+    "中亞/北亞": ["東亞", "南亞", "西亞/中東", "歐洲", "極地"],
+    "極地": ["中亞/北亞", "美洲"]
+  },
+  // 只作為虛構角色生成的設計親和度，並非對個人族裔、遷移或外貌的硬性判定。
+  ETHNICITY_HOME_REGIONS: {
+    "東亞體系": ["東亞"],
+    "東南亞/南島語族體系": ["東南亞"],
+    "南亞/印度河體系": ["南亞"],
+    "中亞/突厥-歐亞體系": ["中亞/北亞"],
+    "西亞/中東-閃米特體系": ["西亞/中東"],
+    "北歐/日耳曼體系": ["歐洲"],
+    "凱爾特/不列顛體系": ["歐洲"],
+    "地中海/南歐體系": ["歐洲"],
+    "東歐/斯拉夫體系": ["歐洲"],
+    "西非/班圖體系": ["非洲"],
+    "東非/庫希特-尼羅特體系": ["非洲"],
+    "北非/柏柏爾-馬格里布體系": ["非洲"],
+    "美洲原住民體系": ["美洲"],
+    "極地/因紐特-薩米體系": ["極地"],
+    "大洋洲/美拉尼西亞-玻里尼西亞體系": ["大洋洲"]
+  },
+  // 文化時間線可以落在任何地區；表中的倍數僅表示題材/風格的相近性。
+  TIMELINE_REGION_AFFINITY: {
+    "遠古石器/部落圖騰紀元": { "非洲": 3, "美洲": 3, "大洋洲": 3, "極地": 3 },
+    "青銅神話/古典英雄時代": { "東亞": 4, "南亞": 4, "西亞/中東": 5, "非洲": 4, "歐洲": 4 },
+    "封建王朝/古典帝國盛世": { "東亞": 6, "南亞": 4, "東南亞": 4, "西亞/中東": 4, "中亞/北亞": 4, "歐洲": 4 },
+    "中世紀高奇幻/騎士魔導王國": { "歐洲": 7, "西亞/中東": 3, "中亞/北亞": 2, "東亞": 2 },
+    "大航海大發現/符文星盤開拓": { "歐洲": 6, "美洲": 4, "大洋洲": 4, "東南亞": 4 },
+    "以太蒸汽/魔導第一次工業革命": { "歐洲": 6, "美洲": 4, "東亞": 3 },
+    "柴油重工/符文鋼鐵要塞": { "歐洲": 5, "美洲": 4, "東亞": 4 },
+    "電氣霓虹/裝飾藝術時代": { "美洲": 5, "歐洲": 5, "東亞": 4, "多元交融/世界都市": 4 },
+    "晶石賽博/霓虹魔導義體紀元": { "東亞": 5, "美洲": 4, "歐洲": 4, "多元交融/世界都市": 6 },
+    "太陽龐克/生態科技綠色未來": { "大洋洲": 4, "東南亞": 4, "非洲": 3, "南亞": 3, "多元交融/世界都市": 5 },
+    "近未來軌道殖民/近地宙域": { "星際宙域/跨星系殖民地": 8, "多元交融/世界都市": 5 },
+    "太空歌劇/星際魔導帝國": { "星際宙域/跨星系殖民地": 10, "多元交融/世界都市": 5 },
+    "虛空超弦/維度升華神代": { "星際宙域/跨星系殖民地": 9, "多元交融/世界都市": 4 }
+  },
+  getEthnicityRegionAffinity(ethnicity, region) {
+    if (!ethnicity || !region || ethnicity === "未知" || region === "未知") return 1;
+    if (ethnicity === "多元混血/跨洲交融體系") {
+      return region === "多元交融/世界都市" ? 14 : region === "星際宙域/跨星系殖民地" ? 6 : 2;
+    }
+    if (ethnicity === "奇幻星民特徵") {
+      return region === "星際宙域/跨星系殖民地" ? 20 : region === "多元交融/世界都市" ? 8 : 1;
+    }
+    if (region === "多元交融/世界都市") return 3;
+    if (region === "星際宙域/跨星系殖民地") return 2;
+    const homes = this.ETHNICITY_HOME_REGIONS[ethnicity] || [];
+    if (homes.includes(region)) return 20;
+    if (homes.some(home => (this.CULTURE_NEIGHBORS[home] || []).includes(region))) return 5;
+    return 1;
+  },
+  getTimelineRegionAffinity(timeline, region) {
+    if (!timeline || !region || timeline === "未知" || region === "未知") return 1;
+    return (this.TIMELINE_REGION_AFFINITY[timeline] || {})[region] || 1;
+  },
+  getWeightedEthnicities(region) {
+    return this.CHARACTER.ethnicity.map(e => Object.assign({}, e, {
+      w: (e.w ?? 1) * this.getEthnicityRegionAffinity(e.v, region)
+    }));
+  },
+  getWeightedRegions(context) {
+    const selected = context || {};
+    return this.CULTURE_REGIONS.map(region => ({
+      v: region,
+      w: this.getEthnicityRegionAffinity(selected.ethnicity, region) *
+        this.getTimelineRegionAffinity(selected.timeline, region)
+    }));
+  },
+  getWeightedTimelines(region) {
+    return this.TIMELINES.map(t => Object.assign({}, t, {
+      w: this.getTimelineRegionAffinity(t.v, region)
+    }));
+  },
+  getArchetypeRegionAffinity(archetypeRegion, region) {
+    if (!archetypeRegion || !region || region === "未知") return 1;
+    if (archetypeRegion === region) return 16;
+    if (region === "多元交融/世界都市") return 3;
+    if (region === "星際宙域/跨星系殖民地") return 2;
+    // 複合區域以最長名稱優先拆解，避免「東南亞」誤匹配成「南亞」。
+    let rest = String(archetypeRegion);
+    const regions = this.CULTURE_REGIONS.slice()
+      .filter(r => r !== "未知" && r !== "多元交融/世界都市" && r !== "星際宙域/跨星系殖民地")
+      .sort((a, b) => b.length - a.length);
+    const parts = [];
+    for (const r of regions) {
+      if (rest.includes(r)) {
+        parts.push(r);
+        rest = rest.replace(r, "");
+      }
+    }
+    if (parts.includes(region)) return 12;
+    if (parts.some(r => (this.CULTURE_NEIGHBORS[region] || []).includes(r))) return 4;
+    return 1;
+  },
+  getWeightedArchetypes(archetypes, region) {
+    return archetypes.map(a => Object.assign({}, a, {
+      w: (a.w ?? 1) * this.getArchetypeRegionAffinity(a.region, region)
+    }));
+  },
+
+  // 相鄰屬性的配色較常見，但相反屬性也永遠可選取。
+  ELEMENT_NEIGHBORS: {
+    metal: ["earth", "thunder", "light"],
+    wood: ["water", "earth", "wind", "light"],
+    water: ["wood", "ice", "wind", "thunder"],
+    fire: ["earth", "light", "thunder"],
+    earth: ["metal", "wood", "fire"],
+    ice: ["water", "wind", "light"],
+    wind: ["wood", "water", "ice", "thunder"],
+    thunder: ["metal", "wind", "water", "fire", "light"],
+    light: ["fire", "metal", "thunder", "wood", "ice"],
+    shadow: ["fire", "water", "ice"]
+  },
+  getElementColorAffinity(element, color) {
+    if (!element || element === "未知" || !color) return 1;
+    const tags = color.elements || [];
+    if (tags.includes(element)) return 9;
+    if (tags.some(tag => (this.ELEMENT_NEIGHBORS[element] || []).includes(tag))) return 3.5;
+    if (tags.includes("all")) return 1.5;
+    return 1;
+  },
+  getWeightedElements(appearancePalette) {
+    const colors = (appearancePalette || [])
+      .map(v => this.COLOR_TONES.find(c => c.v === v))
+      .filter(Boolean);
+    return this.ELEMENTS.map(e => {
+      const affinity = colors.length
+        ? colors.reduce((sum, color) => sum + this.getElementColorAffinity(e.v, color), 0) / colors.length
+        : 1;
+      return Object.assign({}, e, { w: (e.w ?? 1) * (e.v === "未知" ? 0.5 : affinity) });
+    });
+  },
+
   // 基礎單色系選項池（供角色服裝、頭髮與宙獸外觀多選組合，每項為單色，可多選組合成 1~4 色）
   COLOR_TONES: [
     // 中性通用色（全元素適用，或作基底/高光）
@@ -122,15 +267,20 @@ window.COSMI_CATALOG = {
     { v: "緋紅血瞳色", zh: "緋紅血瞳色", elements: ["shadow", "fire"], w: 6 }
   ],
 
-  // 取得受元素限定範圍的色系池（排除與元素不合的色系）
-  getFilteredPalettes(creatureElements) {
-    if (!creatureElements || !creatureElements.length) return this.COLOR_TONES;
-    const cleanElems = creatureElements.map(e => e.replace(/（.*）/, "").replace(/\(.*?\)/, "").trim());
-    if (cleanElems.includes("未知") || !cleanElems.length) return this.COLOR_TONES;
-    return this.COLOR_TONES.filter(c => {
-      if (c.elements.includes("all")) return true;
-      return cleanElems.some(el => c.elements.includes(el));
+  // 配色不再依屬性硬過濾；相符 9x、相鄰 3.5x、中性 1.5x、其他 1x。
+  // 仍保留全部色系且權重 > 0，適用於反差色、異化與混搭造型。
+  getWeightedPalettes(creatureElements) {
+    const elements = (creatureElements || []).filter(e => e && e !== "未知");
+    return this.COLOR_TONES.map(color => {
+      const affinity = elements.length
+        ? Math.max(...elements.map(e => this.getElementColorAffinity(e, color)))
+        : 1;
+      return Object.assign({}, color, { w: (color.w ?? 1) * affinity });
     });
+  },
+  // 保留舊呼叫介面，但行為改為軟性機率加權，不再排除不相符的色系。
+  getFilteredPalettes(creatureElements) {
+    return this.getWeightedPalettes(creatureElements);
   },
 
   // 依角色/宙獸色系判定 2D AGC 立繪背景色（RGB 三通道嚴格均等）
