@@ -326,7 +326,6 @@ document.addEventListener("DOMContentLoaded",()=>{
  error_callback:e=>{$("driveGateStatus").textContent=e.type==="popup_closed"?"登入視窗已關閉":"Google 登入視窗無法開啟";}});
  tokenClient.requestAccessToken({prompt:"select_account"});
  });
- $("driveSignOut").addEventListener("click",()=>lock("已登出"));
  $("driveSync").addEventListener("click",()=>run(()=>syncPackages({force:true})));
  $("driveSavePrompt").addEventListener("click",()=>{if(["portrait","portrait_3d"].includes($("pipelineStage").value)&&!window.COSMI_PIPELINE?.isPortraitAuto())return;run(async()=>{const{path,text}=window.COSMI_FORGE.currentPrompt();await write(path,new Blob([text],{type:"text/markdown"}));$("driveStatus").textContent="已儲存 "+path;});});
  $("driveLoadPrompt").addEventListener("click",()=>run(async()=>{const path=$("drivePromptPath").value.trim();if(!path.startsWith("prompts/")||!path.endsWith(".md"))throw Error("請輸入 prompts/ 下的 Markdown 相對路徑");window.COSMI_FORGE.showPrompt(await(await read(path)).text());$("driveStatus").textContent="已讀取 "+path;}));

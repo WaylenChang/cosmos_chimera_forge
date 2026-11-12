@@ -1085,7 +1085,14 @@
   }
 
   function renderDesigned() {
-    const box = $("#designed"); if (!box) return;
+    const box = $("#designed"), host = $("#designedShortcut");
+    if (!box) return;
+    const hasPreset = Boolean(state.preset || state.presetChar);
+    if (host) host.hidden = !hasPreset;
+    if (!hasPreset) {
+      box.replaceChildren();
+      return;
+    }
     box.replaceChildren();
 
     if (state.preset) {
@@ -1138,18 +1145,7 @@
       return;
     }
 
-    // 當前無 preset 時，顯示精簡快速導覽卡片
-    const gotoCard = el("div", { class: "designed-nav-card", onclick: () => setViewMode("designed") },
-      el("div", { style: "display:flex;align-items:center;justify-content:space-between" },
-        el("span", { style: "font-weight:600;font-size:12px;color:var(--text)" }, "📋 已設計項目庫"),
-        el("span", { class: "f-badge accent" }, `${DESIGNED.length} 線 · ${DESIGNED_CHARACTERS.length} 位`)
-      ),
-      el("div", { class: "muted", style: "font-size:11px;margin-top:4px" }, "點選前往已設計項目審查台，檢閱各階設定、關聯審查包並一鍵鍛造。"),
-      el("div", { style: "display:flex;justify-content:flex-end;margin-top:6px" },
-        el("span", { style: "color:var(--accent);font-size:11.5px;font-weight:600" }, "前往已設計頁籤 →")
-      )
-    );
-    box.append(gotoCard);
+
   }
 
   // ==================== 已設計項目台 (二欄審查檢閱工作台) ====================
@@ -1902,7 +1898,7 @@
   function renderDesignedDesk() {
     renderDesignedRail();
     renderDesignedDetail();
-    if ($("#designedList")) renderDesignedList();
+    if (designedState.mode === "cards") renderDesignedList();
   }
 
   // ==================== 我的最愛 Prompt 與已設計清單管理 ====================
@@ -2427,33 +2423,8 @@
   function renderDesignedList() {
     const box = $("#designedList"); if (!box) return;
     box.replaceChildren();
-
-    const searchInput = $("#designedSearch");
-    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
-
-    const filteredLines = DESIGNED.filter(d => {
-      if (!query) return true;
-      const id = (d.line_id || "").toLowerCase();
-      const code = (d.code_zh || "").toLowerCase();
-      const title = (d.title_zh || "").toLowerCase();
-      const elem = (d.element || "").toLowerCase();
-      const arch = (d.concept?.archetype || "").toLowerCase();
-      const stagesStr = (d.concept?.locked?.stages || []).map(s => s.name_zh + " " + s.name_en + " " + s.creature_id).join(" ").toLowerCase();
-      return id.includes(query) || code.includes(query) || title.includes(query) || elem.includes(query) || arch.includes(query) || stagesStr.includes(query);
-    });
-
-    const filteredChars = DESIGNED_CHARACTERS.filter(c => {
-      if (!query) return true;
-      const id = (c.id || "").toLowerCase();
-      const nameZh = (c.name_zh || "").toLowerCase();
-      const nameEn = (c.name_en || "").toLowerCase();
-      const role = (c.role || "").toLowerCase();
-      const region = (c.region || "").toLowerCase();
-      const ethnicity = (c.ethnicity || "").toLowerCase();
-      const vessel = (c.vessel || "").toLowerCase();
-      const bio = (c.biography || "").toLowerCase();
-      return id.includes(query) || nameZh.includes(query) || nameEn.includes(query) || role.includes(query) || region.includes(query) || ethnicity.includes(query) || vessel.includes(query) || bio.includes(query);
-    });
+    const {lines:filteredLines, chars:filteredChars} = getDesignedFilteredItems();
+    const query = $("#designedSearch")?.value.trim().toLowerCase() || "";
 
     const countEl = $("#designedCount");
     if (countEl) countEl.textContent = `(${DESIGNED.length} 宙獸線 · ${DESIGNED_CHARACTERS.length} 角色${query ? "，符合 " + (filteredLines.length + filteredChars.length) : ""})`;
@@ -3016,7 +2987,9 @@
     const tabsBox = $("#forge3dModeTabs");
     if (!tabsBox) return;
     const t = task(), o = taskOpts(t);
-    if (!is3dType(t.id)) {
+    // Every available 3D pipeline is currently single-subject; do not show
+    // a selector whose only choice is "single".
+    if (!is3dType(t.id) || window.COSMI_PIPELINE?.supports({task:t})) {
       tabsBox.style.display = "none";
       return;
     }
@@ -3284,7 +3257,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedList(); renderDesignedDesk(); updateFavButton();
+    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
     save();
   }
 

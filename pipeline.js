@@ -96,6 +96,8 @@
     }
     const action = $("pipelineRead");
     if (action) {
+      // Manual portrait already has one copy action next to the Prompt.
+      action.hidden = isPortrait && !automatic;
       const hint = !isPortrait ? "從 Google Drive 讀取本步驟 Prompt 模板"
         : automatic ? "建立完整立繪 Prompt .md 並上傳 Google Drive"
         : "複製目前立繪 Prompt，貼入生成平台";
