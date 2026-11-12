@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.5.0",
+  version: "2.6.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -165,7 +165,8 @@ window.COSMI_CATALOG = {
     }));
   },
 
-  // 相鄰屬性的配色較常見，但相反屬性也永遠可選取。
+  // 配色親和權重：直接 6x、相鄰 4.5x、中性 2.5x、反差 1.5x。
+  // 這是相對抽樣權重，不是每組的固定百分比；所有配色組合均保留。
   ELEMENT_NEIGHBORS: {
     metal: ["earth", "thunder", "light"],
     wood: ["water", "earth", "wind", "light"],
@@ -181,10 +182,10 @@ window.COSMI_CATALOG = {
   getElementColorAffinity(element, color) {
     if (!element || element === "未知" || !color) return 1;
     const tags = color.elements || [];
-    if (tags.includes(element)) return 9;
-    if (tags.some(tag => (this.ELEMENT_NEIGHBORS[element] || []).includes(tag))) return 3.5;
-    if (tags.includes("all")) return 1.5;
-    return 1;
+    if (tags.includes(element)) return 6;
+    if (tags.some(tag => (this.ELEMENT_NEIGHBORS[element] || []).includes(tag))) return 4.5;
+    if (tags.includes("all")) return 2.5;
+    return 1.5;
   },
   getWeightedElements(appearancePalette) {
     const colors = (appearancePalette || [])
@@ -210,6 +211,8 @@ window.COSMI_CATALOG = {
     { v: "玄鐵青黑", zh: "玄鐵青黑", elements: ["metal", "earth", "shadow", "all"], w: 7 },
     { v: "古銅生鏽綠", zh: "古銅綠", elements: ["metal", "earth", "wood"], w: 6 },
     { v: "黃銅金", zh: "黃銅金", elements: ["metal", "thunder", "light"], w: 7 },
+    { v: "星銀淺青", zh: "星銀淺青", elements: ["metal", "wind", "ice"], w: 7 },
+    { v: "玫瑰鈦金", zh: "玫瑰鈦金", elements: ["metal", "light", "fire"], w: 7 },
 
     // 火系相關
     { v: "熔岩赤紅", zh: "熔岩赤紅", elements: ["fire", "earth"], w: 8 },
@@ -217,6 +220,8 @@ window.COSMI_CATALOG = {
     { v: "珊瑚鮮橘", zh: "珊瑚鮮橘", elements: ["fire", "light", "water"], w: 7 },
     { v: "深酒紅", zh: "深酒紅", elements: ["fire", "shadow"], w: 7 },
     { v: "陶土磚紅", zh: "陶土磚紅", elements: ["earth", "fire"], w: 7 },
+    { v: "餘燼紫紅", zh: "餘燼紫紅", elements: ["fire", "shadow"], w: 7 },
+    { v: "琥珀橙金", zh: "琥珀橙金", elements: ["fire", "light", "earth"], w: 7 },
 
     // 木系相關
     { v: "蒼翡翠", zh: "蒼翡翠", elements: ["wood"], w: 8 },
@@ -224,6 +229,8 @@ window.COSMI_CATALOG = {
     { v: "嫩芽黃綠", zh: "嫩芽黃綠", elements: ["wood", "light"], w: 7 },
     { v: "橄欖墨綠", zh: "橄欖墨綠", elements: ["wood", "earth"], w: 7 },
     { v: "苔綠", zh: "苔蘚綠", elements: ["wood", "earth"], w: 7 },
+    { v: "月苔青綠", zh: "月苔青綠", elements: ["wood", "shadow"], w: 7 },
+    { v: "花靈紫粉", zh: "花靈紫粉", elements: ["wood", "light"], w: 6 },
 
     // 水系相關
     { v: "海軍深藍", zh: "海軍深藍", elements: ["water", "shadow"], w: 8 },
@@ -231,43 +238,57 @@ window.COSMI_CATALOG = {
     { v: "克萊因藍", zh: "克萊因藍", elements: ["water", "thunder"], w: 7 },
     { v: "清透天藍", zh: "清透天藍", elements: ["water", "wind", "ice"], w: 7 },
     { v: "湖水綠", zh: "湖水綠", elements: ["water", "wood"], w: 7 },
+    { v: "潮汐銀藍", zh: "潮汐銀藍", elements: ["water", "metal", "ice"], w: 7 },
+    { v: "深潭藍綠", zh: "深潭藍綠", elements: ["water", "wood", "shadow"], w: 7 },
 
     // 冰系相關
     { v: "冰晶天藍", zh: "冰晶天藍", elements: ["ice", "water"], w: 8 },
     { v: "霜雪透白", zh: "霜雪透白", elements: ["ice", "light"], w: 8 },
     { v: "純淨冰藍", zh: "純淨冰藍", elements: ["ice"], w: 8 },
     { v: "稜鏡淡紫", zh: "稜鏡淡紫", elements: ["ice", "light", "wind"], w: 7 },
+    { v: "冰霧青綠", zh: "冰霧青綠", elements: ["ice", "wind"], w: 7 },
+    { v: "極光粉紫", zh: "極光粉紫", elements: ["ice", "light", "shadow"], w: 7 },
 
     // 風系相關
     { v: "薄荷淺青", zh: "薄荷淺青", elements: ["wind", "water", "ice"], w: 8 },
     { v: "青瓷灰綠", zh: "青瓷灰綠", elements: ["wind", "wood", "water"], w: 7 },
     { v: "流線淡青", zh: "流線淡青", elements: ["wind", "light"], w: 7 },
+    { v: "薄雲青紫", zh: "薄雲青紫", elements: ["wind", "shadow", "ice"], w: 7 },
+    { v: "曉風香檳金", zh: "曉風香檳金", elements: ["wind", "light"], w: 7 },
 
     // 土系相關
     { v: "大地赭石", zh: "大地赭石", elements: ["earth"], w: 8 },
     { v: "卡其棕", zh: "卡其棕", elements: ["earth", "wood", "all"], w: 7 },
     { v: "焦糖茶褐", zh: "焦糖茶褐", elements: ["earth", "wood"], w: 7 },
     { v: "砂岩黃", zh: "砂岩黃", elements: ["earth", "light"], w: 7 },
+    { v: "石英霧白", zh: "石英霧白", elements: ["earth", "metal", "ice"], w: 7 },
+    { v: "礦脈紫褐", zh: "礦脈紫褐", elements: ["earth", "shadow"], w: 7 },
 
     // 雷系相關
     { v: "雷電曜紫", zh: "雷電曜紫", elements: ["thunder", "shadow"], w: 8 },
     { v: "閃電熾黃", zh: "閃電熾黃", elements: ["thunder", "light"], w: 8 },
     { v: "電弧青藍", zh: "電弧青藍", elements: ["thunder", "water"], w: 7 },
+    { v: "電漿翠青", zh: "電漿翠青", elements: ["thunder", "wind", "water"], w: 7 },
+    { v: "雷雲灰紫", zh: "雷雲灰紫", elements: ["thunder", "shadow", "metal"], w: 7 },
 
     // 光系相關
     { v: "耀日光金", zh: "耀日光金", elements: ["light", "thunder", "metal", "fire"], w: 8 },
     { v: "晨曦金", zh: "晨曦金", elements: ["light", "fire"], w: 8 },
     { v: "琥珀金", zh: "琥珀金", elements: ["light", "earth", "thunder"], w: 7 },
     { v: "櫻花粉", zh: "櫻花粉", elements: ["light", "wood"], w: 7 },
+    { v: "星輝淡紫", zh: "星輝淡紫", elements: ["light", "ice", "shadow"], w: 7 },
+    { v: "日輪奶油金", zh: "日輪奶油金", elements: ["light", "earth"], w: 7 },
 
     // 影系相關
     { v: "虛空深紫", zh: "虛空深紫", elements: ["shadow"], w: 8 },
     { v: "暗影幽黑", zh: "暗影幽黑", elements: ["shadow"], w: 8 },
     { v: "丁香淡紫", zh: "丁香淡紫", elements: ["shadow", "wind", "ice", "light"], w: 7 },
-    { v: "緋紅血瞳色", zh: "緋紅血瞳色", elements: ["shadow", "fire"], w: 6 }
+    { v: "緋紅血瞳色", zh: "緋紅血瞳色", elements: ["shadow", "fire"], w: 6 },
+    { v: "夜幕靛藍", zh: "夜幕靛藍", elements: ["shadow", "water"], w: 7 },
+    { v: "幽夜翡翠", zh: "幽夜翡翠", elements: ["shadow", "wood"], w: 7 }
   ],
 
-  // 配色不再依屬性硬過濾；相符 9x、相鄰 3.5x、中性 1.5x、其他 1x。
+  // 配色不依屬性硬過濾；直接 6x、相鄰 4.5x、中性 2.5x、反差 1.5x。
   // 仍保留全部色系且權重 > 0，適用於反差色、異化與混搭造型。
   getWeightedPalettes(creatureElements) {
     const elements = (creatureElements || []).filter(e => e && e !== "未知");
@@ -278,6 +299,30 @@ window.COSMI_CATALOG = {
       return Object.assign({}, color, { w: (color.w ?? 1) * affinity });
     });
   },
+  // 依色彩語意判斷近似主色相；僅用於多色抽選時的柔性防重複，不影響手動選色。
+  getColorFamily(name) {
+    const color = String(name || "");
+    if (/黑|曜石|玄鐵|暗影|炭煙/.test(color)) return "black";
+    if (/銀|白|霜雪|石英/.test(color)) return "white";
+    if (/紫|丁香|稜鏡|靛/.test(color)) return "purple";
+    if (/粉|櫻|玫瑰/.test(color)) return "pink";
+    if (/紅|赤|熔岩|烈焰|緋/.test(color)) return "red";
+    if (/橘|珊瑚|琥珀/.test(color)) return "orange";
+    if (/黃|金|砂岩|奶油|香檳/.test(color)) return "yellow";
+    if (/綠|翠|苔|橄欖|薄荷/.test(color)) return "green";
+    if (/藍|青|海軍|潮汐|電漿/.test(color)) return "blue";
+    if (/褐|棕|卡其|焦糖|赭/.test(color)) return "brown";
+    if (/灰|煙/.test(color)) return "gray";
+    return "custom:" + color;
+  },
+  getVariedPaletteOptions(options, selected) {
+    const used = new Set((selected || []).map(name => this.getColorFamily(name)));
+    return (options || []).map(c => Object.assign({}, c, {
+      // 同色相仍可重複，僅縮小相對權重，避免 1~4 色全落於同一色族。
+      w: (c.w ?? 1) * (used.has(this.getColorFamily(c.v)) ? 0.55 : 1)
+    }));
+  },
+
   // 保留舊呼叫介面，但行為改為軟性機率加權，不再排除不相符的色系。
   getFilteredPalettes(creatureElements) {
     return this.getWeightedPalettes(creatureElements);
