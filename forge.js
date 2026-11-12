@@ -389,6 +389,11 @@
   }
 
   function rollAll(kind, rng, force) {
+    // 全部重抽時先清除未鎖定的舊結果，避免上一個 seed 的欄位影響新 seed 權重。
+    // 鎖定欄位保留，其他欄位仍可依鎖定條件進行柔性配對。
+    if (force) FIELDS[kind].forEach(f => {
+      if (!state.locks[kind + "." + f.key]) delete state[kind][f.key];
+    });
     FIELDS[kind].forEach(f => {
       if (f.when && !f.when(state)) {
         delete state[kind][f.key];
