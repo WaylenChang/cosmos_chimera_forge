@@ -161,6 +161,15 @@ async function syncPackages({force=false}={}){
   for(const item of cachedRecords.filter(record=>!currentFolders.has(record.entry.id))){
    await cache.removePackage(ns,item.entry.id);
   }
+  if(cachedRecords.some(record=>!currentFolders.has(record.entry.id))){
+   window.COSMI_FORGE.clearDrivePackages?.();
+   ids.clear();
+   for(const item of cachedRecords.filter(record=>currentFolders.has(record.entry.id))){
+    try{await importPackage(item.dir,item.entry,item.files,item.raw,item.reviewRecord || null);}
+    catch(e){errors.push("快取 "+item.entry.name+": "+e.message);}
+   }
+   window.COSMI_FORGE.refresh();
+  }
   const download=limitConcurrent(6);
   const workers=Array.from({length:Math.min(3,entries.length)},async()=>{
    while(next<entries.length){
@@ -189,10 +198,10 @@ async function syncPackages({force=false}={}){
      // Avoid rendering the whole review desk for every downloaded file/package.
      const r=await download(()=>record(entry.name,reviewIndex));
      const pkg=await importPackage(dir,entry,files,raw,r);
-     if(ns && generation===sessionGeneration)void cache?.putPackage(ns,{dir,entry,files,raw,reviewRecord:r,pkgId:pkg.id});
+     if(ns && generation===sessionGeneration)await cache?.putPackage(ns,{dir,entry,files,raw,reviewRecord:r,pkgId:pkg.id});
      count++;
      if(count%5===0)window.COSMI_FORGE.refresh();
-    }catch(e){errors.push(entry.name+": "+e.message);}
+    }catch(e){if(generation!==sessionGeneration)throw e;errors.push(entry.name+": "+e.message);}
     finally{
      finished++;
      status("Drive 正在載入 "+finished+"/"+entries.length+" 個資產目錄（成功 "+count+"）");
@@ -299,7 +308,8 @@ async function authorize(response,restoredSession=null){
    $("driveStatus").textContent+="；管線模板讀取失敗："+e.message;
   });
  }
- await run(()=>syncPackages());
+ if(window.COSMI_DRIVE_CACHE?.preferences().autoSync!==false)await run(()=>syncPackages());
+ else $("driveStatus").textContent="已登入，已依設定暫停自動同步；可手動重新載入 Drive。";
  }catch(e){lock(e.message);}
 }
 window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,
