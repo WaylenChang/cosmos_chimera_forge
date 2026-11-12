@@ -91,6 +91,16 @@ test('typed anatomy profiles are shipped and connected to 3D prompts', () => {
   assert.match(profiles,/humanoid_mecha/);
 });
 
+test('mechanical limb counts retain rigid mecha routes in browser', () => {
+  const ctx={window:{}};
+  vm.runInNewContext(fs.readFileSync(path.join(root,'anatomy-profiles.js'),'utf8'),ctx);
+  const plan=ctx.window.COSMI_ANATOMY.plan;
+  for(const [legs, expected] of [[2,'humanoid_mecha'],[4,'quadruped_mecha'],[6,'multi_leg_mecha'],[8,'multi_leg_mecha']]) {
+    assert.equal(plan('creature',{base_parents:['科幻機械·機甲/外骨骼'],limbs:{legs}},'image').anatomy,expected);
+  }
+  assert.equal(plan('creature',{base_parents:['科幻機械·機甲/外骨骼'],anatomy:'humanoid_mecha',limbs:{legs:4}},'image').anatomy,'humanoid_mecha');
+});
+
 test('browser anatomy planner respects mixed origins and explicit wings', () => {
   const ctx={window:{}};
   vm.runInNewContext(fs.readFileSync(path.join(root,'anatomy-profiles.js'),'utf8'),ctx);
