@@ -37,9 +37,26 @@ jobs:
           python -m compileall -q scripts
           python -m unittest discover -s tests -p 'test_anime3d*.py' -v
 
+  blender-smoke:
+    name: Verify real Blender GLB and animation round-trip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Blender
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender
+          blender --version
+      - name: Real Blender pipeline smoke tests
+        run: python -m unittest discover -s tests -p 'test_anime3d_blender_smoke.py' -v
+
   deploy:
     name: Deploy GitHub Pages
-    needs: verify
+    needs: [verify, blender-smoke]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     concurrency:
