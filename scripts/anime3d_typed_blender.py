@@ -195,6 +195,22 @@ def targets(clip):
     return samples
 
 
+def stash_action(obj, clip):
+    """Keep one exportable NLA strip per object and clip, not orphaned Actions."""
+    if not obj.animation_data or not obj.animation_data.action:
+        return False
+    action = obj.animation_data.action
+    action.name = "typed_" + topology + "_" + clip + "_" + obj.name
+    obj.animation_data.action = None
+    track = obj.animation_data.nla_tracks.new()
+    track.name = clip
+    strip = track.strips.new(clip, 1, action)
+    strip.action_frame_start = 1
+    strip.action_frame_end = frames
+    track.mute = False
+    return True
+
+
 clips = []
 requested = profile.get("motion_plan", [])
 frames = max(16, int(spec.get("animation_frames", 48)))
@@ -205,15 +221,19 @@ for item in requested:
         continue
     if topology == "object" and clip in {"idle", "spin", "attack"}:
         for mesh in meshes:
+            mesh.animation_data_create()
+            mesh.animation_data.action = None
             mesh.rotation_mode = "XYZ"
             initial = tuple(mesh.rotation_euler)
             for frame in (1, frames):
                 angle = 2 * math.pi if clip == "spin" and frame == frames else 0
                 mesh.rotation_euler = (initial[0], initial[1], initial[2] + angle)
                 mesh.keyframe_insert(data_path="rotation_euler", frame=frame)
+            stash_action(mesh, clip)
         clips.append({"name": clip, "method": method, "status": "generated",
                       "frames": frames, "provisional": False})
     elif rigid and rig_quality["status"] == "explicit_parts" and clip in {"open", "close", "rotate", "extend", "retract", "spin"}:
+        authored = []
         for part in parts:
             obj = bpy.data.objects[part["object"]]
             if part["joint"] == "fixed":
@@ -224,13 +244,16 @@ for item in requested:
                 continue
             axis.normalize()
             prop = "location" if part["joint"] == "slider" else "rotation_euler"
+            obj.animation_data_create()
+            obj.animation_data.action = None
             base = tuple(getattr(obj, prop))
             for frame, t in ((1, 0), (frames, 1)):
                 amount = (lo_lim + (hi_lim - lo_lim) * (t if clip not in {"close", "retract"} else 1 - t))
                 vec = Vector(base) + axis * amount
                 setattr(obj, prop, vec[:])
                 obj.keyframe_insert(data_path=prop, frame=frame)
-        clips.append({"name": clip, "method": method, "status": "generated", "frames": frames, "provisional": True})
+            authored.append(stash_action(obj, clip))
+        clips.append({"name": clip, "method": method, "status": "generated" if any(authored) else "needs_moving_parts", "frames": frames, "provisional": True})
     elif rig and not rigid:
         channels = targets(clip)
         if not channels:
@@ -254,8 +277,8 @@ for item in requested:
                 rot[index] = amp * math.sin(phase + offset)
                 bone.rotation_euler = rot
                 bone.keyframe_insert(data_path="rotation_euler", frame=frame, group=name)
-        rig.animation_data.action = None
-        clips.append({"name": clip, "method": method, "status": "generated", "frames": frames, "provisional": True})
+        exported = stash_action(rig, clip)
+        clips.append({"name": clip, "method": method, "status": "generated" if exported else "no_keyframes", "frames": frames, "provisional": True})
     else:
         clips.append({"name": clip, "method": method, "status": "needs_rig_or_mechanism"})
 
@@ -318,12 +341,20 @@ qa = {
         "collision_free": False,   # not safe to infer from one rest pose
         "export_reload": False,    # updated only after actual reload
         "multiview_evidence": len(rendered_views) == 4,
+        "animation_roundtrip": False,
     },
     "warnings": profile.get("warnings", []) +
                 ["Visual anatomy, deformation, poses and self-intersection require reviewed renders"],
 }
 bpy.ops.wm.save_as_mainfile(filepath=str(out / "models" / (model.stem + ".blend")))
-bpy.ops.export_scene.gltf(filepath=str(out / "models" / (model.stem + ".glb")), export_format="GLB", export_animations=True)
+# NLA tracks, one per motion clip, must survive the glTF round trip.
+try:
+    bpy.ops.export_scene.gltf(filepath=str(out / "models" / (model.stem + ".glb")),
+                              export_format="GLB", export_animations=True,
+                              export_animation_mode="NLA_TRACKS")
+except TypeError:
+    bpy.ops.export_scene.gltf(filepath=str(out / "models" / (model.stem + ".glb")),
+                              export_format="GLB", export_animations=True)
 # Round-trip test: not just checking whether export wrote bytes.
 export_file = out / "models" / (model.stem + ".glb")
 if export_file.is_file() and export_file.stat().st_size > 0:
@@ -331,6 +362,12 @@ if export_file.is_file() and export_file.stat().st_size > 0:
         bpy.ops.wm.read_factory_settings(use_empty=True)
         bpy.ops.import_scene.gltf(filepath=str(export_file))
         qa["hard_checks"]["export_reload"] = any(x.type == "MESH" for x in bpy.context.scene.objects)
+        imported_actions = {a.name.lower() for a in bpy.data.actions}
+        qa["exported_actions"] = sorted(imported_actions)
+        local_clips = {x["name"] for x in clips if x["status"] == "generated"}
+        qa["hard_checks"]["animation_roundtrip"] = all(
+            any(clip.lower() in action for action in imported_actions) for clip in local_clips
+        )
     except Exception as exc:
         qa["warnings"].append("Export reload failed: " + str(exc))
 qa["automated_pass"] = all(v for k, v in qa["hard_checks"].items() if k not in {"visual_anatomy", "collision_free"})
