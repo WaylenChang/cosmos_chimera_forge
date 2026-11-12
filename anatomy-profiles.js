@@ -57,7 +57,11 @@
     const declared = concept?.anatomy || concept?.topology;
     if (declared && Object.prototype.hasOwnProperty.call(labels, declared)) anatomy = declared;
     const limbs = concept?.limbs || {};
-    if (!declared && !rigid.has(anatomy)) {
+    if (!declared && (anatomy === "humanoid_mecha" || anatomy === "quadruped_mecha" || anatomy === "multi_leg_mecha")) {
+      if (Number.isInteger(limbs.legs) && limbs.legs >= 5) anatomy = "multi_leg_mecha";
+      else if (limbs.legs === 4) anatomy = "quadruped_mecha";
+      else if (limbs.legs === 2) anatomy = "humanoid_mecha";
+    } else if (!declared && !rigid.has(anatomy)) {
       if (limbs.legs === 4 && limbs.wings > 0) anatomy = "winged_quadruped";
       else if (limbs.legs === 2 && limbs.wings > 0) anatomy = "winged_biped";
       else if (limbs.tentacles > 0 && !limbs.legs) anatomy = "tentacled";
