@@ -44,6 +44,9 @@
         ctx.task.id.startsWith("character") ? "characters" : "creatures";
       const subject = ctx.subjectId || ctx.taskId;
       const destination = "04_encyclopedia/" + kind + "/" + subject + ".md";
+      const moveOptions = kind === "moves" ? Object.fromEntries(
+        Object.entries(ctx.opts || {}).filter(([key]) => ["element","shape","tier","use_creature","action","motion","name"].includes(key))
+      ) : null;
       const focus = kind === "moves" ?
         "招式定位、施放條件、屬性、視覺形態、分鏡、效果節奏與動作規格" :
         kind === "characters" ? "角色身份、背景、外觀、服裝、性格、技能與設計變體" :
