@@ -56,56 +56,69 @@
       ""].join("\n");
   }
   function headerStage(line) {
-    const t=line.replace(/^[\s#*\-]+/g,"").trim();
-    if(!t||t.length>165)return "";
-    // Only structurally labeled form headings, never narrative mentions or animation rows.
-    const numbered=/^[1-4][.、)）]\s*/.test(t)||/^第[一二三四]階段/.test(t);
+    const t=String(line).replace(/^[\s#*\uE000-\uF8FF-]+/g,"").trim();
+    if(!t||/^(juvenile|adolescent|adult|overload)$/i.test(t))return "";
+    const numbered=/^([1-4])[.、)）]\s*/.exec(t);
+    const ordinal=/^(?:[1-4][.、)）]\s*)?第([一二三四])階段[：:]?/.exec(t);
     const bare=/^(幼年|少年|成年|超載)(?:期|型態|形態)\s*[(（]/.test(t);
-    if(!numbered&&!bare)return "";
-    const explicit=/juvenile|adolescent|adult|overload/i.exec(t);
-    if(explicit)return explicit[0].toLowerCase();
-    const zh=/幼年|少年|成年|超載/.exec(t);
-    if(zh)return ({幼年:"juvenile",少年:"adolescent",成年:"adult",超載:"overload"})[zh[0]];
-    const ordinal=/^第([一二三四])階段/.exec(t);
-    return ordinal?STAGES[["一","二","三","四"].indexOf(ordinal[1])]:"";
+    if(!numbered&&!ordinal&&!bare)return "";
+    const candidates=STAGES;
+    if(ordinal){
+      const order=["一","二","三","四"].indexOf(ordinal[1]);
+      if(numbered&&Number(numbered[1])!==order+1)return "";
+      return candidates[order];
+    }
+    const first=t.slice(0,180);
+    const explicit=/(juvenile|adolescent|adult|overload)/i.exec(first);
+    const zh=/(幼年|少年|成年|超載)/.exec(first);
+    const inferred=explicit?explicit[1].toLowerCase():zh?({幼年:"juvenile",少年:"adolescent",成年:"adult",超載:"overload"})[zh[1]]:"";
+    if(numbered&&inferred&&Number(numbered[1])!==candidates.indexOf(inferred)+1)return "";
+    return inferred;
+  }
+  function isLegacyChapterBoundary(line) {
+    const t=String(line).trim();
+    return /^(?:#{1,5}\s*)?(?:[二三四五六七八九十]+[、.．]|[2-9][.、]\s*(?:生態|專屬|生命|骨架|動畫|技術|材質|機制|Field|Ecolog|Evolution|Materials)|第[二三四五六七八九十]章|各階段(?:演化|外觀))/.test(t);
   }
   function splitLegacy(source, subject, stage, sourceFile="") {
     const id=cleanId(subject);
     if(!STAGES.includes(stage))throw Error("不支援的宙獸型態");
     const lines=String(source||"").replace(/^\uFEFF/,"").replace(/\r\n?/g,"\n").split("\n");
-    // Stop at the second chapter; later ecological/animation prose may mention
-    // other forms, and must not silently leak into the current form's entry.
-    const chapter2=lines.findIndex((line,i)=>i>8 && /^(?:#{1,4}\s*)?(?:第二章|二、(?:生態|野外|棲息)|Chapter\s+2\b)/i.test(line.trim()));
-    const limit=chapter2>=0?chapter2:lines.length;
     const starts=[];
-    for(let i=0;i<limit;i++){const st=headerStage(lines[i]);if(st)starts.push({i,stage:st});}
-    if(!starts.some(x=>x.stage===stage))throw Error(id+" 缺少 "+stage+" 專屬段落，拒絕以其他型態代替");
-    const blocks=[];
-    for(let n=0;n<starts.length;n++){
-      const h=starts[n],end=n+1<starts.length?starts[n+1].i:limit;
-      if(h.stage!==stage)continue;
-      const part=lines.slice(h.i,end).join("\n").trim();
-      if(part&&!blocks.includes(part))blocks.push(part);
+    for(let i=0;i<lines.length;i++){
+      const selected=headerStage(lines[i]);
+      if(selected)starts.push({i,stage:selected});
     }
-    const intro=lines.slice(0,starts[0].i).join("\n").trim();
-    const context=intro.split("\n").filter(line=>!/\b(juvenile|adolescent|adult|overload)\b/.test(line))
-      .join("\n").slice(0,1700).trim();
+    // Different historical files use tables, prose headings, or both.
+    // Prefer the complete four-form group with the richest per-form content.
+    const groups=[];
+    for(let i=0;i<=starts.length-4;i++){
+      const group=starts.slice(i,i+4);
+      if(group.every((x,j)=>x.stage===STAGES[j])){
+        const score=[0,1,2].reduce((sum,j)=>sum+lines.slice(group[j].i,group[j+1].i).join("\n").length,0);
+        groups.push({group,score});
+      }
+    }
+    if(!groups.length)throw Error(id+" 缺少完整四型態段落，拒絕猜測或複製其他型態");
+    groups.sort((a,b)=>b.score-a.score||a.group[0].i-b.group[0].i);
+    const group=groups[0].group, pos=STAGES.indexOf(stage),current=group[pos];
+    let end=pos<3?group[pos+1].i:lines.length;
+    if(pos===3)for(let i=current.i+1;i<lines.length;i++){
+      if(isLegacyChapterBoundary(lines[i])){end=i;break;}
+    }
+    const block=lines.slice(current.i,end).join("\n").trim();
+    if(block.length<20)throw Error(id+" "+stage+" 專屬段落過短，需人工核對");
+    const intro=lines.slice(0,Math.min(12,group[0].i))
+      .filter(line=>/通用代號|圖鑑登錄|正式名稱|中文正式|分類|元素屬性|屬性相性|文明|棲息|戰鬥定位|學名|內部代號|宙獸代號|^#/.test(line))
+      .join("\n").trim();
     return ["# "+id+" — "+STAGE_ZH[stage]+"型態宙獸圖鑑",
-      "",
-      "- subject_id: "+id,
-      "- stage: "+stage,
+      "", "- subject_id: "+id, "- stage: "+stage,
       "- status: migrated / review_required",
-      "- source_wiki: "+(sourceFile||id+"_wiki.md"),
-      "",
-      "## 本型態原始描述",
-      blocks.join("\n\n"),
-      "",
-      "## 原系列共通背景（保留摘要）",
-      context||"詳見舊版系列圖鑑備份。",
-      "",
-      "## 資產與驗收",
-      "原始 3D、骨架、動作與立繪仍須逐項審查；本次僅拆分圖鑑內容，不宣稱資產已完成。",
-      "系列其他型態與跨階進化資料保留於 wiki/_legacy/creatures/ 下的原始檔案。",
+      "- source_wiki: "+(sourceFile||id+"_wiki.md"), "",
+      "## 系列基本資料",intro||"請參照原始系列圖鑑。", "",
+      "## 本型態專屬設定",block, "",
+      "## 原始資料與驗收",
+      "系列共通生態與跨階演化資訊保留於 wiki/_legacy/creatures/ 的原始檔案。",
+      "本文件只代表文字資料拆分，3D、骨架、動畫與立繪仍須人工審查。",
       ""].join("\n");
   }
   window.COSMI_WIKI=Object.freeze({ROOT,STAGES,STAGE_ZH,describe,initialMarkdown,splitLegacy,headerStage});
