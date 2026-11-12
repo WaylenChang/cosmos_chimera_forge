@@ -168,6 +168,15 @@ def run(a):
             state["warnings"].append("Backend did not produce a verified nonempty GLB")
             write(state_path, state)
             return 2
+    # Text-only creature modeling owns the original bestiary; image-to-3D
+    # and characters must not inherit an unrelated previous bestiary.
+    subject_kind = str(spec.get("category") or spec.get("subject_type") or "")
+    task_kind = str(spec.get("task_type") or "")
+    requires_bestiary = profile["input_mode"] == "text" and (
+        subject_kind == "creature" or task_kind.startswith("creature"))
+    bestiary = out / "bestiary.md"
+    if requires_bestiary and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
+        state["warnings"].append("Text-to-3D creature requires original bestiary.md")
     if not a.blender or not Path(a.blender).is_file():
         state["status"] = "QA_PENDING"
         state["warnings"].append("Blender binary unavailable; geometry and export QA not run")
@@ -183,6 +192,10 @@ def run(a):
         qa = read(metrics)
         state["automated_pass"] = qa.get("automated_pass", False)
         state["warnings"] += qa.get("warnings", [])
+    if requires_bestiary and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
+        state["status"] = "REVIEW_REQUIRED"
+        write(state_path, state)
+        return 2
     write(state_path, state)
     return 0 if child.returncode == 0 and metrics.is_file() else 2
 
