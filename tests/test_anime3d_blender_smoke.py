@@ -25,6 +25,11 @@ import bpy
 import sys
 target = sys.argv[sys.argv.index("--") + 1]
 bpy.ops.wm.read_factory_settings(use_empty=True)
+try:
+    import addon_utils
+    addon_utils.enable("io_scene_gltf2", default_set=False, persistent=True)
+except Exception:
+    pass
 bpy.ops.mesh.primitive_cube_add(size=2)
 obj = bpy.context.object
 obj.name = "Hatch"
