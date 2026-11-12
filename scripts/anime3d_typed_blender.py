@@ -13,6 +13,13 @@ from pathlib import Path
 import bpy
 from mathutils import Vector
 
+# Older Blender distributes glTF import/export as an opt-in bundled addon.
+try:
+    import addon_utils
+    addon_utils.enable("io_scene_gltf2", default_set=False, persistent=True)
+except Exception:
+    pass  # Blender 4.3+ may register glTF operators natively.
+
 args = sys.argv[sys.argv.index("--") + 1:]
 if len(args) < 3:
     raise SystemExit("Usage: blender -b --python anime3d_typed_blender.py -- model.glb output_dir profile.json [spec.json]")
