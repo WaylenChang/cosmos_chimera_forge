@@ -38,6 +38,7 @@
   .btn.icon-only, .segb.icon-only { width: 32px; min-width: 32px; height: 32px; padding: 0; font-size: 16px; }
   .btn.icon-only.mini { width: 29px; min-width: 29px; height: 29px; }
   button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  [data-tip], [aria-description] { cursor: help; }
   #uiTooltip { position: fixed; display: none; max-width: min(320px, calc(100vw - 24px)); background: #30394b; color: #fff; border: 1px solid #536481; padding: 6px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 22px rgba(0,0,0,.55); pointer-events: none; z-index: 9999; white-space: normal; overflow-wrap: anywhere; }
 
   /* ==================== 鍛造視圖 ==================== */
@@ -1152,16 +1153,16 @@
   tip.setAttribute("role", "tooltip");
   document.body.append(tip);
   let current = null;
-  const selector = "button[data-tip], button[title], a[title], summary[title]";
+  const selector = "[data-tip], [title], [aria-description]";
   function hide() { current = null; tip.style.display = "none"; }
   function show(target) {
-    const message = target?.dataset.tip || target?.getAttribute("title");
+    const message = target?.dataset.tip || target?.getAttribute("title") || target?.getAttribute("aria-description");
     if (!message) return hide();
     if (target.hasAttribute("title")) {
       if (!target.dataset.tip) target.dataset.tip = message;
       target.removeAttribute("title");
     }
-    if (target.tagName === "BUTTON" && !target.getAttribute("aria-label")) target.setAttribute("aria-label", message);
+    if (target.matches("button, a, input, select, textarea") && !target.getAttribute("aria-label")) target.setAttribute("aria-label", message);
     current = target; tip.textContent = message; tip.style.display = "block";
     const rect = target.getBoundingClientRect();
     const x = Math.max(8, Math.min(rect.left + rect.width / 2 - tip.offsetWidth / 2, innerWidth - tip.offsetWidth - 8));
@@ -1181,6 +1182,8 @@
     if (target) show(target);
   });
   document.addEventListener("focusout", hide);
+  document.addEventListener("pointerdown", e => { if (e.pointerType === "touch") { const target = e.target.closest?.(selector); if (target) { if (target === current) hide(); else show(target); } else hide(); } });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
   document.addEventListener("scroll", hide, true);
   window.addEventListener("resize", hide);
 })();
