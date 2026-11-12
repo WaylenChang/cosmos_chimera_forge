@@ -176,6 +176,33 @@ test('legacy Prompt-to-3D migration never invents model or overwrites missing GL
   assert.ok(!h.calls.some(call=>call.url.pathname.includes('/upload/')));
 });
 
+
+test('all concurrent Prompt-to-Image and 3D wiki calls create one stage-specific Markdown', async()=>{
+  let created=false, uploads=0;
+  const h=harness({handle:(u,options)=>{
+    const q=u.searchParams.get('q')||'';
+    if(q.includes("_wiki.md"))return Response.json({files:created?[{id:'wiki-item',name:'cr_new_juvenile_wiki.md'}]:[]});
+    if(u.pathname.includes('/upload/')){
+      uploads++;created=true;return Response.json({id:'wiki-item',name:'cr_new_juvenile_wiki.md'});
+    }
+  }});
+  vm.runInNewContext(fs.readFileSync(path.join(root,'wiki.js'),'utf8'),h.context);
+  await h.login();
+  const ctx={task:{id:'creature-concept'},subjectId:'cr_new',opts:{stage:'juvenile'},concept:{name_zh:'新宙獸'}};
+  const [a,b,c]=await Promise.all([
+    h.context.COSMI_DRIVE.ensureWiki(ctx),
+    h.context.COSMI_DRIVE.ensureWiki({...ctx,task:{id:'creature-model-rig'}}),
+    h.context.COSMI_DRIVE.ensureWiki(ctx)
+  ]);
+  assert.equal(uploads,1);
+  assert.equal(a.path,'wiki/creatures/cr_new_juvenile_wiki.md');
+  assert.equal(a.id,b.id);
+  assert.equal(c.id,a.id);
+  const later=await h.context.COSMI_DRIVE.ensureWiki(ctx);
+  assert.equal(later.created,false);
+  assert.equal(uploads,1);
+});
+
 test('legacy migration control and encyclopedia directory are present in the build',()=>{
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   assert.match(html,/id="settingsMigratePrompt3d"/);
