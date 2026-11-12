@@ -135,7 +135,8 @@
     const isChr = (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr"));
     const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
     state.taskId = targetTaskId;
-    flowSelection = null; state.flowChoice = null;
+    flowSelection = {category:isChr ? "character" : "creature",route:"image",step:"image_blender"};
+    state.flowChoice = flowSelection;
     const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
     const o = taskOpts(t);
     o.scope = "single";
@@ -152,7 +153,10 @@
       o.input_img = "";
     }
     const pipelineStage = document.getElementById("pipelineStage");
-    if (pipelineStage && !["colab", "blender"].includes(pipelineStage.value)) pipelineStage.value = "blender";
+    if (pipelineStage) {
+      if (!["colab", "blender"].includes(pipelineStage.value)) pipelineStage.value = "blender";
+      flowSelection.step = pipelineStage.value === "colab" ? "image_colab" : "image_blender";
+    }
     setViewMode("forge");
     renderAll();
     toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」帶入指定 3D 任務");
@@ -162,6 +166,8 @@
     const isChr = pkg ? (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr")) : false;
     const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
     state.taskId = targetTaskId;
+    flowSelection = {category:isChr ? "character" : "creature",route:"image",step:"image_blender"};
+    state.flowChoice = flowSelection;
     const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
     const o = taskOpts(t);
     o.scope = "batch";
@@ -869,16 +875,32 @@
     curCustomCtx = null;
   }
 
-  // Task type -> pipeline route -> step; retain the legacy task IDs for persisted jobs.
+  // Explicit three-phase chooser: category -> route -> connected pipeline nodes.
   const taskFlow = window.COSMI_TASK_FLOW;
   let flowSelection = null;
   function currentFlow() {
     if (!taskFlow) return null;
     const choice = flowSelection || state.flowChoice;
-    const selected = choice && taskFlow.resolve(choice.category, choice.route, choice.step);
-    if (selected && selected.taskId === state.taskId) return selected;
-    const inferred = taskFlow.infer(state.taskId, $("#pipelineStage")?.value, taskOpts(task()));
-    return inferred ? taskFlow.resolve(inferred.category, inferred.route, inferred.step) : null;
+    if (!choice?.category || !choice.route || !choice.step) return null;
+    const selected = taskFlow.resolve(choice.category, choice.route, choice.step);
+    return selected && selected.taskId === state.taskId ? selected : null;
+  }
+  function chooseCategory(category) {
+    const selected = taskFlow?.selectCategory(category);
+    if (!selected) return;
+    flowSelection = selected;
+    state.flowChoice = selected;
+    state.taskId = category === "move" ? "move-vfx"
+      : category === "character" ? "character-concept" : "creature-concept";
+    const stage = $("#pipelineStage");
+    if (stage && category !== "move") stage.value = "appearance";
+    renderAll();
+  }
+  function chooseRoute(route) {
+    const choice = flowSelection || state.flowChoice;
+    const next = taskFlow?.selectRoute(choice, route);
+    if (!next) return;
+    chooseFlow(next.category, next.route, next.step);
   }
   function chooseFlow(category, route, step) {
     const selected = taskFlow?.resolve(category, route, step);
@@ -893,9 +915,12 @@
       const o = taskOpts(task());
       o.scope = "single";
       if (route === "text") { o.source_pack = ""; o.input_img = ""; }
-      else if (selected.stage === "colab" || selected.stage === "blender") {
+      else {
         const pkg = getActivePkg();
-        if (pkg && !is3dType(pkg.type) && pkg.status === "ok" && (category === "character" ? pkg.type === "character-concept" : pkg.type === "creature-concept")) o.source_pack = pkg.id;
+        if (pkg && !is3dType(pkg.type) && pkg.status === "ok" &&
+          (category === "character" ? pkg.type === "character-concept" : pkg.type === "creature-concept")) {
+          o.source_pack = pkg.id;
+        }
       }
     }
     window.COSMI_PIPELINE?.syncStageActions();
@@ -903,36 +928,66 @@
   }
   function renderTasks() {
     const box = $("#tasks"), categories = $("#taskCategories"), routes = $("#taskRoutes"), detail = $("#taskFlowDetail");
-    if (!taskFlow || !categories || !routes || !detail) return;
+    if (!taskFlow || !box || !categories || !routes || !detail) return;
+    const choice = flowSelection || state.flowChoice;
     const active = currentFlow();
-    if (!active) { box.replaceChildren(); categories.replaceChildren(); routes.replaceChildren(); detail.replaceChildren(); return; }
-    flowSelection = {category: active.category, route: active.route, step: active.step};
-    state.flowChoice = flowSelection;
+    const kind = choice?.category || null;
     categories.replaceChildren(...taskFlow.categories.map(c => el("button", {
-      type:"button", class:c.id === active.category ? "on" : "",
-      "aria-pressed":String(c.id === active.category), "aria-label":"選擇" + c.zh, "data-tip":"切換至" + c.zh + "任務",
-      onclick:()=>chooseFlow(c.id, c.id === "move" ? "move" : "image", c.id === "move" ? "move_vfx" : "appearance")
+      type:"button", class:c.id === kind ? "on" : "",
+      "aria-pressed":String(c.id === kind), "aria-label":"選擇" + c.zh,
+      "data-tip":"先選擇" + c.zh + "，再選管線",
+      onclick:()=>chooseCategory(c.id)
     }, c.zh)));
-    const routeDefs = active.category === "move" ? [] : [
-      {id:"image", label:"Image-to-3D", tip:"先生成與審查立繪，再以 Colab＋Blender 或 AI＋Blender 建模"},
-      {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
-    ];
+    if (!kind) {
+      routes.replaceChildren();
+      box.replaceChildren();
+      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"① 先選擇角色、宙獸或招式。"));
+      renderDesigned();
+      return;
+    }
+    const routeDefs = kind === "move"
+      ? [{id:"move", label:"招式特效（VFX）", tip:"選擇招式特效管線，生成規格、分鏡、圖層與序列圖"}]
+      : [
+        {id:"image", label:"Image-to-3D", tip:"先生成並審查立繪，再選 Colab＋Blender 或 AI＋Blender"},
+        {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
+      ];
     routes.replaceChildren(...routeDefs.map(d => el("button", {
-      type:"button", class:d.id === active.route ? "on" : "",
-      "aria-pressed":String(d.id === active.route), "aria-label":d.tip, "data-tip":d.tip,
-      onclick:()=>chooseFlow(active.category,d.id,"appearance")
+      type:"button", class:d.id === choice.route ? "on" : "",
+      "aria-pressed":String(d.id === choice.route), "aria-label":d.tip, "data-tip":d.tip,
+      onclick:()=>chooseRoute(d.id)
     },d.label)));
-    box.replaceChildren(...taskFlow.steps(active.category,active.route).map((step,i) => el("button", {
-      type:"button", class:"task" + (step.id === active.step ? " on" : "") + (step.alternate ? " is-alternate" : ""),
-      "aria-pressed":String(step.id === active.step),
-      "aria-label":"選擇步驟 " + step.name, "data-tip":step.detail,
-      onclick:()=>chooseFlow(active.category,active.route,step.id)
-    },el("span",{class:"tname"},(i+1)+". "+step.name),el("span",{class:"tmeta"},step.output))));
+    if (!choice.route || !active) {
+      box.replaceChildren();
+      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"② 請選擇管線，接著點選流程圖節點。"));
+      renderDesigned();
+      return;
+    }
+    const rows = taskFlow.diagram(kind, choice.route);
+    function node(step) {
+      return el("button", {
+        type:"button", class:"task" + (step.id === active.step ? " on" : "") + (step.alternate ? " is-alternate" : ""),
+        "aria-pressed":String(step.id === active.step),
+        "aria-label":"選擇步驟 " + step.name, "data-tip":step.detail,
+        onclick:()=>chooseFlow(kind,choice.route,step.id)
+      },el("span",{class:"tname"},step.name),el("span",{class:"tmeta"},step.output));
+    }
+    const elements = [];
+    rows.forEach((row,i) => {
+      if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
+      if (row.type === "branch") {
+        elements.push(el("div",{class:"flow-branch"},
+          el("p",{class:"flow-branch-label"},row.label),
+          el("div",{class:"flow-branch-options"},row.steps.map(node))));
+      } else {
+        elements.push(el("div",{class:"flow-row"},node(row.steps[0])));
+      }
+    });
+    box.replaceChildren(...elements);
     detail.replaceChildren(
       el("strong",{},active.name),
       el("p",{},active.detail),
-      el("p",{}, "產出：",el("code",{},active.output)),
-      el("p",{class:"muted"},"點選流程節點後，右側 Prompt 會切換至該步驟。")
+      el("p",{},"產出：",el("code",{},active.output)),
+      el("p",{class:"muted"},"點選流程節點以切換右側 Prompt 與對應任務選項。")
     );
     renderDesigned();
   }

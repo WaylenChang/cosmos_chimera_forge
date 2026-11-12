@@ -81,7 +81,7 @@ test('unified tooltips cover keyboard, touch, and dynamic controls', () => {
   assert.match(html, /e\.key === "Escape"/);
   assert.match(html, /document\.addEventListener\("focusin"/);
   assert.match(html, /text\.replace\(\/\\s\+\/g, " "\)/);
-  for (const id of ['pipelineStage', 'pipelineAppearance', 'pipelineParameters',
+  for (const id of ['pipelineStage', 'pipelineParameters',
     'prompt', 'stage3dClipSelect', 'stage3dScrubber']) {
     assert.match(html, new RegExp('\\b' + id + ': "'), 'Missing tooltip description: ' + id);
   }

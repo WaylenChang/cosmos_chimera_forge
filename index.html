@@ -53,15 +53,22 @@
   .task-route-picker { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .task-category-picker button, .task-route-picker button { border:1px solid var(--line); border-radius:8px; background:transparent; color:inherit; padding:9px 4px; cursor:pointer; min-width:0; }
   .task-category-picker button.on, .task-route-picker button.on { border-color:var(--accent); background:#202735; }
-  .task-flow-list { display:flex !important; flex-direction:column; gap:5px; }
-  .task-flow-list .task { width:100%; height:auto; min-width:0; margin:0; flex:none; position:relative; }
-  .task-flow-list .task:not(:last-child):after { content:"↓"; position:absolute; left:14px; bottom:-12px; z-index:1; font-size:11px; color:var(--muted); pointer-events:none; }
-  .task-flow-list .task.is-alternate { margin-left:12px; width:calc(100% - 12px); border-left:3px solid var(--accent); }
+  .task-flow-list { display:flex !important; flex-direction:column; align-items:stretch; gap:0; }
+  .task-flow-list .flow-row { display:flex; flex-direction:column; align-items:stretch; min-width:0; }
+  .task-flow-list .flow-connector { display:block; height:26px; width:2px; margin:0 auto; background:var(--line); position:relative; }
+  .task-flow-list .flow-connector:after { content:""; position:absolute; bottom:0; left:-4px; width:8px; height:8px; border-right:2px solid var(--muted); border-bottom:2px solid var(--muted); transform:rotate(45deg); }
+  .task-flow-list .flow-branch { border:1px dashed var(--line); padding:9px 7px; border-radius:10px; min-width:0; }
+  .task-flow-list .flow-branch-label { color:var(--muted); text-align:center; font-size:11px; margin:0 0 8px; }
+  .task-flow-list .flow-branch-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .task-flow-list .task { width:100%; min-width:0; height:auto; margin:0; flex:none; }
+  .task-flow-list .task.is-alternate { border-left:3px solid var(--accent); }
   .task-flow-detail { margin-top:10px; padding:10px; border:1px solid var(--line); border-radius:8px; font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
   .task-flow-detail strong { display:block; margin-bottom:4px; }
   .task-flow-detail p { margin:4px 0; }
   .task-flow-detail code { white-space:normal; overflow-wrap:anywhere; }
-  @media (max-width:1279px) { .task-flow-list { display:grid !important; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); } .task-flow-list .task.is-alternate { margin:0; width:100%; } .task-flow-list .task:after { display:none; } }
+  .task-flow-placeholder { color:var(--muted); font-size:12px; line-height:1.6; padding:10px 0; }
+  @media (max-width:699px) { .task-flow-list .flow-branch-options { grid-template-columns:minmax(0,1fr); } }
+
   /* ==================== 鍛造視圖 ==================== */
   #forgeView { flex: 1; display: grid; grid-template-columns: 220px minmax(360px, 1.1fr) minmax(380px, 1.2fr); gap: 12px; padding: 12px; min-height: 0; overflow: auto; }
   @media (max-width: 1100px) { #forgeView { grid-template-columns: 1fr; } #tasks { display: flex; flex-wrap: wrap; gap: 6px; } .task { flex: 1 1 160px; } }
@@ -153,6 +160,10 @@
   #pipelineControls textarea { display: block; width: 100%; min-height: 110px; max-height: 45dvh; overflow: auto; resize: vertical; font-family: Consolas, monospace; font-size: 12px; line-height: 1.55; }
   #pipelineControls > div:first-of-type { align-items: end; }
   #pipelineControls > div:first-of-type label { flex: 1 1 270px; max-width: 100%; }
+  #promptFormatSettings { border-top:1px solid var(--line); margin-top:12px; padding-top:10px; min-width:0; }
+  #promptFormatSettings summary { cursor:pointer; color:var(--muted); font-size:12px; padding:5px 0; }
+  #promptFormatSettings label { display:block; margin:9px 0 6px; }
+  #promptFormatSettings textarea { display:block; width:100%; min-height:145px; max-height:45dvh; resize:vertical; font:12px/1.55 Consolas,monospace; overflow:auto; }
   #driveToolbar #driveStatus { min-width: 0; flex: 1 1 100%; overflow-wrap: anywhere; font-size: 12px; color: var(--muted); }
   @media (max-width: 1250px) {
     #forgeView { grid-template-columns: minmax(180px, 220px) minmax(0, 1fr); }
@@ -805,12 +816,7 @@
       <option value="review_3d">4 · 立繪與 3D 最終審查</option>
     </select></label>
     <button id="pipelineRead" class="btn mini icon-only" type="button" aria-label="複製目前立繪 Prompt，貼入生成平台" data-tip="複製目前立繪 Prompt，貼入生成平台">📋</button>
-    <button id="pipelineSaveSettings" class="btn ghost mini icon-only" type="button" aria-label="儲存外觀 .md ＋ 參數 .json" data-tip="儲存外觀 .md ＋ 參數 .json">💾</button>
-    <button id="pipelineLoadSettings" class="btn ghost mini icon-only" type="button" aria-label="讀取外觀與參數" data-tip="讀取外觀與參數">📂</button>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
-    <label>外觀設定（留空使用 HTML 隨機／圖鑑設定；可貼入 AI 生成結果）<textarea id="pipelineAppearance" rows="5" placeholder="僅填外觀：輪廓、比例、五官、配色、服裝／肢體、辨識特徵"></textarea></label>
-    <label>格式參數（另存 JSON，不混入外觀 prompt）<textarea id="pipelineParameters" rows="5" spellcheck="false"></textarea></label>
+    
   </div>
   <label>來源立繪資產 ID <input id="pipelineSource" placeholder="cr-… 或 chr-…"></label>
   <button id="pipelineBindSource" class="btn ghost mini icon-only" type="button" aria-label="綁定目前 3D 的來源立繪" data-tip="綁定目前 3D 的來源立繪">🔗</button>
@@ -887,7 +893,7 @@
   <!-- 視圖 1: Prompt 鍛造 -->
   <main id="forgeView">
     <section>
-      <h2>任務清單</h2>
+      <h2>任務流程圖</h2>
       <div id="taskCategories" class="task-category-picker" role="group" aria-label="選擇任務類別"></div>
       <div id="taskRoutes" class="task-route-picker" role="group" aria-label="選擇管線路徑"></div>
       <div id="tasks" class="task-flow-list" aria-label="管線任務流程"></div>
@@ -953,6 +959,15 @@
           <span class="muted" id="chars"></span>
         </div>
         <textarea id="prompt" spellcheck="false" aria-label="產生的 prompt"></textarea>
+        <details id="promptFormatSettings" class="prompt-format-settings">
+          <summary data-tip="設定管線輸出格式，不覆寫概念參數">格式參數</summary>
+          <label for="pipelineParameters" class="muted">管線輸出格式 JSON（不混入外觀 Prompt）</label>
+          <textarea id="pipelineParameters" rows="7" spellcheck="false" aria-label="格式參數 JSON"></textarea>
+          <div class="actions">
+            <button id="pipelineSaveSettings" class="btn ghost mini icon-only" type="button" aria-label="儲存格式參數至 Drive" data-tip="儲存格式參數至 Drive">💾</button>
+            <button id="pipelineLoadSettings" class="btn ghost mini icon-only" type="button" aria-label="從 Drive 讀取格式參數" data-tip="從 Drive 讀取格式參數">📂</button>
+          </div>
+        </details>
       </section>
 
       <!-- 我的最愛 Prompt 清單區塊 -->
@@ -1260,7 +1275,6 @@
     btnGoDesignedFromSubhead: "前往已設計項目清單",
     drivePromptPath: "目前 Prompt 在 Drive 中的相對儲存路徑",
     pipelineStage: "選擇要設定或執行的管線步驟",
-    pipelineAppearance: "輸入角色或宙獸的外觀描述，供管線生成使用",
     pipelineParameters: "編輯本步驟的 JSON 參數",
     pipelineSource: "指定此 3D 模型對應的來源角色或宙獸 ID",
     seed: "控制隨機生成結果的種子值",

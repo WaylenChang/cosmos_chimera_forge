@@ -53,5 +53,33 @@
       steps(c.id, route).some(x => x.id === stage) ? stage : "appearance";
     return { category: c.id, route, step };
   }
-  window.COSMI_TASK_FLOW = Object.freeze({ categories, steps, resolve, infer });
+  // Diagram rows preserve alternate paths as a parallel fork instead of sequential tasks.
+  function diagram(kind, route) {
+    const list = steps(kind, route);
+    if (!list.length) return [];
+    if (route === "image" && kind !== "move") return [
+      ...list.slice(0, 3).map(step => ({ type: "step", steps: [step] })),
+      { type: "branch", label: "二選一建模管線", steps: list.slice(3, 5) },
+      { type: "step", steps: [list[5]] }
+    ];
+    return list.map(step => ({ type: "step", steps: [step] }));
+  }
+  // Explicit chooser state machine: category must be chosen before route and node.
+  function selectCategory(kind) {
+    return category(kind) ? { category: kind, route: null, step: null } : null;
+  }
+  function selectRoute(choice, route) {
+    if (!choice || !category(choice.category)) return null;
+    const kind = choice.category;
+    if (kind === "move") {
+      return route === "move" ? { category: kind, route, step: "move_vfx" } : null;
+    }
+    return route === "image" || route === "text"
+      ? { category: kind, route, step: "appearance" } : null;
+  }
+  function selectStep(choice, step) {
+    const selected = choice && resolve(choice.category, choice.route, step);
+    return selected ? { category: choice.category, route: choice.route, step } : null;
+  }
+  window.COSMI_TASK_FLOW = Object.freeze({ categories, steps, diagram, resolve, infer, selectCategory, selectRoute, selectStep });
 })();

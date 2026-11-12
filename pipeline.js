@@ -6,7 +6,6 @@
     colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d"
   };
   const templates = {};
-  let appearanceSubject;
   const modeKey = "cosmimera.portrait-mode.v1";
   let portraitMode = "manual";
   try {
@@ -26,15 +25,14 @@
     return p;
   }
   function appearance(ctx) {
-    const appearanceKey = ctx.subjectId + ":" + (ctx.opts?.stage || "");
-    if (appearanceSubject && appearanceSubject !== appearanceKey && $("pipelineAppearance")) $("pipelineAppearance").value = "";
-    appearanceSubject = appearanceKey;
+    // Concept parameters are the sole appearance source; notes provide explicit amendments.
     const base = ctx.concept || {};
     const selected = base.locked?.stages?.find(s => s.stage === ctx.opts?.stage) || {};
-    const c = {...base, ...selected, stage: ctx.opts?.stage || base.stage};
+    const concept = {...base, ...selected, stage: ctx.opts?.stage || base.stage};
     const fields = ["name_zh", "name_en", "stage", "gender", "age", "body_type", "outfit_palette", "hair_palette", "eye_palette", "silhouette_keywords", "style", "pose", "element_palettes", "elements", "size_profile", "height", "height_length", "appearance", "look", "size_class", "appearance_palette", "hair", "eyes", "outfit", "accessories", "base_parents", "bases", "archetype", "motifs", "disposition", "formula"];
-    const lines = fields.filter(k => c[k] != null).map(k => k + ": " + (typeof c[k] === "object" ? JSON.stringify(c[k]) : c[k]));
-    return $("pipelineAppearance")?.value.trim() || lines.join("\n") || "請填入角色／宙獸的外觀設定";
+    const lines = fields.filter(k => concept[k] != null).map(k => k + ": " + (typeof concept[k] === "object" ? JSON.stringify(concept[k]) : concept[k]));
+    if (ctx.notes?.trim()) lines.push("補充／修改: " + ctx.notes.trim());
+    return lines.join("\n") || "請先於設計概念參數設定角色／宙獸外觀";
   }
   function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(ctx.task.id); }
   function build(ctx) {
@@ -116,7 +114,7 @@
       syncStageActions();
       window.COSMI_FORGE?.setPortraitRound?.(portraitMode === "auto" ? 0 : 1);
     });
-    for (const id of ["pipelineStage", "pipelineAppearance", "pipelineParameters"]) {
+    for (const id of ["pipelineStage", "pipelineParameters"]) {
       $(id).addEventListener("change", () => {
         if (id === "pipelineStage") {
           syncStageActions();
