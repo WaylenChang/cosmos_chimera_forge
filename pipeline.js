@@ -43,7 +43,7 @@
       const kind = ctx.task.id === "move-vfx" ? "moves" :
         ctx.task.id.startsWith("character") ? "characters" : "creatures";
       const subject = ctx.subjectId || ctx.taskId;
-      const destination = "04_encyclopedia/" + kind + "/" + subject + ".md";
+      const destination = "04_encyclopedia/" + kind + "/" + subject + (kind === "creatures" ? "_wiki.md" : ".md");
       const moveOptions = kind === "moves" ? Object.fromEntries(
         Object.entries(ctx.opts || {}).filter(([key]) => ["element","shape","tier","use_creature","action","motion","name"].includes(key))
       ) : null;
