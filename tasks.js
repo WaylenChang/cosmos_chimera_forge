@@ -810,6 +810,7 @@
   // Apply the same storage contract to every full prompt and every image round.
   TASKS.forEach(t => {
     const build = t.build;
+    t.nativeBuild = build;
     t.build = ctx => {
       if (window.COSMI_PIPELINE?.supports(ctx)) return window.COSMI_PIPELINE.build(ctx);
       const text = build(ctx), newline = text.indexOf("\n");
