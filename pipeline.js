@@ -43,7 +43,7 @@
     "review_portrait": "# 立繪審查\n待審：{{input_path}}/\n依該包外觀與參數檢查圖檔完整性、全身構造、視角與配色一致性、遮擋、瑕疵及水印。\n輸出逐檔缺陷、位置與建議通過／退件；只供人工決策，不修圖、不移動資產或代為核准。",
     "colab": "# Colab GPU Image-to-3D\n{{model_input}}\n參數：`{{parameters_path}}`；輸出：`{{output_path}}/`\n先確認 Colab GPU 與生成模型可用，產生初始網格後交 Blender 修整、綁骨與匯出；無法執行則說明阻塞。\n1. 判定原型（人形、怪物、生物、奇幻生物或超自然物件），搜尋並查閱相關外形、解剖、材質、骨架與運動資料；無法搜尋則註明。\n2. 依本次輸入全新設計並建模，不套用或抄襲舊 3D 檔；依生物或機械構造配置蒙皮、關節與動作。\n3. 由 Blender 直接儲存 `models/{{asset_id}}.blend`、匯出 `models/{{asset_id}}.glb`，保留拓撲、UV、材質與骨架。\n4. 每次修改後檢查正、背、左、右、上、下視角及動作關鍵幀：臉／感知器官不被遮擋，軀幹與肢體完整連接；無破面、孔洞、透視露空、錯誤法線／貼圖、部件互穿、離體或關節錯位及各部位獨立亂移。\n5. 重開 `.blend` 並重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，記錄未完成項；不交 ZIP。",
     "blender": "# Blender Image-to-3D／Prompt-to-3D\n{{model_input}}\n參數：`{{parameters_path}}`；輸出：`{{output_path}}/`\n直接以 Blender 製作完整模型，不以粗糙幾何堆疊充當成品。\n1. 判定原型（人形、怪物、生物、奇幻生物或超自然物件），搜尋並查閱相關外形、解剖、材質、骨架與運動資料；無法搜尋則註明。\n2. 依本次輸入全新設計並建模，不套用或抄襲舊 3D 檔；依生物或機械構造配置蒙皮、關節與動作。\n3. 由 Blender 直接儲存 `models/{{asset_id}}.blend`、匯出 `models/{{asset_id}}.glb`，保留拓撲、UV、材質與骨架。\n4. 每次修改後檢查正、背、左、右、上、下視角及動作關鍵幀：臉／感知器官不被遮擋，軀幹與肢體完整連接；無破面、孔洞、透視露空、錯誤法線／貼圖、部件互穿、離體或關節錯位及各部位獨立亂移。\n5. 重開 `.blend` 並重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，記錄未完成項；不交 ZIP。\n{{bestiary}}",
-    "review_3d": "# 3D 模型審查\n模型：{{input_path}}/；來源立繪：{{source_path}}/\n依立繪、參數與 manifest 檢查 GLB／Blend 可用性、拓撲、材質、骨架及動畫變形、穿插與來源追溯。\n缺已核准立繪或 `.glb`／`.blend` 不得建議通過。列明問題檔案及建議通過／退件；不補檔、不移動資產或代為核准。"
+    "review_3d": "# 3D 模型審查\n模型：{{input_path}}/；來源立繪：{{source_path}}/\n依立繪、參數與 manifest 檢查 GLB／Blend 可用性、拓撲、材質、骨架及動畫變形、穿插與來源追溯。\nImage-to-3D 須有已核准來源立繪；Prompt-to-3D 須在建模後補正式主立繪（不需 T-pose、正面圖），未補齊不得建議通過。缺 `.glb`／`.blend` 亦不得通過。列明問題檔案及建議通過／退件；不補檔、不移動資產或代為核准。"
   };
   const templateMarker = stage => "<!-- COSMI-PIPELINE/2:" + stage + " -->";
   function isCreature(ctx) {
@@ -74,7 +74,7 @@
         const imgPath = imageHint ? (sourceId && !absoluteHint ? sourcePath + "/" + imageHint.replace(/^\/+/, "") : imageHint) : (sourceId ? sourcePath + "/" : "未指定");
         modelInput = "輸入圖片：" + imgPath + "\nsource_pack：" + source;
       } else {
-        modelInput = "純文字外觀：\n" + visual + "\nsource_pack：未指定（後續補核准立繪）";
+        modelInput = "純文字外觀：\n" + visual + "\n建模後須依最終 3D 補正式主立繪（不需 T-pose、正面圖），完成後才能最終驗收。";
       }
     }
     const bestiary = stage === "blender" && !hasImage && isCreature(ctx)
