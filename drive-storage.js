@@ -3,6 +3,30 @@
 "use strict";
 const config=window.COSMI_DRIVE_CONFIG, API="https://www.googleapis.com/drive/v3/files", MIME="application/vnd.google-apps.folder";
 let accessToken="",expiry=0,expiryTimer,tokenClient,initialized=false,syncing,busy=false;
+// sessionStorage survives refreshes within the same browser tab, but not a closed session.
+// Never persist a full-Drive bearer token in localStorage or in a URL.
+const SESSION_KEY="cosmi.drive.oauth.v1",SESSION_SKEW=30000;
+function clearSavedSession(){
+ try{window.sessionStorage?.removeItem(SESSION_KEY);}catch(_){}
+}
+function saveSession(){
+ try{window.sessionStorage?.setItem(SESSION_KEY,JSON.stringify({
+  clientId:config.clientId,rootId:config.rootId,accessToken,expiry
+ }));}catch(_){}
+}
+function readSession(){
+ try{
+  const raw=window.sessionStorage?.getItem(SESSION_KEY);
+  if(!raw)return null;
+  const saved=JSON.parse(raw);
+  if(saved.clientId!==config.clientId||saved.rootId!==config.rootId||
+     typeof saved.accessToken!=="string"||!saved.accessToken||
+     !Number.isFinite(saved.expiry)||saved.expiry<=Date.now()+SESSION_SKEW){
+   clearSavedSession();return null;
+  }
+  return saved;
+ }catch(_){clearSavedSession();return null;}
+}
 const folders=new Map(), $=id=>document.getElementById(id);
 function limitConcurrent(max) {
  let running=0;const waiting=[];
@@ -20,7 +44,7 @@ function relative(path) {
  const parts=path.split("/"); if(parts.some(p=>!p||p==="."||p===".."))throw Error("不允許空白或上層目錄路徑"); return parts;
 }
 function lock(message) {
- accessToken="";expiry=0;folders.clear();clearTimeout(expiryTimer);
+ accessToken="";expiry=0;folders.clear();clearTimeout(expiryTimer);clearSavedSession();
  $("driveApp").hidden=true;$("driveGate").hidden=false;$("driveGateStatus").textContent=message;
  if(initialized)window.location.reload();
 }
@@ -206,11 +230,13 @@ async function uploadAsset(pkg){
  pkg.drivePath=path;pkg.driveFolderId=id;pkg.driveFiles=await walk(id);return path;
 }
 async function run(action){try{return await action();}catch(e){$("driveStatus").textContent=e.message;}}
-async function authorize(response){
+async function authorize(response,restoredSession=null){
  if(response.error||!response.access_token){$("driveGateStatus").textContent=response.error_description||response.error||"Google 登入失敗";return;}
  try{
- accessToken=response.access_token;expiry=Date.now()+Number(response.expires_in||3600)*1000;
+ accessToken=response.access_token;expiry=restoredSession?.expiry??(Date.now()+Number(response.expires_in||3600)*1000);
  const root=await metadata(config.rootId);if(root.trashed||root.mimeType!==MIME)throw Error("Drive 專案資料夾無法存取");
+ // Persist only after Drive permissions have been validated.
+ saveSession();
  expiryTimer=setTimeout(()=>lock("登入已到期，請重新登入 Google"),Math.max(0,expiry-Date.now()));
  // Unlock the UI as soon as folder permission is verified; synchronize assets afterward.
  if(!initialized){window.dispatchEvent(new Event("cosmi:authorized"));initialized=true;}
@@ -228,6 +254,7 @@ window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,sa
  packageDir:type=>/model|rig|anim/.test(type)?"02_3d/ai_blender":"01_portraits"});
 document.addEventListener("DOMContentLoaded",()=>{
  $("driveSignIn").addEventListener("click",()=>{
+ if(window.location?.protocol==="file:"){$("driveGateStatus").textContent="本機請先以 http://localhost:8000 啟動網頁，不能直接開啟 HTML 檔。";return;}
  if(!config.clientId){$("driveGateStatus").textContent="尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";return;}
  if(!window.google?.accounts?.oauth2){$("driveGateStatus").textContent="Google 登入元件尚未載入，請稍後重試。";return;}
  tokenClient ||= google.accounts.oauth2.initTokenClient({client_id:config.clientId,scope:"https://www.googleapis.com/auth/drive",callback:authorize,
@@ -265,6 +292,12 @@ document.addEventListener("DOMContentLoaded",()=>{
  await jsonWrite("reviews/"+pkg.id+".json",{task_id:pkg.id,status:pkg.status,source_pack:id,time:new Date().toISOString()});pkg.sourcePack=id;window.COSMI_FORGE.refresh();$("driveStatus").textContent="已綁定來源立繪 "+id;
  }));
  $("driveUploadPackage").addEventListener("click",()=>run(async()=>{$("driveStatus").textContent="已儲存資產目錄 "+await uploadAsset(window.COSMI_FORGE.activePackage());}));
- $("driveGateStatus").textContent=config.clientId?"登入後可讀取你有權限的專案資產。":"尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";
+ const saved=readSession();
+ if(saved){
+  $("driveGateStatus").textContent="正在恢復 Google Drive 登入…";
+  void authorize({access_token:saved.accessToken},saved);
+ }else{
+  $("driveGateStatus").textContent=window.location?.protocol==="file:"?"本機請先以 http://localhost:8000 啟動網頁，不能直接開啟 HTML 檔。":config.clientId?"登入後可讀取你有權限的專案資產。":"尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";
+ }
 });
 })();
