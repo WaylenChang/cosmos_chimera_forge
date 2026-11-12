@@ -1,4 +1,4 @@
-// Portrait prompts are copied directly; other stage templates remain on private Drive.
+// Portrait prompts support manual clipboard and on-demand automated Drive .md output.
 (function () {
   "use strict";
   const stages = {
@@ -7,6 +7,13 @@
   };
   const templates = {};
   let appearanceSubject;
+  const modeKey = "cosmimera.portrait-mode.v1";
+  let portraitMode = "manual";
+  try {
+    if (window.localStorage?.getItem(modeKey) === "auto") portraitMode = "auto";
+  } catch (_) {
+    // Private browsing may restrict localStorage; manual is a safe default.
+  }
   const $ = id => document.getElementById(id);
   const defaults = {schema: "cosmi-pipeline/1", image_format: "png", views: ["front", "turnaround", "main"],
     model_formats: ["glb", "blend"], animation_clips: ["idle", "walk", "attack"],
@@ -62,23 +69,40 @@
     })());
     await Promise.all(jobs);
   }
+  function isPortraitAuto() {
+    return $("pipelineStage")?.value === "portrait" && portraitMode === "auto";
+  }
   function syncStageActions() {
     const isPortrait = $("pipelineStage")?.value === "portrait";
+    const automatic = isPortraitAuto();
+    const modeControl = $("portraitModeControl"), modeSelect = $("portraitMode");
+    if (modeControl) modeControl.hidden = !isPortrait;
+    if (modeSelect) modeSelect.value = portraitMode;
+    // Manual portrait mode has no Drive Prompt read/write controls.
     for (const id of ["driveSavePrompt", "drivePromptPath", "driveLoadPrompt"]) {
       const control = $(id);
-      if (control) control.hidden = isPortrait;
+      if (control) control.hidden = isPortrait && !automatic;
     }
-    const read = $("pipelineRead");
-    if (read) {
-      const hint = isPortrait ? "複製目前立繪 Prompt，貼入生成平台" : "從 Google Drive 讀取本步驟 Prompt 模板";
-      read.setAttribute("aria-label", hint);
-      read.dataset.tip = hint;
+    const action = $("pipelineRead");
+    if (action) {
+      const hint = !isPortrait ? "從 Google Drive 讀取本步驟 Prompt 模板"
+        : automatic ? "建立完整立繪 Prompt .md 並上傳 Google Drive"
+        : "複製目前立繪 Prompt，貼入生成平台";
+      action.textContent = !isPortrait ? "📖" : automatic ? "☁" : "📋";
+      action.setAttribute("aria-label", hint);
+      action.dataset.tip = hint;
     }
   }
-  window.COSMI_PIPELINE = { stages, templates, defaults, parameters, appearance, supports, build, loadTemplates };
+  window.COSMI_PIPELINE = { stages, templates, defaults, parameters, appearance, supports, build, loadTemplates, isPortraitAuto, syncStageActions };
   document.addEventListener("DOMContentLoaded", () => {
     $("pipelineParameters").value = JSON.stringify(defaults, null, 2);
     syncStageActions();
+    $("portraitMode")?.addEventListener("change", event => {
+      portraitMode = event.target.value === "auto" ? "auto" : "manual";
+      try { window.localStorage?.setItem(modeKey, portraitMode); } catch (_) {}
+      syncStageActions();
+      window.COSMI_FORGE?.setPortraitRound?.(portraitMode === "auto" ? 0 : 1);
+    });
     for (const id of ["pipelineStage", "pipelineAppearance", "pipelineParameters"]) {
       $(id).addEventListener("change", () => {
         if (id === "pipelineStage") {
