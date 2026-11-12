@@ -3,22 +3,16 @@ name: Deploy Prompt Forge & Review Studio
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: 'pages'
-  cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  verify:
+    name: Verify regression tests and production build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,8 +23,33 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Verify Drive integration
-        run: node --test tools/tests/test_drive_storage.cjs tools/tests/test_pipeline.cjs tools/tests/test_asset_directories.cjs
+      # Includes the production build smoke test using a synthetic OAuth client ID.
+      - name: Run all Node regression tests
+        run: node --test tools/tests/*.cjs
+
+  deploy:
+    name: Deploy GitHub Pages
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       - name: Build login-gated site
         env:
