@@ -102,7 +102,7 @@ test('sign out and expiry clear cached tokens instead of reviving login', async 
   const h = harness();
   await h.login();
   assert.ok(h.sessionStorage.getItem('cosmi.drive.oauth.v1'));
-  h.node('driveSignOut').listeners.click();
+  h.context.COSMI_DRIVE.signOut();
   assert.equal(h.sessionStorage.getItem('cosmi.drive.oauth.v1'), null);
   assert.equal(h.node('driveApp').hidden, true);
   assert.equal(h.reloaded, true);
