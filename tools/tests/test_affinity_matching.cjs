@@ -83,10 +83,10 @@ test('each element has multiple direct color matches and nearby affinity is comp
 
 test('multi-color weighting encourages variety without removing same-hue choices', () => {
   const colors = C.getWeightedPalettes(['fire']);
-  const selected = ['烈焰紅'];
+  const selected = ['熔岩赤紅'];
   const adjusted = C.getVariedPaletteOptions(colors, selected);
-  const same = adjusted.find(c => c.v === '餘燼紫紅');
-  const originalSame = colors.find(c => c.v === '餘燼紫紅');
+  const same = adjusted.find(c => c.v === '烈焰紅');
+  const originalSame = colors.find(c => c.v === '烈焰紅');
   const different = adjusted.find(c => c.v === '冰晶天藍');
   const originalDifferent = colors.find(c => c.v === '冰晶天藍');
   assert.ok(same.w > 0 && same.w < originalSame.w);
