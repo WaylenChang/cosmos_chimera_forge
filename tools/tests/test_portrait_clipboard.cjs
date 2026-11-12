@@ -26,6 +26,7 @@ test('native portrait prompts retain the original multi-round copy controls', ()
   assert.match(forge, /"btnCopyR2"/);
   assert.match(forge, /"btnCopyR3"/);
   assert.match(forge, /\$\("#download"\)\.hidden = Boolean\(portraitCopyOnly\)/);
+  assert.match(forge, /const portraitAuto = window\.COSMI_PIPELINE\?\.supports\(b\.ctx\) && window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)/);
   assert.match(pipeline, /Object\.entries\(stages\)\.filter\(\(\[key\]\) => key !== "portrait"\)/);
 });
 
@@ -55,13 +56,17 @@ test('portrait never requires a Drive template when assembling a prompt', () => 
   assert.equal(result, native);
 });
 
-test('portrait toolbar is clipboard-only; other stages can still use Drive', () => {
+test('portrait toolbar switches between manual clipboard and automated Drive writing', () => {
   const html = read('index.html');
   const drive = read('drive-storage.js');
   const pipeline = read('pipeline.js');
-  assert.match(drive, /if\(\$\("pipelineStage"\)\.value==="portrait"\)\{\$\("copy"\)\.click\(\);return;\}/);
-  assert.match(drive, /if\(\$\("pipelineStage"\)\.value==="portrait"\)return;/);
-  assert.match(pipeline, /control\.hidden = isPortrait/);
+  assert.match(drive, /if\(!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)\)\{\$\("copy"\)\.click\(\);return;\}/);
+  assert.match(drive, /await write\(path,new Blob\(\[text\],\{type:"text\/markdown"\}\)\)/);
+  assert.match(pipeline, /control\.hidden = isPortrait && !automatic/);
+  assert.match(pipeline, /window\.localStorage\?\.setItem\(modeKey, portraitMode\)/);
+  assert.match(html, /id="portraitMode"/);
+  assert.match(html, /value="manual"/);
+  assert.match(html, /value="auto"/);
   assert.match(pipeline, /syncStageActions\(\)/);
   assert.match(html, /id="pipelineRead"/);
 });
