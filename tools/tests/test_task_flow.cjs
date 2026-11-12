@@ -59,7 +59,7 @@ test('redundant task navigation and portrait auto controls are removed', () => {
   assert.doesNotMatch(html,/id="portraitAutoRun"/);
   assert.doesNotMatch(forge,/\$\("#btnGoDesignedFromSubhead"\)/);
   assert.doesNotMatch(pipeline,/\$\("portraitAutoRun"\)/);
-  assert.match(html,/id="driveSignOut"/);
+  assert.match(html,/id="settingsSignOut"/);
 });
 test('category and route controls use text without mixed decorative icons', () => {
   const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
