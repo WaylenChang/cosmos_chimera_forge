@@ -9,6 +9,7 @@
   let appearanceSubject;
   const modeKey = "cosmimera.portrait-mode.v1";
   let portraitMode = "manual";
+  let graphMode = null;
   try {
     if (window.localStorage?.getItem(modeKey) === "auto") portraitMode = "auto";
   } catch (_) {
@@ -54,6 +55,7 @@
   function build(ctx) {
     const stage = $("pipelineStage")?.value || "portrait";
     if (stage === "portrait") return ctx.task.build(ctx);
+    if (stage === "portrait_after_3d") return "# 建模後補主立繪\n依本次已完成且通過模型品質檢查的 GLB／Blend 與預覽，繪製一致的正式全身動態主立繪。無需 T-pose、正面圖或三視圖；不得自行變更模型外觀。輸出 PNG 並記錄對應模型資產 ID，供最終驗收。";
     const raw = templates[stage];
     const normalized = typeof raw === "string" ? raw.replace(/\r\n?/g, "\n").trim() : "";
     const prefix = templateMarker(stage);
@@ -65,7 +67,7 @@
     const source = sourceId || "未指定";
     const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? "01_portraits/" + sourceId : "未指定");
     const imageHint = String(ctx.opts?.input_img || "").trim();
-    const hasImage = Boolean(sourceId || imageHint || stage === "colab");
+    const hasImage = stage === "blender" && graphMode === "prompt" ? false : Boolean(sourceId || imageHint || stage === "colab");
     const visual = stage === "appearance" || (stage === "blender" && !hasImage) ? appearance(ctx) : "";
     let modelInput = "";
     if (is3D) {
@@ -136,8 +138,41 @@
       action.dataset.tip = hint;
     }
   }
+
+  const graphSteps = {
+    appearance:["外觀設定","產生原創外觀描述，兩條管線共用。","appearance"],
+    portrait:["立繪生成","Image-to-3D 專用：先產生正面、T-pose 多視圖及動態主立繪。","portrait"],
+    review_portrait:["立繪審查","確認來源立繪通過後，才能以圖片建模。","review_portrait"],
+    colab:["Colab Image-to-3D","以已核准圖片生成模型，Blender 修整後輸出 GLB 與 Blend。","colab"],
+    blender_image:["Blender Image-to-3D","以來源圖片建模，不產生宙獸圖鑑。","blender"],
+    blender_prompt:["Blender Prompt-to-3D","在立繪生成之前分岔，直接依文字外觀建模；宙獸此路線產生圖鑑。","blender"],
+    portrait_after_3d:["建模後補主立繪","以完成的 3D 模型為唯一外觀基準補正式動態主立繪，不需 T-pose 或正面圖。","portrait_after_3d"],
+    review_3d:["最終驗收","Image-to-3D 檢查核准來源立繪；Prompt-to-3D 檢查建模後補的主立繪。缺任一必交成果不得通過。","review_3d"]
+  };
+  function selectGraphStep(key) {
+    const info = graphSteps[key];
+    if (!info) return;
+    graphMode = key === "blender_prompt" || key === "portrait_after_3d" ? "prompt" : key === "blender_image" ? "image" : null;
+    const stage = info[2] === "portrait_after_3d" ? "portrait_after_3d" : info[2];
+    const selector = $("pipelineStage");
+    if (selector) selector.value = stage;
+    document.querySelectorAll("[data-pipeline-node]").forEach(node => node.setAttribute("aria-pressed",String(node.dataset.pipelineNode === key)));
+    if ($("pipelineStepTitle")) $("pipelineStepTitle").textContent = info[0];
+    if ($("pipelineStepDescription")) $("pipelineStepDescription").textContent = info[1];
+    syncStageActions();
+    window.COSMI_FORGE?.setPipelineStage?.(stage);
+    window.COSMI_FORGE?.refresh?.();
+    const updatePrompt = () => {
+      const prompt = $("prompt")?.value || "";
+      const out = $("pipelineStepPrompt");
+      if (out) {out.hidden = false;out.textContent = prompt || "請先選擇資產，以產生此步驟 Prompt。";}
+    };
+    updatePrompt();
+    if ($("pipelineStepPrompt")) $("pipelineStepPrompt").textContent = $("prompt")?.value || "請先選擇資產，以產生此步驟 Prompt。";
+  }
   window.COSMI_PIPELINE = { stages, templates, defaults, parameters, appearance, supports, build, loadTemplates, isPortraitAuto, syncStageActions };
   document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("[data-pipeline-node]").forEach(node => node.addEventListener("click", () => selectGraphStep(node.dataset.pipelineNode)));
     $("pipelineParameters").value = JSON.stringify(defaults, null, 2);
     syncStageActions();
     $("portraitAutoRun")?.addEventListener("click", () => $("pipelineRead")?.click());
@@ -150,6 +185,7 @@
     for (const id of ["pipelineStage", "pipelineAppearance", "pipelineParameters"]) {
       $(id).addEventListener("change", () => {
         if (id === "pipelineStage") {
+          graphMode = null;
           syncStageActions();
           window.COSMI_FORGE?.setPipelineStage($(id).value);
         } else window.COSMI_FORGE?.refresh();
