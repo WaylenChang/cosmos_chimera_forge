@@ -70,7 +70,7 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 `02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已由 AI＋Blender **Prompt-to-3D** 生成的模型，不能將其重新視為 Image-to-3D；`.glb`、`.blend` 留在原本的 `models/`，保留 Google Drive 檔案 ID。這些模型是否已綁骨、包含動畫或符合品質要求，仍須逐件驗證。
 
-原先 `02_3d/ai_blender/_briefs/` 的 15 份 `cr_*_wiki.md` 已保存在舊目錄 `04_encyclopedia/creatures/`；新的 `wiki/creatures/`、`wiki/characters/`、`wiki/moves/` 及 `wiki/_legacy/creatures/` 已建立，目前尚未對 15 份資料執行自助拆分。新規則改為每個階段一份：`<subject_id>_<stage>_wiki.md`。舊系列圖鑑經設定頁拆分後保存在 `wiki/_legacy/creatures/`，防止資料遺失。圖鑑獨立於模型檔案，模型的 `manifest.encyclopedia_path` 指向該 Markdown。
+原先 `02_3d/ai_blender/_briefs/` 的 15 份 `cr_*_wiki.md` 已完成拆分並移轉：`wiki/creatures/` 現有 60 份獨立型態 Markdown（15 × 4），15 份系列原檔保留在 `wiki/_legacy/creatures/`，原 `04_encyclopedia/creatures/` 已清空。`wiki/characters/` 與 `wiki/moves/` 亦已建立。新規則改為每個階段一份：`<subject_id>_<stage>_wiki.md`。舊系列圖鑑經設定頁拆分後保存在 `wiki/_legacy/creatures/`，防止資料遺失。圖鑑獨立於模型檔案，模型的 `manifest.encyclopedia_path` 指向該 Markdown。
 
 為避免大量空目錄及將尚未執行的 QA 假報為完成，既有模型包保留 `models/`，待實際產生骨架、動作、預覽及驗證資料才建立 `rig/`、`animations/`、`previews/`、`qa/` 等子目錄。既有模型的原始 `.glb` 不應複製冒充已完成 QA 的 `source/`。
 
@@ -106,4 +106,4 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 - 招式：`wiki/moves/<move_id>_wiki.md`。
 - Prompt-to-Image、Image-to-3D（Colab/AI Blender）、Prompt-to-3D 使用相同 `wiki` 主鍵。獨立圖鑑步驟只在檔案不存在時建立 Markdown 草稿；下游僅關聯現有檔案，禁止重複產生。
 - 設定頁「拆分舊圖鑑」可重複執行：從舊 `wiki` 前身 `04_encyclopedia/creatures/` 的 15 個原始系列文件擷取四階描述，轉為新 Markdown；四階都有檔案才將原始文件移到 `wiki/_legacy/creatures/`。Google Docs 先透過 export 讀取，既有新檔不覆寫；型態段落無法辨識時列入錯誤而不猜造。
-- 使用獨立草稿時 `status: draft / review_required`，不假稱已完成畫作、模型或 QA。雲端遷移只在使用者登入應用程式並明確點擊後執行。
+- 使用獨立草稿時 `status: draft / review_required`，不假稱已完成畫作、模型或 QA。本次 15→60 雲端資料遷移已透過授權 Drive 操作完成並回讀驗證；網頁端的遷移按鈕保留作為可重試的缺檔修復流程，不會覆寫既有階段圖鑑。
