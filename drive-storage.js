@@ -286,20 +286,25 @@ async function uploadAsset(pkg){
  pkg.drivePath=path;pkg.driveFolderId=id;pkg.driveFiles=await walk(id);return path;
 }
 
-async function ensureWiki(ctx) {
-  if(syncing||busy)throw Error("Drive 正在處理其他資產，請稍後再建立圖鑑");
+const wikiInFlight=new Map();
+function ensureWiki(ctx) {
   const wiki=window.COSMI_WIKI.describe(ctx);
-  await folder("wiki/"+wiki.kind,true);
-  // Name equality and exact folder resolution are the idempotency contract.
-  // Existing content is never regenerated or overwritten by another pipeline.
-  const existing=(await find(wiki.path)).file;
-  if(existing)return {path:wiki.path,created:false,id:existing.id};
-  const text=window.COSMI_WIKI.initialMarkdown(ctx);
-  const destination=await folder("wiki/"+wiki.kind,true);
-  const duplicates=await list(destination,"name = '"+escapeQuery(wiki.path.split("/").pop())+"'");
-  if(duplicates.length)return {path:wiki.path,created:false,id:duplicates[0].id};
-  const written=await write(wiki.path,new Blob([text],{type:"text/markdown"}));
-  return {path:wiki.path,created:true,id:written.id};
+  if(wikiInFlight.has(wiki.path))return wikiInFlight.get(wiki.path);
+  const pending=(async()=>{
+    if(syncing||busy)throw Error("Drive 正在處理其他資產，請稍後再建立圖鑑");
+    const destination=await folder("wiki/"+wiki.kind,true);
+    // Serialize same-path requests within this browser tab, and never
+    // overwrite or fork a previously generated wiki.
+    const found=await list(destination,"name = '"+escapeQuery(wiki.path.split("/").pop())+"'");
+    if(found.length>1)throw Error(wiki.path+" 名稱重複，請人工整理");
+    if(found.length===1)return {path:wiki.path,created:false,id:found[0].id};
+    const text=window.COSMI_WIKI.initialMarkdown(ctx);
+    const written=await write(wiki.path,new Blob([text],{type:"text/markdown"}));
+    return {path:wiki.path,created:true,id:written.id};
+  })();
+  wikiInFlight.set(wiki.path,pending);
+  void pending.then(()=>wikiInFlight.delete(wiki.path),()=>wikiInFlight.delete(wiki.path));
+  return pending;
 }
 async function migrateWikis() {
   if(syncing||busy)throw Error("Drive 正在同步或審查，請稍後再執行");
