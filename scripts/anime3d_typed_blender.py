@@ -256,6 +256,11 @@ for item in requested:
                 continue
             axis.normalize()
             prop = "location" if part["joint"] == "slider" else "rotation_euler"
+            # glTF imports often use QUATERNION rotation mode. Euler F-curves
+            # keyed on such an object do not affect its evaluated transform;
+            # Blender's glTF exporter then emits no animation at all.
+            if prop == "rotation_euler":
+                obj.rotation_mode = "XYZ"
             obj.animation_data_create()
             obj.animation_data.action = None
             base = tuple(getattr(obj, prop))
