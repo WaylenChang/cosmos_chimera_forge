@@ -39,7 +39,20 @@
   function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(ctx.task.id); }
   function build(ctx) {
     const stage = $("pipelineStage")?.value || "portrait";
-    if (stage === "portrait") return ctx.task.build(ctx);
+    if (stage === "portrait") return ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
+    if (stage === "portrait_3d") {
+      const model = window.COSMI_FORGE?.activePackage?.();
+      const subject = ctx.concept?.name_zh || ctx.subjectId;
+      return [
+        "# 3D 完成後補畫主立繪：" + subject,
+        "依已完成的 3D 模型、材質與多角度預覽，繪製一張全身動態主立繪。",
+        "維持模型的外觀、比例、五官、服裝或肢體、配色及辨識特徵。",
+        "不要生成正面基準圖、T-pose 或三視圖；只輸出動態主立繪。",
+        "3D 來源：" + (model?.drivePath || "請指定已完成的 3D 模型目錄"),
+        "輸出至 01_portraits/" + ctx.taskId + "/images/，並建立可追溯的來源關聯。",
+        "完成後須人工審查立繪並綁定 3D，才可最終驗收。"
+      ].join("\n");
+    }
     const template = templates[stage];
     if (!template) return "請先從 Drive 讀取本步驟 prompt.md。";
     const model = window.COSMI_FORGE?.activePackage();
@@ -70,10 +83,10 @@
     await Promise.all(jobs);
   }
   function isPortraitAuto() {
-    return $("pipelineStage")?.value === "portrait" && portraitMode === "auto";
+    return ["portrait", "portrait_3d"].includes($("pipelineStage")?.value) && portraitMode === "auto";
   }
   function syncStageActions() {
-    const isPortrait = $("pipelineStage")?.value === "portrait";
+    const isPortrait = ["portrait", "portrait_3d"].includes($("pipelineStage")?.value);
     const automatic = isPortraitAuto();
     const modeControl = $("portraitModeControl"), modeSelect = $("portraitMode");
     if (modeControl) modeControl.hidden = !isPortrait;
