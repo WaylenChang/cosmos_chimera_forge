@@ -40,6 +40,7 @@
     const stage = $("pipelineStage")?.value || "portrait";
     if (stage === "portrait" || stage === "move_vfx") {
       const content=ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
+      if (!window.COSMI_WIKI || !supports(ctx))return content;
       const wiki=window.COSMI_WIKI.describe(ctx);
       return content + "\n\n圖鑑：" + wiki.path + "（僅引用，未建立時先執行獨立圖鑑步驟；不可重複生成）。";
     }
