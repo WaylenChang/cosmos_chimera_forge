@@ -1153,6 +1153,49 @@
   tip.setAttribute("role", "tooltip");
   document.body.append(tip);
   let current = null;
+  // Supply meaningful descriptions to static and dynamically rendered controls.
+  const tooltipDescriptions = {
+    driveSignIn: "使用 Google 帳號登入並連結 Drive 資產",
+    btnGoDesignedFromSubhead: "前往已設計項目清單",
+    drivePromptPath: "目前 Prompt 在 Drive 中的相對儲存路徑",
+    pipelineStage: "選擇要設定或執行的管線步驟",
+    pipelineAppearance: "輸入角色或宙獸的外觀描述，供管線生成使用",
+    pipelineParameters: "編輯本步驟的 JSON 參數",
+    pipelineSource: "指定此 3D 模型對應的來源角色或宙獸 ID",
+    seed: "控制隨機生成結果的種子值",
+    root: "設定輸出資產的根目錄",
+    notes: "輸入會優先套用到 Prompt 的補充要求",
+    prompt: "查看或編輯目前生成的完整 Prompt",
+    favSearch: "依標題、Prompt、主體 ID 或種子搜尋收藏",
+    designedSearch: "搜尋已設計的角色與宙獸",
+    railSearch: "搜尋審查任務、主體或來源包",
+    stage3dClipSelect: "選擇要預覽的 3D 動作片段",
+    stage3dScrubber: "拖曳調整 3D 動作播放進度",
+    customModalInput: "輸入目前對話方塊要求的內容",
+    upgPromptText: "檢視升級後的 Prompt 內容"
+  };
+  const tooltipControls = "button, a, input:not([type=hidden]):not([type=file]), select, textarea, summary, [role=button], [role=tab]";
+  function enrichTooltips(root = document) {
+    const controls = root.matches?.(tooltipControls) ? [root] : [];
+    controls.push(...root.querySelectorAll(tooltipControls));
+    for (const el of controls) {
+      if (el.hasAttribute("data-tip") || el.hasAttribute("title") || el.hasAttribute("aria-description")) continue;
+      const label = el.labels?.[0]?.textContent?.trim()
+        || (el.id && document.querySelector('label[for="' + CSS.escape(el.id) + '"]')?.textContent?.trim());
+      const explicit = tooltipDescriptions[el.id];
+      const accessible = el.getAttribute("aria-label");
+      const text = explicit || accessible || label || el.getAttribute("placeholder")
+        || (el.matches("button, a, summary, [role=button], [role=tab]") ? el.textContent.trim() : "");
+      if (text) el.dataset.tip = text.replace(/\\s+/g, " ").slice(0, 240);
+    }
+  }
+  enrichTooltips();
+  const observer = new MutationObserver(records => {
+    for (const record of records) for (const node of record.addedNodes) {
+      if (node.nodeType === 1 && node.id !== "uiTooltip") enrichTooltips(node);
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
   const selector = "[data-tip], [title], [aria-description]";
   function hide() { current = null; tip.style.display = "none"; }
   function show(target) {
