@@ -157,6 +157,33 @@ test('ambiguous duplicate Drive names fail instead of overwriting arbitrary data
   await assert.rejects(h.context.COSMI_DRIVE.write('prompts/duplicate.prompt.md', new Blob(['x'])), /名稱重複/);
   assert.ok(!h.calls.some(c => c.url.pathname.includes('/upload/')));
 });
+test('legacy Prompt-to-3D migration never invents model or overwrites missing GLB', async () => {
+  const h=harness({handle:u=>{
+    const q=u.searchParams.get('q')||'';
+    if(q==="'ai_blender-id' in parents and trashed = false")return Response.json({files:[
+      {id:'old-model',name:'asset_cr_sample_adult',mimeType:'application/vnd.google-apps.folder'}]});
+    if(q==="'old-model' in parents and trashed = false")return Response.json({files:[
+      {id:'old-models',name:'models',mimeType:'application/vnd.google-apps.folder'}]});
+    if(q==="'old-models' in parents and trashed = false")return Response.json({files:[]});
+    if(q==="'creatures-id' in parents and trashed = false")return Response.json({files:[]});
+  }});
+  await h.login();
+  const report=await h.context.COSMI_DRIVE.migratePrompt3dAssets();
+  assert.equal(report.total,1);
+  assert.equal(report.updated,0);
+  assert.equal(report.skipped,1);
+  assert.match(report.errors.join(','),/無 .glb/);
+  assert.ok(!h.calls.some(call=>call.url.pathname.includes('/upload/')));
+});
+
+test('legacy migration control and encyclopedia directory are present in the build',()=>{
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  assert.match(html,/id="settingsMigratePrompt3d"/);
+  assert.match(source,/04_encyclopedia\/creatures/);
+  assert.match(source,/before_prompt3d_migration\.json/);
+  assert.match(source,/migratePrompt3dAssets/);
+});
+
 test('production build excludes asset and prompt directories and requires OAuth config', () => {
   const env = { ...process.env, GOOGLE_OAUTH_CLIENT_ID: 'invalid-client-id' };
   assert.notEqual(spawnSync(process.execPath, ['tools/build-site.mjs'], { cwd: root, env }).status, 0);
