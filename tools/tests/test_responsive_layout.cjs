@@ -71,3 +71,18 @@ test('responsive rules preserve readable dialogs, touch and viewport sizing', ()
   assert.match(responsive, /#stage3dCanvas\s*\{\s*touch-action:\s*none/);
   assert.match(responsive, /#forgeView textarea#prompt[^}]*min-height/);
 });
+
+test('unified tooltips cover keyboard, touch, and dynamic controls', () => {
+  assert.match(html, /id="uiTooltip"/);
+  assert.match(html, /const tooltipControls =/);
+  assert.match(html, /MutationObserver\(records =>/);
+  assert.match(html, /observer\.observe\(document\.body, \{ childList: true, subtree: true \}\)/);
+  assert.match(html, /e\.pointerType === "touch"/);
+  assert.match(html, /e\.key === "Escape"/);
+  assert.match(html, /document\.addEventListener\("focusin"/);
+  assert.match(html, /text\.replace\(\/\\s\+\/g, " "\)/);
+  for (const id of ['pipelineStage', 'pipelineAppearance', 'pipelineParameters',
+    'prompt', 'stage3dClipSelect', 'stage3dScrubber']) {
+    assert.match(html, new RegExp('\\b' + id + ': "'), 'Missing tooltip description: ' + id);
+  }
+});
