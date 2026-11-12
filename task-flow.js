@@ -9,7 +9,7 @@
   const flow = Object.freeze({
     image: [
       { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定", detail: "只設計外觀與辨識特徵，不混入 3D 或交付指令。", output: "appearance.md" },
-      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成圖鑑", detail: "依概念參數建立角色／宙獸專屬各型態獨立圖鑑，存放在 wiki；不將圖鑑混入模型檔案。", output: "wiki/<characters|creatures>/<subject_id>_<stage>_wiki.md" },
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成圖鑑", detail: "依概念參數建立角色／宙獸專屬各型態獨立圖鑑，存放在 wiki；不將圖鑑混入模型檔案。", output: "wiki/<characters|creatures>/<subject_id>[_<stage>]_wiki.md" },
       { id: "portrait", stage: "portrait", task: "concept", name: "生成立繪", detail: "正面基準圖 → T-pose 多視角 → 動態主立繪；可選手動複製或 Drive 自動模式。", output: "立繪圖片" },
       { id: "review_portrait", stage: "review_portrait", task: "concept", name: "立繪審查", detail: "核對各視角一致性與缺陷；通過後才允許圖片建模。", output: "立繪審查紀錄" },
       { id: "image_colab", stage: "colab", task: "model", name: "Colab ＋ Blender", detail: "Image-to-3D 分支 A：使用已核准立繪，Colab 建模並以 Blender 修復、檢查與輸出。與 AI ＋ Blender 二選一。", output: ".glb ＋ .blend、骨架、動作、QA", alternate: true },
@@ -25,7 +25,7 @@
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "同時查驗已完成的 3D 與補繪立繪；缺立繪、綁定或 .glb／.blend 均不得通過。", output: "最終審查紀錄" }
     ],
     move: [
-      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成招式圖鑑", detail: "先按招式的屬性、功能、外觀與動作需求生成獨立 Markdown 圖鑑，存於 wiki/moves。", output: "wiki/moves/<subject_id>_<stage>_wiki.md" },
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成招式圖鑑", detail: "先按招式的屬性、功能、外觀與動作需求生成獨立 Markdown 圖鑑，存於 wiki/moves。", output: "wiki/moves/<subject_id>_wiki.md" },
       { id: "move_vfx", stage: "move_vfx", task: "concept", name: "招式與特效設計", detail: "獨立招式圖鑑條目：設定屬性、形狀與強度，生成規格、六格分鏡、分層拆解與序列圖。施放者僅用於示範。", output: "spec.json、storyboard、layers、flipbook" }
     ]
   });
