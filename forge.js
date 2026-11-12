@@ -3333,7 +3333,7 @@
     return loadAssetFiles(files, file);
   }
 
-  async function loadAssetFiles(files, file) {
+  async function loadAssetFiles(files, file, {silent = false} = {}) {
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
     let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
     for (const path in files) {
@@ -3410,11 +3410,11 @@
       stagedTaskId: alignedStaged?.taskId || null,
       status: manifestData?.missing?.length ? "missing" : "pending"
     };
-    addPackage(pkg);
+    addPackage(pkg, {silent});
     return pkg;
   }
 
-    function addPackage(pkg) {
+    function addPackage(pkg, {silent = false} = {}) {
       if (!pkg.baseId || pkg.stage === undefined) {
         const info = parsePackageStage(pkg.id, pkg.manifest, pkg.concept);
         pkg.stage = info.stage;
@@ -3429,6 +3429,10 @@
       const idx = reviewState.packages.findIndex(p => p.id === pkg.id);
       if (idx >= 0) reviewState.packages[idx] = pkg;
       else reviewState.packages.unshift(pkg);
+      if (silent) {
+        if (!reviewState.activePkgId) reviewState.activePkgId = pkg.id;
+        return;
+      }
       reviewState.activePkgId = pkg.id;
       if (pkg.stage) reviewState.activeStage = pkg.stage;
       reviewState.activeImgIdx = 0;
@@ -4627,6 +4631,20 @@
     $("#stage3dInfoBadge").textContent = "";
 
     let glbBuffer = targetPkg.glbFile?.buffer || null;
+    if (!glbBuffer && targetPkg.glbFile?.deferred && targetPkg.driveFolderId) {
+      try {
+        const blob = await window.COSMI_DRIVE.read(targetPkg.drivePath + "/" + targetPkg.glbFile.path);
+        // A different package may have been selected while the network request was running.
+        if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        glbBuffer = await blob.arrayBuffer();
+        if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        targetPkg.glbFile = {...targetPkg.glbFile, buffer:glbBuffer, url:URL.createObjectURL(blob), deferred:false};
+      } catch (error) {
+        targetPkg.glbLoadError = true;
+        $("#stage3dClipBadge").textContent = "GLB 下載失敗："+error.message;
+        return;
+      }
+    }
     if (!glbBuffer && targetPkg.rawFiles) {
       for (const p in targetPkg.rawFiles) {
         if (p.endsWith(".glb")) {
