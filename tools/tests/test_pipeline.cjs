@@ -12,9 +12,9 @@ function harness() {
   for (const [key, name] of Object.entries(c.COSMI_PIPELINE.stages)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
   return {c,nodes,ctx:{task:{id:'character-concept'},taskId:'chr-example',subjectId:'chr_one',concept:{hair_palette:['red'],combat_damage:999,appearance:'long coat'},opts:{source_pack:'source'}}};
 }
-test('each stage resolves its own template without copying JSON parameters into prompt', () => {
+test('non-portrait stages resolve their Drive templates without leaking parameters', () => {
   const {c,nodes,ctx}=harness();
-  for (const stage of Object.keys(c.COSMI_PIPELINE.stages)) {
+  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => name !== 'portrait')) {
     nodes.pipelineStage.value=stage;
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.ok(text.length>100);
@@ -22,6 +22,34 @@ test('each stage resolves its own template without copying JSON parameters into 
     assert.ok(text.length<1800);
   }
 });
+
+test('portrait always uses the native task builder even with a legacy Drive template', () => {
+  const {c,nodes,ctx}=harness();
+  nodes.pipelineStage.value='portrait';
+  c.COSMI_PIPELINE.templates.portrait='LEGACY_DRIVE_TEMPLATE';
+  for (const taskId of ['character-concept', 'creature-concept']) {
+    ctx.task.id=taskId;
+    const expected='NATIVE_PORTRAIT_'+taskId;
+    ctx.task.build=received => {
+      assert.equal(received,ctx);
+      return expected;
+    };
+    assert.equal(c.COSMI_PIPELINE.build(ctx),expected);
+  }
+});
+
+test('Drive template loading skips the native portrait stage', async () => {
+  const {c}=harness();
+  const requests=[];
+  c.COSMI_DRIVE={read: async file => {
+    requests.push(file);
+    return {text: async () => file.startsWith('00_settings/') ? '{}' : 'template'};
+  }};
+  await c.COSMI_PIPELINE.loadTemplates();
+  assert.ok(!requests.includes('prompts/01_portrait.prompt.md'));
+  assert.equal(requests.filter(file => file.startsWith('prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-1);
+});
+
 test('appearance prompt includes visual traits and excludes pipeline and format content', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='appearance';
   const text=c.COSMI_PIPELINE.build(ctx);

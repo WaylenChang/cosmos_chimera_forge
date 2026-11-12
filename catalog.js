@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.5.0",
+  version: "2.7.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -53,6 +53,171 @@ window.COSMI_CATALOG = {
     { v: "未知", zh: "未知", desc: "自由發揮未來或架空時空" }
   ],
 
+  // 軟性機率配對：欄位互不綁定、所有跨地區/跨時代組合皆可抽到；只調整相對權重。
+  // 數字是倍數而非機率百分比；「未知」不套用偏好，以利跨文化、移居和架空世界設定。
+  CULTURE_NEIGHBORS: {
+    "東亞": ["東南亞", "中亞/北亞"],
+    "南亞": ["東南亞", "西亞/中東", "中亞/北亞"],
+    "東南亞": ["東亞", "南亞", "大洋洲"],
+    "西亞/中東": ["南亞", "中亞/北亞", "非洲", "歐洲"],
+    "非洲": ["西亞/中東", "歐洲"],
+    "歐洲": ["西亞/中東", "中亞/北亞", "非洲"],
+    "美洲": ["大洋洲", "極地"],
+    "大洋洲": ["東南亞", "美洲"],
+    "中亞/北亞": ["東亞", "南亞", "西亞/中東", "歐洲", "極地"],
+    "極地": ["中亞/北亞", "美洲"]
+  },
+  // 只作為虛構角色生成的設計親和度，並非對個人族裔、遷移或外貌的硬性判定。
+  ETHNICITY_HOME_REGIONS: {
+    "東亞體系": ["東亞"],
+    "東南亞/南島語族體系": ["東南亞"],
+    "南亞/印度河體系": ["南亞"],
+    "中亞/突厥-歐亞體系": ["中亞/北亞"],
+    "西亞/中東-閃米特體系": ["西亞/中東"],
+    "北歐/日耳曼體系": ["歐洲"],
+    "凱爾特/不列顛體系": ["歐洲"],
+    "地中海/南歐體系": ["歐洲"],
+    "東歐/斯拉夫體系": ["歐洲"],
+    "西非/班圖體系": ["非洲"],
+    "東非/庫希特-尼羅特體系": ["非洲"],
+    "北非/柏柏爾-馬格里布體系": ["非洲"],
+    "美洲原住民體系": ["美洲"],
+    "極地/因紐特-薩米體系": ["極地"],
+    "大洋洲/美拉尼西亞-玻里尼西亞體系": ["大洋洲"]
+  },
+  // 文化時間線可以落在任何地區；表中的倍數僅表示題材/風格的相近性。
+  TIMELINE_REGION_AFFINITY: {
+    "遠古石器/部落圖騰紀元": { "非洲": 3, "美洲": 3, "大洋洲": 3, "極地": 3 },
+    "青銅神話/古典英雄時代": { "東亞": 4, "南亞": 4, "西亞/中東": 5, "非洲": 4, "歐洲": 4 },
+    "封建王朝/古典帝國盛世": { "東亞": 6, "南亞": 4, "東南亞": 4, "西亞/中東": 4, "中亞/北亞": 4, "歐洲": 4 },
+    "中世紀高奇幻/騎士魔導王國": { "歐洲": 7, "西亞/中東": 3, "中亞/北亞": 2, "東亞": 2 },
+    "大航海大發現/符文星盤開拓": { "歐洲": 6, "美洲": 4, "大洋洲": 4, "東南亞": 4 },
+    "以太蒸汽/魔導第一次工業革命": { "歐洲": 6, "美洲": 4, "東亞": 3 },
+    "柴油重工/符文鋼鐵要塞": { "歐洲": 5, "美洲": 4, "東亞": 4 },
+    "電氣霓虹/裝飾藝術時代": { "美洲": 5, "歐洲": 5, "東亞": 4, "多元交融/世界都市": 4 },
+    "晶石賽博/霓虹魔導義體紀元": { "東亞": 5, "美洲": 4, "歐洲": 4, "多元交融/世界都市": 6 },
+    "太陽龐克/生態科技綠色未來": { "大洋洲": 4, "東南亞": 4, "非洲": 3, "南亞": 3, "多元交融/世界都市": 5 },
+    "近未來軌道殖民/近地宙域": { "星際宙域/跨星系殖民地": 8, "多元交融/世界都市": 5 },
+    "太空歌劇/星際魔導帝國": { "星際宙域/跨星系殖民地": 10, "多元交融/世界都市": 5 },
+    "虛空超弦/維度升華神代": { "星際宙域/跨星系殖民地": 9, "多元交融/世界都市": 4 }
+  },
+  getEthnicityRegionAffinity(ethnicity, region) {
+    if (!ethnicity || !region || ethnicity === "未知" || region === "未知") return 1;
+    if (ethnicity === "多元混血/跨洲交融體系") {
+      return region === "多元交融/世界都市" ? 14 : region === "星際宙域/跨星系殖民地" ? 6 : 2;
+    }
+    if (ethnicity === "奇幻星民特徵") {
+      return region === "星際宙域/跨星系殖民地" ? 20 : region === "多元交融/世界都市" ? 8 : 1;
+    }
+    if (region === "多元交融/世界都市") return 3;
+    if (region === "星際宙域/跨星系殖民地") return 2;
+    const homes = this.ETHNICITY_HOME_REGIONS[ethnicity] || [];
+    if (homes.includes(region)) return 20;
+    if (homes.some(home => (this.CULTURE_NEIGHBORS[home] || []).includes(region))) return 5;
+    return 1;
+  },
+  getTimelineRegionAffinity(timeline, region) {
+    if (!timeline || !region || timeline === "未知" || region === "未知") return 1;
+    return (this.TIMELINE_REGION_AFFINITY[timeline] || {})[region] || 1;
+  },
+  getWeightedEthnicities(region) {
+    return this.CHARACTER.ethnicity.map(e => Object.assign({}, e, {
+      w: (e.w ?? 1) * this.getEthnicityRegionAffinity(e.v, region)
+    }));
+  },
+  getWeightedRegions(context) {
+    const selected = context || {};
+    return this.CULTURE_REGIONS.map(region => ({
+      v: region,
+      w: this.getEthnicityRegionAffinity(selected.ethnicity, region) *
+        this.getTimelineRegionAffinity(selected.timeline, region)
+    }));
+  },
+  getWeightedTimelines(region) {
+    return this.TIMELINES.map(t => Object.assign({}, t, {
+      w: this.getTimelineRegionAffinity(t.v, region)
+    }));
+  },
+  getArchetypeRegionAffinity(archetypeRegion, region) {
+    if (!archetypeRegion || !region || region === "未知") return 1;
+    if (archetypeRegion === region) return 16;
+    if (region === "多元交融/世界都市") return 3;
+    if (region === "星際宙域/跨星系殖民地") return 2;
+    // 複合區域以最長名稱優先拆解，避免「東南亞」誤匹配成「南亞」。
+    let rest = String(archetypeRegion);
+    const regions = this.CULTURE_REGIONS.slice()
+      .filter(r => r !== "未知" && r !== "多元交融/世界都市" && r !== "星際宙域/跨星系殖民地")
+      .sort((a, b) => b.length - a.length);
+    const parts = [];
+    for (const r of regions) {
+      if (rest.includes(r)) {
+        parts.push(r);
+        rest = rest.replace(r, "");
+      }
+    }
+    if (parts.includes(region)) return 12;
+    if (parts.some(r => (this.CULTURE_NEIGHBORS[region] || []).includes(r))) return 4;
+    return 1;
+  },
+  getWeightedArchetypes(archetypes, region) {
+    return archetypes.map(a => Object.assign({}, a, {
+      w: (a.w ?? 1) * this.getArchetypeRegionAffinity(a.region, region)
+    }));
+  },
+
+  // 配色親和權重：直接 6x、相鄰 4.5x、中性 2.5x、反差 1.5x。
+  // 這是相對抽樣權重，不是每組的固定百分比；所有配色組合均保留。
+  ELEMENT_NEIGHBORS: {
+    metal: ["earth", "thunder", "light"],
+    wood: ["water", "earth", "wind", "light"],
+    water: ["wood", "ice", "wind", "thunder"],
+    fire: ["earth", "light", "thunder"],
+    earth: ["metal", "wood", "fire"],
+    ice: ["water", "wind", "light"],
+    wind: ["wood", "water", "ice", "thunder"],
+    thunder: ["metal", "wind", "water", "fire", "light"],
+    light: ["fire", "metal", "thunder", "wood", "ice"],
+    shadow: ["fire", "water", "ice"]
+  },
+  // 互斥分類：直接 > 中性 > 相鄰 > 反差；避免同一色票在多類重覆計數。
+  getElementColorTier(element, color) {
+    const tags = color?.elements || [];
+    if (!element || element === "未知" || !this.ELEMENT_NEIGHBORS[element]) return "neutral";
+    if (tags.includes(element)) return "direct";
+    if (tags.includes("all")) return "neutral";
+    if (tags.some(tag => this.ELEMENT_NEIGHBORS[element].includes(tag))) return "adjacent";
+    return "contrast";
+  },
+  getElementColorAffinity(element, color) {
+    if (!element || element === "未知" || !color) return 1;
+    return ({direct: 6, adjacent: 4.5, neutral: 2.5, contrast: 1.5})[this.getElementColorTier(element, color)];
+  },
+  getPaletteTierCounts(element) {
+    const counts = { direct: 0, adjacent: 0, neutral: 0, contrast: 0 };
+    this.COLOR_TONES.forEach(color => { counts[this.getElementColorTier(element, color)]++; });
+    return counts;
+  },
+  // 地區與年代只提供小幅風格偏好，不限制任何跨文化、跨時代配色。
+  getColorStyleAffinity(color, context) {
+    if (!context || !color) return 1;
+    const region = context.region, timeline = context.timeline;
+    const near = (this.CULTURE_NEIGHBORS[region] || []).includes(color.region);
+    const regionBoost = region && color.region === region ? 1.5 : near ? 1.2 : 1;
+    const timeBoost = timeline && color.timeline === timeline ? 1.35 : 1;
+    return regionBoost * timeBoost;
+  },
+  getWeightedElements(appearancePalette) {
+    const colors = (appearancePalette || [])
+      .map(v => this.COLOR_TONES.find(c => c.v === v))
+      .filter(Boolean);
+    return this.ELEMENTS.map(e => {
+      const affinity = colors.length
+        ? colors.reduce((sum, color) => sum + this.getElementColorAffinity(e.v, color), 0) / colors.length
+        : 1;
+      return Object.assign({}, e, { w: (e.w ?? 1) * (e.v === "未知" ? 0.5 : affinity) });
+    });
+  },
+
   // 基礎單色系選項池（供角色服裝、頭髮與宙獸外觀多選組合，每項為單色，可多選組合成 1~4 色）
   COLOR_TONES: [
     // 中性通用色（全元素適用，或作基底/高光）
@@ -65,6 +230,8 @@ window.COSMI_CATALOG = {
     { v: "玄鐵青黑", zh: "玄鐵青黑", elements: ["metal", "earth", "shadow", "all"], w: 7 },
     { v: "古銅生鏽綠", zh: "古銅綠", elements: ["metal", "earth", "wood"], w: 6 },
     { v: "黃銅金", zh: "黃銅金", elements: ["metal", "thunder", "light"], w: 7 },
+    { v: "星銀淺青", zh: "星銀淺青", elements: ["metal", "wind", "ice"], w: 7 },
+    { v: "玫瑰鈦金", zh: "玫瑰鈦金", elements: ["metal", "light", "fire"], w: 7 },
 
     // 火系相關
     { v: "熔岩赤紅", zh: "熔岩赤紅", elements: ["fire", "earth"], w: 8 },
@@ -72,6 +239,8 @@ window.COSMI_CATALOG = {
     { v: "珊瑚鮮橘", zh: "珊瑚鮮橘", elements: ["fire", "light", "water"], w: 7 },
     { v: "深酒紅", zh: "深酒紅", elements: ["fire", "shadow"], w: 7 },
     { v: "陶土磚紅", zh: "陶土磚紅", elements: ["earth", "fire"], w: 7 },
+    { v: "餘燼紫紅", zh: "餘燼紫紅", elements: ["fire", "shadow"], w: 7 },
+    { v: "琥珀橙金", zh: "琥珀橙金", elements: ["fire", "light", "earth"], w: 7 },
 
     // 木系相關
     { v: "蒼翡翠", zh: "蒼翡翠", elements: ["wood"], w: 8 },
@@ -79,6 +248,8 @@ window.COSMI_CATALOG = {
     { v: "嫩芽黃綠", zh: "嫩芽黃綠", elements: ["wood", "light"], w: 7 },
     { v: "橄欖墨綠", zh: "橄欖墨綠", elements: ["wood", "earth"], w: 7 },
     { v: "苔綠", zh: "苔蘚綠", elements: ["wood", "earth"], w: 7 },
+    { v: "月苔青綠", zh: "月苔青綠", elements: ["wood", "shadow"], w: 7 },
+    { v: "花靈紫粉", zh: "花靈紫粉", elements: ["wood", "light"], w: 6 },
 
     // 水系相關
     { v: "海軍深藍", zh: "海軍深藍", elements: ["water", "shadow"], w: 8 },
@@ -86,51 +257,224 @@ window.COSMI_CATALOG = {
     { v: "克萊因藍", zh: "克萊因藍", elements: ["water", "thunder"], w: 7 },
     { v: "清透天藍", zh: "清透天藍", elements: ["water", "wind", "ice"], w: 7 },
     { v: "湖水綠", zh: "湖水綠", elements: ["water", "wood"], w: 7 },
+    { v: "潮汐銀藍", zh: "潮汐銀藍", elements: ["water", "metal", "ice"], w: 7 },
+    { v: "深潭藍綠", zh: "深潭藍綠", elements: ["water", "wood", "shadow"], w: 7 },
 
     // 冰系相關
     { v: "冰晶天藍", zh: "冰晶天藍", elements: ["ice", "water"], w: 8 },
     { v: "霜雪透白", zh: "霜雪透白", elements: ["ice", "light"], w: 8 },
     { v: "純淨冰藍", zh: "純淨冰藍", elements: ["ice"], w: 8 },
     { v: "稜鏡淡紫", zh: "稜鏡淡紫", elements: ["ice", "light", "wind"], w: 7 },
+    { v: "冰霧青綠", zh: "冰霧青綠", elements: ["ice", "wind"], w: 7 },
+    { v: "極光粉紫", zh: "極光粉紫", elements: ["ice", "light", "shadow"], w: 7 },
 
     // 風系相關
     { v: "薄荷淺青", zh: "薄荷淺青", elements: ["wind", "water", "ice"], w: 8 },
     { v: "青瓷灰綠", zh: "青瓷灰綠", elements: ["wind", "wood", "water"], w: 7 },
     { v: "流線淡青", zh: "流線淡青", elements: ["wind", "light"], w: 7 },
+    { v: "薄雲青紫", zh: "薄雲青紫", elements: ["wind", "shadow", "ice"], w: 7 },
+    { v: "曉風香檳金", zh: "曉風香檳金", elements: ["wind", "light"], w: 7 },
 
     // 土系相關
     { v: "大地赭石", zh: "大地赭石", elements: ["earth"], w: 8 },
     { v: "卡其棕", zh: "卡其棕", elements: ["earth", "wood", "all"], w: 7 },
     { v: "焦糖茶褐", zh: "焦糖茶褐", elements: ["earth", "wood"], w: 7 },
     { v: "砂岩黃", zh: "砂岩黃", elements: ["earth", "light"], w: 7 },
+    { v: "石英霧白", zh: "石英霧白", elements: ["earth", "metal", "ice"], w: 7 },
+    { v: "礦脈紫褐", zh: "礦脈紫褐", elements: ["earth", "shadow"], w: 7 },
 
     // 雷系相關
     { v: "雷電曜紫", zh: "雷電曜紫", elements: ["thunder", "shadow"], w: 8 },
     { v: "閃電熾黃", zh: "閃電熾黃", elements: ["thunder", "light"], w: 8 },
     { v: "電弧青藍", zh: "電弧青藍", elements: ["thunder", "water"], w: 7 },
+    { v: "電漿翠青", zh: "電漿翠青", elements: ["thunder", "wind", "water"], w: 7 },
+    { v: "雷雲灰紫", zh: "雷雲灰紫", elements: ["thunder", "shadow", "metal"], w: 7 },
 
     // 光系相關
     { v: "耀日光金", zh: "耀日光金", elements: ["light", "thunder", "metal", "fire"], w: 8 },
     { v: "晨曦金", zh: "晨曦金", elements: ["light", "fire"], w: 8 },
     { v: "琥珀金", zh: "琥珀金", elements: ["light", "earth", "thunder"], w: 7 },
     { v: "櫻花粉", zh: "櫻花粉", elements: ["light", "wood"], w: 7 },
+    { v: "星輝淡紫", zh: "星輝淡紫", elements: ["light", "ice", "shadow"], w: 7 },
+    { v: "日輪奶油金", zh: "日輪奶油金", elements: ["light", "earth"], w: 7 },
 
     // 影系相關
     { v: "虛空深紫", zh: "虛空深紫", elements: ["shadow"], w: 8 },
     { v: "暗影幽黑", zh: "暗影幽黑", elements: ["shadow"], w: 8 },
     { v: "丁香淡紫", zh: "丁香淡紫", elements: ["shadow", "wind", "ice", "light"], w: 7 },
-    { v: "緋紅血瞳色", zh: "緋紅血瞳色", elements: ["shadow", "fire"], w: 6 }
+    { v: "緋紅血瞳色", zh: "緋紅血瞳色", elements: ["shadow", "fire"], w: 6 },
+    { v: "夜幕靛藍", zh: "夜幕靛藍", elements: ["shadow", "water"], w: 7 },
+    { v: "幽夜翡翠", zh: "幽夜翡翠", elements: ["shadow", "wood"], w: 7 },
+    // 真實顏料、器物及歷史美術啟發：文化名稱只代表靈感，並非排他性使用地區。
+    { v: "漢紫礦晶", zh: "漢紫礦晶", elements: ["shadow","thunder"], w: 7, region: "東亞", timeline: "青銅神話/古典英雄時代" },
+    { v: "宋瓷雨青", zh: "宋瓷雨青", elements: ["wind","water","wood"], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "朱漆緋紅", zh: "朱漆緋紅", elements: ["fire","earth"], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "印度孔雀藍", zh: "印度孔雀藍", elements: ["water","wind"], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "藏紅花金", zh: "藏紅花金", elements: ["light","fire"], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "占城青釉", zh: "占城青釉", elements: ["water","wood"], w: 7, region: "東南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "波斯孔雀石綠", zh: "波斯孔雀石綠", elements: ["wood","metal"], w: 7, region: "西亞/中東", timeline: "青銅神話/古典英雄時代" },
+    { v: "古埃及藍", zh: "古埃及藍", elements: ["water","metal"], w: 7, region: "非洲", timeline: "青銅神話/古典英雄時代" },
+    { v: "撒哈拉赤赭", zh: "撒哈拉赤赭", elements: ["earth","fire"], w: 7, region: "非洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "中世紀群青", zh: "中世紀群青", elements: ["water","light"], w: 7, region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國" },
+    { v: "泰爾王紫", zh: "泰爾王紫", elements: ["shadow","light"], w: 7, region: "歐洲", timeline: "青銅神話/古典英雄時代" },
+    { v: "瑪雅藍", zh: "瑪雅藍", elements: ["water","wood"], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "安地斯胭脂紅", zh: "安地斯胭脂紅", elements: ["fire","wood"], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "波里尼西亞珊瑚青", zh: "波里尼西亞珊瑚青", elements: ["water","wind"], w: 7, region: "大洋洲", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "絲路青金石藍", zh: "絲路青金石藍", elements: ["metal","water"], w: 7, region: "中亞/北亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "極地極光綠", zh: "極地極光綠", elements: ["wind","ice"], w: 7, region: "極地", timeline: "遠古神話/原始神代" },
+    { v: "賽博夜光桃紅", zh: "賽博夜光桃紅", elements: ["thunder","shadow"], w: 7, region: "多元交融/世界都市", timeline: "晶石賽博/霓虹魔導義體紀元" },
+    { v: "太陽龐克葉金", zh: "太陽龐克葉金", elements: ["wood","light"], w: 7, region: "多元交融/世界都市", timeline: "太陽龐克/生態科技綠色未來" },
+
+    // 跨文化、跨地形與跨時代的低彩度基底（元素中性，適合服裝、材質與細節）。
+    { v: "宣紙雲白", zh: "宣紙雲白", elements: ["all"], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "宋瓷煙灰", zh: "宋瓷煙灰", elements: ["all"], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "墨池霧灰", zh: "墨池霧灰", elements: ["all"], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "絹紗米白", zh: "絹紗米白", elements: ["all"], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "白釉暖灰", zh: "白釉暖灰", elements: ["all"], w: 7, region: "東亞", timeline: "青銅神話/古典英雄時代" },
+    { v: "檀香米灰", zh: "檀香米灰", elements: ["all"], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "古棉麻白", zh: "古棉麻白", elements: ["all"], w: 7, region: "南亞", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "砂金霧灰", zh: "砂金霧灰", elements: ["all"], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "香料褐灰", zh: "香料褐灰", elements: ["all"], w: 7, region: "南亞", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "椰纖暖米", zh: "椰纖暖米", elements: ["all"], w: 7, region: "東南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "雨林霧灰", zh: "雨林霧灰", elements: ["all"], w: 7, region: "東南亞", timeline: "太陽龐克/生態科技綠色未來" },
+    { v: "藤編淺褐", zh: "藤編淺褐", elements: ["all"], w: 7, region: "東南亞", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "稻穗米白", zh: "稻穗米白", elements: ["all"], w: 7, region: "東南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "羊皮紙乳白", zh: "羊皮紙乳白", elements: ["all"], w: 7, region: "西亞/中東", timeline: "封建王朝/古典帝國盛世" },
+    { v: "沙岩暖灰", zh: "沙岩暖灰", elements: ["all"], w: 7, region: "西亞/中東", timeline: "青銅神話/古典英雄時代" },
+    { v: "石膏米白", zh: "石膏米白", elements: ["all"], w: 7, region: "西亞/中東", timeline: "青銅神話/古典英雄時代" },
+    { v: "香柏煙灰", zh: "香柏煙灰", elements: ["all"], w: 7, region: "西亞/中東", timeline: "封建王朝/古典帝國盛世" },
+    { v: "尼羅河泥灰", zh: "尼羅河泥灰", elements: ["all"], w: 7, region: "非洲", timeline: "青銅神話/古典英雄時代" },
+    { v: "沙丘月白", zh: "沙丘月白", elements: ["all"], w: 7, region: "非洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "亞麻漂白", zh: "亞麻漂白", elements: ["all"], w: 7, region: "非洲", timeline: "青銅神話/古典英雄時代" },
+    { v: "黑陶霧灰", zh: "黑陶霧灰", elements: ["all"], w: 7, region: "非洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "大理石霧白", zh: "大理石霧白", elements: ["all"], w: 7, region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國" },
+    { v: "哥德石板灰", zh: "哥德石板灰", elements: ["all"], w: 7, region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國" },
+    { v: "羊毛薄灰", zh: "羊毛薄灰", elements: ["all"], w: 7, region: "歐洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "古堡砂灰", zh: "古堡砂灰", elements: ["all"], w: 7, region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國" },
+    { v: "鉛玻璃霧銀", zh: "鉛玻璃霧銀", elements: ["all"], w: 7, region: "歐洲", timeline: "電氣霓虹/裝飾藝術時代" },
+    { v: "灰岩壁畫底", zh: "灰岩壁畫底", elements: ["all"], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "玉米纖維米白", zh: "玉米纖維米白", elements: ["all"], w: 7, region: "美洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "安地斯羊駝灰", zh: "安地斯羊駝灰", elements: ["all"], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "乾燥陶土灰", zh: "乾燥陶土灰", elements: ["all"], w: 7, region: "美洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "珊瑚砂乳白", zh: "珊瑚砂乳白", elements: ["all"], w: 7, region: "大洋洲", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "貝殼粉灰", zh: "貝殼粉灰", elements: ["all"], w: 7, region: "大洋洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "火山浮石灰", zh: "火山浮石灰", elements: ["all"], w: 7, region: "大洋洲", timeline: "遠古神話/原始神代" },
+    { v: "漂流木煙褐", zh: "漂流木煙褐", elements: ["all"], w: 7, region: "大洋洲", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "草原毛氈灰", zh: "草原毛氈灰", elements: ["all"], w: 7, region: "中亞/北亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "凍原暮白", zh: "凍原暮白", elements: ["all"], w: 7, region: "極地", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "冰蝕石灰", zh: "冰蝕石灰", elements: ["all"], w: 7, region: "極地", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "羊脂玉灰", zh: "羊脂玉灰", elements: ["all"], w: 7, region: "中亞/北亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "北境雪霧灰", zh: "北境雪霧灰", elements: ["all"], w: 7, region: "極地", timeline: "遠古神話/原始神代" },
+    { v: "軌道鈦灰", zh: "軌道鈦灰", elements: ["all"], w: 7, region: "星際宙域/跨星系殖民地", timeline: "近未來軌道殖民/近地宙域" },
+    { v: "太空陶瓷白", zh: "太空陶瓷白", elements: ["all"], w: 7, region: "星際宙域/跨星系殖民地", timeline: "太空歌劇/星際魔導帝國" },
+    { v: "廢土水泥灰", zh: "廢土水泥灰", elements: ["all"], w: 7, region: "多元交融/世界都市", timeline: "後啟示末日/廢土殘響重生" },
+    { v: "星港膠銀", zh: "星港膠銀", elements: ["all"], w: 7, region: "星際宙域/跨星系殖民地", timeline: "太空歌劇/星際魔導帝國" },
+    { v: "雲端石墨灰", zh: "雲端石墨灰", elements: ["all"], w: 7, region: "多元交融/世界都市", timeline: "晶石賽博/霓虹魔導義體紀元" },
+    { v: "微塵薄銀", zh: "微塵薄銀", elements: ["all"], w: 7, region: "星際宙域/跨星系殖民地", timeline: "虛空超弦/維度升華神代" },
+    { v: "生態纖維米", zh: "生態纖維米", elements: ["all"], w: 7, region: "多元交融/世界都市", timeline: "太陽龐克/生態科技綠色未來" },
+
+    // 文化與時空的風格跳色：無預設元素歸屬，供所有屬性生成反差組合。
+    { v: "漢宮朱砂霞", zh: "漢宮朱砂霞", elements: [], w: 7, region: "東亞", timeline: "青銅神話/古典英雄時代" },
+    { v: "唐錦海棠紅", zh: "唐錦海棠紅", elements: [], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "和紙紫藤色", zh: "和紙紫藤色", elements: [], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "青花瓷靛", zh: "青花瓷靛", elements: [], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "漆器烏梅紫", zh: "漆器烏梅紫", elements: [], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "松煙藍墨", zh: "松煙藍墨", elements: [], w: 7, region: "東亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "孔雀翎碧藍", zh: "孔雀翎碧藍", elements: [], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "孟加拉胭脂桃", zh: "孟加拉胭脂桃", elements: [], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "莫臥兒寶石綠", zh: "莫臥兒寶石綠", elements: [], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "紗麗芒果橙", zh: "紗麗芒果橙", elements: [], w: 7, region: "南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "恆河晨霞粉", zh: "恆河晨霞粉", elements: [], w: 7, region: "南亞", timeline: "遠古神話/原始神代" },
+    { v: "蓮華紫靛", zh: "蓮華紫靛", elements: [], w: 7, region: "南亞", timeline: "遠古神話/原始神代" },
+    { v: "蘭花霓紫", zh: "蘭花霓紫", elements: [], w: 7, region: "東南亞", timeline: "太陽龐克/生態科技綠色未來" },
+    { v: "雨季翠玉光", zh: "雨季翠玉光", elements: [], w: 7, region: "東南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "佛塔金漆橙", zh: "佛塔金漆橙", elements: [], w: 7, region: "東南亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "熱帶蜥藍", zh: "熱帶蜥藍", elements: [], w: 7, region: "東南亞", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "棕櫚影青", zh: "棕櫚影青", elements: [], w: 7, region: "東南亞", timeline: "太陽龐克/生態科技綠色未來" },
+    { v: "緋羽紅", zh: "緋羽紅", elements: [], w: 7, region: "東南亞", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "波斯釉孔雀青", zh: "波斯釉孔雀青", elements: [], w: 7, region: "西亞/中東", timeline: "封建王朝/古典帝國盛世" },
+    { v: "土耳其石藍", zh: "土耳其石藍", elements: [], w: 7, region: "西亞/中東", timeline: "封建王朝/古典帝國盛世" },
+    { v: "伊斯法罕青琉璃", zh: "伊斯法罕青琉璃", elements: [], w: 7, region: "西亞/中東", timeline: "封建王朝/古典帝國盛世" },
+    { v: "沙漠玫瑰粉", zh: "沙漠玫瑰粉", elements: [], w: 7, region: "西亞/中東", timeline: "遠古神話/原始神代" },
+    { v: "香料番紅花橙", zh: "香料番紅花橙", elements: [], w: 7, region: "西亞/中東", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "宮廷深石榴", zh: "宮廷深石榴", elements: [], w: 7, region: "西亞/中東", timeline: "封建王朝/古典帝國盛世" },
+    { v: "努比亞黑曜金", zh: "努比亞黑曜金", elements: [], w: 7, region: "非洲", timeline: "青銅神話/古典英雄時代" },
+    { v: "尼羅鳶尾紫", zh: "尼羅鳶尾紫", elements: [], w: 7, region: "非洲", timeline: "青銅神話/古典英雄時代" },
+    { v: "撒哈拉日落橙", zh: "撒哈拉日落橙", elements: [], w: 7, region: "非洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "薩赫勒紅泥", zh: "薩赫勒紅泥", elements: [], w: 7, region: "非洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "阿散蒂金絲", zh: "阿散蒂金絲", elements: [], w: 7, region: "非洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "東非海岸靛紅", zh: "東非海岸靛紅", elements: [], w: 7, region: "非洲", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "拜占庭馬賽克藍", zh: "拜占庭馬賽克藍", elements: [], w: 7, region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國" },
+    { v: "文藝復興赭玫", zh: "文藝復興赭玫", elements: [], w: 7, region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國" },
+    { v: "哥德彩窗紫", zh: "哥德彩窗紫", elements: [], w: 7, region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國" },
+    { v: "普魯士深藍", zh: "普魯士深藍", elements: [], w: 7, region: "歐洲", timeline: "以太蒸汽/魔導第一次工業革命" },
+    { v: "巴洛克孔雀綠", zh: "巴洛克孔雀綠", elements: [], w: 7, region: "歐洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "裝飾藝術玫瑰金", zh: "裝飾藝術玫瑰金", elements: [], w: 7, region: "歐洲", timeline: "電氣霓虹/裝飾藝術時代" },
+    { v: "阿茲特克松石綠", zh: "阿茲特克松石綠", elements: [], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "印加日耀金", zh: "印加日耀金", elements: [], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "瑪雅靛藍釉", zh: "瑪雅靛藍釉", elements: [], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "安地斯莓果紫", zh: "安地斯莓果紫", elements: [], w: 7, region: "美洲", timeline: "封建王朝/古典帝國盛世" },
+    { v: "羽蛇青藍", zh: "羽蛇青藍", elements: [], w: 7, region: "美洲", timeline: "遠古神話/原始神代" },
+    { v: "北美楓葉銅橙", zh: "北美楓葉銅橙", elements: [], w: 7, region: "美洲", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "海島夕照桃", zh: "海島夕照桃", elements: [], w: 7, region: "大洋洲", timeline: "大航海大發現/符文星盤開拓" },
+    { v: "珊瑚礁孔雀綠", zh: "珊瑚礁孔雀綠", elements: [], w: 7, region: "大洋洲", timeline: "太陽龐克/生態科技綠色未來" },
+    { v: "火山玻璃海藍", zh: "火山玻璃海藍", elements: [], w: 7, region: "大洋洲", timeline: "遠古神話/原始神代" },
+    { v: "海洋夜光紫", zh: "海洋夜光紫", elements: [], w: 7, region: "大洋洲", timeline: "遠古神話/原始神代" },
+    { v: "赭土圖騰赤", zh: "赭土圖騰赤", elements: [], w: 7, region: "大洋洲", timeline: "遠古石器/部落圖騰紀元" },
+    { v: "絲路礦晶藍", zh: "絲路礦晶藍", elements: [], w: 7, region: "中亞/北亞", timeline: "封建王朝/古典帝國盛世" },
+    { v: "草原火焰橙", zh: "草原火焰橙", elements: [], w: 7, region: "中亞/北亞", timeline: "遠古神話/原始神代" },
+    { v: "天山薰衣紫", zh: "天山薰衣紫", elements: [], w: 7, region: "中亞/北亞", timeline: "遠古神話/原始神代" },
+    { v: "極光蜜綠", zh: "極光蜜綠", elements: [], w: 7, region: "極地", timeline: "遠古神話/原始神代" },
+    { v: "永夜磁藍", zh: "永夜磁藍", elements: [], w: 7, region: "極地", timeline: "虛空超弦/維度升華神代" },
+    { v: "賽博故障粉", zh: "賽博故障粉", elements: [], w: 7, region: "多元交融/世界都市", timeline: "晶石賽博/霓虹魔導義體紀元" },
+    { v: "極光量子洋紅", zh: "極光量子洋紅", elements: [], w: 7, region: "星際宙域/跨星系殖民地", timeline: "虛空超弦/維度升華神代" },
+    { v: "蒸汽黃銅鏽綠", zh: "蒸汽黃銅鏽綠", elements: [], w: 7, region: "歐洲", timeline: "以太蒸汽/魔導第一次工業革命" },
+    { v: "柴油機油紫", zh: "柴油機油紫", elements: [], w: 7, region: "多元交融/世界都市", timeline: "柴油重工/符文鋼鐵要塞" },
+    { v: "太陽帆螢青", zh: "太陽帆螢青", elements: [], w: 7, region: "多元交融/世界都市", timeline: "太陽龐克/生態科技綠色未來" },
+    { v: "星門相位藍", zh: "星門相位藍", elements: [], w: 7, region: "星際宙域/跨星系殖民地", timeline: "太空歌劇/星際魔導帝國" },
+    { v: "廢土黃鏽橙", zh: "廢土黃鏽橙", elements: [], w: 7, region: "多元交融/世界都市", timeline: "後啟示末日/廢土殘響重生" }
   ],
 
-  // 取得受元素限定範圍的色系池（排除與元素不合的色系）
-  getFilteredPalettes(creatureElements) {
-    if (!creatureElements || !creatureElements.length) return this.COLOR_TONES;
-    const cleanElems = creatureElements.map(e => e.replace(/（.*）/, "").replace(/\(.*?\)/, "").trim());
-    if (cleanElems.includes("未知") || !cleanElems.length) return this.COLOR_TONES;
-    return this.COLOR_TONES.filter(c => {
-      if (c.elements.includes("all")) return true;
-      return cleanElems.some(el => c.elements.includes(el));
+  // 配色不依屬性硬過濾；直接 6x、相鄰 4.5x、中性 2.5x、反差 1.5x。
+  // 仍保留全部色系且權重 > 0，適用於反差色、異化與混搭造型。
+  getWeightedPalettes(creatureElements, styleContext) {
+    const elements = (creatureElements || []).filter(e => e && e !== "未知");
+    return this.COLOR_TONES.map(color => {
+      const affinity = elements.length
+        ? Math.max(...elements.map(e => this.getElementColorAffinity(e, color)))
+        : 1;
+      return Object.assign({}, color, {
+        w: (color.w ?? 1) * affinity * this.getColorStyleAffinity(color, styleContext)
+      });
     });
+  },
+  // 依色彩語意判斷近似主色相；僅用於多色抽選時的柔性防重複，不影響手動選色。
+  getColorFamily(name) {
+    const color = String(name || "");
+    if (/黑|曜石|玄鐵|暗影|炭煙/.test(color)) return "black";
+    if (/銀|白|霜雪|石英/.test(color)) return "white";
+    if (/紫|丁香|稜鏡|靛/.test(color)) return "purple";
+    if (/粉|櫻|玫瑰/.test(color)) return "pink";
+    if (/紅|赤|熔岩|烈焰|緋/.test(color)) return "red";
+    if (/橘|珊瑚|琥珀/.test(color)) return "orange";
+    if (/黃|金|砂岩|奶油|香檳/.test(color)) return "yellow";
+    if (/綠|翠|苔|橄欖|薄荷/.test(color)) return "green";
+    if (/藍|青|海軍|潮汐|電漿/.test(color)) return "blue";
+    if (/褐|棕|卡其|焦糖|赭/.test(color)) return "brown";
+    if (/灰|煙/.test(color)) return "gray";
+    return "custom:" + color;
+  },
+  getVariedPaletteOptions(options, selected) {
+    const used = new Set((selected || []).map(name => this.getColorFamily(name)));
+    return (options || []).map(c => Object.assign({}, c, {
+      // 同色相仍可重複，僅縮小相對權重，避免 1~4 色全落於同一色族。
+      w: (c.w ?? 1) * (used.has(this.getColorFamily(c.v)) ? 0.55 : 1)
+    }));
+  },
+
+  // 保留舊呼叫介面，但行為改為軟性機率加權，不再排除不相符的色系。
+  getFilteredPalettes(creatureElements) {
+    return this.getWeightedPalettes(creatureElements);
   },
 
   // 依角色/宙獸色系判定 2D AGC 立繪背景色（RGB 三通道嚴格均等）
