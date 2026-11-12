@@ -946,6 +946,7 @@
       routes.replaceChildren();
       box.replaceChildren();
       detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"① 先選擇角色、宙獸或招式。"));
+      renderDesigned();
       return;
     }
     const routeDefs = kind === "move" ? [] : [
@@ -960,6 +961,7 @@
     if (!choice.route || !active) {
       box.replaceChildren();
       detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"② 請選擇管線，接著點選流程圖節點。"));
+      renderDesigned();
       return;
     }
     const rows = taskFlow.diagram(kind, choice.route);
