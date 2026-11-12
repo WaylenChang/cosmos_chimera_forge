@@ -92,7 +92,7 @@
       "；骨架／機構策略：" + anatomy.rig +
       "。依指定原型與實際肢體建立專用動作，混合／不明拓撲先審查，不可擅套人形 Rig。" : filled;
     return stage === "blender" && route === "text" && kind === "creature"
-      ? typed + "\n純文字宙獸建模需建立或更新 04_encyclopedia/creatures/" + ctx.subjectId + ".md，記錄四階外觀、生態與演化，並在模型 manifest 關聯該圖鑑。圖片建模與角色不強制產生圖鑑。" : typed;
+      ? typed + "\n純文字宙獸建模需建立或更新 04_encyclopedia/creatures/" + ctx.subjectId + "_wiki.md，記錄四階外觀、生態與演化，並在模型 manifest 關聯該圖鑑。圖片建模與角色不強制產生圖鑑." : typed;
   }
   async function loadTemplates() {
     const entries = Object.entries(stages).filter(([key]) => !["portrait", "encyclopedia"].includes(key));
