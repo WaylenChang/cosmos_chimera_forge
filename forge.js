@@ -890,8 +890,10 @@
     if (!selected) return;
     flowSelection = selected;
     state.flowChoice = selected;
-    state.taskId = taskFlow.categoryTask?.(category) ||
-      (category === "move" ? "move-vfx" : category === "character" ? "character-concept" : "creature-concept");
+    state.taskId = category === "move" ? "move-vfx"
+      : category === "character" ? "character-concept" : "creature-concept";
+    const stage = $("#pipelineStage");
+    if (stage && category !== "move") stage.value = "appearance";
     if (category === "move") {
       chooseRoute("move");
       return;
