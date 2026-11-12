@@ -43,9 +43,23 @@
     return template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定");
   }
   async function loadTemplates() {
-    const saved = JSON.parse(await (await window.COSMI_DRIVE.read("00_settings/default.parameters.json")).text());
-    if ($("pipelineParameters")) $("pipelineParameters").value = JSON.stringify(saved, null, 2);
-    for (const [key, name] of Object.entries(stages)) templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
+    const entries = Object.entries(stages);
+    const jobs = entries.map(async ([key, name]) => {
+      try {
+        templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
+      } catch (error) {
+        console.warn("無法讀取管線模板：" + name, error);
+      }
+    });
+    jobs.push((async () => {
+      try {
+        const saved = JSON.parse(await (await window.COSMI_DRIVE.read("00_settings/default.parameters.json")).text());
+        if ($("pipelineParameters")) $("pipelineParameters").value = JSON.stringify(saved, null, 2);
+      } catch (error) {
+        console.warn("使用預設管線參數：", error);
+      }
+    })());
+    await Promise.all(jobs);
   }
   window.COSMI_PIPELINE = { stages, templates, defaults, parameters, appearance, supports, build, loadTemplates };
   document.addEventListener("DOMContentLoaded", () => {
