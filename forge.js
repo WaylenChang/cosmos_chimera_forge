@@ -135,6 +135,7 @@
     const isChr = (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr"));
     const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
     state.taskId = targetTaskId;
+    flowSelection = null; state.flowChoice = null;
     const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
     const o = taskOpts(t);
     o.scope = "single";
@@ -873,7 +874,8 @@
   let flowSelection = null;
   function currentFlow() {
     if (!taskFlow) return null;
-    const selected = flowSelection && taskFlow.resolve(flowSelection.category, flowSelection.route, flowSelection.step);
+    const choice = flowSelection || state.flowChoice;
+    const selected = choice && taskFlow.resolve(choice.category, choice.route, choice.step);
     if (selected && selected.taskId === state.taskId) return selected;
     const inferred = taskFlow.infer(state.taskId, $("#pipelineStage")?.value, taskOpts(task()));
     return inferred ? taskFlow.resolve(inferred.category, inferred.route, inferred.step) : null;
@@ -882,6 +884,7 @@
     const selected = taskFlow?.resolve(category, route, step);
     if (!selected) return;
     flowSelection = {category, route, step};
+    state.flowChoice = flowSelection;
     state.taskId = selected.taskId;
     state.currentRound = selected.stage === "portrait" ? 1 : 0;
     const stage = $("#pipelineStage");
@@ -904,6 +907,7 @@
     const active = currentFlow();
     if (!active) { box.replaceChildren(); categories.replaceChildren(); routes.replaceChildren(); detail.replaceChildren(); return; }
     flowSelection = {category: active.category, route: active.route, step: active.step};
+    state.flowChoice = flowSelection;
     categories.replaceChildren(...taskFlow.categories.map(c => el("button", {
       type:"button", class:c.id === active.category ? "on" : "",
       "aria-pressed":String(c.id === active.category), "aria-label":"選擇" + c.zh, "data-tip":"切換至" + c.zh + "任務",
@@ -937,6 +941,7 @@
     state.preset = lineId;
     state.presetChar = null;
     state.taskId = taskId;
+    flowSelection = null; state.flowChoice = null;
     state.currentRound = 1;
     const o = state.opts[taskId] || (state.opts[taskId] = {});
     if (stage) o.stage = stage;
@@ -952,6 +957,7 @@
     state.preset = null;
     state.presetChar = charId;
     state.taskId = taskId || "character-concept";
+    flowSelection = null; state.flowChoice = null;
     state.currentRound = 1;
     const o = state.opts[state.taskId] || (state.opts[state.taskId] = {});
     if (state.taskId === "character-model-rig") {
@@ -5734,7 +5740,7 @@
         catalog: C.version, seed: state.seed, platform: state.platform, taskId: state.taskId, includeReview: state.includeReview,
         character: state.character, creature: state.creature, locks: state.locks, opts: state.opts, notes: state.notes,
         subjectIds: state.subjectIds, history: state.history, root: state.root, customOptions: state.customOptions,
-        preset: state.preset, presetChar: state.presetChar
+        preset: state.preset, presetChar: state.presetChar, flowChoice: state.flowChoice
       }));
     } catch (e) {}
   }
@@ -5749,6 +5755,7 @@
       Object.assign(state, {
         platform: d.platform || "chatgpt", history: d.history || [], root: d.root && !/^(?:[a-z]:|[\\/])/i.test(d.root) ? d.root : DEFAULT_ROOT, notes: d.notes || "",
         customOptions: d.customOptions || {},
+        flowChoice: d.flowChoice || null,
         preset: DESIGNED.some(x => x.line_id === d.preset) ? d.preset : null,
         presetChar: DESIGNED_CHARACTERS.some(x => x.id === d.presetChar) ? d.presetChar : null
       });
