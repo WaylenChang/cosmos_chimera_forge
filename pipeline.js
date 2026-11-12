@@ -32,42 +32,20 @@
     const base = ctx.concept || {};
     const selected = base.locked?.stages?.find(s => s.stage === ctx.opts?.stage) || {};
     const c = {...base, ...selected, stage: ctx.opts?.stage || base.stage};
-    const fields = ["name_zh", "name_en", "stage", "gender", "age", "body_type", "outfit_palette", "hair_palette", "eye_palette", "silhouette_keywords", "style", "pose", "element_palettes", "elements", "size_profile", "height", "height_length", "appearance", "look", "size_class", "appearance_palette", "hair", "eyes", "outfit", "accessories", "base_parents", "bases", "archetype", "motifs", "disposition", "formula"];
+    const fields = ["name_zh", "name_en", "stage", "gender", "age", "height", "height_length", "body_type", "size_class", "size_profile", "silhouette_keywords", "appearance", "look", "style", "pose", "outfit_palette", "hair_palette", "eye_palette", "element_palettes", "appearance_palette", "elements", "hair", "eyes", "outfit", "accessories", "bases", "archetype", "motifs"];
     const lines = fields.filter(k => c[k] != null).map(k => k + ": " + (typeof c[k] === "object" ? JSON.stringify(c[k]) : c[k]));
     return $("pipelineAppearance")?.value.trim() || lines.join("\n") || "請填入角色／宙獸的外觀設定";
   }
   function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(ctx.task.id); }
-  // A stale Drive 3D template must not override the current production contract.
-  const threeDFallback = {
-    colab: [
-      "# Colab GPU Image-to-3D",
-      "{{model_input}}",
-      "參數：`{{parameters_path}}`　輸出：`{{output_path}}/`",
-      "",
-      "確認 GPU 與所選模型可運作；Colab 產生初始網格後須經 Blender 修整、綁骨、檢查與最終匯出，無法執行時回報阻塞。",
-      "1. 先判定原型（人形、怪物、生物、奇幻生物、超自然物件），搜尋並查看解剖、造型、材質、骨架與運動參考；無法查詢則註明。",
-      "2. 只依本次圖片／外觀全新設計模型、材質、骨架和動作；不得套用、改造或抄襲舊 3D 檔。生物使用合適蒙皮，機械使用正確剛性關節。",
-      "3. 在 Blender 完成製作，直接儲存 `models/{{asset_id}}.blend` 並匯出 `models/{{asset_id}}.glb`；依參數建立動畫，保留有效 UV、貼圖與骨架。",
-      "4. 每次修改後檢查正、背、左、右、上、下及動作關鍵幀：臉部／感知器官不被遮擋；軀幹與各部位完整連接；無破面、孔洞、透視露空、錯誤法線／材質、部件互穿、離體或各自亂移，拓撲乾淨。修正後重檢。",
-      "5. 重開 `.blend`、重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，列明缺件或限制；不交 ZIP。",
-      "",
-      "{{bestiary}}",
-    ].join("\n"),
-    blender: [
-      "# Blender Image-to-3D／Prompt-to-3D",
-      "{{model_input}}",
-      "參數：`{{parameters_path}}`　輸出：`{{output_path}}/`",
-      "",
-      "直接操作 Blender；有圖以本次圖片為準，無圖以本次外觀為準，不以簡單幾何堆疊充當完成品。",
-      "1. 先判定原型（人形、怪物、生物、奇幻生物、超自然物件），搜尋並查看解剖、造型、材質、骨架與運動參考；無法查詢則註明。",
-      "2. 只依本次圖片／外觀全新設計模型、材質、骨架和動作；不得套用、改造或抄襲舊 3D 檔。生物使用合適蒙皮，機械使用正確剛性關節。",
-      "3. 在 Blender 完成製作，直接儲存 `models/{{asset_id}}.blend` 並匯出 `models/{{asset_id}}.glb`；依參數建立動畫，保留有效 UV、貼圖與骨架。",
-      "4. 每次修改後檢查正、背、左、右、上、下及動作關鍵幀：臉部／感知器官不被遮擋；軀幹與各部位完整連接；無破面、孔洞、透視露空、錯誤法線／材質、部件互穿、離體或各自亂移，拓撲乾淨。修正後重檢。",
-      "5. 重開 `.blend`、重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，列明缺件或限制；不交 ZIP。",
-      "",
-      "{{bestiary}}",
-    ].join("\n")
+  // A task runs from exactly one versioned stage template; stale Drive files cannot inject old steps.
+  const localTemplates = {
+    "appearance": "# 外觀設定\n依本次素材撰寫繁體中文原創外觀，只描述輪廓、體型比例、臉／感知器官、肢體、配色材質、服裝／表面構造與辨識特徵；保留已定特徵，不加入遊戲數值或後續製圖、建模指示。\n素材：\n{{appearance}}",
+    "review_portrait": "# 立繪審查\n待審：{{input_path}}/\n依該包外觀與參數檢查圖檔完整性、全身構造、視角與配色一致性、遮擋、瑕疵及水印。\n輸出逐檔缺陷、位置與建議通過／退件；只供人工決策，不修圖、不移動資產或代為核准。",
+    "colab": "# Colab GPU Image-to-3D\n{{model_input}}\n參數：`{{parameters_path}}`；輸出：`{{output_path}}/`\n先確認 Colab GPU 與生成模型可用，產生初始網格後交 Blender 修整、綁骨與匯出；無法執行則說明阻塞。\n1. 判定原型（人形、怪物、生物、奇幻生物或超自然物件），查閱相關外形、解剖、材質、骨架與運動資料；無法查閱則註明。\n2. 依本次輸入全新設計並建模，不套用或抄襲舊 3D 檔；依生物或機械構造配置蒙皮、關節與動作。\n3. 由 Blender 直接儲存 `models/{{asset_id}}.blend`、匯出 `models/{{asset_id}}.glb`，保留拓撲、UV、材質與骨架。\n4. 每次修改後檢查正、背、左、右、上、下視角及動作關鍵幀：臉／感知器官不被遮擋，軀幹與肢體完整連接；無破面、孔洞、透視露空、錯誤法線／貼圖、部件互穿、離體或關節錯位及各部位獨立亂移。\n5. 重開 `.blend` 並重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，記錄未完成項；不交 ZIP。",
+    "blender": "# Blender Image-to-3D／Prompt-to-3D\n{{model_input}}\n參數：`{{parameters_path}}`；輸出：`{{output_path}}/`\n直接以 Blender 製作完整模型，不以粗糙幾何堆疊充當成品。\n1. 判定原型（人形、怪物、生物、奇幻生物或超自然物件），查閱相關外形、解剖、材質、骨架與運動資料；無法查閱則註明。\n2. 依本次輸入全新設計並建模，不套用或抄襲舊 3D 檔；依生物或機械構造配置蒙皮、關節與動作。\n3. 由 Blender 直接儲存 `models/{{asset_id}}.blend`、匯出 `models/{{asset_id}}.glb`，保留拓撲、UV、材質與骨架。\n4. 每次修改後檢查正、背、左、右、上、下視角及動作關鍵幀：臉／感知器官不被遮擋，軀幹與肢體完整連接；無破面、孔洞、透視露空、錯誤法線／貼圖、部件互穿、離體或關節錯位及各部位獨立亂移。\n5. 重開 `.blend` 並重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，記錄未完成項；不交 ZIP。\n{{bestiary}}",
+    "review_3d": "# 3D 模型審查\n模型：{{input_path}}/；來源立繪：{{source_path}}/\n依立繪、參數與 manifest 檢查 GLB／Blend 可用性、拓撲、材質、骨架及動畫變形、穿插與來源追溯。\n缺已核准立繪或 `.glb`／`.blend` 不得建議通過。列明問題檔案及建議通過／退件；不補檔、不移動資產或代為核准。"
   };
+  const templateMarker = stage => "<!-- COSMI-PIPELINE/2:" + stage + " -->";
   function isCreature(ctx) {
     const id = ctx.task?.id || "";
     return id.startsWith("creature-") || ctx.task?.needs === "creature" ||
@@ -76,34 +54,43 @@
   function build(ctx) {
     const stage = $("pipelineStage")?.value || "portrait";
     if (stage === "portrait") return ctx.task.build(ctx);
+    const raw = templates[stage];
+    const normalized = typeof raw === "string" ? raw.replace(/\r\n?/g, "\n").trim() : "";
+    const prefix = templateMarker(stage);
+    const template = normalized.startsWith(prefix + "\n") ? normalized.slice(prefix.length).trim() : localTemplates[stage];
+    if (!template) return "此步驟沒有可用的 Prompt 模板。";
     const is3D = stage === "colab" || stage === "blender";
-    const remote = templates[stage];
-    // Old Drive templates lack input isolation and the bestiary slot.
-    const template = is3D && (!remote?.includes("{{model_input}}") || !remote.includes("{{bestiary}}") || !remote.includes("每次修改後"))
-      ? threeDFallback[stage] : remote;
-    if (!template) return "請先從 Drive 讀取本步驟 prompt.md。";
-    const model = window.COSMI_FORGE?.activePackage();
-    const source = stage === "review_3d" ? model?.sourcePack || model?.manifest?.source_pack || "未指定" : ctx.opts?.source_pack || "未指定";
-    const sourcePath = window.COSMI_FORGE?.packages().find(p => p.id === source)?.drivePath || (source === "未指定" ? "未指定" : "01_portraits/" + source);
-    const hasImage = source !== "未指定";
-    const needsAppearance = stage === "appearance" || stage === "review_portrait" || (stage === "blender" && !hasImage);
-    const visual = needsAppearance ? appearance(ctx) : "";
-    const modelInput = hasImage
-      ? "來源立繪：" + sourcePath + "/（source_pack：" + source + "）"
-      : "純文字外觀：\n" + visual + "\nsource_pack：留空（後續須補核准立繪）";
-    const bestiary = is3D && isCreature(ctx)
-      ? "宙獸圖鑑：另建 `bestiary.md`，命名本種，分別描述幼年（juvenile）、少年（adolescent）、成年（adult）、超載（overload）的外觀、虛構生態田野觀察與階段演化；缺圖的形態標明概念推演，不假稱已有模型。"
+    const active = window.COSMI_FORGE?.activePackage();
+    const sourceId = String((stage === "review_3d" ? active?.sourcePack || active?.manifest?.source_pack : ctx.opts?.source_pack) || "").trim();
+    const source = sourceId || "未指定";
+    const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? "01_portraits/" + sourceId : "未指定");
+    const imageHint = String(ctx.opts?.input_img || "").trim();
+    const hasImage = Boolean(sourceId || imageHint || stage === "colab");
+    const visual = stage === "appearance" || (stage === "blender" && !hasImage) ? appearance(ctx) : "";
+    let modelInput = "";
+    if (is3D) {
+      if (hasImage) {
+        const absoluteHint = /^(?:https?:\/\/|01_portraits\/|03_completed\/portraits\/|backup\/)/.test(imageHint);
+        const imgPath = imageHint ? (sourceId && !absoluteHint ? sourcePath + "/" + imageHint.replace(/^\/+/, "") : imageHint) : (sourceId ? sourcePath + "/" : "未指定");
+        modelInput = "輸入圖片：" + imgPath + "\nsource_pack：" + source;
+      } else {
+        modelInput = "純文字外觀：\n" + visual + "\nsource_pack：未指定（後續補核准立繪）";
+      }
+    }
+    const bestiary = stage === "blender" && !hasImage && isCreature(ctx)
+      ? "宙獸圖鑑：另建 `bestiary.md` 並列入 manifest.files；命名本種，分述幼年（juvenile）、少年（adolescent）、成年（adult）、超載（overload）的外觀、生態田野觀察與演化過程。未建模的形態註明概念推演。"
       : "";
+    const activePath = String(active?.drivePath || "");
+    const portraitPath = /^(?:01_portraits|03_completed\/portraits)\//.test(activePath) ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
+    const modelPath = /^(?:02_3d|03_completed\/models)\//.test(activePath) ? activePath : "請指定待審模型目錄";
     const values = {
       appearance: visual, model_input: modelInput, bestiary,
-      asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source,
-      source_path: sourcePath,
-      input_path: model?.drivePath || "請指定輸入資產目錄",
+      asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source, source_path: sourcePath,
+      input_path: stage === "review_portrait" ? portraitPath : modelPath,
       output_path: (stage === "colab" ? "02_3d/colab/" : stage === "blender" ? "02_3d/ai_blender/" : "01_portraits/") + ctx.taskId,
       parameters_path: "00_settings/" + ctx.taskId + ".parameters.json"
     };
-    const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定");
-    return is3D ? filled.replace(/\n{3,}/g, "\n\n").trim() : filled;
+    return template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定").replace(/\n{3,}/g, "\n\n").trim();
   }
   async function loadTemplates() {
     const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
@@ -141,7 +128,7 @@
     }
     const action = $("pipelineRead");
     if (action) {
-      const hint = !isPortrait ? "從 Google Drive 讀取本步驟 Prompt 模板"
+      const hint = !isPortrait ? "使用本步驟精簡 Prompt（Drive 舊版自動略過）"
         : automatic ? "建立完整立繪 Prompt .md 並上傳 Google Drive"
         : "複製目前立繪 Prompt，貼入生成平台";
       action.textContent = !isPortrait ? "📖" : automatic ? "☁" : "📋";

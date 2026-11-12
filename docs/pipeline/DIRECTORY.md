@@ -22,7 +22,7 @@ cosmos_chimera_forge/
     image_backup/              # 歷史立繪備份，不代表已核准
 ```
 
-3D 資產目錄內用 models/、rig/、animations/、previews/、manifest.json；宙獸另交 `bestiary.md`（幼年、少年、成年、超載的外觀、生態田野觀察與演化記錄）。每個版本使用唯一 asset_id；角色與宙獸共用結構，由 manifest.task_type 區別。立繪包涵蓋多個型態時，各模型 source_pack 皆指向同一立繪資產 ID，stage 指定型態。
+3D 資產目錄內用 models/、rig/、animations/、previews/、manifest.json；只有宙獸 Prompt-to-3D 另交 `bestiary.md`（幼年、少年、成年、超載的外觀、生態田野觀察與演化記錄）；所有 Image-to-3D 不產生圖鑑。每個版本使用唯一 asset_id；角色與宙獸共用結構，由 manifest.task_type 區別。立繪包涵蓋多個型態時，各模型 source_pack 皆指向同一立繪資產 ID，stage 指定型態。
 
 格式參數獨立存 JSON；外觀 prompt 不夾帶格式與遊戲數值。審查通過的立繪先不移動；退件整個目錄搬到備份。只有最終人工核可後才能移入完成區；歷史資產不自動視為核可。Prompt 建模缺立繪時，必須補畫、核准並綁定來源才可完成。
 

@@ -1,6 +1,7 @@
-## 2026-11-12 — Tool 2.7.1：3D 管線提示詞精簡與宙獸圖鑑
-- Colab Image-to-3D 與 Blender Image/Prompt-to-3D 改用原型研究、全新 Blender 建模、逐次多視角與動作檢查、直接 .blend/.glb 交付；宙獸另附四形態 `bestiary.md`。
-- 圖片模式不夾帶文字外觀；舊版／缺失的 Drive 3D 模板由新版內建模板取代，避免跨版本重複指令與上下文污染。新增回歸測試。
+## 2026-11-12 — Tool 2.7.1：單步驟提示詞精簡與宙獸圖鑑
+- Colab Image-to-3D 與 Blender Image/Prompt-to-3D 均要求 Blender 原創建模、研究參考與逐次多視角／動作品質檢查，輸出 `.blend`、`.glb`。
+- **僅宙獸 Prompt-to-3D** 產出 `bestiary.md`（四形態外觀、虛構田野觀察、演化）；所有 Image-to-3D 不生成圖鑑。
+- 審閱並精簡外觀、立繪、立繪審查、3D 審查提示詞；版本不符的 Drive 單步驟模板採用內建精簡版。修復原生立繪提示詞遞迴，移除舊 ZIP／存放路徑與全域補充文字污染，新增回歸測試。
 
 ## 2026-11-12 — Tool 2.7.0：Drive 快取與設定頁
 - 新增帳戶隔離的 IndexedDB 資產快取（24 MiB／包、80 MiB／帳戶、TTL 可設定）；登入後快取優先顯示並重新驗證雲端 metadata。
