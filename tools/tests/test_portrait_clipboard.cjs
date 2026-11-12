@@ -28,7 +28,7 @@ test('native portrait prompts retain the original multi-round copy controls', ()
   assert.match(html, /id="btnCopyR3"/);
   assert.match(forge, /\$\("#download"\)\.hidden = Boolean\(portraitCopyOnly\)/);
   assert.match(forge, /const portraitAuto = window\.COSMI_PIPELINE\?\.supports\(b\.ctx\) && window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)/);
-  assert.match(pipeline, /Object\.entries\(stages\)\.filter\(\(\[key\]\) => key !== "portrait"\)/);
+  assert.match(pipeline, /Object\.entries\(stages\)\.filter\(\(\[key\]\) => !\["portrait", "encyclopedia"\]\.includes\(key\)\)/);
 });
 
 test('portrait never requires a Drive template when assembling a prompt', () => {
