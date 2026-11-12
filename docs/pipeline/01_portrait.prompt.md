@@ -1,10 +1,5 @@
 # 生成立繪
-依下列外觀設定與隨附的 parameters.json，繪製原創角色／宙獸。使用乾淨描邊、柔和卡通色塊、清楚剪影；全身完整、四肢結構合理，主體不被文字、水印或背景遮擋。各視角保持臉部、比例、配色與裝備一致。
-
+依本次外觀及 `{{parameters_path}}` 繪製原創角色／宙獸，保持全身完整、比例與多視角特徵一致；無文字／水印及遮擋，依參數指定圖片規格輸出。
 外觀：
 {{appearance}}
-
-參數檔：{{parameters_path}}
-輸出目錄：{{output_path}}/
-
-直接建立 images/ 下各張圖與 concept.json、manifest.json；依參數檔的 delivery 欄位填寫真實產出及 missing，不交壓縮檔。無 Drive 寫入能力時提供原始檔下載並標明目錄，不宣稱已上傳。
+輸出：`{{output_path}}/`；逐檔建立 `images/`、`concept.json`、`manifest.json`，如實記錄缺件；不交 ZIP。

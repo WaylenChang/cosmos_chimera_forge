@@ -21,7 +21,7 @@
 
 `prompts/` 存六個互相獨立的單步驟 `.prompt.md`、`TRIGGERS.md` 與 `DIRECTORY.md`；已填入資產路徑的版本另存 `prompts/jobs/`。舊的跨步驟長 prompt 放 `backup/legacy_prompts/`。本機同步來源見 [docs/pipeline](docs/pipeline/DIRECTORY.md)。
 
-HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
+HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。各步驟只使用本次資產與任務內容；宙獸僅在 Blender **純文字 Prompt-to-3D** 建模時輸出四形態 `bestiary.md`，所有 Image-to-3D 均不產生圖鑑。立繪原生三輪 Prompt 不再附加過時的 ZIP／舊存放路徑。Drive 的單步驟模板若無相容版本標記，網頁採用內建精簡版本；可將 `docs/pipeline/` 中新版 `.prompt.md` 同步至 Drive 的 `prompts/`。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
 
 本機匯入／匯出亦使用展開後的資產目錄。遊戲交付仍可逐檔交給相鄰遊戲專案驗收。Google OAuth 登入需 HTTP(S) 網站來源，無法直接用 file:// 啟用 Drive 功能。
 
