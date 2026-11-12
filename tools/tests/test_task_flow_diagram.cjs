@@ -62,7 +62,7 @@ test('task navigation renders flow connectors and does not infer default route',
   assert.match(html, /\.flow-branch-options/);
   assert.match(forge, /function chooseCategory\(category\)/);
   assert.match(forge, /function chooseRoute\(route\)/);
-  assert.match(forge, /label:"招式特效（VFX）"/);
+  assert.ok(forge.includes('label:"招式特效（VFX）"'));
   assert.doesNotMatch(forge.slice(forge.indexOf('function chooseCategory('), forge.indexOf('function chooseRoute(')), /chooseRoute\("move"\)/);
   assert.match(forge, /if \(!choice\?\.category \|\| !choice\.route \|\| !choice\.step\) return null/);
   assert.match(forge, /taskFlow\.diagram\(kind, choice\.route\)/);
