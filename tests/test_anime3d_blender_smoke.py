@@ -95,6 +95,16 @@ class BlenderSmoke(unittest.TestCase):
         self.assertIn("rotate", qa["covered_clips"])
         self.assertTrue(qa["hard_checks"]["animation_roundtrip"], qa.get("exported_actions"))
 
+    def test_mechanical_slider_native_animations(self):
+        qa = self.process("fixture-slider", {
+            "input_mode": "text", "asset_class": "mechanical", "anatomy": "mechanism",
+            "appearance": "Synthetic sliding panel for QA",
+            "parts": [{"object": "Hatch", "pivot": [0, 0, 0],
+                       "joint": "slider", "axis": [1, 0, 0], "min": 0, "max": 0.4}],
+            "requested_clips": ["extend"]})
+        self.assertIn("extend", qa["covered_clips"])
+        self.assertTrue(qa["hard_checks"]["animation_roundtrip"], qa.get("exported_actions"))
+
 
 if __name__ == "__main__":
     unittest.main()
