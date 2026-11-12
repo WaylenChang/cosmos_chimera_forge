@@ -67,3 +67,13 @@ test('category and route controls use text without mixed decorative icons', () =
   assert.match(forge,/label:"Image-to-3D"/);
   assert.match(forge,/label:"Prompt-to-3D"/);
 });
+
+test('production build ships the task chooser module', () => {
+  const build=fs.readFileSync(path.join(root,'tools/build-site.mjs'),'utf8');
+  assert.ok(build.includes("'task-flow.js'"));
+});
+test('post-model portrait uses native copy or Drive upload, never a missing template', () => {
+  const drive=fs.readFileSync(path.join(root,'drive-storage.js'),'utf8');
+  assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)){'));
+  assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)&&!window.COSMI_PIPELINE?.isPortraitAuto())return;'));
+});
