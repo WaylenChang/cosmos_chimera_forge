@@ -285,6 +285,81 @@ async function uploadAsset(pkg){
  for(const key of keys){const rel=rooted?key.slice(pkg.id.length+1):key;await write(path+"/"+rel,new Blob([pkg.rawFiles[key]]));}
  pkg.drivePath=path;pkg.driveFolderId=id;pkg.driveFiles=await walk(id);return path;
 }
+async function migratePrompt3dAssets() {
+ // One-time, idempotent migration of EXISTING original Prompt-to-3D models.
+ // No mesh is modified, copied or claimed to have passed geometry/animation QA.
+ if(syncing||busy)throw Error("Drive 正在同步或審查，請稍後再執行");
+ busy=true;
+ const report={total:0,updated:0,skipped:0,errors:[]};
+ try {
+  const entries=await list(await folder("02_3d/ai_blender"));
+  const assets=entries.filter(f=>f.mimeType===MIME&&/^asset_cr_[a-z0-9_]+_(juvenile|adolescent|adult|overload)$/.test(f.name));
+  const wikiFiles=await list(await folder("04_encyclopedia/creatures"));
+  const wikiNames=new Set(wikiFiles.map(f=>f.name));
+  report.total=assets.length;
+  for(const asset of assets){
+   try {
+    const children=await list(asset.id);
+    const modelFolder=children.find(f=>f.mimeType===MIME&&f.name==="models");
+    if(!modelFolder){report.skipped++;report.errors.push(asset.name+": 缺 models/");continue;}
+    const models=await list(modelFolder.id);
+    const glbs=models.filter(f=>/\.glb$/i.test(f.name));
+    if(!glbs.length){report.skipped++;report.errors.push(asset.name+": 無 .glb");continue;}
+    const modelEntries=models.filter(f=>/\.(glb|blend)$/i.test(f.name)).map(f=>({
+     path:"models/"+f.name,kind:"model",level:"L1"
+    }));
+    const manifestFile=children.find(f=>f.name==="manifest.json"&&f.mimeType!==MIME);
+    let manifest={};
+    if(manifestFile){
+     try{manifest=JSON.parse(await(await request(API+"/"+manifestFile.id+"?alt=media")).text());}
+     catch(e){report.skipped++;report.errors.push(asset.name+": 既有 manifest 不可解析；未覆寫");continue;}
+     if(!manifest||Array.isArray(manifest)||typeof manifest!=="object"){report.skipped++;continue;}
+    }
+    const matched=/^asset_(cr_[a-z0-9_]+)_(juvenile|adolescent|adult|overload)$/.exec(asset.name);
+    const subject=matched[1], stage=matched[2], wiki=subject+"_wiki.md";
+    const existingEntries=Array.isArray(manifest.files)?manifest.files.filter(e=>e&&typeof e.path==="string"):[];
+    const indexed=new Map(existingEntries.map(e=>[e.path,e]));
+    for(const entry of modelEntries)indexed.set(entry.path,entry);
+    const missing=Array.isArray(manifest.missing)?manifest.missing.filter(e=>e&&typeof e.item==="string"):[];
+    const addMissing=(item,reason)=>{if(!missing.some(m=>m.item===item))missing.push({item,level:"L1",reason});};
+    if(!models.some(f=>/\.blend$/i.test(f.name)))addMissing(".blend","Only source GLB exists; editable Blender file not found");
+    if(!manifest.source_pack)addMissing("source portrait","Prompt-to-3D requires a reviewed post-model portrait");
+    if(!children.some(f=>f.name==="rig"))addMissing("rig QA","Rig was not verified from existing model");
+    if(!children.some(f=>f.name==="animations"))addMissing("animation QA","Motion clips were not verified from existing model");
+    if(!children.some(f=>f.name==="qa"))addMissing("visual QA","Pose/visual QA has not been reviewed");
+    if(!wikiNames.has(wiki))addMissing("encyclopedia","Matching creature wiki not yet found");
+    const next={...manifest,
+     spec:manifest.spec||"cosmimera-art-task/1",
+     task_id:manifest.task_id||asset.name,
+     task_type:manifest.task_type||"creature-model-rig",
+     subject_id:manifest.subject_id||subject,
+     stage:manifest.stage||stage,
+     source_pack:manifest.source_pack||"",
+     produced_by:manifest.produced_by||"historical Prompt-to-3D",
+     input_mode:"text",pipeline:"ai_blender",
+     encyclopedia_path:wikiNames.has(wiki)?"04_encyclopedia/creatures/"+wiki:"",
+     qa_status:"REVIEW_REQUIRED",
+     files:[...indexed.values()],missing,
+     notes:manifest.notes||"Historical Prompt-to-3D source. Pending manual pose, rig, clip and portrait review."
+    };
+    if(JSON.stringify(next)===JSON.stringify(manifest)){report.skipped++;continue;}
+    // Preserve all historical manifest bytes in a separate backup before update.
+    if(manifestFile){
+     const backupPath="backup/manifest_snapshots/"+asset.name+".before_prompt3d_migration.json";
+     if(!(await find(backupPath)).file)await jsonWrite(backupPath,manifest);
+    }
+    const target="02_3d/ai_blender/"+asset.name+"/manifest.json";
+    await jsonWrite(target,next);
+    const check=JSON.parse(await(await read(target)).text());
+    if(check.task_id!==next.task_id||check.input_mode!=="text")throw Error("Manifest 回讀驗證失敗");
+    report.updated++;
+   }catch(e){report.errors.push(asset.name+": "+e.message);}
+  }
+  void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+  return report;
+ }finally{busy=false;}
+}
+
 async function run(action){try{return await action();}catch(e){$("driveStatus").textContent=e.message;}}
 async function authorize(response,restoredSession=null){
  if(response.error||!response.access_token){$("driveGateStatus").textContent=response.error_description||response.error||"Google 登入失敗";return;}
@@ -312,7 +387,7 @@ async function authorize(response,restoredSession=null){
  else $("driveStatus").textContent="已登入，已依設定暫停自動同步；可手動重新載入 Drive。";
  }catch(e){lock(e.message);}
 }
-window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,
+window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,migratePrompt3dAssets,
  cacheStats:()=>window.COSMI_DRIVE_CACHE?.stats(accountNamespace)||Promise.resolve({count:0,bytes:0,supported:false}),
  clearCache:async()=>{await window.COSMI_DRIVE_CACHE?.clear(accountNamespace);return true;},
  signOut:()=>lock("已登出"),rootPath:config.rootPath,
@@ -327,6 +402,16 @@ document.addEventListener("DOMContentLoaded",()=>{
  tokenClient.requestAccessToken({prompt:"select_account"});
  });
  $("driveSync").addEventListener("click",()=>run(()=>syncPackages({force:true})));
+ $("settingsMigratePrompt3d")?.addEventListener("click",()=>{
+  if(!window.confirm("整理 02_3d/ai_blender 的歷史 Prompt-to-3D 資產描述檔？原 GLB/Blend 不會修改；既有 manifest 先備份，全部保持待審狀態。"))return;
+  run(async()=>{
+   $("driveStatus").textContent="正在建立 Prompt-to-3D 資產索引…";
+   const report=await migratePrompt3dAssets();
+   $("driveStatus").textContent="Prompt-to-3D 整理："+report.updated+" 已更新、"+report.skipped+" 跳過、"+report.errors.length+" 項待檢查";
+   $("settingsMessage").textContent=report.errors.slice(0,8).join("；")||"歷史模型已建立待審索引，未自動核准。";
+   await syncPackages({force:true});
+  });
+ });
  $("driveSavePrompt").addEventListener("click",()=>{if(["portrait","portrait_3d"].includes($("pipelineStage").value)&&!window.COSMI_PIPELINE?.isPortraitAuto())return;run(async()=>{const{path,text}=window.COSMI_FORGE.currentPrompt();await write(path,new Blob([text],{type:"text/markdown"}));$("driveStatus").textContent="已儲存 "+path;});});
  $("driveLoadPrompt").addEventListener("click",()=>run(async()=>{const path=$("drivePromptPath").value.trim();if(!path.startsWith("prompts/")||!path.endsWith(".md"))throw Error("請輸入 prompts/ 下的 Markdown 相對路徑");window.COSMI_FORGE.showPrompt(await(await read(path)).text());$("driveStatus").textContent="已讀取 "+path;}));
  $("pipelineRead").addEventListener("click",()=>{
