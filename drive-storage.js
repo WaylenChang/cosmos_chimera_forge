@@ -236,9 +236,9 @@ document.addEventListener("DOMContentLoaded",()=>{
  });
  $("driveSignOut").addEventListener("click",()=>lock("已登出"));
  $("driveSync").addEventListener("click",()=>run(syncPackages));
- $("driveSavePrompt").addEventListener("click",()=>run(async()=>{const{path,text}=window.COSMI_FORGE.currentPrompt();await write(path,new Blob([text],{type:"text/markdown"}));$("driveStatus").textContent="已儲存 "+path;}));
+ $("driveSavePrompt").addEventListener("click",()=>{if($("pipelineStage").value==="portrait")return;run(async()=>{const{path,text}=window.COSMI_FORGE.currentPrompt();await write(path,new Blob([text],{type:"text/markdown"}));$("driveStatus").textContent="已儲存 "+path;});});
  $("driveLoadPrompt").addEventListener("click",()=>run(async()=>{const path=$("drivePromptPath").value.trim();if(!path.startsWith("prompts/")||!path.endsWith(".md"))throw Error("請輸入 prompts/ 下的 Markdown 相對路徑");window.COSMI_FORGE.showPrompt(await(await read(path)).text());$("driveStatus").textContent="已讀取 "+path;}));
- $("pipelineRead").addEventListener("click",()=>run(async()=>{const key=$("pipelineStage").value,name=window.COSMI_PIPELINE.stages[key];window.COSMI_PIPELINE.templates[key]=await(await read("prompts/"+name+".prompt.md")).text();window.COSMI_FORGE.refresh();window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);}));
+ $("pipelineRead").addEventListener("click",()=>{if($("pipelineStage").value==="portrait"){$("copy").click();return;}run(async()=>{const key=$("pipelineStage").value,name=window.COSMI_PIPELINE.stages[key];window.COSMI_PIPELINE.templates[key]=await(await read("prompts/"+name+".prompt.md")).text();window.COSMI_FORGE.refresh();window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);});});
  $("pipelineSaveSettings").addEventListener("click",()=>run(async()=>{
  const d=window.COSMI_FORGE.settings(),p=window.COSMI_PIPELINE.parameters();
  await write("00_settings/"+d.assetId+".appearance.md",new Blob([d.appearance],{type:"text/markdown"}));await jsonWrite("00_settings/"+d.assetId+".parameters.json",{...p,delivery:d.delivery});$("driveStatus").textContent="已分別儲存外觀設定與格式參數";
