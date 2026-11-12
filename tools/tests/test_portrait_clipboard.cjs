@@ -19,12 +19,13 @@ test('favorite button stays icon-only in both states', () => {
 
 test('native portrait prompts retain the original multi-round copy controls', () => {
   const forge = read('forge.js');
+  const html = read('index.html');
   const pipeline = read('pipeline.js');
   assert.match(forge, /const useNativePortrait = pipeline && pipelineStage === "portrait"/);
   assert.match(forge, /\(!pipeline \|\| useNativePortrait\) && t\.buildRounds/);
-  assert.match(forge, /"btnCopyR1"/);
-  assert.match(forge, /"btnCopyR2"/);
-  assert.match(forge, /"btnCopyR3"/);
+  assert.match(html, /id="btnCopyR1"/);
+  assert.match(html, /id="btnCopyR2"/);
+  assert.match(html, /id="btnCopyR3"/);
   assert.match(forge, /\$\("#download"\)\.hidden = Boolean\(portraitCopyOnly\)/);
   assert.match(forge, /const portraitAuto = window\.COSMI_PIPELINE\?\.supports\(b\.ctx\) && window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)/);
   assert.match(pipeline, /Object\.entries\(stages\)\.filter\(\(\[key\]\) => key !== "portrait"\)/);
