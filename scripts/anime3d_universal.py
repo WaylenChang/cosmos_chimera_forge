@@ -65,7 +65,23 @@ def run(a):
     out = root / "02_3d" / ("colab" if profile["input_mode"] == "image" else "ai_blender") / a.asset_id
     state_path = out / "typed_state.json"
     profile_path = out / "profile.json"
-    backend = (profile["backend_priority"][0] if a.backend == "auto" else a.backend)
+    backend = a.backend
+    if backend == "auto":
+        # Choose a configured local runtime instead of silently choosing an
+        # uninstalled expensive model. Tripo remains explicit-cost opt-in.
+        backend = profile["backend_priority"][0]
+        cfg = read(a.backend_config) if getattr(a, "backend_config", None) else {}
+        if profile["input_mode"] == "image":
+            installed = [x for x in profile["backend_priority"]
+                         if x in {"anigen", "pixal3d", "partcrafter"}
+                         and isinstance(cfg.get(x), dict) and
+                         Path(str(cfg[x].get("repo", ""))).is_dir() and
+                         Path(str(cfg[x].get("python", ""))).is_file()]
+            if installed:
+                backend = installed[0]
+            elif a.allow_paid_tripo:
+                backend = "tripo"
+        # Text jobs require the explicitly provided original-generation adapter.
     if backend not in set(profile["backend_priority"]) | {"tripo", "existing"}:
         raise ValueError("Backend incompatible with profile: " + backend)
     if backend == "tripo" and profile["input_mode"] != "image":
