@@ -249,6 +249,37 @@ for item in requested:
 (out / "animations" / "animations_manifest.json").write_text(
     json.dumps({"clips": clips, "source": "typed_blender", "topology": topology}, ensure_ascii=False, indent=2), encoding="utf8")
 
+# Four orthographic turntable views serve as evidence for visual inspection.
+rendered_views = []
+try:
+    scene = bpy.context.scene
+    scene.render.engine = "BLENDER_WORKBENCH"
+    scene.render.resolution_x = 640
+    scene.render.resolution_y = 640
+    scene.render.resolution_percentage = 100
+    scene.render.image_settings.file_format = "PNG"
+    cam_data = bpy.data.cameras.new("TypedQA_Camera")
+    cam = bpy.data.objects.new("TypedQA_Camera", cam_data)
+    scene.collection.objects.link(cam)
+    scene.camera = cam
+    cam_data.type = "ORTHO"
+    cam_data.ortho_scale = 1.65 * max(size)
+    focus = Vector(center)
+    distance = 2.8 * max(size)
+    for label, angle in (("front", 0.0), ("right", math.pi / 2),
+                         ("back", math.pi), ("left", 3 * math.pi / 2)):
+        cam.location = focus + Vector((distance * math.sin(angle),
+                                       -distance * math.cos(angle),
+                                       distance * 0.15))
+        cam.rotation_euler = (focus - cam.location).to_track_quat("-Z", "Y").to_euler()
+        target = out / "previews" / ("qa_" + label + ".png")
+        scene.render.filepath = str(target)
+        bpy.ops.render.render(write_still=True)
+        if target.is_file() and target.stat().st_size:
+            rendered_views.append(str(target.relative_to(out)))
+except Exception as exc:
+    print("WARN: multi-view render unavailable:", exc)
+
 triangles = sum(sum(len(p.vertices) - 2 for p in mesh.data.polygons) for mesh in meshes)
 poly_budget = int(spec.get("poly_budget_triangles") or 30000)
 uv_missing = [m.name for m in meshes if not m.data.uv_layers]
@@ -261,7 +292,7 @@ qa = {
     "checks": profile["qa_checks"], "mesh_count": len(meshes),
     "triangles": triangles, "triangle_budget": poly_budget,
     "uv_missing": uv_missing, "materials_missing": materials_missing,
-    "rig": rig_quality, "motions": clips,
+    "rig": rig_quality, "motions": clips, "rendered_views": rendered_views,
     "required_clips": sorted(required), "covered_clips": sorted(covered),
     "hard_checks": {
         "mesh": bool(meshes and triangles > 0),
@@ -273,6 +304,7 @@ qa = {
         "visual_anatomy": False,  # requires rendered pose sweep reviewed by visual QA
         "collision_free": False,   # not safe to infer from one rest pose
         "export_reload": False,    # updated only after actual reload
+        "multiview_evidence": len(rendered_views) == 4,
     },
     "warnings": profile.get("warnings", []) +
                 ["Visual anatomy, deformation, poses and self-intersection require reviewed renders"],
