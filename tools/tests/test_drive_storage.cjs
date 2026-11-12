@@ -7,21 +7,27 @@ const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '../..');
 const source = fs.readFileSync(path.join(root, 'drive-storage.js'), 'utf8');
 
-function harness({ clientId = '123-test.apps.googleusercontent.com', handle } = {}) {
+function harness({ clientId = '123-test.apps.googleusercontent.com', handle, sessionStorage: providedStorage } = {}) {
   const nodes = {}, calls = [], events = [], timers = [];
+  const saved = new Map();
+  const sessionStorage = providedStorage || {
+    getItem(key) { return saved.get(key) ?? null; },
+    setItem(key, value) { saved.set(key, value); },
+    removeItem(key) { saved.delete(key); }
+  };
   let callback, requested = false, reloaded = false;
   function node(id) {
     return nodes[id] ||= { hidden: id === 'driveApp', textContent: '', value: '', listeners: {},
       addEventListener(event, fn) { this.listeners[event] = fn; } };
   }
   const context = {
-    Blob, File, Headers, URLSearchParams, Event, crypto, Date,
+    Blob, File, Headers, URLSearchParams, Event, crypto, Date, sessionStorage,
     setTimeout(fn) { timers.push(fn); return timers.length; }, clearTimeout() {},
     document: { getElementById: node, addEventListener(_, fn) { fn(); } },
     COSMI_DRIVE_CONFIG: { clientId, rootId: 'project-root', rootPath: 'project/cosmos_chimera_forge' },
     COSMI_FORGE: { refresh() {}, loadZipFile() { throw Error('unexpected ZIP'); } },
     dispatchEvent(event) { events.push(event.type); },
-    location: { reload() { reloaded = true; } },
+    location: { protocol: 'https:', reload() { reloaded = true; } },
     google: { accounts: { oauth2: { initTokenClient(options) {
       callback = options.callback;
       return { requestAccessToken() { requested = true; } };
@@ -41,7 +47,7 @@ function harness({ clientId = '123-test.apps.googleusercontent.com', handle } = 
   };
   context.window = context;
   vm.runInNewContext(source, context);
-  return { context, node, calls, events, timers,
+  return { context, node, calls, events, timers, sessionStorage,
     get requested() { return requested; }, get reloaded() { return reloaded; },
     async login() { node('driveSignIn').listeners.click(); await callback({ access_token: 'test-token', expires_in: 3600 }); }
   };
@@ -80,6 +86,42 @@ test('authorized project access unlocks, and expiry clears the session', async (
   await assert.rejects(h.context.COSMI_DRIVE.read('prompts/test.prompt.md'), /登入/);
   assert.equal(h.calls.length, count);
 });
+test('a verified Google session survives refresh and restores Drive without a popup', async () => {
+  const first = harness();
+  await first.login();
+  const restored = harness({ sessionStorage: first.sessionStorage });
+  // The session is rechecked against the Drive project root before UI unlock.
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(restored.requested, false);
+  assert.equal(restored.node('driveApp').hidden, false);
+  assert.deepEqual(restored.events, ['cosmi:authorized']);
+  assert.ok(restored.calls.some(c => c.url.pathname.endsWith('/project-root')));
+});
+
+test('sign out and expiry clear cached tokens instead of reviving login', async () => {
+  const h = harness();
+  await h.login();
+  assert.ok(h.sessionStorage.getItem('cosmi.drive.oauth.v1'));
+  h.node('driveSignOut').listeners.click();
+  assert.equal(h.sessionStorage.getItem('cosmi.drive.oauth.v1'), null);
+  assert.equal(h.node('driveApp').hidden, true);
+  assert.equal(h.reloaded, true);
+});
+
+test('invalid cached Drive permissions are rejected and the session removed', async () => {
+  const first = harness();
+  await first.login();
+  const restored = harness({
+    sessionStorage: first.sessionStorage,
+    handle: u => u.pathname.endsWith('/project-root')
+      ? Response.json({ error: { message: 'Forbidden' } }, { status: 403 })
+      : null
+  });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(restored.node('driveApp').hidden, true);
+  assert.equal(restored.sessionStorage.getItem('cosmi.drive.oauth.v1'), null);
+});
+
 test('relative paths reject absolute paths, traversal and empty components', () => {
   const h = harness();
   for (const name of ['../secret', '/secret', 'C:/secret', 'a/../secret', 'a//b', 'a\\b', 'a?b', 'a/./b']) {

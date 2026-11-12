@@ -25,6 +25,27 @@ HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並�
 
 本機匯入／匯出亦使用展開後的資產目錄。遊戲交付仍可逐檔交給相鄰遊戲專案驗收。Google OAuth 登入需 HTTP(S) 網站來源，無法直接用 file:// 啟用 Drive 功能。
 
+### 本機 Google 登入與刷新後保留登入
+
+在專案根目錄使用 HTTP 伺服器啟動（**不可直接雙擊 `index.html`**）：
+
+```bash
+python -m http.server 8000
+```
+
+開啟 `http://localhost:8000`。若系統使用 `python3`，改用 `python3 -m http.server 8000`。
+
+在 [Google Cloud Console](https://console.cloud.google.com/apis/credentials) 找到 `drive-config.js` 使用的 **OAuth 2.0 Web application Client ID**，在 **Authorized JavaScript origins** 新增：
+
+- `http://localhost:8000`
+- `http://127.0.0.1:8000`（如果也需要使用 127.0.0.1 存取；Google 視為另一個來源）
+- 正式站來源 `https://changweilin.github.io` 繼續保留
+
+這些來源需與瀏覽器實際使用的 scheme、hostname 和 port 完全一致；不要添加 URL 路徑。確認 Cloud 專案已啟用 Drive API、OAuth consent screen / test users 已設定，且登入帳號具有專案 Drive 資料夾權限。本機與 GitHub Pages 可以使用同一組公開 Client ID，不需要 Client Secret。HTTP localhost 是 Google OAuth 開發環境允許的特例，其他非 localhost 網址通常需要 HTTPS。
+
+**登入持續性**：驗證 Drive 權限成功後，尚未過期的 access token 與到期時間只存放在目前分頁的 `sessionStorage`；同分頁重新整理會嘗試恢復並再次驗證根目錄。主動登出、權限失效或 token 到期會清除記錄並回到登入畫面。此方案不支援跨瀏覽器工作階段的長期自動登入；要達成真正的「記住我」與 refresh token 續期，須另建後端 OAuth authorization-code + PKCE、加密 token 儲存和 HttpOnly/Secure/SameSite session cookie。不同網站來源的 sessionStorage 彼此獨立，localhost 和 GitHub Pages 各需首次授權。
+
+
 ## 核心檔案架構
 
 | 檔案 | 內容 | 何時改 |
@@ -61,6 +82,6 @@ HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並�
 3. **自動部署**：推送至 `main` 觸發 `.github/workflows/deploy.yml`，先執行存取測試，再執行 `node tools/build-site.mjs`。只上傳 `_site/` 的明確檔案清單；不包含 `Art/`、`Data/`、原始 Prompt 或 ZIP。
 4. **驗證**：`node --test tools/tests/test_drive_storage.cjs tools/tests/test_pipeline.cjs tools/tests/test_asset_directories.cjs`；`node tools/build-site.mjs`。正式 OAuth 登入、同意授權與 Drive 寫入仍需在已允許的網站來源，以有權限的 Google 帳號驗證。
 
-GitHub Pages 提供公開的 HTML／JavaScript 殼層，前端登入畫面不是伺服器端存取控制；私人資產只由帶有 OAuth Bearer token 的 Drive API 讀取，實際授權由 Drive ACL 執行。Token 僅保存在記憶體，不寫入 localStorage、網址或部署成品，登出／到期後重載清除私人 blob。鍛造參數與收藏仍保存在目前瀏覽器的本機儲存空間，並非 Drive 同步資料。
+GitHub Pages 提供公開的 HTML／JavaScript 殼層，前端登入畫面不是伺服器端存取控制；私人資產只由帶有 OAuth Bearer token 的 Drive API 讀取，實際授權由 Drive ACL 執行。Token 僅保存在記憶體與同分頁 sessionStorage（供頁面刷新恢復），不寫入 localStorage、網址或部署成品；登出／到期後重載清除私人 blob。鍛造參數與收藏仍保存在目前瀏覽器的本機儲存空間，並非 Drive 同步資料。
 
 參考：[Google Web 授權](https://developers.google.com/identity/oauth2/web/guides/use-token-model)、[GitHub Pages 存取控制](https://docs.github.com/en/enterprise-cloud%40latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site)。
