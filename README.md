@@ -85,3 +85,12 @@ python -m http.server 8000
 GitHub Pages 提供公開的 HTML／JavaScript 殼層，前端登入畫面不是伺服器端存取控制；私人資產只由帶有 OAuth Bearer token 的 Drive API 讀取，實際授權由 Drive ACL 執行。Token 僅保存在記憶體與同分頁 sessionStorage（供頁面刷新恢復），不寫入 localStorage、網址或部署成品；登出／到期後重載清除私人 blob。鍛造參數與收藏仍保存在目前瀏覽器的本機儲存空間，並非 Drive 同步資料。
 
 參考：[Google Web 授權](https://developers.google.com/identity/oauth2/web/guides/use-token-model)、[GitHub Pages 存取控制](https://docs.github.com/en/enterprise-cloud%40latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site)。
+
+
+### Drive 本機快取與設定（Tool 2.7.0）
+
+登入後，使用上方「⚙ 設定」頁管理快取、帳號登出、強制同步、立繪 Prompt 模式與版本檢查。小型 Drive 資產以 IndexedDB 儲存，每包上限 24 MiB，每個帳戶 80 MiB／80 包；大型 GLB 和 Blend 不會下載至快取。預設啟用快取與自動同步，TTL 60 分鐘；可改為 15 分鐘、6 小時或 24 小時。
+
+OAuth token 與 Drive 根目錄權限驗證成功後，先顯示未過期的快取，再並行讀取雲端檔案 metadata（檔案 ID、路徑、修改時間、大小），只下載內容變更的檔案。手動重新同步會跳過快取。快取過期或 IndexedDB 不可用時自動退回雲端載入；寫入、目錄搬移與登出會清除目前帳號的資產快取。
+
+本機快取是裝置上的私人副本，並非加密檔案；不建議在共用電腦啟用。每個 Google 帳戶的快取以 Drive permission ID 隔離，不提供離線登入，也不繞過 Drive 存取權限。網站部署版本由版本檔顯示，沒有登入憑證或私有 Drive 路徑。

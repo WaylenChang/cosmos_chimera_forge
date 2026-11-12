@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.6.0";
+  const TOOL_VERSION = "2.7.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -5601,6 +5601,8 @@
       $("#forgeView").style.display = "none";
       $("#designedView")?.classList.remove("active");
       $("#reviewView").classList.add("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnSettings")?.classList.remove("on");
       $("#viewBtnForge").classList.remove("on");
       $("#viewBtnDesigned")?.classList.remove("on");
       $("#viewBtnReview").classList.add("on");
@@ -5610,15 +5612,30 @@
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.remove("active");
       $("#designedView")?.classList.add("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnSettings")?.classList.remove("on");
       $("#viewBtnForge").classList.remove("on");
       $("#viewBtnDesigned")?.classList.add("on");
       $("#viewBtnReview").classList.remove("on");
       $("#forgeHeaderControls").style.display = "none";
       renderDesignedDesk();
+    } else if (mode === "settings") {
+      $("#forgeView").style.display = "none";
+      $("#reviewView").classList.remove("active");
+      $("#designedView")?.classList.remove("active");
+      $("#settingsView")?.classList.add("active");
+      $("#viewBtnForge").classList.remove("on");
+      $("#viewBtnDesigned")?.classList.remove("on");
+      $("#viewBtnReview").classList.remove("on");
+      $("#viewBtnSettings")?.classList.add("on");
+      $("#forgeHeaderControls").style.display = "none";
+      window.COSMI_SETTINGS?.refresh();
     } else {
       $("#forgeView").style.display = "grid";
       $("#reviewView").classList.remove("active");
       $("#designedView")?.classList.remove("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnSettings")?.classList.remove("on");
       $("#viewBtnForge").classList.add("on");
       $("#viewBtnDesigned")?.classList.remove("on");
       $("#viewBtnReview").classList.remove("on");
@@ -5699,6 +5716,7 @@
     $("#viewBtnForge").addEventListener("click", () => setViewMode("forge"));
     $("#viewBtnDesigned")?.addEventListener("click", () => setViewMode("designed"));
     $("#viewBtnReview").addEventListener("click", () => setViewMode("review"));
+    $("#viewBtnSettings")?.addEventListener("click", () => setViewMode("settings"));
     $("#btnGoDesignedFromSubhead")?.addEventListener("click", () => setViewMode("designed"));
 
     // 已設計台分類切換
@@ -6099,7 +6117,8 @@
     if (had) renderAll(); else reseed(newSeed(), true);
   }
   window.COSMI_FORGE = Object.freeze({
-    loadZipFile, loadAssetFiles,
+    loadZipFile, loadAssetFiles, setViewMode,
+    versionInfo: () => ({tool:TOOL_VERSION,catalog:C.version,spec:SPEC,templates:Object.fromEntries(TASKS.map(t=>[t.id,t.version]))}),
     packages: () => reviewState.packages,
     removePackage: id => { reviewState.packages = reviewState.packages.filter(p => p.id !== id); },
     clearDrivePackages: () => { reviewState.packages = reviewState.packages.filter(p => !p.driveFolderId); },

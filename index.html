@@ -506,6 +506,26 @@
   #driveGate { max-width: 520px; margin: 12vh auto; padding: 32px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
   #driveToolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--line); }
   #drivePromptPath { min-width: 230px; flex: 1; }
+  #settingsView { display:none; flex:1; min-height:0; overflow-y:auto; padding:clamp(12px,2vw,28px); border:0; background:transparent; }
+  #settingsView.active { display:block; }
+  .settings-header { margin:0 0 20px; }
+  .settings-header h2 { font-size:22px; margin-bottom:5px; color:var(--ink); text-transform:none; letter-spacing:0; }
+  .settings-header p, .settings-card .muted { color:var(--muted); font-size:13px; }
+  .settings-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:14px;max-width:1100px; }
+  .settings-card { display:flex; flex-direction:column; gap:12px; }
+  .settings-card h3 { margin:0; }
+  .settings-card label { font-size:13px; }
+  .settings-field { display:flex; flex-direction:column; gap:6px; }
+  .settings-field select { width:100%; max-width:340px; }
+  .settings-switch { display:flex; align-items:center; gap:8px; min-height:30px; }
+  .settings-switch input { width:18px; height:18px; }
+  .settings-actions { display:flex; flex-wrap:wrap; gap:8px; }
+  .settings-versions { display:grid; gap:8px; margin:0; }
+  .settings-versions div { display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid var(--line); padding:5px 0; }
+  .settings-versions dt { color:var(--muted); }
+  .settings-versions dd { margin:0; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; text-align:right; }
+  @media(max-width:699px){#settingsView {padding:12px;} .settings-grid {grid-template-columns:minmax(0,1fr);} }
+
 
   /* ---- Responsive workspaces: desktop, tablet, phone and device orientation ---- */
   #driveApp, .view-container, #forgeView, #reviewView, #designedView,
@@ -787,6 +807,7 @@
     <button class="segb on icon-only" id="viewBtnForge" type="button" aria-label="⚡ Prompt 鍛造" data-tip="⚡ Prompt 鍛造">⚡</button>
     <button class="segb icon-only" id="viewBtnDesigned" type="button" aria-label="📋 已設計項目" data-tip="📋 已設計項目">📚</button>
     <button class="segb icon-only" id="viewBtnReview" type="button" aria-label="🔍 成果審查台" data-tip="🔍 成果審查台">🔍</button>
+    <button class="segb icon-only" id="viewBtnSettings" type="button" aria-label="⚙ 應用程式設定" data-tip="⚙ 應用程式設定">⚙</button>
   </div>
   <span class="grow"></span>
   <div id="forgeHeaderControls" style="display:inline-flex;align-items:center;gap:10px;">
@@ -801,6 +822,53 @@
 </header>
 
 <div class="view-container">
+  <section id="settingsView" aria-labelledby="settingsTitle">
+    <div class="settings-header"><h2 id="settingsTitle">應用程式設定</h2><p>裝置端偏好與 Google Drive 快取管理</p></div>
+    <div class="settings-grid">
+      <section class="settings-card">
+        <h3>版本管理</h3>
+        <dl class="settings-versions">
+          <div><dt>Tool</dt><dd id="settingsToolVersion">—</dd></div>
+          <div><dt>Catalog</dt><dd id="settingsCatalogVersion">—</dd></div>
+          <div><dt>Spec</dt><dd id="settingsSpecVersion">—</dd></div>
+          <div><dt>部署版本</dt><dd id="settingsBuildVersion">—</dd></div>
+        </dl>
+        <button class="btn ghost mini" id="settingsCheckVersion" type="button" data-tip="重新檢查網站部署版本">⟳ 檢查更新</button>
+        <p id="settingsVersionStatus" role="status" class="muted"></p>
+      </section>
+      <section class="settings-card">
+        <h3>Google Drive 與快取</h3>
+        <label class="settings-switch"><input id="settingsCacheEnabled" type="checkbox"> 啟用本機資產快取</label>
+        <label class="settings-switch"><input id="settingsAutoSync" type="checkbox"> 登入後自動同步 Drive</label>
+        <label class="settings-field">快取有效期限
+          <select id="settingsCacheTTL">
+            <option value="15">15 分鐘</option><option value="60">1 小時</option>
+            <option value="360">6 小時</option><option value="1440">24 小時</option>
+          </select>
+        </label>
+        <p id="settingsCacheStats" role="status" class="muted">正在讀取快取資訊…</p>
+        <div class="settings-actions">
+          <button class="btn ghost mini" id="settingsClearCache" type="button" data-tip="僅清理此帳號的 Drive 資產快取，不刪除雲端檔案">🗑 清理快取</button>
+          <button class="btn ghost mini" id="settingsForceSync" type="button" data-tip="忽略快取並從 Drive 重新同步資產">⟳ 強制同步</button>
+        </div>
+      </section>
+      <section class="settings-card">
+        <h3>功能偏好</h3>
+        <label class="settings-field">立繪 Prompt 模式
+          <select id="settingsPortraitMode">
+            <option value="manual">手動複製貼上</option><option value="auto">自動上傳 .md 至 Drive</option>
+          </select>
+        </label>
+        <p class="muted">偏好儲存在目前瀏覽器，與 Google 帳號分開管理。</p>
+      </section>
+      <section class="settings-card">
+        <h3>帳號與隱私</h3>
+        <p class="muted">登出會清除目前 Google 工作階段及此帳號的本機 Drive 快取，不會刪除雲端資料。</p>
+        <button class="btn ghost" id="settingsSignOut" type="button" data-tip="登出 Google 並清理此帳號本機 Drive 快取">⏻ 登出 Google</button>
+      </section>
+    </div>
+    <p id="settingsMessage" role="status" aria-live="polite"></p>
+  </section>
   <!-- 視圖 1: Prompt 鍛造 -->
   <main id="forgeView">
     <section>
@@ -1144,7 +1212,9 @@
 <script src="drive-config.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="pipeline.js"></script>
+<script src="drive-cache.js"></script>
 <script src="drive-storage.js"></script>
+<script src="settings.js"></script>
 <script src="vendor/three.min.js"></script>
 <script src="vendor/OrbitControls.js"></script>
 <script src="vendor/GLTFLoader.js"></script>
