@@ -285,6 +285,78 @@ async function uploadAsset(pkg){
  for(const key of keys){const rel=rooted?key.slice(pkg.id.length+1):key;await write(path+"/"+rel,new Blob([pkg.rawFiles[key]]));}
  pkg.drivePath=path;pkg.driveFolderId=id;pkg.driveFiles=await walk(id);return path;
 }
+
+async function ensureWiki(ctx) {
+  if(syncing||busy)throw Error("Drive 正在處理其他資產，請稍後再建立圖鑑");
+  const wiki=window.COSMI_WIKI.describe(ctx);
+  // Name equality and exact folder resolution are the idempotency contract.
+  // Existing content is never regenerated or overwritten by another pipeline.
+  const existing=(await find(wiki.path)).file;
+  if(existing)return {path:wiki.path,created:false,id:existing.id};
+  const text=window.COSMI_WIKI.initialMarkdown(ctx);
+  const destination=await folder("wiki/"+wiki.kind,true);
+  const duplicates=await list(destination,"name = '"+escapeQuery(wiki.path.split("/").pop())+"'");
+  if(duplicates.length)return {path:wiki.path,created:false,id:duplicates[0].id};
+  const written=await write(wiki.path,new Blob([text],{type:"text/markdown"}));
+  return {path:wiki.path,created:true,id:written.id};
+}
+async function migrateWikis() {
+  if(syncing||busy)throw Error("Drive 正在同步或審查，請稍後再執行");
+  busy=true;
+  const report={sources:0,created:0,skipped:0,archived:0,errors:[]};
+  try{
+    const oldFolder="04_encyclopedia/creatures";
+    const sourceFiles=await list(await folder(oldFolder));
+    await folder("wiki/creatures",true);
+    await folder("wiki/_legacy/creatures",true);
+    const backupId=await folder("wiki/_legacy/creatures");
+    const targetId=await folder("wiki/creatures");
+    const archiveFiles=await list(backupId);
+    const existingArchive=new Set(archiveFiles.map(f=>f.name));
+    // Include previously archived family wikis on repeat runs to repair missing stages.
+    const candidates=[...sourceFiles,...archiveFiles].filter(f=>/^cr_[a-z0-9_]+_wiki\.md$/.test(f.name));
+    const done=new Set();
+    for(const file of candidates){
+      const id=/^(cr_[a-z0-9_]+)_wiki\.md$/.exec(file.name)[1];
+      if(done.has(id))continue;
+      done.add(id);report.sources++;
+      try{
+        let data="";
+        if(file.mimeType==="application/vnd.google-apps.document") {
+          // Native Docs must be exported, not requested with alt=media.
+          const p=new URLSearchParams({mimeType:"text/plain"});
+          data=await(await request(API+"/"+file.id+"/export?"+p)).text();
+        }else data=await(await request(API+"/"+file.id+"?alt=media")).text();
+        if(!data.trim())throw Error("來源圖鑑沒有內容");
+        const present=await list(targetId);
+        const known=new Set(present.map(f=>f.name));
+        let allGood=true;
+        for(const stage of window.COSMI_WIKI.STAGES){
+          const name=id+"_"+stage+"_wiki.md";
+          if(known.has(name)){report.skipped++;continue;}
+          try{
+            const content=window.COSMI_WIKI.splitLegacy(data,id,stage,file.name);
+            await write("wiki/creatures/"+name,new Blob([content],{type:"text/markdown"}));
+            const saved=await read("wiki/creatures/"+name);
+            if(!(await saved.text()).includes("- stage: "+stage))throw Error("圖鑑回讀不符");
+            report.created++;known.add(name);
+          }catch(e){allGood=false;report.errors.push(name+": "+e.message);}
+        }
+        // Never remove legacy bytes. Archive the original only after all stages exist.
+        if(allGood&&!existingArchive.has(file.name)){
+          const meta=await(await request(API+"/"+file.id+"?fields=parents")).json();
+          const previous=(meta.parents||[]).join(",");
+          const q=new URLSearchParams({addParents:backupId,removeParents:previous,fields:"id,parents"});
+          await request(API+"/"+file.id+"?"+q,{method:"PATCH"});
+          existingArchive.add(file.name);report.archived++;
+        }
+      }catch(e){report.errors.push(id+": "+e.message);}
+    }
+    void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+    return report;
+  }finally{busy=false;}
+}
+
 async function migratePrompt3dAssets() {
  // One-time, idempotent migration of EXISTING original Prompt-to-3D models.
  // No mesh is modified, copied or claimed to have passed geometry/animation QA.
@@ -294,7 +366,7 @@ async function migratePrompt3dAssets() {
  try {
   const entries=await list(await folder("02_3d/ai_blender"));
   const assets=entries.filter(f=>f.mimeType===MIME&&/^asset_cr_[a-z0-9_]+_(juvenile|adolescent|adult|overload)$/.test(f.name));
-  const wikiFiles=await list(await folder("04_encyclopedia/creatures"));
+  const wikiFiles=await list(await folder("wiki/creatures"));
   const wikiNames=new Set(wikiFiles.map(f=>f.name));
   report.total=assets.length;
   for(const asset of assets){
@@ -316,7 +388,7 @@ async function migratePrompt3dAssets() {
      if(!manifest||Array.isArray(manifest)||typeof manifest!=="object"){report.skipped++;continue;}
     }
     const matched=/^asset_(cr_[a-z0-9_]+)_(juvenile|adolescent|adult|overload)$/.exec(asset.name);
-    const subject=matched[1], stage=matched[2], wiki=subject+"_wiki.md";
+    const subject=matched[1], stage=matched[2], wiki=subject+"_"+stage+"_wiki.md";
     const existingEntries=Array.isArray(manifest.files)?manifest.files.filter(e=>e&&typeof e.path==="string"):[];
     const indexed=new Map(existingEntries.map(e=>[e.path,e]));
     for(const entry of modelEntries)indexed.set(entry.path,entry);
@@ -327,7 +399,7 @@ async function migratePrompt3dAssets() {
     if(!children.some(f=>f.name==="rig"))addMissing("rig QA","Rig was not verified from existing model");
     if(!children.some(f=>f.name==="animations"))addMissing("animation QA","Motion clips were not verified from existing model");
     if(!children.some(f=>f.name==="qa"))addMissing("visual QA","Pose/visual QA has not been reviewed");
-    if(!wikiNames.has(wiki))addMissing("encyclopedia","Matching creature wiki not yet found");
+    if(!wikiNames.has(wiki))addMissing("encyclopedia","Matching stage-specific creature wiki not yet found");
     const next={...manifest,
      spec:manifest.spec||"cosmimera-art-task/1",
      task_id:manifest.task_id||asset.name,
@@ -337,7 +409,7 @@ async function migratePrompt3dAssets() {
      source_pack:manifest.source_pack||"",
      produced_by:manifest.produced_by||"historical Prompt-to-3D",
      input_mode:"text",pipeline:"ai_blender",
-     encyclopedia_path:wikiNames.has(wiki)?"04_encyclopedia/creatures/"+wiki:"",
+     encyclopedia_path:wikiNames.has(wiki)?"wiki/creatures/"+wiki:"",
      qa_status:"REVIEW_REQUIRED",
      files:[...indexed.values()],missing,
      notes:manifest.notes||"Historical Prompt-to-3D source. Pending manual pose, rig, clip and portrait review."
@@ -388,7 +460,7 @@ async function authorize(response,restoredSession=null){
  else $("driveStatus").textContent="已登入，已依設定暫停自動同步；可手動重新載入 Drive。";
  }catch(e){lock(e.message);}
 }
-window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,migratePrompt3dAssets,
+window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,migratePrompt3dAssets,migrateWikis,ensureWiki,
  cacheStats:()=>window.COSMI_DRIVE_CACHE?.stats(accountNamespace)||Promise.resolve({count:0,bytes:0,supported:false}),
  clearCache:async()=>{await window.COSMI_DRIVE_CACHE?.clear(accountNamespace);return true;},
  signOut:()=>lock("已登出"),rootPath:config.rootPath,
@@ -403,6 +475,15 @@ document.addEventListener("DOMContentLoaded",()=>{
  tokenClient.requestAccessToken({prompt:"select_account"});
  });
  $("driveSync").addEventListener("click",()=>run(()=>syncPackages({force:true})));
+ $("settingsMigrateWiki")?.addEventListener("click",()=>{
+  if(!window.confirm("將現有 15 份系列圖鑑拆成各型態獨立 Markdown？原圖鑑移至 wiki/_legacy 備份；既有階段圖鑑不覆寫。"))return;
+  run(async()=>{
+    $("driveStatus").textContent="正在依型態拆分圖鑑…";
+    const report=await migrateWikis();
+    $("driveStatus").textContent="圖鑑整理："+report.created+" 新增、"+report.skipped+" 既有、"+report.archived+" 備份；"+report.errors.length+" 項錯誤";
+    $("settingsMessage").textContent=report.errors.slice(0,6).join("；")||"各型態圖鑑已整理，原始系列文件保留於 wiki/_legacy。";
+  });
+ });
  $("settingsMigratePrompt3d")?.addEventListener("click",()=>{
   if(!window.confirm("整理 02_3d/ai_blender 的歷史 Prompt-to-3D 資產描述檔？原 GLB/Blend 不會修改；既有 manifest 先備份，全部保持待審狀態。"))return;
   run(async()=>{
@@ -427,7 +508,14 @@ document.addEventListener("DOMContentLoaded",()=>{
    return;
   }
   run(async()=>{const key=$("pipelineStage").value;
-   if(key==="encyclopedia"){window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);return;}
+   if(key==="encyclopedia"){
+     const ctx=window.COSMI_FORGE.currentContext?.();
+     if(!ctx)throw Error("目前沒有可用的圖鑑概念設定");
+     const wiki=await ensureWiki(ctx);
+     window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);
+     $("driveStatus").textContent=(wiki.created?"已建立":"已存在，未重複生成")+" "+wiki.path;
+     return;
+   }
    const name=window.COSMI_PIPELINE.stages[key];window.COSMI_PIPELINE.templates[key]=await(await read("prompts/"+name+".prompt.md")).text();window.COSMI_FORGE.refresh();window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);});
  });
  $("pipelineSaveSettings").addEventListener("click",()=>run(async()=>{
