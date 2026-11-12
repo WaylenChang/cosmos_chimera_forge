@@ -1,4 +1,4 @@
-// Stage prompts live in the private Drive folder; output parameters stay separate.
+// Portrait prompts are copied directly; other stage templates remain on private Drive.
 (function () {
   "use strict";
   const stages = {
@@ -32,6 +32,7 @@
   function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(ctx.task.id); }
   function build(ctx) {
     const stage = $("pipelineStage")?.value || "portrait";
+    if (stage === "portrait") return ctx.task.build(ctx);
     const template = templates[stage];
     if (!template) return "請先從 Drive 讀取本步驟 prompt.md。";
     const model = window.COSMI_FORGE?.activePackage();
@@ -43,7 +44,7 @@
     return template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定");
   }
   async function loadTemplates() {
-    const entries = Object.entries(stages);
+    const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
     const jobs = entries.map(async ([key, name]) => {
       try {
         templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
@@ -61,9 +62,30 @@
     })());
     await Promise.all(jobs);
   }
+  function syncStageActions() {
+    const isPortrait = $("pipelineStage")?.value === "portrait";
+    for (const id of ["driveSavePrompt", "drivePromptPath", "driveLoadPrompt"]) {
+      const control = $(id);
+      if (control) control.hidden = isPortrait;
+    }
+    const read = $("pipelineRead");
+    if (read) {
+      const hint = isPortrait ? "複製目前立繪 Prompt，貼入生成平台" : "從 Google Drive 讀取本步驟 Prompt 模板";
+      read.setAttribute("aria-label", hint);
+      read.dataset.tip = hint;
+    }
+  }
   window.COSMI_PIPELINE = { stages, templates, defaults, parameters, appearance, supports, build, loadTemplates };
   document.addEventListener("DOMContentLoaded", () => {
     $("pipelineParameters").value = JSON.stringify(defaults, null, 2);
-    for (const id of ["pipelineStage", "pipelineAppearance", "pipelineParameters"]) $(id).addEventListener("change", () => id === "pipelineStage" ? window.COSMI_FORGE?.setPipelineStage($(id).value) : window.COSMI_FORGE?.refresh());
+    syncStageActions();
+    for (const id of ["pipelineStage", "pipelineAppearance", "pipelineParameters"]) {
+      $(id).addEventListener("change", () => {
+        if (id === "pipelineStage") {
+          syncStageActions();
+          window.COSMI_FORGE?.setPipelineStage($(id).value);
+        } else window.COSMI_FORGE?.refresh();
+      });
+    }
   });
 })();
