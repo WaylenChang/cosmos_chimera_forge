@@ -94,6 +94,54 @@ class TypedRoutingTests(unittest.TestCase):
         self.assertEqual(v["tripo_clips"], [])
         self.assertEqual(v["unsupported"], ["teleport"])
 
+    def test_drive_route_and_typed_manifest_are_non_destructive(self):
+        from anime3d_universal import run, write_asset_manifest
+        from argparse import Namespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cfg = root / "spec.json"
+            cfg.write_text(json.dumps({"input_mode": "text", "appearance": "Original character",
+                                       "asset_class": "humanoid"}), encoding="utf8")
+            opts = Namespace(root=str(root), asset_id="mdl-test", spec=str(cfg), execute=False,
+                             allow_paid_tripo=False, backend="auto", pipeline="colab",
+                             generator_executable=None, input_model=None, blender=None)
+            with self.assertRaisesRegex(ValueError, "Prompt-to-3D"):
+                run(opts)
+            opts.pipeline = "ai_blender"
+            self.assertEqual(run(opts), 0)
+            out = root / "02_3d" / "ai_blender" / "mdl-test"
+            self.assertTrue((out / "typed_state.json").is_file())
+            self.assertFalse((out / "manifest.json").exists(), "A plan is not a generated deliverable")
+            (out / "models").mkdir()
+            (out / "models" / "mdl-test.glb").write_bytes(b"test-only model placeholder")
+            state = json.loads((out / "typed_state.json").read_text())
+            manifest = write_asset_manifest(out, "mdl-test", json.loads(cfg.read_text()),
+                                            json.loads((out / "profile.json").read_text()), state)
+            self.assertEqual(manifest["pipeline"], "ai_blender")
+            self.assertEqual(manifest["task_type"], "character-model-rig")
+            self.assertIn("models/mdl-test.glb", [entry["path"] for entry in manifest["files"]])
+            self.assertIn("models/mdl-test.blend", [entry["item"] for entry in manifest["missing"]])
+            self.assertFalse((root / "02_3d" / "colab").exists())
+
+    def test_image_ai_blender_route_is_selectable(self):
+        from anime3d_universal import run
+        from argparse import Namespace
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cfg = root / "spec.json"
+            cfg.write_text(json.dumps({"input_mode": "image", "asset_class": "animal",
+                                       "source_pack": "approved", "license_status": "verified"}), encoding="utf8")
+            image = root / "approved.png"
+            image.write_bytes(b"sample")
+            opts = Namespace(root=str(root), asset_id="mdl-test", spec=str(cfg), execute=False,
+                             allow_paid_tripo=False, backend="auto", pipeline="ai_blender",
+                             generator_executable=None, input_model=None, blender=None)
+            with patch("anime3d_agent.validate", return_value=image):
+                self.assertEqual(run(opts), 0)
+            state = json.loads((root / "02_3d" / "ai_blender" / "mdl-test" / "typed_state.json").read_text())
+            self.assertEqual(state["pipeline"], "ai_blender")
+
     def test_runner_plan_does_not_use_paid_api_or_synthesize_mesh(self):
         from anime3d_universal import run
         from argparse import Namespace
