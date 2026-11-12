@@ -3105,6 +3105,7 @@
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const dir = window.COSMI_DRIVE.packageDir(t.id);
     const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait";
+    $("#download").hidden = Boolean(portraitCopyOnly);
     $("#deliver").replaceChildren(
       el("p", {}, "Google Drive 根目錄：", el("code", {}, "project/cosmos_chimera_forge/")),
       el("ol", {},
