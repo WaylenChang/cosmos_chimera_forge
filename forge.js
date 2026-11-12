@@ -385,7 +385,21 @@
     }
     const opts = f.options(state);
     const n = pickWeighted(rng, f.count).n;
-    state[kind][f.key] = pickN(rng, opts, n);
+    if (f.key === "appearance_palette") {
+      // 多色抽選逐色重新計算近似色系，減少單一色相獨占外觀。
+      const pool = opts.slice(), chosen = [];
+      while (chosen.length < n && pool.length) {
+        const weighted = C.getVariedPaletteOptions(pool, chosen);
+        const pick = pickWeighted(rng, weighted);
+        if (!pick) break;
+        chosen.push(pick.v);
+        const idx = pool.findIndex(o => o.v === pick.v);
+        if (idx >= 0) pool.splice(idx, 1);
+      }
+      state[kind][f.key] = chosen;
+    } else {
+      state[kind][f.key] = pickN(rng, opts, n);
+    }
   }
 
   function rollAll(kind, rng, force) {
