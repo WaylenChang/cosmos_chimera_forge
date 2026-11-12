@@ -230,7 +230,7 @@ def run(a):
         state["warnings"].append("Blender binary unavailable; geometry and export QA not run")
         write(state_path, state)
         return 2
-    child = run_checked([a.blender, "-b", "--factory-startup",
+    child = run_checked([a.blender, "-b", "--factory-startup", "--python-exit-code", "3",
                          "--python", str(Path(__file__).with_name("anime3d_typed_blender.py")),
                          "--", str(model), str(out), str(profile_path), str(a.spec)], 3600)
     state["steps"]["blender"] = {"returncode": child.returncode, "stderr": child.stderr[-4000:]}
