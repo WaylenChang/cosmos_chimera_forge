@@ -43,7 +43,7 @@ class BlenderSmoke(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.input = self.root / "fixture.glb"
-        p = subprocess.run([BLENDER, "-b", "--factory-startup",
+        p = subprocess.run([BLENDER, "-b", "--factory-startup", "--python-exit-code", "3",
                             "--python-expr", CREATE_FIXTURE, "--", str(self.input)],
                            capture_output=True, text=True, timeout=150)
         self.assertEqual(p.returncode, 0, p.stdout[-1500:] + p.stderr[-1500:])
