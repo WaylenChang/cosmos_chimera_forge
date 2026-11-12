@@ -79,12 +79,19 @@ def run(a):
     if profile["input_mode"] == "image":
         # Same explicit source authorization used by older agent.
         from anime3d_agent import validate
-        validate(root, spec, a.asset_id)
+        image = validate(root, spec, a.asset_id)
     else:
         if not (spec.get("appearance") or spec.get("prompt") or (spec.get("concept") or {}).get("appearance")):
             raise ValueError("Text-to-3D requires an explicit original design brief")
+    source_sha = ""
+    if profile["input_mode"] == "image":
+        source_sha = hashlib.sha256(image.read_bytes()).hexdigest()
+    elif a.input_model:
+        model_source = Path(a.input_model)
+        if model_source.is_file():
+            source_sha = hashlib.sha256(model_source.read_bytes()).hexdigest()
     fingerprint = hashlib.sha256((json.dumps(spec, sort_keys=True, ensure_ascii=False)
-                                  + backend + (a.input_model or "")).encode("utf8")).hexdigest()
+                                  + backend + (a.input_model or "") + source_sha).encode("utf8")).hexdigest()
     if state_path.is_file():
         state = read(state_path)
         if state.get("fingerprint") != fingerprint:
