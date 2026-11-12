@@ -142,6 +142,25 @@ class TypedRoutingTests(unittest.TestCase):
             state = json.loads((root / "02_3d" / "ai_blender" / "mdl-test" / "typed_state.json").read_text())
             self.assertEqual(state["pipeline"], "ai_blender")
 
+    def test_central_creature_encyclopedia_is_referenced_not_duplicated(self):
+        from anime3d_universal import write_asset_manifest
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            out = root / "02_3d" / "ai_blender" / "asset_cr_test_adult"
+            (out / "models").mkdir(parents=True)
+            (out / "models" / "asset_cr_test_adult.glb").write_bytes(b"synthetic test marker")
+            wiki = root / "04_encyclopedia" / "creatures" / "cr_test_wiki.md"
+            wiki.parent.mkdir(parents=True)
+            wiki.write_text("Original dedicated creature wiki", encoding="utf8")
+            spec = {"asset_class": "fantasy_creature", "category": "creature",
+                    "subject_id": "cr_test", "input_mode": "text", "task_type": "creature-model-rig"}
+            profile = classify(spec)
+            manifest = write_asset_manifest(out, out.name, spec, profile,
+                                            {"status": "REVIEW_REQUIRED", "pipeline": "ai_blender"})
+            self.assertEqual(manifest["encyclopedia_path"], "04_encyclopedia/creatures/cr_test_wiki.md")
+            self.assertNotIn("bestiary.md", [x["item"] for x in manifest["missing"]])
+            self.assertIn("models/asset_cr_test_adult.blend", [x["item"] for x in manifest["missing"]])
+
     def test_runner_plan_does_not_use_paid_api_or_synthesize_mesh(self):
         from anime3d_universal import run
         from argparse import Namespace
