@@ -31,6 +31,65 @@ def write(path, value):
     tmp.replace(path)
 
 
+
+def write_asset_manifest(out, asset_id, spec, profile, state):
+    """Index an actual typed job for the existing Drive review UI.
+
+    A manifest records only files that exist. It never marks a generated
+    asset complete or replaces the separate human-approved review record.
+    """
+    source_pack = spec.get("source_pack") or ""
+    category = str(spec.get("category") or spec.get("subject_type") or "")
+    kind = spec.get("task_type") or (
+        "character-model-rig" if category == "character" or profile["asset_class"] == "humanoid"
+        else "creature-model-rig"
+    )
+    files = []
+    for folder in ("models", "source", "rig", "animations", "previews", "qa", "parts"):
+        base = out / folder
+        if not base.is_dir():
+            continue
+        for file in sorted(base.rglob("*")):
+            if file.is_file() and not file.is_symlink():
+                rel = file.relative_to(out).as_posix()
+                level = "L1" if rel in {f"models/{asset_id}.glb", f"models/{asset_id}.blend"} else "L2"
+                files.append({"path": rel, "kind": "model" if file.suffix.lower() in {".glb", ".blend"} else "report", "level": level})
+    for name in ("profile.json", "typed_state.json", "agent_backend_spec.json", "bestiary.md"):
+        if (out / name).is_file():
+            files.append({"path": name, "kind": "spec", "level": "L2"})
+    missing = []
+    for ext in ("glb", "blend"):
+        if not (out / "models" / f"{asset_id}.{ext}").is_file():
+            missing.append({"item": f"models/{asset_id}.{ext}", "level": "L1", "reason": "Not produced or QA failed"})
+    if not source_pack:
+        missing.append({"item": "approved source portrait", "level": "L1",
+                        "reason": "Prompt-to-3D requires a post-model approved portrait; bind source_pack before completion"})
+    if profile["input_mode"] == "text" and (
+        category == "creature" or str(kind).startswith("creature")
+    ) and not (out / "bestiary.md").is_file():
+        missing.append({"item": "bestiary.md", "level": "L1",
+                        "reason": "Original bestiary required for text-to-3D creatures"})
+    result = {
+        "spec": "cosmimera-art-task/1",
+        "task_header": spec.get("task_header", ""),
+        "task_id": asset_id,
+        "task_type": kind,
+        "subject_id": spec.get("subject_id") or asset_id,
+        "stage": spec.get("stage"),
+        "source_pack": source_pack,
+        "produced_by": "Anime3D typed runner",
+        "input_mode": profile["input_mode"],
+        "anatomy": profile["anatomy"],
+        "pipeline": state.get("pipeline"),
+        "qa_status": state["status"],
+        "files": files,
+        "missing": missing,
+        "notes": "Typed execution output; automatic QA is not final artistic approval."
+    }
+    write(out / "manifest.json", result)
+    return result
+
+
 def run_checked(args, timeout):
     return subprocess.run(args, check=False, text=True, capture_output=True, timeout=timeout)
 
@@ -254,8 +313,11 @@ def run(a):
     if requires_bestiary and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
         state["status"] = "REVIEW_REQUIRED"
         write(state_path, state)
+        write_asset_manifest(out, a.asset_id, spec, profile, state)
         return 2
     write(state_path, state)
+    if metrics.is_file():
+        write_asset_manifest(out, a.asset_id, spec, profile, state)
     return 0 if child.returncode == 0 and metrics.is_file() else 2
 
 
