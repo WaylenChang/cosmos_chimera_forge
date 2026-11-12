@@ -597,8 +597,11 @@
     const pipelineStage = document.getElementById("pipelineStage")?.value;
     if (pipeline && pipelineStage === "colab" && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("Colab 需先選取已通過審查的來源立繪");
     if (pipeline && pipelineStage === "blender" && o.source_pack && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("指定的來源立繪尚未通過審查；純文字建模請取消圖片來源");
-    const rounds = (!pipeline && !errors.length && t.buildRounds) ? t.buildRounds(ctx) : null;
-    lastBuild = { ctx, errors, text: errors.length ? "" : pipeline ? window.COSMI_PIPELINE.build(ctx) : t.build(ctx), rounds };
+    // Portrait uses the original multi-round prompts directly; no Drive template is needed.
+    const useNativePortrait = pipeline && pipelineStage === "portrait" &&
+      (t.id === "character-concept" || t.id === "creature-concept");
+    const rounds = (!errors.length && (!pipeline || useNativePortrait) && t.buildRounds) ? t.buildRounds(ctx) : null;
+    lastBuild = { ctx, errors, text: errors.length ? "" : pipeline && !useNativePortrait ? window.COSMI_PIPELINE.build(ctx) : t.build(ctx), rounds };
     return lastBuild;
   }
 
@@ -2141,24 +2144,20 @@
   function updateFavButton() {
     const btn = $("#btnFavPrompt"); if (!btn) return;
     const b = lastBuild;
-    if (!b || !b.ctx || b.errors.length) {
-      btn.textContent = "⭐ 收藏此 Prompt";
-      btn.classList.remove("on");
-      return;
+    let isFav = false;
+    if (b && b.ctx && !b.errors.length) {
+      const t = b.ctx.task;
+      const curStage = b.ctx.opts?.stage || null;
+      const curPrompt = $("#prompt") ? $("#prompt").value : b.text;
+      isFav = favorites.some(f =>
+        f.task === t.id && f.subjectId === b.ctx.subjectId && f.seed === state.seed && f.stage === curStage && f.prompt === curPrompt
+      );
     }
-    const t = b.ctx.task;
-    const curStage = b.ctx.opts?.stage || null;
-    const curPrompt = $("#prompt") ? $("#prompt").value : b.text;
-    const isFav = favorites.some(f => 
-      f.task === t.id && f.subjectId === b.ctx.subjectId && f.seed === state.seed && f.stage === curStage && f.prompt === curPrompt
-    );
-    if (isFav) {
-      btn.textContent = "★ 已在最愛";
-      btn.classList.add("on");
-    } else {
-      btn.textContent = "⭐ 收藏此 Prompt";
-      btn.classList.remove("on");
-    }
+    const label = isFav ? "已收藏此 Prompt" : "收藏此 Prompt";
+    btn.textContent = isFav ? "★" : "☆";
+    btn.setAttribute("aria-label", label);
+    btn.dataset.tip = label;
+    btn.classList.toggle("on", isFav);
   }
 
   function renderFavorites() {
@@ -3105,10 +3104,13 @@
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const dir = window.COSMI_DRIVE.packageDir(t.id);
+    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait";
     $("#deliver").replaceChildren(
       el("p", {}, "Google Drive 根目錄：", el("code", {}, "project/cosmos_chimera_forge/")),
       el("ol", {},
-        el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
+        portraitCopyOnly
+          ? el("li", {}, "立繪 Prompt：使用 📋 或 ①／②／③ 複製，貼入生成平台；不需建立 .md 檔或上傳 Drive。")
+          : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
         el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + "/"), "。逐檔存入資產目錄，或載入本機資料夾後按「儲存資產目錄至 Drive」。"),
         el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
