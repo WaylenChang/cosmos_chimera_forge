@@ -197,7 +197,16 @@ def classify(spec: dict[str, Any]) -> dict[str, Any]:
     anatomy = explicit or inferred
     if not explicit:
         legs, wings, tentacles = counts.get("legs"), counts.get("wings", 0), counts.get("tentacles", 0)
-        if tentacles and legs in (None, 0):
+        # Mechanical topology must be resolved before organic leg-count routes.
+        # A six-legged machine is not a soft-skinned insect.
+        if asset_class == "robot" and legs is not None:
+            if legs >= 5:
+                anatomy = "multi_leg_mecha"
+            elif legs == 4:
+                anatomy = "quadruped_mecha"
+            elif legs == 2:
+                anatomy = "humanoid_mecha"
+        elif tentacles and legs in (None, 0):
             anatomy = "tentacled"
         elif legs == 4 and wings:
             anatomy = "winged_quadruped"
