@@ -59,7 +59,14 @@
       source_pack: source, source_path: window.COSMI_FORGE?.packages().find(p => p.id === source)?.drivePath || (source === "未指定" ? "未指定" : "01_portraits/" + source),
       input_path: model?.drivePath || "請指定輸入資產目錄", output_path: (stage === "colab" ? "02_3d/colab/" : stage === "blender" ? "02_3d/ai_blender/" : "01_portraits/") + ctx.taskId,
       parameters_path: "00_settings/" + ctx.taskId + ".parameters.json"};
-    return template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定");
+    const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定");
+    if (!["colab", "blender"].includes(stage)) return filled;
+    const kind = ctx.task.id.startsWith("character") ? "character" : "creature";
+    const route = stage === "colab" || ctx.opts?.source_pack || ctx.opts?.input_img ? "image" : "text";
+    const anatomy = window.COSMI_ANATOMY?.plan(kind, ctx.concept, route);
+    return anatomy ? filled + "\n解剖分類：" + anatomy.anatomy +
+      "；骨架／機構策略：" + anatomy.rig +
+      "。依指定原型與實際肢體建立專用動作，混合／不明拓撲先審查，不可擅套人形 Rig。" : filled;
   }
   async function loadTemplates() {
     const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
