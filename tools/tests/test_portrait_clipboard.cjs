@@ -21,7 +21,7 @@ test('native portrait prompts retain the original multi-round copy controls', ()
   const forge = read('forge.js');
   const html = read('index.html');
   const pipeline = read('pipeline.js');
-  assert.match(forge, /const useNativePortrait = pipeline && pipelineStage === "portrait"/);
+  assert.match(forge, /const useNativePortrait = pipeline && \["portrait", "portrait_3d"\]\.includes\(pipelineStage\)/);
   assert.match(forge, /\(!pipeline \|\| useNativePortrait\) && t\.buildRounds/);
   assert.match(html, /id="btnCopyR1"/);
   assert.match(html, /id="btnCopyR2"/);
