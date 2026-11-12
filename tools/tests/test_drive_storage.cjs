@@ -179,9 +179,11 @@ test('legacy Prompt-to-3D migration never invents model or overwrites missing GL
 test('legacy migration control and encyclopedia directory are present in the build',()=>{
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   assert.match(html,/id="settingsMigratePrompt3d"/);
-  assert.match(source,/04_encyclopedia\/creatures/);
+  assert.match(source,/wiki\/creatures/);
   assert.match(source,/before_prompt3d_migration\.json/);
   assert.match(source,/migratePrompt3dAssets/);
+   assert.match(source,/migrateWikis/);
+   assert.match(html,/id="settingsMigrateWiki"/);
 });
 
 test('production build excludes asset and prompt directories and requires OAuth config', () => {
