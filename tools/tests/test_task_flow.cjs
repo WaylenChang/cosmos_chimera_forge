@@ -50,3 +50,20 @@ test('post-model portrait does not ask for front view or T-pose', () => {
   assert.match(code,/不要生成正面基準圖、T-pose 或三視圖/);
   assert.match(code,/nativeBuild/);
 });
+
+test('redundant task navigation and portrait auto controls are removed', () => {
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  const pipeline=fs.readFileSync(path.join(root,'pipeline.js'),'utf8');
+  assert.doesNotMatch(html,/id="btnGoDesignedFromSubhead"/);
+  assert.doesNotMatch(html,/id="portraitAutoRun"/);
+  assert.doesNotMatch(forge,/\$\("#btnGoDesignedFromSubhead"\)/);
+  assert.doesNotMatch(pipeline,/\$\("portraitAutoRun"\)/);
+  assert.match(html,/id="driveSignOut"/);
+});
+test('category and route controls use text without mixed decorative icons', () => {
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/}, c\.zh\)\)\)/);
+  assert.match(forge,/label:"Image-to-3D"/);
+  assert.match(forge,/label:"Prompt-to-3D"/);
+});
