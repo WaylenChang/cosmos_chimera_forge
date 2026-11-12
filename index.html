@@ -801,11 +801,11 @@
     <div class="pipeline-lane"><h3>Image-to-3D</h3>
       <button class="pipeline-node" data-pipeline-node="portrait" type="button">立繪生成</button><div class="pipeline-arrow">↓</div>
       <button class="pipeline-node" data-pipeline-node="review_portrait" type="button">立繪審查</button><div class="pipeline-arrow">↓</div>
-      <button class="pipeline-node" data-pipeline-node="colab" type="button">Colab Image-to-3D</button>
-      <button class="pipeline-node" data-pipeline-node="blender_image" type="button">Blender Image-to-3D（替代）</button>
+      <button class="pipeline-node" data-pipeline-node="colab" type="button">管線 A：Colab GPU → Blender 修整</button>
+      <div class="pipeline-arrow">或（獨立管線）</div><button class="pipeline-node" data-pipeline-node="blender_image" type="button">管線 B：AI Blender（圖片建模）</button>
     </div>
     <div class="pipeline-lane"><h3>Prompt-to-3D</h3>
-      <button class="pipeline-node" data-pipeline-node="blender_prompt" type="button">Blender 文字建模</button><div class="pipeline-arrow">↓</div>
+      <button class="pipeline-node" data-pipeline-node="blender_prompt" type="button">管線 B：AI Blender（文字建模）</button><div class="pipeline-arrow">↓</div>
       <button class="pipeline-node" data-pipeline-node="portrait_after_3d" type="button">依完成模型補主立繪</button><div class="pipeline-arrow">↓</div>
       <span class="muted" style="text-align:center">無需 T-pose／正面圖</span>
     </div>
@@ -821,8 +821,8 @@
       <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
       <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
       <option value="review_portrait">2 · 立繪審查</option>
-      <option value="colab">3-a · Colab GPU</option>
-      <option value="blender">3-b · AI Blender（Argon／Codex）</option>
+      <option value="colab">3-a · Colab GPU + Blender</option>
+      <option value="blender">3-b · AI Blender 獨立管線（Argon／Codex）</option>
       <option value="portrait_after_3d">3-c · 建模後補主立繪</option>
       <option value="review_3d">4 · 立繪與 3D 最終審查</option>
     </select></label>
