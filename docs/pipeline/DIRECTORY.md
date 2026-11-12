@@ -70,13 +70,13 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 `02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已由 AI＋Blender **Prompt-to-3D** 生成的模型，不能將其重新視為 Image-to-3D；`.glb`、`.blend` 留在原本的 `models/`，保留 Google Drive 檔案 ID。這些模型是否已綁骨、包含動畫或符合品質要求，仍須逐件驗證。
 
-原先 `02_3d/ai_blender/_briefs/` 的 15 份 `cr_*_wiki.md` 已搬到新建的 `wiki/creatures/`；角色與招式目錄 `wiki/characters/`、`wiki/moves/` 也已建立。新規則改為每個階段一份：`<subject_id>_<stage>_wiki.md`。舊系列圖鑑經設定頁拆分後保存在 `wiki/_legacy/creatures/`，防止資料遺失。圖鑑獨立於模型檔案，模型的 `manifest.encyclopedia_path` 指向該 Markdown。
+原先 `02_3d/ai_blender/_briefs/` 的 15 份 `cr_*_wiki.md` 已保存在舊目錄 `04_encyclopedia/creatures/`；新的 `wiki/creatures/`、`wiki/characters/`、`wiki/moves/` 及 `wiki/_legacy/creatures/` 已建立，目前尚未對 15 份資料執行自助拆分。新規則改為每個階段一份：`<subject_id>_<stage>_wiki.md`。舊系列圖鑑經設定頁拆分後保存在 `wiki/_legacy/creatures/`，防止資料遺失。圖鑑獨立於模型檔案，模型的 `manifest.encyclopedia_path` 指向該 Markdown。
 
 為避免大量空目錄及將尚未執行的 QA 假報為完成，既有模型包保留 `models/`，待實際產生骨架、動作、預覽及驗證資料才建立 `rig/`、`animations/`、`previews/`、`qa/` 等子目錄。既有模型的原始 `.glb` 不應複製冒充已完成 QA 的 `source/`。
 
 登入網頁後，設定頁提供 **「整理歷史 Prompt-to-3D 目錄」**，需明確點擊及確認後才會檢查實際 `.glb`／`.blend`，建立或更新 `manifest.json`，標記 `input_mode=text`、`pipeline=ai_blender`、`encyclopedia_path` 和待審項目。若原有 manifest，先保存到 `backup/manifest_snapshots/`；不改模型、不自動移至完成區。此自助整理需在網站完成 OAuth 登入後執行，並非由 GitHub CI 在 Drive 背景操作。
 
-角色／宙獸的 Image-to-3D 與 Prompt-to-3D 流程，以及招式特效流程，現在均有獨立的「生成圖鑑」節點。生成 Prompt 使用當前主體概念，輸出到對應的 `wiki/<kind>/`，不得讀取或覆寫別的資產。宙獸 Prompt-to-3D 的圖鑑可先於建模產生；建模時只引用或更新該圖鑑，不再把 `bestiary.md` 當作模型目錄中必須重複保存的副本。
+角色／宙獸的 Image-to-3D 與 Prompt-to-3D 流程，以及招式特效流程，現在均有獨立的「生成圖鑑」節點。生成 Prompt 使用當前主體概念，輸出到對應的 `wiki/<kind>/`，不得讀取或覆寫別的資產。宙獸 Prompt-to-3D 的圖鑑可先於建模產生；建模時只引用該圖鑑，不再把 `bestiary.md` 當作模型目錄中必須重複保存的副本。
 
 ## HTML 操作
 
