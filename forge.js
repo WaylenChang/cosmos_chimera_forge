@@ -3234,7 +3234,7 @@
           : portraitAuto
           ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + "/"), "。逐檔存入資產目錄，或載入本機資料夾後按「儲存資產目錄至 Drive」。"),
+        el("li", {}, "成果包存放：", el("code", {}, $("#pipelineStage")?.value === "encyclopedia" ? dir + "/" + b.ctx.subjectId + ".md" : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
         el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
