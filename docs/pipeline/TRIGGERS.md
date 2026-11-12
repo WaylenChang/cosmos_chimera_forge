@@ -9,3 +9,4 @@
 - 最終審查：讀取 cosmos_chimera_forge/prompts/04_review_3d.prompt.md，檢查模型與對應立繪；Prompt-to-3D 必須使用建模後補繪的主立繪。
 
 HTML 中選步驟，按「讀取本步驟 .md／複製執行」可產生已填入目前資產的版本。原始 .md 的 {{欄位}} 由 HTML 代入；直接交給 AI 時須提供實際路徑與設定。讀取本身不會自動啟動外部 AI 或 Colab。
+\n流程圖：外觀設定後、立繪生成前分為 Image-to-3D 與 Prompt-to-3D。後者建模完成後補正式主立繪（無需 T-pose、正面圖），再進最終驗收。HTML 點選流程區塊可切換步驟並查看 Prompt。\n
