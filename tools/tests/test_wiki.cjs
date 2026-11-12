@@ -43,3 +43,41 @@ test("wiki module is loaded before pipeline and deployed",()=>{
  assert.ok(html.indexOf('src="wiki.js"')<html.indexOf('src="pipeline.js"'));
  assert.match(build,/'wiki\.js'/);
 });
+
+
+test("legacy extractor handles private-use text prefixes and detailed stage blocks",()=>{
+ const w=load();
+ const source=[
+   "# Legacy", "family identity",
+   "\uEC02"+"1. 幼年期 (juvenile / XS)", "young_visual_xyz",
+   "2. 少年期 (adolescent / S)", "teen_visual_xyz",
+   "3. 成年期 (adult / M)", "adult_visual_xyz",
+   "4. 超載期 (overload / L)", "overload_visual_xyz",
+   "第二章：共同生態", "must_stay_in_legacy_only"
+ ].join("\n");
+ for(const [stage,unique] of [["juvenile","young_visual_xyz"],["adolescent","teen_visual_xyz"],
+                              ["adult","adult_visual_xyz"],["overload","overload_visual_xyz"]]){
+   const md=w.splitLegacy(source,"cr_test",stage);
+   assert.match(md,new RegExp(unique));
+   assert.doesNotMatch(md,/must_stay_in_legacy_only/);
+ }
+});
+test("legacy extractor prefers detailed form sections over a compact summary table",()=>{
+ const w=load();
+ const source=[
+   "1. Juvenile", "short young", "2. Adolescent", "short teen",
+   "3. Adult", "short adult", "4. Overload", "short overload",
+   "1. 幼年期 (juvenile / XS)", "young_unique_long_description_with_detail",
+   "2. 少年期 (adolescent / S)", "teen_unique_long_description_with_detail",
+   "3. 成年期 (adult / M)", "adult_unique_long_description_with_detail",
+   "4. 超載期 (overload / L)", "overload_unique_long_description_with_detail",
+   "三、生態與演化", "shared ecology"
+ ].join("\n");
+ const adult=w.splitLegacy(source,"cr_test","adult");
+ assert.match(adult,/adult_unique_long_description_with_detail/);
+ assert.doesNotMatch(adult,/teen_unique_long_description_with_detail|shared ecology/);
+});
+test("legacy extraction rejects incomplete or misordered stages",()=>{
+ const w=load();
+ assert.throws(()=>w.splitLegacy("1. 幼年期 (juvenile)\nyoung\n2. 成年期 (adult)\nadult","cr_test","adult"),/缺少完整/);
+});
