@@ -7,6 +7,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Cancel obsolete PR verification runs, including expensive Blender packages.
+# Release deployment remains serialized by the deploy job's own concurrency.
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
