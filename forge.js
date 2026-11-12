@@ -3104,13 +3104,25 @@
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const dir = window.COSMI_DRIVE.packageDir(t.id);
-    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait";
+    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait" && !window.COSMI_PIPELINE?.isPortraitAuto();
+    const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
     $("#download").hidden = Boolean(portraitCopyOnly);
+    if (portraitAuto && state.currentRound !== 0 && b.rounds?.length) {
+      state.currentRound = 0;
+      displayedText = b.text;
+      $("#prompt").value = displayedText;
+      $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
+      for (const button of roundTabs?.querySelectorAll("button") || []) {
+        button.classList.toggle("on", button.textContent.includes("完整全流程"));
+      }
+    }
     $("#deliver").replaceChildren(
       el("p", {}, "Google Drive 根目錄：", el("code", {}, "project/cosmos_chimera_forge/")),
       el("ol", {},
         portraitCopyOnly
-          ? el("li", {}, "立繪 Prompt：使用 📋 或 ①／②／③ 複製，貼入生成平台；不需建立 .md 檔或上傳 Drive。")
+          ? el("li", {}, "手動模式：使用 📋 或 ①／②／③ 複製，貼入生成平台；不需建立 .md 檔或上傳 Drive。")
+          : portraitAuto
+          ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
         el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + "/"), "。逐檔存入資產目錄，或載入本機資料夾後按「儲存資產目錄至 Drive」。"),
         el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
@@ -6092,9 +6104,21 @@
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
         produced_by: "", files: [], missing: []}}),
     refresh: () => { renderAll(); renderReviewView(); },
+    setPortraitRound: round => { state.currentRound = round; renderOutput(); },
     activePackage: getActivePkg,
     packageBlob: pkg => createZipBlob(pkg.rawFiles),
-    currentPrompt: () => { if (lastBuild.errors.length) throw Error(lastBuild.errors.join("；")); return ({ path: "prompts/jobs/" + lastBuild.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md", text: $("#prompt")?.value || lastBuild.text }); },
+    currentPrompt: () => {
+      // Automated portrait exports always contain the complete multi-round prompt,
+      // regardless of which round is currently displayed.
+      const b = build();
+      if (b.errors.length) throw Error(b.errors.join("；"));
+      const stage = document.getElementById("pipelineStage")?.value || "task";
+      const portrait = stage === "portrait" && window.COSMI_PIPELINE?.supports(b.ctx);
+      return {
+        path: "prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
+        text: portrait ? b.text : ($("#prompt")?.value || b.text)
+      };
+    },
     showPrompt: text => {
       const dialog = document.createElement("dialog");
       const textarea = document.createElement("textarea");
