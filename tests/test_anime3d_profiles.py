@@ -62,6 +62,17 @@ class TypedRoutingTests(unittest.TestCase):
         self.assertIn("landmark_completeness", v["qa_checks"])
         self.assertTrue(v["warnings"])
 
+    def test_robot_leg_count_keeps_rigid_kinematics(self):
+        expected = {2: "humanoid_mecha", 4: "quadruped_mecha", 6: "multi_leg_mecha", 8: "multi_leg_mecha"}
+        for legs, anatomy in expected.items():
+            with self.subTest(legs=legs):
+                profile = classify({"asset_class": "robot", "limbs": {"legs": legs}})
+                self.assertEqual(profile["anatomy"], anatomy)
+                self.assertEqual(profile["rig_strategy"], "rigid_part_hierarchy")
+                self.assertEqual(profile["surface_mode"], "rigid")
+        explicit = classify({"asset_class": "robot", "anatomy": "humanoid_mecha", "limbs": {"legs": 4}})
+        self.assertEqual(explicit["anatomy"], "humanoid_mecha")
+
     def test_mechanical_not_skin_mapped(self):
         for topology in ["mechanism", "humanoid_mecha", "quadruped_mecha", "multi_leg_mecha"]:
             v = classify({"asset_class": "robot", "anatomy": topology, "requested_clips": ["rotate"]})
