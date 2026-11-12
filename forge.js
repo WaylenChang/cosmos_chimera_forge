@@ -3212,8 +3212,9 @@
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const encyclopediaKind = t.id === "move-vfx" ? "moves" : t.id.startsWith("character") ? "characters" : "creatures";
+    const wikiPath = window.COSMI_WIKI.describe(b.ctx).path;
     const dir = $("#pipelineStage")?.value === "encyclopedia"
-      ? "04_encyclopedia/" + encyclopediaKind : window.COSMI_DRIVE.packageDir(t.id);
+      ? "wiki/" + encyclopediaKind : window.COSMI_DRIVE.packageDir(t.id);
     const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && ["portrait", "portrait_3d"].includes($("#pipelineStage")?.value) && !window.COSMI_PIPELINE?.isPortraitAuto();
     const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
     $("#download").hidden = Boolean(portraitCopyOnly);
@@ -3234,7 +3235,7 @@
           : portraitAuto
           ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果包存放：", el("code", {}, $("#pipelineStage")?.value === "encyclopedia" ? dir + "/" + b.ctx.subjectId + (encyclopediaKind === "creatures" ? "_wiki.md" : ".md") : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
+        el("li", {}, "成果包存放：", el("code", {}, $("#pipelineStage")?.value === "encyclopedia" ? wikiPath : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
         el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
@@ -6234,6 +6235,7 @@
       }
       renderAll();
     },
+    currentContext: () => build().ctx,
     settings: () => ({assetId: lastBuild.ctx.taskId, subjectId: lastBuild.ctx.subjectId, appearance: window.COSMI_PIPELINE.appearance(lastBuild.ctx),
       delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
