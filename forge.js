@@ -5867,10 +5867,18 @@
     $("#reroll").addEventListener("click", () => reseed(newSeed(), true));
     $("#seed").addEventListener("change", e => reseed(e.target.value, true));
     $("#notes").addEventListener("input", e => { state.notes = e.target.value; renderOutput(); save(); });
+    function ensureWikiOnPrompt(ctx) {
+      if(!window.COSMI_DRIVE?.ensureWiki || !window.COSMI_PIPELINE?.supports(ctx))return;
+      void window.COSMI_DRIVE.ensureWiki(ctx).catch(e => {
+        console.warn("尚未同步圖鑑："+e.message);
+        toast("圖鑑未同步至 Drive："+e.message);
+      });
+    }
     $("#copy").addEventListener("click", () => {
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
+      ensureWikiOnPrompt(b.ctx);
       copyText($("#prompt").value, `已複製本步驟 Prompt (${staged.taskId})；格式參數請另存 JSON`);
       record();
     });
@@ -5880,6 +5888,7 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[0]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 1;
       renderOutput();
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
@@ -5893,6 +5902,7 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[1]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 2;
       renderOutput();
       copyText(b.rounds[1].prompt, `已複製第 2 輪 (三視圖) Prompt！請貼入同對話接續生成`);
@@ -5903,12 +5913,13 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[2]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 3;
       renderOutput();
       copyText(b.rounds[2].prompt, `已複製第 3 輪 (主立繪) Prompt！請貼入同對話接續生成`);
       record();
     });
-    $("#download").addEventListener("click", () => { download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
+    $("#download").addEventListener("click", () => { ensureWikiOnPrompt(lastBuild.ctx); download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
     $("#export").addEventListener("click", () => {
       const b = lastBuild; if (!b.ctx.concept) { toast("此任務沒有概念"); return; }
       download(b.ctx.subjectId + ".concept.json", JSON.stringify(b.ctx.concept, null, 2), "application/json");
