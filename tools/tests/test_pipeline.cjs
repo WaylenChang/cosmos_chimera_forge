@@ -52,6 +52,18 @@ test('Drive template loading skips the native portrait stage', async () => {
   assert.equal(requests.filter(file => file.startsWith('prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
 });
 
+test('encyclopedia prompt routes three categories to isolated Markdown paths', () => {
+  const {c,nodes,ctx}=harness();nodes.pipelineStage.value='encyclopedia';
+  assert.match(c.COSMI_PIPELINE.build(ctx),/04_encyclopedia\/characters\/chr_one\.md/);
+  ctx.task.id='creature-concept';
+  assert.match(c.COSMI_PIPELINE.build(ctx),/04_encyclopedia\/creatures\/chr_one\.md/);
+  ctx.task.id='move-vfx';ctx.subjectId='fx_fire_burst';ctx.opts={element:'fire',shape:'burst',tier:'heavy'};
+  const wiki=c.COSMI_PIPELINE.build(ctx);
+  assert.match(wiki,/04_encyclopedia\/moves\/fx_fire_burst\.md/);
+  assert.match(wiki,/fire|burst/);
+  assert.doesNotMatch(wiki,/DO_NOT_LEAK/);
+});
+
 test('appearance prompt includes visual traits and excludes pipeline and format content', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='appearance';
   const text=c.COSMI_PIPELINE.build(ctx);
