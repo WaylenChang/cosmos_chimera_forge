@@ -16,6 +16,14 @@
 - 依賴外部研究模型的 AniGen／Pixal3D／PartCrafter／文字建模後端需另外安裝相容模型與 adapter；未安裝會明確標記 REVIEW_REQUIRED，**目前不等同所有類型均已完成實機端到端自動量產**。
 - 詳細規格、實際命令、輸入格式、付費授權及限制見 [Typed Pipeline 使用說明](docs/ANIME3D_TYPED_RUNNER.md)。
 
+## Prompt-to-3D 歷史模型與獨立圖鑑（PR #11）
+
+Google Drive 已新增 `04_encyclopedia/{characters,creatures,moves}/`，將 `02_3d/ai_blender/_briefs/` 原有 15 份 `cr_*_wiki.md` 宙獸圖鑑移至 `04_encyclopedia/creatures/`（原始檔案與 ID 保持不變）。網頁任務流程新增「生成圖鑑」節點，分別為角色、宙獸與招式產生專屬 Markdown Prompt，避免污染模型流程。
+
+`02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已生成的 **Prompt-to-3D** 原始 GLB/Blend。設定頁的「整理歷史 Prompt-to-3D 目錄」提供經使用者確認的原位整理：為現存模型建立待審 `manifest.json`、記錄圖鑑關聯和缺失項、備份舊索引。原模型不改、不搬，不將未驗證骨架或動作當成完成。登入 Google 並明確執行整理後才會對 Drive 寫入索引；GitHub CI 不會替使用者自動修改雲端資產。
+
+完整約定見 [Drive 目錄規範](docs/pipeline/DIRECTORY.md)。
+
 ## 角色／宙獸管線（2026-11-11）
 
 正式資產使用 Google Drive 深層資料夾，逐檔讀取與交付。每個資產版本以唯一 asset_id 建目錄，保留 manifest.json、concept.json、images/ 或 models/、rig/、animations/、previews/。角色與宙獸共用結構，以 task_type 區分。
