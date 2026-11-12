@@ -789,13 +789,12 @@
   <button class="btn ghost mini icon-only" id="driveSavePrompt" type="button" aria-label="儲存本步驟 Prompt" data-tip="儲存本步驟 Prompt">💾</button>
   <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/jobs/task.colab.prompt.md">
   <button class="btn ghost mini icon-only" id="driveLoadPrompt" type="button" aria-label="讀取 Prompt" data-tip="讀取 Prompt">📖</button>
-  <button class="btn ghost mini icon-only" id="driveSignOut" type="button" aria-label="登出" data-tip="登出">⏻</button>
   <span id="driveStatus" role="status" aria-live="polite"></span>
 </div>
 <details id="pipelineControls" style="padding:8px 16px;border-bottom:1px solid var(--line)">
   <summary title="外觀、立繪、3D、審查與交付設定">⚙ 管線設定</summary>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
-    <label>目前步驟 <select id="pipelineStage">
+    <label hidden>目前步驟 <select id="pipelineStage">
       <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
       <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
       <option value="portrait_3d">1-b · 3D 完成後補畫主立繪（無 T-pose）</option>
@@ -848,7 +847,7 @@
           <div><dt>Spec</dt><dd id="settingsSpecVersion">—</dd></div>
           <div><dt>部署版本</dt><dd id="settingsBuildVersion">—</dd></div>
         </dl>
-        <button class="btn ghost mini" id="settingsCheckVersion" type="button" data-tip="重新檢查網站部署版本">⟳ 檢查更新</button>
+        <button class="btn ghost mini" id="settingsCheckVersion" type="button" data-tip="重新檢查網站部署版本">檢查更新</button>
         <p id="settingsVersionStatus" role="status" class="muted"></p>
       </section>
       <section class="settings-card">
@@ -863,8 +862,8 @@
         </label>
         <p id="settingsCacheStats" role="status" class="muted">正在讀取快取資訊…</p>
         <div class="settings-actions">
-          <button class="btn ghost mini" id="settingsClearCache" type="button" data-tip="僅清理此帳號的 Drive 資產快取，不刪除雲端檔案">🗑 清理快取</button>
-          <button class="btn ghost mini" id="settingsForceSync" type="button" data-tip="忽略快取並從 Drive 重新同步資產">⟳ 強制同步</button>
+          <button class="btn ghost mini" id="settingsClearCache" type="button" data-tip="僅清理此帳號的 Drive 資產快取，不刪除雲端檔案">清理快取</button>
+          <button class="btn ghost mini" id="settingsForceSync" type="button" data-tip="忽略快取並從 Drive 重新同步資產">強制同步</button>
         </div>
       </section>
       <section class="settings-card">
@@ -879,7 +878,7 @@
       <section class="settings-card">
         <h3>帳號與隱私</h3>
         <p class="muted">登出會清除目前 Google 工作階段及此帳號的本機 Drive 快取，不會刪除雲端資料。</p>
-        <button class="btn ghost" id="settingsSignOut" type="button" data-tip="登出 Google 並清理此帳號本機 Drive 快取">⏻ 登出 Google</button>
+        <button class="btn ghost" id="settingsSignOut" type="button" data-tip="登出 Google 並清理此帳號本機 Drive 快取">登出 Google</button>
       </section>
     </div>
     <p id="settingsMessage" role="status" aria-live="polite"></p>
@@ -894,7 +893,6 @@
       <div id="taskFlowDetail" class="task-flow-detail" aria-live="polite"></div>
       <div class="subhead" style="margin-top:14px;margin-bottom:4px">
         <h2 style="margin:0">已設計項目</h2>
-        <button class="btn mini ghost icon-only" type="button" id="btnGoDesignedFromSubhead" aria-label="📂" data-tip="📂">📂</button>
       </div>
       <div id="designed"></div>
       <details style="margin-top:12px">
@@ -939,7 +937,6 @@
               <option value="auto">自動 · .md 至 Drive</option>
             </select>
           </label>
-          <button class="btn mini ghost icon-only" id="portraitAutoRun" type="button" hidden aria-label="建立完整立繪 Prompt .md 並上傳 Google Drive" data-tip="建立完整立繪 Prompt .md 並上傳 Google Drive">☁</button>
           <div class="round-copy-group" id="roundCopyGroup" style="display:none">
             <button class="btn mini icon-only" id="btnCopyR1" type="button" aria-label="複製第 1 輪 正面正交基準圖 Prompt" data-tip="複製第 1 輪 正面正交基準圖 Prompt">①</button>
             <button class="btn mini ghost icon-only" id="btnCopyR2" type="button" aria-label="複製第 2 輪 T-pose 三視圖合圖 Prompt" data-tip="複製第 2 輪 T-pose 三視圖合圖 Prompt">②</button>
@@ -989,8 +986,8 @@
       <div class="rail-top">
         <div class="seg" id="designedCatSeg" role="tablist">
           <button class="segb on" data-cat="all" type="button">全部</button>
-          <button class="segb" data-cat="creature" type="button">🐾 宙獸</button>
-          <button class="segb" data-cat="character" type="button">👤 角色</button>
+          <button class="segb" data-cat="creature" type="button">宙獸</button>
+          <button class="segb" data-cat="character" type="button">角色</button>
         </div>
         <input type="text" id="designedSearch" placeholder="🔍 搜尋宙獸、屬性、角色、line_id..." spellcheck="false">
         <div class="subhead" style="margin:2px 0 0;font-size:11.5px;color:var(--muted)">
@@ -1204,17 +1201,17 @@
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between">
         <b>最新產出 Prompt：</b>
-        <button class="btn mini" id="btnCopyUpgPrompt" type="button">📋 複製 Prompt</button>
+        <button class="btn mini" id="btnCopyUpgPrompt" type="button">複製 Prompt</button>
       </div>
       <textarea id="upgPromptText" class="prompt-raw-box" readonly spellcheck="false"></textarea>
       <div>
         <b>升級交付檔案下載：</b>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
-          <button class="btn ghost mini" id="btnDlUpgPrompt" type="button">⬇ prompt.md</button>
-          <button class="btn ghost mini" id="btnDlUpgConcept" type="button">⬇ concept.json</button>
-          <button class="btn ghost mini" id="btnDlUpgManifest" type="button">⬇ manifest.json</button>
-          <button class="btn ghost mini" id="btnDlUpgZip" hidden type="button">🗜️ 升級後 Zip 包</button>
-          <button class="btn ghost mini" id="btnLoadInForge" type="button">⚡ 帶入 Prompt 鍛造台編輯</button>
+          <button class="btn ghost mini" id="btnDlUpgPrompt" type="button">prompt.md</button>
+          <button class="btn ghost mini" id="btnDlUpgConcept" type="button">concept.json</button>
+          <button class="btn ghost mini" id="btnDlUpgManifest" type="button">manifest.json</button>
+          <button class="btn ghost mini" id="btnDlUpgZip" hidden type="button">升級後 Zip 包</button>
+          <button class="btn ghost mini" id="btnLoadInForge" type="button">帶入 Prompt 鍛造台編輯</button>
         </div>
       </div>
     </div>
