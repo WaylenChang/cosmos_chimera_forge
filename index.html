@@ -37,6 +37,7 @@
   #designedStageHost { min-height: 0; }
   .btn.icon-only, .segb.icon-only { width: 32px; min-width: 32px; height: 32px; padding: 0; font-size: 16px; }
   .btn.icon-only.mini { width: 29px; min-width: 29px; height: 29px; }
+  #btnFavPrompt { flex: 0 0 32px; max-width: 32px; white-space: nowrap; overflow: hidden; }
   button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   [data-tip]:not(button):not(a):not(input):not(select):not(textarea), [aria-description]:not(button):not(a):not(input):not(select):not(textarea) { cursor: help; }
   #uiTooltip { position: fixed; display: none; max-width: min(320px, calc(100vw - 24px)); background: #30394b; color: #fff; border: 1px solid #536481; padding: 6px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 22px rgba(0,0,0,.55); pointer-events: none; z-index: 9999; white-space: normal; overflow-wrap: anywhere; }
@@ -746,7 +747,7 @@
   <button class="btn ghost mini icon-only" id="driveSync" type="button" aria-label="重新載入 Drive 資產" data-tip="重新載入 Drive 資產">⟳</button>
   <button class="btn ghost mini icon-only" id="driveUploadPackage" type="button" aria-label="儲存資產目錄至 Drive" data-tip="儲存資產目錄至 Drive">⤴</button>
   <button class="btn ghost mini icon-only" id="driveSavePrompt" type="button" aria-label="儲存本步驟 Prompt" data-tip="儲存本步驟 Prompt">💾</button>
-  <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/01_portrait.prompt.md">
+  <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/jobs/task.colab.prompt.md">
   <button class="btn ghost mini icon-only" id="driveLoadPrompt" type="button" aria-label="讀取 Prompt" data-tip="讀取 Prompt">📖</button>
   <button class="btn ghost mini icon-only" id="driveSignOut" type="button" aria-label="登出" data-tip="登出">⏻</button>
   <span id="driveStatus" role="status" aria-live="polite"></span>
@@ -762,7 +763,7 @@
       <option value="blender">3-b · AI Blender（Argon／Codex）</option>
       <option value="review_3d">4 · 立繪與 3D 最終審查</option>
     </select></label>
-    <button id="pipelineRead" class="btn mini icon-only" type="button" aria-label="讀取本步驟 .md／複製執行" data-tip="讀取本步驟 .md／複製執行">📋</button>
+    <button id="pipelineRead" class="btn mini icon-only" type="button" aria-label="複製目前立繪 Prompt，貼入生成平台" data-tip="複製目前立繪 Prompt，貼入生成平台">📋</button>
     <button id="pipelineSaveSettings" class="btn ghost mini icon-only" type="button" aria-label="儲存外觀 .md ＋ 參數 .json" data-tip="儲存外觀 .md ＋ 參數 .json">💾</button>
     <button id="pipelineLoadSettings" class="btn ghost mini icon-only" type="button" aria-label="讀取外觀與參數" data-tip="讀取外觀與參數">📂</button>
   </div>
@@ -846,7 +847,7 @@
             <button class="btn mini ghost icon-only" id="btnCopyR3" type="button" aria-label="複製第 3 輪 全身動態主立繪 Prompt" data-tip="複製第 3 輪 全身動態主立繪 Prompt">③</button>
           </div>
           <button class="btn icon-only" id="copy" type="button" aria-label="📋 複製目前顯示" data-tip="📋 複製目前顯示">📋</button>
-          <button class="btn ghost icon-only" id="btnFavPrompt" type="button" aria-label="將目前 Prompt 與設定加入我的最愛清單" data-tip="將目前 Prompt 與設定加入我的最愛清單">⭐</button>
+          <button class="btn ghost icon-only" id="btnFavPrompt" type="button" aria-label="收藏此 Prompt" data-tip="收藏此 Prompt">☆</button>
           <button class="btn ghost icon-only" id="open" type="button" aria-label="↗ 開啟平台" data-tip="↗ 開啟平台">↗</button>
           <button class="btn ghost icon-only" id="download" type="button" aria-label="⬇ prompt.md" data-tip="⬇ prompt.md">⬇</button>
           <button class="btn ghost icon-only" id="export" type="button" aria-label="⬇ 概念 JSON" data-tip="⬇ 概念 JSON">{}</button>
