@@ -54,7 +54,7 @@
       return [
         "# 生成原創" + (kind === "moves" ? "招式" : kind === "characters" ? "角色" : "宙獸") + "圖鑑",
         "對象：" + subject,
-        "概念設定：", appearance(ctx),
+        "概念設定：", kind === "moves" ? JSON.stringify(moveOptions, null, 2) : appearance(ctx),
         "只依目前概念與已確認的素材建立圖鑑，不借用其他對象的圖鑑內容。",
         "內容包含：" + focus + "；未確認資料明確標示待核，不虛構實測數據與來源。",
         "輸出 Markdown：" + destination,
