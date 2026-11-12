@@ -143,9 +143,9 @@
     appearance:["外觀設定","產生原創外觀描述，兩條管線共用。","appearance"],
     portrait:["立繪生成","Image-to-3D 專用：先產生正面、T-pose 多視圖及動態主立繪。","portrait"],
     review_portrait:["立繪審查","確認來源立繪通過後，才能以圖片建模。","review_portrait"],
-    colab:["Colab Image-to-3D","以已核准圖片生成模型，Blender 修整後輸出 GLB 與 Blend。","colab"],
-    blender_image:["Blender Image-to-3D","以來源圖片建模，不產生宙獸圖鑑。","blender"],
-    blender_prompt:["Blender Prompt-to-3D","在立繪生成之前分岔，直接依文字外觀建模；宙獸此路線產生圖鑑。","blender"],
+    colab:["Colab + Blender","獨立管線 A：Colab GPU 生成初始網格，再由 Blender 修整、綁骨並匯出 GLB 與 Blend；不是 AI Blender 管線的前置步驟。","colab"],
+    blender_image:["AI Blender：Image-to-3D","獨立管線 B：直接由 AI 操作 Blender，以來源圖片建模；不經過 Colab，不產生宙獸圖鑑。","blender"],
+    blender_prompt:["AI Blender：Prompt-to-3D","獨立管線 B 的文字輸入模式：在立繪生成前分岔，直接由 AI 操作 Blender 建模；宙獸此路線產生圖鑑。","blender"],
     portrait_after_3d:["建模後補主立繪","以完成的 3D 模型為唯一外觀基準補正式動態主立繪，不需 T-pose 或正面圖。","portrait_after_3d"],
     review_3d:["最終驗收","Image-to-3D 檢查核准來源立繪；Prompt-to-3D 檢查建模後補的主立繪。缺任一必交成果不得通過。","review_3d"]
   };
