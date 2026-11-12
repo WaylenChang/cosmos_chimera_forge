@@ -27,6 +27,16 @@ jobs:
       - name: Run all Node regression tests
         run: node --test tools/tests/*.cjs
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate Python scripts and anatomy routes
+        run: |
+          python -m compileall -q scripts
+          python -m unittest discover -s tests -p 'test_anime3d*.py' -v
+
   deploy:
     name: Deploy GitHub Pages
     needs: verify
