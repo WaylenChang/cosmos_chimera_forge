@@ -15,7 +15,8 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from anime3d_profiles import classify, save_profile
+from anime3d_profiles import classify
+from anime3d_backend_adapter import run as run_official_backend, validate_glb, BackendError
 
 
 def read(path):
@@ -42,13 +43,14 @@ def main():
     p.add_argument("--execute", action="store_true", help="Run actual backend (paid calls remain separate opt-in)")
     p.add_argument("--allow-paid-tripo", action="store_true", help="Authorize charges through Tripo")
     p.add_argument("--backend", choices=["auto", "tripo", "anigen", "pixal3d", "partcrafter", "blender_text", "existing"], default="auto")
-    p.add_argument("--generator-executable", help="Installed local adapter executable accepting --input --spec --output")
+    p.add_argument("--generator-executable", help="Custom executable accepting --input --spec --output")
+    p.add_argument("--backend-config", help="JSON paths to installed official AniGen/Pixal3D/PartCrafter environments")
     p.add_argument("--input-model", help="Existing real GLB to process without generating a new model")
     p.add_argument("--blender", default=shutil.which("blender"))
     a = p.parse_args()
     try:
         return run(a)
-    except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as e:
+    except (OSError, ValueError, RuntimeError, BackendError, subprocess.TimeoutExpired) as e:
         print("ERROR:", e, file=sys.stderr)
         return 2
 
@@ -90,8 +92,10 @@ def run(a):
         model_source = Path(a.input_model)
         if model_source.is_file():
             source_sha = hashlib.sha256(model_source.read_bytes()).hexdigest()
+    config_sha = hashlib.sha256(Path(a.backend_config).read_bytes()).hexdigest() if getattr(a, "backend_config", None) else ""
     fingerprint = hashlib.sha256((json.dumps(spec, sort_keys=True, ensure_ascii=False)
-                                  + backend + (a.input_model or "") + source_sha).encode("utf8")).hexdigest()
+                                  + backend + (a.input_model or "") + source_sha + config_sha +
+                                  str(a.generator_executable or "")).encode("utf8")).hexdigest()
     if state_path.is_file():
         state = read(state_path)
         if state.get("fingerprint") != fingerprint:
@@ -100,11 +104,11 @@ def run(a):
         state = {"asset_id": a.asset_id, "fingerprint": fingerprint, "backend": backend,
                  "status": "QUEUED", "steps": {}, "warnings": profile["warnings"]}
     write(profile_path, profile)
-    model = out / "models" / (a.asset_id + ".glb")
+    model = out / "source" / (a.asset_id + ".glb")
     write(state_path, state)
     if not a.execute:
         print(json.dumps({"mode": "plan", "backend": backend, "profile": profile,
-                          "output": str(out), "requires_generator": backend not in {"existing", "tripo"},
+                          "output": str(out), "requires_generator": backend not in {"existing", "tripo"} and not getattr(a, "backend_config", None),
                           "paid_tripo_authorized": False}, ensure_ascii=False, indent=2))
         return 0
     state["status"] = "RUNNING"
@@ -142,32 +146,60 @@ def run(a):
                             (["--blender", a.blender] if a.blender else []), 7200)
         state["steps"]["tripo"] = {"returncode": child.returncode, "stderr": child.stderr[-4000:]}
         write(state_path, state)
-        if child.returncode != 0 or not model.exists():
+        generated = out / "models" / (a.asset_id + ".glb")
+        if child.returncode != 0 or not generated.exists():
             state["status"] = "REVIEW_REQUIRED"
             write(state_path, state)
             return 2
+        model.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(generated, model)
     else:
         # Model-specific runtimes have incompatible Torch/CUDA requirements.
         # External adapters isolate them; no subprocess shell or guessed APIs.
-        if not a.generator_executable:
-            state["status"] = "REVIEW_REQUIRED"
-            state["warnings"].append(f"{backend} adapter missing; install and pass --generator-executable")
-            write(state_path, state)
-            return 2
-        exe = Path(a.generator_executable).resolve()
-        if not exe.is_file() or not os.access(exe, os.X_OK):
-            raise ValueError("Generator adapter is missing or not executable")
         model.parent.mkdir(parents=True, exist_ok=True)
-        source = str((root / "01_portraits" / spec.get("source_pack", "")).resolve()) if profile["input_mode"] == "image" else str(a.spec)
-        child = run_checked([str(exe), "--input", source, "--spec", str(a.spec),
-                             "--output", str(model)], 7200)
-        state["steps"]["generation"] = {"returncode": child.returncode, "stderr": child.stderr[-4000:]}
-        write(state_path, state)
-        if child.returncode != 0 or not model.is_file() or model.stat().st_size < 100:
+        if backend in {"anigen", "pixal3d", "partcrafter"} and getattr(a, "backend_config", None) and not a.generator_executable:
+            try:
+                result = run_official_backend(backend, Path(a.backend_config), image, Path(a.spec), model)
+                state["steps"]["generation"] = {"status": "generated", "result": result}
+            except (BackendError, OSError, subprocess.TimeoutExpired) as exc:
+                state["status"] = "REVIEW_REQUIRED"
+                state["steps"]["generation"] = {"status": "failed", "error": str(exc)[-2000:]}
+                write(state_path, state)
+                return 2
+        else:
+            if not a.generator_executable:
+                state["status"] = "REVIEW_REQUIRED"
+                state["warnings"].append(f"{backend} runtime missing; configure --backend-config or --generator-executable")
+                write(state_path, state)
+                return 2
+            exe = Path(a.generator_executable).resolve()
+            if not exe.is_file() or not os.access(exe, os.X_OK):
+                raise ValueError("Generator adapter is missing or not executable")
+            source = str(image) if profile["input_mode"] == "image" else str(a.spec)
+            # Never accept stale results after a child fails or produces nothing.
+            model.unlink(missing_ok=True)
+            child = run_checked([str(exe), "--input", source, "--spec", str(a.spec),
+                                 "--output", str(model)], 7200)
+            state["steps"]["generation"] = {"returncode": child.returncode, "stderr": child.stderr[-4000:]}
+            if child.returncode != 0:
+                state["status"] = "REVIEW_REQUIRED"
+                write(state_path, state)
+                return 2
+        try:
+            state["steps"]["generated_glb"] = validate_glb(model)
+        except BackendError as exc:
             state["status"] = "REVIEW_REQUIRED"
-            state["warnings"].append("Backend did not produce a verified nonempty GLB")
+            state["warnings"].append(f"Invalid GLB from generator: {exc}")
             write(state_path, state)
             return 2
+        write(state_path, state)
+    try:
+        state["steps"]["source_glb"] = validate_glb(model)
+    except BackendError as exc:
+        state["status"] = "REVIEW_REQUIRED"
+        state["warnings"].append(f"Source GLB invalid: {exc}")
+        write(state_path, state)
+        return 2
     # Text-only creature modeling owns the original bestiary; image-to-3D
     # and characters must not inherit an unrelated previous bestiary.
     subject_kind = str(spec.get("category") or spec.get("subject_type") or "")
