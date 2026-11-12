@@ -64,9 +64,15 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
     if not source_pack:
         missing.append({"item": "approved source portrait", "level": "L1",
                         "reason": "Prompt-to-3D requires a post-model approved portrait; bind source_pack before completion"})
+    subject_id = spec.get("subject_id") or ""
+    wiki_path = out.parents[2] / "04_encyclopedia" / "creatures" / (subject_id + "_wiki.md") if subject_id else None
+    if wiki_path and wiki_path.is_file():
+        result_wiki = "04_encyclopedia/creatures/" + subject_id + "_wiki.md"
+    else:
+        result_wiki = ""
     if profile["input_mode"] == "text" and (
         category == "creature" or str(kind).startswith("creature")
-    ) and not (out / "bestiary.md").is_file():
+    ) and not (out / "bestiary.md").is_file() and not result_wiki:
         missing.append({"item": "bestiary.md", "level": "L1",
                         "reason": "Original bestiary required for text-to-3D creatures"})
     result = {
@@ -82,6 +88,7 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
         "anatomy": profile["anatomy"],
         "pipeline": state.get("pipeline"),
         "qa_status": state["status"],
+        "encyclopedia_path": result_wiki,
         "files": files,
         "missing": missing,
         "notes": "Typed execution output; automatic QA is not final artistic approval."
@@ -293,8 +300,10 @@ def run(a):
     requires_bestiary = profile["input_mode"] == "text" and (
         subject_kind == "creature" or task_kind.startswith("creature"))
     bestiary = out / "bestiary.md"
-    if requires_bestiary and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
-        state["warnings"].append("Text-to-3D creature requires original bestiary.md")
+    encyclopedia = root / "04_encyclopedia" / "creatures" / (str(spec.get("subject_id") or "") + "_wiki.md")
+    wiki_exists = bool(spec.get("subject_id")) and encyclopedia.is_file() and bool(encyclopedia.read_text(encoding="utf8").strip())
+    if requires_bestiary and not wiki_exists and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
+        state["warnings"].append("Text-to-3D creature requires original 04_encyclopedia/creatures/<subject_id>_wiki.md or legacy bestiary.md")
     if not a.blender or not Path(a.blender).is_file():
         state["status"] = "QA_PENDING"
         state["warnings"].append("Blender binary unavailable; geometry and export QA not run")
@@ -310,7 +319,7 @@ def run(a):
         qa = read(metrics)
         state["automated_pass"] = qa.get("automated_pass", False)
         state["warnings"] += qa.get("warnings", [])
-    if requires_bestiary and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
+    if requires_bestiary and not wiki_exists and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
         state["status"] = "REVIEW_REQUIRED"
         write(state_path, state)
         write_asset_manifest(out, a.asset_id, spec, profile, state)
