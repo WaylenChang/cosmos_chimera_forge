@@ -912,10 +912,10 @@
       type:"button", class:c.id === active.category ? "on" : "",
       "aria-pressed":String(c.id === active.category), "aria-label":"選擇" + c.zh, "data-tip":"切換至" + c.zh + "任務",
       onclick:()=>chooseFlow(c.id, c.id === "move" ? "move" : "image", c.id === "move" ? "move_vfx" : "appearance")
-    }, c.icon + " " + c.zh)));
+    }, c.zh)));
     const routeDefs = active.category === "move" ? [] : [
-      {id:"image", label:"🖼 Image-to-3D", tip:"先生成與審查立繪，再以 Colab＋Blender 或 AI＋Blender 建模"},
-      {id:"text", label:"✍ Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
+      {id:"image", label:"Image-to-3D", tip:"先生成與審查立繪，再以 Colab＋Blender 或 AI＋Blender 建模"},
+      {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
     ];
     routes.replaceChildren(...routeDefs.map(d => el("button", {
       type:"button", class:d.id === active.route ? "on" : "",
@@ -2307,7 +2307,7 @@
         const topMatch = matches[0];
         const statusMap = {
           approved: { zh: "✅ 已核准通過", cls: "ok" },
-          reject: { zh: "❌ 退回拒絕", cls: "danger" },
+          reject: { zh: "退回拒絕", cls: "danger" },
           pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
         };
         const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
@@ -2852,7 +2852,7 @@
     if (chosenPkg) {
       box.append(el("div", { class: "subhead" },
         el("h3", {}, "審查台來源立繪包：" + chosenPkg.id),
-        el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.source_pack = ""; o.input_img = ""; renderAll(); } }, "✕ 取消選擇")
+        el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.source_pack = ""; o.input_img = ""; renderAll(); } }, "取消選擇")
       ));
       box.append(el("p", { class: "muted" }, "概念與造型參照自審查台讀入之立繪包（主體 " + (chosenPkg.subjectId || "—") + " · " + (chosenPkg.type === "character-concept" || chosenPkg.id.startsWith("chr") ? "角色" : "宙獸") + " · 共 " + (chosenPkg.images ? chosenPkg.images.length : 0) + " 張圖）。"));
       if (chosenPkg.concept) {
@@ -3065,9 +3065,7 @@
 
         const quickTools = el("div", { style: "display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;" },
           el("span", { class: "muted", style: "font-size:11px;" }, (isChr3d ? "角色" : isCr3d ? "宙獸" : "") + "立繪包：" + conceptPkgs.length + " 包"),
-          el("button", { type: "button", class: "btn mini ghost", title: "載入系統內建測試包至審查台", onclick: () => { loadSampleFixtures(); renderAll(); } }, "🧪 載入範例包"),
           el("button", { type: "button", class: "btn mini ghost", title: "從本機選取資產資料夾", onclick: () => $("#folderFileInput").click() }, "載入資料夾"),
-          el("button", { type: "button", class: "btn mini ghost", title: "前往成果審查台進行立繪檢閱", onclick: () => setViewMode("review") }, "🔍 轉至審查台")
         );
 
         control = el("div", { class: "pack-picker-box" }, packSelect, textInput, quickTools);
@@ -3105,7 +3103,7 @@
           if (o.input_img) {
             badge = el("div", { class: "selected-img-badge" },
               el("span", {}, "✅ 指定輸入圖：", el("code", {}, o.input_img), " (" + describeImg(o.input_img) + ")"),
-              el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.input_img = ""; renderAll(); } }, "✕ 重設為全套視圖")
+              el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.input_img = ""; renderAll(); } }, "重設為全套視圖")
             );
           }
 
@@ -5178,7 +5176,7 @@
             renderPanelAnims(pkg, linkedPkg);
             toast("已重設動作驗收狀態");
           } }, "🔄 重設驗收"),
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportAnimReviewReport(targetPkg, clips, verifiedMap) }, "⬇ 匯出動作報告 (.json)")
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportAnimReviewReport(targetPkg, clips, verifiedMap) }, "匯出動作報告 (.json)")
         )
       )
     );
@@ -5443,7 +5441,7 @@
         el("h4", {}, "原始 Prompt 文本（完整內容）"),
         el("textarea", { class: "prompt-raw-box", readonly: true, spellcheck: "false" }, getFullPromptText(pkg)),
         el("div", { style: "display:flex;gap:6px;margin-top:6px" },
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => download(pkg.id + ".prompt.md", getFullPromptText(pkg), "text/markdown") }, "⬇ 下載 prompt.md"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => download(pkg.id + ".prompt.md", getFullPromptText(pkg), "text/markdown") }, "下載 prompt.md"),
           el("button", { class: "btn ghost mini", type: "button", onclick: () => {
             const upg = upgradePackageFormat(pkg);
             if (upg) showUpgradeModal(upg);
@@ -5578,15 +5576,15 @@
       box.append(el("h4", {}, "審查覆核意見"));
       const reviewBox = el("div", { class: "review-box" },
         el("div", { class: "seg" },
-          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "✅ 核准通過"),
-          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "🟨 待修改"),
+          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "核准通過"),
+          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "待修改"),
           el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "reject") }, "❌ 退回拒絕")
         ),
         el("textarea", { id: "revNote", placeholder: "填寫人工審查意見（例如：身高比例良好，但服裝配色需微調；臉部表情需更生動...）", onchange: e => { saveReview(pkg, e.target.value); } }, getReviewNote(pkg)),
         el("div", { style: "display:flex;gap:6px;margin-top:6px;flex-wrap:wrap" },
-          el("button", { class: "btn mini", type: "button", onclick: async () => { try { await window.COSMI_DRIVE.saveNote(pkg, $("#revNote")?.value || ""); toast("已將審查意見儲存至 Drive"); } catch(e) { toast(e.message); } } }, "💾 儲存審查意見"),
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportReviewReport(pkg) }, "⬇ 下載審查報告 (.json)"),
-          el("button", { class: "btn ghost mini", type: "button", title: "移至備份區（自動加入時間戳）", onclick: () => backupActivePackage(pkg) }, "📦 移至備份區 (含時間戳)")
+          el("button", { class: "btn mini", type: "button", onclick: async () => { try { await window.COSMI_DRIVE.saveNote(pkg, $("#revNote")?.value || ""); toast("已將審查意見儲存至 Drive"); } catch(e) { toast(e.message); } } }, "儲存審查意見"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportReviewReport(pkg) }, "下載審查報告 (.json)"),
+          el("button", { class: "btn ghost mini", type: "button", title: "移至備份區（自動加入時間戳）", onclick: () => backupActivePackage(pkg) }, "移至備份區 (含時間戳)")
         )
       );
       box.append(reviewBox);
@@ -5602,8 +5600,8 @@
       const backupCmd = `Move-Item -Path "Art\\_incoming\\${pkg.id}.zip" -Destination "Art\\_backup\\${pkg.id}_${ts}.zip" -Force`;
       box.append(
         el("div", { style: "display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;" },
-          el("button", { class: "btn mini", type: "button", onclick: () => unpackPackageToDisk(pkg) }, "⚡ 實體解壓至本專案審查目錄"),
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => deployPackageToGame(pkg) }, "🚀 交付至 cosmos_chimera")
+          el("button", { class: "btn mini", type: "button", onclick: () => unpackPackageToDisk(pkg) }, "實體解壓至本專案審查目錄"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => deployPackageToGame(pkg) }, "交付至 cosmos_chimera")
         ),
         el("p", { class: "muted" }, "本專案解壓審查指令（PowerShell）："),
         el("div", { class: "cmd" }, el("code", {}, psUnpackCmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(psUnpackCmd, "已複製本專案解壓指令") }, "複製")),
@@ -5781,7 +5779,6 @@
     $("#viewBtnDesigned")?.addEventListener("click", () => setViewMode("designed"));
     $("#viewBtnReview").addEventListener("click", () => setViewMode("review"));
     $("#viewBtnSettings")?.addEventListener("click", () => setViewMode("settings"));
-    $("#btnGoDesignedFromSubhead")?.addEventListener("click", () => setViewMode("designed"));
 
     // 已設計台分類切換
     $$("#designedCatSeg .segb").forEach(btn => {
