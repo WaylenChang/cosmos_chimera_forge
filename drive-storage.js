@@ -289,6 +289,7 @@ async function uploadAsset(pkg){
 async function ensureWiki(ctx) {
   if(syncing||busy)throw Error("Drive 正在處理其他資產，請稍後再建立圖鑑");
   const wiki=window.COSMI_WIKI.describe(ctx);
+  await folder("wiki/"+wiki.kind,true);
   // Name equality and exact folder resolution are the idempotency contract.
   // Existing content is never regenerated or overwritten by another pipeline.
   const existing=(await find(wiki.path)).file;
@@ -515,6 +516,10 @@ document.addEventListener("DOMContentLoaded",()=>{
      window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);
      $("driveStatus").textContent=(wiki.created?"已建立":"已存在，未重複生成")+" "+wiki.path;
      return;
+   }
+   if(["appearance","portrait","review_portrait","colab","blender","review_3d","portrait_3d","move_vfx"].includes(key)){
+     const context=window.COSMI_FORGE.currentContext?.();
+     if(context)await ensureWiki(context);
    }
    const name=window.COSMI_PIPELINE.stages[key];window.COSMI_PIPELINE.templates[key]=await(await read("prompts/"+name+".prompt.md")).text();window.COSMI_FORGE.refresh();window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);});
  });
