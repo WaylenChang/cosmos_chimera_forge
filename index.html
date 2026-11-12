@@ -807,6 +807,8 @@
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
     <label hidden>目前步驟 <select id="pipelineStage">
       <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
+      <option value="encyclopedia">圖鑑 · 角色／宙獸／招式 Markdown</option>
+      <option value="move_vfx">招式與特效設計</option>
       <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
       <option value="portrait_3d">1-b · 3D 完成後補畫主立繪（無 T-pose）</option>
       <option value="review_portrait">2 · 立繪審查</option>
@@ -871,6 +873,10 @@
           <button class="btn ghost mini" id="settingsClearCache" type="button" data-tip="僅清理此帳號的 Drive 資產快取，不刪除雲端檔案">清理快取</button>
         </div>
         <p class="muted">需要重新載入 Drive 資產時，使用頁面上方的 ⟳ 同步按鈕。</p>
+        <div class="settings-actions">
+          <button class="btn ghost mini" id="settingsMigrateWiki" type="button" data-tip="依型態拆分舊系列圖鑑為四份獨立 Markdown，原始文件保留在 wiki/_legacy，重複執行不覆寫">拆分舊圖鑑</button>
+          <button class="btn ghost mini" id="settingsMigratePrompt3d" type="button" data-tip="只補齊已產生 GLB 的歷史 Prompt-to-3D 資產索引，既有 manifest 先備份；不動模型，不自動核准">整理歷史 Prompt-to-3D 目錄</button>
+        </div>
       </section>
       <section class="settings-card">
         <h3>功能偏好</h3>
@@ -1249,6 +1255,7 @@
 
 <script src="drive-config.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="wiki.js"></script>
 <script src="pipeline.js"></script>
 <script src="drive-cache.js"></script>
 <script src="drive-storage.js"></script>
@@ -1265,6 +1272,7 @@
 </script>
 <script src="catalog.js"></script>
 <script src="tasks.js"></script>
+<script src="anatomy-profiles.js"></script>
 <script src="task-flow.js"></script>
 <script src="designed.js"></script>
 <script src="forge.js"></script>

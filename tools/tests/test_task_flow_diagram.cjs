@@ -42,19 +42,19 @@ test('category must be selected before route; route must be selected before node
   assert.equal(flow.selectStep(routed, 'image_colab'), null);
   assert.equal(flow.selectStep(routed, 'prompt_3d').step, 'prompt_3d');
   const move = flow.selectRoute(flow.selectCategory('move'), 'move');
-  assert.equal(move.step, 'move_vfx');
+  assert.equal(move.step, 'encyclopedia');
   assert.equal(flow.selectRoute(flow.selectCategory('move'), 'image'), null);
 });
 test('image modeling is a parallel fork, not sequential Colab then Blender', () => {
   const flow = flowModule();
   const rows = Array.from(flow.diagram('character', 'image'));
-  assert.equal(rows.length, 5);
-  assert.equal(rows[3].type, 'branch');
-  assert.deepEqual(Array.from(rows[3].steps, s => s.id), ['image_colab', 'image_blender']);
-  assert.equal(rows[2].steps[0].id, 'review_portrait');
-  assert.equal(rows[4].steps[0].id, 'review_3d');
+  assert.equal(rows.length, 6);
+  assert.equal(rows[4].type, 'branch');
+  assert.deepEqual(Array.from(rows[4].steps, s => s.id), ['image_colab', 'image_blender']);
+  assert.equal(rows[3].steps[0].id, 'review_portrait');
+  assert.equal(rows[5].steps[0].id, 'review_3d');
   assert.deepEqual(Array.from(flow.diagram('creature', 'text'), r => r.steps[0].id),
-    ['appearance', 'prompt_3d', 'portrait_3d', 'review_portrait_3d', 'review_3d']);
+    ['appearance', 'encyclopedia', 'prompt_3d', 'portrait_3d', 'review_portrait_3d', 'review_3d']);
 });
 test('task navigation renders flow connectors and does not infer default route', () => {
   assert.match(html, /<h2>任務流程圖<\/h2>/);

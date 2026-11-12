@@ -15,22 +15,33 @@ test('three entry categories are character, creature, move', () => {
   const flow = loadFlow();
   assert.deepEqual(Array.from(flow.categories,c=>c.id),['character','creature','move']);
   assert.equal(flow.resolve('move','move','move_vfx').taskId,'move-vfx');
-  assert.equal(flow.steps('move','move').length,1);
+  assert.equal(flow.steps('move','move').length,2);
+  assert.equal(flow.steps('move','move')[0].id,'encyclopedia');
 });
 test('image route has two exclusive Blender routes after portrait approval', () => {
   const flow=loadFlow();
   const steps=Array.from(flow.steps('character','image'),s=>s.id);
-  assert.deepEqual(steps,['appearance','portrait','review_portrait','image_colab','image_blender','review_3d']);
+  assert.deepEqual(steps,['appearance','encyclopedia','portrait','review_portrait','image_colab','image_blender','review_3d']);
   assert.equal(flow.resolve('character','image','image_colab').taskId,'character-model-rig');
   assert.equal(flow.resolve('creature','image','image_blender').taskId,'creature-model-rig');
 });
 test('prompt to 3D branches before portraits, with post-model portrait and final review', () => {
   const flow=loadFlow();
   const steps=Array.from(flow.steps('creature','text'),s=>s.id);
-  assert.deepEqual(steps,['appearance','prompt_3d','portrait_3d','review_portrait_3d','review_3d']);
+  assert.deepEqual(steps,['appearance','encyclopedia','prompt_3d','portrait_3d','review_portrait_3d','review_3d']);
   assert.equal(flow.resolve('creature','text','prompt_3d').stage,'blender');
   assert.equal(flow.resolve('character','text','portrait_3d').stage,'portrait_3d');
   assert.equal(flow.resolve('character','text','image_colab'),null);
+});
+test('encyclopedia is a standalone step for all three subjects', () => {
+  const flow=loadFlow();
+  for(const kind of ['character','creature']) for(const route of ['image','text']) {
+    assert.equal(flow.resolve(kind,route,'encyclopedia').stage,'encyclopedia');
+  }
+  assert.equal(flow.resolve('move','move','encyclopedia').stage,'encyclopedia');
+  const rows=flow.diagram('creature','image');
+  assert.deepEqual(Array.from(rows.find(r=>r.type==='branch').steps,s=>s.id),['image_colab','image_blender']);
+  assert.equal(flow.selectRoute(flow.selectCategory('move'),'move').step,'encyclopedia');
 });
 test('legacy task and stage can be mapped to new flow', () => {
   const flow=loadFlow();
@@ -76,4 +87,41 @@ test('post-model portrait uses native copy or Drive upload, never a missing temp
   const drive=fs.readFileSync(path.join(root,'drive-storage.js'),'utf8');
   assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)){'));
   assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)&&!window.COSMI_PIPELINE?.isPortraitAuto())return;'));
+});
+
+test('typed anatomy profiles are shipped and connected to 3D prompts', () => {
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const build=fs.readFileSync(path.join(root,'tools/build-site.mjs'),'utf8');
+  const pipeline=fs.readFileSync(path.join(root,'pipeline.js'),'utf8');
+  const profiles=fs.readFileSync(path.join(root,'anatomy-profiles.js'),'utf8');
+  assert.match(html,/src="anatomy-profiles.js"/);
+  assert.ok(build.includes("'anatomy-profiles.js'"));
+  assert.ok(html.indexOf('src="anatomy-profiles.js"') < html.indexOf('src="forge.js"'));
+  assert.match(pipeline,/COSMI_ANATOMY\?\.plan/);
+  assert.match(profiles,/winged_quadruped/);
+  assert.match(profiles,/humanoid_mecha/);
+});
+
+test('mechanical limb counts retain rigid mecha routes in browser', () => {
+  const ctx={window:{}};
+  vm.runInNewContext(fs.readFileSync(path.join(root,'anatomy-profiles.js'),'utf8'),ctx);
+  const plan=ctx.window.COSMI_ANATOMY.plan;
+  for(const [legs, expected] of [[2,'humanoid_mecha'],[4,'quadruped_mecha'],[6,'multi_leg_mecha'],[8,'multi_leg_mecha']]) {
+    assert.equal(plan('creature',{base_parents:['科幻機械·機甲/外骨骼'],limbs:{legs}},'image').anatomy,expected);
+  }
+  assert.equal(plan('creature',{base_parents:['科幻機械·機甲/外骨骼'],anatomy:'humanoid_mecha',limbs:{legs:4}},'image').anatomy,'humanoid_mecha');
+});
+
+test('browser anatomy planner respects mixed origins and explicit wings', () => {
+  const ctx={window:{}};
+  vm.runInNewContext(fs.readFileSync(path.join(root,'anatomy-profiles.js'),'utf8'),ctx);
+  const plan=ctx.window.COSMI_ANATOMY.plan;
+  const winged=plan('creature',{base_parents:['生物·哺乳類'],limbs:{legs:4,wings:2}},'image');
+  assert.equal(winged.anatomy,'winged_quadruped');
+  const machine=plan('creature',{base_parents:['科幻機械·機甲/外骨骼']},'text');
+  assert.equal(machine.anatomy,'humanoid_mecha');
+  assert.equal(machine.input_mode,'text');
+  const mixed=plan('creature',{base_parents:['生物·哺乳類','幻想生物·異界/異形']},'image');
+  assert.equal(mixed.anatomy,'hybrid');
+  assert.equal(mixed.review_required,true);
 });

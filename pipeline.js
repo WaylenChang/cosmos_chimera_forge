@@ -3,7 +3,8 @@
   "use strict";
   const stages = {
     appearance: "00_appearance", portrait: "01_portrait", review_portrait: "02_review_portrait",
-    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d"
+    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d",
+    encyclopedia: "05_encyclopedia"
   };
   const templates = {};
   const modeKey = "cosmimera.portrait-mode.v1";
@@ -34,10 +35,38 @@
     if (ctx.notes?.trim()) lines.push("補充／修改: " + ctx.notes.trim());
     return lines.join("\n") || "請先於設計概念參數設定角色／宙獸外觀";
   }
-  function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(ctx.task.id); }
+  function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig", "move-vfx"].includes(ctx.task.id); }
   function build(ctx) {
     const stage = $("pipelineStage")?.value || "portrait";
-    if (stage === "portrait") return ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
+    if (stage === "portrait" || stage === "move_vfx") {
+      const content=ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
+      if (!window.COSMI_WIKI || !supports(ctx))return content;
+      const wiki=window.COSMI_WIKI.describe(ctx);
+      return content + "\n\n圖鑑：" + wiki.path + "（僅引用，未建立時先執行獨立圖鑑步驟；不可重複生成）。";
+    }
+    if (stage === "encyclopedia") {
+      const wiki = window.COSMI_WIKI.describe(ctx);
+      const kind = wiki.kind, subject = wiki.subject;
+      const destination = wiki.path;
+      const moveOptions = kind === "moves" ? Object.fromEntries(
+        Object.entries(ctx.opts || {}).filter(([key]) => ["element","shape","tier","use_creature","action","motion","name"].includes(key))
+      ) : null;
+      const focus = kind === "moves" ?
+        "招式定位、施放條件、屬性、視覺形態、分鏡、效果節奏與動作規格" :
+        kind === "characters" ? "角色身份、背景、外觀、服裝、性格、技能與設計變體" :
+        "此階段宙獸原型、生態、棲息地、解剖結構、屬性、動作與招式";
+      return [
+        "# 生成原創" + (kind === "moves" ? "招式" : kind === "characters" ? "角色" : "宙獸") + "圖鑑",
+        "對象：" + subject + (wiki.stage ? "；當前型態：" + wiki.stage : ""),
+        "概念設定：", kind === "moves" ? JSON.stringify(moveOptions, null, 2) : appearance(ctx),
+        "只依目前概念與已確認的素材建立圖鑑，不借用其他對象的圖鑑內容。",
+        "內容包含：" + focus + "；只描述目前型態，不混入其他階段的外觀與招式；未確認資料標示待核。",
+        "先檢查此精確路徑是否已存在：存在則使用現有圖鑑，不重新生成；若需改版請明確要求更新，禁止建立副本。",
+        "輸出 Markdown：" + destination,
+        "圖鑑獨立於 3D 模型目錄；若需模型關聯，記錄現有 asset_id 與模型路徑，不複製 GLB。",
+        "僅更新本對象的圖鑑，不修改或移動既有模型，也不得以產生圖鑑代替 3D QA 與最終驗收。"
+      ].join("\n");
+    }
     if (stage === "portrait_3d") {
       const model = window.COSMI_FORGE?.activePackage?.();
       const subject = ctx.concept?.name_zh || ctx.subjectId;
@@ -59,10 +88,19 @@
       source_pack: source, source_path: window.COSMI_FORGE?.packages().find(p => p.id === source)?.drivePath || (source === "未指定" ? "未指定" : "01_portraits/" + source),
       input_path: model?.drivePath || "請指定輸入資產目錄", output_path: (stage === "colab" ? "02_3d/colab/" : stage === "blender" ? "02_3d/ai_blender/" : "01_portraits/") + ctx.taskId,
       parameters_path: "00_settings/" + ctx.taskId + ".parameters.json"};
-    return template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定");
+    const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定");
+    if (!["colab", "blender"].includes(stage)) return filled;
+    const kind = ctx.task.id.startsWith("character") ? "character" : "creature";
+    const route = stage === "colab" || ctx.opts?.source_pack || ctx.opts?.input_img ? "image" : "text";
+    const anatomy = window.COSMI_ANATOMY?.plan(kind, ctx.concept, route);
+    const typed = anatomy ? filled + "\n解剖分類：" + anatomy.anatomy +
+      "；骨架／機構策略：" + anatomy.rig +
+      "。依指定原型與實際肢體建立專用動作，混合／不明拓撲先審查，不可擅套人形 Rig。" : filled;
+    const wiki = window.COSMI_WIKI.describe(ctx);
+    return typed + "\n共用圖鑑：" + wiki.path + "。此管線只引用既有圖鑑，不重新生成；若尚無該圖鑑，先執行獨立「生成圖鑑」步驟。manifest.encyclopedia_path 記錄同一路徑。";
   }
   async function loadTemplates() {
-    const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
+    const entries = Object.entries(stages).filter(([key]) => !["portrait", "encyclopedia"].includes(key));
     const jobs = entries.map(async ([key, name]) => {
       try {
         templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();

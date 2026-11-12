@@ -7,6 +7,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Cancel obsolete PR verification runs, including expensive Blender packages.
+# Release deployment remains serialized by the deploy job's own concurrency.
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
@@ -27,9 +33,40 @@ jobs:
       - name: Run all Node regression tests
         run: node --test tools/tests/*.cjs
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate Python scripts and anatomy routes
+        run: |
+          python -m compileall -q scripts
+          python -m unittest discover -s tests -p 'test_anime3d*.py' -v
+
+  blender-smoke:
+    name: Verify real Blender GLB and animation round-trip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Blender
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender python3-numpy libegl1 libgbm1 libgl1-mesa-dri xvfb
+          blender --version
+          blender -b --python-exit-code 3 --python-expr "import numpy; print('Blender NumPy', numpy.__version__)"
+          ldconfig -p | grep 'libEGL.so.1'
+      - name: Real Blender pipeline smoke tests
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: xvfb-run -a python -m unittest discover -s tests -p 'test_anime3d_blender_smoke.py' -v
+
   deploy:
     name: Deploy GitHub Pages
-    needs: verify
+    needs: [verify, blender-smoke]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     concurrency:

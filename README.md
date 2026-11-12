@@ -7,6 +7,23 @@
 - **資產儲存**：Google Drive `project/cosmos_chimera_forge/`。Prompt 與包內參照使用相對目錄；網頁不再從相鄰遊戲倉庫讀取圖片與模型。
 - Google 登入需要 HTTP(S) 網站來源，不支援直接以 `file://` 開啟後完整使用。
 
+## 六類 Anime3D 分流實作（2026-11-12）
+
+新增角色、怪物、動物、奇幻生物、機械與機甲的**解剖型態分類器**，依實際肢體、翅膀、尾巴、表面材質及可動部件產出後端優先順序、骨架／機構策略、動作與 QA 項目；混合或不明拓撲不會強制當成人形。網頁的 3D Prompt 自動帶入分類摘要。
+
+- 執行入口：`scripts/anime3d_universal.py` 與 `notebooks/07_batch_runner.ipynb`。
+- Blender 專用模型後處理：`scripts/anime3d_typed_blender.py`，處理實際 GLB、剛性零件與多角度預覽，產出待審 QA。
+- 依賴外部研究模型的 AniGen／Pixal3D／PartCrafter／文字建模後端需另外安裝相容模型與 adapter；未安裝會明確標記 REVIEW_REQUIRED，**目前不等同所有類型均已完成實機端到端自動量產**。
+- 詳細規格、實際命令、輸入格式、付費授權及限制見 [Typed Pipeline 使用說明](docs/ANIME3D_TYPED_RUNNER.md)。
+
+## Prompt-to-3D 歷史模型與獨立圖鑑（PR #11）
+
+Google Drive 已建立 `wiki/{characters,creatures,moves}/` 及 `wiki/_legacy/creatures/`。原有 15 份系列圖鑑已完成實際遷移，拆成 60 份 `wiki/creatures/<subject_id>_<stage>_wiki.md`（15 家族 × 4 型態，全部為真正的 Markdown，無重複檔名）。15 份原始系列文件保留原檔 ID，已移到 `wiki/_legacy/creatures/`；舊 `04_encyclopedia/creatures/` 已清空。已驗證各階段檔案與格式；文字遷移不代表模型或動畫已獲人工 QA 核准。角色與招式使用 `<subject_id>_wiki.md`。所有管線以主體與型態定位同一圖鑑，生成只在缺檔時建立待審 Markdown 草稿。
+
+`02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已生成的 **Prompt-to-3D** 原始 GLB/Blend。設定頁的「整理歷史 Prompt-to-3D 目錄」提供經使用者確認的原位整理：為現存模型建立待審 `manifest.json`、記錄圖鑑關聯和缺失項、備份舊索引。原模型不改、不搬，不將未驗證骨架或動作當成完成。登入 Google 並明確執行整理後才會對 Drive 寫入索引；GitHub CI 不會替使用者自動修改雲端資產。
+
+完整約定見 [Drive 目錄規範](docs/pipeline/DIRECTORY.md)。
+
 ## 角色／宙獸管線（2026-11-11）
 
 正式資產使用 Google Drive 深層資料夾，逐檔讀取與交付。每個資產版本以唯一 asset_id 建目錄，保留 manifest.json、concept.json、images/ 或 models/、rig/、animations/、previews/。角色與宙獸共用結構，以 task_type 區分。

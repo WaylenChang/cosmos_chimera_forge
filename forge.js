@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.7.0";
+  const TOOL_VERSION = "2.8.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -910,7 +910,7 @@
     state.taskId = selected.taskId;
     state.currentRound = selected.stage === "portrait" ? 1 : 0;
     const stage = $("#pipelineStage");
-    if (stage && selected.stage !== "move_vfx") stage.value = selected.stage;
+    if (stage) stage.value = selected.stage;
     if (selected.stage === "colab" || selected.stage === "blender") {
       const o = taskOpts(task());
       o.scope = "single";
@@ -3206,12 +3206,15 @@
       displayedText = b.text;
     }
 
-    if ($("#pipelineStage")?.value === "portrait_3d") displayedText = window.COSMI_PIPELINE.build(b.ctx);
+    if (["portrait_3d","encyclopedia"].includes($("#pipelineStage")?.value)) displayedText = window.COSMI_PIPELINE.build(b.ctx);
     $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : displayedText;
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
-    const dir = window.COSMI_DRIVE.packageDir(t.id);
+    const encyclopediaKind = t.id === "move-vfx" ? "moves" : t.id.startsWith("character") ? "characters" : "creatures";
+    const wikiPath = window.COSMI_WIKI.describe(b.ctx).path;
+    const dir = $("#pipelineStage")?.value === "encyclopedia"
+      ? "wiki/" + encyclopediaKind : window.COSMI_DRIVE.packageDir(t.id);
     const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && ["portrait", "portrait_3d"].includes($("#pipelineStage")?.value) && !window.COSMI_PIPELINE?.isPortraitAuto();
     const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
     $("#download").hidden = Boolean(portraitCopyOnly);
@@ -3232,7 +3235,7 @@
           : portraitAuto
           ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + "/"), "。逐檔存入資產目錄，或載入本機資料夾後按「儲存資產目錄至 Drive」。"),
+        el("li", {}, "成果包存放：", el("code", {}, $("#pipelineStage")?.value === "encyclopedia" ? wikiPath : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
         el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
@@ -5864,10 +5867,18 @@
     $("#reroll").addEventListener("click", () => reseed(newSeed(), true));
     $("#seed").addEventListener("change", e => reseed(e.target.value, true));
     $("#notes").addEventListener("input", e => { state.notes = e.target.value; renderOutput(); save(); });
+    function ensureWikiOnPrompt(ctx) {
+      if(!window.COSMI_DRIVE?.ensureWiki || !window.COSMI_PIPELINE?.supports(ctx))return;
+      void window.COSMI_DRIVE.ensureWiki(ctx).catch(e => {
+        console.warn("尚未同步圖鑑："+e.message);
+        toast("圖鑑未同步至 Drive："+e.message);
+      });
+    }
     $("#copy").addEventListener("click", () => {
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
+      ensureWikiOnPrompt(b.ctx);
       copyText($("#prompt").value, `已複製本步驟 Prompt (${staged.taskId})；格式參數請另存 JSON`);
       record();
     });
@@ -5877,6 +5888,7 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[0]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 1;
       renderOutput();
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
@@ -5890,6 +5902,7 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[1]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 2;
       renderOutput();
       copyText(b.rounds[1].prompt, `已複製第 2 輪 (三視圖) Prompt！請貼入同對話接續生成`);
@@ -5900,12 +5913,13 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[2]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 3;
       renderOutput();
       copyText(b.rounds[2].prompt, `已複製第 3 輪 (主立繪) Prompt！請貼入同對話接續生成`);
       record();
     });
-    $("#download").addEventListener("click", () => { download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
+    $("#download").addEventListener("click", () => { ensureWikiOnPrompt(lastBuild.ctx); download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
     $("#export").addEventListener("click", () => {
       const b = lastBuild; if (!b.ctx.concept) { toast("此任務沒有概念"); return; }
       download(b.ctx.subjectId + ".concept.json", JSON.stringify(b.ctx.concept, null, 2), "application/json");
@@ -6214,7 +6228,7 @@
     persistReview: saveReview,
     setPipelineStage: stage => {
       const flow = currentFlow();
-      if (flow && flow.category === "move") { renderAll(); return; }
+      if (flow && flow.category === "move" && stage !== "encyclopedia") { renderAll(); return; }
       const kind = flow?.category || (task().id.startsWith("character") ? "character" : "creature");
       const route = stage === "portrait_3d" ? "text" : flow?.route || "image";
       const matching = taskFlow?.steps(kind,route).find(s=>s.stage===stage);
@@ -6232,6 +6246,7 @@
       }
       renderAll();
     },
+    currentContext: () => build().ctx,
     settings: () => ({assetId: lastBuild.ctx.taskId, subjectId: lastBuild.ctx.subjectId, appearance: window.COSMI_PIPELINE.appearance(lastBuild.ctx),
       delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
