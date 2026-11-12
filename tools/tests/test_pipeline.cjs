@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
 function harness() {
-  const nodes = {pipelineStage: {value: 'portrait'}, pipelineAppearance: {value: ''}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
+  const nodes = {pipelineStage: {value: 'portrait'}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
   const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({drivePath: '02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'03_completed/portraits/source'}]}};
   c.window = c;
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);
@@ -59,10 +59,14 @@ test('source paths resolve completed portraits by exact asset identity', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='colab';
   assert.match(c.COSMI_PIPELINE.build(ctx),/03_completed\/portraits\/source/);
 });
-test('manual appearance cannot leak into a different subject', () => {
-  const {c,nodes,ctx}=harness();c.COSMI_PIPELINE.appearance(ctx);nodes.pipelineAppearance.value='private override';
-  assert.equal(c.COSMI_PIPELINE.appearance(ctx),'private override');
-  assert.doesNotMatch(c.COSMI_PIPELINE.appearance({...ctx,subjectId:'chr_two'}),/private override/);
+test('appearance comes only from concept parameters and cannot inherit another subject', () => {
+  const {c,ctx}=harness();
+  const first=c.COSMI_PIPELINE.appearance(ctx);
+  assert.match(first,/hair_palette.*red/);
+  assert.match(first,/appearance: long coat/);
+  const next=c.COSMI_PIPELINE.appearance({...ctx,subjectId:'chr_two',concept:{appearance:'blue armor'}});
+  assert.match(next,/blue armor/);
+  assert.doesNotMatch(next,/long coat|private override/);
 });
 
 
