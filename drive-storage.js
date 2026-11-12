@@ -2,7 +2,7 @@
 (function () {
 "use strict";
 const config=window.COSMI_DRIVE_CONFIG, API="https://www.googleapis.com/drive/v3/files", MIME="application/vnd.google-apps.folder";
-let accessToken="",expiry=0,expiryTimer,tokenClient,initialized=false,syncing,busy=false;
+let accessToken="",expiry=0,expiryTimer,tokenClient,initialized=false,syncing,busy=false,accountNamespace="",sessionGeneration=0;
 // sessionStorage survives refreshes within the same browser tab, but not a closed session.
 // Never persist a full-Drive bearer token in localStorage or in a URL.
 const SESSION_KEY="cosmi.drive.oauth.v1",SESSION_SKEW=30000;
@@ -44,7 +44,10 @@ function relative(path) {
  const parts=path.split("/"); if(parts.some(p=>!p||p==="."||p===".."))throw Error("不允許空白或上層目錄路徑"); return parts;
 }
 function lock(message) {
- accessToken="";expiry=0;folders.clear();clearTimeout(expiryTimer);clearSavedSession();
+ const previousNamespace=accountNamespace;
+ sessionGeneration++;accessToken="";expiry=0;accountNamespace="";folders.clear();clearTimeout(expiryTimer);clearSavedSession();
+ // Invalidate the private cache on any logout, expiry or permission failure.
+ void window.COSMI_DRIVE_CACHE?.clear(previousNamespace);
  $("driveApp").hidden=true;$("driveGate").hidden=false;$("driveGateStatus").textContent=message;
  if(initialized)window.location.reload();
 }
@@ -84,8 +87,11 @@ async function write(path,blob){
  const{file,parent,name}=await find(path,true),boundary="cosmi_"+crypto.randomUUID();
  const body=new Blob(["--"+boundary+"\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n"+JSON.stringify(file?{name}:{name,parents:[parent]})+"\r\n",
  "--"+boundary+"\r\nContent-Type: "+(blob.type||"application/octet-stream")+"\r\n\r\n",blob,"\r\n--"+boundary+"--"]);
- return(await request("https://www.googleapis.com/upload/drive/v3/files"+(file?"/"+file.id:"")+"?uploadType=multipart&fields=id,name,size",
+ const result=await(await request("https://www.googleapis.com/upload/drive/v3/files"+(file?"/"+file.id:"")+"?uploadType=multipart&fields=id,name,size",
  {method:file?"PATCH":"POST",headers:{"Content-Type":"multipart/related; boundary="+boundary},body})).json();
+ // A write may change asset metadata or references: never serve a stale package afterward.
+ void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+ return result;
 }
 const jsonWrite=(path,data)=>write(path,new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
 async function walk(id,prefix="",depth=0){
@@ -104,13 +110,38 @@ async function record(id,reviewIndex){
  const file=reviewIndex?reviewIndex.get(id+".json"):(await find("reviews/"+id+".json")).file;
  return file?JSON.parse(await(await request(API+"/"+file.id+"?alt=media")).text()):null;
 }
-async function syncPackages(){
+async function syncPackages({force=false}={}){
  if(syncing)return syncing;if(busy)throw Error("審查寫入中，請稍後重新載入");
  syncing=(async()=>{
+  const generation=sessionGeneration,ns=accountNamespace,cache=window.COSMI_DRIVE_CACHE;
+  const options=cache?.preferences();
   const errors=[];let count=0,finished=0,next=0;const ids=new Set();
+  const cachedRecords=!force&&options?.cacheEnabled&&ns?await cache.getPackages(ns):[];
+  const prior=new Map(cachedRecords.map(record=>[record.entry.id,record]));
+  const checkSession=()=>{if(generation!==sessionGeneration)throw Error("Google 工作階段已變更");};
+  const importPackage=async(dir,entry,files,raw,reviewRecord)=>{
+   checkSession();
+   const pkg=await window.COSMI_FORGE.loadAssetFiles(raw,{name:entry.name},{silent:true});
+   checkSession();
+   if(ids.has(pkg.id))throw Error(pkg.id+" 在多個目錄重複");
+   ids.add(pkg.id);pkg.drivePath=dir+"/"+entry.name;pkg.driveFolderId=entry.id;pkg.driveFiles=files;
+   const glb=files.find(f=>/\.glb$/i.test(f.path));
+   if(glb&&!pkg.glbFile)pkg.glbFile={path:glb.path,deferred:true};
+   if(reviewRecord){pkg.status=reviewRecord.status;pkg.sourcePack=reviewRecord.source_pack;pkg.reviewRecord=reviewRecord;}
+   if(dir.startsWith("03_completed/"))pkg.completed=true;
+   return pkg;
+  };
   const status=message=>{$("driveStatus").textContent=message;};
-  status("正在取得 Drive 資產清單…");
+  status(cachedRecords.length?"正在顯示本機快取…":"正在取得 Drive 資產清單…");
   window.COSMI_FORGE.clearDrivePackages?.();
+  if(cachedRecords.length){
+   for(const item of cachedRecords){
+    try{await importPackage(item.dir,item.entry,item.files,item.raw,item.reviewRecord || null);}
+    catch(e){errors.push("快取 "+item.entry.name+": "+e.message);await cache.removePackage(ns,item.entry.id);}
+   }
+   window.COSMI_FORGE.refresh();
+   status("已從快取顯示 "+ids.size+" 個資產，正在確認雲端更新…");
+  }
   const reviewIndexPromise=(async()=>{
    try{
     const reviewFiles=await list(await folder("reviews"));
@@ -123,28 +154,42 @@ async function syncPackages(){
     return entries.filter(f=>f.mimeType===MIME&&!f.name.startsWith("_")).map(entry=>({dir,entry}));
    }catch(e){errors.push(dir+": "+e.message);return [];}
   }));
+  checkSession();
   const entries=groups.flat(),reviewIndex=await reviewIndexPromise;
+  const currentFolders=new Set(entries.map(item=>item.entry.id));
+  // Folder removals are not safely observable from local cache; remove any missing folder.
+  for(const item of cachedRecords.filter(record=>!currentFolders.has(record.entry.id))){
+   await cache.removePackage(ns,item.entry.id);
+  }
   const download=limitConcurrent(6);
   const workers=Array.from({length:Math.min(3,entries.length)},async()=>{
    while(next<entries.length){
     const {dir,entry}=entries[next++];
     try{
+     checkSession();
      const files=await walk(entry.id),raw={};
+     const old=prior.get(entry.id);
+     const fingerprint=items=>JSON.stringify(items.map(f=>[f.id,f.path,f.modifiedTime||"",f.size||""]).sort((a,b)=>a[1].localeCompare(b[1])));
+     const reuse=!!old&&fingerprint(old.files)===fingerprint(files);
+     if(reuse){
+      // Refresh the review record even for a cached asset, since it can change independently.
+      const r=await download(()=>record(old.pkgId||entry.name,reviewIndex));
+      if(ids.has(old.pkgId||entry.name)){
+       const pkg=window.COSMI_FORGE.packages().find(p=>p.driveFolderId===entry.id);
+       if(pkg){pkg.driveFiles=files;pkg.status=r?.status||pkg.status;pkg.sourcePack=r?.source_pack||pkg.sourcePack;pkg.reviewRecord=r||pkg.reviewRecord;count++;continue;}
+      }
+      await importPackage(dir,entry,files,old.raw,r);
+      count++;continue;
+     }
      const needed=files.filter(f=>/\.(json|md|png|jpe?g|webp)$/i.test(f.name)&&!f.mimeType.startsWith("application/vnd.google-apps."));
      await Promise.all(needed.map(f=>download(async()=>{
       raw[entry.name+"/"+f.path]=new Uint8Array(await(await request(API+"/"+f.id+"?alt=media")).arrayBuffer());
      })));
      if(!Object.keys(raw).length)continue;
      // Avoid rendering the whole review desk for every downloaded file/package.
-     const pkg=await window.COSMI_FORGE.loadAssetFiles(raw,{name:entry.name},{silent:true});
-     if(ids.has(pkg.id))throw Error(pkg.id+" 在多個目錄重複");ids.add(pkg.id);
-     pkg.drivePath=dir+"/"+entry.name;pkg.driveFolderId=entry.id;pkg.driveFiles=files;
-     // Large GLB files are downloaded only when the user opens their 3D preview.
-     const glb=files.find(f=>/\.glb$/i.test(f.path));
-     if(glb&&!pkg.glbFile)pkg.glbFile={path:glb.path,deferred:true};
-     const r=await download(()=>record(pkg.id,reviewIndex));
-     if(r){pkg.status=r.status;pkg.sourcePack=r.source_pack;pkg.reviewRecord=r;}
-     if(dir.startsWith("03_completed/"))pkg.completed=true;
+     const r=await download(()=>record(entry.name,reviewIndex));
+     const pkg=await importPackage(dir,entry,files,raw,r);
+     if(ns && generation===sessionGeneration)void cache?.putPackage(ns,{dir,entry,files,raw,reviewRecord:r,pkgId:pkg.id});
      count++;
      if(count%5===0)window.COSMI_FORGE.refresh();
     }catch(e){errors.push(entry.name+": "+e.message);}
@@ -155,9 +200,10 @@ async function syncPackages(){
    }
   });
   await Promise.all(workers);
+  checkSession();
   window.COSMI_FORGE.refresh();
   const errorText=errors.length?"；"+errors.slice(0,3).join("；")+(errors.length>3?"；另有 "+(errors.length-3)+" 項錯誤":""):"";
-  status("Drive 已載入 "+count+" 個資產目錄"+errorText);
+  status("Drive 已載入 "+count+" 個資產目錄"+(cachedRecords.length?"（已使用快取）":"")+errorText);
   return count;
  })().finally(()=>{syncing=null;});return syncing;
 }
@@ -167,6 +213,7 @@ async function move(id,from,to){
  const m=await metadata(id);if(m.trashed||!m.parents?.includes(from))throw Error("來源已移動，請重新載入 Drive");
  const p=new URLSearchParams({addParents:to,removeParents:from,fields:"id,name,parents"});
  const r=await(await request(API+"/"+encodeURIComponent(id)+"?"+p,{method:"PATCH"})).json();
+ void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
  if(!r.parents?.includes(to)||r.parents?.includes(from))throw Error("Drive 移動結果未確認");folders.clear();return r;
 }
 async function review(pkg,status,note=""){
@@ -235,6 +282,11 @@ async function authorize(response,restoredSession=null){
  try{
  accessToken=response.access_token;expiry=restoredSession?.expiry??(Date.now()+Number(response.expires_in||3600)*1000);
  const root=await metadata(config.rootId);if(root.trashed||root.mimeType!==MIME)throw Error("Drive 專案資料夾無法存取");
+ // A permission ID is stable for this account. Never mix cached data between Google accounts.
+ let permissionId="";
+ try{const about=await(await request("https://www.googleapis.com/drive/v3/about?fields=user(permissionId)")).json();
+  permissionId=about.user?.permissionId||"";}catch(_){}
+ accountNamespace=window.COSMI_DRIVE_CACHE?.namespace(config.rootId,permissionId)||"";
  // Persist only after Drive permissions have been validated.
  saveSession();
  expiryTimer=setTimeout(()=>lock("登入已到期，請重新登入 Google"),Math.max(0,expiry-Date.now()));
@@ -247,10 +299,13 @@ async function authorize(response,restoredSession=null){
    $("driveStatus").textContent+="；管線模板讀取失敗："+e.message;
   });
  }
- await run(syncPackages);
+ await run(()=>syncPackages());
  }catch(e){lock(e.message);}
 }
-window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,rootPath:config.rootPath,
+window.COSMI_DRIVE=Object.freeze({relative,read,write,folder,list,move,review,saveNote,uploadAsset,syncPackages,
+ cacheStats:()=>window.COSMI_DRIVE_CACHE?.stats(accountNamespace)||Promise.resolve({count:0,bytes:0,supported:false}),
+ clearCache:async()=>{await window.COSMI_DRIVE_CACHE?.clear(accountNamespace);return true;},
+ signOut:()=>lock("已登出"),rootPath:config.rootPath,
  packageDir:type=>/model|rig|anim/.test(type)?"02_3d/ai_blender":"01_portraits"});
 document.addEventListener("DOMContentLoaded",()=>{
  $("driveSignIn").addEventListener("click",()=>{
@@ -262,7 +317,7 @@ document.addEventListener("DOMContentLoaded",()=>{
  tokenClient.requestAccessToken({prompt:"select_account"});
  });
  $("driveSignOut").addEventListener("click",()=>lock("已登出"));
- $("driveSync").addEventListener("click",()=>run(syncPackages));
+ $("driveSync").addEventListener("click",()=>run(()=>syncPackages({force:true})));
  $("driveSavePrompt").addEventListener("click",()=>{if($("pipelineStage").value==="portrait"&&!window.COSMI_PIPELINE?.isPortraitAuto())return;run(async()=>{const{path,text}=window.COSMI_FORGE.currentPrompt();await write(path,new Blob([text],{type:"text/markdown"}));$("driveStatus").textContent="已儲存 "+path;});});
  $("driveLoadPrompt").addEventListener("click",()=>run(async()=>{const path=$("drivePromptPath").value.trim();if(!path.startsWith("prompts/")||!path.endsWith(".md"))throw Error("請輸入 prompts/ 下的 Markdown 相對路徑");window.COSMI_FORGE.showPrompt(await(await read(path)).text());$("driveStatus").textContent="已讀取 "+path;}));
  $("pipelineRead").addEventListener("click",()=>{
