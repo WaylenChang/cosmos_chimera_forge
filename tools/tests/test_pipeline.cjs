@@ -49,7 +49,7 @@ test('Drive template loading skips the native portrait stage', async () => {
   }};
   await c.COSMI_PIPELINE.loadTemplates();
   assert.ok(!requests.includes('prompts/01_portrait.prompt.md'));
-  assert.equal(requests.filter(file => file.startsWith('prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-1);
+  assert.equal(requests.filter(file => file.startsWith('prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
 });
 
 test('appearance prompt includes visual traits and excludes pipeline and format content', () => {
