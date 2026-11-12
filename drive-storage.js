@@ -346,6 +346,7 @@ async function migratePrompt3dAssets() {
     // Preserve all historical manifest bytes in a separate backup before update.
     if(manifestFile){
      const backupPath="backup/manifest_snapshots/"+asset.name+".before_prompt3d_migration.json";
+     await folder("backup/manifest_snapshots",true);
      if(!(await find(backupPath)).file)await jsonWrite(backupPath,manifest);
     }
     const target="02_3d/ai_blender/"+asset.name+"/manifest.json";
