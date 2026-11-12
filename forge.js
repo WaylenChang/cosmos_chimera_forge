@@ -890,6 +890,10 @@
       const o = taskOpts(task());
       o.scope = "single";
       if (route === "text") { o.source_pack = ""; o.input_img = ""; }
+      else if (selected.stage === "colab" || selected.stage === "blender") {
+        const pkg = getActivePkg();
+        if (pkg && !is3dType(pkg.type) && pkg.status === "ok" && (category === "character" ? pkg.type === "character-concept" : pkg.type === "creature-concept")) o.source_pack = pkg.id;
+      }
     }
     window.COSMI_PIPELINE?.syncStageActions();
     renderAll();
@@ -3170,7 +3174,7 @@
       displayedText = b.text;
     }
 
-    if ($("#pipelineStage")?.value === "portrait_3d" && b.rounds?.length) displayedText = b.rounds[2]?.prompt || b.text;
+    if ($("#pipelineStage")?.value === "portrait_3d") displayedText = window.COSMI_PIPELINE.build(b.ctx);
     $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : displayedText;
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
