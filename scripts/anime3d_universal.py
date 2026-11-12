@@ -112,7 +112,7 @@ def run(a):
     elif backend == "tripo":
         # Tripo's current agent only supports its preset retarget path and
         # refuses advanced rigs. Do not silently downgrade anatomy to biped.
-        unsupported = profile["unsupported"] + profile["procedural_clips"]
+        unsupported = profile["unsupported"]
         if profile["anatomy"] not in {"biped", "quadruped", "hexapod", "octopod", "serpentine", "aquatic"} or unsupported:
             state["status"] = "REVIEW_REQUIRED"
             state["warnings"].append("Tripo-only agent cannot safely execute this advanced anatomy/motion; choose a typed adapter")
@@ -123,9 +123,15 @@ def run(a):
             state["warnings"].append("Explicit --allow-paid-tripo needed for paid API")
             write(state_path, state)
             return 2
+        # The API runner accepts only published Tripo presets; supplementary
+        # procedural clips are authored afterwards by Blender.
+        api_spec_path = out / "agent_backend_spec.json"
+        api_spec = dict(spec)
+        api_spec["requested_clips"] = profile["tripo_clips"]
+        write(api_spec_path, api_spec)
         child = run_checked([sys.executable, str(Path(__file__).with_name("anime3d_agent.py")),
                              "--root", str(root), "--asset-id", a.asset_id,
-                             "--spec", str(a.spec), "--execute"] +
+                             "--spec", str(api_spec_path), "--execute"] +
                             (["--blender", a.blender] if a.blender else []), 7200)
         state["steps"]["tripo"] = {"returncode": child.returncode, "stderr": child.stderr[-4000:]}
         write(state_path, state)
