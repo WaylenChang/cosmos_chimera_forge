@@ -66,7 +66,7 @@ test('forge rolls use soft-affinity helpers and reset unlocked full-roll values'
 
 test('each element has multiple direct color matches and nearby affinity is competitive', () => {
   const all = C.COLOR_TONES;
-  assert.equal(all.length, 66);
+  assert.equal(all.length, 189);
   for (const element of C.ELEMENTS.map(e => e.v).filter(v => v !== '未知')) {
     const direct = all.filter(color => color.elements.includes(element));
     assert.ok(direct.length >= 9, element + ' only has ' + direct.length + ' direct colors');
@@ -93,4 +93,41 @@ test('multi-color weighting encourages variety without removing same-hue choices
   assert.equal(different.w, originalDifferent.w);
   assert.equal(adjusted.length, colors.length);
   assert.match(readForge(), /C\.getVariedPaletteOptions\(pool, chosen\)/);
+});
+
+
+test('every elemental palette follows direct <= adjacent <= neutral <= contrast by unique entries', () => {
+  const elements = C.ELEMENTS.map(e => e.v).filter(v => v !== '未知');
+  assert.equal(new Set(C.COLOR_TONES.map(c => c.v)).size, C.COLOR_TONES.length);
+  for (const element of elements) {
+    const stats = C.getPaletteTierCounts(element);
+    assert.ok(stats.direct >= 9, element + ': not enough direct colors');
+    assert.ok(stats.direct <= stats.adjacent, element + ': direct exceeds adjacent');
+    assert.ok(stats.adjacent <= stats.neutral, element + ': adjacent exceeds neutral');
+    assert.ok(stats.neutral <= stats.contrast, element + ': neutral exceeds contrast');
+    assert.equal(Object.values(stats).reduce((sum, v) => sum + v, 0), C.COLOR_TONES.length);
+    const tagged = C.COLOR_TONES.map(color => C.getElementColorTier(element, color));
+    assert.ok(tagged.every(x => ['direct', 'adjacent', 'neutral', 'contrast'].includes(x)));
+  }
+});
+
+test('culture and timeline style colors are optional, additive and never hard-excluded', () => {
+  const region = '非洲', timeline = '青銅神話/古典英雄時代';
+  const color = C.COLOR_TONES.find(c => c.v === '古埃及藍');
+  assert.equal(color.region, region);
+  assert.equal(color.timeline, timeline);
+  assert.ok(C.COLOR_TONES.some(c => c.v === '瑪雅藍' && c.region === '美洲'));
+  assert.ok(C.COLOR_TONES.some(c => c.v === '宋瓷雨青' && c.region === '東亞'));
+  assert.ok(C.COLOR_TONES.some(c => c.v === '賽博故障粉'));
+  const sameRegion = C.getColorStyleAffinity(color, { region, timeline });
+  const otherRegion = C.getColorStyleAffinity(color, { region: '歐洲', timeline: '太空歌劇/星際魔導帝國' });
+  assert.ok(sameRegion > otherRegion && otherRegion > 0);
+  for (const element of ['fire', 'ice', 'shadow', 'metal']) {
+    const matched = C.getWeightedPalettes([element], { region, timeline });
+    assert.equal(matched.length, C.COLOR_TONES.length);
+    assert.ok(matched.every(c => c.w > 0));
+  }
+  const forge = readForge();
+  assert.match(forge, /getWeightedPalettes\(\[\], \{ region: s\.character\.region/);
+  assert.match(forge, /getWeightedPalettes\(s\.creature\.elements \|\| \[\], \{ region: s\.creature\.region/);
 });
