@@ -103,10 +103,10 @@ python scripts/anime3d_universal.py --root /content/drive/MyDrive/project/cosmos
 This does **not** quietly fall back to an unrelated model or the previous
 image generation job. The separately installed adapter must itself produce the
 original model. For text-based **creatures only**, the model must reference an original
-wiki at `04_encyclopedia/creatures/<subject_id>_wiki.md` or a backward-compatible
-legacy `bestiary.md`; image-based creatures and characters do not require
-embedded wikis. The same wiki belongs to the entire creature family, not a
-separate duplicate in each evolution stage's model folder.
+wiki at `wiki/creatures/<subject_id>_<stage>_wiki.md` for every creature stage, or a backward-compatible
+legacy `bestiary.md` only for reading historical assets. Image-to-3D and Prompt-to-3D
+share exactly the same stage-specific wiki identity, and model packages reference it via
+`manifest.encyclopedia_path`; do not generate copies per modeling branch.
 
 ## Built-in AniGen / Pixal3D / PartCrafter execution
 
