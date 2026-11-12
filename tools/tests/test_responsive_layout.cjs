@@ -73,7 +73,7 @@ test('responsive rules preserve readable dialogs, touch and viewport sizing', ()
 });
 
 test('unified tooltips cover keyboard, touch, and dynamic controls', () => {
-  assert.match(html, /id="uiTooltip"/);
+  assert.match(html, /tip\.id = "uiTooltip"/);
   assert.match(html, /const tooltipControls =/);
   assert.match(html, /MutationObserver\(records =>/);
   assert.match(html, /observer\.observe\(document\.body, \{ childList: true, subtree: true \}\)/);
