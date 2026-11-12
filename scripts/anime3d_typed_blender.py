@@ -35,6 +35,11 @@ out.mkdir(parents=True, exist_ok=True)
 if not model.is_file() or model.suffix.lower() != ".glb":
     raise SystemExit("A real source .glb is required; no placeholder geometry is generated")
 bpy.ops.wm.read_factory_settings(use_empty=True)
+try:
+    import addon_utils
+    addon_utils.enable("io_scene_gltf2", default_set=False, persistent=True)
+except Exception:
+    pass  # Built-in importer on newer Blender.
 bpy.ops.import_scene.gltf(filepath=str(model))
 meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
 if not meshes:
