@@ -910,7 +910,7 @@
     state.taskId = selected.taskId;
     state.currentRound = selected.stage === "portrait" ? 1 : 0;
     const stage = $("#pipelineStage");
-    if (stage && selected.stage !== "move_vfx") stage.value = selected.stage;
+    if (stage) stage.value = selected.stage;
     if (selected.stage === "colab" || selected.stage === "blender") {
       const o = taskOpts(task());
       o.scope = "single";
