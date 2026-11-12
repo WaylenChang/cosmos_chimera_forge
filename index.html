@@ -38,6 +38,12 @@
   .btn.icon-only, .segb.icon-only { width: 32px; min-width: 32px; height: 32px; padding: 0; font-size: 16px; }
   .btn.icon-only.mini { width: 29px; min-width: 29px; height: 29px; }
   #btnFavPrompt { flex: 0 0 32px; max-width: 32px; white-space: nowrap; overflow: hidden; }
+  #forgeView .portrait-mode-control { display: inline-flex; align-items: center; gap: 7px; flex: 1 1 245px; min-width: 0; color: var(--muted); font-size: 12px; white-space: nowrap; }
+  #forgeView .portrait-mode-control select { width: auto; min-width: 0; max-width: 260px; flex: 1 1 160px; }
+  @media (max-width: 500px) {
+    #forgeView .portrait-mode-control { flex-basis: 100%; }
+    #forgeView .portrait-mode-control select { max-width: none; }
+  }
   button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   [data-tip]:not(button):not(a):not(input):not(select):not(textarea), [aria-description]:not(button):not(a):not(input):not(select):not(textarea) { cursor: help; }
   #uiTooltip { position: fixed; display: none; max-width: min(320px, calc(100vw - 24px)); background: #30394b; color: #fff; border: 1px solid #536481; padding: 6px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 22px rgba(0,0,0,.55); pointer-events: none; z-index: 9999; white-space: normal; overflow-wrap: anywhere; }
@@ -841,6 +847,12 @@
         </div>
 
         <div class="actions">
+          <label id="portraitModeControl" class="portrait-mode-control" hidden>立繪模式
+            <select id="portraitMode" aria-label="立繪 Prompt 執行方式" data-tip="手動複製貼上，或自動建立完整 Prompt .md 並儲存至 Google Drive">
+              <option value="manual">手動 · 複製貼上</option>
+              <option value="auto">自動 · .md 至 Drive</option>
+            </select>
+          </label>
           <div class="round-copy-group" id="roundCopyGroup" style="display:none">
             <button class="btn mini icon-only" id="btnCopyR1" type="button" aria-label="複製第 1 輪 正面正交基準圖 Prompt" data-tip="複製第 1 輪 正面正交基準圖 Prompt">①</button>
             <button class="btn mini ghost icon-only" id="btnCopyR2" type="button" aria-label="複製第 2 輪 T-pose 三視圖合圖 Prompt" data-tip="複製第 2 輪 T-pose 三視圖合圖 Prompt">②</button>
@@ -1167,6 +1179,7 @@
     root: "設定輸出資產的根目錄",
     notes: "輸入會優先套用到 Prompt 的補充要求",
     prompt: "查看或編輯目前生成的完整 Prompt",
+    portraitMode: "切換立繪的手動複製貼上或自動建立 Markdown 檔並儲存至 Google Drive",
     favSearch: "依標題、Prompt、主體 ID 或種子搜尋收藏",
     designedSearch: "搜尋已設計的角色與宙獸",
     railSearch: "搜尋審查任務、主體或來源包",
