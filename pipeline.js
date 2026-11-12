@@ -3,7 +3,8 @@
   "use strict";
   const stages = {
     appearance: "00_appearance", portrait: "01_portrait", review_portrait: "02_review_portrait",
-    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d"
+    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d",
+    encyclopedia: "05_encyclopedia"
   };
   const templates = {};
   const modeKey = "cosmimera.portrait-mode.v1";
@@ -34,10 +35,30 @@
     if (ctx.notes?.trim()) lines.push("補充／修改: " + ctx.notes.trim());
     return lines.join("\n") || "請先於設計概念參數設定角色／宙獸外觀";
   }
-  function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(ctx.task.id); }
+  function supports(ctx) { return ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig", "move-vfx"].includes(ctx.task.id); }
   function build(ctx) {
     const stage = $("pipelineStage")?.value || "portrait";
-    if (stage === "portrait") return ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
+    if (stage === "portrait" || stage === "move_vfx") return ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
+    if (stage === "encyclopedia") {
+      const kind = ctx.task.id === "move-vfx" ? "moves" :
+        ctx.task.id.startsWith("character") ? "characters" : "creatures";
+      const subject = ctx.subjectId || ctx.taskId;
+      const destination = "04_encyclopedia/" + kind + "/" + subject + ".md";
+      const focus = kind === "moves" ?
+        "招式定位、施放條件、屬性、視覺形態、分鏡、效果節奏與動作規格" :
+        kind === "characters" ? "角色身份、背景、外觀、服裝、性格、技能與設計變體" :
+        "宙獸原型、生態、棲息地、解剖結構、四階段演化、屬性、動作與招式";
+      return [
+        "# 生成原創" + (kind === "moves" ? "招式" : kind === "characters" ? "角色" : "宙獸") + "圖鑑",
+        "對象：" + subject,
+        "概念設定：", appearance(ctx),
+        "只依目前概念與已確認的素材建立圖鑑，不借用其他對象的圖鑑內容。",
+        "內容包含：" + focus + "；未確認資料明確標示待核，不虛構實測數據與來源。",
+        "輸出 Markdown：" + destination,
+        "圖鑑獨立於 3D 模型目錄；若需模型關聯，記錄現有 asset_id 與模型路徑，不複製 GLB。",
+        "僅更新本對象的圖鑑，不修改或移動既有模型，也不得以產生圖鑑代替 3D QA 與最終驗收。"
+      ].join("\n");
+    }
     if (stage === "portrait_3d") {
       const model = window.COSMI_FORGE?.activePackage?.();
       const subject = ctx.concept?.name_zh || ctx.subjectId;
@@ -68,10 +89,10 @@
       "；骨架／機構策略：" + anatomy.rig +
       "。依指定原型與實際肢體建立專用動作，混合／不明拓撲先審查，不可擅套人形 Rig。" : filled;
     return stage === "blender" && route === "text" && kind === "creature"
-      ? typed + "\n純文字宙獸建模須同時產生原創 bestiary.md，含四階外觀、生態與演化；圖片建模與角色不產生圖鑑。" : typed;
+      ? typed + "\n純文字宙獸建模需建立或更新 04_encyclopedia/creatures/" + ctx.subjectId + ".md，記錄四階外觀、生態與演化，並在模型 manifest 關聯該圖鑑。圖片建模與角色不強制產生圖鑑。" : typed;
   }
   async function loadTemplates() {
-    const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
+    const entries = Object.entries(stages).filter(([key]) => !["portrait", "encyclopedia"].includes(key));
     const jobs = entries.map(async ([key, name]) => {
       try {
         templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
