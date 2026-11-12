@@ -800,7 +800,6 @@
   <button class="btn ghost mini icon-only" id="driveSavePrompt" type="button" aria-label="儲存本步驟 Prompt" data-tip="儲存本步驟 Prompt">💾</button>
   <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/jobs/task.colab.prompt.md">
   <button class="btn ghost mini icon-only" id="driveLoadPrompt" type="button" aria-label="讀取 Prompt" data-tip="讀取 Prompt">📖</button>
-  <button class="btn ghost mini icon-only" id="driveSignOut" type="button" aria-label="登出" data-tip="登出">⏻</button>
   <span id="driveStatus" role="status" aria-live="polite"></span>
 </div>
 <details id="pipelineControls" style="padding:8px 16px;border-bottom:1px solid var(--line)">
@@ -870,8 +869,8 @@
         <p id="settingsCacheStats" role="status" class="muted">正在讀取快取資訊…</p>
         <div class="settings-actions">
           <button class="btn ghost mini" id="settingsClearCache" type="button" data-tip="僅清理此帳號的 Drive 資產快取，不刪除雲端檔案">清理快取</button>
-          <button class="btn ghost mini" id="settingsForceSync" type="button" data-tip="忽略快取並從 Drive 重新同步資產">強制同步</button>
         </div>
+        <p class="muted">需要重新載入 Drive 資產時，使用頁面上方的 ⟳ 同步按鈕。</p>
       </section>
       <section class="settings-card">
         <h3>功能偏好</h3>
@@ -898,10 +897,18 @@
       <div id="taskRoutes" class="task-route-picker" role="group" aria-label="選擇管線路徑"></div>
       <div id="tasks" class="task-flow-list" aria-label="管線任務流程"></div>
       <div id="taskFlowDetail" class="task-flow-detail" aria-live="polite"></div>
-      <div class="subhead" style="margin-top:14px;margin-bottom:4px">
-        <h2 style="margin:0">已設計項目</h2>
+
+      <div id="designedShortcut" hidden>
+
+        <div class="subhead" style="margin-top:14px;margin-bottom:4px">
+
+          <h2 style="margin:0">已載入的設計項目</h2>
+
+        </div>
+
+        <div id="designed"></div>
+
       </div>
-      <div id="designed"></div>
       <details style="margin-top:12px">
         <summary class="muted" style="cursor:pointer">遊戲交付相對目錄（本機匯出用）</summary>
         <input id="root" style="width:100%;margin-top:6px;font-family:Consolas,monospace" spellcheck="false">
