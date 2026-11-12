@@ -91,7 +91,6 @@
     const modeControl = $("portraitModeControl"), modeSelect = $("portraitMode");
     if (modeControl) modeControl.hidden = !isPortrait;
     if (modeSelect) modeSelect.value = portraitMode;
-    if ($("portraitAutoRun")) $("portraitAutoRun").hidden = !automatic;
     // Manual portrait mode has no Drive Prompt read/write controls.
     for (const id of ["driveSavePrompt", "drivePromptPath", "driveLoadPrompt"]) {
       const control = $(id);
@@ -111,7 +110,6 @@
   document.addEventListener("DOMContentLoaded", () => {
     $("pipelineParameters").value = JSON.stringify(defaults, null, 2);
     syncStageActions();
-    $("portraitAutoRun")?.addEventListener("click", () => $("pipelineRead")?.click());
     $("portraitMode")?.addEventListener("change", event => {
       portraitMode = event.target.value === "auto" ? "auto" : "manual";
       try { window.localStorage?.setItem(modeKey, portraitMode); } catch (_) {}
