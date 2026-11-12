@@ -47,6 +47,7 @@ class BlenderSmoke(unittest.TestCase):
                             "--python-expr", CREATE_FIXTURE, "--", str(self.input)],
                            capture_output=True, text=True, timeout=150)
         self.assertEqual(p.returncode, 0, p.stdout[-1500:] + p.stderr[-1500:])
+        self.assertTrue(self.input.is_file(), p.stdout[-6000:] + p.stderr[-6000:])
         self.assertGreater(self.input.stat().st_size, 100)
 
     def process(self, name, spec):
