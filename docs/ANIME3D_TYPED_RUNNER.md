@@ -105,6 +105,62 @@ image generation job. The separately installed adapter must itself produce the
 original model. For text-based **creatures only**, the existing prompt-to-3D
 task also requires \`bestiary.md\`; image-based creatures and characters do not.
 
+## Built-in AniGen / Pixal3D / PartCrafter execution
+
+Three model adapters now call the published upstream CLI directly, without
+requiring you to implement your own wrapper. Install each external repository,
+its compatible model weights, CUDA/Torch dependencies and the exact version
+recommended by that project. Do not install conflicting GPU dependencies into
+the same Python environment.
+
+Configure a local JSON file using
+[anime3d_backends.example.json](anime3d_backends.example.json):
+
+\`\`\`json
+{
+  "anigen": {"repo": "/opt/models/AniGen", "python": "/opt/envs/anigen/bin/python"},
+  "pixal3d": {"repo": "/opt/models/Pixal3D", "python": "/opt/envs/pixal3d/bin/python", "low_vram": true, "attn_backend": "sdpa"},
+  "partcrafter": {"repo": "/opt/models/PartCrafter", "python": "/opt/envs/partcrafter/bin/python"}
+}
+\`\`\`
+
+Execute with, for example:
+
+\`\`\`sh
+python scripts/anime3d_universal.py \
+  --root /content/drive/MyDrive/project/cosmos_chimera_forge \
+  --asset-id mdl-dragon --spec /path/to/approved-dragon.json \
+  --backend anigen --backend-config /path/to/backends.json \
+  --blender /usr/bin/blender --execute
+\`\`\`
+
+Supported official CLI scripts:
+- AniGen: \`example.py\` using \`--image_path\`, \`--output_name\`,
+  \`--joints_density\`. Requires the actual pretrained weights.
+- Pixal3D: \`inference.py\` (single view) or \`inference_mv.py\`
+  (calibrated multi-view). Multi-view requires \`multiview_dir\` relative
+  to the approved source directory, valid \`transforms.json\` and
+  correctly posed camera matrices; it is not a substitute for source review.
+- PartCrafter: \`scripts/inference_partcrafter.py\`; preserves separate
+  \`part_*.glb\` alongside the merged GLB.
+
+Each run uses a new temporary directory and verifies the resulting glTF 2.0
+container before publishing the model into its immutable source folder.
+The separate Blender stage exports a \`models/<asset_id>.blend\` and
+\`models/<asset_id>.glb\`. Final animated GLBs are re-imported and
+their action clips inspected. The original generator output stays under
+\`source/<asset_id>.glb\`. No stale output can satisfy a failed generator job.
+
+**Limitations:** These adapters execute the installed official CLIs but do not
+provide pretrained checkpoints, GPU/CUDA, environment installation, or artistic
+approval. AniGen topology-appropriate anatomical skeletons must still be
+visually reviewed. PartCrafter output is not by itself a jointed mechanism:
+author explicit pivots and joint limits before motion can be approved.
+A text-to-3D model generator still needs a separately installed executable
+that produces an original GLB. All multi-view/animation QA currently requires
+Blender and visual verification. CI runs isolated backend CLI contract tests
+plus real Blender smoke tests with synthetic data (no downloaded weights).
+
 ## Existing model QA
 
 \`\`\`sh
@@ -161,6 +217,7 @@ including colliders and mechanical linkage, need additional verification.
 \`\`\`sh
 python -m compileall -q scripts
 python -m unittest discover -s tests -p 'test_anime3d*.py' -v
+# Install Blender to run non-skipped mesh/animation integration tests
 node --test tools/tests/*.cjs
 \`\`\`
 
