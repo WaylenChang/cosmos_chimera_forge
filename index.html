@@ -48,6 +48,20 @@
   [data-tip]:not(button):not(a):not(input):not(select):not(textarea), [aria-description]:not(button):not(a):not(input):not(select):not(textarea) { cursor: help; }
   #uiTooltip { position: fixed; display: none; max-width: min(320px, calc(100vw - 24px)); background: #30394b; color: #fff; border: 1px solid #536481; padding: 6px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 22px rgba(0,0,0,.55); pointer-events: none; z-index: 9999; white-space: normal; overflow-wrap: anywhere; }
 
+  /* Category-first task workflow: selectable nodes and detail panel. */
+  .task-category-picker, .task-route-picker { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-bottom:10px; }
+  .task-route-picker { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .task-category-picker button, .task-route-picker button { border:1px solid var(--line); border-radius:8px; background:transparent; color:inherit; padding:9px 4px; cursor:pointer; min-width:0; }
+  .task-category-picker button.on, .task-route-picker button.on { border-color:var(--accent); background:#202735; }
+  .task-flow-list { display:flex !important; flex-direction:column; gap:5px; }
+  .task-flow-list .task { width:100%; height:auto; min-width:0; margin:0; flex:none; position:relative; }
+  .task-flow-list .task:not(:last-child):after { content:"↓"; position:absolute; left:14px; bottom:-12px; z-index:1; font-size:11px; color:var(--muted); pointer-events:none; }
+  .task-flow-list .task.is-alternate { margin-left:12px; width:calc(100% - 12px); border-left:3px solid var(--accent); }
+  .task-flow-detail { margin-top:10px; padding:10px; border:1px solid var(--line); border-radius:8px; font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
+  .task-flow-detail strong { display:block; margin-bottom:4px; }
+  .task-flow-detail p { margin:4px 0; }
+  .task-flow-detail code { white-space:normal; overflow-wrap:anywhere; }
+  @media (max-width:1279px) { .task-flow-list { display:grid !important; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); } .task-flow-list .task.is-alternate { margin:0; width:100%; } .task-flow-list .task:after { display:none; } }
   /* ==================== 鍛造視圖 ==================== */
   #forgeView { flex: 1; display: grid; grid-template-columns: 220px minmax(360px, 1.1fr) minmax(380px, 1.2fr); gap: 12px; padding: 12px; min-height: 0; overflow: auto; }
   @media (max-width: 1100px) { #forgeView { grid-template-columns: 1fr; } #tasks { display: flex; flex-wrap: wrap; gap: 6px; } .task { flex: 1 1 160px; } }
@@ -784,6 +798,7 @@
     <label>目前步驟 <select id="pipelineStage">
       <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
       <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
+      <option value="portrait_3d">1-b · 3D 完成後補畫主立繪（無 T-pose）</option>
       <option value="review_portrait">2 · 立繪審查</option>
       <option value="colab">3-a · Colab GPU</option>
       <option value="blender">3-b · AI Blender（Argon／Codex）</option>
@@ -873,7 +888,10 @@
   <main id="forgeView">
     <section>
       <h2>任務清單</h2>
-      <div id="tasks"></div>
+      <div id="taskCategories" class="task-category-picker" role="group" aria-label="選擇任務類別"></div>
+      <div id="taskRoutes" class="task-route-picker" role="group" aria-label="選擇管線路徑"></div>
+      <div id="tasks" class="task-flow-list" aria-label="管線任務流程"></div>
+      <div id="taskFlowDetail" class="task-flow-detail" aria-live="polite"></div>
       <div class="subhead" style="margin-top:14px;margin-bottom:4px">
         <h2 style="margin:0">已設計項目</h2>
         <button class="btn mini ghost icon-only" type="button" id="btnGoDesignedFromSubhead" aria-label="📂" data-tip="📂">📂</button>
@@ -1227,6 +1245,7 @@
 </script>
 <script src="catalog.js"></script>
 <script src="tasks.js"></script>
+<script src="task-flow.js"></script>
 <script src="designed.js"></script>
 <script src="forge.js"></script>
 
