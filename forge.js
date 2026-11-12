@@ -3206,7 +3206,7 @@
       displayedText = b.text;
     }
 
-    if ($("#pipelineStage")?.value === "portrait_3d") displayedText = window.COSMI_PIPELINE.build(b.ctx);
+    if (["portrait_3d","encyclopedia"].includes($("#pipelineStage")?.value)) displayedText = window.COSMI_PIPELINE.build(b.ctx);
     $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : displayedText;
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
