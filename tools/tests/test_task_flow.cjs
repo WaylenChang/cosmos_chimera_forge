@@ -77,3 +77,30 @@ test('post-model portrait uses native copy or Drive upload, never a missing temp
   assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)){'));
   assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)&&!window.COSMI_PIPELINE?.isPortraitAuto())return;'));
 });
+
+test('typed anatomy profiles are shipped and connected to 3D prompts', () => {
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const build=fs.readFileSync(path.join(root,'tools/build-site.mjs'),'utf8');
+  const pipeline=fs.readFileSync(path.join(root,'pipeline.js'),'utf8');
+  const profiles=fs.readFileSync(path.join(root,'anatomy-profiles.js'),'utf8');
+  assert.match(html,/src="anatomy-profiles.js"/);
+  assert.ok(build.includes("'anatomy-profiles.js'"));
+  assert.ok(html.indexOf('src="anatomy-profiles.js"') < html.indexOf('src="forge.js"'));
+  assert.match(pipeline,/COSMI_ANATOMY\?\.plan/);
+  assert.match(profiles,/winged_quadruped/);
+  assert.match(profiles,/humanoid_mecha/);
+});
+
+test('browser anatomy planner respects mixed origins and explicit wings', () => {
+  const ctx={window:{}};
+  vm.runInNewContext(fs.readFileSync(path.join(root,'anatomy-profiles.js'),'utf8'),ctx);
+  const plan=ctx.window.COSMI_ANATOMY.plan;
+  const winged=plan('creature',{base_parents:['生物·哺乳類'],limbs:{legs:4,wings:2}},'image');
+  assert.equal(winged.anatomy,'winged_quadruped');
+  const machine=plan('creature',{base_parents:['科幻機械·機甲/外骨骼']},'text');
+  assert.equal(machine.anatomy,'humanoid_mecha');
+  assert.equal(machine.input_mode,'text');
+  const mixed=plan('creature',{base_parents:['生物·哺乳類','幻想生物·異界/異形']},'image');
+  assert.equal(mixed.anatomy,'hybrid');
+  assert.equal(mixed.review_required,true);
+});
