@@ -102,8 +102,11 @@ python scripts/anime3d_universal.py --root /content/drive/MyDrive/project/cosmos
 
 This does **not** quietly fall back to an unrelated model or the previous
 image generation job. The separately installed adapter must itself produce the
-original model. For text-based **creatures only**, the existing prompt-to-3D
-task also requires \`bestiary.md\`; image-based creatures and characters do not.
+original model. For text-based **creatures only**, the model must reference an original
+wiki at `04_encyclopedia/creatures/<subject_id>_wiki.md` or a backward-compatible
+legacy `bestiary.md`; image-based creatures and characters do not require
+embedded wikis. The same wiki belongs to the entire creature family, not a
+separate duplicate in each evolution stage's model folder.
 
 ## Built-in AniGen / Pixal3D / PartCrafter execution
 
