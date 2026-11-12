@@ -43,6 +43,8 @@ def main():
     p.add_argument("--execute", action="store_true", help="Run actual backend (paid calls remain separate opt-in)")
     p.add_argument("--allow-paid-tripo", action="store_true", help="Authorize charges through Tripo")
     p.add_argument("--backend", choices=["auto", "tripo", "anigen", "pixal3d", "partcrafter", "blender_text", "existing"], default="auto")
+    p.add_argument("--pipeline", choices=["auto", "colab", "ai_blender"], default="auto",
+                   help="Drive model route; image supports Colab or AI+Blender, text always uses AI+Blender")
     p.add_argument("--generator-executable", help="Custom executable accepting --input --spec --output")
     p.add_argument("--backend-config", help="JSON paths to installed official AniGen/Pixal3D/PartCrafter environments")
     p.add_argument("--input-model", help="Existing real GLB to process without generating a new model")
@@ -62,7 +64,14 @@ def run(a):
     if not safe or ".." in a.asset_id:
         raise ValueError("Invalid asset ID")
     root = Path(a.root).resolve()
-    out = root / "02_3d" / ("colab" if profile["input_mode"] == "image" else "ai_blender") / a.asset_id
+    pipeline = getattr(a, "pipeline", "auto") or "auto"
+    if pipeline not in {"auto", "colab", "ai_blender"}:
+        raise ValueError("Unsupported pipeline route")
+    if pipeline == "auto":
+        pipeline = "colab" if profile["input_mode"] == "image" else "ai_blender"
+    if pipeline == "colab" and profile["input_mode"] != "image":
+        raise ValueError("Prompt-to-3D is an AI+Blender route, not an image Colab job")
+    out = root / "02_3d" / pipeline / a.asset_id
     state_path = out / "typed_state.json"
     profile_path = out / "profile.json"
     backend = a.backend
@@ -86,6 +95,8 @@ def run(a):
         raise ValueError("Backend incompatible with profile: " + backend)
     if backend == "tripo" and profile["input_mode"] != "image":
         raise ValueError("Tripo adapter supports only image input")
+    if backend == "tripo" and pipeline != "colab":
+        raise ValueError("Tripo adapter writes its original output under 02_3d/colab; use the Colab route")
     if a.input_model and backend != "existing":
         raise ValueError("--input-model requires --backend existing")
     if backend == "existing" and not a.input_model:
@@ -110,7 +121,7 @@ def run(a):
             source_sha = hashlib.sha256(model_source.read_bytes()).hexdigest()
     config_sha = hashlib.sha256(Path(a.backend_config).read_bytes()).hexdigest() if getattr(a, "backend_config", None) else ""
     fingerprint = hashlib.sha256((json.dumps(spec, sort_keys=True, ensure_ascii=False)
-                                  + backend + (a.input_model or "") + source_sha + config_sha +
+                                  + backend + pipeline + (a.input_model or "") + source_sha + config_sha +
                                   str(a.generator_executable or "")).encode("utf8")).hexdigest()
     if state_path.is_file():
         state = read(state_path)
@@ -118,12 +129,12 @@ def run(a):
             raise ValueError("Input or backend changed: use a new asset ID")
     else:
         state = {"asset_id": a.asset_id, "fingerprint": fingerprint, "backend": backend,
-                 "status": "QUEUED", "steps": {}, "warnings": profile["warnings"]}
+                 "pipeline": pipeline, "status": "QUEUED", "steps": {}, "warnings": profile["warnings"]}
     write(profile_path, profile)
     model = out / "source" / (a.asset_id + ".glb")
     write(state_path, state)
     if not a.execute:
-        print(json.dumps({"mode": "plan", "backend": backend, "profile": profile,
+        print(json.dumps({"mode": "plan", "backend": backend, "pipeline": pipeline, "profile": profile,
                           "output": str(out), "requires_generator": backend not in {"existing", "tripo"} and not getattr(a, "backend_config", None),
                           "paid_tripo_authorized": False}, ensure_ascii=False, indent=2))
         return 0
