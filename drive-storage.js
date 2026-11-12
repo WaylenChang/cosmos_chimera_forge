@@ -340,7 +340,9 @@ document.addEventListener("DOMContentLoaded",()=>{
    });
    return;
   }
-  run(async()=>{const key=$("pipelineStage").value,name=window.COSMI_PIPELINE.stages[key];window.COSMI_PIPELINE.templates[key]=await(await read("prompts/"+name+".prompt.md")).text();window.COSMI_FORGE.refresh();window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);});
+  run(async()=>{const key=$("pipelineStage").value;
+   if(key==="encyclopedia"){window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);return;}
+   const name=window.COSMI_PIPELINE.stages[key];window.COSMI_PIPELINE.templates[key]=await(await read("prompts/"+name+".prompt.md")).text();window.COSMI_FORGE.refresh();window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);});
  });
  $("pipelineSaveSettings").addEventListener("click",()=>run(async()=>{
  const d=window.COSMI_FORGE.settings(),p=window.COSMI_PIPELINE.parameters();
