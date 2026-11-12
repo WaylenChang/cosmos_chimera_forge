@@ -6216,7 +6216,7 @@
     persistReview: saveReview,
     setPipelineStage: stage => {
       const flow = currentFlow();
-      if (flow && flow.category === "move") { renderAll(); return; }
+      if (flow && flow.category === "move" && stage !== "encyclopedia") { renderAll(); return; }
       const kind = flow?.category || (task().id.startsWith("character") ? "character" : "creature");
       const route = stage === "portrait_3d" ? "text" : flow?.route || "image";
       const matching = taskFlow?.steps(kind,route).find(s=>s.stage===stage);
