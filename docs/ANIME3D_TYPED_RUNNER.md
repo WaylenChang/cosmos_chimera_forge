@@ -194,6 +194,41 @@ For rigid components, supply:
 Component names must match actual mesh objects. Physical engineering constraints,
 including colliders and mechanical linkage, need additional verification.
 
+
+## Anatomy coverage and acceptance gates
+
+All six asset classes are routed independently from visual catalog themes.
+The topology profile is the execution contract, not a claim that every model
+can be rigged without landmarks or a working model backend.
+
+| Asset family | Topologies | Rig/motion path | Final acceptance blocker |
+| --- | --- | --- | --- |
+| Characters / humanoids | `biped`, `winged_biped` | Skinned character bones; independent wing chains where needed | Correct weights, face/garment clearance, clip review |
+| Monsters | `biped`, `tentacled`, `hybrid`, multi-leg variants | Topology-specific guides; ambiguous hybrids require authored landmarks | Every distinct appendage identified and animated |
+| Animals | `quadruped`, `avian`, `aquatic`, `hexapod`, `octopod` | Leg gaits, fin/spine, or wing chains, never human fallback | Ground/water contact and limb topology |
+| Fantasy creatures | `winged_quadruped`, `winged_biped`, `serpentine`, `plant`, `amorphous`, `object`, `hybrid` | Wings, body chains, object transforms or specialized procedural channels | Pose sweeps, silhouette and self-intersections |
+| Machinery | `mechanism`, `object` | Rigid parts, authored pivots/axis/limits; no soft-skin default | Motion linkage and collision sweep |
+| Robots / mecha | `humanoid_mecha`, `quadruped_mecha`, `multi_leg_mecha` | Rigid articulated assemblies, leg count retained | Armor clearance, joint limits, planted feet |
+
+When no `anatomy` is specified, robot leg counts choose two-legged,
+four-legged or multi-legged **mecha** routes before organic insect/quadruped
+rules; explicitly authored anatomy always takes precedence. The browser and
+Python planner both apply this rule.
+
+**What is implemented:** typed planning and routing, selectable external
+generators, source validation, guide rig construction (opt-in), original
+GLB preservation, rigid authored pivots, procedural animation generation where
+a matching armature/part channel exists, Blender QA, multiple preview angles,
+GLB export/reimport and animation-track checks, resumable job state and tests.
+
+**What is not automatic:** complete commercial-quality skin weights, approved
+character anatomy for arbitrary generated meshes, all requested motions for
+every unusual topology, semantics/kinematics inferred from raw PartCrafter
+pieces, vendor model installation, and final artistic/Unity approval. Missing
+rig or missing motion channels must remain `QA_PENDING` or
+`REVIEW_REQUIRED`; they are not complete deliverables. Real production
+execution needs the upstream model weights and source assets.
+
 ## Execution and status rules
 
 - Dry-run is default. \`--execute\` permits configured local runtime activity,
