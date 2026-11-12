@@ -78,3 +78,43 @@ test('a previous review binding does not become an image source for prompt-only 
  const {c,nodes,ctx}=harness();nodes.pipelineStage.value='blender';nodes.pipelineSource.value='unrelated-old-source';ctx.opts.source_pack='';
  const text=c.COSMI_PIPELINE.build(ctx);assert.doesNotMatch(text,/unrelated-old-source/);assert.match(text,/未指定/);
 });
+
+test('both 3D routes require original Blender exports, iterative multi-view QA and creature bestiary', () => {
+  const {c,nodes,ctx}=harness();
+  ctx.task.id='creature-model-rig';ctx.subjectId='cr_one';
+  for (const stage of ['colab','blender']) {
+    nodes.pipelineStage.value=stage;
+    const prompt=c.COSMI_PIPELINE.build(ctx);
+    for (const expected of ['Blender','models/chr-example', '.blend','.glb','原型','搜尋','正、背、左、右、上、下','每次修改後','拓撲','bestiary.md','juvenile','adolescent','adult','overload']) {
+      assert.ok(prompt.includes(expected), stage+' lacks '+expected);
+    }
+    assert.ok(prompt.length<1800, stage+' prompt should remain focused');
+    assert.ok(!prompt.includes('{{') && !prompt.includes('DO_NOT_LEAK') && !prompt.includes('combat_damage'));
+    assert.equal((prompt.match(/宙獸圖鑑/g)||[]).length,1);
+  }
+});
+
+test('image and prompt inputs are exclusive and do not inherit stale content', () => {
+  const {c,nodes,ctx}=harness();nodes.pipelineStage.value='blender';
+  const withImage=c.COSMI_PIPELINE.build(ctx);
+  assert.ok(withImage.includes('03_completed/portraits/source'));
+  assert.ok(!withImage.includes('long coat') && !withImage.includes('hair_palette') && !withImage.includes('DO_NOT_LEAK'));
+  ctx.opts.source_pack='';nodes.pipelineSource.value='unrelated-old-source';
+  const fromPrompt=c.COSMI_PIPELINE.build(ctx);
+  assert.ok(fromPrompt.includes('純文字外觀'));
+  assert.ok(fromPrompt.includes('long coat'));
+  assert.ok(!fromPrompt.includes('03_completed/portraits/source') && !fromPrompt.includes('unrelated-old-source') && !fromPrompt.includes('DO_NOT_LEAK'));
+  assert.ok(!fromPrompt.includes('bestiary.md'));
+});
+
+test('legacy or unavailable Drive 3D templates never contaminate new instructions', () => {
+  const {c,nodes,ctx}=harness();
+  ctx.task.id='creature-concept';ctx.subjectId='cr_one';
+  nodes.pipelineStage.value='colab';c.COSMI_PIPELINE.templates.colab='OUTDATED_TASK_CONTEXT';
+  let text=c.COSMI_PIPELINE.build(ctx);
+  assert.ok(text.includes('bestiary.md') && !text.includes('OUTDATED_TASK_CONTEXT'));
+  nodes.pipelineStage.value='blender';delete c.COSMI_PIPELINE.templates.blender;
+  text=c.COSMI_PIPELINE.build(ctx);
+  assert.ok(text.includes('正、背、左、右、上、下'));
+  assert.ok(text.includes('bestiary.md'));
+});

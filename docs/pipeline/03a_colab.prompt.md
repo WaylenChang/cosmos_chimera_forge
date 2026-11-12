@@ -1,9 +1,12 @@
-# Colab GPU：image-to-3D、骨架與動作
-使用指定立繪在 Colab GPU 執行可用模型，建立可編輯網格、符合解剖或機械結構的骨架及所需動作。記錄實際模型版本、GPU、設定、執行紀錄與可續跑輸出。後端與 Blender 修復順序依當次環境選定；先確認模型能啟動及適用輸入，無可用 GPU 或模型時回報阻塞，不假稱完成。
+# Colab GPU Image-to-3D
+{{model_input}}
+參數：`{{parameters_path}}`　輸出：`{{output_path}}/`
 
-來源立繪：{{source_path}}/
-source_pack：{{source_pack}}
-參數檔：{{parameters_path}}
-輸出目錄：{{output_path}}/
+確認 GPU 與所選模型可運作；Colab 產生初始網格後須經 Blender 修整、綁骨、檢查與最終匯出，無法執行時回報阻塞。
+1. 先判定原型（人形、怪物、生物、奇幻生物、超自然物件），搜尋並查看解剖、造型、材質、骨架與運動參考；無法查詢則註明。
+2. 只依本次圖片／外觀全新設計模型、材質、骨架和動作；不得套用、改造或抄襲舊 3D 檔。生物使用合適蒙皮，機械使用正確剛性關節。
+3. 在 Blender 完成製作，直接儲存 `models/{{asset_id}}.blend` 並匯出 `models/{{asset_id}}.glb`；依參數建立動畫，保留有效 UV、貼圖與骨架。
+4. 每次修改後檢查正、背、左、右、上、下及動作關鍵幀：臉部／感知器官不被遮擋；軀幹與各部位完整連接；無破面、孔洞、透視露空、錯誤法線／材質、部件互穿、離體或各自亂移，拓撲乾淨。修正後重檢。
+5. 重開 `.blend`、重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，列明缺件或限制；不交 ZIP。
 
-保持原立繪設計。生物採適合的蒙皮，機械採剛性零件與正確軸心；檢查破洞、斷肢、穿插、法線及材質。必要時在 Blender 修復。依參數直接建立 models/ 下的 .glb 與 .blend、rig/、animations/、previews/ 及 manifest.json，列明未完成項目；不交壓縮檔。不擅用付費 API 代替 Colab GPU 模型。
+{{bestiary}}
