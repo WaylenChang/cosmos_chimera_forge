@@ -615,9 +615,9 @@
     const pipeline = window.COSMI_PIPELINE?.supports(ctx);
     const pipelineStage = document.getElementById("pipelineStage")?.value;
     if (pipeline && pipelineStage === "colab" && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("Colab 需先選取已通過審查的來源立繪");
-    if (pipeline && pipelineStage === "blender" && o.source_pack && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("指定的來源立繪尚未通過審查；純文字建模請取消圖片來源");
+    if (pipeline && pipelineStage === "blender" && (o.source_pack || o.input_img) && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("指定的來源立繪尚未通過審查；純文字建模請取消圖片來源");
     // Portrait uses the original multi-round prompts directly; no Drive template is needed.
-    const useNativePortrait = pipeline && pipelineStage === "portrait" &&
+    const useNativePortrait = pipeline && ["portrait", "portrait_3d"].includes(pipelineStage) &&
       (t.id === "character-concept" || t.id === "creature-concept");
     const rounds = (!errors.length && (!pipeline || useNativePortrait) && t.buildRounds) ? t.buildRounds(ctx) : null;
     lastBuild = { ctx, errors, text: errors.length ? "" : pipeline && !useNativePortrait ? window.COSMI_PIPELINE.build(ctx) : t.build(ctx), rounds };
@@ -868,14 +868,64 @@
     curCustomCtx = null;
   }
 
+  // Task type -> pipeline route -> step; retain the legacy task IDs for persisted jobs.
+  const taskFlow = window.COSMI_TASK_FLOW;
+  let flowSelection = null;
+  function currentFlow() {
+    if (!taskFlow) return null;
+    const selected = flowSelection && taskFlow.resolve(flowSelection.category, flowSelection.route, flowSelection.step);
+    if (selected && selected.taskId === state.taskId) return selected;
+    const inferred = taskFlow.infer(state.taskId, $("#pipelineStage")?.value, taskOpts(task()));
+    return inferred ? taskFlow.resolve(inferred.category, inferred.route, inferred.step) : null;
+  }
+  function chooseFlow(category, route, step) {
+    const selected = taskFlow?.resolve(category, route, step);
+    if (!selected) return;
+    flowSelection = {category, route, step};
+    state.taskId = selected.taskId;
+    state.currentRound = selected.stage === "portrait" ? 1 : 0;
+    const stage = $("#pipelineStage");
+    if (stage && selected.stage !== "move_vfx") stage.value = selected.stage;
+    if (selected.stage === "colab" || selected.stage === "blender") {
+      const o = taskOpts(task());
+      o.scope = "single";
+      if (route === "text") { o.source_pack = ""; o.input_img = ""; }
+    }
+    window.COSMI_PIPELINE?.syncStageActions();
+    renderAll();
+  }
   function renderTasks() {
-    const box = $("#tasks"); box.replaceChildren();
-    TASKS.forEach(t => {
-      box.append(el("button", {
-        class: "task" + (t.id === state.taskId ? " on" : ""), type: "button",
-        onclick: () => { state.taskId = t.id; state.currentRound = 1; renderAll(); }
-      }, el("span", { class: "tname" }, t.zh), el("span", { class: "tmeta" }, t.id + " · 建議 " + (t.platform === "gemini" ? "Gemini" : "ChatGPT"))));
-    });
+    const box = $("#tasks"), categories = $("#taskCategories"), routes = $("#taskRoutes"), detail = $("#taskFlowDetail");
+    if (!taskFlow || !categories || !routes || !detail) return;
+    const active = currentFlow();
+    if (!active) { box.replaceChildren(); categories.replaceChildren(); routes.replaceChildren(); detail.replaceChildren(); return; }
+    flowSelection = {category: active.category, route: active.route, step: active.step};
+    categories.replaceChildren(...taskFlow.categories.map(c => el("button", {
+      type:"button", class:c.id === active.category ? "on" : "",
+      "aria-pressed":String(c.id === active.category), "aria-label":"選擇" + c.zh, "data-tip":"切換至" + c.zh + "任務",
+      onclick:()=>chooseFlow(c.id, c.id === "move" ? "move" : "image", c.id === "move" ? "move_vfx" : "appearance")
+    }, c.icon + " " + c.zh)));
+    const routeDefs = active.category === "move" ? [] : [
+      {id:"image", label:"🖼 Image-to-3D", tip:"先生成與審查立繪，再以 Colab＋Blender 或 AI＋Blender 建模"},
+      {id:"text", label:"✍ Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
+    ];
+    routes.replaceChildren(...routeDefs.map(d => el("button", {
+      type:"button", class:d.id === active.route ? "on" : "",
+      "aria-pressed":String(d.id === active.route), "aria-label":d.tip, "data-tip":d.tip,
+      onclick:()=>chooseFlow(active.category,d.id,"appearance")
+    },d.label)));
+    box.replaceChildren(...taskFlow.steps(active.category,active.route).map((step,i) => el("button", {
+      type:"button", class:"task" + (step.id === active.step ? " on" : "") + (step.alternate ? " is-alternate" : ""),
+      "aria-pressed":String(step.id === active.step),
+      "aria-label":"選擇步驟 " + step.name, "data-tip":step.detail,
+      onclick:()=>chooseFlow(active.category,active.route,step.id)
+    },el("span",{class:"tname"},(i+1)+". "+step.name),el("span",{class:"tmeta"},step.output))));
+    detail.replaceChildren(
+      el("strong",{},active.name),
+      el("p",{},active.detail),
+      el("p",{}, "產出：",el("code",{},active.output)),
+      el("p",{class:"muted"},"點選流程節點後，右側 Prompt 會切換至該步驟。")
+    );
     renderDesigned();
   }
 
@@ -2954,7 +3004,9 @@
 
   function renderOptions() {
     const t = task(), o = taskOpts(t), box = $("#options"); box.replaceChildren();
-    t.options.filter(d => (!window.COSMI_PIPELINE?.supports({task:t}) || ["source_pack", "stage"].includes(d.key)) && d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
+    const flow = currentFlow();
+    const isText3d = flow?.step === "prompt_3d";
+    t.options.filter(d => (!window.COSMI_PIPELINE?.supports({task:t}) || ["source_pack", "input_img", "stage"].includes(d.key)) && !(isText3d && ["source_pack", "input_img"].includes(d.key)) && d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
       if (is3dType(t.id) && d.key === "source_pack") {
@@ -3079,7 +3131,7 @@
 
     let displayedText = b.text;
 
-    if (b.rounds && b.rounds.length) {
+    if (b.rounds && b.rounds.length && $("#pipelineStage")?.value !== "portrait_3d") {
       if (state.currentRound === undefined || state.currentRound === null) {
         state.currentRound = 1;
       }
@@ -3118,12 +3170,13 @@
       displayedText = b.text;
     }
 
+    if ($("#pipelineStage")?.value === "portrait_3d" && b.rounds?.length) displayedText = b.rounds[2]?.prompt || b.text;
     $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : displayedText;
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const dir = window.COSMI_DRIVE.packageDir(t.id);
-    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait" && !window.COSMI_PIPELINE?.isPortraitAuto();
+    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && ["portrait", "portrait_3d"].includes($("#pipelineStage")?.value) && !window.COSMI_PIPELINE?.isPortraitAuto();
     const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
     $("#download").hidden = Boolean(portraitCopyOnly);
     if (portraitAuto && state.currentRound !== 0 && b.rounds?.length) {
@@ -6124,8 +6177,14 @@
     clearDrivePackages: () => { reviewState.packages = reviewState.packages.filter(p => !p.driveFolderId); },
     persistReview: saveReview,
     setPipelineStage: stage => {
+      const flow = currentFlow();
+      if (flow && flow.category === "move") { renderAll(); return; }
+      const kind = flow?.category || (task().id.startsWith("character") ? "character" : "creature");
+      const route = stage === "portrait_3d" ? "text" : flow?.route || "image";
+      const matching = taskFlow?.steps(kind,route).find(s=>s.stage===stage);
+      if (matching) { chooseFlow(kind,route,matching.id); return; }
       const isCharacter = task().id.startsWith("character");
-      if (["appearance", "portrait"].includes(stage)) state.taskId = isCharacter ? "character-concept" : "creature-concept";
+      if (["appearance", "portrait", "portrait_3d", "review_portrait"].includes(stage)) state.taskId = isCharacter ? "character-concept" : "creature-concept";
       if (["colab", "blender"].includes(stage)) {
         const pkg = getActivePkg();
         const chr = pkg && !is3dType(pkg.type) ? pkg.type === "character-concept" : isCharacter;
@@ -6151,10 +6210,10 @@
       const b = build();
       if (b.errors.length) throw Error(b.errors.join("；"));
       const stage = document.getElementById("pipelineStage")?.value || "task";
-      const portrait = stage === "portrait" && window.COSMI_PIPELINE?.supports(b.ctx);
+      const portrait = ["portrait", "portrait_3d"].includes(stage) && window.COSMI_PIPELINE?.supports(b.ctx);
       return {
         path: "prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
-        text: portrait ? b.text : ($("#prompt")?.value || b.text)
+        text: portrait ? (stage === "portrait_3d" ? ($("#prompt")?.value || b.text) : b.text) : ($("#prompt")?.value || b.text)
       };
     },
     showPrompt: text => {
