@@ -37,7 +37,7 @@ test('portrait always uses the native task builder even with a legacy Drive temp
       assert.equal(received,ctx);
       return expected;
     };
-    assert.equal(c.COSMI_PIPELINE.build(ctx),expected);
+    assert.match(c.COSMI_PIPELINE.build(ctx),new RegExp('^'+expected+'\\n\\n圖鑑：wiki/'));
   }
 });
 
