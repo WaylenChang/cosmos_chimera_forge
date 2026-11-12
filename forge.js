@@ -894,10 +894,6 @@
       : category === "character" ? "character-concept" : "creature-concept";
     const stage = $("#pipelineStage");
     if (stage && category !== "move") stage.value = "appearance";
-    if (category === "move") {
-      chooseRoute("move");
-      return;
-    }
     renderAll();
   }
   function chooseRoute(route) {
@@ -949,10 +945,12 @@
       renderDesigned();
       return;
     }
-    const routeDefs = kind === "move" ? [] : [
-      {id:"image", label:"Image-to-3D", tip:"先生成並審查立繪，再選 Colab＋Blender 或 AI＋Blender"},
-      {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
-    ];
+    const routeDefs = kind === "move"
+      ? [{id:"move", label:"招式特效（VFX）", tip:"選擇招式特效管線，生成規格、分鏡、圖層與序列圖"}]
+      : [
+        {id:"image", label:"Image-to-3D", tip:"先生成並審查立繪，再選 Colab＋Blender 或 AI＋Blender"},
+        {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
+      ];
     routes.replaceChildren(...routeDefs.map(d => el("button", {
       type:"button", class:d.id === choice.route ? "on" : "",
       "aria-pressed":String(d.id === choice.route), "aria-label":d.tip, "data-tip":d.tip,
