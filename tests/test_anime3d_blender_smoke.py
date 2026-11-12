@@ -65,7 +65,9 @@ class BlenderSmoke(unittest.TestCase):
                             "--input-model", str(self.input), "--blender", BLENDER, "--execute"],
                            capture_output=True, text=True, timeout=240)
         out = self.root / "02_3d" / "ai_blender" / name
-        self.assertEqual(p.returncode, 0, (p.stdout + p.stderr)[-4000:])
+        state_path = self.root / "02_3d" / "ai_blender" / name / "typed_state.json"
+        debug = state_path.read_text(encoding="utf8")[-6000:] if state_path.is_file() else "missing state"
+        self.assertEqual(p.returncode, 0, (p.stdout + p.stderr)[-4000:] + "\\nState: " + debug)
         self.assertTrue((out / "models" / f"{name}.blend").is_file())
         self.assertTrue((out / "models" / f"{name}.glb").is_file())
         self.assertTrue((out / "source" / f"{name}.glb").is_file())
