@@ -1,0 +1,16 @@
+{
+  "anigen": {
+    "repo": "/opt/models/AniGen",
+    "python": "/opt/envs/anigen/bin/python"
+  },
+  "pixal3d": {
+    "repo": "/opt/models/Pixal3D",
+    "python": "/opt/envs/pixal3d/bin/python",
+    "low_vram": true,
+    "attn_backend": "sdpa"
+  },
+  "partcrafter": {
+    "repo": "/opt/models/PartCrafter",
+    "python": "/opt/envs/partcrafter/bin/python"
+  }
+}
