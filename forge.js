@@ -1898,8 +1898,7 @@
   function renderDesignedDesk() {
     renderDesignedRail();
     renderDesignedDetail();
-    // The designed card view uses the same collection filters and is rendered by
-    // the caller when that view is visible, avoiding double re-creation.
+    if (designedState.mode === "cards") renderDesignedList();
   }
 
   // ==================== 我的最愛 Prompt 與已設計清單管理 ====================
@@ -2988,7 +2987,9 @@
     const tabsBox = $("#forge3dModeTabs");
     if (!tabsBox) return;
     const t = task(), o = taskOpts(t);
-    if (!is3dType(t.id)) {
+    // Every available 3D pipeline is currently single-subject; do not show
+    // a selector whose only choice is "single".
+    if (!is3dType(t.id) || window.COSMI_PIPELINE?.supports({task:t})) {
       tabsBox.style.display = "none";
       return;
     }
@@ -3256,7 +3257,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); if (designedState.mode === "cards") renderDesignedList(); updateFavButton();
+    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
     save();
   }
 
@@ -5854,10 +5855,7 @@
       }
     });
     $("#favSearch")?.addEventListener("input", () => renderFavorites());
-    $("#designedSearch")?.addEventListener("input", () => {
-      renderDesignedDesk();
-      if (designedState.mode === "cards") renderDesignedList();
-    });
+    $("#designedSearch")?.addEventListener("input", () => renderDesignedDesk());
 
     // 平台切換按鈕事件
     $("#platChatgpt").addEventListener("click", () => { state.platform = "chatgpt"; renderAll(); });
