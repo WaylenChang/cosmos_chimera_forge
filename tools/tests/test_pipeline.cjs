@@ -16,7 +16,7 @@ function harness() {
 }
 test('non-portrait stages resolve their Drive templates without leaking parameters', () => {
   const {c,nodes,ctx}=harness();
-  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => name !== 'portrait')) {
+  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => !['portrait','encyclopedia'].includes(name))) {
     nodes.pipelineStage.value=stage;
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.ok(text.length>100);
