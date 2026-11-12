@@ -8,6 +8,7 @@ function harness() {
   const nodes = {pipelineStage: {value: 'portrait'}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
   const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({drivePath: '02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'03_completed/portraits/source'}]}};
   c.window = c;
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);
   for (const [key, name] of Object.entries(c.COSMI_PIPELINE.stages)) {
     if (!['portrait','encyclopedia'].includes(key)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
@@ -54,12 +55,12 @@ test('Drive template loading skips the native portrait stage', async () => {
 
 test('encyclopedia prompt routes three categories to isolated Markdown paths', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='encyclopedia';
-  assert.match(c.COSMI_PIPELINE.build(ctx),/04_encyclopedia\/characters\/chr_one\.md/);
+  assert.match(c.COSMI_PIPELINE.build(ctx),/wiki\/characters\/chr_one_wiki\.md/);
   ctx.task.id='creature-concept';
-  assert.match(c.COSMI_PIPELINE.build(ctx),/04_encyclopedia\/creatures\/chr_one_wiki\.md/);
+  assert.match(c.COSMI_PIPELINE.build(ctx),/wiki\/creatures\/chr_one_adult_wiki\.md/);
   ctx.task.id='move-vfx';ctx.subjectId='fx_fire_burst';ctx.opts={element:'fire',shape:'burst',tier:'heavy'};
   const wiki=c.COSMI_PIPELINE.build(ctx);
-  assert.match(wiki,/04_encyclopedia\/moves\/fx_fire_burst\.md/);
+  assert.match(wiki,/wiki\/moves\/fx_fire_burst_wiki\.md/);
   assert.match(wiki,/fire|burst/);
   assert.doesNotMatch(wiki,/DO_NOT_LEAK/);
 });
