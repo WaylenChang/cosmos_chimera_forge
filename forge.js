@@ -6162,19 +6162,17 @@
       $("#forgeHeaderControls").style.display = "none";
       renderReviewView();
     } else if (mode === "designed") {
-      $("#forgeView").style.display = "none";
-      $("#reviewView").classList.remove("active");
-      $("#designedView")?.classList.add("active");
-      $("#settingsView")?.classList.remove("active");
-      $("#viewBtnSettings")?.classList.remove("on");
-      $("#viewBtnForge").classList.remove("on");
-      $("#viewBtnDesigned")?.classList.add("on");
-      $("#viewBtnReview").classList.remove("on");
-      $("#forgeHeaderControls").style.display = "none";
+      // Compatibility entrypoint: all visible navigation stays in the unified review desk.
+      // Keep legacy detail rendering for older integrations without mounting its view.
       renderDesignedDesk();
-      if (!window.COSMI_DRIVE?.pipelineIndex?.()?.syncedAt) {
-        void window.COSMI_DRIVE?.syncPipelineIndex?.().catch(() => {});
-      }
+      const entry = reviewDeskEntries("designed", "").find(e =>
+        e.catalog?.id === designedState.selectedId && e.catalog?.kind === designedState.selectedType
+      ) || reviewDeskEntries("designed", "")[0];
+      reviewState.activeDesignedKey = entry?.key || null;
+      reviewState.filterCat = "designed";
+      reviewState.filterQuery = "";
+      const search = $("#railSearch"); if (search) search.value = "";
+      return setViewMode("review");
     } else if (mode === "settings") {
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.remove("active");
