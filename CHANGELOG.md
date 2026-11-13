@@ -1,6 +1,27 @@
+## 2026-11-12 — Tool 2.7.1：單步驟提示詞精簡與宙獸圖鑑
+- Colab Image-to-3D 與 Blender Image/Prompt-to-3D 均要求 Blender 原創建模、研究參考與逐次多視角／動作品質檢查，輸出 `.blend`、`.glb`。
+- **僅宙獸 Prompt-to-3D** 產出 `bestiary.md`（四形態外觀、虛構田野觀察、演化）；所有 Image-to-3D 不生成圖鑑。
+- 審閱並精簡外觀、立繪、立繪審查、3D 審查提示詞；版本不符的 Drive 單步驟模板採用內建精簡版。修復原生立繪提示詞遞迴，移除舊 ZIP／存放路徑與全域補充文字污染，新增回歸測試。
+
+## 2026-11-12 — Tool 2.7.0：Drive 快取與設定頁
+- 新增帳戶隔離的 IndexedDB 資產快取（24 MiB／包、80 MiB／帳戶、TTL 可設定）；登入後快取優先顯示並重新驗證雲端 metadata。
+- 新增響應式設定頁：版本資訊與部署版本檢查、Google 登出、清理快取、強制同步、快取開關與期限、自動同步、立繪 Prompt 模式。
+- 清除快取不影響雲端資料；主動登出或憑證失效清除本地私人快取。版本號採 SemVer minor 更新。
+- 新增快取與設定頁測試，將新腳本及 version.json 納入正式部署。
+
 # Changelog
 
+- 2026-11-12 · tool@2.6.0 · 精簡操作介面為圖示按鈕與懸浮提示、收合管線說明；恢復主頁及已設計項目檢視捲動；角色與宙獸預覽改用 Drive 審查包 metadata 及彈性圖檔名稱匹配，缺圖時顯示明確提示。
+
 格式：`日期 · 元件@版本 · 變更`。版本規則見 README.md。
+
+- 2026-11-12 · tool@2.6.0 · 角色／宙獸改用 Drive 深層目錄與六個獨立步驟 Markdown prompt，外觀與格式參數分開；審查支援原位核准、退件備份及立繪／3D 成對移入完成區，移動失敗嘗試回復；主流程逐檔匯入／匯出。
+
+- 2026-11-11 · template@(creature-model-rig@5.0.1, character-model-rig@5.0.1) · Image-to-3D 提示詞增加原型判斷與資料搜尋，將研究結果用於原創外觀、骨架及動作設計。
+
+- 2026-11-11 · template@(creature-model-rig@5.0.0, character-model-rig@5.0.0) · Image-to-3D 提示詞要求依立繪全新建模，使用 Blender 直接交付可編輯 .blend 與匯出 .glb，並於交付前檢查臉部遮擋、破圖、穿透及軀幹與身體連接。
+
+- 2026-11-11 · tool@2.5.0 · 將立繪／3D 目錄與既有 Prompt 搬至 Google Drive `project/cosmos_chimera_forge/`（`argon_blender` 保留原位）；所有任務模板修訂版新增統一相對路徑規範。網頁加入 Google OAuth 與 Drive ACL 檢查、雲端成果包載入及 Prompt 讀寫；Pages 改為明確清單建置，排除私人資產，移除本機絕對路徑與內嵌真實成果測試資料。
 
 - 2026-11-10 · data@1.1.0 · tool@2.4.1 · 角色與宙獸數據格式對齊 cosmos_chimera，雙向同步與共同維護：
   - **角色數據格式標準化 (`character.schema.json`)**：新增與 `catalog.js`、`tasks.js` 及交付包 `concept.json` 完全一致之 `Data/schemas/character.schema.json`，涵蓋身分身形、族裔性別、年齡數值（整數 cm）、個性故事與收服道具。

@@ -1,0 +1,36 @@
+{
+  "schema": "cosmi-pipeline/1",
+  "image_format": "png",
+  "views": [
+    "front",
+    "turnaround",
+    "main"
+  ],
+  "model_formats": [
+    "glb",
+    "blend"
+  ],
+  "animation_clips": [
+    "idle",
+    "walk",
+    "attack"
+  ],
+  "image_specs": {
+    "front": {
+      "aspect": "1:1",
+      "view": "正面正交、自然平正站姿、全身"
+    },
+    "turnaround": {
+      "aspect": "16:9",
+      "view": "正側背視角、同比例、全身"
+    },
+    "main": {
+      "aspect": "1:1",
+      "view": "動態主立繪、全身"
+    }
+  },
+  "embed_textures": true,
+  "units": "meters",
+  "texture_size": 2048,
+  "triangle_budget": 30000
+}

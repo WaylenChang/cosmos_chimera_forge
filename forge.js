@@ -1,12 +1,12 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.4.0";
+  const TOOL_VERSION = "2.7.1";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
   const LS_KEY = "cosmimera.prompt-forge.v2";
   const REVIEW_KEY = "cosmimera.prompt-forge.reviews.v1";
-  const DEFAULT_ROOT = "C:\\Users\\user\\Documents\\app\\cosmos_chimera";
+  const DEFAULT_ROOT = "../cosmos_chimera";
 
   function is3dType(t) {
     return t === "creature-model-rig" || t === "character-model-rig" || t === "model-rig" || (typeof t === "string" && (t.startsWith("mdl") || t.startsWith("anim")));
@@ -87,6 +87,7 @@
     if (m) {
       return { stage: m[1].toLowerCase(), baseId: pkgId.slice(0, m.index) };
     }
+    if (manifest?.stage && STAGE_KEYS.includes(manifest.stage)) return {stage: manifest.stage, baseId: pkgId};
     if (concept?.stage && STAGE_KEYS.includes(concept.stage)) {
       return { stage: concept.stage, baseId: pkgId };
     }
@@ -149,6 +150,8 @@
     } else {
       o.input_img = "";
     }
+    const pipelineStage = document.getElementById("pipelineStage");
+    if (pipelineStage && !["colab", "blender"].includes(pipelineStage.value)) pipelineStage.value = "blender";
     setViewMode("forge");
     renderAll();
     toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」帶入指定 3D 任務");
@@ -259,9 +262,9 @@
         const poses = CH.getRolePoses ? CH.getRolePoses(curRole) : (CH.role_poses?.[curRole] || CH.role_poses?.["未知"] || []);
         return uniform(poses.concat(getCustom("character.pose")));
       }, count: [{ n: 1, w: 1 }], dep: "role" },
-      { key: "ethnicity", label: "人種", options: () => CH.ethnicity.map(e => ({ v: e.v, w: e.w, zh: e.zh })).concat(getCustom("character.ethnicity").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 1 }] },
-      { key: "region", label: "文化地區", options: () => uniform(C.CULTURE_REGIONS.concat(getCustom("character.region"))), count: [{ n: 1, w: 1 }] },
-      { key: "timeline", label: "文化時間線", options: () => C.TIMELINES.map(t => ({ v: t.v, zh: t.zh, w: 1 })).concat(getCustom("character.timeline").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
+      { key: "ethnicity", label: "人種", options: s => C.getWeightedEthnicities(s.character.region?.[0]).concat(getCustom("character.ethnicity").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 1 }] },
+      { key: "region", label: "文化地區", options: s => C.getWeightedRegions({ ethnicity: s.character.ethnicity?.[0], timeline: s.character.timeline?.[0] }).concat(uniform(getCustom("character.region"))), count: [{ n: 1, w: 1 }] },
+      { key: "timeline", label: "文化時間線", options: s => C.getWeightedTimelines(s.character.region?.[0]).concat(getCustom("character.timeline").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "gender", label: "性別", options: () => CH.gender.map(g => ({ v: g.v, w: g.w })).concat(getCustom("character.gender").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "age_band", label: "年齡層", options: () => CH.age.map(a => ({ v: a.v, w: a.w })).concat(getCustom("character.age_band").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "age", label: "年齡", options: s => { const b = CH.age.find(a => a.v === s.character.age_band?.[0]) || CH.age[1]; const r = []; for (let i = b.min; i <= b.max; i++) r.push({ v: String(i), w: 1 }); r.push({ v: "未知", w: 1 }); return r.concat(getCustom("character.age").map(v => ({ v, w: 1 }))); }, count: [{ n: 1, w: 1 }], dep: "age_band" },
@@ -278,7 +281,7 @@
         return [{ v: d.bodyFat, w: 1 }, { v: "18.0%", w: 1 }, { v: "22.0%", w: 1 }, { v: "未知", w: 1 }].concat(getCustom("character.body_fat").map(v => ({ v, w: 1 })));
       }, count: [{ n: 1, w: 1 }], dep: "weight", customGen: (s, rng) => sampleHumanDimensions(rng, s.character.gender?.[0], s.character.age_band?.[0], s.character.age?.[0]).bodyFat },
       { key: "cup_size", label: "罩杯（女性）", options: () => CH.cup_sizes.map(c => ({ v: c.v, w: c.w })).concat(getCustom("character.cup_size").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }], when: s => s.character.gender?.[0] === "女" },
-      { key: "outfit_palette", label: "服裝色系 (1~4色)", options: () => C.PALETTES.map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("character.outfit_palette").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 15 }, { n: 2, w: 45 }, { n: 3, w: 25 }, { n: 4, w: 15 }], max: 4 },
+      { key: "outfit_palette", label: "服裝色系 (1~4色)", options: s => C.getWeightedPalettes([], { region: s.character.region?.[0], timeline: s.character.timeline?.[0] }).map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("character.outfit_palette").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 15 }, { n: 2, w: 45 }, { n: 3, w: 25 }, { n: 4, w: 15 }], max: 4 },
       { key: "hair_palette", label: "頭髮色系 (1~2色)", options: () => CH.hair_palettes.map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("character.hair_palette").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 6 }, { n: 2, w: 4 }], max: 2 },
       { key: "eye_palette", label: "瞳孔色系 (1~2色)", options: () => CH.eye_palettes.map(p => ({ v: p.v, w: p.w })).concat(getCustom("character.eye_palette").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }], max: 2 },
       { key: "personality", label: "性格特質", options: () => uniform(C.PERSONALITIES.concat(getCustom("character.personality"))), count: [{ n: 2, w: 1 }], max: 4 },
@@ -289,7 +292,7 @@
       { key: "vessel", label: "主要收服道具", options: () => C.VESSELS.map(v => ({ v: v.v, w: v.w, zh: v.zh })).concat(getCustom("character.vessel").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 1 }] }
     ],
     creature: [
-      { key: "elements", label: "屬性", options: () => C.ELEMENTS.map(e => ({ v: e.v, w: e.w, zh: e.zh })).concat(getCustom("creature.elements").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 2 }, { n: 2, w: 1 }], max: 2 },
+      { key: "elements", label: "屬性", options: s => C.getWeightedElements(s.creature.appearance_palette).concat(getCustom("creature.elements").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 2 }, { n: 2, w: 1 }], max: 2 },
       { key: "base_parents", label: "外觀基底類別 (1~3)", options: () => CR.base_parents.map(b => ({ v: b.v, zh: b.zh || b.v, w: b.w })).concat(getCustom("creature.base_parents").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 40 }, { n: 2, w: 45 }, { n: 3, w: 15 }], max: 3 },
       { key: "bases", label: "外觀基底 (1~3)", options: s => {
         const parents = (s.creature.base_parents || []).map(traceBaseParent);
@@ -301,14 +304,14 @@
         return uniform(subs.concat(["未知"]).concat(getCustom("creature.bases")));
       }, count: [{ n: 1, w: 25 }, { n: 2, w: 50 }, { n: 3, w: 25 }], max: 3, dep: "base_parents" },
       { key: "appearance_palette", label: "宙獸色系 (1~4色)", options: s => {
-        const pool = C.getFilteredPalettes(s.creature.elements || []);
+        const pool = C.getWeightedPalettes(s.creature.elements || [], { region: s.creature.region?.[0], timeline: s.creature.timeline?.[0] });
         return pool.map(p => ({ v: p.v, w: p.w, zh: p.zh || p.v })).concat(getCustom("creature.appearance_palette").map(v => ({ v, w: 1, zh: v })));
       }, count: [{ n: 1, w: 15 }, { n: 2, w: 45 }, { n: 3, w: 25 }, { n: 4, w: 15 }], max: 4, dep: "elements" },
-      { key: "timeline", label: "文化時間線", options: () => C.TIMELINES.map(t => ({ v: t.v, zh: t.zh, w: 1 })).concat(getCustom("creature.timeline").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
-      { key: "region", label: "文化地區", options: () => uniform(C.CULTURE_REGIONS.concat(getCustom("creature.region"))), count: [{ n: 1, w: 1 }] },
+      { key: "timeline", label: "文化時間線", options: s => C.getWeightedTimelines(s.creature.region?.[0]).concat(getCustom("creature.timeline").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
+      { key: "region", label: "文化地區", options: s => C.getWeightedRegions({ timeline: s.creature.timeline?.[0] }).concat(uniform(getCustom("creature.region"))), count: [{ n: 1, w: 1 }] },
       { key: "archetype", label: "文化原型", options: s => {
-        const pool = archetypePool(s);
-        return pool.map(a => ({ v: a.name, w: 1, zh: a.name + "（" + a.region + "·" + a.type + (a.sensitivity === "review" ? "・需審" : "") + "）" })).concat(getCustom("creature.archetype").map(v => ({ v, w: 1, zh: v })));
+        const pool = C.getWeightedArchetypes(archetypePool(s), s.creature.region?.[0]);
+        return pool.map(a => ({ v: a.name, w: a.w, zh: a.name + "（" + a.region + "·" + a.type + (a.sensitivity === "review" ? "・需審" : "") + "）" })).concat(getCustom("creature.archetype").map(v => ({ v, w: 1, zh: v })));
       }, count: [{ n: 1, w: 1 }] },
       { key: "role", label: "戰鬥定位", options: () => uniform(CR.role.concat(getCustom("creature.role"))), count: [{ n: 1, w: 1 }] },
       { key: "temperament", label: "領域性情（開戰半徑）", options: () => uniform(C.TEMPERAMENTS.map(t => ({ v: t.v, zh: `${t.zh}（${t.radius_m}m 領域）` })).concat(getCustom("creature.temperament"))), count: [{ n: 1, w: 1 }] },
@@ -382,10 +385,29 @@
     }
     const opts = f.options(state);
     const n = pickWeighted(rng, f.count).n;
-    state[kind][f.key] = pickN(rng, opts, n);
+    if (f.key === "appearance_palette" || f.key === "outfit_palette") {
+      // 多色抽選逐色重新計算近似色系，減少單一色相獨占外觀。
+      const pool = opts.slice(), chosen = [];
+      while (chosen.length < n && pool.length) {
+        const weighted = C.getVariedPaletteOptions(pool, chosen);
+        const pick = pickWeighted(rng, weighted);
+        if (!pick) break;
+        chosen.push(pick.v);
+        const idx = pool.findIndex(o => o.v === pick.v);
+        if (idx >= 0) pool.splice(idx, 1);
+      }
+      state[kind][f.key] = chosen;
+    } else {
+      state[kind][f.key] = pickN(rng, opts, n);
+    }
   }
 
   function rollAll(kind, rng, force) {
+    // 全部重抽時先清除未鎖定的舊結果，避免上一個 seed 的欄位影響新 seed 權重。
+    // 鎖定欄位保留，其他欄位仍可依鎖定條件進行柔性配對。
+    if (force) FIELDS[kind].forEach(f => {
+      if (!state.locks[kind + "." + f.key]) delete state[kind][f.key];
+    });
     FIELDS[kind].forEach(f => {
       if (f.when && !f.when(state)) {
         delete state[kind][f.key];
@@ -558,11 +580,12 @@
   }
 
   let lastBuild = null;
+  const pipelineTaskIds = new Map();
   function build() {
     const t = task(), o = taskOpts(t), subj = resolveSubject(t, o);
     const errors = [];
     t.options
-      .filter(d => d.type === "checks" && !d.optional && (!d.when || d.when(o)) && (o[d.key] || []).length === 0)
+      .filter(d => !window.COSMI_PIPELINE?.supports({task:t}) && d.type === "checks" && !d.optional && (!d.when || d.when(o)) && (o[d.key] || []).length === 0)
       .forEach(d => errors.push("至少勾選一個「" + d.label + "」"));
     const s = stamp();
     let taskId = t.prefix + "-" + s.day + "-" + state.seed + "-" + s.hm;
@@ -571,19 +594,33 @@
     } else if ((t.id === "creature-model-rig" || t.id === "model-rig") && o.stage) {
       taskId += "-" + o.stage;
     }
-    const header = "[COSMIMERA-TASK spec=" + SPEC + " tool=" + TOOL_VERSION + " catalog=" + C.version + " template=" + t.id + "@" + t.version + " task_id=" + taskId + " seed=" + state.seed + "]";
+    let header = "[COSMIMERA-TASK spec=" + SPEC + " tool=" + TOOL_VERSION + " catalog=" + C.version + " template=" + t.id + "@" + t.version + " task_id=" + taskId + " seed=" + state.seed + "]";
     const is3dTask = is3dType(t.id);
     const chosenPkg = (is3dTask && o.source_pack) ? reviewState.packages.find(p => p.id === o.source_pack) : null;
     let concept = chosenPkg?.concept || (subj === "character" ? characterConcept() : subj === "creature" ? creatureConcept() : null);
     let subjId = chosenPkg?.subjectId || (subj ? subjectId(subj) : is3dTask ? "batch" : t.id === "capture-vessel" ? "vessels" : t.id === "culture-research" ? "region_" + o.region : "fx_" + o.element + "_" + o.shape);
 
+    if (["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(t.id)) {
+      const key = [subjId, t.id, o.stage || "", state.seed, o.source_pack || ""].join(":");
+      const previousId = taskId;
+      if (pipelineTaskIds.has(key)) taskId = pipelineTaskIds.get(key);
+      else pipelineTaskIds.set(key, taskId);
+      header = header.replace("task_id=" + previousId, "task_id=" + taskId);
+    }
     const ctx = {
       header, taskId, timestamp: s.day + "-" + s.hm, task: t, opts: o, concept, notes: state.notes.trim(),
       platform: state.platform, platformName: state.platform === "gemini" ? "Gemini Argon（任務模式）" : "ChatGPT（對話版）",
       subjectId: subjId
     };
-    const rounds = (!errors.length && t.buildRounds) ? t.buildRounds(ctx) : null;
-    lastBuild = { ctx, errors, text: errors.length ? "" : t.build(ctx), rounds };
+    const pipeline = window.COSMI_PIPELINE?.supports(ctx);
+    const pipelineStage = document.getElementById("pipelineStage")?.value;
+    if (pipeline && pipelineStage === "colab" && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("Colab 需先選取已通過審查的來源立繪");
+    if (pipeline && pipelineStage === "blender" && o.source_pack && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("指定的來源立繪尚未通過審查；純文字建模請取消圖片來源");
+    // Portrait uses the original multi-round prompts directly; no Drive template is needed.
+    const useNativePortrait = pipeline && pipelineStage === "portrait" &&
+      (t.id === "character-concept" || t.id === "creature-concept");
+    const rounds = (!errors.length && (!pipeline || useNativePortrait) && t.buildRounds) ? t.buildRounds(ctx) : null;
+    lastBuild = { ctx, errors, text: errors.length ? "" : pipeline && !useNativePortrait ? window.COSMI_PIPELINE.build(ctx) : t.build(ctx), rounds };
     return lastBuild;
   }
 
@@ -875,87 +912,61 @@
   }
 
   // ==================== cosmos_chimera 外部資產讀取管線 ====================
-  const COSMOS_CHIMERA_BASE = "../cosmos_chimera/Assets/_Project/Art";
-
-  function getCharacterAssetUrls(charId) {
-    const views = ["main", "turnaround", "front", "side", "back", "expressions", "props"];
-    const viewLabels = {
-      main: "主立繪 (Main)",
-      turnaround: "三視圖 (Turnaround)",
-      front: "正交正面 (Front)",
-      side: "正交側面 (Side)",
-      back: "正交背面 (Back)",
-      expressions: "表情集 (Expressions)",
-      props: "道具板 (Props)"
-    };
-
-    const conceptDir = `${COSMOS_CHIMERA_BASE}/Characters/${charId}/Concept`;
-    const modelDir = `${COSMOS_CHIMERA_BASE}/Characters/${charId}/Model`;
-
-    const pack = (reviewState.packages || []).find(p => (p.subjectId || p.manifest?.subject_id) === charId && !is3dType(p.type));
-    const mdlPack = (reviewState.packages || []).find(p => is3dType(p.type) && ((p.manifest?.source_pack && pack && p.manifest.source_pack === pack.id) || p.subjectId === charId));
-
-    const images = views.map(v => {
-      const primaryUrl = `${conceptDir}/${charId}_${v}.png`;
-      let fallbackUrl = null;
-      if (pack && pack.images) {
-        const found = pack.images.find(img => img.path.includes(`_${v}.png`) || img.path.endsWith(`${v}.png`));
-        if (found) fallbackUrl = found.url;
-      }
-      if (!fallbackUrl) {
-        fallbackUrl = `Art/_incoming/${pack?.id || ""}/images/${charId}_${v}.png`;
-      }
-      return {
-        view: v,
-        label: viewLabels[v] || v,
-        primaryUrl,
-        fallbackUrl
-      };
+  // Asset URLs are private in-memory blobs loaded through the authenticated Drive API.
+  function assetName(path) {
+    return String(path || "").split("/").pop().replace(/\\/g, "/").split("/").pop().replace(/\.[^.]+$/, "").toLowerCase();
+  }
+  function linkedAssetPackages(subject) {
+    const key = String(subject || "").toLowerCase();
+    return reviewState.packages.filter(p => {
+      const ids = [p.subjectId, p.manifest?.subject_id, p.concept?.id, p.concept?.line_id, p.concept?.creature_id, p.id]
+        .filter(Boolean).map(s => String(s).toLowerCase());
+      if (ids.includes(key)) return true;
+      const source = reviewState.packages.find(x => x.id === (p.sourcePack || p.manifest?.source_pack));
+      return !!source && [source.subjectId, source.manifest?.subject_id, source.concept?.id, source.concept?.line_id]
+        .some(s => String(s || "").toLowerCase() === key);
     });
-
-    const modelFront = {
-      primaryUrl: `${modelDir}/${charId}_model_front.png`,
-      fallbackUrl: mdlPack?.images?.[0]?.url || `Art/_incoming/${mdlPack?.id || ""}/images/${mdlPack?.manifest?.subject_id || "chr"}_model_front.png`
-    };
-
-    const glbUrl = `${modelDir}/${charId}.glb`;
-    const fbxUrl = `${modelDir}/${charId}.fbx`;
-
+  }
+  function imageForView(images, view) {
+    const all = images || [], pattern = new RegExp("(?:^|[_\\\\-])" + view + "$", "i");
+    return all.find(i => pattern.test(assetName(i.path)) && i.url) || null;
+  }
+  function getCharacterAssetUrls(charId) {
+    // Asset folders contain versioned names; manifest subject_id or concept.id links them to the catalog.
+    const matches = linkedAssetPackages(charId);
+    const pack = matches.find(p => !is3dType(p.type) && p.images?.length);
+    const mdlPack = matches.find(p => is3dType(p.type) && (p.images?.length || p.glbFile));
+    const all = pack?.images || [];
+    const order = ["main", "turnaround", "front", "side", "back", "expressions", "props"];
+    const images = order.map(view => {
+      const match = imageForView(all, view);
+      return match ? { view, label: view, primaryUrl: match.url, fallbackUrl: match.url } : null;
+    }).filter(Boolean);
+    const used = new Set(images.map(x => x.primaryUrl));
+    all.forEach(i => { if (i.url && !used.has(i.url)) images.push({
+      view: assetName(i.path), label: assetName(i.path), primaryUrl: i.url, fallbackUrl: i.url
+    }); });
+    if (!images.length) images.push({ view: "missing", label: "尚無立繪", primaryUrl: "", fallbackUrl: "" });
+    const modelFront = imageForView(mdlPack?.images, "front") || mdlPack?.images?.[0] || null;
     return {
-      conceptDir,
-      modelDir,
-      images,
-      modelFront,
-      glbUrl,
-      fbxUrl,
-      pack,
-      mdlPack
+      conceptDir: pack?.drivePath || "01_portraits/", modelDir: mdlPack?.drivePath || "02_3d/legacy/",
+      images, modelFront: { primaryUrl: modelFront?.url || "", fallbackUrl: modelFront?.url || "" },
+      glbUrl: mdlPack?.glbFile?.url || "", fbxUrl: "", pack, mdlPack
     };
   }
-
   function getCreatureStageAssetUrls(lineId, stage) {
-    const stageDir = `${COSMOS_CHIMERA_BASE}/Creatures/${lineId}/${stage}/Concept`;
-    const primaryUrl = `${stageDir}/cr_${lineId}_${stage}_main.png`;
-
-    const pack = (reviewState.packages || []).find(p => (p.subjectId || p.concept?.line_id) === lineId && p.stage === stage && !is3dType(p.type));
-    let fallbackUrl = pack?.images?.find(i => i.path.includes("main"))?.url || `Art/_incoming/${pack?.id || ""}/images/cr_${lineId}_${stage}_main.png`;
-
-    return {
-      primaryUrl,
-      fallbackUrl,
-      turnaroundUrl: `${stageDir}/cr_${lineId}_${stage}_turnaround.png`,
-      frontUrl: `${stageDir}/cr_${lineId}_${stage}_front.png`
-    };
+    const packs = linkedAssetPackages(lineId).filter(p => !is3dType(p.type));
+    const images = packs.flatMap(p => p.images || []);
+    const forStage = images.filter(i => new RegExp("(?:^|[_\\\\-])" + stage + "(?:[_\\\\-]|$)", "i").test(assetName(i.path)));
+    const image = suffix => imageForView(forStage, suffix)?.url || "";
+    const url = image("main") || forStage[0]?.url || "";
+    return { primaryUrl: url, fallbackUrl: url, turnaroundUrl: image("turnaround"), frontUrl: image("front") };
   }
-
   function getCreatureOverviewAssetUrls(lineId) {
-    const overviewDir = `${COSMOS_CHIMERA_BASE}/Creatures/${lineId}/Overview`;
-    return {
-      lineupUrl: `${overviewDir}/cr_${lineId}_lineup.png`,
-      scaleUrl: `${overviewDir}/cr_${lineId}_scale.png`,
-      fallbackLineupUrl: `Art/_incoming/cr-20261107-4a9a-2022/images/cr_${lineId}_lineup.png`,
-      fallbackScaleUrl: `Art/_incoming/cr-20261107-4a9a-2022/images/cr_${lineId}_scale.png`
-    };
+    const images = linkedAssetPackages(lineId).flatMap(p => p.images || []);
+    const lineupUrl = imageForView(images, "lineup")?.url || "";
+    const scaleUrl = imageForView(images, "scale")?.url || "";
+    return { lineupUrl, scaleUrl, fallbackLineupUrl: lineupUrl, fallbackScaleUrl: scaleUrl };
   }
 
   function renderDesigned() {
@@ -1085,9 +1096,7 @@
 
     const { lines, chars } = getDesignedFilteredItems();
     const countEl = $("#designedRailCount");
-    if (countEl) {
-      countEl.textContent = `共 ${DESIGNED.length} 宙獸線 · ${DESIGNED_CHARACTERS.length} 角色 (符合 ${lines.length + chars.length})`;
-    }
+    if (countEl) countEl.textContent = `${lines.length + chars.length} / ${DESIGNED.length + DESIGNED_CHARACTERS.length}`;
 
     // 確保有預設選取項目
     if (designedState.selectedType === "character") {
@@ -1127,7 +1136,7 @@
         const isForging = state.preset === d.line_id;
         const matches = getReviewMatches(d.line_id);
 
-        const crThumbUrl = `${COSMOS_CHIMERA_BASE}/Creatures/${d.line_id}/adult/Concept/cr_${d.line_id}_adult_main.png`;
+        const crThumbUrl = getCreatureStageAssetUrls(d.line_id, "adult").primaryUrl;
         const crThumbImg = el("img", {
           src: crThumbUrl,
           alt: d.title_zh,
@@ -1168,17 +1177,17 @@
         const isForging = state.presetChar === c.id;
         const matches = getReviewMatches(c.id);
 
-        const charThumbUrl = `${COSMOS_CHIMERA_BASE}/Characters/${c.id}/Concept/${c.id}_main.png`;
+        const charThumbUrl = getCharacterAssetUrls(c.id).images[0].primaryUrl;
         const charThumbImg = el("img", {
-          src: charThumbUrl,
+          src: charThumbUrl || undefined,
           alt: c.name_zh,
-          style: "width:100%;height:100%;object-fit:cover;object-position:top;",
+          style: "width:100%;height:100%;object-fit:cover;object-position:top;" + (charThumbUrl ? "" : "display:none;"),
           onerror: function() {
             this.style.display = "none";
             if (this.nextElementSibling) this.nextElementSibling.style.display = "flex";
           }
         });
-        const charIconSpan = el("span", { style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;" }, "👤");
+        const charIconSpan = el("span", { style: "display:" + (charThumbUrl ? "none" : "flex") + ";width:100%;height:100%;align-items:center;justify-content:center;" }, "👤");
         const rlThumbChar = el("div", { class: "rl-thumb", style: "background:#262035;overflow:hidden;position:relative;" }, charThumbImg, charIconSpan);
 
         const row = el("button", {
@@ -1303,28 +1312,29 @@
             },
               el("img", {
                 id: "charMainImg",
-                src: assetData.images[0].primaryUrl,
+                src: assetData.images[0].primaryUrl || undefined,
                 alt: c.name_zh,
-                style: "max-width:100%;max-height:100%;object-fit:contain;",
+                style: "max-width:100%;max-height:100%;object-fit:contain;" + (assetData.images[0].primaryUrl ? "" : "display:none;"),
                 onerror: function() {
                   if (assetData.images[0].fallbackUrl && this.src !== assetData.images[0].fallbackUrl) {
                     this.src = assetData.images[0].fallbackUrl;
                   }
                 }
               }),
+              !assetData.images[0].primaryUrl ? el("span", { class: "muted" }, "Drive 尚無此角色立繪") : null,
               el("a", {
                 id: "charImgDownload",
-                href: assetData.images[0].primaryUrl,
+                href: assetData.images[0].primaryUrl || "#",
                 target: "_blank",
                 class: "btn mini ghost",
-                style: "position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);",
+                style: "position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);" + (assetData.images[0].primaryUrl ? "" : "display:none;"),
                 title: "在新分頁檢視原尺寸大圖"
               }, "🔍 原圖")
             ),
 
             // Thumbnail Strip / View Switcher
             el("div", { style: "display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;" },
-              assetData.images.map((im, idx) => {
+              assetData.images.filter(im => im.primaryUrl).map((im, idx) => {
                 const thumbBtn = el("button", {
                   type: "button",
                   class: "segb" + (idx === 0 ? " on" : ""),
@@ -1378,18 +1388,16 @@
               style: "width:100%;height:260px;background:#101319;border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px;"
             },
               el("img", {
-                src: assetData.modelFront.primaryUrl,
+                src: assetData.modelFront.primaryUrl || undefined,
                 alt: `${c.name_zh} 3D 正面正交`,
-                style: "max-width:100%;max-height:100%;object-fit:contain;",
+                style: "max-width:100%;max-height:100%;object-fit:contain;" + (assetData.modelFront.primaryUrl ? "" : "display:none;"),
                 onerror: function() {
                   if (assetData.modelFront.fallbackUrl && this.src !== assetData.modelFront.fallbackUrl) {
                     this.src = assetData.modelFront.fallbackUrl;
                   }
                 }
               }),
-              el("span", {
-                style: "position:absolute;top:6px;left:6px;font-size:10.5px;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;color:#a9d9df"
-              }, "正交正面 1024px")
+              !assetData.modelFront.primaryUrl ? el("span", { class: "muted" }, "Drive 尚無 3D 預覽圖") : null
             ),
 
             // 3D Asset Files Info
@@ -1514,7 +1522,7 @@
           revCard.append(pRow);
         });
       } else {
-        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此角色的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或「⚡ 一鍵解壓 Zip」。"));
+        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此角色的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或選取資產資料夾。"));
       }
       bodyEl.append(revCard);
 
@@ -1770,7 +1778,7 @@
           revCard.append(pRow);
         });
       } else {
-        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此演化線的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或「⚡ 一鍵解壓 Zip」。"));
+        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此演化線的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或選取資產資料夾。"));
       }
       bodyEl.append(revCard);
     }
@@ -2155,24 +2163,20 @@
   function updateFavButton() {
     const btn = $("#btnFavPrompt"); if (!btn) return;
     const b = lastBuild;
-    if (!b || !b.ctx || b.errors.length) {
-      btn.textContent = "⭐ 收藏此 Prompt";
-      btn.classList.remove("on");
-      return;
+    let isFav = false;
+    if (b && b.ctx && !b.errors.length) {
+      const t = b.ctx.task;
+      const curStage = b.ctx.opts?.stage || null;
+      const curPrompt = $("#prompt") ? $("#prompt").value : b.text;
+      isFav = favorites.some(f =>
+        f.task === t.id && f.subjectId === b.ctx.subjectId && f.seed === state.seed && f.stage === curStage && f.prompt === curPrompt
+      );
     }
-    const t = b.ctx.task;
-    const curStage = b.ctx.opts?.stage || null;
-    const curPrompt = $("#prompt") ? $("#prompt").value : b.text;
-    const isFav = favorites.some(f => 
-      f.task === t.id && f.subjectId === b.ctx.subjectId && f.seed === state.seed && f.stage === curStage && f.prompt === curPrompt
-    );
-    if (isFav) {
-      btn.textContent = "★ 已在最愛";
-      btn.classList.add("on");
-    } else {
-      btn.textContent = "⭐ 收藏此 Prompt";
-      btn.classList.remove("on");
-    }
+    const label = isFav ? "已收藏此 Prompt" : "收藏此 Prompt";
+    btn.textContent = isFav ? "★" : "☆";
+    btn.setAttribute("aria-label", label);
+    btn.dataset.tip = label;
+    btn.classList.toggle("on", isFav);
   }
 
   function renderFavorites() {
@@ -2907,7 +2911,8 @@
       { v: "single", zh: "🎯 指定處理模式" },
       { v: "batch", zh: "📦 批量處理模式" }
     ];
-    modes.forEach(m => {
+    if (window.COSMI_PIPELINE?.supports({task:t})) o.scope = "single";
+    modes.filter(m => !window.COSMI_PIPELINE?.supports({task:t}) || m.v === "single").forEach(m => {
       const isCur = (o.scope || "single") === m.v;
       const btn = el("button", {
         class: "segb" + (isCur ? " on" : ""),
@@ -2949,7 +2954,7 @@
 
   function renderOptions() {
     const t = task(), o = taskOpts(t), box = $("#options"); box.replaceChildren();
-    t.options.filter(d => d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
+    t.options.filter(d => (!window.COSMI_PIPELINE?.supports({task:t}) || ["source_pack", "stage"].includes(d.key)) && d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
       if (is3dType(t.id) && d.key === "source_pack") {
@@ -2999,7 +3004,7 @@
         const quickTools = el("div", { style: "display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;" },
           el("span", { class: "muted", style: "font-size:11px;" }, (isChr3d ? "角色" : isCr3d ? "宙獸" : "") + "立繪包：" + conceptPkgs.length + " 包"),
           el("button", { type: "button", class: "btn mini ghost", title: "載入系統內建測試包至審查台", onclick: () => { loadSampleFixtures(); renderAll(); } }, "🧪 載入範例包"),
-          el("button", { type: "button", class: "btn mini ghost", title: "從本機選擇 Zip 載入審查台", onclick: () => $("#zipFileInput").click() }, "🗜️ 載入 Zip"),
+          el("button", { type: "button", class: "btn mini ghost", title: "從本機選取資產資料夾", onclick: () => $("#folderFileInput").click() }, "載入資料夾"),
           el("button", { type: "button", class: "btn mini ghost", title: "前往成果審查台進行立繪檢閱", onclick: () => setViewMode("review") }, "🔍 轉至審查台")
         );
 
@@ -3117,41 +3122,31 @@
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
-    const root = state.root || DEFAULT_ROOT;
-    const dest = root + "\\" + t.drop.replace(/\//g, "\\");
-    const cmd = 'powershell unpack_incoming.ps1 -Pattern "' + b.ctx.taskId + '*"';
-    if (t.drive) {
-      const zips = b.ctx.taskId + (b.ctx.opts.scope === "batch" ? "*" : "") + ".zip";
-      const dcmd = 'powershell unpack_incoming.ps1 -Pattern "' + b.ctx.taskId + '*"';
-      $("#deliver").replaceChildren(
-        el("ol", {},
-          el("li", {}, "先把角色/宙獸立繪包（", el("code", {}, "chr-*.zip / cr-*.zip"), "）放到雲端硬碟 ", el("code", {}, "project/cosmos_chimera/image_in/")),
-          el("li", {}, "按「複製 prompt」→「開啟 Gemini」切到任務模式貼上送出"),
-          el("li", {}, "處理完成之立繪包會自動移至相鄰之 ", el("code", {}, "project/cosmos_chimera/image_backup/"), " 歸檔，避免重複處理"),
-          el("li", {}, "完成後從雲端硬碟 ", el("code", {}, "project/cosmos_chimera/3D_out/"), " 下載 ", el("code", {}, zips), " 到本專案 ", el("code", {}, "Art/_incoming/"), "（審查檔案均放在本專案）"),
-          el("li", {}, "進入本專案「成果審查台」進行 3D 與立繪對比審查，審查確認後解壓至 ", el("code", {}, dest + "\\"), "。")
-        ),
-        el("div", { class: "cmd" }, el("code", {}, dcmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(dcmd, "已複製解壓指令") }, "複製")),
-        el("div", { style: "margin-top:8px;display:flex;gap:8px;align-items:center;" },
-          el("button", { type: "button", class: "btn mini", onclick: () => { setViewMode("review"); $("#directUnpackFileInput")?.click(); } }, "⚡ 轉至審查台解壓至 cosmos_chimera"),
-          el("span", { class: "muted" }, "或在終端機執行 unpack_incoming.ps1 批次解壓")
-        )
-      );
-      return;
+    const dir = window.COSMI_DRIVE.packageDir(t.id);
+    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait" && !window.COSMI_PIPELINE?.isPortraitAuto();
+    const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
+    $("#download").hidden = Boolean(portraitCopyOnly);
+    if (portraitAuto && state.currentRound !== 0 && b.rounds?.length) {
+      state.currentRound = 0;
+      displayedText = b.text;
+      $("#prompt").value = displayedText;
+      $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
+      for (const button of roundTabs?.querySelectorAll("button") || []) {
+        button.classList.toggle("on", button.textContent.includes("完整全流程"));
+      }
     }
     $("#deliver").replaceChildren(
+      el("p", {}, "Google Drive 根目錄：", el("code", {}, "project/cosmos_chimera_forge/")),
       el("ol", {},
-        el("li", {}, "按「複製 prompt」→「開啟 " + (state.platform === "gemini" ? "Gemini" : "ChatGPT") + "」貼上送出", state.platform === "gemini" ? "（先切到任務/Agent 模式）" : "", "。後續任務（3D/動作）可把前一包的概念圖、concept.json、rig_spec.json 一起附上。"),
-        el("li", {}, "下載 ", el("code", {}, b.ctx.taskId + ".zip"), " 存放到本專案 ", el("code", {}, "Art/_incoming/"), "（立繪與 3D 審查檔案均統一放在本專案）。"),
-        el("li", {}, "進入「成果審查台」點選「📂 掃描本專案審查目錄」進行檢閱與覆核。"),
-        el("li", {}, "審查通過後，點選「⚡ 解壓至 cosmos_chimera」解壓至遊戲專案（", el("code", {}, dest + "\\"), "）。")
-      ),
-      el("div", { class: "cmd" }, el("code", {}, cmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(cmd, "已複製解壓指令") }, "複製")),
-      el("div", { style: "margin-top:8px;display:flex;gap:8px;align-items:center;" },
-        el("button", { type: "button", class: "btn mini", onclick: () => { setViewMode("review"); $("#directUnpackFileInput")?.click(); } }, "⚡ 轉至審查台解壓至 cosmos_chimera"),
-        el("span", { class: "muted" }, "或在終端機執行 unpack_incoming.ps1 批次解壓")
-      ),
-      el("p", { class: "muted" }, "若圖片沒有被打包進 zip：照 manifest.files 的檔名手動存到本專案 ", el("code", {}, "Art/_incoming/" + b.ctx.taskId + "/images/"), " 進行審查。")
+        portraitCopyOnly
+          ? el("li", {}, "手動模式：使用 📋 或 ①／②／③ 複製，貼入生成平台；不需建立 .md 檔或上傳 Drive。")
+          : portraitAuto
+          ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
+          : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
+        el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + "/"), "。逐檔存入資產目錄，或載入本機資料夾後按「儲存資產目錄至 Drive」。"),
+        el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
+        el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
+      )
     );
     updateFavButton();
   }
@@ -3270,8 +3265,8 @@
     const curStage = pkg.stage || reviewState.activeStage || "adult";
     if (is3dType(pkg.type)) {
       // 3D 封裝往回找立繪包
-      if (pkg.manifest?.source_pack) {
-        const found = reviewState.packages.find(p => p.id === pkg.manifest.source_pack);
+      if ((pkg.sourcePack || pkg.manifest?.source_pack)) {
+        const found = reviewState.packages.find(p => p.id === (pkg.sourcePack || pkg.manifest.source_pack));
         if (found) return found;
       }
       return reviewState.packages.find(p => !is3dType(p.type) && (p.groupKey === pkg.groupKey || p.subjectId === pkg.subjectId) && (!p.stage || p.stage === curStage))
@@ -3369,6 +3364,10 @@
   async function loadZipFile(file) {
     const buf = await file.arrayBuffer();
     const files = await parseZipBuffer(buf);
+    return loadAssetFiles(files, file);
+  }
+
+  async function loadAssetFiles(files, file, {silent = false} = {}) {
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
     let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
     for (const path in files) {
@@ -3393,7 +3392,7 @@
       }
     }
     let alignedStaged = null;
-    if (!manifestData || !conceptData) {
+    if (/\.zip$/i.test(file.name) && (!manifestData || !conceptData)) {
       alignedStaged = findMatchingStagedFormat(file.name, Object.keys(files));
       if (alignedStaged) {
         if (!manifestData) manifestData = alignedStaged.manifest;
@@ -3440,16 +3439,16 @@
       animFiles,
       fileCount: Object.keys(files).length,
       rawZip: file,
-      isZip: true,
+      isZip: /\.zip$/i.test(file.name),
       aligned: !!alignedStaged,
       stagedTaskId: alignedStaged?.taskId || null,
       status: manifestData?.missing?.length ? "missing" : "pending"
     };
-    addPackage(pkg);
+    addPackage(pkg, {silent});
     return pkg;
   }
 
-    function addPackage(pkg) {
+    function addPackage(pkg, {silent = false} = {}) {
       if (!pkg.baseId || pkg.stage === undefined) {
         const info = parsePackageStage(pkg.id, pkg.manifest, pkg.concept);
         pkg.stage = info.stage;
@@ -3458,12 +3457,16 @@
       pkg.groupKey = (pkg.type === "creature-concept" || pkg.id.startsWith("cr"))
         ? (pkg.baseId || pkg.subjectId || pkg.id)
         : (is3dType(pkg.type) || pkg.id.startsWith("mdl"))
-        ? (pkg.baseId || pkg.id)
+        ? (pkg.manifest?.source_pack || pkg.subjectId || pkg.baseId || pkg.id)
         : pkg.id;
 
       const idx = reviewState.packages.findIndex(p => p.id === pkg.id);
       if (idx >= 0) reviewState.packages[idx] = pkg;
       else reviewState.packages.unshift(pkg);
+      if (silent) {
+        if (!reviewState.activePkgId) reviewState.activePkgId = pkg.id;
+        return;
+      }
       reviewState.activePkgId = pkg.id;
       if (pkg.stage) reviewState.activeStage = pkg.stage;
       reviewState.activeImgIdx = 0;
@@ -3488,6 +3491,7 @@
   }
 
   function backupActivePackage(pkg) {
+    if (pkg?.driveFolderId) return reviewPackage(pkg, "reject");
     if (!pkg) pkg = getActivePkg();
     if (!pkg) { toast("請先選取要備份的任務包"); return; }
     const ts = getBackupTimestamp();
@@ -3713,352 +3717,6 @@
         ],
         fileCount: 11,
         status: "pending"
-      },
-      {
-        id: "chr-20261106-1286-1855",
-        type: "character-concept",
-        subjectId: "chr_amemori_sumiha",
-        manifest: {
-          spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-1286-1855 seed=1286]",
-          task_id: "chr-20261106-1286-1855",
-          task_type: "character-concept",
-          subject_id: "chr_amemori_sumiha",
-          produced_by: "ChatGPT（對話版）",
-          files: [
-            { path: "concept.json", kind: "spec", level: "L1" },
-            { path: "images/chr_amemori_sumiha_main.png", kind: "main", level: "L1" },
-            { path: "images/chr_amemori_sumiha_turnaround.png", kind: "turnaround", level: "L1" },
-            { path: "images/chr_amemori_sumiha_front.png", kind: "view", level: "L1" },
-            { path: "images/chr_amemori_sumiha_side.png", kind: "view", level: "L1" },
-            { path: "images/chr_amemori_sumiha_back.png", kind: "view", level: "L1" },
-            { path: "images/chr_amemori_sumiha_expressions.png", kind: "sheet", level: "L1" },
-            { path: "images/chr_amemori_sumiha_props.png", kind: "sheet", level: "L1" }
-          ],
-          missing: [],
-          notes: "大廳 NPC 孵蛋師，傳統日式層疊線條融合現代剪裁，配有卵形孵化背包與符籙卡片"
-        },
-        concept: {
-          id: "chr_amemori_sumiha", name_zh: "雨森澄羽", name_en: "Amemori Sumiha",
-          role: "大廳 NPC：孵蛋師", ethnicity: "東亞體系", region: "日本",
-          timeline: "晶石賽博/霓虹魔導義體紀元",
-          gender: "女", age_band: "青年", age: 22, height: "163 cm", height_cm: 163, weight: "48 kg", weight_kg: 48, body_fat: "17.5%",
-          cup_size: "C",
-          body_type: "纖細結實；窄肩、長腿，重心穩定，適合長時間巡檢孵化艙",
-          outfit_palette: ["海軍深藍", "象牙米白", "黃銅金", "珊瑚鮮橘", "以太水藍"],
-          hair_palette: ["曜石純黑", "清透天藍"],
-          eye_palette: ["琥珀金"],
-          personality: ["冷靜", "好奇"], style: "傳統民族服融合現代剪裁",
-          interests: ["釣魚", "電子遊戲"], likes: ["毛茸茸的生物", "辣的食物"], dislikes: ["等待", "被小看"],
-          vessel: "talisman_card", vessel_zh: "符籙卡片",
-          biography: "雨森澄羽誕生於霓虹交織的小行星軌道孵化基地，家族代代皆是專注於以太生命律動的調律技師。在漫天數據流與冰冷機房中長大的她，年少時便能單憑指尖微觸感知卵殼內最纖細的以太震顫。面對外界對其年輕資歷的質疑，她以近乎偏執的冷靜與釣魚般的耐性，研發出將古老符籙轉譯為微電路脈衝的校準卡片。平日看似寡言疏離、行事雷厲風行，唯獨在破殼而出的毛茸茸幼獸將溫熱鼻尖湊向掌心時，澄羽才會卸下心防，露出只屬於守護者的溫柔笑意。"
-        },
-        images: [
-          { path: "images/chr_amemori_sumiha_main.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_main.png" },
-          { path: "images/chr_amemori_sumiha_turnaround.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_turnaround.png" },
-          { path: "images/chr_amemori_sumiha_front.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_front.png" },
-          { path: "images/chr_amemori_sumiha_side.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_side.png" },
-          { path: "images/chr_amemori_sumiha_back.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_back.png" },
-          { path: "images/chr_amemori_sumiha_expressions.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_expressions.png" },
-          { path: "images/chr_amemori_sumiha_props.png", url: "Art/_incoming/chr-20261106-1286-1855/images/chr_amemori_sumiha_props.png" }
-        ],
-        fileCount: 8,
-        status: "ok"
-      },
-      {
-        id: "mdl-20261109-f048-1847-chr_1286_1855",
-        type: "character-model-rig",
-        baseId: "mdl-20261109-f048-1847-chr_1286_1855",
-        subjectId: "chr_amemori_sumiha",
-        manifest: {
-          spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=2.4.0 template=character-model-rig@4.3.0 task_id=mdl-20261109-f048-1847 seed=f048]",
-          task_id: "mdl-20261109-f048-1847-chr_1286_1855",
-          task_type: "character-model-rig",
-          subject_id: "chr_amemori_sumiha",
-          source_pack: "chr-20261106-1286-1855",
-          produced_by: "Gemini Argon（任務模式）",
-          files: [
-            { path: "images/chr_1286_model_front.png", kind: "view", level: "L1" },
-            { path: "models/chr_1286.glb", kind: "model", level: "L1" },
-            { path: "models/chr_1286.fbx", kind: "model", level: "L1" },
-            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/anim_spec.json", kind: "spec", level: "L1" }
-          ],
-          missing: [],
-          notes: "由角色立繪包 chr-20261106-1286-1855 生成 Humanoid 3D 建模與 32 支動作骨架規格"
-        },
-        animSpec: {
-          spec: "cosmimera-anim-spec/1",
-          template: "character-model-rig@4.3.0",
-          subject_id: "chr_amemori_sumiha",
-          source_pack: "chr-20261106-1286-1855",
-          fps: 30,
-          total_clips: C.CLIPS.humanoid.length,
-          clips: C.CLIPS.humanoid.map(c => ({
-            clip: "chr_" + c.id,
-            description: c.zh,
-            fps: 30,
-            frames: c.f,
-            duration_sec: +(c.f / 30).toFixed(4),
-            loop: !!c.loop,
-            root_motion: !!c.rm,
-            events: (c.ev || []).map(ev => {
-              const [name, fr] = ev.split("@");
-              return { name, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
-            }),
-            file: "anims/chr_" + c.id + ".fbx",
-            animated_bones_count: 28,
-            keyframe_samples: Math.ceil(c.f / 2)
-          }))
-        },
-        images: [
-          { path: "images/chr_1286_model_front.png", url: "Art/_incoming/mdl-20261109-f048-1847-chr_1286_1855/images/chr_1286_model_front.png" }
-        ],
-        fileCount: 36,
-        status: "ok"
-      },
-      {
-        id: "chr-20261106-1286-2039",
-        type: "character-concept",
-        subjectId: "chr_yeh_chengxi",
-        manifest: {
-          spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-1286-2039 seed=1286]",
-          task_id: "chr-20261106-1286-2039",
-          task_type: "character-concept",
-          subject_id: "chr_yeh_chengxi",
-          produced_by: "ChatGPT（對話版）",
-          files: [
-            { path: "concept.json", kind: "spec", level: "L1" },
-            { path: "images/chr_yeh_chengxi_main.png", kind: "main", level: "L1" },
-            { path: "images/chr_yeh_chengxi_turnaround.png", kind: "turnaround", level: "L1" },
-            { path: "images/chr_yeh_chengxi_front.png", kind: "view", level: "L1" },
-            { path: "images/chr_yeh_chengxi_side.png", kind: "view", level: "L1" },
-            { path: "images/chr_yeh_chengxi_back.png", kind: "view", level: "L1" },
-            { path: "images/chr_yeh_chengxi_expressions.png", kind: "sheet", level: "L1" },
-            { path: "images/chr_yeh_chengxi_props.png", kind: "sheet", level: "L1" }
-          ],
-          missing: [],
-          notes: "玩家角色預設外觀，海洋水手風格，配備跑酷機能短褲與琉璃珠"
-        },
-        concept: {
-          id: "chr_yeh_chengxi", name_zh: "葉澄汐", name_en: "Chengxi Yeh",
-          role: "玩家角色預設外觀", ethnicity: "東亞體系", region: "台灣漢人",
-          timeline: "晶石賽博/霓虹魔導義體紀元",
-          gender: "女", age_band: "青年", age: 23, height: "165 cm", height_cm: 165, weight: "50 kg", weight_kg: 50, body_fat: "18.2%",
-          cup_size: "C",
-          body_type: "精實輕盈的跑酷體型，約 7.3 頭身；窄肩、修長四肢與穩定核心，重視攀躍和低重心落地",
-          outfit_palette: ["深海湛藍", "月華純白", "珊瑚鮮橘", "黃銅金", "晴空冰藍"],
-          hair_palette: ["曜石純黑", "清透天藍", "濃茶褐"],
-          eye_palette: ["琥珀金"],
-          personality: ["腹黑", "衝動"], style: "海洋水手",
-          interests: ["跑酷", "料理"], likes: ["閃亮的礦石", "星空"], dislikes: ["吵雜", "高處"],
-          vessel: "glass_bead", vessel_zh: "琉璃珠",
-          biography: "葉澄汐自幼在巨艦穿梭的繁忙海港船塢中奔跑成長，跟隨老船匠攀爬於高聳龍骨與窄甲板之間。一次深入廢棄沉船底艙探險時，她偶然在古老以太動力核心殘骸中拾得一枚流轉著星雲光斑的琉璃珠，初次喚醒了深海宙獸的共鳴之音。自此，澄汐踏上了追尋深空星海與未知巨獸的航程。性格熱烈果敢、敢作敢當的她，總是掛著一抹狡黠自信的笑意躍向危險前線；縱使內心深處對無垠深淵的失重高處仍有著不易察覺的畏懼，她也絕不允許自己後退半步。平時將琉璃珠穩妥掛扣於右腰座，遭遇危機時瞬息摘珠啟動以太光泡。"
-        },
-        images: [
-          { path: "images/chr_yeh_chengxi_main.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_main.png" },
-          { path: "images/chr_yeh_chengxi_turnaround.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_turnaround.png" },
-          { path: "images/chr_yeh_chengxi_front.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_front.png" },
-          { path: "images/chr_yeh_chengxi_side.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_side.png" },
-          { path: "images/chr_yeh_chengxi_back.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_back.png" },
-          { path: "images/chr_yeh_chengxi_expressions.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_expressions.png" },
-          { path: "images/chr_yeh_chengxi_props.png", url: "Art/_incoming/chr-20261106-1286-2039/images/chr_yeh_chengxi_props.png" }
-        ],
-        fileCount: 8,
-        status: "ok"
-      },
-      {
-        id: "mdl-20261109-f048-1847-chr_1286",
-        type: "character-model-rig",
-        baseId: "mdl-20261109-f048-1847-chr_1286",
-        subjectId: "chr_yeh_chengxi",
-        manifest: {
-          spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=2.4.0 template=character-model-rig@4.3.0 task_id=mdl-20261109-f048-1847 seed=f048]",
-          task_id: "mdl-20261109-f048-1847-chr_1286",
-          task_type: "character-model-rig",
-          subject_id: "chr_yeh_chengxi",
-          source_pack: "chr-20261106-1286-2039",
-          produced_by: "Gemini Argon（任務模式）",
-          files: [
-            { path: "images/chr_1286_model_front.png", kind: "view", level: "L1" },
-            { path: "models/chr_1286.glb", kind: "model", level: "L1" },
-            { path: "models/chr_1286.fbx", kind: "model", level: "L1" },
-            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/anim_spec.json", kind: "spec", level: "L1" }
-          ],
-          missing: [],
-          notes: "由角色立繪包 chr-20261106-1286-2039 生成 Humanoid 3D 建模與 32 支動作骨架規格"
-        },
-        animSpec: {
-          spec: "cosmimera-anim-spec/1",
-          template: "character-model-rig@4.3.0",
-          subject_id: "chr_yeh_chengxi",
-          source_pack: "chr-20261106-1286-2039",
-          fps: 30,
-          total_clips: C.CLIPS.humanoid.length,
-          clips: C.CLIPS.humanoid.map(c => ({
-            clip: "chr_" + c.id,
-            description: c.zh,
-            fps: 30,
-            frames: c.f,
-            duration_sec: +(c.f / 30).toFixed(4),
-            loop: !!c.loop,
-            root_motion: !!c.rm,
-            events: (c.ev || []).map(ev => {
-              const [name, fr] = ev.split("@");
-              return { name, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
-            }),
-            file: "anims/chr_" + c.id + ".fbx",
-            animated_bones_count: 28,
-            keyframe_samples: Math.ceil(c.f / 2)
-          }))
-        },
-        images: [
-          { path: "images/chr_1286_model_front.png", url: "Art/_incoming/mdl-20261109-f048-1847-chr_1286/images/chr_1286_model_front.png" }
-        ],
-        fileCount: 36,
-        status: "ok"
-      },
-      {
-        id: "chr-20261106-3d04-2100",
-        type: "character-concept",
-        subjectId: "chr_roen",
-        manifest: {
-          spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=character-concept@3.0.0 task_id=chr-20261106-3d04-2100 seed=3d04]",
-          task_id: "chr-20261106-3d04-2100",
-          task_type: "character-concept",
-          subject_id: "chr_roen",
-          produced_by: "ChatGPT（對話版）",
-          files: [
-            { path: "concept.json", kind: "spec", level: "L1" },
-            { path: "images/chr_roen_main.png", kind: "main", level: "L1" },
-            { path: "images/chr_roen_turnaround.png", kind: "turnaround", level: "L1" },
-            { path: "images/chr_roen_front.png", kind: "view", level: "L1" },
-            { path: "images/chr_roen_side.png", kind: "view", level: "L1" },
-            { path: "images/chr_roen_back.png", kind: "view", level: "L1" },
-            { path: "images/chr_roen_expressions.png", kind: "sheet", level: "L1" },
-            { path: "images/chr_roen_props.png", kind: "sheet", level: "L1" }
-          ],
-          missing: [],
-          notes: "玩家角色預設外觀，地中海賽博市集風格，手持發光多維魔方"
-        },
-        concept: {
-          id: "chr_roen", name_zh: "洛恩", name_en: "Roen",
-          role: "玩家角色預設外觀", ethnicity: "白人", region: "南歐地中海",
-          timeline: "晶石賽博/霓虹魔導義體紀元",
-          gender: "男", age_band: "青少年", age: 15, height: "172 cm", height_cm: 172, weight: "61 kg", weight_kg: 61, body_fat: "13.8%",
-          cup_size: null,
-          body_type: "偏瘦、靈活的青少年體型；肩寬適中、四肢修長，頭身比約 1:7",
-          outfit_palette: ["象牙米白", "炭煙燻灰", "珊瑚鮮橘", "克萊因藍"],
-          hair_palette: ["炭煙燻灰", "月華純白"],
-          eye_palette: ["清透天藍"],
-          personality: ["冷靜", "寡言"], style: "賽博市集",
-          interests: ["電子遊戲", "機械改裝"], likes: ["安靜的清晨", "甜食"], dislikes: ["輸", "擁擠人群"],
-          vessel: "magic_cube", vessel_zh: "魔術方塊",
-          biography: "洛恩成長於地中海暖風穿行的軌道浮空市集，在老舊機械與二手義體零件堆中度過了整個童年。比起同齡少年的嬉鬧狂歡，他更偏愛在晨曦微光尚未喧囂時，獨自拆解精密發條與光子回路。他手中那枚能解鎖能量牢籠的多維魔術方塊，正是他親手將祖父留下的遺物機巧改造而成。在初次面對狂暴的晶石幼獸時，洛恩沒有絲毫慌亂，而是以驚人的幾何洞察力瞬息轉動方塊矩陣完成了完美捕捉。寡言冷靜的他習慣以嚴密的邏輯剖析戰局，誓要在無垠星海中印證自己的每一步推演。"
-        },
-        images: [
-          { path: "images/chr_roen_main.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_main.png" },
-          { path: "images/chr_roen_turnaround.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_turnaround.png" },
-          { path: "images/chr_roen_front.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_front.png" },
-          { path: "images/chr_roen_side.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_side.png" },
-          { path: "images/chr_roen_back.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_back.png" },
-          { path: "images/chr_roen_expressions.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_expressions.png" },
-          { path: "images/chr_roen_props.png", url: "Art/_incoming/chr-20261106-3d04-2100/images/chr_roen_props.png" }
-        ],
-        fileCount: 8,
-        status: "ok"
-      },
-      {
-        id: "mdl-20261109-f048-1847-chr_3d04",
-        type: "character-model-rig",
-        baseId: "mdl-20261109-f048-1847-chr_3d04",
-        subjectId: "chr_roen",
-        manifest: {
-          spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=2.0.0 catalog=2.4.0 template=character-model-rig@4.3.0 task_id=mdl-20261109-f048-1847 seed=f048]",
-          task_id: "mdl-20261109-f048-1847-chr_3d04",
-          task_type: "character-model-rig",
-          subject_id: "chr_roen",
-          source_pack: "chr-20261106-3d04-2100",
-          produced_by: "Gemini Argon（任務模式）",
-          files: [
-            { path: "images/chr_3d04_model_front.png", kind: "view", level: "L1" },
-            { path: "models/chr_3d04.glb", kind: "model", level: "L1" },
-            { path: "models/chr_3d04.fbx", kind: "model", level: "L1" },
-            { path: "rig/rig_spec.json", kind: "spec", level: "L1" },
-            { path: "anims/anim_spec.json", kind: "spec", level: "L1" }
-          ],
-          missing: [],
-          notes: "由角色立繪包 chr-20261106-3d04-2100 生成 Humanoid 3D 建模與 32 支動作骨架規格"
-        },
-        animSpec: {
-          spec: "cosmimera-anim-spec/1",
-          template: "character-model-rig@4.3.0",
-          subject_id: "chr_roen",
-          source_pack: "chr-20261106-3d04-2100",
-          fps: 30,
-          total_clips: C.CLIPS.humanoid.length,
-          clips: C.CLIPS.humanoid.map(c => ({
-            clip: "chr_" + c.id,
-            description: c.zh,
-            fps: 30,
-            frames: c.f,
-            duration_sec: +(c.f / 30).toFixed(4),
-            loop: !!c.loop,
-            root_motion: !!c.rm,
-            events: (c.ev || []).map(ev => {
-              const [name, fr] = ev.split("@");
-              return { name, frame: +fr, time_sec: +(+fr / 30).toFixed(4) };
-            }),
-            file: "anims/chr_" + c.id + ".fbx",
-            animated_bones_count: 28,
-            keyframe_samples: Math.ceil(c.f / 2)
-          }))
-        },
-        images: [
-          { path: "images/chr_3d04_model_front.png", url: "Art/_incoming/mdl-20261109-f048-1847-chr_3d04/images/chr_3d04_model_front.png" }
-        ],
-        fileCount: 36,
-        status: "ok"
-      },
-      {
-        id: "cr-20261107-4a9a-2022",
-        type: "creature-concept",
-        subjectId: "starter_sun_line",
-        manifest: {
-          spec: "cosmimera-art-task/1",
-          task_header: "[COSMIMERA-TASK spec=1 tool=1.9.0 catalog=2.1.0 template=creature-concept@5.0.0 task_id=cr-20261107-4a9a-2022 seed=4a9a]",
-          task_id: "cr-20261107-4a9a-2022",
-          task_type: "creature-concept",
-          subject_id: "starter_sun_line",
-          produced_by: "ChatGPT（對話版）",
-          files: [
-            { path: "concept.json", kind: "spec", level: "L1" },
-            { path: "images/cr_starter_sun_line_juvenile_main.png", kind: "main", level: "L1" },
-            { path: "images/cr_starter_sun_line_adolescent_main.png", kind: "main", level: "L1" },
-            { path: "images/cr_starter_sun_line_adult_main.png", kind: "main", level: "L1" },
-            { path: "images/cr_starter_sun_line_overload_main.png", kind: "main", level: "L1" },
-            { path: "images/cr_starter_sun_line_lineup.png", kind: "sheet", level: "L1" },
-            { path: "images/cr_starter_sun_line_scale.png", kind: "sheet", level: "L1" }
-          ],
-          missing: [],
-          notes: "已設計首選宙獸：煌冠日冕獸 / 曜羽龍 / 耀日輝冕凰，四階型態演化全套立繪"
-        },
-        images: [
-          { path: "images/cr_starter_sun_line_juvenile_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_juvenile_main.png" },
-          { path: "images/cr_starter_sun_line_adolescent_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_adolescent_main.png" },
-          { path: "images/cr_starter_sun_line_adult_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_adult_main.png" },
-          { path: "images/cr_starter_sun_line_overload_main.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_overload_main.png" },
-          { path: "images/cr_starter_sun_line_lineup.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_lineup.png" },
-          { path: "images/cr_starter_sun_line_scale.png", url: "Art/_incoming/cr-20261107-4a9a-2022/images/cr_starter_sun_line_scale.png" }
-        ],
-        fileCount: 14,
-        status: "ok"
       }
     ];
     mockPackages.forEach(p => addPackage(p));
@@ -4118,12 +3776,8 @@
   async function performScanDirectory(dirHandle) {
     let foundCount = 0;
     for await (const [name, handle] of dirHandle.entries()) {
-      if (handle.kind === "directory" && (name.startsWith("chr-") || name.startsWith("cr-") || name.startsWith("mdl-") || name.startsWith("anim-") || name.startsWith("fx-") || name.startsWith("vsl-"))) {
+      if (handle.kind === "directory") {
         await loadFromDirHandle(name, handle);
-        foundCount++;
-      } else if (handle.kind === "file" && name.endsWith(".zip")) {
-        const file = await handle.getFile();
-        await loadZipFile(file);
         foundCount++;
       }
     }
@@ -4170,229 +3824,54 @@
 
   // 透過標準 webkitdirectory 上傳批次資料夾解析
   async function handleFolderUpload(fileList) {
-    if (!fileList || !fileList.length) return;
-    toast("正在讀取資料夾檔案...");
-    const taskGroups = {};
-    for (let i = 0; i < fileList.length; i++) {
-      const file = fileList[i];
-      const rel = file.webkitRelativePath || file.name;
-      const parts = rel.split("/");
-      // 判斷是否直接選中了 Art/_incoming 目錄，或者選中了某個 task 資料夾
-      let taskId = "";
-      let subPath = "";
-      for (let p = 0; p < parts.length; p++) {
-        if (/^(chr-|cr-|mdl-|anim-|fx-|vsl-)/.test(parts[p])) {
-          taskId = parts[p];
-          subPath = parts.slice(p + 1).join("/");
-          break;
-        }
-      }
-      if (taskId) {
-        if (!taskGroups[taskId]) taskGroups[taskId] = [];
-        taskGroups[taskId].push({ file, subPath });
-      } else if (file.name.endsWith(".zip")) {
-        await loadZipFile(file);
-      }
+    const files = Array.from(fileList || []), groups = new Map();
+    for (const file of files) {
+      if (/\.zip$/i.test(file.name)) { toast("請選取展開後的資產目錄"); continue; }
+      const parts = (file.webkitRelativePath || file.name).split("/");
+      let at = parts.findIndex(p => /^(chr-|cr-|mdl-|anim-|asset_)/.test(p));
+      if (at < 0) at = 0;
+      const id = parts[at];
+      if (!groups.has(id)) groups.set(id, {});
+      groups.get(id)[parts.slice(at).join("/")] = new Uint8Array(await file.arrayBuffer());
     }
-
-    let loadedCount = 0;
-    for (const taskId in taskGroups) {
-      const entries = taskGroups[taskId];
-      let manifestData = null, conceptData = null, rawPrompt = "";
-      let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
-      const images = [];
-      let fileCount = entries.length;
-
-      for (const item of entries) {
-        const fn = item.subPath || item.file.name;
-        if (fn.endsWith("manifest.json")) {
-          try { manifestData = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith("concept.json")) {
-          try { conceptData = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith(".prompt.md") || fn === "prompt.md") {
-          try { rawPrompt = await item.file.text(); } catch (e) {}
-        } else if (fn.endsWith("anim_spec.json")) {
-          try { animSpec = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith("rig_spec.json")) {
-          try { rigSpec = JSON.parse(await item.file.text()); } catch (e) {}
-        } else if (fn.endsWith(".glb")) {
-          try {
-            const buf = await item.file.arrayBuffer();
-            glbFile = { path: fn, url: URL.createObjectURL(item.file), buffer: buf, file: item.file };
-          } catch (e) {}
-        } else if (fn.endsWith(".fbx") && (fn.includes("anim") || fn.includes("models"))) {
-          animFiles.push({ path: fn, size: item.file.size });
-        } else if (/\.(png|jpe?g|webp)$/i.test(fn)) {
-          images.push({ path: fn, url: URL.createObjectURL(item.file) });
-        }
-      }
-
-      let alignedStaged = null;
-      if (!manifestData || !conceptData) {
-        alignedStaged = findMatchingStagedFormat(taskId, entries.map(e => e.subPath || e.file.name));
-        if (alignedStaged) {
-          if (!manifestData) manifestData = alignedStaged.manifest;
-          if (!conceptData) conceptData = alignedStaged.concept;
-          if (!rawPrompt) rawPrompt = alignedStaged.prompt;
-        }
-      }
-
-      const pkg = {
-        id: taskId,
-        type: inferTaskType(taskId, manifestData),
-        subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
-        manifest: manifestData,
-        concept: conceptData,
-        rawPrompt,
-        images,
-        glbFile,
-        animSpec,
-        rigSpec,
-        animFiles,
-        fileCount,
-        aligned: !!alignedStaged,
-        stagedTaskId: alignedStaged?.taskId || null,
-        status: manifestData?.missing?.length ? "missing" : "pending"
-      };
-      addPackage(pkg);
-      loadedCount++;
-    }
-    toast(`已讀取 ${loadedCount} 個任務資料夾`);
+    for (const [name, raw] of groups) await loadAssetFiles(raw, {name});
+    renderReviewView();
   }
 
   async function loadFromDirHandle(taskId, dirHandle) {
-    let manifestData = null, conceptData = null, rawPrompt = "";
-    const images = [];
-    let fileCount = 0;
-    try {
-      const mfFile = await (await dirHandle.getFileHandle("manifest.json")).getFile();
-      manifestData = JSON.parse(await mfFile.text());
-    } catch (e) {}
-    try {
-      const cpFile = await (await dirHandle.getFileHandle("concept.json")).getFile();
-      conceptData = JSON.parse(await cpFile.text());
-    } catch (e) {}
-
-    // 嘗試讀取 prompt.md
-    for await (const [pname, phandle] of dirHandle.entries()) {
-      if (phandle.kind === "file" && (pname.endsWith(".prompt.md") || pname === "prompt.md")) {
-        try { rawPrompt = await (await phandle.getFile()).text(); } catch (e) {}
+    const raw = {};
+    async function collect(handle, prefix) {
+      for await (const [name, child] of handle.entries()) {
+        window.COSMI_DRIVE.relative(name);
+        if (child.kind === "directory") await collect(child, prefix + name + "/");
+        else if (!/\.zip$/i.test(name)) raw[prefix + name] = new Uint8Array(await (await child.getFile()).arrayBuffer());
       }
     }
-
-    // 讀取 images 目錄
-    try {
-      const imgDir = await dirHandle.getDirectoryHandle("images");
-      for await (const [iname, ihandle] of imgDir.entries()) {
-        if (ihandle.kind === "file" && /\.(png|jpe?g|webp)$/i.test(iname)) {
-          const file = await ihandle.getFile();
-          images.push({ path: "images/" + iname, url: URL.createObjectURL(file) });
-          fileCount++;
-        }
-      }
-    } catch (e) {}
-
-    // 讀取 models 目錄 (glb / fbx 3D 模型)
-    let glbFile = null, animSpec = null, rigSpec = null, animFiles = [];
-    try {
-      const mdlDir = await dirHandle.getDirectoryHandle("models");
-      for await (const [mname, mhandle] of mdlDir.entries()) {
-        if (mhandle.kind === "file") {
-          const file = await mhandle.getFile();
-          fileCount++;
-          if (mname.endsWith(".glb")) {
-            try {
-              const buf = await file.arrayBuffer();
-              glbFile = { path: "models/" + mname, url: URL.createObjectURL(file), buffer: buf, file };
-            } catch (e) {}
-          }
-        }
-      }
-    } catch (e) {}
-
-    // 讀取 anims 目錄 (anim_spec.json 與動作 fbx)
-    try {
-      const animDir = await dirHandle.getDirectoryHandle("anims");
-      for await (const [aname, ahandle] of animDir.entries()) {
-        if (ahandle.kind === "file") {
-          const file = await ahandle.getFile();
-          fileCount++;
-          if (aname === "anim_spec.json" || aname.endsWith("anim_spec.json")) {
-            try { animSpec = JSON.parse(await file.text()); } catch (e) {}
-          } else if (aname.endsWith(".fbx")) {
-            animFiles.push({ path: "anims/" + aname, size: file.size });
-          }
-        }
-      }
-    } catch (e) {}
-
-    // 讀取 rig 目錄 (rig_spec.json)
-    try {
-      const rigDir = await dirHandle.getDirectoryHandle("rig");
-      for await (const [rname, rhandle] of rigDir.entries()) {
-        if (rhandle.kind === "file") {
-          const file = await rhandle.getFile();
-          fileCount++;
-          if (rname === "rig_spec.json" || rname.endsWith("rig_spec.json")) {
-            try { rigSpec = JSON.parse(await file.text()); } catch (e) {}
-          }
-        }
-      }
-    } catch (e) {}
-
-    let alignedStaged = null;
-    if (!manifestData || !conceptData) {
-      alignedStaged = findMatchingStagedFormat(taskId, images.map(i => i.path));
-      if (alignedStaged) {
-        if (!manifestData) manifestData = alignedStaged.manifest;
-        if (!conceptData) conceptData = alignedStaged.concept;
-        if (!rawPrompt) rawPrompt = alignedStaged.prompt;
-        try {
-          if (manifestData) {
-            const mfH = await dirHandle.getFileHandle("manifest.json", { create: true });
-            const w = await mfH.createWritable();
-            await w.write(JSON.stringify(manifestData, null, 2));
-            await w.close();
-          }
-          if (conceptData) {
-            const cpH = await dirHandle.getFileHandle("concept.json", { create: true });
-            const w = await cpH.createWritable();
-            await w.write(JSON.stringify(conceptData, null, 2));
-            await w.close();
-          }
-          if (rawPrompt) {
-            const prH = await dirHandle.getFileHandle(alignedStaged.taskId + ".prompt.md", { create: true });
-            const w = await prH.createWritable();
-            await w.write(rawPrompt);
-            await w.close();
-          }
-        } catch (e) {}
-      }
-    }
-
-    const pkg = {
-      id: taskId,
-      type: inferTaskType(taskId, manifestData),
-      subjectId: manifestData?.subject_id || alignedStaged?.subjectId || "",
-      manifest: manifestData,
-      concept: conceptData,
-      rawPrompt,
-      images,
-      glbFile,
-      animSpec,
-      rigSpec,
-      animFiles,
-      fileCount,
-      dirHandle,
-      aligned: !!alignedStaged,
-      stagedTaskId: alignedStaged?.taskId || null,
-      status: manifestData?.missing?.length ? "missing" : "pending"
-    };
-    addPackage(pkg);
+    await collect(dirHandle, taskId + "/");
+    const pkg = await loadAssetFiles(raw, {name: taskId});
+    pkg.dirHandle = dirHandle; return pkg;
   }
 
   function getActivePkg() {
     return reviewState.packages.find(p => p.id === reviewState.activePkgId) || reviewState.packages[0] || null;
+  }
+
+  async function exportAssetDirectory(pkg) {
+    if (!pkg) return toast("請先選取資產");
+    if (!window.showDirectoryPicker) return toast("請使用支援資料夾寫入的瀏覽器，或直接在 Drive 下載個別檔案");
+    try {
+      const root = await window.showDirectoryPicker({mode: "readwrite"});
+      const target = await root.getDirectoryHandle(pkg.id, {create: true});
+      const entries = pkg.driveFiles || Object.keys(pkg.rawFiles || {}).map(path => ({path: path.startsWith(pkg.id + "/") ? path.slice(pkg.id.length + 1) : path, key: path}));
+      for (const f of entries) {
+        const parts = window.COSMI_DRIVE.relative(f.path), name = parts.pop(); let dir = target;
+        for (const part of parts) dir = await dir.getDirectoryHandle(part, {create: true});
+        const blob = pkg.driveFolderId ? await window.COSMI_DRIVE.read(pkg.drivePath + "/" + f.path) : new Blob([pkg.rawFiles[f.key]]);
+        const h = await dir.getFileHandle(name, {create: true}), w = await h.createWritable();
+        await w.write(blob); await w.close();
+      }
+      toast("已逐檔匯出資產目錄");
+    } catch (e) { if (e.name !== "AbortError") toast(e.message); }
   }
 
   // ==================== 實體一鍵解壓縮引擎（解壓至本專案 Art/_incoming） ====================
@@ -5186,6 +4665,20 @@
     $("#stage3dInfoBadge").textContent = "";
 
     let glbBuffer = targetPkg.glbFile?.buffer || null;
+    if (!glbBuffer && targetPkg.glbFile?.deferred && targetPkg.driveFolderId) {
+      try {
+        const blob = await window.COSMI_DRIVE.read(targetPkg.drivePath + "/" + targetPkg.glbFile.path);
+        // A different package may have been selected while the network request was running.
+        if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        glbBuffer = await blob.arrayBuffer();
+        if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        targetPkg.glbFile = {...targetPkg.glbFile, buffer:glbBuffer, url:URL.createObjectURL(blob), deferred:false};
+      } catch (error) {
+        targetPkg.glbLoadError = true;
+        $("#stage3dClipBadge").textContent = "GLB 下載失敗："+error.message;
+        return;
+      }
+    }
     if (!glbBuffer && targetPkg.rawFiles) {
       for (const p in targetPkg.rawFiles) {
         if (p.endsWith(".glb")) {
@@ -5196,6 +4689,7 @@
     }
 
     const onModelLoaded = (model, animations) => {
+      targetPkg.glbLoadError = false;
       three.modelGroup = model;
       three.scene.add(model);
 
@@ -5266,19 +4760,35 @@
         if (glbBuffer) {
           loader.parse(glbBuffer, "", gltf => onModelLoaded(gltf.scene, gltf.animations), err => {
             console.error("GLTF buffer parse error:", err);
-            buildProcedural3dRig(targetPkg, onModelLoaded);
+            if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
           });
         } else {
           loader.load(targetPkg.glbUrl, gltf => onModelLoaded(gltf.scene, gltf.animations), undefined, err => {
             console.error("GLTF load url error:", err);
-            buildProcedural3dRig(targetPkg, onModelLoaded);
+            if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
           });
         }
       } else {
-        buildProcedural3dRig(targetPkg, onModelLoaded);
+        if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
       }
     } else {
-      buildProcedural3dRig(targetPkg, onModelLoaded);
+      if (targetPkg.driveFolderId) {
+              targetPkg.glbLoadError = true;
+              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
+              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+            } else buildProcedural3dRig(targetPkg, onModelLoaded);
     }
   }
 
@@ -6005,13 +5515,13 @@
       box.append(el("h4", {}, "審查覆核意見"));
       const reviewBox = el("div", { class: "review-box" },
         el("div", { class: "seg" },
-          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => { pkg.status = "ok"; saveReview(pkg); renderReviewView(); } }, "✅ 核准通過"),
-          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => { pkg.status = "pending"; saveReview(pkg); renderReviewView(); } }, "🟨 待修改"),
-          el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => { pkg.status = "reject"; saveReview(pkg); renderReviewView(); } }, "❌ 退回拒絕")
+          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "✅ 核准通過"),
+          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "🟨 待修改"),
+          el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "reject") }, "❌ 退回拒絕")
         ),
         el("textarea", { id: "revNote", placeholder: "填寫人工審查意見（例如：身高比例良好，但服裝配色需微調；臉部表情需更生動...）", onchange: e => { saveReview(pkg, e.target.value); } }, getReviewNote(pkg)),
         el("div", { style: "display:flex;gap:6px;margin-top:6px;flex-wrap:wrap" },
-          el("button", { class: "btn mini", type: "button", onclick: () => { saveReview(pkg, $("#revNote")?.value); toast("已儲存審查結果"); } }, "💾 儲存審查意見"),
+          el("button", { class: "btn mini", type: "button", onclick: async () => { try { await window.COSMI_DRIVE.saveNote(pkg, $("#revNote")?.value || ""); toast("已將審查意見儲存至 Drive"); } catch(e) { toast(e.message); } } }, "💾 儲存審查意見"),
           el("button", { class: "btn ghost mini", type: "button", onclick: () => exportReviewReport(pkg) }, "⬇ 下載審查報告 (.json)"),
           el("button", { class: "btn ghost mini", type: "button", title: "移至備份區（自動加入時間戳）", onclick: () => backupActivePackage(pkg) }, "📦 移至備份區 (含時間戳)")
         )
@@ -6057,11 +5567,17 @@
     return upg ? upg.newPromptText : (pkg.manifest?.task_header || "無可用 Prompt 資訊");
   }
 
+  async function reviewPackage(pkg, status) {
+    try {
+      await window.COSMI_DRIVE.review(pkg, status, $("#revNote")?.value || getReviewNote(pkg));
+    } catch (e) { const status = document.getElementById("driveStatus"); if (status) status.textContent = e.message; toast(e.message); }
+  }
+
   function getReviewNote(pkg) {
-    return reviewState.reviews[pkg.id]?.note || "";
+    return pkg.reviewRecord?.note || reviewState.reviews[pkg.id]?.note || "";
   }
   function saveReview(pkg, note) {
-    reviewState.reviews[pkg.id] = { status: pkg.status, note: note ?? getReviewNote(pkg), time: new Date().toLocaleString() };
+    reviewState.reviews[pkg.id] = { ...reviewState.reviews[pkg.id], status: pkg.status, note: note ?? getReviewNote(pkg), time: new Date().toLocaleString() };
     try { localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewState.reviews)); } catch (e) {}
     if ($("#favList")) renderFavorites();
     if ($("#designedList")) renderDesignedList();
@@ -6085,31 +5601,41 @@
       $("#forgeView").style.display = "none";
       $("#designedView")?.classList.remove("active");
       $("#reviewView").classList.add("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnSettings")?.classList.remove("on");
       $("#viewBtnForge").classList.remove("on");
       $("#viewBtnDesigned")?.classList.remove("on");
       $("#viewBtnReview").classList.add("on");
       $("#forgeHeaderControls").style.display = "none";
-      if (!reviewState.packages.length) {
-        const autoScanned = await tryAutoScanIncoming();
-        if (!autoScanned && !reviewState.packages.length) {
-          loadSampleFixtures();
-        }
-      } else {
-        renderReviewView();
-      }
+      renderReviewView();
     } else if (mode === "designed") {
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.remove("active");
       $("#designedView")?.classList.add("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnSettings")?.classList.remove("on");
       $("#viewBtnForge").classList.remove("on");
       $("#viewBtnDesigned")?.classList.add("on");
       $("#viewBtnReview").classList.remove("on");
       $("#forgeHeaderControls").style.display = "none";
       renderDesignedDesk();
+    } else if (mode === "settings") {
+      $("#forgeView").style.display = "none";
+      $("#reviewView").classList.remove("active");
+      $("#designedView")?.classList.remove("active");
+      $("#settingsView")?.classList.add("active");
+      $("#viewBtnForge").classList.remove("on");
+      $("#viewBtnDesigned")?.classList.remove("on");
+      $("#viewBtnReview").classList.remove("on");
+      $("#viewBtnSettings")?.classList.add("on");
+      $("#forgeHeaderControls").style.display = "none";
+      window.COSMI_SETTINGS?.refresh();
     } else {
       $("#forgeView").style.display = "grid";
       $("#reviewView").classList.remove("active");
       $("#designedView")?.classList.remove("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnSettings")?.classList.remove("on");
       $("#viewBtnForge").classList.add("on");
       $("#viewBtnDesigned")?.classList.remove("on");
       $("#viewBtnReview").classList.remove("on");
@@ -6164,7 +5690,7 @@
       if (!d) return false;
       const sameMajor = (d.catalog || "").split(".")[0] === C.version.split(".")[0];
       Object.assign(state, {
-        platform: d.platform || "chatgpt", history: d.history || [], root: d.root || "", notes: d.notes || "",
+        platform: d.platform || "chatgpt", history: d.history || [], root: d.root && !/^(?:[a-z]:|[\\/])/i.test(d.root) ? d.root : DEFAULT_ROOT, notes: d.notes || "",
         customOptions: d.customOptions || {},
         preset: DESIGNED.some(x => x.line_id === d.preset) ? d.preset : null,
         presetChar: DESIGNED_CHARACTERS.some(x => x.id === d.presetChar) ? d.presetChar : null
@@ -6190,6 +5716,7 @@
     $("#viewBtnForge").addEventListener("click", () => setViewMode("forge"));
     $("#viewBtnDesigned")?.addEventListener("click", () => setViewMode("designed"));
     $("#viewBtnReview").addEventListener("click", () => setViewMode("review"));
+    $("#viewBtnSettings")?.addEventListener("click", () => setViewMode("settings"));
     $("#btnGoDesignedFromSubhead")?.addEventListener("click", () => setViewMode("designed"));
 
     // 已設計台分類切換
@@ -6251,8 +5778,8 @@
     $("#copy").addEventListener("click", () => {
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
-      const staged = generateAndStageFormats(b);
-      copyText($("#prompt").value, `已複製 Prompt！同時產生時間戳格式包 (${staged.taskId})，供審查台自動對齊封裝`);
+      const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
+      copyText($("#prompt").value, `已複製本步驟 Prompt (${staged.taskId})；格式參數請另存 JSON`);
       record();
     });
 
@@ -6263,7 +5790,7 @@
       if (!b.rounds || !b.rounds[0]) return;
       state.currentRound = 1;
       renderOutput();
-      const staged = generateAndStageFormats(b);
+      const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
       const isEvo = b.ctx.opts?.stage && b.ctx.opts.stage !== "juvenile" && b.ctx.task.id === "creature-concept";
       const hint = isEvo ? `已複製第 1 輪 (正面圖) Prompt！請先上傳前一階正面圖再貼入生成` : `已複製第 1 輪 (正面圖) Prompt！已產生時間戳對齊包 (${staged.taskId})`;
       copyText(b.rounds[0].prompt, hint);
@@ -6295,7 +5822,11 @@
       download(b.ctx.subjectId + ".concept.json", JSON.stringify(b.ctx.concept, null, 2), "application/json");
     });
     $("#open").addEventListener("click", () => window.open(state.platform === "gemini" ? "https://gemini.google.com/app" : "https://chatgpt.com/", "_blank", "noopener"));
-    $("#root").addEventListener("change", e => { state.root = e.target.value.trim().replace(/[\\/]+$/, ""); renderOutput(); save(); });
+    $("#root").addEventListener("change", e => {
+      const value = e.target.value.trim().replace(/[\\/]+$/, "");
+      if (/^(?:[a-z]:|[\\/])/i.test(value)) { toast("請使用相對目錄，例如 ../cosmos_chimera"); e.target.value = state.root || DEFAULT_ROOT; return; }
+      state.root = value || DEFAULT_ROOT; renderOutput(); save();
+    });
 
     // 鍛造台升級舊版包按鈕
     $("#btnUpgradeForge").addEventListener("click", () => $("#upgradeFileInput").click());
@@ -6461,7 +5992,7 @@
     $("#btnUnpack").addEventListener("click", () => {
       const pkg = getActivePkg();
       if (!pkg) { toast("請先選取任務包"); return; }
-      unpackPackageToDisk(pkg);
+      exportAssetDirectory(pkg);
     });
     // 審查通過，交付部署至 cosmos_chimera
     $("#btnDeployGame")?.addEventListener("click", () => {
@@ -6469,19 +6000,7 @@
       if (!pkg) { toast("請先選取任務包"); return; }
       deployPackageToGame(pkg);
     });
-    $("#btnExportAlignedZip")?.addEventListener("click", () => {
-      const pkg = getActivePkg();
-      if (!pkg) { toast("請先選取任務包"); return; }
-      if (!pkg.rawFiles || !Object.keys(pkg.rawFiles).length) {
-        toast("此任務包沒有可打包的檔案");
-        return;
-      }
-      const blob = createZipBlob(pkg.rawFiles);
-      const a = el("a", { href: URL.createObjectURL(blob), download: pkg.id + ".zip" });
-      document.body.append(a); a.click();
-      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-      toast("已打包下載完整 Zip（含立繪圖檔、manifest.json、concept.json 與 prompt.md）");
-    });
+    $("#btnExportAlignedZip")?.addEventListener("click", () => exportAssetDirectory(getActivePkg()));
     $("#btnToImg3d")?.addEventListener("click", () => {
       const pkg = getActivePkg();
       if (!pkg) return;
@@ -6597,5 +6116,57 @@
     $("#root").value = state.root || DEFAULT_ROOT;
     if (had) renderAll(); else reseed(newSeed(), true);
   }
-  document.addEventListener("DOMContentLoaded", init);
+  window.COSMI_FORGE = Object.freeze({
+    loadZipFile, loadAssetFiles, setViewMode,
+    versionInfo: () => ({tool:TOOL_VERSION,catalog:C.version,spec:SPEC,templates:Object.fromEntries(TASKS.map(t=>[t.id,t.version]))}),
+    packages: () => reviewState.packages,
+    removePackage: id => { reviewState.packages = reviewState.packages.filter(p => p.id !== id); },
+    clearDrivePackages: () => { reviewState.packages = reviewState.packages.filter(p => !p.driveFolderId); },
+    persistReview: saveReview,
+    setPipelineStage: stage => {
+      const isCharacter = task().id.startsWith("character");
+      if (["appearance", "portrait"].includes(stage)) state.taskId = isCharacter ? "character-concept" : "creature-concept";
+      if (["colab", "blender"].includes(stage)) {
+        const pkg = getActivePkg();
+        const chr = pkg && !is3dType(pkg.type) ? pkg.type === "character-concept" : isCharacter;
+        state.taskId = chr ? "character-model-rig" : "creature-model-rig";
+        if (pkg && !is3dType(pkg.type)) {
+          const opts = taskOpts(task()); opts.source_pack = pkg.id; opts.scope = "single";
+          if (pkg.stage) opts.stage = pkg.stage;
+        }
+      }
+      renderAll();
+    },
+    settings: () => ({assetId: lastBuild.ctx.taskId, subjectId: lastBuild.ctx.subjectId, appearance: window.COSMI_PIPELINE.appearance(lastBuild.ctx),
+      delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
+        task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
+        produced_by: "", files: [], missing: []}}),
+    refresh: () => { renderAll(); renderReviewView(); },
+    setPortraitRound: round => { state.currentRound = round; renderOutput(); },
+    activePackage: getActivePkg,
+    packageBlob: pkg => createZipBlob(pkg.rawFiles),
+    currentPrompt: () => {
+      // Automated portrait exports always contain the complete multi-round prompt,
+      // regardless of which round is currently displayed.
+      const b = build();
+      if (b.errors.length) throw Error(b.errors.join("；"));
+      const stage = document.getElementById("pipelineStage")?.value || "task";
+      const portrait = stage === "portrait" && window.COSMI_PIPELINE?.supports(b.ctx);
+      return {
+        path: "prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
+        text: portrait ? b.text : ($("#prompt")?.value || b.text)
+      };
+    },
+    showPrompt: text => {
+      const dialog = document.createElement("dialog");
+      const textarea = document.createElement("textarea");
+      textarea.readOnly = true; textarea.value = text; textarea.style.cssText = "width:75vw;height:65vh";
+      const copy = document.createElement("button"); copy.textContent = "複製 Prompt"; copy.onclick = () => copyText(text, "已複製 Drive Prompt");
+      const save = document.createElement("button"); save.textContent = "下載 Prompt"; save.onclick = () => download("drive.prompt.md", text, "text/markdown");
+      const close = document.createElement("button"); close.textContent = "關閉"; close.onclick = () => dialog.close();
+      dialog.append(textarea, copy, save, close); document.body.append(dialog);
+      dialog.addEventListener("close", () => dialog.remove(), { once: true }); dialog.showModal();
+    }
+  });
+  window.addEventListener("cosmi:authorized", init, { once: true });
 })();

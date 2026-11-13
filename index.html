@@ -11,7 +11,8 @@
     --danger: #ff8a80; --ok: #8fd8a0; --code: #161922;
   }
   * { box-sizing: border-box; margin: 0; }
-  html, body { height: 100%; overflow: hidden; }
+  html { min-height: 100%; overflow-x: hidden; overflow-y: auto; }
+  body { min-height: 100%; height: auto; overflow-x: hidden; overflow-y: auto; }
   body { display: flex; flex-direction: column; background: var(--bg); color: var(--ink); font: 14px/1.5 "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif; }
 
   /* ---- Header ---- */
@@ -30,7 +31,22 @@
   .stage-forge-seg { display: inline-flex; }
   .stage-forge-seg .segb { padding: 3px 10px; font-size: 12px; }
 
-  .view-container { flex: 1; min-height: 0; display: flex; }
+  #driveApp:not([hidden]) { display: flex; flex-direction: column; min-height: 100dvh; width: 100%; }
+  .view-container { flex: 1; min-height: clamp(520px, 72dvh, 920px); display: flex; }
+  #designedDetailView, #designedCardsView, #designedRailList, #railList, #panelBody { min-height: 0; overscroll-behavior-y: auto; scrollbar-width: thin; }
+  #designedStageHost { min-height: 0; }
+  .btn.icon-only, .segb.icon-only { width: 32px; min-width: 32px; height: 32px; padding: 0; font-size: 16px; }
+  .btn.icon-only.mini { width: 29px; min-width: 29px; height: 29px; }
+  #btnFavPrompt { flex: 0 0 32px; max-width: 32px; white-space: nowrap; overflow: hidden; }
+  #forgeView .portrait-mode-control { display: inline-flex; align-items: center; gap: 7px; flex: 1 1 245px; min-width: 0; color: var(--muted); font-size: 12px; white-space: nowrap; }
+  #forgeView .portrait-mode-control select { width: auto; min-width: 0; max-width: 260px; flex: 1 1 160px; }
+  @media (max-width: 500px) {
+    #forgeView .portrait-mode-control { flex-basis: 100%; }
+    #forgeView .portrait-mode-control select { max-width: none; }
+  }
+  button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  [data-tip]:not(button):not(a):not(input):not(select):not(textarea), [aria-description]:not(button):not(a):not(input):not(select):not(textarea) { cursor: help; }
+  #uiTooltip { position: fixed; display: none; max-width: min(320px, calc(100vw - 24px)); background: #30394b; color: #fff; border: 1px solid #536481; padding: 6px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 22px rgba(0,0,0,.55); pointer-events: none; z-index: 9999; white-space: normal; overflow-wrap: anywhere; }
 
   /* ==================== 鍛造視圖 ==================== */
   #forgeView { flex: 1; display: grid; grid-template-columns: 220px minmax(360px, 1.1fr) minmax(380px, 1.2fr); gap: 12px; padding: 12px; min-height: 0; overflow: auto; }
@@ -97,6 +113,51 @@
   .stack > section + section { margin-top: 12px; }
   #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; background: #2d3646; color: #fff; border: 1px solid var(--accent); padding: 7px 15px; border-radius: 6px; transition: .2s; pointer-events: none; z-index: 300; font-size: 13px; box-shadow: 0 4px 14px rgba(0,0,0,.5); }
   #toast.show { opacity: 1; transform: translateX(-50%); }
+
+  /* ---- Pipeline / Prompt workspace: flexible cards, no fixed-height overlap ---- */
+  #forgeView { grid-template-columns: minmax(190px, 220px) minmax(0, 1fr) minmax(0, 1.15fr); align-items: start; overflow: visible; }
+  #forgeView > *, #forgeView .stack, #forgeView section { min-width: 0; max-width: 100%; }
+  #forgeView .stack { display: flex; flex-direction: column; gap: 12px; }
+  #forgeView .stack > section + section { margin-top: 0; }
+  #forgeView section { overflow: hidden; }
+  #forgeView .field, #forgeView .field.opt { grid-template-columns: minmax(0, 120px) minmax(0, 1fr); }
+  #forgeView .field > *, #forgeView .field.opt > * { min-width: 0; }
+  #forgeView .subhead { align-items: flex-start; gap: 8px; }
+  #forgeView .subhead > h2 { flex: 1 1 100%; }
+  #forgeStageTabs, #forge3dModeTabs { max-width: 100%; flex-wrap: wrap; }
+  #forgeView .actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 0; }
+  #forgeView .actions > .btn, #forgeView .actions > .round-copy-group { flex: none; }
+  #forgeView .actions .muted { margin-left: auto; white-space: nowrap; }
+  #forgeView textarea#prompt { display: block; width: 100%; min-height: 320px; height: clamp(320px, 52dvh, 720px); max-height: 78dvh; overflow: auto; resize: vertical; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; line-height: 1.6; }
+  #forgeView #header { overflow-wrap: anywhere; line-height: 1.5; }
+  #forgeView #favoritesSection, #forgeView #deliver, #forgeView #history { min-width: 0; overflow-wrap: anywhere; }
+  #pipelineControls { min-width: 0; }
+  #pipelineControls[open] { display: block; }
+  #pipelineControls > div, #pipelineControls label { min-width: 0; }
+  #pipelineControls label { display: flex; flex-direction: column; gap: 6px; overflow-wrap: anywhere; }
+  #pipelineControls select { max-width: 100%; }
+  #pipelineControls textarea { display: block; width: 100%; min-height: 110px; max-height: 45dvh; overflow: auto; resize: vertical; font-family: Consolas, monospace; font-size: 12px; line-height: 1.55; }
+  #pipelineControls > div:first-of-type { align-items: end; }
+  #pipelineControls > div:first-of-type label { flex: 1 1 270px; max-width: 100%; }
+  #driveToolbar #driveStatus { min-width: 0; flex: 1 1 100%; overflow-wrap: anywhere; font-size: 12px; color: var(--muted); }
+  @media (max-width: 1250px) {
+    #forgeView { grid-template-columns: minmax(180px, 220px) minmax(0, 1fr); }
+    #forgeView > .stack:last-child { grid-column: 2; }
+  }
+  @media (max-width: 850px) {
+    #forgeView { grid-template-columns: minmax(0, 1fr); padding: 10px; }
+    #forgeView > .stack:last-child { grid-column: auto; }
+    #forgeView .field, #forgeView .field.opt { grid-template-columns: minmax(0, 1fr); gap: 5px; }
+    #forgeView .subhead > h2 { flex-basis: auto; }
+    #forgeView textarea#prompt { height: 48dvh; }
+    #pipelineControls { padding: 10px !important; }
+    #pipelineControls > div { grid-template-columns: minmax(0, 1fr) !important; }
+  }
+  @media (max-width: 500px) {
+    #forgeView { padding: 8px; gap: 10px; }
+    #forgeView .actions .btn { min-width: 30px; }
+    #pipelineControls > div:first-of-type { align-items: stretch; }
+  }
 
   /* ==================== 審查台視圖 (參考 steel_vs_swarm) ==================== */
   #reviewView { flex: 1; display: none; min-height: 0; }
@@ -437,29 +498,414 @@
     justify-content: space-between;
     gap: 4px;
   }
+
+  .pipeline-map {padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+  .pipeline-map h2 {margin-bottom:8px}
+  .pipeline-flow {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:900px}
+  .pipeline-node {width:100%;padding:9px 7px;border:1px solid var(--line);border-radius:8px;background:var(--subpanel);color:var(--ink);text-align:center;white-space:normal;min-height:42px}
+  .pipeline-node:hover,.pipeline-node:focus-visible {border-color:var(--accent)}
+  .pipeline-node[aria-pressed="true"] {border-color:var(--accent);background:#27364b}
+  .pipeline-wide {grid-column:1/-1}
+  .pipeline-lane {display:grid;gap:7px;align-content:start;border:1px dashed var(--line);border-radius:9px;padding:8px;min-width:0}
+  .pipeline-lane h3 {font-size:12px;text-align:center;color:var(--muted)}
+  .pipeline-arrow {text-align:center;color:var(--muted);line-height:1}
+  #pipelineStepDetail {margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:10px;overflow-wrap:anywhere}
+  #pipelineStepDetail p {color:var(--muted);font-size:12px;margin-top:4px}
+  #pipelineStepDetail pre {white-space:pre-wrap;overflow-wrap:anywhere;max-height:240px;overflow:auto;background:var(--code);padding:10px;margin-top:8px;border-radius:6px;font-size:12px}
+  @media(max-width:550px){.pipeline-map{padding:10px}.pipeline-flow{gap:5px}.pipeline-lane{padding:5px}.pipeline-node{font-size:11px;padding:7px 4px}}
 </style>
 </head>
 <body>
+<style>
+  [hidden] { display: none !important; }
+  #driveGate { max-width: 520px; margin: 12vh auto; padding: 32px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+  #driveToolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+  #drivePromptPath { min-width: 230px; flex: 1; }
+  #settingsView { display:none; flex:1; min-height:0; overflow-y:auto; padding:clamp(12px,2vw,28px); border:0; background:transparent; }
+  #settingsView.active { display:block; }
+  .settings-header { margin:0 0 20px; }
+  .settings-header h2 { font-size:22px; margin-bottom:5px; color:var(--ink); text-transform:none; letter-spacing:0; }
+  .settings-header p, .settings-card .muted { color:var(--muted); font-size:13px; }
+  .settings-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:14px;max-width:1100px; }
+  .settings-card { display:flex; flex-direction:column; gap:12px; }
+  .settings-card h3 { margin:0; }
+  .settings-card label { font-size:13px; }
+  .settings-field { display:flex; flex-direction:column; gap:6px; }
+  .settings-field select { width:100%; max-width:340px; }
+  .settings-switch { display:flex; align-items:center; gap:8px; min-height:30px; }
+  .settings-switch input { width:18px; height:18px; }
+  .settings-actions { display:flex; flex-wrap:wrap; gap:8px; }
+  .settings-versions { display:grid; gap:8px; margin:0; }
+  .settings-versions div { display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid var(--line); padding:5px 0; }
+  .settings-versions dt { color:var(--muted); }
+  .settings-versions dd { margin:0; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; text-align:right; }
+  @media(max-width:699px){#settingsView {padding:12px;} .settings-grid {grid-template-columns:minmax(0,1fr);} }
+
+
+  /* ---- Responsive workspaces: desktop, tablet, phone and device orientation ---- */
+  #driveApp, .view-container, #forgeView, #reviewView, #designedView,
+  #stageHost, #designedStageHost, #panel, #panelBody { min-width: 0; }
+  #driveGate { width: min(520px, calc(100% - 24px)); }
+  #driveToolbar > *, header > *, #forgeHeaderControls { min-width: 0; }
+  #forgeHeaderControls { max-width: 100%; flex-wrap: wrap; }
+  #stageTag { max-width: calc(100% - 24px); min-width: 0; flex-wrap: wrap; overflow-wrap: anywhere; }
+  #stId { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  #panelTabs { scrollbar-width: thin; }
+  #panelTabs .segb { flex: none; white-space: nowrap; }
+  #panelBody, #designedDetailView, #designedCardsView { overflow-wrap: anywhere; }
+  #panelBody table { max-width: 100%; }
+  #panelBody th, #panelBody td { overflow-wrap: anywhere; }
+  .designed-detail-grid, .designed-stages-grid { min-width: 0; }
+  .card-title, .card-meta-row, .prompt-card, .stage-mini-card { min-width: 0; overflow-wrap: anywhere; }
+  .stagebar { min-width: 0; }
+  .stagebar-group, #zoomSeg, #viewSeg, #stage3dSpeedSeg { max-width: 100%; }
+  #forgeView .field .fctl { flex-wrap: wrap; }
+  #forgeView .round-seg { min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: thin; }
+  #forgeView .round-seg .segb { flex: 1 0 auto; }
+  #pipelineSource { max-width: 100%; }
+  #stage3dHud, #stage3dTimeline { overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+  #toast { max-width: calc(100vw - 24px); text-align: center; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+
+  /* Compact desktop and landscape tablet: two forge work areas; slimmer review sidebars. */
+  @media (max-width: 1279px) {
+    #forgeView { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #forgeView > section:first-child { grid-column: 1 / -1; }
+    #forgeView > .stack:last-child { grid-column: auto; }
+    #tasks { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 8px; }
+    #tasks .task { margin-bottom: 0; height: 100%; min-width: 0; }
+    #rail { width: clamp(220px, 22vw, 270px); }
+    aside#panel { width: clamp(290px, 29vw, 355px); }
+    #designedRail { width: clamp(230px, 25vw, 300px); }
+  }
+
+  /* Tablet and small laptop: avoid three compressed review columns. */
+  @media (max-width: 1023px) {
+    .view-container { display: block; flex: 1 0 auto; min-height: 0; }
+    #reviewView.active {
+      display: grid; width: 100%; min-height: 0;
+      grid-template-columns: minmax(210px, 31%) minmax(0, 1fr);
+      grid-template-rows: clamp(390px, 62dvh, 680px) auto;
+    }
+    #reviewView #rail {
+      grid-column: 1; grid-row: 1; width: auto; height: auto;
+      border-right: 1px solid var(--line); border-bottom: 0;
+    }
+    #reviewView #stageHost { grid-column: 2; grid-row: 1; height: auto; min-height: 0; }
+    #reviewView aside#panel {
+      grid-column: 1 / -1; grid-row: 2; width: auto; min-height: 280px;
+      border-left: 0; border-top: 1px solid var(--line);
+    }
+    #reviewView #panelBody { min-height: 260px; max-height: 480px; overflow-y: auto; }
+    #designedView.active {
+      display: grid; width: 100%;
+      grid-template-columns: minmax(210px, 30%) minmax(0, 1fr);
+      grid-template-rows: clamp(480px, 72dvh, 780px);
+    }
+    #designedView #designedRail {
+      grid-column: 1; width: auto; height: auto;
+      border-right: 1px solid var(--line); border-bottom: 0;
+    }
+    #designedView #designedStageHost { grid-column: 2; min-height: 0; }
+    #forgeView .field, #forgeView .field.opt { grid-template-columns: minmax(0, 1fr); gap: 5px; }
+    #forgeView textarea#prompt { min-height: 280px; max-height: none; height: clamp(300px, 50dvh, 650px); }
+    #pipelineControls > div { min-width: 0; }
+  }
+
+  /* Large tablets in portrait also need the two-column review desk. */
+  @media (orientation: portrait) and (min-width: 700px) and (max-width: 1100px) {
+    .view-container { display: block; flex: 1 0 auto; min-height: 0; }
+    #reviewView.active {
+      display: grid; width: 100%;
+      grid-template-columns: minmax(225px, 32%) minmax(0, 1fr);
+      grid-template-rows: clamp(440px, 58dvh, 780px) auto;
+    }
+    #reviewView #rail {
+      grid-column: 1; grid-row: 1; width: auto; height: auto;
+      border-right: 1px solid var(--line); border-bottom: 0;
+    }
+    #reviewView #stageHost { grid-column: 2; grid-row: 1; height: auto; min-height: 0; }
+    #reviewView aside#panel {
+      grid-column: 1 / -1; grid-row: 2; width: auto; min-height: 300px;
+      border-left: 0; border-top: 1px solid var(--line);
+    }
+    #reviewView #panelBody { min-height: 280px; max-height: 520px; overflow-y: auto; }
+    #designedView.active {
+      display: grid; width: 100%;
+      grid-template-columns: minmax(225px, 31%) minmax(0, 1fr);
+      grid-template-rows: clamp(520px, 72dvh, 850px);
+    }
+    #designedView #designedRail {
+      grid-column: 1; width: auto; height: auto;
+      border-right: 1px solid var(--line); border-bottom: 0;
+    }
+    #designedView #designedStageHost { grid-column: 2; min-height: 0; }
+  }
+
+  /* Phone portrait: vertically flowing content, independently reachable asset lists. */
+  @media (max-width: 699px) {
+    #driveGate { margin: max(16px, 7dvh) auto; padding: clamp(16px, 5vw, 30px); }
+    #driveToolbar { gap: 6px; padding: 8px 10px; }
+    #driveToolbar .btn.icon-only { width: 40px; min-width: 40px; height: 40px; }
+    #drivePromptPath { order: 1; min-width: 0; flex: 1 1 100%; }
+    #driveLoadPrompt { order: 2; }
+    #driveStatus { order: 3; }
+    #pipelineControls { padding: 10px !important; }
+    #pipelineControls > div:first-of-type { flex-wrap: wrap; align-items: center; }
+    #pipelineControls > div:first-of-type label { flex: 1 1 100%; }
+    #pipelineControls > div:first-of-type button { width: 40px; height: 40px; }
+    #pipelineControls > div[style*="grid-template-columns"] { grid-template-columns: minmax(0, 1fr) !important; }
+    #pipelineControls label { min-width: 0; }
+    #pipelineSource { width: 100%; }
+    header { display: grid; grid-template-columns: minmax(0, 1fr) auto; padding: 8px 10px; gap: 7px; }
+    header h1 { font-size: 15px; min-width: 0; flex-wrap: wrap; gap: 2px 6px; }
+    header > .grow { display: none; }
+    header > .seg { justify-self: end; }
+    #forgeHeaderControls { grid-column: 1 / -1; justify-content: flex-end; gap: 6px !important; }
+    #forgeHeaderControls #rec { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+    #forgeView { width: 100%; grid-template-columns: minmax(0, 1fr); padding: 10px; gap: 10px; }
+    #forgeView > section:first-child, #forgeView > .stack:last-child { grid-column: auto; }
+    #forgeView section { padding: 10px; }
+    #tasks { grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); }
+    #forgeView .field, #forgeView .field.opt { grid-template-columns: minmax(0, 1fr); }
+    #forgeView .subhead { flex-wrap: wrap; }
+    #forgeView .actions { gap: 6px; }
+    #forgeView .actions .muted { margin-left: 0; }
+    #forgeView textarea#prompt { min-height: 260px; height: clamp(300px, 48dvh, 620px); }
+    #forgeView .round-seg .segb { min-height: 36px; }
+    #reviewView.active { display: flex; flex-direction: column; width: 100%; }
+    #reviewView #rail {
+      width: 100%; height: auto; flex: none; border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    #rail .rail-tools { flex-direction: row; align-items: center; }
+    #rail .rail-tools > .btn { width: 44px; height: 44px; flex: none; }
+    #rail .rail-tools-sub { display: flex; flex-wrap: wrap; gap: 6px; }
+    #rail .rail-tools-sub .btn { width: 40px; height: 40px; }
+    #reviewView #railList { flex: none; min-height: 110px; max-height: clamp(150px, 26dvh, 240px); overflow-y: auto; }
+    #reviewView #stageHost { width: 100%; height: clamp(440px, 72dvh, 720px); flex: none; min-height: 0; }
+    #reviewView aside#panel { width: 100%; min-height: 0; flex: none; border-left: 0; border-top: 1px solid var(--line); }
+    #reviewView #panelBody { min-height: 240px; max-height: none; overflow-y: visible; }
+    #panelTabs { position: sticky; top: 0; z-index: 15; background: var(--panel); }
+    #panelTabs .segb { min-height: 40px; }
+    #stageCompareView { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 6px; }
+    #stageTag { left: 6px; top: 6px; max-width: calc(100% - 12px); padding: 4px 6px; }
+    #stageEmpty { padding: 16px; margin: 12px; }
+    .stagebar { gap: 6px; padding: 6px; }
+    .stagebar .stagebar-group .muted { display: none; }
+    #stageCarousel { left: 6px; right: 6px; }
+    .stage3d-hud { top: 56px; left: 6px; right: 6px; max-width: calc(100% - 12px); padding: 4px 6px; }
+    .stage3d-timeline {
+      left: 6px; right: 6px; max-width: calc(100% - 12px);
+      padding: 6px; gap: 5px; flex-wrap: wrap; justify-content: flex-start;
+    }
+    .stage3d-timeline select { width: min(180px, 42%) !important; flex: 1 1 auto; }
+    .stage3d-timeline-slider { flex: 1 1 100%; order: 2; }
+    .stage3d-time-display { order: 3; min-width: 0; }
+    #stage3dSpeedSeg { order: 4; overflow-x: auto; }
+    #btn3dLoop { order: 5; }
+    #designedView.active { display: flex; flex-direction: column; width: 100%; }
+    #designedView #designedRail {
+      width: 100%; height: auto; flex: none; border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    #designedRailList { flex: none; min-height: 110px; max-height: clamp(150px, 26dvh, 250px); overflow-y: auto; }
+    #designedView #designedStageHost { width: 100%; height: auto; min-height: 460px; flex: none; }
+    #designedDetailView, #designedCardsView { min-height: 360px !important; overflow-y: visible !important; }
+    .designed-detail-grid, .designed-stages-grid { grid-template-columns: minmax(0, 1fr); }
+    #designedStageHeader { min-width: 0; flex-wrap: wrap; overflow-wrap: anywhere; }
+    .modal-card { width: min(420px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow-y: auto; }
+    .upgrade-card { width: calc(100vw - 24px); max-width: none; max-height: calc(100dvh - 24px); padding: 12px; }
+    .modal-actions { flex-wrap: wrap; }
+  }
+
+  /* Short landscape devices: use width for side-by-side browsing, height for preview. */
+  @media (orientation: landscape) and (min-width: 560px) and (max-width: 1023px) and (max-height: 600px) {
+    #driveToolbar { padding: 6px 10px; }
+    #drivePromptPath { min-width: 140px; flex: 1 1 180px; order: 0; }
+    #driveLoadPrompt, #driveStatus { order: 0; }
+    header { display: flex; flex-wrap: wrap; padding: 6px 10px; }
+    header > .grow { display: block; }
+    #forgeHeaderControls { grid-column: auto; }
+    #forgeView { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #forgeView > section:first-child { grid-column: 1 / -1; }
+    #forgeView > .stack:last-child { grid-column: auto; }
+    #forgeView textarea#prompt { height: clamp(230px, 65dvh, 400px); }
+    #reviewView.active {
+      display: grid; grid-template-columns: minmax(190px, 28%) minmax(0, 1fr);
+      grid-template-rows: clamp(320px, 90dvh, 500px) auto;
+    }
+    #reviewView #rail {
+      grid-column: 1; grid-row: 1; width: auto; height: auto;
+      border-right: 1px solid var(--line); border-bottom: 0;
+    }
+    #reviewView #railList { flex: 1; min-height: 0; max-height: none; overflow-y: auto; }
+    #reviewView #stageHost { grid-column: 2; grid-row: 1; width: auto; height: auto; min-height: 0; }
+    #reviewView aside#panel { grid-column: 1 / -1; grid-row: 2; width: auto; }
+    #reviewView #panelBody { min-height: 230px; max-height: none; overflow-y: visible; }
+    #stageCompareView { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); }
+    .stage3d-timeline { flex-wrap: nowrap; overflow-x: auto; }
+    .stage3d-timeline-slider, .stage3d-time-display, #stage3dSpeedSeg, #btn3dLoop { order: 0; }
+    .stage3d-timeline-slider { flex: 1 0 90px; }
+    #designedView.active {
+      display: grid; grid-template-columns: minmax(190px, 28%) minmax(0, 1fr);
+      grid-template-rows: clamp(340px, 90dvh, 520px);
+    }
+    #designedView #designedRail {
+      grid-column: 1; width: auto; height: auto;
+      border-right: 1px solid var(--line); border-bottom: 0;
+    }
+    #designedRailList { flex: 1; min-height: 0; max-height: none; overflow-y: auto; }
+    #designedView #designedStageHost { grid-column: 2; width: auto; height: auto; min-height: 0; }
+    #designedDetailView, #designedCardsView { min-height: 0 !important; overflow-y: auto !important; }
+  }
+
+  @media (max-width: 420px) {
+    header h1 { font-size: 13px; }
+    #forgeHeaderControls #rec { flex-basis: 100%; }
+    #seed { width: 64px !important; }
+    #stage3dSpeedSeg { flex: 1 1 auto; }
+    #stage3dSpeedSeg .segb { padding: 4px 5px; }
+    #stage3dTimeDisplay { flex: 1 1 100%; }
+    .stagebar .btn.icon-only, .stagebar .segb.icon-only { width: 36px; min-width: 36px; height: 36px; }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    button, .segb, .btn, .icon { touch-action: manipulation; }
+    #driveToolbar .btn.icon-only, header .segb.icon-only, header .btn.icon-only {
+      min-width: 40px; height: 40px;
+    }
+    #panelTabs, #catSeg, #designedCatSeg, .img-picker-strip { -webkit-overflow-scrolling: touch; }
+    #stage3dCanvas { touch-action: none; }
+  }
+</style>
+<section id="driveGate" aria-labelledby="driveGateTitle">
+  <h1 id="driveGateTitle">COSMIMERA · Prompt Forge</h1>
+  <button class="btn" id="driveSignIn" type="button">使用 Google 帳號登入</button>
+  <p id="driveGateStatus" role="status">正在載入 Google 登入設定…</p>
+</section>
+<div id="driveApp" hidden>
+<div id="driveToolbar">
+  <button class="btn ghost mini icon-only" id="driveSync" type="button" aria-label="重新載入 Drive 資產" data-tip="重新載入 Drive 資產">⟳</button>
+  <button class="btn ghost mini icon-only" id="driveUploadPackage" type="button" aria-label="儲存資產目錄至 Drive" data-tip="儲存資產目錄至 Drive">⤴</button>
+  <button class="btn ghost mini icon-only" id="driveSavePrompt" type="button" aria-label="儲存本步驟 Prompt" data-tip="儲存本步驟 Prompt">💾</button>
+  <input id="drivePromptPath" aria-label="Prompt 相對路徑" placeholder="prompts/jobs/task.colab.prompt.md">
+  <button class="btn ghost mini icon-only" id="driveLoadPrompt" type="button" aria-label="讀取 Prompt" data-tip="讀取 Prompt">📖</button>
+  <button class="btn ghost mini icon-only" id="driveSignOut" type="button" aria-label="登出" data-tip="登出">⏻</button>
+  <span id="driveStatus" role="status" aria-live="polite"></span>
+</div>
+<section class="pipeline-map" id="pipelineMap" aria-label="互動式管線流程圖">
+  <h2>管線流程 · 點選步驟查看內容與 Prompt</h2>
+  <div class="pipeline-flow">
+    <button class="pipeline-node pipeline-wide" data-pipeline-node="appearance" type="button">外觀設定</button>
+    <div class="pipeline-arrow pipeline-wide">↓ 立繪生成前分岔</div>
+    <div class="pipeline-lane"><h3>Image-to-3D</h3>
+      <button class="pipeline-node" data-pipeline-node="portrait" type="button">立繪生成</button><div class="pipeline-arrow">↓</div>
+      <button class="pipeline-node" data-pipeline-node="review_portrait" type="button">立繪審查</button><div class="pipeline-arrow">↓</div>
+      <button class="pipeline-node" data-pipeline-node="colab" type="button">管線 A：Colab GPU → Blender 修整</button>
+      <div class="pipeline-arrow">或（獨立管線）</div><button class="pipeline-node" data-pipeline-node="blender_image" type="button">管線 B：AI Blender（圖片建模）</button>
+    </div>
+    <div class="pipeline-lane"><h3>Prompt-to-3D</h3>
+      <button class="pipeline-node" data-pipeline-node="blender_prompt" type="button">管線 B：AI Blender（文字建模）</button><div class="pipeline-arrow">↓</div>
+      <button class="pipeline-node" data-pipeline-node="portrait_after_3d" type="button">依完成模型補主立繪</button><div class="pipeline-arrow">↓</div>
+      <span class="muted" style="text-align:center">無需 T-pose／正面圖</span>
+    </div>
+    <div class="pipeline-arrow pipeline-wide">↓</div>
+    <button class="pipeline-node pipeline-wide" data-pipeline-node="review_3d" type="button">最終驗收（模型 + 立繪）</button>
+  </div>
+  <div id="pipelineStepDetail" aria-live="polite"><strong id="pipelineStepTitle">選擇流程步驟</strong><p id="pipelineStepDescription">點選上方區塊，顯示步驟說明及對應 Prompt。</p><pre id="pipelineStepPrompt" hidden></pre></div>
+</section>
+<details id="pipelineControls" style="padding:8px 16px;border-bottom:1px solid var(--line)">
+  <summary title="外觀、立繪、3D、審查與交付設定">⚙ 管線設定</summary>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+    <label>目前步驟 <select id="pipelineStage">
+      <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
+      <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
+      <option value="review_portrait">2 · 立繪審查</option>
+      <option value="colab">3-a · Colab GPU + Blender</option>
+      <option value="blender">3-b · AI Blender 獨立管線（Argon／Codex）</option>
+      <option value="portrait_after_3d">3-c · 建模後補主立繪</option>
+      <option value="review_3d">4 · 立繪與 3D 最終審查</option>
+    </select></label>
+    <button id="pipelineRead" class="btn mini icon-only" type="button" aria-label="複製目前立繪 Prompt，貼入生成平台" data-tip="複製目前立繪 Prompt，貼入生成平台">📋</button>
+    <button id="pipelineSaveSettings" class="btn ghost mini icon-only" type="button" aria-label="儲存外觀 .md ＋ 參數 .json" data-tip="儲存外觀 .md ＋ 參數 .json">💾</button>
+    <button id="pipelineLoadSettings" class="btn ghost mini icon-only" type="button" aria-label="讀取外觀與參數" data-tip="讀取外觀與參數">📂</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+    <label>外觀設定（留空使用 HTML 隨機／圖鑑設定；可貼入 AI 生成結果）<textarea id="pipelineAppearance" rows="5" placeholder="僅填外觀：輪廓、比例、五官、配色、服裝／肢體、辨識特徵"></textarea></label>
+    <label>格式參數（另存 JSON，不混入外觀 prompt）<textarea id="pipelineParameters" rows="5" spellcheck="false"></textarea></label>
+  </div>
+  <label>來源立繪資產 ID <input id="pipelineSource" placeholder="cr-… 或 chr-…"></label>
+  <button id="pipelineBindSource" class="btn ghost mini icon-only" type="button" aria-label="綁定目前 3D 的來源立繪" data-tip="綁定目前 3D 的來源立繪">🔗</button>
+</details>
+
 <header>
-  <h1>宙獸紀 · Prompt Forge<small id="ver"></small></h1>
+  <h1>COSMIMERA<small id="ver"></small></h1>
   <div class="seg" role="tablist">
-    <button class="segb on" id="viewBtnForge" type="button">⚡ Prompt 鍛造</button>
-    <button class="segb" id="viewBtnDesigned" type="button">📋 已設計項目</button>
-    <button class="segb" id="viewBtnReview" type="button">🔍 成果審查台</button>
+    <button class="segb on icon-only" id="viewBtnForge" type="button" aria-label="⚡ Prompt 鍛造" data-tip="⚡ Prompt 鍛造">⚡</button>
+    <button class="segb icon-only" id="viewBtnDesigned" type="button" aria-label="📋 已設計項目" data-tip="📋 已設計項目">📚</button>
+    <button class="segb icon-only" id="viewBtnReview" type="button" aria-label="🔍 成果審查台" data-tip="🔍 成果審查台">🔍</button>
+    <button class="segb icon-only" id="viewBtnSettings" type="button" aria-label="⚙ 應用程式設定" data-tip="⚙ 應用程式設定">⚙</button>
   </div>
   <span class="grow"></span>
   <div id="forgeHeaderControls" style="display:inline-flex;align-items:center;gap:10px;">
     <div class="seg" role="radiogroup" aria-label="執行平台" id="platformSeg">
-      <button class="segb on" data-plat="chatgpt" id="platChatgpt" type="button">ChatGPT 對話版</button>
-      <button class="segb" data-plat="gemini" id="platGemini" type="button">Gemini Argon</button>
+      <button class="segb on icon-only" data-plat="chatgpt" id="platChatgpt" type="button" aria-label="ChatGPT 對話版" data-tip="ChatGPT 對話版">🤖</button>
+      <button class="segb icon-only" data-plat="gemini" id="platGemini" type="button" aria-label="Gemini Argon" data-tip="Gemini Argon">✦</button>
     </div>
     <span class="muted" id="rec"></span>
     <label class="inline">seed <input id="seed" style="width:75px;font-family:Consolas,monospace" spellcheck="false"></label>
-    <button class="btn" id="reroll" type="button">🎲 全部隨機</button>
+    <button class="btn icon-only" id="reroll" type="button" aria-label="🎲 全部隨機" data-tip="🎲 全部隨機">🎲</button>
   </div>
 </header>
 
 <div class="view-container">
+  <section id="settingsView" aria-labelledby="settingsTitle">
+    <div class="settings-header"><h2 id="settingsTitle">應用程式設定</h2><p>裝置端偏好與 Google Drive 快取管理</p></div>
+    <div class="settings-grid">
+      <section class="settings-card">
+        <h3>版本管理</h3>
+        <dl class="settings-versions">
+          <div><dt>Tool</dt><dd id="settingsToolVersion">—</dd></div>
+          <div><dt>Catalog</dt><dd id="settingsCatalogVersion">—</dd></div>
+          <div><dt>Spec</dt><dd id="settingsSpecVersion">—</dd></div>
+          <div><dt>部署版本</dt><dd id="settingsBuildVersion">—</dd></div>
+        </dl>
+        <button class="btn ghost mini" id="settingsCheckVersion" type="button" data-tip="重新檢查網站部署版本">⟳ 檢查更新</button>
+        <p id="settingsVersionStatus" role="status" class="muted"></p>
+      </section>
+      <section class="settings-card">
+        <h3>Google Drive 與快取</h3>
+        <label class="settings-switch"><input id="settingsCacheEnabled" type="checkbox"> 啟用本機資產快取</label>
+        <label class="settings-switch"><input id="settingsAutoSync" type="checkbox"> 登入後自動同步 Drive</label>
+        <label class="settings-field">快取有效期限
+          <select id="settingsCacheTTL">
+            <option value="15">15 分鐘</option><option value="60">1 小時</option>
+            <option value="360">6 小時</option><option value="1440">24 小時</option>
+          </select>
+        </label>
+        <p id="settingsCacheStats" role="status" class="muted">正在讀取快取資訊…</p>
+        <div class="settings-actions">
+          <button class="btn ghost mini" id="settingsClearCache" type="button" data-tip="僅清理此帳號的 Drive 資產快取，不刪除雲端檔案">🗑 清理快取</button>
+          <button class="btn ghost mini" id="settingsForceSync" type="button" data-tip="忽略快取並從 Drive 重新同步資產">⟳ 強制同步</button>
+        </div>
+      </section>
+      <section class="settings-card">
+        <h3>功能偏好</h3>
+        <label class="settings-field">立繪 Prompt 模式
+          <select id="settingsPortraitMode">
+            <option value="manual">手動複製貼上</option><option value="auto">自動上傳 .md 至 Drive</option>
+          </select>
+        </label>
+        <p class="muted">偏好儲存在目前瀏覽器，與 Google 帳號分開管理。</p>
+      </section>
+      <section class="settings-card">
+        <h3>帳號與隱私</h3>
+        <p class="muted">登出會清除目前 Google 工作階段及此帳號的本機 Drive 快取，不會刪除雲端資料。</p>
+        <button class="btn ghost" id="settingsSignOut" type="button" data-tip="登出 Google 並清理此帳號本機 Drive 快取">⏻ 登出 Google</button>
+      </section>
+    </div>
+    <p id="settingsMessage" role="status" aria-live="polite"></p>
+  </section>
   <!-- 視圖 1: Prompt 鍛造 -->
   <main id="forgeView">
     <section>
@@ -467,11 +913,11 @@
       <div id="tasks"></div>
       <div class="subhead" style="margin-top:14px;margin-bottom:4px">
         <h2 style="margin:0">已設計項目</h2>
-        <button class="btn mini ghost" type="button" id="btnGoDesignedFromSubhead" style="font-size:11px;padding:1px 6px;">開啟頁籤 →</button>
+        <button class="btn mini ghost icon-only" type="button" id="btnGoDesignedFromSubhead" aria-label="📂" data-tip="📂">📂</button>
       </div>
       <div id="designed"></div>
       <details style="margin-top:12px">
-        <summary class="muted" style="cursor:pointer">專案路徑設定</summary>
+        <summary class="muted" style="cursor:pointer">遊戲交付相對目錄（本機匯出用）</summary>
         <input id="root" style="width:100%;margin-top:6px;font-family:Consolas,monospace" spellcheck="false">
       </details>
     </section>
@@ -506,18 +952,25 @@
         </div>
 
         <div class="actions">
+          <label id="portraitModeControl" class="portrait-mode-control" hidden>立繪模式
+            <select id="portraitMode" aria-label="立繪 Prompt 執行方式" data-tip="手動複製貼上，或自動建立完整 Prompt .md 並儲存至 Google Drive">
+              <option value="manual">手動 · 複製貼上</option>
+              <option value="auto">自動 · .md 至 Drive</option>
+            </select>
+          </label>
+          <button class="btn mini ghost icon-only" id="portraitAutoRun" type="button" hidden aria-label="建立完整立繪 Prompt .md 並上傳 Google Drive" data-tip="建立完整立繪 Prompt .md 並上傳 Google Drive">☁</button>
           <div class="round-copy-group" id="roundCopyGroup" style="display:none">
-            <button class="btn mini" id="btnCopyR1" type="button" title="複製第 1 輪 正面正交基準圖 Prompt">📋 複製第 1 輪 (正面圖)</button>
-            <button class="btn mini ghost" id="btnCopyR2" type="button" title="複製第 2 輪 T-pose 三視圖合圖 Prompt">📋 複製第 2 輪 (三視圖)</button>
-            <button class="btn mini ghost" id="btnCopyR3" type="button" title="複製第 3 輪 全身動態主立繪 Prompt">📋 複製第 3 輪 (主立繪)</button>
+            <button class="btn mini icon-only" id="btnCopyR1" type="button" aria-label="複製第 1 輪 正面正交基準圖 Prompt" data-tip="複製第 1 輪 正面正交基準圖 Prompt">①</button>
+            <button class="btn mini ghost icon-only" id="btnCopyR2" type="button" aria-label="複製第 2 輪 T-pose 三視圖合圖 Prompt" data-tip="複製第 2 輪 T-pose 三視圖合圖 Prompt">②</button>
+            <button class="btn mini ghost icon-only" id="btnCopyR3" type="button" aria-label="複製第 3 輪 全身動態主立繪 Prompt" data-tip="複製第 3 輪 全身動態主立繪 Prompt">③</button>
           </div>
-          <button class="btn" id="copy" type="button">📋 複製目前顯示</button>
-          <button class="btn ghost" id="btnFavPrompt" type="button" title="將目前 Prompt 與設定加入我的最愛清單">⭐ 收藏此 Prompt</button>
-          <button class="btn ghost" id="open" type="button">↗ 開啟平台</button>
-          <button class="btn ghost" id="download" type="button">⬇ prompt.md</button>
-          <button class="btn ghost" id="export" type="button">⬇ 概念 JSON</button>
-          <button class="btn ghost" id="btnUpgradeForge" type="button">🔄 升級舊版包</button>
-          <button class="btn ghost" id="toReview" type="button">🔍 轉至審查台</button>
+          <button class="btn icon-only" id="copy" type="button" aria-label="📋 複製目前顯示" data-tip="📋 複製目前顯示">📋</button>
+          <button class="btn ghost icon-only" id="btnFavPrompt" type="button" aria-label="收藏此 Prompt" data-tip="收藏此 Prompt">☆</button>
+          <button class="btn ghost icon-only" id="open" type="button" aria-label="↗ 開啟平台" data-tip="↗ 開啟平台">↗</button>
+          <button class="btn ghost icon-only" id="download" type="button" aria-label="⬇ prompt.md" data-tip="⬇ prompt.md">⬇</button>
+          <button class="btn ghost icon-only" id="export" type="button" aria-label="⬇ 概念 JSON" data-tip="⬇ 概念 JSON">{}</button>
+          <button class="btn ghost icon-only" id="btnUpgradeForge" hidden type="button" aria-label="🔄 升級舊版包" data-tip="🔄 升級舊版包">🔄</button>
+          <button class="btn ghost icon-only" id="toReview" type="button" aria-label="🔍 轉至審查台" data-tip="🔍 轉至審查台">🔍</button>
           <span class="muted" id="chars"></span>
         </div>
         <textarea id="prompt" spellcheck="false" aria-label="產生的 prompt"></textarea>
@@ -528,7 +981,7 @@
         <div class="subhead">
           <h2 style="margin:0">⭐ 我的最愛 Prompt 清單 <span class="muted" id="favCount">(0)</span></h2>
           <div style="display:inline-flex;gap:6px;align-items:center">
-            <button class="btn mini ghost" id="btnClearFavs" type="button" title="清空所有收藏">清空全部</button>
+            <button class="btn mini ghost icon-only" id="btnClearFavs" type="button" aria-label="清空所有收藏" data-tip="清空所有收藏">🗑</button>
           </div>
         </div>
         <div style="margin-bottom:8px">
@@ -572,16 +1025,16 @@
         <div style="display:flex;align-items:center;gap:8px" id="designedStageHeader"></div>
         <span class="grow"></span>
         <div class="seg" id="designedModeSeg" role="tablist">
-          <button class="segb on" id="btnDesignedModeDetail" data-mode="detail" type="button">🔍 詳細檢閱</button>
-          <button class="segb" id="btnDesignedModeCards" data-mode="cards" type="button">📑 完整卡片清單</button>
+          <button class="segb on icon-only" id="btnDesignedModeDetail" data-mode="detail" type="button" aria-label="🔍 詳細檢閱" data-tip="🔍 詳細檢閱">🔎</button>
+          <button class="segb icon-only" id="btnDesignedModeCards" data-mode="cards" type="button" aria-label="📑 完整卡片清單" data-tip="📑 完整卡片清單">▦</button>
         </div>
       </div>
 
       <!-- 單項詳細檢閱舞台 -->
-      <div id="designedDetailView" style="flex:1;overflow-y:auto;padding:16px;"></div>
+      <div id="designedDetailView" style="flex:1;min-height:0;overflow-y:auto;padding:12px;"></div>
 
       <!-- 完整平鋪卡片清單視圖 -->
-      <div id="designedCardsView" style="flex:1;overflow-y:auto;padding:16px;display:none;">
+      <div id="designedCardsView" style="flex:1;min-height:0;overflow-y:auto;padding:12px;display:none;">
         <div id="designedList"></div>
       </div>
     </div>
@@ -593,12 +1046,12 @@
     <nav id="rail">
       <div class="rail-top">
         <div class="rail-tools">
-          <button class="btn" id="btnScanDir" type="button" title="選取本專案 Art/_incoming 目錄進行自動掃描審查">📂 掃描本專案審查目錄</button>
+          <button class="btn icon-only" id="btnScanDir" type="button" aria-label="選取本專案 Art/_incoming 目錄進行自動掃描審查" data-tip="選取本專案 Art/_incoming 目錄進行自動掃描審查">📂</button>
           <div class="rail-tools-sub">
-            <button class="btn ghost" id="btnDirectUnpackZip" type="button" title="選取 Zip 載入審查並解壓至本專案">⚡ 一鍵解壓 Zip</button>
-            <button class="btn ghost" id="btnLoadZip" type="button" title="選擇本機下載的 .zip 或解壓檔案">🗜️ 載入 Zip</button>
-            <button class="btn ghost" id="btnLoadFixtures" type="button" title="載入系統內建測試包快速體驗">🧪 載入範例</button>
-            <button class="btn ghost" id="btnUpgradeZip" type="button" title="一鍵升級舊版立繪或3D壓縮包格式">🔄 升級舊包</button>
+            <button class="btn ghost icon-only" id="btnDirectUnpackZip" hidden type="button" aria-label="選取 Zip 載入審查並解壓至本專案" data-tip="選取 Zip 載入審查並解壓至本專案">⚡</button>
+            <button class="btn ghost icon-only" id="btnLoadZip" hidden type="button" aria-label="選擇本機下載的 .zip 或解壓檔案" data-tip="選擇本機下載的 .zip 或解壓檔案">🗜</button>
+            <button class="btn ghost icon-only" id="btnLoadFixtures" type="button" aria-label="載入系統內建測試包快速體驗" data-tip="載入系統內建測試包快速體驗">🧪</button>
+            <button class="btn ghost icon-only" id="btnUpgradeZip" hidden type="button" aria-label="一鍵升級舊版立繪或3D壓縮包格式" data-tip="一鍵升級舊版立繪或3D壓縮包格式">🔄</button>
           </div>
         </div>
         <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display:none">
@@ -628,7 +1081,7 @@
       <div id="stageViewport">
         <div id="stageEmpty">
           <p>📦 尚未選取交付任務</p>
-          <p class="muted" style="margin-top:6px">點選左側「📂 掃描本專案審查目錄」或直接拖曳 <code>&lt;task_id&gt;.zip</code> 到此處進行審查。</p>
+          <p class="muted" style="margin-top:6px">點選左側「📂 掃描本專案審查目錄」並選取展開後的資產資料夾進行審查。</p>
         </div>
         <!-- 單圖視圖 -->
         <div id="stageSingleView" style="display:none">
@@ -663,20 +1116,20 @@
             <span class="stage3d-hud-title" id="stage3dClipBadge">🎬 動作: chr_idle (待機)</span>
             <span class="stage3d-hud-info" id="stage3dInfoBadge"></span>
             <div style="flex:1"></div>
-            <button class="btn ghost mini" id="btn3dBones" type="button" title="切換骨骼架構顯示 (快捷鍵: B)">🦴 骨骼</button>
-            <button class="btn ghost mini" id="btn3dWireframe" type="button" title="切換拓撲布線顯示 (快捷鍵: W)">🕸️ 拓撲</button>
-            <button class="btn ghost mini" id="btn3dGrid" type="button" title="切換地面網格顯示">📏 網格</button>
-            <button class="btn ghost mini" id="btn3dCamFront" type="button" title="正面視角">正</button>
-            <button class="btn ghost mini" id="btn3dCamSide" type="button" title="側面視角">側</button>
-            <button class="btn ghost mini" id="btn3dCamBack" type="button" title="背面視角">背</button>
-            <button class="btn ghost mini" id="btn3dCamIso" type="button" title="45度透視視角">透</button>
-            <button class="btn ghost mini" id="btn3dReset" type="button" title="重設相機視角 (快捷鍵: R)">🔄 置中</button>
+            <button class="btn ghost mini icon-only" id="btn3dBones" type="button" aria-label="切換骨骼架構顯示 (快捷鍵: B)" data-tip="切換骨骼架構顯示 (快捷鍵: B)">🦴</button>
+            <button class="btn ghost mini icon-only" id="btn3dWireframe" type="button" aria-label="切換拓撲布線顯示 (快捷鍵: W)" data-tip="切換拓撲布線顯示 (快捷鍵: W)">▦</button>
+            <button class="btn ghost mini icon-only" id="btn3dGrid" type="button" aria-label="切換地面網格顯示" data-tip="切換地面網格顯示">▥</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamFront" type="button" aria-label="正面視角" data-tip="正面視角">↑</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamSide" type="button" aria-label="側面視角" data-tip="側面視角">→</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamBack" type="button" aria-label="背面視角" data-tip="背面視角">↓</button>
+            <button class="btn ghost mini icon-only" id="btn3dCamIso" type="button" aria-label="45度透視視角" data-tip="45度透視視角">◇</button>
+            <button class="btn ghost mini icon-only" id="btn3dReset" type="button" aria-label="重設相機視角 (快捷鍵: R)" data-tip="重設相機視角 (快捷鍵: R)">⟳</button>
           </div>
           <div class="stage3d-timeline" id="stage3dTimeline">
             <button class="icon" id="btn3dPrevClip" type="button" title="上一個動作 (快捷鍵: [)">⏮</button>
             <select id="stage3dClipSelect" title="選取動作 Clip" style="width:160px;height:28px;font-size:12px;"></select>
             <button class="icon" id="btn3dNextClip" type="button" title="下一個動作 (快捷鍵: ])">⏭</button>
-            <button class="btn mini" id="btn3dPlayPause" type="button" title="播放 / 暫停 (快捷鍵: 空白鍵)">⏸ 暫停</button>
+            <button class="btn mini icon-only" id="btn3dPlayPause" type="button" aria-label="播放 / 暫停 (快捷鍵: 空白鍵)" data-tip="播放 / 暫停 (快捷鍵: 空白鍵)">⏯</button>
             
             <div class="stage3d-timeline-slider">
               <div class="stage3d-events-track" id="stage3dEventsTrack"></div>
@@ -691,7 +1144,7 @@
               <button class="segb on mini" data-speed="1.0" type="button">1x</button>
               <button class="segb mini" data-speed="1.5" type="button">1.5x</button>
             </div>
-            <button class="btn ghost mini" id="btn3dLoop" type="button" title="循環模式切換 (快捷鍵: L)">🔁 循環</button>
+            <button class="btn ghost mini icon-only" id="btn3dLoop" type="button" aria-label="循環模式切換 (快捷鍵: L)" data-tip="循環模式切換 (快捷鍵: L)">🔁</button>
           </div>
         </div>
 
@@ -701,9 +1154,9 @@
         <div class="stagebar-group">
           <span class="muted">檢視模式：</span>
           <div class="seg" id="modeSeg">
-            <button class="segb on" id="btnModeSingle" data-mode="single" type="button">單圖視圖</button>
-            <button class="segb" id="btnModeCompare" data-mode="compare" type="button">⚡ 2D ⇄ 3D 雙欄對照</button>
-            <button class="segb" id="btnMode3D" data-mode="3d" type="button">🧊 3D 動作檢驗</button>
+            <button class="segb on icon-only" id="btnModeSingle" data-mode="single" type="button" aria-label="單圖視圖" data-tip="單圖視圖">▣</button>
+            <button class="segb icon-only" id="btnModeCompare" data-mode="compare" type="button" aria-label="⚡ 2D ⇄ 3D 雙欄對照" data-tip="⚡ 2D ⇄ 3D 雙欄對照">◫</button>
+            <button class="segb icon-only" id="btnMode3D" data-mode="3d" type="button" aria-label="🧊 3D 動作檢驗" data-tip="🧊 3D 動作檢驗">🧊</button>
           </div>
         </div>
         <div class="stagebar-group" id="viewSegGroup">
@@ -712,20 +1165,20 @@
         </div>
         <span class="grow"></span>
         <div class="seg" id="zoomSeg">
-          <button class="segb" id="zoomFit" type="button">適應</button>
-          <button class="segb" id="zoom1x" type="button">1:1</button>
-          <button class="segb" id="zoomIn" type="button">＋</button>
-          <button class="segb" id="zoomOut" type="button">－</button>
+          <button class="segb icon-only" id="zoomFit" type="button" aria-label="適應" data-tip="適應">⛶</button>
+          <button class="segb icon-only" id="zoom1x" type="button" aria-label="1:1" data-tip="1:1">1:1</button>
+          <button class="segb icon-only" id="zoomIn" type="button" aria-label="＋" data-tip="＋">+</button>
+          <button class="segb icon-only" id="zoomOut" type="button" aria-label="－" data-tip="－">−</button>
         </div>
-        <button class="btn" id="btnUnpack" type="button" title="實體解壓縮至本專案 Art/_incoming 目錄以供審查">⚡ 一鍵解壓至本專案</button>
-        <button class="btn ghost" id="btnDeployGame" type="button" title="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案">🚀 交付至 cosmos_chimera</button>
-        <button class="btn ghost" id="btnExportAlignedZip" type="button" title="下載已整合格式與圖檔的完整 Zip 壓縮包">🗜️ 下載整合 Zip</button>
-        <button class="btn ghost" id="btnToImg3d" type="button" title="以此立繪包產出指定 img-to-3D Prompt">🎯 指定 3D Prompt</button>
-        <button class="btn ghost" id="btnToImg3dBatch" type="button" title="產出批量 img-to-3D Prompt（處理 image_in 內吻合條件之全部立繪包）">📦 批量 3D Prompt</button>
-        <button class="btn ghost" id="btnUpgradeActive" type="button" title="一鍵升級為最新版 Prompt 與規格">🔄 升級格式</button>
-        <button class="btn ghost mini" id="btnBackup" type="button" title="移至備份區（自動加入時間戳）">📦 移至備份區</button>
-        <button class="btn ghost mini" id="btnCopyPath" type="button">📋 複製路徑</button>
-        <button class="btn ghost mini" id="btnCopyPs" type="button">💻 PowerShell</button>
+        <button class="btn icon-only" id="btnUnpack" type="button" aria-label="逐檔寫入選定的本機目錄" data-tip="逐檔寫入選定的本機目錄">⤓</button>
+        <button class="btn ghost icon-only" id="btnDeployGame" type="button" aria-label="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案" data-tip="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案">🚀</button>
+        <button class="btn ghost icon-only" id="btnExportAlignedZip" type="button" aria-label="將資產逐檔匯出至選定目錄" data-tip="將資產逐檔匯出至選定目錄">📦</button>
+        <button class="btn ghost icon-only" id="btnToImg3d" type="button" aria-label="以此立繪包產出指定 img-to-3D Prompt" data-tip="以此立繪包產出指定 img-to-3D Prompt">🎯</button>
+        <button class="btn ghost icon-only" id="btnToImg3dBatch" hidden type="button" aria-label="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）" data-tip="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）">▦</button>
+        <button class="btn ghost icon-only" id="btnUpgradeActive" hidden type="button" aria-label="一鍵升級為最新版 Prompt 與規格" data-tip="一鍵升級為最新版 Prompt 與規格">🔄</button>
+        <button class="btn ghost mini icon-only" id="btnBackup" type="button" aria-label="移至備份區（自動加入時間戳）" data-tip="移至備份區（自動加入時間戳）">📦</button>
+        <button class="btn ghost mini icon-only" id="btnCopyPath" type="button" aria-label="📋 複製路徑" data-tip="📋 複製路徑">📋</button>
+        <button class="btn ghost mini icon-only" id="btnCopyPs" hidden type="button" aria-label="💻 PowerShell" data-tip="💻 PowerShell">💻</button>
       </div>
     </div>
 
@@ -779,7 +1232,7 @@
           <button class="btn ghost mini" id="btnDlUpgPrompt" type="button">⬇ prompt.md</button>
           <button class="btn ghost mini" id="btnDlUpgConcept" type="button">⬇ concept.json</button>
           <button class="btn ghost mini" id="btnDlUpgManifest" type="button">⬇ manifest.json</button>
-          <button class="btn ghost mini" id="btnDlUpgZip" type="button">🗜️ 升級後 Zip 包</button>
+          <button class="btn ghost mini" id="btnDlUpgZip" hidden type="button">🗜️ 升級後 Zip 包</button>
           <button class="btn ghost mini" id="btnLoadInForge" type="button">⚡ 帶入 Prompt 鍛造台編輯</button>
         </div>
       </div>
@@ -791,7 +1244,14 @@
 </div>
 
 <div id="toast" role="status"></div>
+</div>
 
+<script src="drive-config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="pipeline.js"></script>
+<script src="drive-cache.js"></script>
+<script src="drive-storage.js"></script>
+<script src="settings.js"></script>
 <script src="vendor/three.min.js"></script>
 <script src="vendor/OrbitControls.js"></script>
 <script src="vendor/GLTFLoader.js"></script>
@@ -806,5 +1266,95 @@
 <script src="tasks.js"></script>
 <script src="designed.js"></script>
 <script src="forge.js"></script>
+
+<script>
+(() => {
+  const tip = document.createElement("div");
+  tip.id = "uiTooltip";
+  tip.setAttribute("role", "tooltip");
+  document.body.append(tip);
+  let current = null;
+  // Supply meaningful descriptions to static and dynamically rendered controls.
+  const tooltipDescriptions = {
+    driveSignIn: "使用 Google 帳號登入並連結 Drive 資產",
+    btnGoDesignedFromSubhead: "前往已設計項目清單",
+    drivePromptPath: "目前 Prompt 在 Drive 中的相對儲存路徑",
+    pipelineStage: "選擇要設定或執行的管線步驟",
+    pipelineAppearance: "輸入角色或宙獸的外觀描述，供管線生成使用",
+    pipelineParameters: "編輯本步驟的 JSON 參數",
+    pipelineSource: "指定此 3D 模型對應的來源角色或宙獸 ID",
+    seed: "控制隨機生成結果的種子值",
+    root: "設定輸出資產的根目錄",
+    notes: "輸入會優先套用到 Prompt 的補充要求",
+    prompt: "查看或編輯目前生成的完整 Prompt",
+    portraitMode: "切換立繪的手動複製貼上或自動建立 Markdown 檔並儲存至 Google Drive",
+    favSearch: "依標題、Prompt、主體 ID 或種子搜尋收藏",
+    designedSearch: "搜尋已設計的角色與宙獸",
+    railSearch: "搜尋審查任務、主體或來源包",
+    stage3dClipSelect: "選擇要預覽的 3D 動作片段",
+    stage3dScrubber: "拖曳調整 3D 動作播放進度",
+    customModalInput: "輸入目前對話方塊要求的內容",
+    upgPromptText: "檢視升級後的 Prompt 內容"
+  };
+  const tooltipControls = "button, a, input:not([type=hidden]):not([type=file]), select, textarea, summary, [role=button], [role=tab]";
+  function enrichTooltips(root = document) {
+    const controls = root.matches?.(tooltipControls) ? [root] : [];
+    controls.push(...root.querySelectorAll(tooltipControls));
+    for (const el of controls) {
+      if (el.hasAttribute("data-tip") || el.hasAttribute("title") || el.hasAttribute("aria-description")) continue;
+      const label = el.labels?.[0]?.textContent?.trim()
+        || (el.id && document.querySelector('label[for="' + CSS.escape(el.id) + '"]')?.textContent?.trim());
+      const explicit = tooltipDescriptions[el.id];
+      const accessible = el.getAttribute("aria-label");
+      const text = explicit || accessible || label || el.getAttribute("placeholder")
+        || (el.matches("button, a, summary, [role=button], [role=tab]") ? el.textContent.trim() : "");
+      if (text) el.dataset.tip = text.replace(/\s+/g, " ").slice(0, 240);
+    }
+  }
+  enrichTooltips();
+  const observer = new MutationObserver(records => {
+    for (const record of records) for (const node of record.addedNodes) {
+      if (node.nodeType === 1 && node.id !== "uiTooltip") enrichTooltips(node);
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+  const selector = "[data-tip], [title], [aria-description]";
+  function hide() { current = null; tip.style.display = "none"; }
+  function show(target) {
+    const message = target?.dataset.tip || target?.getAttribute("title") || target?.getAttribute("aria-description");
+    if (!message) return hide();
+    if (target.hasAttribute("title")) {
+      if (!target.dataset.tip) target.dataset.tip = message;
+      target.removeAttribute("title");
+    }
+    if (target.matches("button, a, input, select, textarea") && !target.getAttribute("aria-label")) target.setAttribute("aria-label", message);
+    current = target; tip.textContent = message; tip.style.display = "block";
+    const rect = target.getBoundingClientRect();
+    const x = Math.max(8, Math.min(rect.left + rect.width / 2 - tip.offsetWidth / 2, innerWidth - tip.offsetWidth - 8));
+    const bottom = rect.bottom + 8;
+    const top = bottom + tip.offsetHeight > innerHeight ? rect.top - tip.offsetHeight - 8 : bottom;
+    tip.style.left = x + "px"; tip.style.top = Math.max(8, top) + "px";
+  }
+  document.addEventListener("pointerover", e => {
+    if (e.pointerType === "touch") return;
+    const target = e.target.closest?.(selector);
+    if (target && target !== current) show(target);
+  });
+  document.addEventListener("pointerout", e => {
+    if (e.pointerType === "touch") return;
+    if (current && e.target.closest?.(selector) === current && !current.contains(e.relatedTarget)) hide();
+  });
+  document.addEventListener("focusin", e => {
+    const target = e.target.closest?.(selector);
+    if (target) show(target);
+  });
+  document.addEventListener("focusout", e => { if (current === e.target || !current?.contains(e.relatedTarget)) hide(); });
+  document.addEventListener("pointerdown", e => { if (e.pointerType === "touch") { const target = e.target.closest?.(selector); if (target) { if (target === current) hide(); else show(target); } else hide(); } });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
+  document.addEventListener("scroll", hide, true);
+  window.addEventListener("resize", hide);
+  document.addEventListener("pointerdown", e => { if (e.pointerType !== "touch") hide(); });
+})();
+</script>
 </body>
 </html>

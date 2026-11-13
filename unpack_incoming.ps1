@@ -42,13 +42,9 @@ if (-not $SourceDir) {
 #    - 若指定 -DeployToGame 或指定 -DestDir，才輸出至 cosmos_chimera
 if (-not $DestDir) {
     if ($DeployToGame) {
-        $Candidate1 = Join-Path $ForgeRoot "..\cosmos_chimera\Art\_incoming"
-        $Candidate2 = "C:\Users\user\Documents\app\cosmos_chimera\Art\_incoming"
         if (Test-Path (Join-Path $ForgeRoot "..\cosmos_chimera")) {
             $DestRepo = (Resolve-Path (Join-Path $ForgeRoot "..\cosmos_chimera")).Path
             $DestDir = Join-Path $DestRepo "Art\_incoming"
-        } elseif (Test-Path "C:\Users\user\Documents\app\cosmos_chimera") {
-            $DestDir = $Candidate2
         } else {
             $DestDir = Join-Path $ForgeRoot "..\cosmos_chimera\Art\_incoming"
         }

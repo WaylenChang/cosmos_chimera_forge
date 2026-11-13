@@ -14,3 +14,6 @@ crawl_*.py
 /Art/_incoming/*
 !/Art/_incoming/README.md
 *.zip
+/Art/_prompts/*
+!/Art/_prompts/README.md
+/_site/

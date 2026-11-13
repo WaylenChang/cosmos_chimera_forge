@@ -7,10 +7,21 @@
   const STYLE =
     "柔和卡通著色（2–3 階明暗）、乾淨深色描邊、色塊分明、剪影鮮明、微弱邊緣光；純色平光背景，主體不與背景融合。無文字、無簽名浮水印、原創設計。";
 
-  // REQ: 使用者 2026-11-07 — 3D 管線的輸入/輸出固定在這兩個雲端硬碟資料夾。
-  const DRIVE_IN = "我的雲端硬碟/project/cosmos_chimera/image_in";
-  const DRIVE_OUT = "我的雲端硬碟/project/cosmos_chimera/3D_out";
-  const DRIVE_BACKUP = "我的雲端硬碟/project/cosmos_chimera/image_backup";
+  // All paths below are relative to project/cosmos_chimera_forge on Google Drive.
+  const DRIVE_IN = "01_portraits";
+  const DRIVE_OUT = "02_3d/ai_blender";
+  const DRIVE_BACKUP = "backup/image_backup";
+
+  function storageSection(ctx) {
+    const dir = /model|rig|anim/.test(ctx.task.id) ? DRIVE_OUT : DRIVE_IN;
+    return [
+      "## Google Drive 讀寫與存放",
+      "- 專案根目錄：`project/cosmos_chimera_forge/`；以下路徑皆相對於此根目錄，不使用本機絕對路徑。",
+      "- 本次 prompt：`prompts/" + ctx.taskId + ".prompt.md`；參考立繪：`image_in/` 或已歸檔的 `image_backup/`；3D 參考及輸出：`3D_out/`。",
+      "- 成果包儲存為 `" + dir + "/" + ctx.taskId + ".zip`，包內參照仍相對於 task_id 資料夾（例如 `images/`、`models/`）。",
+      "- 無法直接寫入 Drive 時，提供下載並指明上述相對存放位置；不要宣稱已上傳。"
+    ].join("\n");
+  }
 
   const CULTURE_RULES =
     "- 文化原型只擷取象徵符號與意象，不直接照搬宗教儀式紋樣，不用神祇/人物本名為角色命名。\n" +
@@ -18,6 +29,19 @@
 
   function json(o) { return "```json\n" + JSON.stringify(o, null, 2) + "\n```"; }
   function list(items) { return items.map(s => "- " + s).join("\n"); }
+
+  function modelQualityRules() {
+    return [
+      "## 5. 最終品質檢查（交付前逐項確認）",
+      "- 從正面、側面、背面及旋轉視角詳細檢查模型與匯出的 GLB：臉部清楚可見，不被頭髮、配件或其他物件遮擋。",
+      "- 修復破圖、網格破洞、穿透或透視露空、貼圖與法線錯誤；確認軀幹完整存在，頭部、四肢及其他身體部位與軀幹自然且完整連接，無斷裂或懸空。",
+      "- 在 Blender 重新開啟 .blend，並重新載入 .glb 檢查幾何、材質和姿態；修正問題後再交付。"
+    ].join("\n");
+  }
+
+  function modelResearchRules() {
+    return "- **原型研究與設計**：先判斷立繪的設計原型屬於何種人形、怪物、生物、奇幻生物或超自然物件，搜尋相關的解剖、結構、運動方式與視覺資料；綜合研究結果與本次立繪，再原創設計外觀、適合該原型的骨架及各種自然可信的動作。若無法搜尋，須如實說明，不得虛構資料來源。";
+  }
 
   function deliverySection(ctx, tree) {
     const isModelRig = ctx.task.id === "creature-model-rig" || ctx.task.id === "character-model-rig" || ctx.task.id === "model-rig";
@@ -84,7 +108,7 @@
         "",
         body,
         "",
-        ctx.notes ? "## 使用者補充\n" + ctx.notes + "\n" : null
+        // Pipeline portraits use selected concept/parameters only, not global notes from another task.
       ].filter(s => s !== null).join("\n");
     }
     return [
@@ -136,7 +160,7 @@
 
   const TASKS = [
     {
-      id: "character-concept", version: "4.3.0", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
+      id: "character-concept", version: "4.3.1", zh: "角色設計概念與立繪", prefix: "chr", platform: "chatgpt",
       needs: "character", drop: "Art/_incoming",
       options: [
         { key: "scene_theme", type: "select", label: "【第 3 輪主立繪】場景主題", items: () => C.SCENE_THEMES, def: "auto" },
@@ -233,7 +257,7 @@
     },
 
     {
-      id: "creature-concept", version: "6.5.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
+      id: "creature-concept", version: "6.5.1", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
       needs: "creature", drop: "Art/_incoming",
       options: [
         { key: "stage", type: "select", label: "宙獸型態（四型態分開產出）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult" },
@@ -382,12 +406,12 @@
 
         const step2Lines = [
           "### 步驟 2（多視角拓撲圖）：`images/cr_" + S + "_" + curStage + "_turnaround.png`",
-          "- **內容**：**正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例排布）。嚴格以本型態「步驟 1 正面圖」為基準多角度延伸，自然站姿、平光無透視，背景同為 " + bgInfo.hex + "。（不加演化 prompt）"
+          "- **內容**：**正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例排布）。嚴格以本型態「步驟 1 正面圖」為基準多角度延伸，自然站姿、平光無透視，背景同為 " + bgInfo.hex + "。"
         ];
 
         const step3Lines = [
           "### 步驟 3（動態主立繪）：`images/cr_" + S + "_" + curStage + "_main.png`",
-          "- **內容**：**全身戰鬥主立繪 1:1**（場景氛圍與招式演出強化）。嚴格以本型態「步驟 1 正面圖」之造型為基準繪製動態姿勢：（不加演化 prompt）",
+          "- **內容**：**全身戰鬥主立繪 1:1**（場景氛圍與招式演出強化）。嚴格以本型態「步驟 1 正面圖」之造型為基準繪製動態姿勢：",
           lockedStage?.signature_move ? ("- **招式演出**：" + lockedStage.signature_move.visual) : null,
           curStage === "overload" ? "- **超載爆發**：裝甲展開、核心光環浮現、高密度能量粒子流外溢" : null,
           sceneInfo.fullPromptSection
@@ -421,10 +445,10 @@
 
     {
       // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、屬性、基底等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "creature-model-rig", version: "4.4.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "creature-model-rig", version: "5.0.1", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
-        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 cr-*.zip）" }], def: "single" },
+        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（01_portraits 內宙獸目錄）" }], def: "single" },
         { key: "source_pack", type: "text", label: "參照宙獸立繪包 ID (source_pack)", def: "", placeholder: "例：cr-20261106-7f3a-2105-adult", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
         { key: "stage", type: "select", label: "宙獸型態（四型態分開處理）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult", when: o => o.scope !== "batch" },
@@ -474,6 +498,7 @@
           source_pack: o.source_pack || "<來源宙獸立繪包 task_id，例 cr-20261106-7f3a-2105-adult>",
           files: [
             { path: `models/${unit}.glb`, kind: "model" },
+            { path: `models/${unit}.blend`, kind: "model" },
             { path: `models/${unit}.fbx`, kind: "model" },
             { path: "rig/rig_spec.json", kind: "spec" },
             { path: "anims/anim_spec.json", kind: "spec" },
@@ -498,8 +523,10 @@
             ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
+          modelResearchRules(),
           sizeSpec,
-          `- 輸出格式：\`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）`,
+          "- **原創製作**：以本次輸入立繪為依據全新設計並建模；不得參考、複製或修改舊模型檔直接充當新作品。",
+          `- **Blender 直接交付**：使用 Blender 製作並儲存可編輯的 \`models/${unit}.blend\`，由 Blender 直接匯出 \`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）。`,
           "",
           "## 3. 骨架體系（Generic Rig）",
           "- " + rigRule,
@@ -512,11 +539,13 @@
           "  - `idle`（標準待機）：2 秒短週期呼吸律動，適合即時探索與戰鬥過渡。",
           "  - `idle_long`（長時間靜止週期動作）：4 秒長週期（120 幀，loop），呈現長時間定力靜止、微幅呼吸起伏、低頻眼眸/耳尾微動或重心微調，首尾幀平滑閉合無縫循環，保持姿態穩定兼具活體生命感。",
           "",
-          "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          modelQualityRules(),
+          "",
+          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
           "```",
           outId + "/",
           "├── manifest.json",
-          "├── models/          # " + unit + ".glb, .fbx (PBR 烘焙貼圖完成模型)",
+          "├── models/          # " + unit + ".glb, .blend, .fbx (Blender 可編輯原檔與 PBR 烘焙貼圖完成模型)",
           "├── anims/           # anim_spec.json (L1), cr_" + stageTag + "_*.fbx (L2)",
           "├── rig/             # rig_spec.json (L1)",
           "└── images/          # " + unit + "_model_front.png (L1: 正交彩現檢視圖)",
@@ -533,10 +562,10 @@
 
     {
       // REQ: 使用者 2026-11-09 — 角色 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、性別、身高、道具等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "character-model-rig", version: "4.4.0", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      id: "character-model-rig", version: "5.0.1", zh: "角色 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "character", drop: "Art/_incoming", drive: true,
       options: [
-        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（image_in 內所有吻合 chr-*.zip）" }], def: "single" },
+        { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（01_portraits 內角色目錄）" }], def: "single" },
         { key: "source_pack", type: "text", label: "參照角色立繪包 ID (source_pack)", def: "", placeholder: "例：chr-20261106-7f3a-2105", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
         { key: "actions_character", type: "checks", label: "角色動作", items: () => C.ACTIONS.character.map(a => ({ v: a.id, zh: a.zh })), def: "all" }
@@ -568,6 +597,7 @@
           source_pack: o.source_pack || "<來源角色立繪包 task_id，例 chr-20261106-7f3a-2105>",
           files: [
             { path: `models/${unit}.glb`, kind: "model" },
+            { path: `models/${unit}.blend`, kind: "model" },
             { path: `models/${unit}.fbx`, kind: "model" },
             { path: "rig/rig_spec.json", kind: "spec" },
             { path: "anims/anim_spec.json", kind: "spec" },
@@ -592,9 +622,11 @@
             ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
+          modelResearchRules(),
           "- 面數預算：**15,000 ~ 25,000 tris**（健康卡通比例、拓撲乾淨適配變形）",
           "- 貼圖規格：**2048 × 2048 PBR**（Base Color, Normal, Metallic/Roughness）",
-          `- 輸出格式：\`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）`,
+          "- **原創製作**：以本次輸入立繪為依據全新設計並建模；不得參考、複製或修改舊模型檔直接充當新作品。",
+          `- **Blender 直接交付**：使用 Blender 製作並儲存可編輯的 \`models/${unit}.blend\`，由 Blender 直接匯出 \`models/${unit}.glb\` 與 \`models/${unit}.fbx\`（Scale 1.0，Y-Up，-Z 前向，全身居中、站立地面原點）。`,
           "",
           "## 3. 骨架體系（Unity Humanoid）",
           "- " + rigRule,
@@ -607,11 +639,13 @@
           "  - `idle`（標準待機）：2 秒短週期呼吸律動，標準 Humanoid 待機姿態。",
           "  - `idle_long`（長時間靜止週期動作）：4 秒長週期（120 幀，loop），呈現長時間定力靜止、極小幅度胸腔呼吸、眼皮微眨或細微重心微調，首尾幀完全對齊平滑循環，避免大幅晃動以確保站姿安定感。",
           "",
-          "## 5. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          modelQualityRules(),
+          "",
+          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
           "```",
           outId + "/",
           "├── manifest.json",
-          "├── models/          # " + unit + ".glb, .fbx (PBR 烘焙貼圖完成模型)",
+          "├── models/          # " + unit + ".glb, .blend, .fbx (Blender 可編輯原檔與 PBR 烘焙貼圖完成模型)",
           "├── anims/           # anim_spec.json (L1), chr_*.fbx (L2)",
           "├── rig/             # rig_spec.json (L1)",
           "└── images/          # " + unit + "_model_front.png (L1: 正交彩現檢視圖)",
@@ -627,7 +661,7 @@
     },
 
     {
-      id: "move-vfx", version: "1.1.0", zh: "招式效果動畫（特效）", prefix: "fx", platform: "chatgpt",
+      id: "move-vfx", version: "1.1.1", zh: "招式效果動畫（特效）", prefix: "fx", platform: "chatgpt",
       needs: null, drop: "Art/_incoming",
       options: [
         { key: "use_creature", type: "select", label: "示範施放者", items: () => [{ v: "yes", zh: "以目前宙獸概念示範" }, { v: "no", zh: "不指定（通用示範）" }], def: "yes" },
@@ -688,7 +722,7 @@
     },
 
     {
-      id: "capture-vessel", version: "1.0.0", zh: "收服道具設計", prefix: "vsl", platform: "chatgpt",
+      id: "capture-vessel", version: "1.0.1", zh: "收服道具設計", prefix: "vsl", platform: "chatgpt",
       needs: null, drop: "Art/_incoming",
       options: [
         { key: "vessels", type: "checks", label: "道具類別", items: () => C.VESSELS.map(v => ({ v: v.v, zh: v.zh + "（副手提供" + v.sub + "）" })), def: ["talisman_card", "glass_bead", "magic_cube"] },
@@ -732,7 +766,7 @@
     },
 
     {
-      id: "culture-research", version: "1.0.0", zh: "文化原型考據", prefix: "res", platform: "gemini",
+      id: "culture-research", version: "1.0.1", zh: "文化原型考據", prefix: "res", platform: "gemini",
       needs: null, drop: "Data/_incoming",
       options: [
         { key: "region", type: "select", label: "地區", items: () => C.RESEARCH_REGIONS.map(r => ({ v: r, zh: r })), def: "rand" },
@@ -773,5 +807,25 @@
     }
   ];
 
+  // Pipeline steps are isolated: native portraits never inherit old ZIP/storage instructions.
+  TASKS.forEach(t => {
+    const nativeBuild = t.build;
+    t.build = ctx => {
+      if (window.COSMI_PIPELINE?.supports(ctx)) {
+        return document.getElementById("pipelineStage")?.value === "portrait" ? nativeBuild(ctx) : window.COSMI_PIPELINE.build(ctx);
+      }
+      const text = nativeBuild(ctx), newline = text.indexOf("\n");
+      return text.slice(0, newline + 1) + "\n" + storageSection(ctx) + "\n" + text.slice(newline + 1);
+    };
+    if (t.buildRounds) {
+      const nativeRounds = t.buildRounds;
+      t.buildRounds = ctx => {
+        const rounds = nativeRounds(ctx);
+        return window.COSMI_PIPELINE?.supports(ctx) ? rounds
+          : rounds.map(round => ({ ...round, prompt: round.prompt + "\n\n" + storageSection(ctx) }));
+      };
+    }
+  });
+  TASKS.filter(t => ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(t.id)).forEach(t => { t.version = (Number(t.version.split(".")[0]) + 1) + ".0.0"; });
   window.COSMI_TASKS = TASKS;
 })();
