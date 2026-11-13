@@ -7,6 +7,103 @@
   const state = { linked: "" };
   const isModel = pkg => /model|rig|anim/.test(pkg?.type || "");
 
+  // Drive model packages may be named asset_cr_* or asset_chr_* rather than mdl-*.
+  // Classify by manifest task type first, retaining ID fallbacks for legacy ZIPs.
+  function matchesCategory(pkg, category) {
+    if (!pkg || category === "all") return true;
+    if (category === "pending") return ["pending", "missing"].includes(pkg.status);
+    const type = String(pkg.type || pkg.manifest?.task_type || "").toLowerCase();
+    const id = String(pkg.id || "").toLowerCase();
+    const model = /model|rig|anim/.test(type) || /^(?:mdl|anim)(?:[-_]|$)/.test(id);
+    const creature = type.startsWith("creature-") || /^(?:asset_)?cr(?:[-_]|$)/.test(id);
+    const character = type.startsWith("character-") || /^(?:asset_)?chr(?:[-_]|$)/.test(id);
+    if (category === "mdl") return model;
+    if (category === "cr") return creature;
+    if (category === "chr") return character;
+    if (category === "fx") return /vfx|effect/.test(type) || /^fx(?:[-_]|$)/.test(id);
+    return true;
+  }
+
+  // One subject = one review-desk row. Catalog designs and real Drive packages
+  // are views of the same subject, never separate items in the rail.
+  function unifiedEntries(packages = [], creatures = [], characters = [], category = "all", search = "") {
+    const norm = value => String(value || "").trim().toLowerCase();
+    const base = value => norm(value)
+      .replace(/^asset_(?=(?:cr|chr)[_-])/, "")
+      .replace(/[-_](juvenile|adolescent|adult|overload)$/, "");
+    const catalogs = new Map(), aliases = new Map(), groups = new Map();
+    const addCatalog = (kind, id, label, item, ids) => {
+      if (!id) return;
+      const key = kind + ":" + norm(id);
+      catalogs.set(key, { kind, id, label, item });
+      for (const alias of ids) {
+        if (norm(alias)) aliases.set(norm(alias), key);
+        if (base(alias)) aliases.set(base(alias), key);
+      }
+    };
+    for (const d of creatures) {
+      addCatalog("creature", d.line_id, [d.code_zh, d.title_zh].filter(Boolean).join(" · ") || d.line_id, d,
+        [d.line_id, ...(d.concept?.locked?.stages || []).map(s => s.creature_id)]);
+    }
+    for (const c of characters) {
+      addCatalog("character", c.id, [c.name_zh, c.name_en].filter(Boolean).join(" · ") || c.id, c, [c.id]);
+    }
+    const byId = new Map(packages.map(p => [norm(p.id), p]));
+    const resolveCatalog = p => {
+      const src = byId.get(norm(p.manifest?.source_pack));
+      const ids = [p.subjectId, p.manifest?.subject_id, p.concept?.line_id,
+        p.concept?.creature_id, p.concept?.id, src?.subjectId,
+        src?.manifest?.subject_id, p.baseId, p.groupKey, p.id];
+      for (const id of ids) {
+        const match = aliases.get(norm(id)) || aliases.get(base(id));
+        if (match) return match;
+      }
+      return "";
+    };
+    const ensure = (key, fallback) => {
+      if (!groups.has(key)) {
+        const design = catalogs.get(key) || null;
+        groups.set(key, { key, label: design?.label || fallback || key,
+          catalog: design, packages: [] });
+      }
+      return groups.get(key);
+    };
+    for (const p of packages) {
+      const catalogKey = resolveCatalog(p);
+      const src = byId.get(norm(p.manifest?.source_pack));
+      const subject = base(p.subjectId || p.manifest?.subject_id ||
+        p.concept?.line_id || p.concept?.creature_id || p.concept?.id ||
+        src?.subjectId || src?.manifest?.subject_id || p.groupKey || p.baseId || p.id);
+      const key = catalogKey || "subject:" + (subject || norm(p.id));
+      ensure(key, p.subjectId || p.manifest?.subject_id || subject || p.id).packages.push(p);
+    }
+    for (const [key, design] of catalogs) ensure(key, design.label);
+    const q = norm(search);
+    return [...groups.values()].filter(g => {
+      const accepted = g.packages.some(p => ["ok", "approved", "provisional"].includes(p.status));
+      if (category === "designed") {
+        if (!g.catalog && !accepted) return false;
+      } else if (category === "pending") {
+        if (!g.packages.some(p => matchesCategory(p, "pending"))) return false;
+      } else if (category !== "all") {
+        const kindMatch = (category === "cr" && g.catalog?.kind === "creature") ||
+          (category === "chr" && g.catalog?.kind === "character");
+        if (!kindMatch && !g.packages.some(p => matchesCategory(p, category))) return false;
+      }
+      return !q || [g.label, g.key, g.catalog?.id,
+        ...g.packages.flatMap(p => [p.id, p.subjectId, p.manifest?.source_pack, p.drivePath])
+      ].some(v => norm(v).includes(q));
+    }).map(g => ({
+      ...g,
+      star: g.packages.some(p => ["ok", "approved"].includes(p.status)) ? "★"
+        : (g.catalog || g.packages.some(p => p.status === "provisional")) ? "☆" : "",
+      starTitle: g.packages.some(p => ["ok", "approved"].includes(p.status)) ? "審查通過"
+        : g.packages.some(p => p.status === "provisional") ? "暫時採用" : g.catalog ? "已有設計，尚未審查通過" : "",
+      visiblePackages: ["pending", "chr", "cr", "mdl", "fx"].includes(category)
+        ? g.packages.filter(p => matchesCategory(p, category)) : g.packages
+    }));
+  }
+
   function exactBuffer(bytes) {
     if (ArrayBuffer.isView(bytes)) return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
     if (bytes instanceof ArrayBuffer) return bytes.slice(0);
@@ -86,7 +183,7 @@
   }
 
   return Object.freeze({
-    selectRootManifest, selectModelFile, descriptorFor, packageFiles,
+    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries,
     exactBuffer, relative, orbitFor, open, onPackagesChanged, install
   });
 });

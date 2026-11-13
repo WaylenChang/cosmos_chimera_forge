@@ -57,7 +57,7 @@
     #forgeView > .stack:nth-child(2) { grid-column:1 / 3; }
     #forgeView > .stack:last-child { grid-column:3; }
   }
-  .task-flow-list { display:flex !important; flex-direction:row; align-items:center; gap:0; overflow-x:auto; overflow-y:hidden; min-width:0; padding:12px 4px 18px; scrollbar-width:thin; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; }
+  .task-flow-list { display:flex !important; flex-direction:row; align-items:center; gap:0; flex-wrap:nowrap !important; overflow-x:auto; overflow-y:hidden; min-width:0; padding:12px 4px 18px; scrollbar-width:thin; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; }
   .task-flow-list .flow-row { display:flex; flex-direction:row; align-items:center; flex:none; }
   .task-flow-list .flow-connector { display:block; flex:0 0 28px; height:2px; background:var(--line); position:relative; }
   .task-flow-list .flow-connector:after { content:""; position:absolute; right:0; top:-4px; width:8px; height:8px; border-right:2px solid var(--muted); border-top:2px solid var(--muted); transform:rotate(45deg); }
@@ -204,6 +204,9 @@
 
   /* ==================== 審查台視圖 (參考 steel_vs_swarm) ==================== */
   #reviewView { flex: 1; display: none; min-height: 0; }
+  #stageViewport { position: relative; }
+  #reviewDesignedDetails #designedStageHeader { display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px; }
+  #reviewDesignedDetails #designedDetailView { overflow:visible !important;height:auto;min-height:0;padding:0 !important; }
   #reviewView.active { display: flex; }
 
   /* ==================== 已設計項目台視圖 ==================== */
@@ -857,7 +860,6 @@
   <h1>COSMIMERA<small id="ver"></small></h1>
   <div class="seg" role="tablist">
     <button class="segb on icon-only" id="viewBtnForge" type="button" aria-label="⚡ Prompt 鍛造" data-tip="⚡ Prompt 鍛造">⚡</button>
-    <button class="segb icon-only" id="viewBtnDesigned" type="button" aria-label="📋 已設計項目" data-tip="📋 已設計項目">📚</button>
     <button class="segb icon-only" id="viewBtnReview" type="button" aria-label="🔍 成果審查台" data-tip="🔍 成果審查台">🔍</button>
     <button class="segb icon-only" id="viewBtnSettings" type="button" aria-label="⚙ 應用程式設定" data-tip="⚙ 應用程式設定">⚙</button>
   </div>
@@ -1123,6 +1125,7 @@
         <input type="file" id="upgradeFileInput" accept=".zip,application/zip" style="display:none">
         <div class="seg" id="catSeg">
           <button class="segb on" data-cat="all" type="button">全部</button>
+          <button class="segb" data-cat="designed" type="button">☆ 已設計</button>
           <button class="segb" data-cat="pending" type="button">待決定</button>
           <button class="segb" data-cat="chr" type="button">角色</button>
           <button class="segb" data-cat="cr" type="button">宙獸</button>
@@ -1142,6 +1145,7 @@
         <span class="ref-tag" id="stRefTag" style="display:none"></span>
       </div>
       <div id="stageViewport">
+        <div id="reviewDesignedDetails" style="display:none;position:absolute;inset:0;overflow-y:auto;padding:12px;background:var(--bg,#101319);z-index:3;"></div>
         <div id="stageEmpty">
           <p>📦 尚未選取交付任務</p>
           <p class="muted" style="margin-top:6px">點選左側「📂 掃描本專案審查目錄」並選取展開後的資產資料夾進行審查。</p>

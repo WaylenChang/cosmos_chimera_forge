@@ -24,7 +24,10 @@ test('designed shortcut appears only for an active preset, not as a duplicate li
   assert.match(html,/id="designedShortcut" hidden/);
   assert.match(forge,/host\.hidden = !hasPreset/);
   assert.doesNotMatch(forge,/designed-nav-card/);
-  assert.match(html,/id="viewBtnDesigned"/);
+  assert.doesNotMatch(html,/id="viewBtnDesigned"/);
+  assert.match(html,/data-cat="designed"/);
+  assert.match(html,/id="reviewDesignedDetails"/);
+  assert.match(forge,/reviewDeskEntries\(/);
 });
 test('designed filters are shared and full-list rendering is not repeated by renderAll', () => {
   const list = forge.slice(forge.indexOf('  function renderDesignedList()'),forge.indexOf('  function fieldRow('));
