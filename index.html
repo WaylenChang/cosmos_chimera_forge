@@ -48,42 +48,49 @@
   [data-tip]:not(button):not(a):not(input):not(select):not(textarea), [aria-description]:not(button):not(a):not(input):not(select):not(textarea) { cursor: help; }
   #uiTooltip { position: fixed; display: none; max-width: min(320px, calc(100vw - 24px)); background: #30394b; color: #fff; border: 1px solid #536481; padding: 6px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 22px rgba(0,0,0,.55); pointer-events: none; z-index: 9999; white-space: normal; overflow-wrap: anywhere; }
 
-  /* A single left-to-right graph; two always-visible 3D lanes share start/end. */
-  .task-category-picker { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-bottom:10px; }
-  .task-category-picker button { border:1px solid var(--line); border-radius:8px; background:transparent; color:inherit; padding:9px 4px; cursor:pointer; min-width:0; }
-  .task-category-picker button.on { border-color:var(--accent); background:#202735; }
+  /* Borderless rail map: one shared entrance/exit, two image-model tracks, one text-model track. */
+  .task-category-picker { display:flex; align-items:center; gap:20px; margin-bottom:2px; padding:0 4px 11px; border-bottom:1px solid rgba(145,164,192,.14); }
+  .task-category-picker button { flex:none; border:0; border-bottom:2px solid transparent; border-radius:0; background:none; color:var(--muted); padding:7px 4px 9px; font-size:12px; font-weight:600; letter-spacing:.08em; cursor:pointer; transition:color .18s,border-color .18s; }
+  .task-category-picker button:hover { color:var(--ink); }
+  .task-category-picker button.on { border-bottom-color:var(--accent); color:#eaf2ff; }
   #forgeView > section:first-child { grid-column:1 / -1; overflow:visible; }
   @media (min-width:1251px) {
     #forgeView > .stack:nth-child(2) { grid-column:1 / 3; }
     #forgeView > .stack:last-child { grid-column:3; }
   }
-  .task-flow-list { display:flex !important; flex-direction:row; align-items:center; gap:0; flex-wrap:nowrap !important; overflow-x:auto; overflow-y:hidden; min-width:0; padding:12px 4px 18px; scrollbar-width:thin; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; }
-  .task-flow-list .flow-row { display:flex; flex-direction:row; align-items:center; flex:none; }
-  .task-flow-list .flow-connector { display:block; flex:0 0 28px; height:2px; background:var(--line); position:relative; }
-  .task-flow-list .flow-connector:after { content:""; position:absolute; right:0; top:-4px; width:8px; height:8px; border-right:2px solid var(--muted); border-top:2px solid var(--muted); transform:rotate(45deg); }
-  .task-flow-list .flow-fork { display:flex; align-items:stretch; flex:none; }
-  .task-flow-list .flow-split, .task-flow-list .flow-merge { width:14px; flex:none; position:relative; }
-  .task-flow-list .flow-split { border-left:2px solid var(--line); border-radius:10px 0 0 10px; margin:34px 0; }
-  .task-flow-list .flow-merge { border-right:2px solid var(--line); border-radius:0 10px 10px 0; margin:34px 0; }
-  .task-flow-list .flow-lanes { display:flex; flex-direction:column; gap:14px; flex:none; }
-  .task-flow-list .flow-lane { display:flex; flex-direction:column; min-width:0; border:1px solid var(--line); border-radius:10px; padding:8px 10px 10px; }
-  .task-flow-list .flow-lane-label { font-size:11px; font-weight:600; color:var(--accent); padding:0 0 8px; }
-  .task-flow-list .flow-lane-track { display:flex; align-items:center; flex:1; }
-  .task-flow-list .flow-lane-track > .flow-connector { flex-basis:26px; }
-  .task-flow-list .flow-alternatives { display:flex; flex-direction:column; border:1px dashed var(--line); border-radius:8px; padding:7px; }
-  .task-flow-list .flow-alternatives-label { font-size:10px; color:var(--muted); text-align:center; margin-bottom:6px; }
-  .task-flow-list .flow-alternatives-options { display:flex; gap:6px; }
-  .task-flow-list .task { min-width:148px; max-width:170px; min-height:52px; width:170px; height:auto; margin:0; flex:none; text-align:center; justify-content:center; }
-  .task-flow-list .task.is-alternate { border-top:3px solid var(--accent); }
-  .task-flow-list .flow-shared .task { border-color:var(--accent); }
-  .task-flow-detail { margin-top:10px; padding:10px; border:1px solid var(--line); border-radius:8px; font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
-  .task-flow-placeholder { color:var(--muted); font-size:12px; line-height:1.6; padding:10px 0; }
+  .task-flow-list { display:flex !important; flex-direction:row; align-items:center; gap:0; flex-wrap:nowrap !important; overflow-x:auto; overflow-y:hidden; min-width:0; padding:28px 10px 30px; scrollbar-width:thin; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; --flow-line:#50627b; }
+  .task-flow-list .flow-row { display:flex; align-items:center; flex:none; }
+  .task-flow-list .flow-connector { display:block; flex:0 0 30px; width:30px; height:1px; background:var(--flow-line); opacity:.82; }
+  .task-flow-list .flow-fork, .task-flow-list .flow-parallel { display:flex; align-items:stretch; flex:none; border:0; background:none; padding:0; }
+  .task-flow-list .flow-lanes, .task-flow-list .flow-parallel-tracks { display:grid; grid-template-columns:max-content; align-content:center; gap:22px; border:0; background:none; }
+  .task-flow-list .flow-lane, .task-flow-list .flow-parallel-track { display:flex; align-items:center; width:100%; border:0; background:none; }
+  .task-flow-list .flow-lane { padding:13px 0; }
+  .task-flow-list .flow-lane-track { display:flex; align-items:center; width:100%; }
+  .task-flow-list .flow-parallel-tracks { gap:20px; }
+  .task-flow-list .flow-parallel-track > .flow-connector:first-child,
+  .task-flow-list .flow-lane-track > .flow-connector:first-child { flex:0 0 24px; width:24px; }
+  .task-flow-list .flow-parallel-track > .flow-connector:last-child,
+  .task-flow-list .flow-lane-track > .flow-connector:last-child { flex:1 0 24px; min-width:24px; }
+  .task-flow-list .flow-split, .task-flow-list .flow-merge { position:relative; flex:0 0 1px; width:1px; align-self:stretch; }
+  .task-flow-list .flow-split:before, .task-flow-list .flow-merge:before { content:""; position:absolute; top:var(--rail-top,25%); bottom:var(--rail-bottom,25%); left:0; width:1px; background:var(--flow-line); opacity:.9; }
+  .task-flow-list .task { display:inline-flex; align-items:center; justify-content:center; flex:none; width:auto; min-width:138px; max-width:none; min-height:44px; height:44px; padding:8px 14px 10px; margin:0; border:0; border-bottom:2px solid transparent; border-radius:7px; background:none; box-shadow:none; color:#c5d1e0; text-align:center; white-space:nowrap; transition:background .18s,color .18s,border-color .18s; }
+  .task-flow-list .task:hover { background:rgba(125,167,222,.10); color:#f4f8ff; }
+  .task-flow-list .task.on { background:rgba(110,168,255,.12); color:#f5f9ff; border-bottom-color:var(--accent); box-shadow:none; }
+  .task-flow-list .task .tname { font-size:12.5px; font-weight:570; letter-spacing:.015em; }
+  .task-flow-list .flow-shared .task .tname { color:#e3edfb; font-weight:700; }
+  .task-flow-detail { margin-top:2px; padding:4px 0 0; border:0; font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
+  .task-flow-placeholder { color:var(--muted); font-size:12px; line-height:1.6; padding:8px 0; }
   @media (max-width:699px) {
-    .task-flow-list { touch-action:pan-x pan-y; }
-    .task-flow-list .task { min-width:135px; width:135px; }
-    .task-flow-list .flow-connector { flex-basis:18px; }
-    .task-flow-list .flow-lane-track > .flow-connector { flex-basis:18px; }
-    .task-flow-list .flow-alternatives-options { flex-direction:column; }
+    .task-flow-list { padding:22px 4px 24px; touch-action:pan-x pan-y; }
+    .task-flow-list .task { min-width:124px; height:42px; min-height:42px; padding:7px 10px 9px; }
+    .task-flow-list .task .tname { font-size:11.5px; }
+    .task-flow-list .flow-connector { flex-basis:19px; width:19px; }
+    .task-flow-list .flow-parallel-track > .flow-connector:first-child,
+    .task-flow-list .flow-lane-track > .flow-connector:first-child { flex-basis:16px; width:16px; }
+    .task-flow-list .flow-parallel-track > .flow-connector:last-child,
+    .task-flow-list .flow-lane-track > .flow-connector:last-child { flex-basis:16px; min-width:16px; }
+    .task-flow-list .flow-lanes { gap:18px; }
+    .task-flow-list .flow-parallel-tracks { gap:16px; }
   }
 
   /* ==================== 鍛造視圖 ==================== */
@@ -564,6 +571,42 @@
   }
 
   .pipeline-map {padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+  /* Concept editor: labels, actions and choices remain one rail at every breakpoint.
+     Only the concept list scrolls horizontally when a narrow viewport cannot fit. */
+  #forgeView #concept { min-width:0; max-width:100%; overflow-x:auto; overflow-y:visible;
+    scrollbar-width:thin; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; }
+  #forgeView #concept .concept-field {
+    display:grid !important;
+    grid-template-columns:minmax(104px, .85fr) 92px minmax(144px, 1.6fr) !important;
+    gap:6px !important; align-items:center; min-width:354px; width:100%;
+  }
+  #forgeView #concept .concept-field > label {
+    display:block; min-width:0; overflow:hidden; white-space:nowrap;
+    text-overflow:ellipsis; cursor:help; font-size:12px;
+  }
+  #forgeView #concept .concept-field > .fctl {
+    display:flex; align-items:center; justify-content:center; gap:3px;
+    flex-wrap:nowrap; min-width:0; white-space:nowrap;
+  }
+  #forgeView #concept .concept-field > .fctl > button {
+    width:28px; min-width:28px; height:28px; padding:0; flex:none;
+  }
+  #forgeView #concept .concept-field > select,
+  #forgeView #concept .concept-field > .chips { min-width:0; width:100%; max-width:100%; }
+  #forgeView #concept .concept-field > select { height:32px; padding:4px 6px; font-size:12px; }
+  #forgeView #concept .concept-field > .chips {
+    display:flex; align-items:center; flex-wrap:nowrap; gap:4px;
+    overflow-x:auto; overflow-y:hidden; scrollbar-width:thin; padding:2px 0;
+  }
+  #forgeView #concept .concept-field > .chips > * { flex:none; white-space:nowrap; }
+  #forgeView #concept .concept-field > .chips > select { width:auto; min-width:74px; }
+  @media (max-width:699px) {
+    #forgeView #concept .concept-field {
+      grid-template-columns:104px 88px minmax(144px,1fr) !important;
+      min-width:348px; gap:4px !important;
+    }
+    #forgeView #concept .concept-field > .fctl > button { width:27px; min-width:27px; height:30px; }
+  }
 </style>
 </head>
 <body>
@@ -952,7 +995,7 @@
     <section>
       <h2>任務流程圖</h2>
       <div id="taskCategories" class="task-category-picker" role="group" aria-label="選擇任務類別"></div>
-      <div id="tasks" class="task-flow-list" role="region" tabindex="0" aria-label="橫向管線任務流程，左右捲動可查看兩條完整 3D 管線"></div>
+      <div id="tasks" class="task-flow-list" role="region" tabindex="0" aria-label="橫向任務流程：立繪建模有兩條上下並排的後端路線，文字建模另成一線"></div>
       <div id="taskFlowDetail" class="task-flow-detail" aria-live="polite"></div>
 
       <div id="designedShortcut" hidden>
@@ -973,9 +1016,13 @@
     </section>
 
     <div class="stack">
-      <section>
-        <h2>設計概念參數</h2>
+      <section id="conceptSection">
+        <h2>角色設計概念</h2>
         <div id="concept"></div>
+      </section>
+      <section id="flowStageInventory" hidden aria-live="polite">
+        <h2 id="flowStageInventoryTitle">階段角色／宙獸</h2>
+        <div id="flowStageInventoryItems"></div>
       </section>
       <section>
         <h2>任務選項</h2>

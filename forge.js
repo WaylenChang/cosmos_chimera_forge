@@ -985,36 +985,62 @@
         onclick:()=>chooseFlow(kind,route,step.id)
       },el("span",{class:"tname"},step.name));
     }
+    function connector() {
+      return el("span",{class:"flow-connector","aria-hidden":"true"});
+    }
+    function parallelTracks(segment, route) {
+      return el("div",{class:"flow-parallel"},
+        el("span",{class:"flow-split","aria-hidden":"true"}),
+        el("div",{class:"flow-parallel-tracks"},segment.tracks.map(track =>
+          el("div",{class:"flow-parallel-track"},connector(),node(track[0],route),connector()))),
+        el("span",{class:"flow-merge","aria-hidden":"true"}));
+    }
     function linkedSegments(segments, route) {
       const elements = [];
       segments.forEach((segment, i) => {
-        if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
-        if (segment.type === "alternatives") {
-          elements.push(el("div",{class:"flow-alternatives"},
-            el("div",{class:"flow-alternatives-label"},segment.label),
-            el("div",{class:"flow-alternatives-options"},segment.steps.map(s=>node(s,route)))));
-        } else {
-          elements.push(el("div",{class:"flow-row"},node(segment.steps[0],route)));
-        }
+        if (i) elements.push(connector());
+        if (segment.type === "parallel") elements.push(parallelTracks(segment, route));
+        else elements.push(el("div",{class:"flow-row"},node(segment.steps[0],route)));
       });
       return elements;
     }
     const elements = [];
     rows.forEach((row, i) => {
-      if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
+      if (i) elements.push(connector());
       if (row.type === "fork") {
         elements.push(el("div",{class:"flow-fork"},
           el("span",{class:"flow-split","aria-hidden":"true"}),
-          el("div",{class:"flow-lanes"},row.lanes.map(lane=>
-            el("div",{class:"flow-lane","aria-label":lane.label},
-              el("span",{class:"flow-lane-label"},lane.label),
-              el("div",{class:"flow-lane-track"},linkedSegments(lane.segments,lane.id))))),
+          el("div",{class:"flow-lanes"},row.lanes.map(lane =>
+            el("div",{class:"flow-lane","aria-label":lane.id === "image" ? "立繪建模路線" : "文字建模路線"},
+              el("div",{class:"flow-lane-track"},connector(),
+                ...linkedSegments(lane.segments,lane.id),connector())))),
           el("span",{class:"flow-merge","aria-hidden":"true"})));
       } else {
         elements.push(el("div",{class:"flow-row" + (row.shared ? " flow-shared" : "")},node(row.steps[0])));
       }
     });
+    // Connector stems join exactly at track centers, including on narrow screens.
+    function alignStems() {
+      box.querySelectorAll(".flow-fork, .flow-parallel").forEach(fork => {
+        const split = fork.querySelector(":scope > .flow-split");
+        const merge = fork.querySelector(":scope > .flow-merge");
+        const tracks = fork.classList.contains("flow-fork")
+          ? Array.from(fork.querySelectorAll(":scope > .flow-lanes > .flow-lane"))
+          : Array.from(fork.querySelectorAll(":scope > .flow-parallel-tracks > .flow-parallel-track"));
+        if (!split || !merge || tracks.length < 2) return;
+        const bounds = fork.getBoundingClientRect();
+        const first = tracks[0].getBoundingClientRect();
+        const last = tracks[tracks.length - 1].getBoundingClientRect();
+        const top = Math.max(0, first.top + first.height/2 - bounds.top);
+        const bottom = Math.max(0, bounds.bottom - (last.top + last.height/2));
+        for (const stem of [split,merge]) {
+          stem.style.setProperty("--rail-top",top+"px");
+          stem.style.setProperty("--rail-bottom",bottom+"px");
+        }
+      });
+    }
     box.replaceChildren(...elements);
+    alignStems();
     detail.replaceChildren();
     detail.hidden = true;
     renderDesigned();
@@ -3314,6 +3340,7 @@
   function fieldRow(kind, f) {
     if (f.when && !f.when(state)) return el("div", { style: "display:none" });
     const key = kind + "." + f.key, vals = state[kind][f.key] || [], opts = f.options(state);
+    const controlId = "concept-" + kind + "-" + f.key;
     const label = v => (opts.find(o => o.v === v) || {}).zh || v;
     
     // 改良後的按鈕式鎖定開關，排版永不跑版
@@ -3342,7 +3369,7 @@
     let control;
     const multi = (f.max || 1) > 1;
     if (!multi) {
-      control = el("select", { onchange: e => {
+      control = el("select", { id: controlId, onchange: e => {
         if (e.target.value === "__CUSTOM__") {
           edit.click();
         } else {
@@ -3356,7 +3383,7 @@
       );
     } else {
       const chips = vals.map(v => el("span", { class: "chip" }, label(v), el("button", { type: "button", title: "移除", onclick: () => { state[kind][f.key] = vals.filter(x => x !== v); renderAll(); } }, "×")));
-      const add = el("select", { onchange: e => {
+      const add = el("select", { id: controlId, onchange: e => {
         if (!e.target.value) return;
         if (e.target.value === "__CUSTOM__") {
           edit.click();
@@ -3371,7 +3398,63 @@
       );
       control = el("div", { class: "chips" }, chips, add);
     }
-    return el("div", { class: "field" }, el("label", {}, f.label), el("div", { class: "fctl" }, edit, dice, lockBtn), control);
+    return el("div", { class: "field concept-field", "data-concept-field": key },
+      el("label", { for: controlId, title: f.label, "data-tip": f.label }, f.label),
+      el("div", { class: "fctl" }, edit, dice, lockBtn), control);
+  }
+
+  // The task graph is the single source of truth for which editor is visible.
+  function renderFlowStageInventory() {
+    const conceptSection = $("#conceptSection");
+    const inventory = $("#flowStageInventory");
+    const items = $("#flowStageInventoryItems");
+    const title = $("#flowStageInventoryTitle");
+    if (!conceptSection || !inventory || !items || !title) return;
+    const flow = currentFlow();
+    const showConcept = flow?.taskId === "character-concept" &&
+      ["appearance", "portrait", "review_portrait"].includes(flow.step);
+    conceptSection.hidden = !showConcept;
+    inventory.hidden = !flow || showConcept;
+    if (inventory.hidden) return;
+    title.textContent = flow.name + " · 階段角色／宙獸";
+    const category = flow.category;
+    const packages = reviewState.packages || [];
+    const relevant = packages.filter(p => {
+      const type = String(p.type || "");
+      const id = String(p.id || "");
+      const isCharacter = type.startsWith("character-") || id.startsWith("chr");
+      const isCreature = type.startsWith("creature-") || id.startsWith("cr");
+      if (category === "character" && !isCharacter) return false;
+      if (category === "creature" && !isCreature) return false;
+      if (category === "move") return false;
+      const stage = flow.stage;
+      if (["colab", "blender", "prompt_3d", "review_3d", "final_review"].includes(stage))
+        return is3dType(type) || is3dType(id);
+      return !is3dType(type) && !is3dType(id);
+    });
+    const unique = new Map();
+    for (const p of relevant) {
+      const subject = String(p.subjectId || p.manifest?.subject_id || p.concept?.line_id ||
+        p.concept?.id || p.id || "").trim();
+      const form = p.stage || p.manifest?.stage || "";
+      const key = subject + "|" + form;
+      const previous = unique.get(key);
+      if (!previous || (p.status === "ok" && previous.status !== "ok")) unique.set(key,p);
+    }
+    items.replaceChildren();
+    if (!unique.size) {
+      items.append(el("p", {class:"muted"}, "此階段尚無可追蹤的角色／宙獸成果。"));
+      return;
+    }
+    for (const p of unique.values()) {
+      const subject = p.subjectId || p.manifest?.subject_id || p.concept?.name_zh ||
+        p.concept?.id || p.id;
+      const form = p.stage || p.manifest?.stage;
+      items.append(el("div", {class:"field"},
+        el("span", {}, subject + (form ? " · " + (STAGE_ZH[form] || form) : "")),
+        el("span", {class:"muted"}, " · " + (p.status || "待審查") +
+          " · " + (p.images?.length || 0) + " 張圖片" + (p.models?.length ? " · " + p.models.length + " 個模型" : ""))));
+    }
   }
 
   function renderConcepts() {
@@ -3766,7 +3849,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
+    renderTasks(); renderFlowStageInventory(); if (!$("#conceptSection")?.hidden) renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
     save();
   }
 
