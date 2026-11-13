@@ -69,7 +69,8 @@ test('task graph is horizontally scrollable and category selection needs no rout
   assert.match(html, /<h2>任務流程圖<\/h2>/);
   assert.match(html, /\.task-flow-list \{ display:flex !important; flex-direction:row/);
   assert.match(html, /overflow-x:auto/);
-  assert.match(html, /flow-lanes/);\n  assert.match(html, /flow-parallel-tracks/);
+  assert.match(html, /flow-lanes/); 
+  assert.match(html, /flow-parallel-tracks/);
   assert.doesNotMatch(html, /id="taskRoutes"/);
   assert.match(forge, /function chooseCategory\(category\)/);
   assert.doesNotMatch(forge, /function chooseRoute\(route\)/);
