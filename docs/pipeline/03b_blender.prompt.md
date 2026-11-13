@@ -1,10 +1,11 @@
-# AI Blender 建模
-直接操作 Blender，以指定圖片為優先參考；無圖片時依下列外觀設定建立原創模型。保持輪廓、比例、辨識特徵與配色；採符合生物解剖或機械結構的網格、骨架與動作，避免以簡單幾何堆疊冒充完成品。
-
-圖片目錄（未指定時使用文字外觀）：{{source_path}}
-外觀：
-{{appearance}}
-參數檔：{{parameters_path}}
-輸出目錄：{{output_path}}/
-
-在 Blender 檢查正側背面與動作變形，修復穿插、破洞、斷裂、法線及材質；重新開啟 .blend 並重新匯入 .glb 確認可用。依參數直接建立 models/、rig/、animations/、previews/ 與 manifest.json，不交壓縮檔。source_pack 如實填寫圖片來源；純文字建模時留空並記錄缺少來源立繪。無操作能力時回報限制，不虛構輸出。
+<!-- COSMI-PIPELINE/2:blender -->
+# Blender Image-to-3D／Prompt-to-3D
+{{model_input}}
+參數：`{{parameters_path}}`；輸出：`{{output_path}}/`
+直接以 Blender 製作完整模型，不以粗糙幾何堆疊充當成品。
+1. 判定原型（人形、怪物、生物、奇幻生物或超自然物件），搜尋並查閱相關外形、解剖、材質、骨架與運動資料；無法搜尋則註明。
+2. 依本次輸入全新設計並建模，不套用或抄襲舊 3D 檔；依生物或機械構造配置蒙皮、關節與動作。
+3. 由 Blender 直接儲存 `models/{{asset_id}}.blend`、匯出 `models/{{asset_id}}.glb`，保留拓撲、UV、材質與骨架。
+4. 每次修改後檢查正、背、左、右、上、下視角及動作關鍵幀：臉／感知器官不被遮擋，軀幹與肢體完整連接；無破面、孔洞、透視露空、錯誤法線／貼圖、部件互穿、離體或關節錯位及各部位獨立亂移。
+5. 重開 `.blend` 並重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，記錄未完成項；不交 ZIP。
+{{bestiary}}

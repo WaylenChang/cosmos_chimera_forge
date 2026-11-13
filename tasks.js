@@ -108,7 +108,7 @@
         "",
         body,
         "",
-        ctx.notes ? "## 使用者補充\n" + ctx.notes + "\n" : null
+        // Pipeline portraits use selected concept/parameters only, not global notes from another task.
       ].filter(s => s !== null).join("\n");
     }
     return [
@@ -406,12 +406,12 @@
 
         const step2Lines = [
           "### 步驟 2（多視角拓撲圖）：`images/cr_" + S + "_" + curStage + "_turnaround.png`",
-          "- **內容**：**正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例排布）。嚴格以本型態「步驟 1 正面圖」為基準多角度延伸，自然站姿、平光無透視，背景同為 " + bgInfo.hex + "。（不加演化 prompt）"
+          "- **內容**：**正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例排布）。嚴格以本型態「步驟 1 正面圖」為基準多角度延伸，自然站姿、平光無透視，背景同為 " + bgInfo.hex + "。"
         ];
 
         const step3Lines = [
           "### 步驟 3（動態主立繪）：`images/cr_" + S + "_" + curStage + "_main.png`",
-          "- **內容**：**全身戰鬥主立繪 1:1**（場景氛圍與招式演出強化）。嚴格以本型態「步驟 1 正面圖」之造型為基準繪製動態姿勢：（不加演化 prompt）",
+          "- **內容**：**全身戰鬥主立繪 1:1**（場景氛圍與招式演出強化）。嚴格以本型態「步驟 1 正面圖」之造型為基準繪製動態姿勢：",
           lockedStage?.signature_move ? ("- **招式演出**：" + lockedStage.signature_move.visual) : null,
           curStage === "overload" ? "- **超載爆發**：裝甲展開、核心光環浮現、高密度能量粒子流外溢" : null,
           sceneInfo.fullPromptSection
@@ -807,18 +807,24 @@
     }
   ];
 
-  // Apply the same storage contract to every full prompt and every image round.
+  // Pipeline steps are isolated: native portraits never inherit old ZIP/storage instructions.
   TASKS.forEach(t => {
     const build = t.build;
     t.nativeBuild = build;
     t.build = ctx => {
-      if (window.COSMI_PIPELINE?.supports(ctx)) return window.COSMI_PIPELINE.build(ctx);
-      const text = build(ctx), newline = text.indexOf("\n");
+      if (window.COSMI_PIPELINE?.supports(ctx)) {
+        return document.getElementById("pipelineStage")?.value === "portrait" ? nativeBuild(ctx) : window.COSMI_PIPELINE.build(ctx);
+      }
+      const text = nativeBuild(ctx), newline = text.indexOf("\n");
       return text.slice(0, newline + 1) + "\n" + storageSection(ctx) + "\n" + text.slice(newline + 1);
     };
     if (t.buildRounds) {
-      const buildRounds = t.buildRounds;
-      t.buildRounds = ctx => buildRounds(ctx).map(round => ({ ...round, prompt: round.prompt + "\n\n" + storageSection(ctx) }));
+      const nativeRounds = t.buildRounds;
+      t.buildRounds = ctx => {
+        const rounds = nativeRounds(ctx);
+        return window.COSMI_PIPELINE?.supports(ctx) ? rounds
+          : rounds.map(round => ({ ...round, prompt: round.prompt + "\n\n" + storageSection(ctx) }));
+      };
     }
   });
   TASKS.filter(t => ["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(t.id)).forEach(t => { t.version = (Number(t.version.split(".")[0]) + 1) + ".0.0"; });
