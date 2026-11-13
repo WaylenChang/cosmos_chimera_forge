@@ -152,7 +152,14 @@
     const generation = state.generation;
     state.pkg = pkg;
     $("modelReviewTitle").textContent = "互動 3D 驗收";
-    $("modelReviewApproval").textContent = pkg.status === "ok" ? "已核准" : "待人工驗收";
+    const approvalLabels = {
+      ok: "通過",
+      provisional: "暫時採用",
+      pending: "待決定",
+      reject: "退回重建",
+      missing: "有缺檔"
+    };
+    $("modelReviewApproval").textContent = approvalLabels[pkg.status] || "暫時採用";
     $("modelReviewNotes").textContent = "";
     $("modelReviewPlay").disabled = true;
     $("modelReviewScrub").value = 0;

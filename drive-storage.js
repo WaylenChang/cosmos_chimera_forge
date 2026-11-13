@@ -558,7 +558,7 @@
   async function review(pkg, status, note = "") {
     if (!pkg?.driveFolderId) throw Error("請先將資產資料夾儲存至 Drive");
     if (syncing || busy) throw Error("Drive 處理中，請稍後重試");
-    if (!["ok", "pending", "reject"].includes(status))
+    if (!["ok", "provisional", "pending", "reject"].includes(status))
       throw Error("無效審查狀態");
     if (pkg.completed) throw Error("資產已完成，請建立新版本後審查");
     busy = true;
@@ -669,10 +669,14 @@
       window.COSMI_FORGE.refresh();
       $("driveStatus").textContent =
         status === "reject"
-          ? "已退件並移至 " + pkg.drivePath
+          ? "已退回重建並移至 " + pkg.drivePath
           : isModel && status === "ok"
-            ? "已核准並將立繪與 3D 移入完成區"
-            : "已儲存審查；立繪留在原位";
+            ? "已通過並將立繪與 3D 移入完成區"
+            : status === "provisional"
+              ? "已標記暫時採用；資產留在原位"
+              : status === "pending"
+                ? "已標記待決定；資產留在原位"
+                : "已儲存審查；立繪留在原位";
       return r;
     } finally {
       busy = false;

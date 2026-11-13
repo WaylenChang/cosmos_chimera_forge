@@ -12,6 +12,23 @@
     return t === "creature-model-rig" || t === "character-model-rig" || t === "model-rig" || (typeof t === "string" && (t.startsWith("mdl") || t.startsWith("anim")));
   }
 
+  function reviewStatusInfo(status) {
+    switch (status) {
+      case "ok":
+      case "approved":
+        return { zh: "通過", badge: "✅ 通過", cls: "ok" };
+      case "provisional":
+        return { zh: "暫時採用", badge: "🟦 暫時採用", cls: "accent" };
+      case "reject":
+        return { zh: "退回重建", badge: "❌ 退回重建", cls: "danger" };
+      case "missing":
+        return { zh: "有缺檔", badge: "⚠️ 缺檔", cls: "missing" };
+      case "pending":
+      default:
+        return { zh: "待決定", badge: "🟨 待決定", cls: "warn" };
+    }
+  }
+
   // 舊版人形與基底父類別追溯相容（人形一律視為精靈族）
   function traceBaseParent(bp) {
     if (!bp) return bp;
@@ -1613,16 +1630,11 @@
       );
       if (matches.length > 0) {
         matches.forEach(pkg => {
-          const statusMap = {
-            approved: { zh: "✅ 已核准", cls: "ok" },
-            reject: { zh: "❌ 退回", cls: "danger" },
-            pending: { zh: "🟨 待審", cls: "warn" }
-          };
-          const st = statusMap[pkg.status] || { zh: "📦 已收錄", cls: "ok" };
+          const st = reviewStatusInfo(pkg.status);
           const pRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;margin-bottom:6px" },
             el("div", { style: "display:flex;align-items:center;gap:8px" },
               el("code", { style: "font-size:12px;color:var(--accent)" }, pkg.id),
-              el("span", { class: "f-badge " + st.cls }, st.zh),
+              el("span", { class: "f-badge " + st.cls }, st.badge),
               el("span", { class: "muted", style: "font-size:11px" }, pkg.type || "character")
             ),
             el("button", {
@@ -1869,16 +1881,11 @@
       );
       if (lineMatches.length > 0) {
         lineMatches.forEach(pkg => {
-          const statusMap = {
-            approved: { zh: "✅ 已核准", cls: "ok" },
-            reject: { zh: "❌ 退回", cls: "danger" },
-            pending: { zh: "🟨 待審", cls: "warn" }
-          };
-          const st = statusMap[pkg.status] || { zh: "📦 已收錄", cls: "ok" };
+          const st = reviewStatusInfo(pkg.status);
           const pRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;margin-bottom:6px" },
             el("div", { style: "display:flex;align-items:center;gap:8px" },
               el("code", { style: "font-size:12px;color:var(--accent)" }, pkg.id),
-              el("span", { class: "f-badge " + st.cls }, st.zh),
+              el("span", { class: "f-badge " + st.cls }, st.badge),
               el("span", { class: "muted", style: "font-size:11px" }, pkg.type || "creature")
             ),
             el("button", {
@@ -2356,15 +2363,10 @@
       
       if (matches.length > 0) {
         const topMatch = matches[0];
-        const statusMap = {
-          approved: { zh: "✅ 已核准通過", cls: "ok" },
-          reject: { zh: "退回拒絕", cls: "danger" },
-          pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
-        };
-        const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
+        const stInfo = reviewStatusInfo(topMatch.status);
         reviewInfo.append(
           el("span", { class: "prompt-k" }, "審查欄位："),
-          el("span", { class: "f-badge " + stInfo.cls }, stInfo.zh),
+          el("span", { class: "f-badge " + stInfo.cls }, stInfo.badge),
           el("code", {}, topMatch.id)
         );
         reviewRow.append(
@@ -2473,15 +2475,10 @@
         
         if (lineMatches.length > 0) {
           const topMatch = lineMatches[0];
-          const statusMap = {
-            approved: { zh: "✅ 已核准通過", cls: "ok" },
-            reject: { zh: "❌ 退回拒絕", cls: "danger" },
-            pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
-          };
-          const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
+          const stInfo = reviewStatusInfo(topMatch.status);
           reviewInfo.append(
             el("span", { class: "prompt-k" }, "審查欄位："),
-            el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.zh} (共收錄 ${lineMatches.length} 包)`),
+            el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.badge} (共收錄 ${lineMatches.length} 包)`),
             el("code", {}, topMatch.id)
           );
           reviewRow.append(
@@ -2741,15 +2738,10 @@
         const reviewInfo = el("div", { class: "card-review-info" });
         if (chrMatches.length > 0) {
           const topMatch = chrMatches[0];
-          const statusMap = {
-            approved: { zh: "✅ 已核准通過", cls: "ok" },
-            reject: { zh: "❌ 退回拒絕", cls: "danger" },
-            pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
-          };
-          const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
+          const stInfo = reviewStatusInfo(topMatch.status);
           reviewInfo.append(
             el("span", { class: "prompt-k" }, "審查欄位："),
-            el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.zh} (共收錄 ${chrMatches.length} 包)`),
+            el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.badge} (共收錄 ${chrMatches.length} 包)`),
             el("code", {}, topMatch.id)
           );
           reviewRow.append(
@@ -3541,7 +3533,7 @@
       isZip: /\.zip$/i.test(file.name),
       aligned: !!alignedStaged,
       stagedTaskId: alignedStaged?.taskId || null,
-      status: manifestData?.missing?.length ? "missing" : "pending"
+      status: manifestData?.missing?.length ? "missing" : "provisional"
     };
     addPackage(pkg, {silent});
     return pkg;
@@ -3649,7 +3641,7 @@
           { path: "images/cr_line_7f3a_juvenile_front.png", url: createSampleSvgDataUrl("正面正交視圖 1:1", "#34495e") }
         ],
         fileCount: 4,
-        status: "ok"
+        status: "provisional"
       },
       {
         id: "cr-20261106-7f3a-2105-adolescent",
@@ -3683,7 +3675,7 @@
           { path: "images/cr_line_7f3a_adolescent_front.png", url: createSampleSvgDataUrl("正面正交視圖 1:1", "#34495e") }
         ],
         fileCount: 4,
-        status: "ok"
+        status: "provisional"
       },
       {
         id: "cr-20261106-7f3a-2105-adult",
@@ -3717,7 +3709,7 @@
           { path: "images/cr_line_7f3a_adult_front.png", url: createSampleSvgDataUrl("正面正交視圖 1:1", "#34495e") }
         ],
         fileCount: 4,
-        status: "ok"
+        status: "provisional"
       },
       {
         id: "cr-20261106-7f3a-2105-overload",
@@ -3751,7 +3743,7 @@
           { path: "images/cr_line_7f3a_overload_front.png", url: createSampleSvgDataUrl("正面正交視圖 1:1", "#34495e") }
         ],
         fileCount: 4,
-        status: "ok"
+        status: "provisional"
       },
       {
         id: "mdl-20261106-7f3a-2105-adult",
@@ -3815,7 +3807,7 @@
           { path: "images/cr_line_7f3a_adult_anim_sheet_01.png", url: createSampleSvgDataUrl("動作關鍵幀分鏡 · 焰甲重龍", "#8e44ad") }
         ],
         fileCount: 11,
-        status: "pending"
+        status: "provisional"
       }
     ];
     mockPackages.forEach(p => addPackage(p));
@@ -4353,7 +4345,7 @@
       }
 
       const thumbUrl = repPkg.images?.[0]?.url || g.packages.find(p => p.images?.[0]?.url)?.images[0].url;
-      const statZh = repPkg.status === "ok" ? "✅ 合規" : repPkg.status === "reject" ? "❌ 退回" : repPkg.status === "missing" ? "⚠️ 缺檔" : "🟨 待審";
+      const statZh = reviewStatusInfo(repPkg.status).badge;
       const pLinked = getLinkedPackage(repPkg);
 
       // 若群組有多種型態或具備型態屬性，顯示型態標籤 pills
@@ -4428,8 +4420,8 @@
     $("#stageTag").style.display = "flex";
     $("#stId").textContent = pkg.id + (pkg.stage ? ` · ${STAGE_ZH[pkg.stage] || pkg.stage}` : "") + (pkg.aligned ? " [🏷️ 自動對齊格式]" : "");
     const badge = $("#stBadge");
-    badge.className = "badge " + pkg.status;
-    badge.textContent = pkg.status === "ok" ? "已通過" : pkg.status === "reject" ? "需修改" : pkg.status === "missing" ? "有缺檔" : "待審核";
+    badge.className = "badge " + (pkg.status || "provisional");
+    badge.textContent = reviewStatusInfo(pkg.status).zh;
 
     // 關聯立繪/3D 標籤
     const refTag = $("#stRefTag");
@@ -5619,9 +5611,10 @@
       box.append(el("h4", {}, "審查覆核意見"));
       const reviewBox = el("div", { class: "review-box" },
         el("div", { class: "seg" },
-          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "核准通過"),
-          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "待修改"),
-          el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "reject") }, "❌ 退回拒絕")
+          el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "reject") }, "退回重建"),
+          el("button", { class: "segb" + (pkg.status === "provisional" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "provisional") }, "暫時採用"),
+          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "通過"),
+          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "待決定")
         ),
         el("textarea", { id: "revNote", placeholder: "填寫人工審查意見（例如：身高比例良好，但服裝配色需微調；臉部表情需更生動...）", onchange: e => { saveReview(pkg, e.target.value); } }, getReviewNote(pkg)),
         el("div", { style: "display:flex;gap:6px;margin-top:6px;flex-wrap:wrap" },

@@ -247,6 +247,7 @@
   .rl-badges { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
   .rl-stat { font-size: 10.5px; border-radius: 4px; padding: 1px 5px; display: inline-block; }
   .rl-stat.ok { background: #1d3324; color: var(--ok); }
+  .rl-stat.provisional { background: #1b283d; color: var(--accent); }
   .rl-stat.pending { background: #382c16; color: var(--warn); }
   .rl-stat.reject { background: #3c1c1c; color: var(--danger); }
   .rl-stat.missing { background: #30261a; color: #ffab40; }
@@ -256,6 +257,11 @@
   .stagewrap { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; background: #12141a; }
   #stageTag { position: absolute; left: 12px; top: 10px; font-size: 12px; color: #9fb4d8; background: rgba(23,26,33,.92); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; pointer-events: auto; z-index: 20; backdrop-filter: blur(4px); font-family: Consolas, monospace; display: flex; align-items: center; gap: 8px; }
   #stageTag .badge { padding: 1px 6px; border-radius: 4px; font-size: 10.5px; }
+  #stageTag .badge.ok { background: #1d3324; color: var(--ok); }
+  #stageTag .badge.provisional { background: #1b283d; color: var(--accent); }
+  #stageTag .badge.pending { background: #382c16; color: var(--warn); }
+  #stageTag .badge.reject { background: #3c1c1c; color: var(--danger); }
+  #stageTag .badge.missing { background: #30261a; color: #ffab40; }
   #stageTag .ref-tag { padding: 1px 6px; border-radius: 4px; font-size: 10.5px; background: #1e2e46; color: #7fd8ff; cursor: pointer; pointer-events: auto; }
   #stageTag .stage-switch-seg { pointer-events: auto; }
   #stageTag .stage-switch-seg .segb { pointer-events: auto; cursor: pointer; }
@@ -1118,7 +1124,7 @@
         <input type="file" id="upgradeFileInput" accept=".zip,application/zip" style="display:none">
         <div class="seg" id="catSeg">
           <button class="segb on" data-cat="all" type="button">全部</button>
-          <button class="segb" data-cat="pending" type="button">待審</button>
+          <button class="segb" data-cat="pending" type="button">待決定</button>
           <button class="segb" data-cat="chr" type="button">角色</button>
           <button class="segb" data-cat="cr" type="button">宙獸</button>
           <button class="segb" data-cat="mdl" type="button">3D</button>
