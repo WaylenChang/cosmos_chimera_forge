@@ -8,6 +8,7 @@ queue is empty, the GPU batch finishes, or the GPU remains idle.
 from __future__ import annotations
 
 import argparse
+import datetime
 import json
 import os
 from pathlib import Path
@@ -17,20 +18,61 @@ import threading
 import time
 
 
-def shutdown_colab_runtime(reason: str, unassign_fn=None) -> bool:
+def runtime_status_path(root: Path) -> Path:
+    return Path(root) / "02_3d" / "colab" / "_gpu_runtime_status.json"
+
+
+def write_runtime_status(root: Path, active: bool, reason: str, unassign_invoked: bool = False) -> Path:
+    path = runtime_status_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "gpu_runtime_active": active,
+        "unassign_invoked": unassign_invoked,
+        "reason": reason,
+        "updated_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }
+    tmp = path.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+    tmp.replace(path)
+    return path
+
+
+def verify_colab_shutdown(root: Path) -> tuple[bool, dict]:
+    """Verify the Drive runtime status receipt confirms Colab GPU was shut down."""
+    path = runtime_status_path(root)
+    if not path.is_file():
+        return False, {"error": "Missing GPU runtime status receipt", "path": str(path)}
+    data = json.loads(path.read_text(encoding="utf8"))
+    ok = (data.get("gpu_runtime_active") is False) and (data.get("unassign_invoked") is True)
+    return ok, data
+
+
+def shutdown_colab_runtime(reason: str, unassign_fn=None, root: Path | None = None) -> bool:
     """Flush pending Drive writes and unassign the Colab GPU runtime."""
     print(f"[GPU-GUARD] Shutting down Colab runtime: {reason}", flush=True)
-    if os.name == "posix":
-        subprocess.run(["sync"], check=False)
+    invoked = False
     if unassign_fn is not None:
+        if root is not None:
+            write_runtime_status(root, active=False, reason=reason, unassign_invoked=True)
+        if os.name == "posix":
+            subprocess.run(["sync"], check=False)
         unassign_fn(reason)
         return True
     try:
         from google.colab import runtime  # type: ignore
 
+        invoked = True
+        if root is not None:
+            write_runtime_status(root, active=False, reason=reason, unassign_invoked=True)
+        if os.name == "posix":
+            subprocess.run(["sync"], check=False)
         runtime.unassign()
         return True
     except ImportError:
+        if root is not None:
+            write_runtime_status(root, active=False, reason=reason, unassign_invoked=invoked)
+        if os.name == "posix":
+            subprocess.run(["sync"], check=False)
         print("[GPU-GUARD] google.colab.runtime unavailable; skipping unassign.", flush=True)
         return False
 
@@ -202,14 +244,16 @@ def run_batch(
 
     if stage == "gpu" and not pending:
         if auto_shutdown:
-            shutdown_colab_runtime("empty_gpu_queue", unassign_fn=shutdown_fn)
+            shutdown_colab_runtime("empty_gpu_queue", unassign_fn=shutdown_fn, root=root)
         return 0
 
     watchdog = None
+    if stage == "gpu":
+        write_runtime_status(root, active=True, reason="gpu_stage_started", unassign_invoked=False)
     if stage == "gpu" and auto_shutdown:
         watchdog = GpuIdleWatchdog(
             idle_timeout_sec=idle_timeout_sec,
-            shutdown_fn=lambda r: shutdown_colab_runtime(r, unassign_fn=shutdown_fn),
+            shutdown_fn=lambda r: shutdown_colab_runtime(r, unassign_fn=shutdown_fn, root=root),
         )
         watchdog.start()
 
@@ -235,23 +279,31 @@ def run_batch(
         if watchdog is not None:
             watchdog.stop()
         if stage == "gpu" and auto_shutdown:
-            shutdown_colab_runtime("gpu_stage_finished", unassign_fn=shutdown_fn)
+            shutdown_colab_runtime("gpu_stage_finished", unassign_fn=shutdown_fn, root=root)
     return exit_code
 
 
 def main() -> int:
     p = argparse.ArgumentParser(description="Colab GPU guard and staged batch runner")
     p.add_argument("--root", required=True)
-    p.add_argument("--queue", required=True, help="Path to batch_queue.json")
-    p.add_argument("--stage", choices=["pre_gpu", "gpu", "post_gpu", "all"], required=True)
+    p.add_argument("--queue", help="Path to batch_queue.json")
+    p.add_argument("--stage", choices=["pre_gpu", "gpu", "post_gpu", "all"])
     p.add_argument("--backend-config", default="")
     p.add_argument("--blender", default="")
     p.add_argument("--idle-timeout", type=float, default=180.0)
     p.add_argument("--no-auto-shutdown", action="store_true")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--verify-shutdown", action="store_true", help="Verify Colab GPU runtime shutdown receipt")
     a = p.parse_args()
+    root = Path(a.root).resolve()
+    if a.verify_shutdown:
+        ok, data = verify_colab_shutdown(root)
+        print(json.dumps({"shutdown_verified": ok, **data}, ensure_ascii=False, indent=2))
+        return 0 if ok else 2
+    if not a.queue or not a.stage:
+        p.error("--queue and --stage are required unless --verify-shutdown is set")
     return run_batch(
-        root=Path(a.root).resolve(),
+        root=root,
         queue_path=Path(a.queue).resolve(),
         stage=a.stage,
         backend_config=a.backend_config,

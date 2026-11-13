@@ -60,6 +60,11 @@
 
 **必要的狀態機**：`QUEUED → RUNNING → QA_PENDING → PASSED / RETRY / FALLBACK / REVIEW_REQUIRED / FAILED`。每個節點落盤 `manifest.json`、原始輸入、模型版本、task ID、時間、費用、VRAM、品質報告；重啟只接續未完成節點，**不重跑成功且內容雜湊不變的步驟**。
 
+**Colab GPU 分段與關機驗收（強制規則）**：
+- 嚴守 `pre_gpu`（CPU: N00–N01）→ `gpu`（GPU: N02–N04）→ `post_gpu`（CPU/本機: N05–N08）順序，不可在 GPU runtime 執行 Blender 渲染或等待人工互動。
+- GPU 階段結束、失敗或佇列為空時，必須透過 `google.colab.runtime.unassign()` 自動關閉 GPU（並以 `GpuIdleWatchdog` 防止閒置空轉）。
+- **AI Agent 在任務完成後必須檢查 Colab 是否已關閉**：執行 `python scripts/anime3d_colab_guard.py --root <DRIVE_PROJECT> --verify-shutdown` 確認 `02_3d/colab/_gpu_runtime_status.json` 的 `gpu_runtime_active=false` 與 `unassign_invoked=true`，並核對 Colab 介面／CLI 顯示為已中斷連線（若仍連線須立即主動終止後才可回報完成）。
+
 ### 1.1 Agent 職責切分
 
 | Agent | 輸入 | 輸出 | 可以自主處理 | 轉人工條件 |

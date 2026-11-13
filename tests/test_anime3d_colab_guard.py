@@ -156,6 +156,29 @@ class ColabStageAndGuardTests(unittest.TestCase):
             self.assertEqual(len(cmds), 2)
             self.assertIn("--stage", cmds[0])
             self.assertEqual(reasons, ["gpu_stage_finished"])
+            ok, data = guard.verify_colab_shutdown(root)
+            self.assertTrue(ok)
+            self.assertFalse(data["gpu_runtime_active"])
+            self.assertTrue(data["unassign_invoked"])
+
+    def test_verify_shutdown_rejects_active_or_missing_runtime(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            ok_missing, _ = guard.verify_colab_shutdown(root)
+            self.assertFalse(ok_missing)
+
+            guard.write_runtime_status(root, active=True, reason="still_running", unassign_invoked=False)
+            ok_active, data = guard.verify_colab_shutdown(root)
+            self.assertFalse(ok_active)
+            self.assertTrue(data["gpu_runtime_active"])
+
+            cli = subprocess.run(
+                [sys.executable, str(ROOT / "scripts/anime3d_colab_guard.py"), "--root", str(root), "--verify-shutdown"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(cli.returncode, 2)
 
     def test_idle_watchdog_triggers_shutdown_when_inactive(self):
         reasons = []
