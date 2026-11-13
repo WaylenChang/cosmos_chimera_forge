@@ -52,6 +52,32 @@ test('unified review desk deduplicates catalog and Drive packages with acceptanc
   assert.equal(review.unifiedEntries(packages,[creature],[char],'all','太陽獸').length,1);
 });
 
+
+test('AI Blender 3D category keeps the model visible and never opens a catalog portrait instead', () => {
+  const portrait = {id:'cr_chrono_beetle_adult', type:'creature-concept',
+    subjectId:'cr_chrono_beetle', stage:'adult', status:'ok'};
+  const model = {id:'asset_cr_chrono_beetle_adult', type:'creature-model-rig',
+    subjectId:'cr_chrono_beetle', stage:'adult', status:'missing',
+    manifest:{task_type:'creature-model-rig',pipeline:'ai_blender',
+      files:[{path:'models/cr_chrono_beetle_adult.glb',kind:'model',level:'L1'}],
+      missing:[{item:'source portrait'}]}};
+  const juvenile = {...model, id:'asset_cr_chrono_beetle_juvenile',stage:'juvenile'};
+  const catalog = [{line_id:'cr_chrono_beetle',title_zh:'時序甲蟲'}];
+  const all = review.unifiedEntries([portrait, model, juvenile],catalog,[]);
+  assert.equal(all.length,1, 'do not duplicate the same creature across designs and Drive');
+  const three = review.unifiedEntries([portrait, model, juvenile],catalog,[],'mdl');
+  assert.equal(three.length,1);
+  assert.deepEqual(three[0].visiblePackages.map(p=>p.id),
+    ['asset_cr_chrono_beetle_adult','asset_cr_chrono_beetle_juvenile']);
+  assert.equal(review.preferredVisiblePackage(three,portrait.id).id,model.id,
+    'a previously selected 2D package must be replaced by the visible 3D model');
+  assert.equal(review.preferredVisiblePackage(three,juvenile.id).id,juvenile.id,
+    'retain a stage selection that is already valid for the current filter');
+  assert.equal(review.preferredVisiblePackage([],model.id),null);
+  assert.equal(review.matchesCategory(model,'pending'),true,
+    'missing QA must not hide a valid GLB model from review');
+});
+
 test('designed-only catalog rows receive hollow stars before any delivery exists', () => {
   const rows=review.unifiedEntries([], [{line_id:'sun_01',title_zh:'日獸'}], []);
   assert.equal(rows.length,1);

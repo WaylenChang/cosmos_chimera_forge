@@ -104,6 +104,13 @@
     }));
   }
 
+  // Keep the active package only when it is present in the selected category.
+  // A catalog design and its Blender model may share one subject-level row.
+  function preferredVisiblePackage(entries = [], activeId = "") {
+    const shown = entries.flatMap(entry => entry.visiblePackages || []);
+    return shown.find(pkg => pkg.id === activeId) || shown[0] || null;
+  }
+
   function exactBuffer(bytes) {
     if (ArrayBuffer.isView(bytes)) return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
     if (bytes instanceof ArrayBuffer) return bytes.slice(0);
@@ -183,7 +190,7 @@
   }
 
   return Object.freeze({
-    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries,
+    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage,
     exactBuffer, relative, orbitFor, open, onPackagesChanged, install
   });
 });
