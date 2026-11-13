@@ -11,7 +11,7 @@ function forge(){
   localStorage:{getItem(){return null;},setItem(){}},
   document:{addEventListener(){},querySelector:s=>s==='#toast'?toast:null,getElementById(){return null;}},
   addEventListener(){}};c.window=c;
- for(const file of ['catalog.js','tasks.js','designed.js','pipeline.js','forge.js'])vm.runInNewContext(fs.readFileSync(path.join(root,file),'utf8'),c,{filename:file});
+ for(const file of ['catalog.js','tasks.js','designed.js','pipeline.js','model-review.js','forge.js'])vm.runInNewContext(fs.readFileSync(path.join(root,file),'utf8'),c,{filename:file});
  return c.COSMI_FORGE;
 }
 test('directory loader preserves actual files and does not inject a legacy staged prompt',async()=>{

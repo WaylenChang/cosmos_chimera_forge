@@ -102,7 +102,7 @@ test('sign out and expiry clear cached tokens instead of reviving login', async 
   const h = harness();
   await h.login();
   assert.ok(h.sessionStorage.getItem('cosmi.drive.oauth.v1'));
-  h.node('driveSignOut').listeners.click();
+  h.context.COSMI_DRIVE.signOut();
   assert.equal(h.sessionStorage.getItem('cosmi.drive.oauth.v1'), null);
   assert.equal(h.node('driveApp').hidden, true);
   assert.equal(h.reloaded, true);
@@ -157,6 +157,62 @@ test('ambiguous duplicate Drive names fail instead of overwriting arbitrary data
   await assert.rejects(h.context.COSMI_DRIVE.write('prompts/duplicate.prompt.md', new Blob(['x'])), /名稱重複/);
   assert.ok(!h.calls.some(c => c.url.pathname.includes('/upload/')));
 });
+test('legacy Prompt-to-3D migration never invents model or overwrites missing GLB', async () => {
+  const h=harness({handle:u=>{
+    const q=u.searchParams.get('q')||'';
+    if(q==="'ai_blender-id' in parents and trashed = false")return Response.json({files:[
+      {id:'old-model',name:'asset_cr_sample_adult',mimeType:'application/vnd.google-apps.folder'}]});
+    if(q==="'old-model' in parents and trashed = false")return Response.json({files:[
+      {id:'old-models',name:'models',mimeType:'application/vnd.google-apps.folder'}]});
+    if(q==="'old-models' in parents and trashed = false")return Response.json({files:[]});
+    if(q==="'creatures-id' in parents and trashed = false")return Response.json({files:[]});
+  }});
+  await h.login();
+  const report=await h.context.COSMI_DRIVE.migratePrompt3dAssets();
+  assert.equal(report.total,1);
+  assert.equal(report.updated,0);
+  assert.equal(report.skipped,1);
+  assert.match(report.errors.join(','),/無 .glb/);
+  assert.ok(!h.calls.some(call=>call.url.pathname.includes('/upload/')));
+});
+
+
+test('all concurrent Prompt-to-Image and 3D wiki calls create one stage-specific Markdown', async()=>{
+  let created=false, uploads=0;
+  const h=harness({handle:(u,options)=>{
+    const q=u.searchParams.get('q')||'';
+    if(q.includes("_wiki.md"))return Response.json({files:created?[{id:'wiki-item',name:'cr_new_juvenile_wiki.md'}]:[]});
+    if(u.pathname.includes('/upload/')){
+      uploads++;created=true;return Response.json({id:'wiki-item',name:'cr_new_juvenile_wiki.md'});
+    }
+  }});
+  vm.runInNewContext(fs.readFileSync(path.join(root,'wiki.js'),'utf8'),h.context);
+  await h.login();
+  const ctx={task:{id:'creature-concept'},subjectId:'cr_new',opts:{stage:'juvenile'},concept:{name_zh:'新宙獸'}};
+  const [a,b,c]=await Promise.all([
+    h.context.COSMI_DRIVE.ensureWiki(ctx),
+    h.context.COSMI_DRIVE.ensureWiki({...ctx,task:{id:'creature-model-rig'}}),
+    h.context.COSMI_DRIVE.ensureWiki(ctx)
+  ]);
+  assert.equal(uploads,1);
+  assert.equal(a.path,'wiki/creatures/cr_new_juvenile_wiki.md');
+  assert.equal(a.id,b.id);
+  assert.equal(c.id,a.id);
+  const later=await h.context.COSMI_DRIVE.ensureWiki(ctx);
+  assert.equal(later.created,false);
+  assert.equal(uploads,1);
+});
+
+test('legacy migration control and encyclopedia directory are present in the build',()=>{
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  assert.match(html,/id="settingsMigratePrompt3d"/);
+  assert.match(source,/wiki\/creatures/);
+  assert.match(source,/before_prompt3d_migration\.json/);
+  assert.match(source,/migratePrompt3dAssets/);
+   assert.match(source,/migrateWikis/);
+   assert.match(html,/id="settingsMigrateWiki"/);
+});
+
 test('production build excludes asset and prompt directories and requires OAuth config', () => {
   const env = { ...process.env, GOOGLE_OAUTH_CLIENT_ID: 'invalid-client-id' };
   assert.notEqual(spawnSync(process.execPath, ['tools/build-site.mjs'], { cwd: root, env }).status, 0);
@@ -167,6 +223,11 @@ test('production build excludes asset and prompt directories and requires OAuth 
   assert.ok(!names.includes('Art') && !names.includes('Data') && !names.includes('.git'));
   assert.match(fs.readFileSync(path.join(root, '_site/drive-config.js'), 'utf8'), /123-test.apps.googleusercontent.com/);
   assert.match(fs.readFileSync(path.join(root, '_site/index.html'), 'utf8'), /id="driveApp" hidden/);
+  const builtHtml = fs.readFileSync(path.join(root, '_site/index.html'), 'utf8');
+  for (const asset of ['forge.js','drive-storage.js','model-review.js','model-review.css','drive-config.js']) {
+    const digest = require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'_site',asset))).digest('hex').slice(0,12);
+    assert.ok(builtHtml.includes(`="${asset}?v=${digest}"`), asset+' must bypass stale Pages cache using its content hash');
+  }
   fs.rmSync(path.join(root, '_site'), { recursive: true });
 });
 

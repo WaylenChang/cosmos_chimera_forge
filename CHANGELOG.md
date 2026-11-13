@@ -1,7 +1,30 @@
-## 2026-11-12 — Tool 2.7.1：單步驟提示詞精簡與宙獸圖鑑
-- Colab Image-to-3D 與 Blender Image/Prompt-to-3D 均要求 Blender 原創建模、研究參考與逐次多視角／動作品質檢查，輸出 `.blend`、`.glb`。
-- **僅宙獸 Prompt-to-3D** 產出 `bestiary.md`（四形態外觀、虛構田野觀察、演化）；所有 Image-to-3D 不生成圖鑑。
-- 審閱並精簡外觀、立繪、立繪審查、3D 審查提示詞；版本不符的 Drive 單步驟模板採用內建精簡版。修復原生立繪提示詞遞迴，移除舊 ZIP／存放路徑與全域補充文字污染，新增回歸測試。
+## 2026-11-13 — Tool 2.9.1：Drive 延後載入與 Pages 快取修正
+
+- 同步 metadata／預覽時容許 GLB 延後下載，資產抵達後即可開啟指定驗收連結。
+- Pages 建置依程式與樣式的實際內容雜湊產生版本 URL，避免部署後仍混用舊的 Drive 載入程式。
+- 修正 Linux CI 虛擬環境 launcher 測試檔缺少執行權限的問題，保留 production 執行權限檢查。
+
+## 2026-11-13 — Tool 2.9.0：Drive 互動 3D 驗收
+
+- Prompt Forge 加入互動模型驗收視窗、資產選擇、實際動畫切換、暫停／時間軸、正面重設與驗收連結；GitHub Pages 以原 Google 登入讀取 Drive 的 GLB、四視角和影片，不使用 Colab runtime。
+- `review_viewer.json` 指定包內最終模型、SHA256、相機方向與預覽資源。模型、貼圖與影片留在私人 Drive；Pages 僅部署程式與 Google model-viewer 4.1.0 元件，不變更資產共享權限。
+- 修正巢狀動畫 manifest 蓋過根 manifest、原始 source／rig 搶先於含動畫 models/ 的選擇、GLB typed-array 邊界，以及切換資產後沿用上一模型動作的問題。
+
+## 2026-11-13 — Anime3D 執行修復與葉澄汐管線查核
+
+- 新增獨立 SkinTokens mesh-to-rig CLI 階段、真正 joints／weights 結構檢查及 source／rig 分開雜湊續跑；綁骨失敗不接受舊模型。葉澄汐已完成 Colab L4 真實 Pixal3D／SkinTokens 推論；任意其他骨架仍需各自驗證。
+- 修正 Colab 儲存格反斜線換行、明確來源圖片／已完成立繪路徑、subject_id 綁定與非人形 Tripo 路由；新增葉澄汐 spec 及不呼叫付費 API 的 preflight。
+- 成功 source GLB 依 SHA256 續跑，付費 POST 結果不明時禁止自動重送；外部程序失敗不接受舊 QA 報告。
+- 開源後端不再假設有 Tripo preset；檢查真正蒙皮與所有必要動畫往返，保留已有動作，排除 Blender 5.2 骨架顯示物件造成的材質誤判。
+- 葉澄汐依實際 52 骨骼映射完成三段程序動作與動畫重載，交付 GLB／Blend、貼圖四視角、影片及互動驗收檢視器；目前待人工品質核准。
+
+## 2026-11-12 — Tool 2.8.0：依類型建立 Anime3D 管線
+
+- 依角色／宙獸原型及實際解剖拓撲，分流人形、動物、怪物、翼類、多足、蛇形、植物、無機物、機械及機甲；同時支援混合型與人工覆寫。
+- 新增 Colab 通用執行器與獨立後端 adapter 介面、來源內容雜湊、分階段續跑、嚴格區分 dry-run 與付費 Tripo 授權。
+- Blender 增加不同拓撲的暫定 Rig／程序化動作／機械零件與樞紐、GLB 往返檢查、多角度 QA 圖及待審品質報告；不足以完成視覺驗收時不自動通過。
+- 網頁 3D Prompt 帶入解剖與骨架策略；加入 Python／Node CI 分流與錯誤回退測試。
+- 外部 AniGen／Pixal3D／PartCrafter／Prompt-to-3D 模型仍需實際安裝的可執行 adapter，未完成實機端到端驗證，不能當成已完全自動化的可用模型。
 
 ## 2026-11-12 — Tool 2.7.0：Drive 快取與設定頁
 - 新增帳戶隔離的 IndexedDB 資產快取（24 MiB／包、80 MiB／帳戶、TTL 可設定）；登入後快取優先顯示並重新驗證雲端 metadata。

@@ -5,16 +5,19 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
 function harness() {
-  const nodes = {pipelineStage: {value: 'portrait'}, pipelineAppearance: {value: ''}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
+  const nodes = {pipelineStage: {value: 'portrait'}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
   const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({drivePath: '02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'03_completed/portraits/source'}]}};
   c.window = c;
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);
-  for (const [key, name] of Object.entries(c.COSMI_PIPELINE.stages)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
+  for (const [key, name] of Object.entries(c.COSMI_PIPELINE.stages)) {
+    if (!['portrait','encyclopedia'].includes(key)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
+  }
   return {c,nodes,ctx:{task:{id:'character-concept'},taskId:'chr-example',subjectId:'chr_one',concept:{hair_palette:['red'],combat_damage:999,appearance:'long coat'},opts:{source_pack:'source'}}};
 }
 test('non-portrait stages resolve their Drive templates without leaking parameters', () => {
   const {c,nodes,ctx}=harness();
-  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => name !== 'portrait')) {
+  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => !['portrait','encyclopedia'].includes(name))) {
     nodes.pipelineStage.value=stage;
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.ok(text.length>100);
@@ -34,7 +37,7 @@ test('portrait always uses the native task builder even with a legacy Drive temp
       assert.equal(received,ctx);
       return expected;
     };
-    assert.equal(c.COSMI_PIPELINE.build(ctx),expected);
+    assert.match(c.COSMI_PIPELINE.build(ctx),new RegExp('^'+expected+'\\n\\n圖鑑：wiki/'));
   }
 });
 
@@ -47,7 +50,19 @@ test('Drive template loading skips the native portrait stage', async () => {
   }};
   await c.COSMI_PIPELINE.loadTemplates();
   assert.ok(!requests.includes('prompts/01_portrait.prompt.md'));
-  assert.equal(requests.filter(file => file.startsWith('prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-1);
+  assert.equal(requests.filter(file => file.startsWith('prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
+});
+
+test('encyclopedia prompt routes three categories to isolated Markdown paths', () => {
+  const {c,nodes,ctx}=harness();nodes.pipelineStage.value='encyclopedia';
+  assert.match(c.COSMI_PIPELINE.build(ctx),/wiki\/characters\/chr_one_wiki\.md/);
+  ctx.task.id='creature-concept';
+  assert.match(c.COSMI_PIPELINE.build(ctx),/wiki\/creatures\/chr_one_adult_wiki\.md/);
+  ctx.task.id='move-vfx';ctx.subjectId='fx_fire_burst';ctx.opts={element:'fire',shape:'burst',tier:'heavy'};
+  const wiki=c.COSMI_PIPELINE.build(ctx);
+  assert.match(wiki,/wiki\/moves\/fx_fire_burst_wiki\.md/);
+  assert.match(wiki,/fire|burst/);
+  assert.doesNotMatch(wiki,/DO_NOT_LEAK/);
 });
 
 test('appearance prompt includes visual traits and excludes pipeline and format content', () => {
@@ -59,10 +74,14 @@ test('source paths resolve completed portraits by exact asset identity', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='colab';
   assert.match(c.COSMI_PIPELINE.build(ctx),/03_completed\/portraits\/source/);
 });
-test('manual appearance cannot leak into a different subject', () => {
-  const {c,nodes,ctx}=harness();c.COSMI_PIPELINE.appearance(ctx);nodes.pipelineAppearance.value='private override';
-  assert.equal(c.COSMI_PIPELINE.appearance(ctx),'private override');
-  assert.doesNotMatch(c.COSMI_PIPELINE.appearance({...ctx,subjectId:'chr_two'}),/private override/);
+test('appearance comes only from concept parameters and cannot inherit another subject', () => {
+  const {c,ctx}=harness();
+  const first=c.COSMI_PIPELINE.appearance(ctx);
+  assert.match(first,/hair_palette.*red/);
+  assert.match(first,/appearance: long coat/);
+  const next=c.COSMI_PIPELINE.appearance({...ctx,subjectId:'chr_two',concept:{appearance:'blue armor'}});
+  assert.match(next,/blue armor/);
+  assert.doesNotMatch(next,/long coat|private override/);
 });
 
 

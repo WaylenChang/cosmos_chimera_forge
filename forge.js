@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.7.1";
+  const TOOL_VERSION = "2.9.1";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -135,6 +135,8 @@
     const isChr = (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr"));
     const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
     state.taskId = targetTaskId;
+    flowSelection = {category:isChr ? "character" : "creature",route:"image",step:"image_blender"};
+    state.flowChoice = flowSelection;
     const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
     const o = taskOpts(t);
     o.scope = "single";
@@ -151,7 +153,10 @@
       o.input_img = "";
     }
     const pipelineStage = document.getElementById("pipelineStage");
-    if (pipelineStage && !["colab", "blender"].includes(pipelineStage.value)) pipelineStage.value = "blender";
+    if (pipelineStage) {
+      if (!["colab", "blender"].includes(pipelineStage.value)) pipelineStage.value = "blender";
+      flowSelection.step = pipelineStage.value === "colab" ? "image_colab" : "image_blender";
+    }
     setViewMode("forge");
     renderAll();
     toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」帶入指定 3D 任務");
@@ -161,6 +166,8 @@
     const isChr = pkg ? (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr")) : false;
     const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
     state.taskId = targetTaskId;
+    flowSelection = {category:isChr ? "character" : "creature",route:"image",step:"image_blender"};
+    state.flowChoice = flowSelection;
     const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
     const o = taskOpts(t);
     o.scope = "batch";
@@ -615,9 +622,9 @@
     const pipeline = window.COSMI_PIPELINE?.supports(ctx);
     const pipelineStage = document.getElementById("pipelineStage")?.value;
     if (pipeline && pipelineStage === "colab" && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("Colab 需先選取已通過審查的來源立繪");
-    if (pipeline && pipelineStage === "blender" && o.source_pack && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("指定的來源立繪尚未通過審查；純文字建模請取消圖片來源");
+    if (pipeline && pipelineStage === "blender" && (o.source_pack || o.input_img) && (!chosenPkg || chosenPkg.status !== "ok")) errors.push("指定的來源立繪尚未通過審查；純文字建模請取消圖片來源");
     // Portrait uses the original multi-round prompts directly; no Drive template is needed.
-    const useNativePortrait = pipeline && pipelineStage === "portrait" &&
+    const useNativePortrait = pipeline && ["portrait", "portrait_3d"].includes(pipelineStage) &&
       (t.id === "character-concept" || t.id === "creature-concept");
     const rounds = (!errors.length && (!pipeline || useNativePortrait) && t.buildRounds) ? t.buildRounds(ctx) : null;
     lastBuild = { ctx, errors, text: errors.length ? "" : pipeline && !useNativePortrait ? window.COSMI_PIPELINE.build(ctx) : t.build(ctx), rounds };
@@ -868,14 +875,120 @@
     curCustomCtx = null;
   }
 
+  // Explicit three-phase chooser: category -> route -> connected pipeline nodes.
+  const taskFlow = window.COSMI_TASK_FLOW;
+  let flowSelection = null;
+  function currentFlow() {
+    if (!taskFlow) return null;
+    const choice = flowSelection || state.flowChoice;
+    if (!choice?.category || !choice.route || !choice.step) return null;
+    const selected = taskFlow.resolve(choice.category, choice.route, choice.step);
+    return selected && selected.taskId === state.taskId ? selected : null;
+  }
+  function chooseCategory(category) {
+    const selected = taskFlow?.selectCategory(category);
+    if (!selected) return;
+    flowSelection = selected;
+    state.flowChoice = selected;
+    state.taskId = category === "move" ? "move-vfx"
+      : category === "character" ? "character-concept" : "creature-concept";
+    const stage = $("#pipelineStage");
+    if (stage && category !== "move") stage.value = "appearance";
+    renderAll();
+  }
+  function chooseRoute(route) {
+    const choice = flowSelection || state.flowChoice;
+    const next = taskFlow?.selectRoute(choice, route);
+    if (!next) return;
+    chooseFlow(next.category, next.route, next.step);
+  }
+  function chooseFlow(category, route, step) {
+    const selected = taskFlow?.resolve(category, route, step);
+    if (!selected) return;
+    flowSelection = {category, route, step};
+    state.flowChoice = flowSelection;
+    state.taskId = selected.taskId;
+    state.currentRound = selected.stage === "portrait" ? 1 : 0;
+    const stage = $("#pipelineStage");
+    if (stage) stage.value = selected.stage;
+    if (selected.stage === "colab" || selected.stage === "blender") {
+      const o = taskOpts(task());
+      o.scope = "single";
+      if (route === "text") { o.source_pack = ""; o.input_img = ""; }
+      else {
+        const pkg = getActivePkg();
+        if (pkg && !is3dType(pkg.type) && pkg.status === "ok" &&
+          (category === "character" ? pkg.type === "character-concept" : pkg.type === "creature-concept")) {
+          o.source_pack = pkg.id;
+        }
+      }
+    }
+    window.COSMI_PIPELINE?.syncStageActions();
+    renderAll();
+  }
   function renderTasks() {
-    const box = $("#tasks"); box.replaceChildren();
-    TASKS.forEach(t => {
-      box.append(el("button", {
-        class: "task" + (t.id === state.taskId ? " on" : ""), type: "button",
-        onclick: () => { state.taskId = t.id; state.currentRound = 1; renderAll(); }
-      }, el("span", { class: "tname" }, t.zh), el("span", { class: "tmeta" }, t.id + " · 建議 " + (t.platform === "gemini" ? "Gemini" : "ChatGPT"))));
+    const box = $("#tasks"), categories = $("#taskCategories"), routes = $("#taskRoutes"), detail = $("#taskFlowDetail");
+    if (!taskFlow || !box || !categories || !routes || !detail) return;
+    const choice = flowSelection || state.flowChoice;
+    const active = currentFlow();
+    const kind = choice?.category || null;
+    categories.replaceChildren(...taskFlow.categories.map(c => el("button", {
+      type:"button", class:c.id === kind ? "on" : "",
+      "aria-pressed":String(c.id === kind), "aria-label":"選擇" + c.zh,
+      "data-tip":"先選擇" + c.zh + "，再選管線",
+      onclick:()=>chooseCategory(c.id)
+    }, c.zh)));
+    if (!kind) {
+      routes.replaceChildren();
+      box.replaceChildren();
+      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"① 先選擇角色、宙獸或招式。"));
+      renderDesigned();
+      return;
+    }
+    const routeDefs = kind === "move"
+      ? [{id:"move", label:"招式特效（VFX）", tip:"選擇招式特效管線，生成規格、分鏡、圖層與序列圖"}]
+      : [
+        {id:"image", label:"Image-to-3D", tip:"先生成並審查立繪，再選 Colab＋Blender 或 AI＋Blender"},
+        {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
+      ];
+    routes.replaceChildren(...routeDefs.map(d => el("button", {
+      type:"button", class:d.id === choice.route ? "on" : "",
+      "aria-pressed":String(d.id === choice.route), "aria-label":d.tip, "data-tip":d.tip,
+      onclick:()=>chooseRoute(d.id)
+    },d.label)));
+    if (!choice.route || !active) {
+      box.replaceChildren();
+      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"② 請選擇管線，接著點選流程圖節點。"));
+      renderDesigned();
+      return;
+    }
+    const rows = taskFlow.diagram(kind, choice.route);
+    function node(step) {
+      return el("button", {
+        type:"button", class:"task" + (step.id === active.step ? " on" : "") + (step.alternate ? " is-alternate" : ""),
+        "aria-pressed":String(step.id === active.step),
+        "aria-label":"選擇步驟 " + step.name, "data-tip":step.detail,
+        onclick:()=>chooseFlow(kind,choice.route,step.id)
+      },el("span",{class:"tname"},step.name),el("span",{class:"tmeta"},step.output));
+    }
+    const elements = [];
+    rows.forEach((row,i) => {
+      if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
+      if (row.type === "branch") {
+        elements.push(el("div",{class:"flow-branch"},
+          el("p",{class:"flow-branch-label"},row.label),
+          el("div",{class:"flow-branch-options"},row.steps.map(node))));
+      } else {
+        elements.push(el("div",{class:"flow-row"},node(row.steps[0])));
+      }
     });
+    box.replaceChildren(...elements);
+    detail.replaceChildren(
+      el("strong",{},active.name),
+      el("p",{},active.detail),
+      el("p",{},"產出：",el("code",{},active.output)),
+      el("p",{class:"muted"},"點選流程節點以切換右側 Prompt 與對應任務選項。")
+    );
     renderDesigned();
   }
 
@@ -883,6 +996,7 @@
     state.preset = lineId;
     state.presetChar = null;
     state.taskId = taskId;
+    flowSelection = null; state.flowChoice = null;
     state.currentRound = 1;
     const o = state.opts[taskId] || (state.opts[taskId] = {});
     if (stage) o.stage = stage;
@@ -898,6 +1012,7 @@
     state.preset = null;
     state.presetChar = charId;
     state.taskId = taskId || "character-concept";
+    flowSelection = null; state.flowChoice = null;
     state.currentRound = 1;
     const o = state.opts[state.taskId] || (state.opts[state.taskId] = {});
     if (state.taskId === "character-model-rig") {
@@ -970,7 +1085,14 @@
   }
 
   function renderDesigned() {
-    const box = $("#designed"); if (!box) return;
+    const box = $("#designed"), host = $("#designedShortcut");
+    if (!box) return;
+    const hasPreset = Boolean(state.preset || state.presetChar);
+    if (host) host.hidden = !hasPreset;
+    if (!hasPreset) {
+      box.replaceChildren();
+      return;
+    }
     box.replaceChildren();
 
     if (state.preset) {
@@ -1023,18 +1145,7 @@
       return;
     }
 
-    // 當前無 preset 時，顯示精簡快速導覽卡片
-    const gotoCard = el("div", { class: "designed-nav-card", onclick: () => setViewMode("designed") },
-      el("div", { style: "display:flex;align-items:center;justify-content:space-between" },
-        el("span", { style: "font-weight:600;font-size:12px;color:var(--text)" }, "📋 已設計項目庫"),
-        el("span", { class: "f-badge accent" }, `${DESIGNED.length} 線 · ${DESIGNED_CHARACTERS.length} 位`)
-      ),
-      el("div", { class: "muted", style: "font-size:11px;margin-top:4px" }, "點選前往已設計項目審查台，檢閱各階設定、關聯審查包並一鍵鍛造。"),
-      el("div", { style: "display:flex;justify-content:flex-end;margin-top:6px" },
-        el("span", { style: "color:var(--accent);font-size:11.5px;font-weight:600" }, "前往已設計頁籤 →")
-      )
-    );
-    box.append(gotoCard);
+
   }
 
   // ==================== 已設計項目台 (二欄審查檢閱工作台) ====================
@@ -1787,7 +1898,7 @@
   function renderDesignedDesk() {
     renderDesignedRail();
     renderDesignedDetail();
-    if ($("#designedList")) renderDesignedList();
+    if (designedState.mode === "cards") renderDesignedList();
   }
 
   // ==================== 我的最愛 Prompt 與已設計清單管理 ====================
@@ -2247,7 +2358,7 @@
         const topMatch = matches[0];
         const statusMap = {
           approved: { zh: "✅ 已核准通過", cls: "ok" },
-          reject: { zh: "❌ 退回拒絕", cls: "danger" },
+          reject: { zh: "退回拒絕", cls: "danger" },
           pending: { zh: "🟨 待修改 / 待審", cls: "warn" }
         };
         const stInfo = statusMap[topMatch.status] || { zh: "📦 審查包收錄中", cls: "ok" };
@@ -2312,33 +2423,8 @@
   function renderDesignedList() {
     const box = $("#designedList"); if (!box) return;
     box.replaceChildren();
-
-    const searchInput = $("#designedSearch");
-    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
-
-    const filteredLines = DESIGNED.filter(d => {
-      if (!query) return true;
-      const id = (d.line_id || "").toLowerCase();
-      const code = (d.code_zh || "").toLowerCase();
-      const title = (d.title_zh || "").toLowerCase();
-      const elem = (d.element || "").toLowerCase();
-      const arch = (d.concept?.archetype || "").toLowerCase();
-      const stagesStr = (d.concept?.locked?.stages || []).map(s => s.name_zh + " " + s.name_en + " " + s.creature_id).join(" ").toLowerCase();
-      return id.includes(query) || code.includes(query) || title.includes(query) || elem.includes(query) || arch.includes(query) || stagesStr.includes(query);
-    });
-
-    const filteredChars = DESIGNED_CHARACTERS.filter(c => {
-      if (!query) return true;
-      const id = (c.id || "").toLowerCase();
-      const nameZh = (c.name_zh || "").toLowerCase();
-      const nameEn = (c.name_en || "").toLowerCase();
-      const role = (c.role || "").toLowerCase();
-      const region = (c.region || "").toLowerCase();
-      const ethnicity = (c.ethnicity || "").toLowerCase();
-      const vessel = (c.vessel || "").toLowerCase();
-      const bio = (c.biography || "").toLowerCase();
-      return id.includes(query) || nameZh.includes(query) || nameEn.includes(query) || role.includes(query) || region.includes(query) || ethnicity.includes(query) || vessel.includes(query) || bio.includes(query);
-    });
+    const {lines:filteredLines, chars:filteredChars} = getDesignedFilteredItems();
+    const query = $("#designedSearch")?.value.trim().toLowerCase() || "";
 
     const countEl = $("#designedCount");
     if (countEl) countEl.textContent = `(${DESIGNED.length} 宙獸線 · ${DESIGNED_CHARACTERS.length} 角色${query ? "，符合 " + (filteredLines.length + filteredChars.length) : ""})`;
@@ -2792,7 +2878,7 @@
     if (chosenPkg) {
       box.append(el("div", { class: "subhead" },
         el("h3", {}, "審查台來源立繪包：" + chosenPkg.id),
-        el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.source_pack = ""; o.input_img = ""; renderAll(); } }, "✕ 取消選擇")
+        el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.source_pack = ""; o.input_img = ""; renderAll(); } }, "取消選擇")
       ));
       box.append(el("p", { class: "muted" }, "概念與造型參照自審查台讀入之立繪包（主體 " + (chosenPkg.subjectId || "—") + " · " + (chosenPkg.type === "character-concept" || chosenPkg.id.startsWith("chr") ? "角色" : "宙獸") + " · 共 " + (chosenPkg.images ? chosenPkg.images.length : 0) + " 張圖）。"));
       if (chosenPkg.concept) {
@@ -2901,7 +2987,9 @@
     const tabsBox = $("#forge3dModeTabs");
     if (!tabsBox) return;
     const t = task(), o = taskOpts(t);
-    if (!is3dType(t.id)) {
+    // Every available 3D pipeline is currently single-subject; do not show
+    // a selector whose only choice is "single".
+    if (!is3dType(t.id) || window.COSMI_PIPELINE?.supports({task:t})) {
       tabsBox.style.display = "none";
       return;
     }
@@ -2954,7 +3042,9 @@
 
   function renderOptions() {
     const t = task(), o = taskOpts(t), box = $("#options"); box.replaceChildren();
-    t.options.filter(d => (!window.COSMI_PIPELINE?.supports({task:t}) || ["source_pack", "stage"].includes(d.key)) && d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
+    const flow = currentFlow();
+    const isText3d = flow?.step === "prompt_3d";
+    t.options.filter(d => (!window.COSMI_PIPELINE?.supports({task:t}) || ["source_pack", "input_img", "stage"].includes(d.key)) && !(isText3d && ["source_pack", "input_img"].includes(d.key)) && d.key !== "scope" && (!d.when || d.when(o)) && (d.key !== "stage" || !isCreatureStageTask(t, o))).forEach(d => {
       const items = d.items ? d.items(o, env()) : [];
       let control;
       if (is3dType(t.id) && d.key === "source_pack") {
@@ -3003,9 +3093,7 @@
 
         const quickTools = el("div", { style: "display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;" },
           el("span", { class: "muted", style: "font-size:11px;" }, (isChr3d ? "角色" : isCr3d ? "宙獸" : "") + "立繪包：" + conceptPkgs.length + " 包"),
-          el("button", { type: "button", class: "btn mini ghost", title: "載入系統內建測試包至審查台", onclick: () => { loadSampleFixtures(); renderAll(); } }, "🧪 載入範例包"),
           el("button", { type: "button", class: "btn mini ghost", title: "從本機選取資產資料夾", onclick: () => $("#folderFileInput").click() }, "載入資料夾"),
-          el("button", { type: "button", class: "btn mini ghost", title: "前往成果審查台進行立繪檢閱", onclick: () => setViewMode("review") }, "🔍 轉至審查台")
         );
 
         control = el("div", { class: "pack-picker-box" }, packSelect, textInput, quickTools);
@@ -3043,7 +3131,7 @@
           if (o.input_img) {
             badge = el("div", { class: "selected-img-badge" },
               el("span", {}, "✅ 指定輸入圖：", el("code", {}, o.input_img), " (" + describeImg(o.input_img) + ")"),
-              el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.input_img = ""; renderAll(); } }, "✕ 重設為全套視圖")
+              el("button", { type: "button", class: "btn mini ghost", onclick: () => { o.input_img = ""; renderAll(); } }, "重設為全套視圖")
             );
           }
 
@@ -3079,7 +3167,7 @@
 
     let displayedText = b.text;
 
-    if (b.rounds && b.rounds.length) {
+    if (b.rounds && b.rounds.length && $("#pipelineStage")?.value !== "portrait_3d") {
       if (state.currentRound === undefined || state.currentRound === null) {
         state.currentRound = 1;
       }
@@ -3118,12 +3206,16 @@
       displayedText = b.text;
     }
 
+    if (["portrait_3d","encyclopedia"].includes($("#pipelineStage")?.value)) displayedText = window.COSMI_PIPELINE.build(b.ctx);
     $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : displayedText;
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
-    const dir = window.COSMI_DRIVE.packageDir(t.id);
-    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait" && !window.COSMI_PIPELINE?.isPortraitAuto();
+    const encyclopediaKind = t.id === "move-vfx" ? "moves" : t.id.startsWith("character") ? "characters" : "creatures";
+    const wikiPath = window.COSMI_WIKI.describe(b.ctx).path;
+    const dir = $("#pipelineStage")?.value === "encyclopedia"
+      ? "wiki/" + encyclopediaKind : window.COSMI_DRIVE.packageDir(t.id);
+    const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && ["portrait", "portrait_3d"].includes($("#pipelineStage")?.value) && !window.COSMI_PIPELINE?.isPortraitAuto();
     const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
     $("#download").hidden = Boolean(portraitCopyOnly);
     if (portraitAuto && state.currentRound !== 0 && b.rounds?.length) {
@@ -3143,7 +3235,7 @@
           : portraitAuto
           ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果包存放：", el("code", {}, dir + "/" + b.ctx.taskId + "/"), "。逐檔存入資產目錄，或載入本機資料夾後按「儲存資產目錄至 Drive」。"),
+        el("li", {}, "成果包存放：", el("code", {}, $("#pipelineStage")?.value === "encyclopedia" ? wikiPath : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
         el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
@@ -3168,7 +3260,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedList(); renderDesignedDesk(); updateFavButton();
+    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
     save();
   }
 
@@ -3369,11 +3461,12 @@
 
   async function loadAssetFiles(files, file, {silent = false} = {}) {
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
-    let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
+    const manifestPath = window.COSMI_MODEL_REVIEW.selectRootManifest(Object.keys(files));
+    if (manifestPath) prefix = manifestPath.slice(0, -"manifest.json".length);
+    let animSpec = null, rigSpec = null, glbFile = null, animFiles = [], glbCandidates = [];
     for (const path in files) {
-      if (path.endsWith("manifest.json")) {
+      if (path === manifestPath) {
         try { manifestData = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
-        prefix = path.slice(0, path.lastIndexOf("manifest.json"));
       } else if (path.endsWith("concept.json")) {
         try { conceptData = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
       } else if (path.endsWith(".prompt.md") || path.endsWith("prompt.md") || path.endsWith("prompt.txt")) {
@@ -3384,12 +3477,18 @@
         try { rigSpec = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
       } else if (path.endsWith(".glb")) {
         const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
-        const blob = new Blob([files[path]], { type: "model/gltf-binary" });
-        glbFile = { path: rel, url: URL.createObjectURL(blob), buffer: files[path].buffer, uint8: files[path] };
+        glbCandidates.push({path:rel,key:path});
       } else if (path.endsWith(".fbx") && (path.includes("anim") || path.includes("models"))) {
         const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
         animFiles.push({ path: rel, size: files[path].length });
       }
+    }
+    // Drive initially imports only metadata/previews; binary files are deferred.
+    const selectedGlb = glbCandidates.length ? window.COSMI_MODEL_REVIEW.selectModelFile(glbCandidates, manifestData || {}) : null;
+    if (selectedGlb) {
+      const bytes = files[selectedGlb.key];
+      const blob = new Blob([bytes], {type:"model/gltf-binary"});
+      glbFile = {path:selectedGlb.path,url:URL.createObjectURL(blob),buffer:window.COSMI_MODEL_REVIEW.exactBuffer(bytes),uint8:bytes};
     }
     let alignedStaged = null;
     if (/\.zip$/i.test(file.name) && (!manifestData || !conceptData)) {
@@ -4539,7 +4638,7 @@
     if (!pkg) return [];
     if (pkg.animSpec?.clips?.length) return pkg.animSpec.clips;
     if (linkedPkg?.animSpec?.clips?.length) return linkedPkg.animSpec.clips;
-    if (reviewState.three.clips?.length) {
+    if (reviewState.three.clips?.length && [pkg.id, linkedPkg?.id].includes(reviewState.three.loadedPkgId)) {
       return reviewState.three.clips.map(c => ({
         clip: c.name,
         description: getClipZh(c.name, pkg),
@@ -4550,6 +4649,7 @@
         events: []
       }));
     }
+    if (pkg.glbFile || pkg.driveFolderId) return [];
     if (is3dType(pkg.type) || pkg.id.startsWith("mdl")) {
       const isChr = pkg.type === "character-model-rig" || pkg.subjectId?.startsWith("chr") || (pkg.id.startsWith("mdl") && pkg.manifest?.source_pack?.startsWith("chr"));
       const list = isChr ? (C.CLIPS?.character || C.ACTIONS?.character || []) : (C.CLIPS?.creature || C.ACTIONS?.creature || []);
@@ -4682,7 +4782,7 @@
     if (!glbBuffer && targetPkg.rawFiles) {
       for (const p in targetPkg.rawFiles) {
         if (p.endsWith(".glb")) {
-          glbBuffer = targetPkg.rawFiles[p].buffer;
+          glbBuffer = window.COSMI_MODEL_REVIEW.exactBuffer(targetPkg.rawFiles[p]);
           break;
         }
       }
@@ -4878,6 +4978,10 @@
       clip = three.clips.find(c => c.name === altName || c.name.endsWith(altName));
     }
     if (!clip) {
+      if (pkg?.glbFile || pkg?.driveFolderId) {
+        $("#stage3dClipBadge").textContent = "模型未包含此動畫：" + clipName;
+        return;
+      }
       const allClips = getPackageClips(pkg);
       const spec = allClips.find(c => c.clip === clipName || c.clip === clipName.replace(/^(chr_|cr_)/, ""));
       const dur = spec ? spec.duration_sec : 1.5;
@@ -5115,7 +5219,7 @@
             renderPanelAnims(pkg, linkedPkg);
             toast("已重設動作驗收狀態");
           } }, "🔄 重設驗收"),
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportAnimReviewReport(targetPkg, clips, verifiedMap) }, "⬇ 匯出動作報告 (.json)")
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportAnimReviewReport(targetPkg, clips, verifiedMap) }, "匯出動作報告 (.json)")
         )
       )
     );
@@ -5380,7 +5484,7 @@
         el("h4", {}, "原始 Prompt 文本（完整內容）"),
         el("textarea", { class: "prompt-raw-box", readonly: true, spellcheck: "false" }, getFullPromptText(pkg)),
         el("div", { style: "display:flex;gap:6px;margin-top:6px" },
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => download(pkg.id + ".prompt.md", getFullPromptText(pkg), "text/markdown") }, "⬇ 下載 prompt.md"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => download(pkg.id + ".prompt.md", getFullPromptText(pkg), "text/markdown") }, "下載 prompt.md"),
           el("button", { class: "btn ghost mini", type: "button", onclick: () => {
             const upg = upgradePackageFormat(pkg);
             if (upg) showUpgradeModal(upg);
@@ -5515,15 +5619,15 @@
       box.append(el("h4", {}, "審查覆核意見"));
       const reviewBox = el("div", { class: "review-box" },
         el("div", { class: "seg" },
-          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "✅ 核准通過"),
-          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "🟨 待修改"),
+          el("button", { class: "segb" + (pkg.status === "ok" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "ok") }, "核准通過"),
+          el("button", { class: "segb" + (pkg.status === "pending" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "pending") }, "待修改"),
           el("button", { class: "segb" + (pkg.status === "reject" ? " on" : ""), type: "button", onclick: () => reviewPackage(pkg, "reject") }, "❌ 退回拒絕")
         ),
         el("textarea", { id: "revNote", placeholder: "填寫人工審查意見（例如：身高比例良好，但服裝配色需微調；臉部表情需更生動...）", onchange: e => { saveReview(pkg, e.target.value); } }, getReviewNote(pkg)),
         el("div", { style: "display:flex;gap:6px;margin-top:6px;flex-wrap:wrap" },
-          el("button", { class: "btn mini", type: "button", onclick: async () => { try { await window.COSMI_DRIVE.saveNote(pkg, $("#revNote")?.value || ""); toast("已將審查意見儲存至 Drive"); } catch(e) { toast(e.message); } } }, "💾 儲存審查意見"),
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportReviewReport(pkg) }, "⬇ 下載審查報告 (.json)"),
-          el("button", { class: "btn ghost mini", type: "button", title: "移至備份區（自動加入時間戳）", onclick: () => backupActivePackage(pkg) }, "📦 移至備份區 (含時間戳)")
+          el("button", { class: "btn mini", type: "button", onclick: async () => { try { await window.COSMI_DRIVE.saveNote(pkg, $("#revNote")?.value || ""); toast("已將審查意見儲存至 Drive"); } catch(e) { toast(e.message); } } }, "儲存審查意見"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => exportReviewReport(pkg) }, "下載審查報告 (.json)"),
+          el("button", { class: "btn ghost mini", type: "button", title: "移至備份區（自動加入時間戳）", onclick: () => backupActivePackage(pkg) }, "移至備份區 (含時間戳)")
         )
       );
       box.append(reviewBox);
@@ -5539,8 +5643,8 @@
       const backupCmd = `Move-Item -Path "Art\\_incoming\\${pkg.id}.zip" -Destination "Art\\_backup\\${pkg.id}_${ts}.zip" -Force`;
       box.append(
         el("div", { style: "display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;" },
-          el("button", { class: "btn mini", type: "button", onclick: () => unpackPackageToDisk(pkg) }, "⚡ 實體解壓至本專案審查目錄"),
-          el("button", { class: "btn ghost mini", type: "button", onclick: () => deployPackageToGame(pkg) }, "🚀 交付至 cosmos_chimera")
+          el("button", { class: "btn mini", type: "button", onclick: () => unpackPackageToDisk(pkg) }, "實體解壓至本專案審查目錄"),
+          el("button", { class: "btn ghost mini", type: "button", onclick: () => deployPackageToGame(pkg) }, "交付至 cosmos_chimera")
         ),
         el("p", { class: "muted" }, "本專案解壓審查指令（PowerShell）："),
         el("div", { class: "cmd" }, el("code", {}, psUnpackCmd), el("button", { type: "button", class: "btn ghost mini", onclick: () => copyText(psUnpackCmd, "已複製本專案解壓指令") }, "複製")),
@@ -5677,7 +5781,7 @@
         catalog: C.version, seed: state.seed, platform: state.platform, taskId: state.taskId, includeReview: state.includeReview,
         character: state.character, creature: state.creature, locks: state.locks, opts: state.opts, notes: state.notes,
         subjectIds: state.subjectIds, history: state.history, root: state.root, customOptions: state.customOptions,
-        preset: state.preset, presetChar: state.presetChar
+        preset: state.preset, presetChar: state.presetChar, flowChoice: state.flowChoice
       }));
     } catch (e) {}
   }
@@ -5692,6 +5796,7 @@
       Object.assign(state, {
         platform: d.platform || "chatgpt", history: d.history || [], root: d.root && !/^(?:[a-z]:|[\\/])/i.test(d.root) ? d.root : DEFAULT_ROOT, notes: d.notes || "",
         customOptions: d.customOptions || {},
+        flowChoice: d.flowChoice || null,
         preset: DESIGNED.some(x => x.line_id === d.preset) ? d.preset : null,
         presetChar: DESIGNED_CHARACTERS.some(x => x.id === d.presetChar) ? d.presetChar : null
       });
@@ -5717,7 +5822,6 @@
     $("#viewBtnDesigned")?.addEventListener("click", () => setViewMode("designed"));
     $("#viewBtnReview").addEventListener("click", () => setViewMode("review"));
     $("#viewBtnSettings")?.addEventListener("click", () => setViewMode("settings"));
-    $("#btnGoDesignedFromSubhead")?.addEventListener("click", () => setViewMode("designed"));
 
     // 已設計台分類切換
     $$("#designedCatSeg .segb").forEach(btn => {
@@ -5775,10 +5879,18 @@
     $("#reroll").addEventListener("click", () => reseed(newSeed(), true));
     $("#seed").addEventListener("change", e => reseed(e.target.value, true));
     $("#notes").addEventListener("input", e => { state.notes = e.target.value; renderOutput(); save(); });
+    function ensureWikiOnPrompt(ctx) {
+      if(!window.COSMI_DRIVE?.ensureWiki || !window.COSMI_PIPELINE?.supports(ctx))return;
+      void window.COSMI_DRIVE.ensureWiki(ctx).catch(e => {
+        console.warn("尚未同步圖鑑："+e.message);
+        toast("圖鑑未同步至 Drive："+e.message);
+      });
+    }
     $("#copy").addEventListener("click", () => {
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
+      ensureWikiOnPrompt(b.ctx);
       copyText($("#prompt").value, `已複製本步驟 Prompt (${staged.taskId})；格式參數請另存 JSON`);
       record();
     });
@@ -5788,6 +5900,7 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[0]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 1;
       renderOutput();
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
@@ -5801,6 +5914,7 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[1]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 2;
       renderOutput();
       copyText(b.rounds[1].prompt, `已複製第 2 輪 (三視圖) Prompt！請貼入同對話接續生成`);
@@ -5811,12 +5925,13 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[2]) return;
+      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 3;
       renderOutput();
       copyText(b.rounds[2].prompt, `已複製第 3 輪 (主立繪) Prompt！請貼入同對話接續生成`);
       record();
     });
-    $("#download").addEventListener("click", () => { download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
+    $("#download").addEventListener("click", () => { ensureWikiOnPrompt(lastBuild.ctx); download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
     $("#export").addEventListener("click", () => {
       const b = lastBuild; if (!b.ctx.concept) { toast("此任務沒有概念"); return; }
       download(b.ctx.subjectId + ".concept.json", JSON.stringify(b.ctx.concept, null, 2), "application/json");
@@ -6124,8 +6239,14 @@
     clearDrivePackages: () => { reviewState.packages = reviewState.packages.filter(p => !p.driveFolderId); },
     persistReview: saveReview,
     setPipelineStage: stage => {
+      const flow = currentFlow();
+      if (flow && flow.category === "move" && stage !== "encyclopedia") { renderAll(); return; }
+      const kind = flow?.category || (task().id.startsWith("character") ? "character" : "creature");
+      const route = stage === "portrait_3d" ? "text" : flow?.route || "image";
+      const matching = taskFlow?.steps(kind,route).find(s=>s.stage===stage);
+      if (matching) { chooseFlow(kind,route,matching.id); return; }
       const isCharacter = task().id.startsWith("character");
-      if (["appearance", "portrait"].includes(stage)) state.taskId = isCharacter ? "character-concept" : "creature-concept";
+      if (["appearance", "portrait", "portrait_3d", "review_portrait"].includes(stage)) state.taskId = isCharacter ? "character-concept" : "creature-concept";
       if (["colab", "blender"].includes(stage)) {
         const pkg = getActivePkg();
         const chr = pkg && !is3dType(pkg.type) ? pkg.type === "character-concept" : isCharacter;
@@ -6137,6 +6258,7 @@
       }
       renderAll();
     },
+    currentContext: () => build().ctx,
     settings: () => ({assetId: lastBuild.ctx.taskId, subjectId: lastBuild.ctx.subjectId, appearance: window.COSMI_PIPELINE.appearance(lastBuild.ctx),
       delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
@@ -6151,10 +6273,10 @@
       const b = build();
       if (b.errors.length) throw Error(b.errors.join("；"));
       const stage = document.getElementById("pipelineStage")?.value || "task";
-      const portrait = stage === "portrait" && window.COSMI_PIPELINE?.supports(b.ctx);
+      const portrait = ["portrait", "portrait_3d"].includes(stage) && window.COSMI_PIPELINE?.supports(b.ctx);
       return {
         path: "prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
-        text: portrait ? b.text : ($("#prompt")?.value || b.text)
+        text: portrait ? (stage === "portrait_3d" ? ($("#prompt")?.value || b.text) : b.text) : ($("#prompt")?.value || b.text)
       };
     },
     showPrompt: text => {

@@ -4,7 +4,10 @@ from pathlib import Path
 model,output,budget=Path(sys.argv[sys.argv.index("--")+1]),Path(sys.argv[sys.argv.index("--")+2]),int(sys.argv[sys.argv.index("--")+3])
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=str(model))
+custom_shapes={bone.custom_shape for obj in bpy.context.scene.objects if obj.type=="ARMATURE"
+               for bone in obj.pose.bones if bone.custom_shape}
 meshes=[o for o in bpy.data.objects if o.type=="MESH"]
+meshes=[o for o in meshes if o not in custom_shapes]
 rigs=[o for o in bpy.data.objects if o.type=="ARMATURE"]
 triangles=sum(sum(len(p.vertices)-2 for p in obj.data.polygons) for obj in meshes)
 vertices=sum(len(obj.data.vertices) for obj in meshes)

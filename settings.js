@@ -49,12 +49,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   catch(e){message("清理快取失敗："+e.message);}
   await refresh();
  });
- $("settingsForceSync")?.addEventListener("click",async()=>{
-  message("正在從 Google Drive 強制同步…");
-  try{await window.COSMI_DRIVE?.syncPackages({force:true});message("Drive 強制同步完成。");}
-  catch(e){message("同步失敗："+e.message);}
-  await refresh();
- });
  $("settingsSignOut")?.addEventListener("click",()=>window.COSMI_DRIVE?.signOut());
  $("settingsCheckVersion")?.addEventListener("click",checkVersion);
  window.addEventListener("cosmi:authorized",()=>{void refresh();void checkVersion();});

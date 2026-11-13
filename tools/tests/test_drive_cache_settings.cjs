@@ -55,7 +55,7 @@ test('Drive restores cached previews after OAuth verification and checks current
 });
 test('settings has accessible responsive controls and is present in production allowlist',()=>{
  for(const id of ['viewBtnSettings','settingsView','settingsCacheEnabled','settingsAutoSync',
-  'settingsCacheTTL','settingsClearCache','settingsForceSync','settingsSignOut',
+  'settingsCacheTTL','settingsClearCache','settingsSignOut',
   'settingsPortraitMode','settingsToolVersion','settingsCatalogVersion','settingsCheckVersion']){
   assert.match(html,new RegExp('id="'+id+'"'));
  }

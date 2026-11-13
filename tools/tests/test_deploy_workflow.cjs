@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const workflow = fs.readFileSync(path.resolve(__dirname, '../../.github/workflows/deploy.yml'), 'utf8');
+const workflow = fs.readFileSync(path.resolve(__dirname, '../../.github/workflows/deploy.yml'), 'utf8').replace(/\r\n/g, '\n');
 const [verify, deploy] = workflow.split(/^  deploy:\s*$/m);
 
 test('pull requests run every Node regression test before Pages deployment', () => {
@@ -11,7 +11,10 @@ test('pull requests run every Node regression test before Pages deployment', () 
   assert.match(verify, /^  verify:\s*$/m);
   assert.match(verify, /node --test tools\/tests\/\*\.cjs/);
   assert.ok(deploy, 'deploy job must be separate from PR verification');
-  assert.match(deploy, /^    needs: verify$/m);
+  assert.match(deploy, /^    needs: \[verify, blender-smoke\]$/m);
+  assert.match(verify, /^  blender-smoke:$/m);
+  assert.match(verify, /Install Blender/);
+  assert.match(verify, /test_anime3d_blender_smoke\.py/);
   assert.match(deploy, /^    if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request'$/m);
   assert.match(deploy, /^    permissions:\n      contents: read\n      pages: write\n      id-token: write$/m);
 });
