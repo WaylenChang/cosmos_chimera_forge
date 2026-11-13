@@ -129,6 +129,7 @@ async function syncPackages({force=false}={}){
    if(glb&&!pkg.glbFile)pkg.glbFile={path:glb.path,deferred:true};
    if(reviewRecord){pkg.status=reviewRecord.status;pkg.sourcePack=reviewRecord.source_pack;pkg.reviewRecord=reviewRecord;}
    if(dir.startsWith("03_completed/"))pkg.completed=true;
+   window.COSMI_MODEL_REVIEW?.onPackagesChanged();
    return pkg;
   };
   const status=message=>{$("driveStatus").textContent=message;};

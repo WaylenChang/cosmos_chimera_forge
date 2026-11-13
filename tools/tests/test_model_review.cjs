@@ -57,6 +57,12 @@ test('actual asset parser retains root identity and selects the final model with
   assert.equal(pkg.glbFile.path,'models/final.glb');
   assert.deepEqual(Array.from(new Uint8Array(pkg.glbFile.buffer)),[1,2,3]);
   URL.revokeObjectURL(pkg.glbFile.url);
+  const deferred = await parse({
+    'drive-asset/manifest.json':json({task_id:'drive-asset',task_type:'character-model-rig',files:[{path:'models/final.glb',kind:'model',level:'L1'}]}),
+    'drive-asset/animations/animations_manifest.json':json({clips:[{name:'idle'}]})
+  }, {name:'drive-asset'}, {silent:true});
+  assert.equal(deferred.id,'drive-asset');
+  assert.equal(deferred.glbFile,null,'metadata-only Drive imports defer binary loading');
 });
 test('Pages build includes viewer code and runtime without embedding private assets', () => {
   const html = fs.readFileSync(path.join(root,'index.html'),'utf8');

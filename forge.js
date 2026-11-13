@@ -3483,7 +3483,8 @@
         animFiles.push({ path: rel, size: files[path].length });
       }
     }
-    const selectedGlb = window.COSMI_MODEL_REVIEW.selectModelFile(glbCandidates, manifestData || {});
+    // Drive initially imports only metadata/previews; binary files are deferred.
+    const selectedGlb = glbCandidates.length ? window.COSMI_MODEL_REVIEW.selectModelFile(glbCandidates, manifestData || {}) : null;
     if (selectedGlb) {
       const bytes = files[selectedGlb.key];
       const blob = new Blob([bytes], {type:"model/gltf-binary"});
