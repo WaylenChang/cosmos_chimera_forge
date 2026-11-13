@@ -224,7 +224,9 @@ test('production build excludes asset and prompt directories and requires OAuth 
   assert.match(fs.readFileSync(path.join(root, '_site/drive-config.js'), 'utf8'), /123-test.apps.googleusercontent.com/);
   assert.match(fs.readFileSync(path.join(root, '_site/index.html'), 'utf8'), /id="driveApp" hidden/);
   const builtHtml = fs.readFileSync(path.join(root, '_site/index.html'), 'utf8');
-  for (const asset of ['forge.js','drive-storage.js','model-review.js','model-review.css','drive-config.js']) {
+  assert.ok(!names.includes('model-review.css'), 'retired duplicate 3D viewer CSS must not ship');
+  assert.doesNotMatch(builtHtml, /model-review\.css/);
+  for (const asset of ['forge.js','drive-storage.js','model-review.js','drive-config.js']) {
     const digest = require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'_site',asset))).digest('hex').slice(0,12);
     assert.ok(builtHtml.includes(`="${asset}?v=${digest}"`), asset+' must bypass stale Pages cache using its content hash');
   }

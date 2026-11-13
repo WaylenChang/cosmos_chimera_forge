@@ -64,14 +64,21 @@ test('actual asset parser retains root identity and selects the final model with
   assert.equal(deferred.id,'drive-asset');
   assert.equal(deferred.glbFile,null,'metadata-only Drive imports defer binary loading');
 });
-test('Pages build includes viewer code and runtime without embedding private assets', () => {
+test('Pages build ships unified 3D review workbench without a second modal or private assets', () => {
   const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
   assert.ok(html.indexOf('src="model-review.js"') < html.indexOf('src="drive-storage.js"'));
-  assert.match(html,/id="modelReviewOpen"/);
+  assert.match(html,/id="stage3dView"/);
+  assert.match(html,/id="stage3dCanvas"/);
+  assert.doesNotMatch(html,/id="modelReviewOpen"/);
   const build = fs.readFileSync(path.join(root,'tools/build-site.mjs'),'utf8');
-  assert.match(build,/'model-review.js'/); assert.match(build,/'model-review.css'/);
+  assert.match(build,/'model-review.js'/);
+  assert.doesNotMatch(build,/'model-review.css'/);
   assert.ok(fs.statSync(path.join(root,'vendor/model-viewer.min.js')).size > 500000);
   const runtime = fs.readFileSync(path.join(root,'model-review.js'),'utf8');
   assert.ok(!runtime.includes('iframe')); assert.ok(!runtime.includes('access_token'));
-  assert.match(runtime,/COSMI_DRIVE\.read/);
+  assert.match(runtime,/openReviewPackage/);
+  const forge = fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/COSMI_DRIVE\.read\(/);
+  assert.match(forge,/descriptor\.model\.sha256/);
+  assert.match(forge,/stage3dClipSelect/);
 });

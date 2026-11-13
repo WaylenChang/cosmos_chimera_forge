@@ -18,7 +18,7 @@ test('one visible sign-out and one force-sync control', () => {
   assert.doesNotMatch(drive,/\$\("driveSignOut"\)/);
   assert.doesNotMatch(settings,/\$\("settingsForceSync"\)/);
   assert.match(settings,/COSMI_DRIVE\?\.signOut\(\)/);
-  assert.match(drive,/syncPackages\(\{force:true\}\)/);
+  assert.match(drive,/syncPackages\(\{\s*force:\s*true\s*\}\)/);
 });
 test('designed shortcut appears only for an active preset, not as a duplicate library link', () => {
   assert.match(html,/id="designedShortcut" hidden/);
