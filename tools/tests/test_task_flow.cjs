@@ -40,8 +40,12 @@ test('encyclopedia is integrated into appearance for character/creature and stan
     assert.match(flow.resolve(kind,route,'appearance').output,/wiki\//);
   }
   assert.equal(flow.resolve('move','move','encyclopedia').stage,'encyclopedia');
-  const rows=flow.diagram('creature','image');
-  assert.deepEqual(Array.from(rows.find(r=>r.type==='branch').steps,s=>s.id),['image_colab','image_blender']);
+  const rows=flow.diagram('creature');
+  const fork=rows.find(r=>r.type==='fork');
+  assert.deepEqual(Array.from(fork.lanes,l=>l.id),['image','text']);
+  assert.deepEqual(Array.from(fork.lanes[0].segments[2].steps,s=>s.id),['image_colab','image_blender']);
+  assert.equal(rows[0].steps[0].id,'appearance');
+  assert.equal(rows.at(-1).steps[0].id,'review_3d');
   assert.equal(flow.selectRoute(flow.selectCategory('move'),'move').step,'encyclopedia');
 });
 test('legacy task and stage can be mapped to new flow', () => {
@@ -54,7 +58,8 @@ test('legacy task and stage can be mapped to new flow', () => {
 test('page loads flow before forge and includes category, route, step and detail containers', () => {
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   assert.ok(html.indexOf('src="task-flow.js"') < html.indexOf('src="forge.js"'));
-  for(const id of ['taskCategories','taskRoutes','tasks','taskFlowDetail']) assert.match(html,new RegExp('id="'+id+'"'));
+  for(const id of ['taskCategories','tasks','taskFlowDetail']) assert.match(html,new RegExp('id="'+id+'"'));
+  assert.doesNotMatch(html,/id="taskRoutes"/);
 });
 test('post-model portrait does not ask for front view or T-pose', () => {
   const code=fs.readFileSync(path.join(root,'pipeline.js'),'utf8');
@@ -73,11 +78,11 @@ test('redundant task navigation and portrait auto controls are removed', () => {
   assert.doesNotMatch(pipeline,/\$\("portraitAutoRun"\)/);
   assert.match(html,/id="settingsSignOut"/);
 });
-test('category and route controls use text without mixed decorative icons', () => {
+test('category controls use text and do not display a route toggle', () => {
   const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
   assert.match(forge,/}, c\.zh\)\)\)/);
-  assert.match(forge,/label:"Image-to-3D"/);
-  assert.match(forge,/label:"Prompt-to-3D"/);
+  assert.doesNotMatch(forge,/function chooseRoute\(/);
+  assert.match(forge,/el\("span",\{class:"flow-lane-label"\},lane.label\)/);
 });
 
 test('production build ships the task chooser module', () => {
