@@ -152,3 +152,16 @@ test('minimal rail diagram exposes both image backends without text route header
   assert.match(html,/\.task-flow-list \.flow-lane, \.task-flow-list \.flow-parallel-track \{[^}]*border:0/);
   assert.doesNotMatch(forge,/lane\.label|segment\.label/);
 });
+
+test('concept fields keep label buttons and options in one row on desktop tablet and phone', () => {
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/class: "field concept-field"/);
+  assert.match(forge,/"data-concept-field": key/);
+  assert.match(forge,/el\("label", \{ for: controlId, title: f\.label/);
+  assert.match(html,/#forgeView #concept \.concept-field \{[\s\S]*?display:grid !important;/);
+  assert.match(html,/#forgeView #concept \.concept-field \{[\s\S]*?grid-template-columns:[^;]+!important;/);
+  assert.match(html,/#forgeView #concept \{[^}]*overflow-x:auto/);
+  assert.match(html,/#forgeView #concept \.concept-field > \.chips \{[\s\S]*?flex-wrap:nowrap/);
+  assert.match(html,/@media \(max-width:699px\) \{\s*#forgeView #concept \.concept-field/);
+});
