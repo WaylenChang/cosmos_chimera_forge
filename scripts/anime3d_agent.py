@@ -28,14 +28,16 @@ def api(key,method,path,payload=None,upload=None):
     if upload is not None:
         boundary="----cosmimera"+uuid.uuid4().hex
         ext=Path(upload).suffix.lower()
-        mime="image/png" if ext==".png" else "image/jpeg"
+        mime={".png":"image/png", ".webp":"image/webp"}.get(ext,"image/jpeg")
         prefix=(f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="source{ext}"\r\nContent-Type: {mime}\r\n\r\n').encode()
         data=prefix+Path(upload).read_bytes()+f'\r\n--{boundary}--\r\n'.encode()
         headers["Content-Type"]="multipart/form-data; boundary="+boundary
     elif payload is not None:
         data=json.dumps(payload).encode()
         headers["Content-Type"]="application/json"
-    for attempt in range(4):
+    # A failed POST response may still have created a billable task. Only GET
+    # requests can be retried without a provider idempotency guarantee.
+    for attempt in range(4 if method == "GET" else 1):
         req=urllib.request.Request(BASE+path,headers=headers,data=data,method=method)
         try:
             with urllib.request.urlopen(req,timeout=90) as response:obj=json.load(response)
@@ -43,7 +45,7 @@ def api(key,method,path,payload=None,upload=None):
                 raise RuntimeError("Tripo API rejection code "+str(obj.get("code")))
             return obj["data"]
         except urllib.error.HTTPError as exc:
-            if exc.code not in (429,500,502,503,504) or attempt==3:
+            if method != "GET" or exc.code not in (429,500,502,503,504) or attempt==3:
                 raise RuntimeError("Tripo HTTP "+str(exc.code)) from None
             retry=exc.headers.get("Retry-After","")
             time.sleep(min(int(retry) if retry.isdigit() else 3*2**attempt,120))
@@ -64,7 +66,7 @@ def route(spec):
     if kind=="mechanical" or (kind=="robot" and spec.get("surface_mode")=="rigid"):
         return {"mode":"manual_parts","rig_type":None,"clips":[],"unsupported":spec.get("requested_clips",[])}
     anatomy=spec.get("anatomy","biped")
-    rig=spec.get("rig_type") or ("quadruped" if anatomy.startswith("quadruped") and "wing" not in anatomy else "biped" if anatomy in ("biped","humanoid") else "others")
+    rig=spec.get("rig_type") or (anatomy if anatomy in NONBIPED else "biped" if anatomy in ("biped","humanoid") else "others")
     clips=spec.get("requested_clips",["idle","walk"])
     supported=[x for x in clips if (x in BIPED if rig=="biped" else x in NONBIPED.get(rig,{}))]
     return {"mode":"tripo","rig_type":rig,"clips":supported,"unsupported":[x for x in clips if x not in supported]}
@@ -77,16 +79,40 @@ def validate(root,spec,asset_id):
     source=spec["source_pack"]
     review=root/"reviews"/(source+".json")
     if not review.exists() or load(review).get("status")!="ok":raise ValueError("source portrait not approved")
-    folder=root/"01_portraits"/source
-    files=sorted((p for p in folder.rglob("*") if p.is_file() and p.suffix.lower() in (".png",".jpg",".jpeg")),key=lambda p:(0 if "front" in p.stem.lower() else 1,str(p))) if folder.exists() else []
+    folders=[root/"01_portraits"/source, root/"03_completed"/"portraits"/source]
+    available=[p for p in folders if p.is_dir()]
+    if len(available)>1:raise ValueError("ambiguous source portrait location")
+    folder=available[0].resolve() if available else folders[0].resolve()
+    manifest=folder/"manifest.json"
+    if manifest.is_file() and spec.get("subject_id") and load(manifest).get("subject_id")!=spec["subject_id"]:
+        raise ValueError("source portrait subject mismatch")
+    extensions=(".png",".jpg",".jpeg",".webp")
+    explicit=spec.get("source_image")
+    if explicit:
+        candidate=(folder/explicit).resolve()
+        if not candidate.is_relative_to(folder):raise ValueError("source_image escapes approved portrait")
+        files=[candidate] if candidate.is_file() and candidate.suffix.lower() in extensions else []
+    else:
+        files=sorted((p for p in folder.rglob("*") if p.is_file() and not p.is_symlink() and p.suffix.lower() in extensions),key=lambda p:(0 if "front" in p.stem.lower() else 1,str(p))) if folder.exists() else []
     if not files:raise ValueError("source image missing")
     if files[0].stat().st_size>20*1024*1024:raise ValueError("image larger than Tripo 20MB limit")
     return files[0]
 
 def task(key,state,name,endpoint,payload,path):
     item=state["steps"].setdefault(name,{})
+    if item.get("status")=="success" and isinstance(item.get("data"),dict):
+        return item["data"]
     if not item.get("task_id"):
-        item["task_id"]=api(key,"POST",endpoint,payload)["task_id"]
+        if item.get("status") in ("SUBMITTING", "SUBMISSION_UNKNOWN"):
+            raise ValueError("Task submission outcome unknown; reconcile provider task ID before resuming: " + name)
+        item["status"]="SUBMITTING"
+        save(path,state)
+        try:
+            item["task_id"]=api(key,"POST",endpoint,payload)["task_id"]
+        except Exception:
+            item["status"]="SUBMISSION_UNKNOWN"
+            save(path,state)
+            raise
         save(path,state)
     data=poll(key,item["task_id"])
     item.update({"status":"success","data":data})
@@ -123,6 +149,7 @@ def run(args):
     if decision["mode"]!="tripo" or decision["rig_type"]=="others" or decision["unsupported"]:
         state["status"]="REVIEW_REQUIRED";state["errors"].append({"step":"route","error":"Unsupported rig or motion presets"})
         save(state_file,state);return 2
+    if len(decision["clips"])>5:raise ValueError("Retarget supports up to 5 clips per request; split into jobs before executing")
     key=os.environ.get("TRIPO_API_KEY")
     if not key:raise ValueError("TRIPO_API_KEY not set")
     try:
@@ -159,7 +186,7 @@ def run(args):
         if not blender:
             state["status"]="QA_PENDING";save(state_file,state);return 2
         qa_script=Path(__file__).with_name("anime3d_blender.py")
-        result=subprocess.run([blender,"-b","--factory-startup","--python",str(qa_script),"--",str(model),str(job),str(spec.get("poly_budget_triangles",30000))],capture_output=True,text=True,timeout=600)
+        result=subprocess.run([blender,"-b","--factory-startup","--python-exit-code","3","--python",str(qa_script),"--",str(model),str(job),str(spec.get("poly_budget_triangles",30000))],capture_output=True,text=True,timeout=600)
         if result.returncode:raise ValueError("Blender QA failed: "+(result.stderr or result.stdout)[-1000:])
         metrics=load(job/"qa"/"metrics.json")
         found=[]

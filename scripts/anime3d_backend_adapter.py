@@ -81,7 +81,9 @@ def runtime_config(backend: str, config_path: Path) -> dict:
     if not raw.get("repo") or not raw.get("python"):
         raise BackendError(f"{backend} requires repo and python paths")
     repo = Path(raw["repo"]).expanduser().resolve()
-    python = Path(raw["python"]).expanduser().resolve()
+    # A Linux venv's bin/python is normally a symlink. Resolving it would
+    # execute the base interpreter and silently lose the isolated packages.
+    python = Path(raw["python"]).expanduser().absolute()
     script = repo / SCRIPTS[backend]
     if not repo.is_dir() or not script.is_file():
         raise BackendError(f"Installed {backend} repository/script not found: {script}")

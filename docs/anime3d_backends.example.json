@@ -1,4 +1,9 @@
 {
+  "skintokens": {
+    "repo": "/opt/models/SkinTokens",
+    "python": "/opt/envs/skintokens/bin/python",
+    "checkpoint": "experiments/articulation_xl_quantization_256_token_4/grpo_1400.ckpt"
+  },
   "anigen": {
     "repo": "/opt/models/AniGen",
     "python": "/opt/envs/anigen/bin/python"

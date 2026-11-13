@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const workflow = fs.readFileSync(path.resolve(__dirname, '../../.github/workflows/deploy.yml'), 'utf8');
+const workflow = fs.readFileSync(path.resolve(__dirname, '../../.github/workflows/deploy.yml'), 'utf8').replace(/\r\n/g, '\n');
 const [verify, deploy] = workflow.split(/^  deploy:\s*$/m);
 
 test('pull requests run every Node regression test before Pages deployment', () => {

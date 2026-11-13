@@ -9,6 +9,8 @@
 
 ## 六類 Anime3D 分流實作（2026-11-12）
 
+2026-11-13：[逐管線查核與葉澄汐測試](docs/ANIME3D_PIPELINE_AUDIT_20261113.md) 已記錄 Notebook、續跑、來源、Blender 蒙皮及動畫保留修復。葉澄汐來源已由使用者明確核准並保存 Drive 審查紀錄；[SkinTokens 綁骨接點](docs/ANIME3D_SKINTOKENS.md) 已補上。新版程式包與 notebook 已更新至原 Drive 檔案並讀回驗證 SHA256；瀏覽器控制已恢復，真實 Colab L4 GPU 已連線。Drive 掛載權限確認與隔離模型環境安裝仍待完成，尚未執行角色推論，不能宣稱端到端通過。
+
 新增角色、怪物、動物、奇幻生物、機械與機甲的**解剖型態分類器**，依實際肢體、翅膀、尾巴、表面材質及可動部件產出後端優先順序、骨架／機構策略、動作與 QA 項目；混合或不明拓撲不會強制當成人形。網頁的 3D Prompt 自動帶入分類摘要。
 
 - 執行入口：`scripts/anime3d_universal.py` 與 `notebooks/07_batch_runner.ipynb`。

@@ -34,6 +34,8 @@ python scripts/anime3d_agent.py --root /content/drive/MyDrive/project/cosmos_chi
 }
 ```
 
-`TRIPO_API_KEY` 只從 Colab Secrets 注入環境變數，不寫入 repo。圖像需在 `01_portraits/<source_pack>/`，且 `reviews/<source_pack>.json` 為 `{"status":"ok"}`。
+`TRIPO_API_KEY` 只從 Colab Secrets 注入環境變數，不寫入 repo。圖像需在 `01_portraits/<source_pack>/` 或 `03_completed/portraits/<source_pack>/`，且 `reviews/<source_pack>.json` 為 `{"status":"ok"}`。可用相對於來源包的 `source_image` 固定圖檔；提供 `subject_id` 時須與來源 manifest 相符。
 
-**限制：** 尚未在真實 Colab、Blender 或付費 Tripo API 進行端到端實測；模型品質、UV、變形、動作與引擎 Toon Shader 仍須覆核。
+**限制：** 已用本機 Blender 5.2 合成素材驗證網格、蒙皮與動畫往返；尚未完成真實角色的 Colab／付費 API 端到端實測。Pixal3D 到 SkinTokens 的自動串接仍缺少實作，模型品質、變形、動作與引擎 Toon Shader 仍須覆核。
+
+2026-11-13 的逐節點／六類資產查核、葉澄汐來源及阻塞見 [管線查核報告](ANIME3D_PIPELINE_AUDIT_20261113.md)。實際使用入口為 `notebooks/07_batch_runner.ipynb`；先執行 `scripts/anime3d_preflight.py` 檢查來源與環境。單獨 API runner 的 `--execute` 會允許付費請求；通用 runner 另需 `--allow-paid-tripo`，不可混淆。

@@ -6,12 +6,14 @@ cannot prove true anatomy. Model/rig/animation checks are recorded independently
 Usage: blender -b --python scripts/anime3d_typed_blender.py -- input.glb output profile.json [spec.json]
 """
 import json
+import hashlib
 import math
+import re
 import sys
 from pathlib import Path
 
 import bpy
-from mathutils import Vector
+from mathutils import Quaternion, Vector
 
 # Older Blender distributes glTF import/export as an opt-in bundled addon.
 try:
@@ -41,6 +43,13 @@ try:
 except Exception:
     pass  # Built-in importer on newer Blender.
 bpy.ops.import_scene.gltf(filepath=str(model))
+# Blender 5.2 imports bone-display widgets as mesh objects (e.g. Icosphere).
+# They are armature UI helpers, not generated asset geometry or materials.
+custom_shapes = {bone.custom_shape for obj in bpy.context.scene.objects if obj.type == "ARMATURE"
+                 for bone in obj.pose.bones if bone.custom_shape}
+for shape in custom_shapes:
+    for collection in tuple(shape.users_collection):
+        collection.objects.unlink(shape)
 meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
 if not meshes:
     raise SystemExit("The source model contains no mesh objects")
@@ -207,7 +216,7 @@ def targets(clip):
     return samples
 
 
-def stash_action(obj, clip):
+def stash_action(obj, clip, frame_count=None):
     """Keep one exportable NLA strip per object and clip, not orphaned Actions."""
     if not obj.animation_data or not obj.animation_data.action:
         return False
@@ -218,7 +227,7 @@ def stash_action(obj, clip):
     track.name = clip
     strip = track.strips.new(clip, 1, action)
     strip.action_frame_start = 1
-    strip.action_frame_end = frames
+    strip.action_frame_end = frame_count or frames
     track.mute = False
     return True
 
@@ -226,8 +235,73 @@ def stash_action(obj, clip):
 clips = []
 requested = profile.get("motion_plan", [])
 frames = max(16, int(spec.get("animation_frames", 48)))
+def has_clip(clip, names):
+    return any(clip.lower() in re.split(r"[^a-z0-9]+", name.lower()) for name in names)
+
+imported_actions = [action.name for action in bpy.data.actions]
+motion_map_path = out / "rig" / "motion_bone_map.json"
+motion_map = {}
+camera_front_y_sign = -1
+if motion_map_path.is_file():
+    mapped = json.loads(motion_map_path.read_text(encoding="utf8"))
+    if mapped.get("source_rig_sha256") != hashlib.sha256(model.read_bytes()).hexdigest():
+        raise ValueError("Motion bone mapping does not match this exact rig")
+    motion_map = mapped["bones"]
+    camera_front_y_sign = mapped.get("camera_front_y_sign", -1)
+    if camera_front_y_sign not in {-1, 1}:
+        raise ValueError("Camera front Y sign must be -1 or 1")
+    if not rig or topology != "biped" or any(name not in rig.pose.bones for name in motion_map.values()):
+        raise ValueError("Motion mapping references absent bones or a different anatomy")
+
+
+def mapped_biped_motion(clip):
+    """Author review clips on an inspected learned rig, retaining its skin weights."""
+    required = {"hips", "spine", "left_upper_arm", "right_upper_arm",
+                "left_thigh", "right_thigh", "left_calf", "right_calf"}
+    if not required <= motion_map.keys() or clip not in {"idle", "walk", "run"}:
+        return False
+    rig.animation_data_create()
+    rig.animation_data.action = bpy.data.actions.new(f"mapped_biped_{clip}")
+    for bone in rig.pose.bones:
+        bone.rotation_mode = "QUATERNION"
+        bone.rotation_quaternion = (1, 0, 0, 0)
+        bone.location = (0, 0, 0)
+    clip_frames = mapped_clip_frames(clip)
+    for frame in range(1, clip_frames + 1):
+        phase = 2 * math.pi * (frame - 1) / (clip_frames - 1)
+        moving = clip != "idle"
+        stride = (0.34 if clip == "walk" else 0.62) if moving else 0
+        knee = 0.55 if clip == "walk" else 0.95
+        angles = {"spine": [("X", 0.012 * math.sin(phase))]}
+        for side, offset, lower in (("left", 0, -1.25), ("right", math.pi, 1.25)):
+            swing = math.sin(phase + offset)
+            angles[side + "_upper_arm"] = [("Y", lower), ("X", -0.65 * stride * swing)]
+            angles[side + "_thigh"] = [("X", stride * swing)]
+            angles[side + "_calf"] = [("X", knee * max(0, -swing) if moving else 0)]
+        for role, rotations in angles.items():
+            bone = rig.pose.bones[motion_map[role]]
+            inverse = bone.bone.matrix_local.to_3x3().inverted()
+            rotation = Quaternion((1, 0, 0, 0))
+            for axis, angle in rotations:
+                rotation = rotation @ Quaternion(inverse @ Vector(tuple(1 if a == axis else 0 for a in "XYZ")), angle)
+            bone.rotation_quaternion = rotation
+            bone.keyframe_insert(data_path="rotation_quaternion", frame=frame, group=bone.name)
+        hips = rig.pose.bones[motion_map["hips"]]
+        bob = (0.004 if clip == "walk" else 0.009) * (1 - math.cos(2 * phase)) if moving else 0.0015 * math.sin(phase)
+        hips.location = hips.bone.matrix_local.to_3x3().inverted() @ Vector((0, 0, bob))
+        hips.keyframe_insert(data_path="location", frame=frame, group=hips.name)
+    return stash_action(rig, clip, clip_frames)
+
+
+def mapped_clip_frames(clip):
+    return max(16, round(frames * {"idle": 1, "walk": 2 / 3, "run": 5 / 12}[clip]))
+
+
 for item in requested:
     clip, method = item["clip"], item["method"]
+    if has_clip(clip, imported_actions):
+        clips.append({"name": clip, "method": "source_animation", "status": "preserved"})
+        continue
     if method != "blender_procedural":
         clips.append({"name": clip, "method": method, "status": "external" if method == "tripo_preset" else "unsupported"})
         continue
@@ -272,6 +346,12 @@ for item in requested:
             authored.append(stash_action(obj, clip))
         clips.append({"name": clip, "method": method, "status": "generated" if any(authored) else "needs_moving_parts", "frames": frames, "provisional": True})
     elif rig and not rigid:
+        if motion_map and mapped_biped_motion(clip):
+            clips.append({"name": clip, "method": "mapped_biped_procedural", "status": "generated",
+                          "frames": mapped_clip_frames(clip), "provisional": True,
+                          "bone_map": "rig/motion_bone_map.json",
+                          "note": "In-place review motion; foot contact and deformation need visual review"})
+            continue
         channels = targets(clip)
         if not channels:
             clips.append({"name": clip, "method": method, "status": "no_template_for_rig"})
@@ -311,18 +391,21 @@ try:
     scene.render.resolution_y = 640
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
+    scene.display.shading.color_type = "TEXTURE"
+    scene.display.shading.light = "STUDIO"
+    scene.view_settings.view_transform = "Standard"
     cam_data = bpy.data.cameras.new("TypedQA_Camera")
     cam = bpy.data.objects.new("TypedQA_Camera", cam_data)
     scene.collection.objects.link(cam)
     scene.camera = cam
     cam_data.type = "ORTHO"
-    cam_data.ortho_scale = 1.65 * max(size)
+    cam_data.ortho_scale = 1.20 * max(size)
     focus = Vector(center)
     distance = 2.8 * max(size)
     for label, angle in (("front", 0.0), ("right", math.pi / 2),
                          ("back", math.pi), ("left", 3 * math.pi / 2)):
         cam.location = focus + Vector((distance * math.sin(angle),
-                                       -distance * math.cos(angle),
+                                       camera_front_y_sign * distance * math.cos(angle),
                                        distance * 0.15))
         cam.rotation_euler = (focus - cam.location).to_track_quat("-Z", "Y").to_euler()
         target = out / "previews" / ("qa_" + label + ".png")
@@ -337,15 +420,25 @@ triangles = sum(sum(len(p.vertices) - 2 for p in mesh.data.polygons) for mesh in
 poly_budget = int(spec.get("poly_budget_triangles") or 30000)
 uv_missing = [m.name for m in meshes if not m.data.uv_layers]
 materials_missing = [m.name for m in meshes if not m.data.materials]
+skinning = {"deforming_meshes": [], "unweighted_vertices": 0}
+for mesh in meshes:
+    armatures = [m.object for m in mesh.modifiers if m.type == "ARMATURE" and m.object]
+    if not armatures:
+        continue
+    skinning["deforming_meshes"].append(mesh.name)
+    bones = {bone.name for arm in armatures for bone in arm.data.bones}
+    groups = {g.index for g in mesh.vertex_groups if g.name in bones}
+    skinning["unweighted_vertices"] += sum(
+        not any(g.group in groups and g.weight > 0 for g in vertex.groups)
+        for vertex in mesh.data.vertices)
 required = set(profile.get("requested_clips", []))
-covered = {x["name"] for x in clips if x["status"] == "generated"}
-covered.update(x["clip"] for x in requested if x["method"] == "tripo_preset" and any(x["clip"] in a.name.lower() for a in bpy.data.actions))
+covered = {x["name"] for x in clips if x["status"] in {"generated", "preserved"}}
 qa = {
     "asset_class": profile["asset_class"], "topology": topology,
     "checks": profile["qa_checks"], "mesh_count": len(meshes),
     "triangles": triangles, "triangle_budget": poly_budget,
     "uv_missing": uv_missing, "materials_missing": materials_missing,
-    "rig": rig_quality, "motions": clips, "rendered_views": rendered_views,
+    "rig": rig_quality, "skinning": skinning, "motions": clips, "rendered_views": rendered_views,
     "required_clips": sorted(required), "covered_clips": sorted(covered),
     "hard_checks": {
         "mesh": bool(meshes and triangles > 0),
@@ -353,6 +446,7 @@ qa = {
         "uv": not uv_missing,
         "materials": not materials_missing,
         "rig": rig_quality["status"] in {"existing", "explicit_parts", "object_transform"},
+        "skinning": rigid or bool(skinning["deforming_meshes"] and skinning["unweighted_vertices"] == 0),
         "motions": required <= covered,
         "visual_anatomy": False,  # requires rendered pose sweep reviewed by visual QA
         "collision_free": False,   # not safe to infer from one rest pose
@@ -381,9 +475,9 @@ if export_file.is_file() and export_file.stat().st_size > 0:
         qa["hard_checks"]["export_reload"] = any(x.type == "MESH" for x in bpy.context.scene.objects)
         imported_actions = {a.name.lower() for a in bpy.data.actions}
         qa["exported_actions"] = sorted(imported_actions)
-        local_clips = {x["name"] for x in clips if x["status"] == "generated"}
+        local_clips = required
         qa["hard_checks"]["animation_roundtrip"] = all(
-            any(clip.lower() in action for action in imported_actions) for clip in local_clips
+            has_clip(clip, imported_actions) for clip in local_clips
         )
     except Exception as exc:
         qa["warnings"].append("Export reload failed: " + str(exc))

@@ -67,6 +67,9 @@ class BlenderSmoke(unittest.TestCase):
         out = self.root / "02_3d" / "ai_blender" / name
         state_path = self.root / "02_3d" / "ai_blender" / name / "typed_state.json"
         debug = state_path.read_text(encoding="utf8")[-6000:] if state_path.is_file() else "missing state"
+        metrics_path = out / "qa/typed_metrics.json"
+        if metrics_path.is_file():
+            debug += "\nQA: " + metrics_path.read_text(encoding="utf8")[-6000:]
         self.assertEqual(p.returncode, 0, (p.stdout + p.stderr)[-4000:] + "\\nState: " + debug)
         self.assertTrue((out / "models" / f"{name}.blend").is_file())
         self.assertTrue((out / "models" / f"{name}.glb").is_file())
@@ -109,6 +112,77 @@ class BlenderSmoke(unittest.TestCase):
             "requested_clips": ["extend"]})
         self.assertIn("extend", qa["covered_clips"])
         self.assertTrue(qa["hard_checks"]["animation_roundtrip"], qa.get("exported_actions"))
+
+    def test_biped_skin_and_three_clips_survive_roundtrip(self):
+        fixture_script = self.root / "make_biped.py"
+        fixture_script.write_text(CREATE_FIXTURE + r'''
+mesh = obj
+bpy.ops.object.armature_add()
+rig = bpy.context.object
+rig.name = "SyntheticBipedRig"
+bpy.ops.object.mode_set(mode="EDIT")
+spine = rig.data.edit_bones[0]
+spine.name = "Spine"
+leg = rig.data.edit_bones.new("Leg_0_upper")
+leg.head = (0, 0, 0)
+leg.tail = (0, 0, -1)
+leg.parent = spine
+bpy.ops.object.mode_set(mode="OBJECT")
+mesh.parent = rig
+mod = mesh.modifiers.new("SyntheticSkin", "ARMATURE")
+mod.object = rig
+for name, indexes in [("Spine", [v.index for v in mesh.data.vertices if v.co.z >= 0]),
+                      ("Leg_0_upper", [v.index for v in mesh.data.vertices if v.co.z < 0])]:
+    group = mesh.vertex_groups.new(name=name)
+    group.add(indexes, 1.0, "REPLACE")
+bpy.ops.export_scene.gltf(filepath=target, export_format="GLB")
+''', encoding="utf8")
+        p = subprocess.run([BLENDER, "-b", "--factory-startup", "--python-exit-code", "3",
+                            "--python", str(fixture_script), "--", str(self.input)],
+                           capture_output=True, text=True, timeout=150)
+        self.assertEqual(p.returncode, 0, (p.stdout + p.stderr)[-3000:])
+        qa = self.process("fixture-biped", {
+            "input_mode": "text", "asset_class": "humanoid", "anatomy": "biped",
+            "appearance": "Synthetic skinned geometry for integration testing; not Chengxi",
+            "requested_clips": ["idle", "walk", "run"]})
+        self.assertEqual(qa["covered_clips"], ["idle", "run", "walk"])
+        self.assertTrue(qa["hard_checks"]["skinning"])
+        self.assertTrue(qa["hard_checks"]["animation_roundtrip"], qa.get("exported_actions"))
+        # Feed the actual animated export through the Tripo-specific profile.
+        # This checks preservation, without sending any vendor request.
+        out = self.root / "02_3d/ai_blender/fixture-biped"
+        profile = json.loads((out / "profile.json").read_text(encoding="utf8"))
+        for item in profile["motion_plan"]:
+            item["method"] = "tripo_preset"
+        profile_path = self.root / "vendor-profile.json"
+        profile_path.write_text(json.dumps(profile), encoding="utf8")
+        preserved = self.root / "preserved"
+        p = subprocess.run([BLENDER, "-b", "--factory-startup", "--python-exit-code", "3",
+                            "--python", str(SCRIPT.with_name("anime3d_typed_blender.py")), "--",
+                            str(out / "models/fixture-biped.glb"), str(preserved), str(profile_path)],
+                           capture_output=True, text=True, timeout=240)
+        self.assertEqual(p.returncode, 0, (p.stdout + p.stderr)[-3000:])
+        result = json.loads((preserved / "qa/typed_metrics.json").read_text(encoding="utf8"))
+        self.assertTrue(result["hard_checks"]["animation_roundtrip"], result.get("exported_actions"))
+        self.assertTrue(all(clip["status"] == "preserved" for clip in result["motions"]))
+
+    def test_unrigged_biped_remains_qa_pending_and_fails_command(self):
+        cfg = self.root / "unrigged.json"
+        cfg.write_text(json.dumps({"input_mode": "text", "asset_class": "humanoid",
+                                   "appearance": "Synthetic unrigged fixture", "anatomy": "biped",
+                                   "requested_clips": ["idle", "walk", "run"]}), encoding="utf8")
+        p = subprocess.run([sys.executable, str(SCRIPT), "--root", str(self.root),
+                            "--asset-id", "unrigged", "--spec", str(cfg), "--backend", "existing",
+                            "--input-model", str(self.input), "--blender", BLENDER, "--execute"],
+                           capture_output=True, text=True, timeout=240)
+        self.assertEqual(p.returncode, 2, (p.stdout + p.stderr)[-3000:])
+        out = self.root / "02_3d/ai_blender/unrigged"
+        state = json.loads((out / "typed_state.json").read_text(encoding="utf8"))
+        qa = json.loads((out / "qa/typed_metrics.json").read_text(encoding="utf8"))
+        self.assertEqual(state["status"], "QA_PENDING")
+        self.assertFalse(qa["hard_checks"]["skinning"])
+        self.assertFalse(qa["hard_checks"]["animation_roundtrip"])
+        self.assertTrue((out / "manifest.json").is_file())
 
 
 if __name__ == "__main__":

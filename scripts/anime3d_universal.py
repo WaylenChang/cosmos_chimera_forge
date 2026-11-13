@@ -15,8 +15,9 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from anime3d_profiles import classify
+from anime3d_profiles import classify, PROCEDURAL
 from anime3d_backend_adapter import run as run_official_backend, validate_glb, BackendError
+from anime3d_rig_adapter import run as run_skintokens, validate_skin
 
 
 def read(path):
@@ -29,6 +30,20 @@ def write(path, value):
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
     tmp.replace(path)
+
+
+def encyclopedia_path(root, spec, profile):
+    subject = spec.get("subject_id") or ""
+    if not subject or any(x in subject for x in ("/", "\\", "..")):
+        return ""
+    creature = str(spec.get("category") or spec.get("subject_type") or "") == "creature" or str(spec.get("task_type") or "").startswith("creature") or profile["asset_class"] != "humanoid"
+    stage = spec.get("stage") or "adult"
+    if any(x in str(stage) for x in ("/", "\\", "..")):
+        raise ValueError("Unsafe creature stage")
+    paths = ([f"wiki/creatures/{subject}_{stage}_wiki.md",
+              f"04_encyclopedia/creatures/{subject}_wiki.md"] if creature else
+             [f"wiki/characters/{subject}_wiki.md"])
+    return next((p for p in paths if (root / p).is_file() and (root / p).read_text(encoding="utf8").strip()), "")
 
 
 
@@ -54,7 +69,7 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
                 rel = file.relative_to(out).as_posix()
                 level = "L1" if rel in {f"models/{asset_id}.glb", f"models/{asset_id}.blend"} else "L2"
                 files.append({"path": rel, "kind": "model" if file.suffix.lower() in {".glb", ".blend"} else "report", "level": level})
-    for name in ("profile.json", "typed_state.json", "agent_backend_spec.json", "bestiary.md"):
+    for name in ("profile.json", "typed_state.json", "agent_backend_spec.json", "material_profile.json", "bestiary.md"):
         if (out / name).is_file():
             files.append({"path": name, "kind": "spec", "level": "L2"})
     missing = []
@@ -65,11 +80,7 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
         missing.append({"item": "approved source portrait", "level": "L1",
                         "reason": "Prompt-to-3D requires a post-model approved portrait; bind source_pack before completion"})
     subject_id = spec.get("subject_id") or ""
-    wiki_path = out.parents[2] / "04_encyclopedia" / "creatures" / (subject_id + "_wiki.md") if subject_id else None
-    if wiki_path and wiki_path.is_file():
-        result_wiki = "04_encyclopedia/creatures/" + subject_id + "_wiki.md"
-    else:
-        result_wiki = ""
+    result_wiki = encyclopedia_path(out.parents[2], spec, profile)
     if profile["input_mode"] == "text" and (
         category == "creature" or str(kind).startswith("creature")
     ) and not (out / "bestiary.md").is_file() and not result_wiki:
@@ -98,7 +109,27 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
 
 
 def run_checked(args, timeout):
-    return subprocess.run(args, check=False, text=True, capture_output=True, timeout=timeout)
+    try:
+        return subprocess.run(args, check=False, text=True, capture_output=True, timeout=timeout)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        # Callers persist this process result, rather than leaving RUNNING
+        # forever when Blender/a custom adapter cannot start or times out.
+        return subprocess.CompletedProcess(args, 124 if isinstance(exc, subprocess.TimeoutExpired) else 127,
+                                           stdout="", stderr=str(exc))
+
+
+def execution_profile(profile, backend):
+    """Vendor presets exist only on the vendor path; never promise them locally."""
+    profile = json.loads(json.dumps(profile))
+    if backend != "tripo":
+        for item in profile["motion_plan"]:
+            if item["method"] == "tripo_preset":
+                item["method"] = "blender_procedural" if item["clip"] in PROCEDURAL[profile["anatomy"]] else "review_required"
+                item["preset"] = None
+        profile["tripo_clips"] = []
+        profile["procedural_clips"] = [x["clip"] for x in profile["motion_plan"] if x["method"] == "blender_procedural"]
+        profile["unsupported"] = [x["clip"] for x in profile["motion_plan"] if x["method"] == "review_required"]
+    return profile
 
 
 def main():
@@ -112,6 +143,8 @@ def main():
     p.add_argument("--pipeline", choices=["auto", "colab", "ai_blender"], default="auto",
                    help="Drive model route; image supports Colab or AI+Blender, text always uses AI+Blender")
     p.add_argument("--generator-executable", help="Custom executable accepting --input --spec --output")
+    p.add_argument("--rig-backend", choices=["none", "skintokens"], default="none",
+                   help="Optional real mesh-to-skin stage in an isolated runtime")
     p.add_argument("--backend-config", help="JSON paths to installed official AniGen/Pixal3D/PartCrafter environments")
     p.add_argument("--input-model", help="Existing real GLB to process without generating a new model")
     p.add_argument("--blender", default=shutil.which("blender"))
@@ -126,6 +159,7 @@ def main():
 def run(a):
     spec = read(a.spec)
     profile = classify(spec)
+    rig_backend = getattr(a, "rig_backend", "none")
     safe = a.asset_id and all(ch.isalnum() or ch in "-_" for ch in a.asset_id)
     if not safe or ".." in a.asset_id:
         raise ValueError("Invalid asset ID")
@@ -171,6 +205,11 @@ def run(a):
         raise ValueError("Adapter command is only for standalone GPU / text backends")
     if a.allow_paid_tripo and backend != "tripo":
         raise ValueError("Paid Tripo consent is only meaningful with --backend tripo")
+    if rig_backend != "none" and (backend == "tripo" or profile["surface_mode"] == "rigid"):
+        raise ValueError("SkinTokens is for a standalone organic mesh, not Tripo/rigid machinery")
+    if rig_backend == "skintokens" and not getattr(a, "backend_config", None):
+        raise ValueError("SkinTokens requires --backend-config for its isolated runtime")
+    profile = execution_profile(profile, backend)
     if profile["input_mode"] == "image":
         # Same explicit source authorization used by older agent.
         from anime3d_agent import validate
@@ -181,14 +220,15 @@ def run(a):
     source_sha = ""
     if profile["input_mode"] == "image":
         source_sha = hashlib.sha256(image.read_bytes()).hexdigest()
-    elif a.input_model:
+    if a.input_model:
         model_source = Path(a.input_model)
         if model_source.is_file():
-            source_sha = hashlib.sha256(model_source.read_bytes()).hexdigest()
+            source_sha += hashlib.sha256(model_source.read_bytes()).hexdigest()
     config_sha = hashlib.sha256(Path(a.backend_config).read_bytes()).hexdigest() if getattr(a, "backend_config", None) else ""
     fingerprint = hashlib.sha256((json.dumps(spec, sort_keys=True, ensure_ascii=False)
                                   + backend + pipeline + (a.input_model or "") + source_sha + config_sha +
-                                  str(a.generator_executable or "")).encode("utf8")).hexdigest()
+                                  str(a.generator_executable or "") +
+                                  (rig_backend if rig_backend != "none" else "")).encode("utf8")).hexdigest()
     if state_path.is_file():
         state = read(state_path)
         if state.get("fingerprint") != fingerprint:
@@ -199,6 +239,12 @@ def run(a):
     write(profile_path, profile)
     model = out / "source" / (a.asset_id + ".glb")
     write(state_path, state)
+    # Reuse only a successful source whose bytes still match this job's record.
+    recorded = state["steps"].get("source_glb", {})
+    resume_source = bool(model.is_file() and recorded.get("sha256") and
+                         hashlib.sha256(model.read_bytes()).hexdigest() == recorded["sha256"])
+    if model.is_file() and recorded.get("sha256") and not resume_source:
+        raise ValueError("Cached source changed: preserve the original and use a new asset ID")
     if not a.execute:
         print(json.dumps({"mode": "plan", "backend": backend, "pipeline": pipeline, "profile": profile,
                           "output": str(out), "requires_generator": backend not in {"existing", "tripo"} and not getattr(a, "backend_config", None),
@@ -206,7 +252,9 @@ def run(a):
         return 0
     state["status"] = "RUNNING"
     write(state_path, state)
-    if backend == "existing":
+    if resume_source:
+        validate_glb(model)
+    elif backend == "existing":
         source = Path(a.input_model).resolve()
         if not source.is_file() or source.suffix.lower() != ".glb" or source.stat().st_size == 0:
             raise ValueError("Input model must be a nonempty real .glb")
@@ -267,7 +315,10 @@ def run(a):
                 return 2
             exe = Path(a.generator_executable).resolve()
             if not exe.is_file() or not os.access(exe, os.X_OK):
-                raise ValueError("Generator adapter is missing or not executable")
+                state["status"] = "REVIEW_REQUIRED"
+                state["warnings"].append("Generator adapter is missing or not executable")
+                write(state_path, state)
+                return 2
             source = str(image) if profile["input_mode"] == "image" else str(a.spec)
             # Never accept stale results after a child fails or produces nothing.
             model.unlink(missing_ok=True)
@@ -288,11 +339,36 @@ def run(a):
         write(state_path, state)
     try:
         state["steps"]["source_glb"] = validate_glb(model)
+        state["steps"]["source_glb"]["sha256"] = hashlib.sha256(model.read_bytes()).hexdigest()
+        write(state_path, state)
     except BackendError as exc:
         state["status"] = "REVIEW_REQUIRED"
         state["warnings"].append(f"Source GLB invalid: {exc}")
         write(state_path, state)
+        write_asset_manifest(out, a.asset_id, spec, profile, state)
         return 2
+    if rig_backend == "skintokens":
+        rigged = out / "rig" / model.name
+        prior = state["steps"].get("rigging", {})
+        try:
+            if prior.get("status") == "generated" and prior.get("sha256"):
+                if not rigged.is_file() or hashlib.sha256(rigged.read_bytes()).hexdigest() != prior["sha256"]:
+                    raise BackendError("Cached rig changed or disappeared; preserve this job and use a new asset ID")
+                validate_skin(rigged)
+            else:
+                result = run_skintokens(Path(a.backend_config), model, rigged)
+                state["steps"]["rigging"] = dict(result, status="generated")
+            model = rigged
+            write(state_path, state)
+        except (BackendError, OSError, subprocess.TimeoutExpired) as exc:
+            state["status"] = "QA_PENDING"
+            # Do not discard a successful rig receipt after a cache mismatch.
+            if prior.get("status") != "generated":
+                state["steps"]["rigging"] = {"status": "failed", "error": str(exc)[-2000:]}
+            state["warnings"].append("SkinTokens: " + str(exc)[-2000:])
+            write(state_path, state)
+            write_asset_manifest(out, a.asset_id, spec, profile, state)
+            return 2
     # Text-only creature modeling owns the original bestiary; image-to-3D
     # and characters must not inherit an unrelated previous bestiary.
     subject_kind = str(spec.get("category") or spec.get("subject_type") or "")
@@ -300,24 +376,36 @@ def run(a):
     requires_bestiary = profile["input_mode"] == "text" and (
         subject_kind == "creature" or task_kind.startswith("creature"))
     bestiary = out / "bestiary.md"
-    encyclopedia = root / "04_encyclopedia" / "creatures" / (str(spec.get("subject_id") or "") + "_wiki.md")
-    wiki_exists = bool(spec.get("subject_id")) and encyclopedia.is_file() and bool(encyclopedia.read_text(encoding="utf8").strip())
+    wiki_exists = bool(encyclopedia_path(root, spec, profile))
     if requires_bestiary and not wiki_exists and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
-        state["warnings"].append("Text-to-3D creature requires original 04_encyclopedia/creatures/<subject_id>_wiki.md or legacy bestiary.md")
+        state["warnings"].append("Text-to-3D creature requires wiki/creatures/<subject_id>_<stage>_wiki.md or legacy bestiary.md")
     if not a.blender or not Path(a.blender).is_file():
         state["status"] = "QA_PENDING"
         state["warnings"].append("Blender binary unavailable; geometry and export QA not run")
         write(state_path, state)
+        write_asset_manifest(out, a.asset_id, spec, profile, state)
         return 2
+    write(out / "material_profile.json", {
+        "name": spec.get("toon_profile", "anime_cel_2band"), "shadow_bands": 2,
+        "palette_hex": spec.get("palette_hex", []), "target_engine": spec.get("target_engine", "unity"),
+        "shader_applied": False, "note": "Material metadata only; apply and review Toon shader in the target engine"
+    })
+    # Remove only this attempt's QA receipt: an old report cannot validate a
+    # later Blender process that failed before writing its own report.
+    (out / "qa" / "typed_metrics.json").unlink(missing_ok=True)
+    state["automated_pass"] = False
+    write(state_path, state)
     child = run_checked([a.blender, "-b", "--factory-startup", "--python-exit-code", "3",
                          "--python", str(Path(__file__).with_name("anime3d_typed_blender.py")),
                          "--", str(model), str(out), str(profile_path), str(a.spec)], 3600)
-    state["steps"]["blender"] = {"returncode": child.returncode, "stderr": child.stderr[-4000:]}
+    state["steps"]["blender"] = {"returncode": child.returncode, "stderr": child.stderr[-4000:], "stdout_tail": child.stdout[-4000:]}
     metrics = out / "qa" / "typed_metrics.json"
-    state["status"] = "REVIEW_REQUIRED" if child.returncode == 0 and metrics.is_file() else "QA_PENDING"
+    state["status"] = "QA_PENDING"
     if metrics.is_file():
         qa = read(metrics)
         state["automated_pass"] = qa.get("automated_pass", False)
+        if child.returncode == 0 and state["automated_pass"]:
+            state["status"] = "REVIEW_REQUIRED"
         state["warnings"] += qa.get("warnings", [])
     if requires_bestiary and not wiki_exists and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
         state["status"] = "REVIEW_REQUIRED"
@@ -325,9 +413,8 @@ def run(a):
         write_asset_manifest(out, a.asset_id, spec, profile, state)
         return 2
     write(state_path, state)
-    if metrics.is_file():
-        write_asset_manifest(out, a.asset_id, spec, profile, state)
-    return 0 if child.returncode == 0 and metrics.is_file() else 2
+    write_asset_manifest(out, a.asset_id, spec, profile, state)
+    return 0 if child.returncode == 0 and state.get("automated_pass") else 2
 
 
 if __name__ == "__main__":
