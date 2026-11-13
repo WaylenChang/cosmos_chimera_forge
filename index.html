@@ -545,6 +545,10 @@
 <style>
   [hidden] { display: none !important; }
   #driveGate { max-width: 520px; margin: 12vh auto; padding: 32px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+  .drive-local-guide { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  .drive-local-guide summary { cursor: pointer; color: var(--ink); font-weight: 500; }
+  .drive-local-guide ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 6px; line-height: 1.5; }
+  .drive-local-guide code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; padding: 1px 5px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); color: var(--ink); }
   #driveToolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--line); }
   #drivePromptPath { min-width: 230px; flex: 1; }
   #settingsView { display:none; flex:1; min-height:0; overflow-y:auto; padding:clamp(12px,2vw,28px); border:0; background:transparent; }
@@ -808,6 +812,14 @@
   <h1 id="driveGateTitle">COSMIMERA · Prompt Forge</h1>
   <button class="btn" id="driveSignIn" type="button">使用 Google 帳號登入</button>
   <p id="driveGateStatus" role="status">正在載入 Google 登入設定…</p>
+  <details class="drive-local-guide">
+    <summary>本機啟動說明（不可直接雙擊 index.html）</summary>
+    <ol>
+      <li>Google OAuth 登入需要 HTTP(S) 來源，不支援直接以 <code>file://</code> 開啟。</li>
+      <li>Windows 請於專案根目錄執行 <code>.\start_local.ps1</code>（自動啟動伺服器並開啟 <code>http://localhost:8687</code>）；或手動執行 <code>python -m http.server 8687</code>（若使用 python3 則為 <code>python3 -m http.server 8687</code>）。</li>
+      <li>確認 Google Cloud Console 的 Web Client ID 已將 <code>http://localhost:8687</code> 加入 <strong>Authorized JavaScript origins</strong>，且登入帳號擁有專案 Drive 資料夾權限。</li>
+    </ol>
+  </details>
 </section>
 <div id="driveApp" hidden>
 <div id="driveToolbar">
