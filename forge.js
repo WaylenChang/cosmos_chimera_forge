@@ -985,36 +985,62 @@
         onclick:()=>chooseFlow(kind,route,step.id)
       },el("span",{class:"tname"},step.name));
     }
+    function connector() {
+      return el("span",{class:"flow-connector","aria-hidden":"true"});
+    }
+    function parallelTracks(segment, route) {
+      return el("div",{class:"flow-parallel"},
+        el("span",{class:"flow-split","aria-hidden":"true"}),
+        el("div",{class:"flow-parallel-tracks"},segment.tracks.map(track =>
+          el("div",{class:"flow-parallel-track"},connector(),node(track[0],route),connector()))),
+        el("span",{class:"flow-merge","aria-hidden":"true"}));
+    }
     function linkedSegments(segments, route) {
       const elements = [];
       segments.forEach((segment, i) => {
-        if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
-        if (segment.type === "alternatives") {
-          elements.push(el("div",{class:"flow-alternatives"},
-            el("div",{class:"flow-alternatives-label"},segment.label),
-            el("div",{class:"flow-alternatives-options"},segment.steps.map(s=>node(s,route)))));
-        } else {
-          elements.push(el("div",{class:"flow-row"},node(segment.steps[0],route)));
-        }
+        if (i) elements.push(connector());
+        if (segment.type === "parallel") elements.push(parallelTracks(segment, route));
+        else elements.push(el("div",{class:"flow-row"},node(segment.steps[0],route)));
       });
       return elements;
     }
     const elements = [];
     rows.forEach((row, i) => {
-      if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
+      if (i) elements.push(connector());
       if (row.type === "fork") {
         elements.push(el("div",{class:"flow-fork"},
           el("span",{class:"flow-split","aria-hidden":"true"}),
-          el("div",{class:"flow-lanes"},row.lanes.map(lane=>
-            el("div",{class:"flow-lane","aria-label":lane.label},
-              el("span",{class:"flow-lane-label"},lane.label),
-              el("div",{class:"flow-lane-track"},linkedSegments(lane.segments,lane.id))))),
+          el("div",{class:"flow-lanes"},row.lanes.map(lane =>
+            el("div",{class:"flow-lane","aria-label":lane.id === "image" ? "立繪建模路線" : "文字建模路線"},
+              el("div",{class:"flow-lane-track"},connector(),
+                ...linkedSegments(lane.segments,lane.id),connector())))),
           el("span",{class:"flow-merge","aria-hidden":"true"})));
       } else {
         elements.push(el("div",{class:"flow-row" + (row.shared ? " flow-shared" : "")},node(row.steps[0])));
       }
     });
+    // Connector stems join exactly at track centers, including on narrow screens.
+    function alignStems() {
+      box.querySelectorAll(".flow-fork, .flow-parallel").forEach(fork => {
+        const split = fork.querySelector(":scope > .flow-split");
+        const merge = fork.querySelector(":scope > .flow-merge");
+        const tracks = fork.classList.contains("flow-fork")
+          ? Array.from(fork.querySelectorAll(":scope > .flow-lanes > .flow-lane"))
+          : Array.from(fork.querySelectorAll(":scope > .flow-parallel-tracks > .flow-parallel-track"));
+        if (!split || !merge || tracks.length < 2) return;
+        const bounds = fork.getBoundingClientRect();
+        const first = tracks[0].getBoundingClientRect();
+        const last = tracks[tracks.length - 1].getBoundingClientRect();
+        const top = Math.max(0, first.top + first.height/2 - bounds.top);
+        const bottom = Math.max(0, bounds.bottom - (last.top + last.height/2));
+        for (const stem of [split,merge]) {
+          stem.style.setProperty("--rail-top",top+"px");
+          stem.style.setProperty("--rail-bottom",bottom+"px");
+        }
+      });
+    }
     box.replaceChildren(...elements);
+    alignStems();
     detail.replaceChildren();
     detail.hidden = true;
     renderDesigned();
