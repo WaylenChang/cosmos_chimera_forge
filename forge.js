@@ -3403,6 +3403,60 @@
       el("div", { class: "fctl" }, edit, dice, lockBtn), control);
   }
 
+  // The task graph is the single source of truth for which editor is visible.
+  function renderFlowStageInventory() {
+    const conceptSection = $("#conceptSection");
+    const inventory = $("#flowStageInventory");
+    const items = $("#flowStageInventoryItems");
+    const title = $("#flowStageInventoryTitle");
+    if (!conceptSection || !inventory || !items || !title) return;
+    const flow = currentFlow();
+    const showConcept = flow?.taskId === "character-concept" &&
+      ["appearance", "portrait", "review_portrait"].includes(flow.step);
+    conceptSection.hidden = !showConcept;
+    inventory.hidden = !flow || showConcept;
+    if (inventory.hidden) return;
+    title.textContent = flow.name + " · 階段角色／宙獸";
+    const category = flow.category;
+    const packages = reviewState.packages || [];
+    const relevant = packages.filter(p => {
+      const type = String(p.type || "");
+      const id = String(p.id || "");
+      const isCharacter = type.startsWith("character-") || id.startsWith("chr");
+      const isCreature = type.startsWith("creature-") || id.startsWith("cr");
+      if (category === "character" && !isCharacter) return false;
+      if (category === "creature" && !isCreature) return false;
+      if (category === "move") return false;
+      const stage = flow.stage;
+      if (["colab", "blender", "prompt_3d", "review_3d", "final_review"].includes(stage))
+        return is3dType(type) || is3dType(id);
+      return !is3dType(type) && !is3dType(id);
+    });
+    const unique = new Map();
+    for (const p of relevant) {
+      const subject = String(p.subjectId || p.manifest?.subject_id || p.concept?.line_id ||
+        p.concept?.id || p.id || "").trim();
+      const form = p.stage || p.manifest?.stage || "";
+      const key = subject + "|" + form;
+      const previous = unique.get(key);
+      if (!previous || (p.status === "ok" && previous.status !== "ok")) unique.set(key,p);
+    }
+    items.replaceChildren();
+    if (!unique.size) {
+      items.append(el("p", {class:"muted"}, "此階段尚無可追蹤的角色／宙獸成果。"));
+      return;
+    }
+    for (const p of unique.values()) {
+      const subject = p.subjectId || p.manifest?.subject_id || p.concept?.name_zh ||
+        p.concept?.id || p.id;
+      const form = p.stage || p.manifest?.stage;
+      items.append(el("div", {class:"field"},
+        el("span", {}, subject + (form ? " · " + (STAGE_ZH[form] || form) : "")),
+        el("span", {class:"muted"}, " · " + (p.status || "待審查") +
+          " · " + (p.images?.length || 0) + " 張圖片" + (p.models?.length ? " · " + p.models.length + " 個模型" : ""))));
+    }
+  }
+
   function renderConcepts() {
     const t = task(), o = taskOpts(t), subj = resolveSubject(t, o);
     const box = $("#concept"); box.replaceChildren();
@@ -3795,7 +3849,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
+    renderTasks(); renderFlowStageInventory(); if (!$("#conceptSection")?.hidden) renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
     save();
   }
 
