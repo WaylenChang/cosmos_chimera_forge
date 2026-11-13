@@ -148,6 +148,8 @@ def main():
     p.add_argument("--backend-config", help="JSON paths to installed official AniGen/Pixal3D/PartCrafter environments")
     p.add_argument("--input-model", help="Existing real GLB to process without generating a new model")
     p.add_argument("--blender", default=shutil.which("blender"))
+    p.add_argument("--stage", choices=["all", "pre_gpu", "gpu", "post_gpu"], default="all",
+                   help="Pipeline stage slice (strictly ordered N00-N01 -> N02-N04 -> N05-N08)")
     a = p.parse_args()
     try:
         return run(a)
@@ -245,11 +247,30 @@ def run(a):
                          hashlib.sha256(model.read_bytes()).hexdigest() == recorded["sha256"])
     if model.is_file() and recorded.get("sha256") and not resume_source:
         raise ValueError("Cached source changed: preserve the original and use a new asset ID")
+    stage = getattr(a, "stage", "all") or "all"
+    if stage == "pre_gpu":
+        if state.get("stage_completed") not in {"gpu", "post_gpu"}:
+            state["stage_completed"] = "pre_gpu"
+        write(state_path, state)
+        print(json.dumps({"mode": "pre_gpu", "asset_id": a.asset_id, "backend": backend,
+                          "pipeline": pipeline, "stage_completed": state["stage_completed"],
+                          "output": str(out)}, ensure_ascii=False, indent=2))
+        return 0
     if not a.execute:
         print(json.dumps({"mode": "plan", "backend": backend, "pipeline": pipeline, "profile": profile,
                           "output": str(out), "requires_generator": backend not in {"existing", "tripo"} and not getattr(a, "backend_config", None),
                           "paid_tripo_authorized": False}, ensure_ascii=False, indent=2))
         return 0
+    if stage == "post_gpu":
+        if not resume_source and backend != "existing":
+            raise ValueError("Stage post_gpu requires completed N02 source GLB from gpu stage")
+        if rig_backend == "skintokens":
+            rigged = out / "rig" / model.name
+            prior_rig = state["steps"].get("rigging", {})
+            if prior_rig.get("status") != "generated" or not prior_rig.get("sha256"):
+                raise ValueError("Stage post_gpu requires completed N04 rigging from gpu stage")
+            if not rigged.is_file() or hashlib.sha256(rigged.read_bytes()).hexdigest() != prior_rig["sha256"]:
+                raise BackendError("Cached rig changed or disappeared; preserve this job and use a new asset ID")
     state["status"] = "RUNNING"
     write(state_path, state)
     if resume_source:
@@ -369,6 +390,12 @@ def run(a):
             write(state_path, state)
             write_asset_manifest(out, a.asset_id, spec, profile, state)
             return 2
+    if stage == "gpu":
+        state["stage_completed"] = "gpu"
+        state["status"] = "GPU_COMPLETED"
+        write(state_path, state)
+        write_asset_manifest(out, a.asset_id, spec, profile, state)
+        return 0
     # Text-only creature modeling owns the original bestiary; image-to-3D
     # and characters must not inherit an unrelated previous bestiary.
     subject_kind = str(spec.get("category") or spec.get("subject_type") or "")
@@ -406,6 +433,7 @@ def run(a):
         state["automated_pass"] = qa.get("automated_pass", False)
         if child.returncode == 0 and state["automated_pass"]:
             state["status"] = "REVIEW_REQUIRED"
+            state["stage_completed"] = "post_gpu"
         state["warnings"] += qa.get("warnings", [])
     if requires_bestiary and not wiki_exists and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
         state["status"] = "REVIEW_REQUIRED"
