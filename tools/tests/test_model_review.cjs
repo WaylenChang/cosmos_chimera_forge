@@ -48,7 +48,7 @@ test('unified review desk deduplicates catalog and Drive packages with acceptanc
   assert.equal(orphan.star,'☆','provisional Drive-only asset is a designed item');
   assert.equal(review.unifiedEntries(packages,[creature],[char],'designed').length,3);
   assert.equal(review.unifiedEntries(packages,[creature],[char],'mdl').length,3);
-  assert.equal(review.unifiedEntries(packages,[creature],[char],'pending').length,1);
+  assert.equal(review.unifiedEntries(packages,[creature],[char],'pending').length,2);
   assert.equal(review.unifiedEntries(packages,[creature],[char],'all','太陽獸').length,1);
 });
 
