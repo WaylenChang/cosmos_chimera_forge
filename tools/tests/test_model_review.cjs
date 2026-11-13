@@ -6,6 +6,23 @@ const vm = require('node:vm');
 const review = require('../../model-review.js');
 const root = path.resolve(__dirname, '../..');
 
+test('Drive AI Blender creature assets appear in 3D and creature filters regardless of asset_ prefix', () => {
+  const model = {
+    id: 'asset_cr_chrono_beetle_adult',
+    type: 'creature-model-rig',
+    manifest: {task_type:'creature-model-rig',stage:'adult',missing:[{item:'source portrait'}]},
+    status: 'missing'
+  };
+  assert.equal(review.matchesCategory(model, 'mdl'), true);
+  assert.equal(review.matchesCategory(model, 'cr'), true);
+  assert.equal(review.matchesCategory(model, 'pending'), true);
+  assert.equal(review.matchesCategory(model, 'chr'), false);
+  assert.equal(review.matchesCategory({id:'asset_cr_aqua_slime_juvenile',type:'creature-model-rig',status:'provisional'},'mdl'),true);
+  assert.equal(review.matchesCategory({id:'asset_chr_actor_adult',type:'character-model-rig',status:'ok'},'mdl'),true);
+  assert.equal(review.matchesCategory({id:'asset_chr_actor_adult',type:'character-model-rig'},'chr'),true);
+  assert.equal(review.matchesCategory({id:'cr_01',type:'creature-concept'},'mdl'),false);
+});
+
 test('root manifest cannot be replaced by animation or video manifests', () => {
   assert.equal(review.selectRootManifest(['asset/qa/review_video_manifest.json', 'asset/animations/animations_manifest.json',
     'asset/manifest.json', 'asset/nested/manifest.json']), 'asset/manifest.json');
