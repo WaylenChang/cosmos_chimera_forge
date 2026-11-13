@@ -224,7 +224,9 @@ test('production build excludes asset and prompt directories and requires OAuth 
   assert.match(fs.readFileSync(path.join(root, '_site/drive-config.js'), 'utf8'), /123-test.apps.googleusercontent.com/);
   assert.match(fs.readFileSync(path.join(root, '_site/index.html'), 'utf8'), /id="driveApp" hidden/);
   const builtHtml = fs.readFileSync(path.join(root, '_site/index.html'), 'utf8');
-  for (const asset of ['forge.js','drive-storage.js','model-review.js','model-review.css','drive-config.js']) {
+  assert.ok(!names.includes('model-review.css'), 'retired duplicate 3D viewer CSS must not ship');
+  assert.doesNotMatch(builtHtml, /model-review\.css/);
+  for (const asset of ['forge.js','drive-storage.js','model-review.js','drive-config.js']) {
     const digest = require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'_site',asset))).digest('hex').slice(0,12);
     assert.ok(builtHtml.includes(`="${asset}?v=${digest}"`), asset+' must bypass stale Pages cache using its content hash');
   }
@@ -321,3 +323,64 @@ test('sync reads nested asset directories, ignores ZIP, and keeps blend metadata
  assert.ok(!h.calls.some(c=>c.url.searchParams.get('alt')==='media'&&/(blend|old-zip)$/.test(c.url.pathname)));
  assert.match(h.node('driveStatus').textContent,/1 個資產目錄/);
 });
+
+
+test('AI Blender Drive scan imports nested GLB and BLEND entries as one reviewable creature package', async () => {
+  const review = require('../../model-review.js');
+  const taskId = 'asset_cr_chrono_beetle_adult';
+  const manifest = {
+    spec:'cosmimera-art-task/1', task_id:taskId, task_type:'creature-model-rig',
+    subject_id:'cr_chrono_beetle', stage:'adult', pipeline:'ai_blender',
+    files:[
+      {path:'models/cr_chrono_beetle_adult.glb',kind:'model',level:'L1'},
+      {path:'models/cr_chrono_beetle_adult.blend',kind:'model',level:'L1'}
+    ],
+    missing:[{item:'source portrait'}]
+  };
+  const directory = {
+    "'ai_blender-id' in parents and trashed = false": [
+      {id:'ai-model-id',name:taskId,mimeType:'application/vnd.google-apps.folder'}
+    ],
+    "'ai-model-id' in parents and trashed = false": [
+      {id:'manifest-id',name:'manifest.json',mimeType:'application/json',size:'400'},
+      {id:'models-id',name:'models',mimeType:'application/vnd.google-apps.folder'}
+    ],
+    "'models-id' in parents and trashed = false": [
+      {id:'glb-id',name:'cr_chrono_beetle_adult.glb',mimeType:'model/gltf-binary',size:'2012168'},
+      {id:'blend-id',name:'cr_chrono_beetle_adult.blend',mimeType:'application/octet-stream',size:'263628'}
+    ]
+  };
+  const h = harness({handle:url=>{
+    const q=url.searchParams.get('q') || '';
+    if(Object.hasOwn(directory,q)) return Response.json({files:directory[q]});
+    if(url.pathname.endsWith('/manifest-id'))
+      return new Response(JSON.stringify(manifest),{headers:{'Content-Type':'application/json'}});
+  }});
+  const packages = [];
+  h.context.COSMI_MODEL_REVIEW = {
+    selectModelFile:review.selectModelFile, descriptorFor:()=>null,
+    onPackagesChanged(){}
+  };
+  h.context.COSMI_FORGE.clearDrivePackages = () => {packages.length=0;};
+  h.context.COSMI_FORGE.packages = () => packages;
+  h.context.COSMI_FORGE.loadAssetFiles = async (raw,{name}) => {
+    assert.equal(name,taskId);
+    const m=JSON.parse(new TextDecoder().decode(raw[taskId+'/manifest.json']));
+    const pkg={id:m.task_id,type:m.task_type,subjectId:m.subject_id,
+      manifest:m,stage:m.stage,status:'missing'};
+    packages.push(pkg);
+    return pkg;
+  };
+  await h.login();
+  assert.equal(packages.length,1);
+  const pkg=packages[0];
+  assert.equal(pkg.drivePath,'02_3d/ai_blender/'+taskId);
+  assert.equal(pkg.driveFiles.length,3);
+  assert.equal(pkg.glbFile.path,'models/cr_chrono_beetle_adult.glb');
+  assert.equal(pkg.glbFile.deferred,true);
+  assert.equal(review.matchesCategory(pkg,'mdl'),true);
+  assert.match(h.node('driveStatus').textContent,/Drive 已載入 1 個資產目錄/);
+  assert.ok(!h.calls.some(c=>c.url.pathname.endsWith('/glb-id') ||
+    c.url.pathname.endsWith('/blend-id')), 'never fetch large model binaries when listing');
+});
+

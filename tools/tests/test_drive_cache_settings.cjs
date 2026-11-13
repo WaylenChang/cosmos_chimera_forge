@@ -45,11 +45,12 @@ test('private cache safely degrades if browser IndexedDB is unavailable',async()
  assert.equal((await cache.stats(ns)).supported,false);
 });
 test('Drive restores cached previews after OAuth verification and checks current cloud metadata',()=>{
- assert.match(driveSource,/accountNamespace=window\.COSMI_DRIVE_CACHE\?\.namespace\(config\.rootId,permissionId\)/);
+ // Formatting differences do not change the OAuth/cache isolation contract.
+ assert.match(driveSource,/accountNamespace\s*=\s*window\.COSMI_DRIVE_CACHE\?\.namespace\(\s*config\.rootId,\s*permissionId\s*\)\s*\|\|\s*""/);
  assert.match(driveSource,/getPackages\(ns\)/);
- assert.match(driveSource,/importPackage\(item\.dir,item\.entry,item\.files,item\.raw/);
- assert.match(driveSource,/fingerprint\(old\.files\)===fingerprint\(files\)/);
- assert.match(driveSource,/syncPackages\(\{force:true\}\)/);
+ assert.match(driveSource,/importPackage\(\s*item\.dir,\s*item\.entry,\s*item\.files,\s*item\.raw/);
+ assert.match(driveSource,/fingerprint\(old\.files\)\s*===\s*fingerprint\(files\)/);
+ assert.match(driveSource,/syncPackages\(\{\s*force:\s*true\s*\}\)/);
  assert.match(driveSource,/sessionGeneration\+\+/);
  assert.match(driveSource,/\.clear\(previousNamespace\)/);
 });

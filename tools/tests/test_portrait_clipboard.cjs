@@ -61,8 +61,9 @@ test('portrait toolbar switches between manual clipboard and automated Drive wri
   const html = read('index.html');
   const drive = read('drive-storage.js');
   const pipeline = read('pipeline.js');
-  assert.match(drive, /if\(!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)\)\{\$\("copy"\)\.click\(\);return;\}/);
-  assert.match(drive, /await write\(path,new Blob\(\[text\],\{type:"text\/markdown"\}\)\)/);
+  // Manual mode copies the current portrait prompt; auto mode uploads Markdown.
+  assert.match(drive, /if\s*\(\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)\s*\)\s*\{\s*\$\("copy"\)\.click\(\);\s*return;\s*\}/);
+  assert.match(drive, /await write\(\s*path,\s*new Blob\(\[text\],\s*\{\s*type:\s*"text\/markdown"\s*\}\)\s*\)/);
   assert.match(pipeline, /control\.hidden = isPortrait && !automatic/);
   assert.match(pipeline, /window\.localStorage\?\.setItem\(modeKey, portraitMode\)/);
   assert.match(html, /id="portraitMode"/);

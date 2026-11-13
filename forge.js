@@ -113,7 +113,7 @@
 
   const reviewState = {
     packages: [], activePkgId: null, activeStage: "adult", activeImgIdx: 0,
-    filterCat: "all", filterQuery: "", viewMode: "single", // "single" | "compare" | "3d"
+    filterCat: "all", filterQuery: "", activeDesignedKey: null, viewMode: "single", // "single" | "compare" | "3d"
     zoomLevel: 1.0, panX: 0, panY: 0,
     reviews: {},
     three: {
@@ -896,7 +896,7 @@
     curCustomCtx = null;
   }
 
-  // Explicit three-phase chooser: category -> route -> connected pipeline nodes.
+  // Choose a category, then select a node directly from the unified pipeline graph.
   const taskFlow = window.COSMI_TASK_FLOW;
   let flowSelection = null;
   function currentFlow() {
@@ -916,12 +916,6 @@
     const stage = $("#pipelineStage");
     if (stage && category !== "move") stage.value = "appearance";
     renderAll();
-  }
-  function chooseRoute(route) {
-    const choice = flowSelection || state.flowChoice;
-    const next = taskFlow?.selectRoute(choice, route);
-    if (!next) return;
-    chooseFlow(next.category, next.route, next.step);
   }
   function chooseFlow(category, route, step) {
     const selected = taskFlow?.resolve(category, route, step);
@@ -946,67 +940,107 @@
     }
     window.COSMI_PIPELINE?.syncStageActions();
     renderAll();
+    // On narrow touch layouts, reveal the selected step's controls after rendering.
+    // Keep desktop selection behavior unchanged and avoid page navigation.
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      requestAnimationFrame(() => {
+        const target = document.querySelector("#pipelineControls") || document.querySelector("#prompt");
+        if (!target) return;
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const top = Math.max(0, window.scrollY + target.getBoundingClientRect().top - 72);
+        window.scrollTo({top, behavior: reducedMotion ? "instant" : "smooth"});
+      });
+    }
   }
   function renderTasks() {
-    const box = $("#tasks"), categories = $("#taskCategories"), routes = $("#taskRoutes"), detail = $("#taskFlowDetail");
-    if (!taskFlow || !box || !categories || !routes || !detail) return;
+    const box = $("#tasks"), categories = $("#taskCategories"), detail = $("#taskFlowDetail");
+    if (!taskFlow || !box || !categories || !detail) return;
     const choice = flowSelection || state.flowChoice;
     const active = currentFlow();
     const kind = choice?.category || null;
     categories.replaceChildren(...taskFlow.categories.map(c => el("button", {
       type:"button", class:c.id === kind ? "on" : "",
       "aria-pressed":String(c.id === kind), "aria-label":"選擇" + c.zh,
-      "data-tip":"先選擇" + c.zh + "，再選管線",
+      "data-tip":"顯示" + c.zh + "的完整任務流程",
       onclick:()=>chooseCategory(c.id)
     }, c.zh)));
     if (!kind) {
-      routes.replaceChildren();
       box.replaceChildren();
       detail.hidden = false;
-      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"① 先選擇角色、宙獸或招式。"));
+      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"先選擇角色、宙獸或招式，查看完整管線流程。"));
       renderDesigned();
       return;
     }
-    const routeDefs = kind === "move"
-      ? [{id:"move", label:"招式特效（VFX）", tip:"選擇招式特效管線，生成規格、分鏡、圖層與序列圖"}]
-      : [
-        {id:"image", label:"Image-to-3D", tip:"先生成並審查立繪，再選 Colab＋Blender 或 AI＋Blender"},
-        {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
-      ];
-    routes.replaceChildren(...routeDefs.map(d => el("button", {
-      type:"button", class:d.id === choice.route ? "on" : "",
-      "aria-pressed":String(d.id === choice.route), "aria-label":d.tip, "data-tip":d.tip,
-      onclick:()=>chooseRoute(d.id)
-    },d.label)));
-    if (!choice.route || !active) {
-      box.replaceChildren();
-      detail.hidden = false;
-      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"② 請選擇管線，接著點選流程圖節點。"));
-      renderDesigned();
-      return;
-    }
-    const rows = taskFlow.diagram(kind, choice.route);
-    function node(step) {
+    const rows = taskFlow.diagram(kind);
+    function node(step, laneRoute = null) {
+      // Shared start/end keep the last chosen lane, while branch nodes choose it directly.
+      const route = laneRoute || (kind === "move" ? "move" : choice?.route === "text" ? "text" : "image");
+      const isActive = active?.step === step.id && active?.route === route;
       const tip = step.detail + (step.output ? "\n產出：" + step.output : "");
       return el("button", {
-        type:"button", class:"task" + (step.id === active.step ? " on" : "") + (step.alternate ? " is-alternate" : ""),
-        "aria-pressed":String(step.id === active.step),
+        type:"button", class:"task" + (isActive ? " on" : "") + (step.alternate ? " is-alternate" : ""),
+        "data-route":route, "data-step":step.id,
+        "aria-pressed":String(isActive),
         "aria-label":"選擇步驟 " + step.name, "data-tip":tip, title:tip,
-        onclick:()=>chooseFlow(kind,choice.route,step.id)
+        onclick:()=>chooseFlow(kind,route,step.id)
       },el("span",{class:"tname"},step.name));
     }
+    function connector() {
+      return el("span",{class:"flow-connector","aria-hidden":"true"});
+    }
+    function parallelTracks(segment, route) {
+      return el("div",{class:"flow-parallel"},
+        el("span",{class:"flow-split","aria-hidden":"true"}),
+        el("div",{class:"flow-parallel-tracks"},segment.tracks.map(track =>
+          el("div",{class:"flow-parallel-track"},connector(),node(track[0],route),connector()))),
+        el("span",{class:"flow-merge","aria-hidden":"true"}));
+    }
+    function linkedSegments(segments, route) {
+      const elements = [];
+      segments.forEach((segment, i) => {
+        if (i) elements.push(connector());
+        if (segment.type === "parallel") elements.push(parallelTracks(segment, route));
+        else elements.push(el("div",{class:"flow-row"},node(segment.steps[0],route)));
+      });
+      return elements;
+    }
     const elements = [];
-    rows.forEach((row,i) => {
-      if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
-      if (row.type === "branch") {
-        elements.push(el("div",{class:"flow-branch"},
-          el("p",{class:"flow-branch-label"},row.label),
-          el("div",{class:"flow-branch-options"},row.steps.map(node))));
+    rows.forEach((row, i) => {
+      if (i) elements.push(connector());
+      if (row.type === "fork") {
+        elements.push(el("div",{class:"flow-fork"},
+          el("span",{class:"flow-split","aria-hidden":"true"}),
+          el("div",{class:"flow-lanes"},row.lanes.map(lane =>
+            el("div",{class:"flow-lane","aria-label":lane.id === "image" ? "立繪建模路線" : "文字建模路線"},
+              el("div",{class:"flow-lane-track"},connector(),
+                ...linkedSegments(lane.segments,lane.id),connector())))),
+          el("span",{class:"flow-merge","aria-hidden":"true"})));
       } else {
-        elements.push(el("div",{class:"flow-row"},node(row.steps[0])));
+        elements.push(el("div",{class:"flow-row" + (row.shared ? " flow-shared" : "")},node(row.steps[0])));
       }
     });
+    // Connector stems join exactly at track centers, including on narrow screens.
+    function alignStems() {
+      box.querySelectorAll(".flow-fork, .flow-parallel").forEach(fork => {
+        const split = fork.querySelector(":scope > .flow-split");
+        const merge = fork.querySelector(":scope > .flow-merge");
+        const tracks = fork.classList.contains("flow-fork")
+          ? Array.from(fork.querySelectorAll(":scope > .flow-lanes > .flow-lane"))
+          : Array.from(fork.querySelectorAll(":scope > .flow-parallel-tracks > .flow-parallel-track"));
+        if (!split || !merge || tracks.length < 2) return;
+        const bounds = fork.getBoundingClientRect();
+        const first = tracks[0].getBoundingClientRect();
+        const last = tracks[tracks.length - 1].getBoundingClientRect();
+        const top = Math.max(0, first.top + first.height/2 - bounds.top);
+        const bottom = Math.max(0, bounds.bottom - (last.top + last.height/2));
+        for (const stem of [split,merge]) {
+          stem.style.setProperty("--rail-top",top+"px");
+          stem.style.setProperty("--rail-bottom",bottom+"px");
+        }
+      });
+    }
     box.replaceChildren(...elements);
+    alignStems();
     detail.replaceChildren();
     detail.hidden = true;
     renderDesigned();
@@ -1443,6 +1477,46 @@
     return badges;
   }
 
+  // Accepted Drive assets must remain visible even without a generated designed.js entry.
+  function acceptedUncataloguedPackages() {
+    const known = new Set([
+      ...DESIGNED.map(d => String(d.line_id).toLowerCase()),
+      ...DESIGNED_CHARACTERS.map(d => String(d.id).toLowerCase())
+    ]);
+    const grouped = new Map();
+    for (const pkg of reviewState.packages || []) {
+      if (!isAcceptedStatus(pkg.status)) continue;
+      const subject = String(pkg.subjectId || pkg.manifest?.subject_id || pkg.concept?.line_id ||
+        pkg.concept?.creature_id || pkg.concept?.id || pkg.id || "").trim();
+      if (!subject || known.has(subject.toLowerCase())) continue;
+      const key = subject.toLowerCase();
+      if (!grouped.has(key)) grouped.set(key, { id: subject, packages: [] });
+      grouped.get(key).packages.push(pkg);
+    }
+    return [...grouped.values()];
+  }
+
+  function renderUncataloguedDesignedDetail(group) {
+    const header = $("#designedStageHeader"), body = $("#designedDetailView");
+    if (!header || !body) return;
+    header.replaceChildren(el("b", {}, group.id), el("span", { class: "f-badge accent" }, "已採用 · 尚未建檔"));
+    body.replaceChildren();
+    body.append(el("div", { class: "designed-detail-card" },
+      el("h3", {}, "已採用成果"),
+      el("div", { class: "muted" }, "此項目尚未建立完整設計資料，仍可查看已採用成果；請補齊資料與缺件。"),
+      ...group.packages.map(pkg => el("div", { class: "designed-review-item" },
+        el("div", { style: "flex:1;min-width:0" },
+          el("b", {}, pkg.id),
+          el("span", { class: "f-badge " + reviewStatusInfo(pkg.status).cls }, reviewStatusInfo(pkg.status).badge),
+          el("div", { class: "muted" }, pkg.drivePath || ""),
+          el("div", { style: "color:var(--warn);font-size:12px" },
+            "需補件：" + (pkg.manifest?.missing?.length ? pkg.manifest.missing.join("、") : "請確認尚缺的設計資料與交付檔案"))
+        ),
+        el("button", { class: "btn mini", type: "button", onclick: () => jumpToReview(pkg.id, pkg.stage) }, "檢視成果")
+      ))
+    ));
+  }
+
   function getDesignedFilteredItems() {
     const searchInput = $("#designedSearch");
     const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
@@ -1479,7 +1553,15 @@
       });
     }
 
-    return { lines, chars };
+    const orphaned = acceptedUncataloguedPackages().filter(group => {
+      if (designedState.cat !== "all") return false;
+      if (designedState.statusFilter === "unprocessed") return false;
+      if (designedState.statusFilter === "ok" && !group.packages.some(p => isApprovedStatus(p.status))) return false;
+      if (designedState.statusFilter === "provisional" && !group.packages.some(p => isProvisionalStatus(p.status))) return false;
+      return !query || group.id.toLowerCase().includes(query) ||
+        group.packages.some(p => String(p.id).toLowerCase().includes(query));
+    });
+    return { lines, chars, orphaned };
   }
 
   function renderDesignedRail() {
@@ -1487,18 +1569,23 @@
     if (!listEl) return;
     listEl.replaceChildren();
 
-    const { lines, chars } = getDesignedFilteredItems();
+    const { lines, chars, orphaned } = getDesignedFilteredItems();
     const countEl = $("#designedRailCount");
-    if (countEl) countEl.textContent = `${lines.length + chars.length} / ${DESIGNED.length + DESIGNED_CHARACTERS.length}`;
+    if (countEl) countEl.textContent = `${lines.length + chars.length + orphaned.length} / ${DESIGNED.length + DESIGNED_CHARACTERS.length + acceptedUncataloguedPackages().length}`;
 
     // 確保有預設選取項目
-    if (designedState.selectedType === "character") {
+    if (designedState.selectedType === "uncatalogued" && orphaned.some(g => g.id === designedState.selectedId)) {
+      // Preserve selection of a Drive-only accepted item.
+    } else if (designedState.selectedType === "character") {
       if (!chars.some(c => c.id === designedState.selectedId)) {
         if (chars.length > 0) {
           designedState.selectedId = chars[0].id;
         } else if (lines.length > 0) {
           designedState.selectedId = lines[0].line_id;
           designedState.selectedType = "creature";
+        } else if (orphaned.length) {
+          designedState.selectedId = orphaned[0].id;
+          designedState.selectedType = "uncatalogued";
         } else {
           designedState.selectedId = null;
         }
@@ -1511,15 +1598,31 @@
         } else if (chars.length > 0) {
           designedState.selectedId = chars[0].id;
           designedState.selectedType = "character";
+        } else if (orphaned.length) {
+          designedState.selectedId = orphaned[0].id;
+          designedState.selectedType = "uncatalogued";
         } else {
           designedState.selectedId = null;
         }
       }
     }
 
-    if (!lines.length && !chars.length) {
+    if (!lines.length && !chars.length && !orphaned.length) {
       listEl.append(el("div", { class: "muted", style: "padding:16px;text-align:center;font-size:12px" }, "無符合搜尋條件的項目"));
       return;
+    }
+
+    if (orphaned.length) {
+      listEl.append(el("div", { class: "muted", style: "padding:8px" }, "📦 已採用（待補設計資料）"));
+      orphaned.forEach(group => listEl.append(el("button", {
+        type: "button", class: "rl" + (designedState.selectedType === "uncatalogued" && designedState.selectedId === group.id ? " on" : ""),
+        onclick: () => selectDesignedItem(group.id, "uncatalogued")
+      }, el("div", { class: "rl-txt" },
+        el("div", { class: "rl-id" }, group.id),
+        el("div", { class: "rl-badges" },
+          ...group.packages.map(pkg => el("span", { class: "rl-stat " + (isApprovedStatus(pkg.status) ? "ok" : "provisional") }, reviewStatusInfo(pkg.status).zh))
+        )
+      ))));
     }
 
     if (lines.length > 0) {
@@ -1665,6 +1768,8 @@
         ),
         pkg.drivePath ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace" }, pkg.drivePath) : null,
         note ? el("div", { style: "font-size:11.5px;color:var(--warn);background:rgba(217,182,109,0.08);padding:4px 8px;border-radius:4px;border-left:2px solid var(--warn)" }, `審查意見：${note}`) : null,
+        pkg.manifest?.missing?.length ? el("div", { style: "color:var(--warn);font-size:12px" },
+          `⚠️ 需補件：${pkg.manifest.missing.join("、")}（不影響目前審查狀態）`) : null,
         imgs.length > 1 ? el("div", { style: "display:flex;gap:4px;flex-wrap:wrap;margin-top:2px" },
           imgs.slice(0, 5).map(im => el("img", {
             src: im.url,
@@ -1810,6 +1915,12 @@
 
     if (!designedState.selectedId) {
       bodyEl.append(el("div", { class: "muted", style: "padding:32px;text-align:center;font-size:13px" }, "請從左側名冊欄選取已設計項目進行審查檢驗。"));
+      return;
+    }
+
+    if (designedState.selectedType === "uncatalogued") {
+      const group = acceptedUncataloguedPackages().find(g => g.id === designedState.selectedId);
+      if (group) renderUncataloguedDesignedDetail(group);
       return;
     }
 
@@ -2411,6 +2522,7 @@
   }
 
   async function jumpToReview(pkgIdOrSubject, stage = null) {
+    reviewState.activeDesignedKey = null;
     await setViewMode("review");
     const s = (pkgIdOrSubject || "").trim().toLowerCase();
 
@@ -3228,6 +3340,7 @@
   function fieldRow(kind, f) {
     if (f.when && !f.when(state)) return el("div", { style: "display:none" });
     const key = kind + "." + f.key, vals = state[kind][f.key] || [], opts = f.options(state);
+    const controlId = "concept-" + kind + "-" + f.key;
     const label = v => (opts.find(o => o.v === v) || {}).zh || v;
     
     // 改良後的按鈕式鎖定開關，排版永不跑版
@@ -3256,7 +3369,7 @@
     let control;
     const multi = (f.max || 1) > 1;
     if (!multi) {
-      control = el("select", { onchange: e => {
+      control = el("select", { id: controlId, onchange: e => {
         if (e.target.value === "__CUSTOM__") {
           edit.click();
         } else {
@@ -3270,7 +3383,7 @@
       );
     } else {
       const chips = vals.map(v => el("span", { class: "chip" }, label(v), el("button", { type: "button", title: "移除", onclick: () => { state[kind][f.key] = vals.filter(x => x !== v); renderAll(); } }, "×")));
-      const add = el("select", { onchange: e => {
+      const add = el("select", { id: controlId, onchange: e => {
         if (!e.target.value) return;
         if (e.target.value === "__CUSTOM__") {
           edit.click();
@@ -3285,7 +3398,63 @@
       );
       control = el("div", { class: "chips" }, chips, add);
     }
-    return el("div", { class: "field" }, el("label", {}, f.label), el("div", { class: "fctl" }, edit, dice, lockBtn), control);
+    return el("div", { class: "field concept-field", "data-concept-field": key },
+      el("label", { for: controlId, title: f.label, "data-tip": f.label }, f.label),
+      el("div", { class: "fctl" }, edit, dice, lockBtn), control);
+  }
+
+  // The task graph is the single source of truth for which editor is visible.
+  function renderFlowStageInventory() {
+    const conceptSection = $("#conceptSection");
+    const inventory = $("#flowStageInventory");
+    const items = $("#flowStageInventoryItems");
+    const title = $("#flowStageInventoryTitle");
+    if (!conceptSection || !inventory || !items || !title) return;
+    const flow = currentFlow();
+    const showConcept = flow?.taskId === "character-concept" &&
+      ["appearance", "portrait", "review_portrait"].includes(flow.step);
+    conceptSection.hidden = !showConcept;
+    inventory.hidden = !flow || showConcept;
+    if (inventory.hidden) return;
+    title.textContent = flow.name + " · 階段角色／宙獸";
+    const category = flow.category;
+    const packages = reviewState.packages || [];
+    const relevant = packages.filter(p => {
+      const type = String(p.type || "");
+      const id = String(p.id || "");
+      const isCharacter = type.startsWith("character-") || id.startsWith("chr");
+      const isCreature = type.startsWith("creature-") || id.startsWith("cr");
+      if (category === "character" && !isCharacter) return false;
+      if (category === "creature" && !isCreature) return false;
+      if (category === "move") return false;
+      const stage = flow.stage;
+      if (["colab", "blender", "prompt_3d", "review_3d", "final_review"].includes(stage))
+        return is3dType(type) || is3dType(id);
+      return !is3dType(type) && !is3dType(id);
+    });
+    const unique = new Map();
+    for (const p of relevant) {
+      const subject = String(p.subjectId || p.manifest?.subject_id || p.concept?.line_id ||
+        p.concept?.id || p.id || "").trim();
+      const form = p.stage || p.manifest?.stage || "";
+      const key = subject + "|" + form;
+      const previous = unique.get(key);
+      if (!previous || (p.status === "ok" && previous.status !== "ok")) unique.set(key,p);
+    }
+    items.replaceChildren();
+    if (!unique.size) {
+      items.append(el("p", {class:"muted"}, "此階段尚無可追蹤的角色／宙獸成果。"));
+      return;
+    }
+    for (const p of unique.values()) {
+      const subject = p.subjectId || p.manifest?.subject_id || p.concept?.name_zh ||
+        p.concept?.id || p.id;
+      const form = p.stage || p.manifest?.stage;
+      items.append(el("div", {class:"field"},
+        el("span", {}, subject + (form ? " · " + (STAGE_ZH[form] || form) : "")),
+        el("span", {class:"muted"}, " · " + (p.status || "待審查") +
+          " · " + (p.images?.length || 0) + " 張圖片" + (p.models?.length ? " · " + p.models.length + " 個模型" : ""))));
+    }
   }
 
   function renderConcepts() {
@@ -3680,7 +3849,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
+    renderTasks(); renderFlowStageInventory(); if (!$("#conceptSection")?.hidden) renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
     save();
   }
 
@@ -4730,110 +4899,127 @@
     $("#upgradeModal").classList.add("show");
   }
 
-  // 渲染成果審查台主要畫面
-  function renderReviewView() {
-    const pkg = getActivePkg();
-    const linkedPkg = getLinkedPackage(pkg);
-
-    // 渲染名冊清單
-    // 渲染名冊清單（依 groupKey 分組，同宙獸之四種型態收合於同一項目）
-    const railList = $("#railList"); railList.replaceChildren();
-    const query = reviewState.filterQuery.toLowerCase();
-    const filtered = reviewState.packages.filter(p => {
-      if (reviewState.filterCat === "pending" && p.status !== "pending") return false;
-      if (reviewState.filterCat === "chr" && !p.id.startsWith("chr")) return false;
-      if (reviewState.filterCat === "cr" && !p.id.startsWith("cr")) return false;
-      if (reviewState.filterCat === "mdl" && !p.id.startsWith("mdl") && !p.id.startsWith("anim")) return false;
-      if (reviewState.filterCat === "fx" && !p.id.startsWith("fx")) return false;
-      if (query && !p.id.toLowerCase().includes(query) && !p.subjectId.toLowerCase().includes(query) && !(p.manifest?.source_pack || "").toLowerCase().includes(query)) return false;
-      return true;
-    });
-
-    const groups = [];
-    const groupMap = new Map();
-    filtered.forEach(p => {
-      const gk = (p.type === "creature-concept" || p.id.startsWith("cr"))
-        ? (p.groupKey || p.baseId || p.id)
-        : (is3dType(p.type) || p.id.startsWith("mdl"))
-        ? (p.groupKey || p.baseId || p.id)
-        : p.id;
-      if (!groupMap.has(gk)) {
-        const g = { key: gk, packages: [], baseId: p.baseId || p.id, type: p.type, subjectId: p.subjectId };
-        groupMap.set(gk, g);
-        groups.push(g);
-      }
-      groupMap.get(gk).packages.push(p);
-    });
-
-    groups.forEach(g => {
-      const isSel = pkg && (pkg.groupKey === g.key || pkg.id === g.key || g.packages.some(p => p.id === pkg.id));
-      let repPkg = (isSel && pkg) ? pkg : null;
-      if (!repPkg) {
-        repPkg = g.packages.find(p => p.stage === reviewState.activeStage)
-          || g.packages.find(p => p.stage === "adult")
-          || g.packages[0];
-      }
-
-      const thumbUrl = repPkg.images?.[0]?.url || g.packages.find(p => p.images?.[0]?.url)?.images[0].url;
-      const statZh = reviewStatusInfo(repPkg.status).badge;
-      const pLinked = getLinkedPackage(repPkg);
-
-      // 若群組有多種型態或具備型態屬性，顯示型態標籤 pills
-      let stagePillsEl = null;
-      const hasStages = g.packages.some(p => p.stage);
-      if (hasStages) {
-        const pills = STAGE_KEYS.map(stKey => {
-          const matchP = g.packages.find(p => p.stage === stKey);
-          if (!matchP) return null;
-          const isStOn = isSel && repPkg.stage === stKey;
-          return el("span", {
-            class: "stage-pill" + (isStOn ? " on" : ""),
-            title: STAGE_ZH[stKey] + " (" + matchP.id + ")",
-            onclick: (e) => {
-              e.stopPropagation();
-              reviewState.activeStage = stKey;
-              reviewState.activePkgId = matchP.id;
-              reviewState.activeImgIdx = 0;
-              renderReviewView();
-            }
-          }, STAGE_ZH[stKey]);
-        }).filter(Boolean);
-        stagePillsEl = el("div", { class: "stage-pills" }, pills);
-      }
-
-      const badges = el("div", { class: "rl-badges" },
-        el("span", { class: "rl-stat " + repPkg.status }, statZh),
-        repPkg.manifest?.source_pack ? el("span", { class: "rl-link-tag", title: "參照立繪: " + repPkg.manifest.source_pack }, "⬅ " + repPkg.manifest.source_pack.slice(0, 10)) : null,
-        (!repPkg.manifest?.source_pack && pLinked && !is3dType(repPkg.type)) ? el("span", { class: "rl-link-tag", title: "已關聯 3D 模型" }, "➡ 3D") : null
-      );
-
-      const item = el("div", {
-        class: "rl" + (isSel ? " on" : ""),
-        onclick: () => {
-          reviewState.activePkgId = repPkg.id;
-          if (repPkg.stage) reviewState.activeStage = repPkg.stage;
-          reviewState.activeImgIdx = 0;
-          if ((is3dType(repPkg.type) || repPkg.id.startsWith("mdl")) && reviewState.viewMode === "single") {
-            reviewState.viewMode = "3d";
-          }
-          renderReviewView();
-        }
-      },
-        el("div", { class: "rl-thumb" }, thumbUrl ? el("img", { src: thumbUrl }) : "📦"),
-        el("div", { class: "rl-txt" },
-          el("div", { class: "rl-id" }, g.baseId || repPkg.id),
-          el("div", { class: "rl-sub" }, repPkg.type + (repPkg.subjectId ? " · " + repPkg.subjectId : "") + (repPkg.stage ? " · " + STAGE_ZH[repPkg.stage] : "")),
-          stagePillsEl,
-          badges
-        )
-      );
-      railList.append(item);
-    });
-
-    if (!groups.length) {
-      railList.append(el("div", { class: "muted", style: "padding:16px 8px;text-align:center" }, "無符合條件的任務包"));
+  function reviewDeskEntries(category = reviewState.filterCat, query = reviewState.filterQuery) {
+    return window.COSMI_MODEL_REVIEW.unifiedEntries(reviewState.packages,
+      DESIGNED, DESIGNED_CHARACTERS, category, query);
+  }
+  function renderReviewDesigned(entry) {
+    const overlay = $("#reviewDesignedDetails");
+    if (!overlay) return;
+    overlay.style.display = "block";
+    const header = $("#designedStageHeader"), body = $("#designedDetailView");
+    if (header.parentNode !== overlay) overlay.append(header);
+    if (body.parentNode !== overlay) overlay.append(body);
+    header.replaceChildren();
+    body.replaceChildren();
+    if (entry.catalog) {
+      designedState.selectedId = entry.catalog.id;
+      designedState.selectedType = entry.catalog.kind;
+      renderDesignedDetail();
+    } else {
+      header.append(el("b", {}, entry.label));
+      body.append(el("div", {class:"designed-detail-card"}, "已採用 · 尚未建立完整設計資料"));
     }
-
+    if (entry.packages.length) {
+      const card = el("div", {class:"designed-detail-card"}, el("h3", {}, "相關交付成果"));
+      for (const p of sortPackagesByPriority(entry.packages)) {
+        const missing = p.manifest?.missing || [];
+        const note = missing.length ? " · ⚠️ 需補件：" +
+          missing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、") : "";
+        card.append(el("button", {class:"btn mini",type:"button",onclick:() => {
+          reviewState.activeDesignedKey = null;
+          reviewState.activePkgId = p.id;
+          if (p.stage) reviewState.activeStage = p.stage;
+          renderReviewView();
+        }}, p.id + " · " + reviewStatusInfo(p.status).zh + note));
+      }
+      body.prepend(card);
+    }
+    for (const id of ["stageEmpty","stageSingleView","stageCompareView","stage3dView","stageTag"]) {
+      const node = $("#" + id); if (node) node.style.display = "none";
+    }
+    $("#stageCarousel").replaceChildren();
+    $("#viewSeg").replaceChildren();
+    $("#panelBody").replaceChildren(el("div",{class:"muted"},entry.star + " " + entry.starTitle));
+  }
+  // Single index for designed subjects and review packages.
+  function renderReviewView() {
+    const entries = reviewDeskEntries();
+    const filtered = ["chr", "cr", "mdl", "fx", "pending"].includes(reviewState.filterCat);
+    // The rail and the stage must use the same category. Drive models may arrive
+    // after a portrait or catalog row has already been selected.
+    const focused = filtered
+      ? window.COSMI_MODEL_REVIEW.preferredVisiblePackage(entries, reviewState.activePkgId)
+      : null;
+    if (filtered && focused && focused.id !== reviewState.activePkgId) {
+      reviewState.activePkgId = focused.id;
+      if (focused.stage) reviewState.activeStage = focused.stage;
+      if (is3dType(focused.type)) reviewState.viewMode = "3d";
+    }
+    if (["mdl", "fx", "pending"].includes(reviewState.filterCat))
+      reviewState.activeDesignedKey = null;
+    const design = reviewState.activeDesignedKey &&
+      reviewDeskEntries("all", "").find(e => e.key === reviewState.activeDesignedKey);
+    const pkg = design ? null : (filtered && !focused ? null : getActivePkg());
+    const linkedPkg = getLinkedPackage(pkg);
+    const railList = $("#railList");
+    if (!railList) return;
+    railList.replaceChildren();
+    for (const entry of entries) {
+      const packages = entry.visiblePackages;
+      const representative = sortPackagesByPriority(packages)[0] || null;
+      const selected = design?.key === entry.key ||
+        (!design && pkg && packages.some(p => p.id === pkg.id));
+      const image = representative?.images?.[0]?.url ||
+        entry.packages.find(p => p.images?.[0]?.url)?.images[0]?.url;
+      const row = el("div", {class:"rl" + (selected ? " on" : ""),onclick:() => {
+        reviewState.activeDesignedKey = !representative ||
+          (entry.catalog && !["mdl", "fx", "pending"].includes(reviewState.filterCat))
+          ? entry.key : null;
+        if (!reviewState.activeDesignedKey && representative) {
+          reviewState.activePkgId = representative.id;
+          reviewState.activeImgIdx = 0;
+          if (representative.stage) reviewState.activeStage = representative.stage;
+          if (is3dType(representative.type)) reviewState.viewMode = "3d";
+        }
+        renderReviewView();
+      }});
+      row.append(el("div",{class:"rl-thumb"},image ? el("img",{src:image}) : "📦"));
+      const detail = el("div",{class:"rl-txt"});
+      detail.append(el("div",{class:"rl-id"},entry.star ?
+        el("span",{title:entry.starTitle,style:"color:var(--warn);margin-right:6px"},entry.star) : null,
+        entry.label));
+      detail.append(el("div",{class:"rl-sub"},entry.catalog?.id || representative?.subjectId || entry.key));
+      const stages = el("div",{class:"stage-pills"});
+      const stageRepresentatives = new Map();
+      for (const p of sortPackagesByPriority(packages.filter(p => p.stage))) {
+        if (!stageRepresentatives.has(p.stage)) stageRepresentatives.set(p.stage, p);
+      }
+      for (const p of stageRepresentatives.values()) {
+        stages.append(el("button",{class:"stage-pill",type:"button",title:p.id,onclick:event => {
+          event.stopPropagation();
+          reviewState.activeDesignedKey = null;
+          reviewState.activePkgId = p.id;
+          reviewState.activeStage = p.stage;
+          if (is3dType(p.type)) reviewState.viewMode = "3d";
+          renderReviewView();
+        }}, STAGE_ZH[p.stage] || p.stage));
+      }
+      if (stages.children.length) detail.append(stages);
+      const badges = el("div",{class:"rl-badges"});
+      if (representative) badges.append(el("span",{class:"rl-stat "+representative.status},
+        reviewStatusInfo(representative.status).badge));
+      if (entry.packages.length > 1) badges.append(el("span",{class:"rl-stat"},entry.packages.length+" 個交付包"));
+      if (entry.packages.some(p => p.manifest?.missing?.length))
+        badges.append(el("span",{class:"rl-stat missing"},"⚠️ 需補件"));
+      detail.append(badges);
+      row.append(detail);
+      railList.append(row);
+    }
+    if (!entries.length) railList.append(el("div",{class:"muted"},"無符合條件的項目"));
+    if (design) { renderReviewDesigned(design); return; }
+    const overlay = $("#reviewDesignedDetails");
+    if (overlay) overlay.style.display = "none";
     // 渲染舞台
     if (!pkg) {
       $("#stageEmpty").style.display = "block";
@@ -6540,6 +6726,8 @@
         document.querySelectorAll("#catSeg .segb").forEach(b => b.classList.remove("on"));
         btn.classList.add("on");
         reviewState.filterCat = btn.dataset.cat;
+        reviewState.activeDesignedKey = null;
+        if (reviewState.filterCat === "mdl") reviewState.viewMode = "3d";
         renderReviewView();
       });
     });
@@ -6697,6 +6885,7 @@
     openReviewPackage: pkg => {
       if (!pkg) return;
       reviewState.activePkgId = pkg.id;
+      reviewState.activeDesignedKey = null;
       if (pkg.stage) reviewState.activeStage = pkg.stage;
       reviewState.activeImgIdx = 0;
       if (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) reviewState.viewMode = "3d";

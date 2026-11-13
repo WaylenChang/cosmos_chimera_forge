@@ -40,8 +40,12 @@ test('encyclopedia is integrated into appearance for character/creature and stan
     assert.match(flow.resolve(kind,route,'appearance').output,/wiki\//);
   }
   assert.equal(flow.resolve('move','move','encyclopedia').stage,'encyclopedia');
-  const rows=flow.diagram('creature','image');
-  assert.deepEqual(Array.from(rows.find(r=>r.type==='branch').steps,s=>s.id),['image_colab','image_blender']);
+  const rows=flow.diagram('creature');
+  const fork=rows.find(r=>r.type==='fork');
+  assert.deepEqual(Array.from(fork.lanes,l=>l.id),['image','text']);
+  assert.deepEqual(Array.from(fork.lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
+  assert.equal(rows[0].steps[0].id,'appearance');
+  assert.equal(rows.at(-1).steps[0].id,'review_3d');
   assert.equal(flow.selectRoute(flow.selectCategory('move'),'move').step,'encyclopedia');
 });
 test('legacy task and stage can be mapped to new flow', () => {
@@ -54,7 +58,8 @@ test('legacy task and stage can be mapped to new flow', () => {
 test('page loads flow before forge and includes category, route, step and detail containers', () => {
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   assert.ok(html.indexOf('src="task-flow.js"') < html.indexOf('src="forge.js"'));
-  for(const id of ['taskCategories','taskRoutes','tasks','taskFlowDetail']) assert.match(html,new RegExp('id="'+id+'"'));
+  for(const id of ['taskCategories','tasks','taskFlowDetail']) assert.match(html,new RegExp('id="'+id+'"'));
+  assert.doesNotMatch(html,/id="taskRoutes"/);
 });
 test('post-model portrait does not ask for front view or T-pose', () => {
   const code=fs.readFileSync(path.join(root,'pipeline.js'),'utf8');
@@ -73,11 +78,12 @@ test('redundant task navigation and portrait auto controls are removed', () => {
   assert.doesNotMatch(pipeline,/\$\("portraitAutoRun"\)/);
   assert.match(html,/id="settingsSignOut"/);
 });
-test('category and route controls use text without mixed decorative icons', () => {
+test('category controls use text and do not display a route toggle', () => {
   const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
   assert.match(forge,/}, c\.zh\)\)\)/);
-  assert.match(forge,/label:"Image-to-3D"/);
-  assert.match(forge,/label:"Prompt-to-3D"/);
+  assert.doesNotMatch(forge,/function chooseRoute\(/);
+  assert.doesNotMatch(forge,/flow-lane-label|flow-alternatives-label/); 
+  assert.match(forge,/class:"flow-parallel-track"/);
 });
 
 test('production build ships the task chooser module', () => {
@@ -86,10 +92,14 @@ test('production build ships the task chooser module', () => {
 });
 test('post-model portrait uses native copy or Drive upload, never a missing template', () => {
   const drive=fs.readFileSync(path.join(root,'drive-storage.js'),'utf8');
-  assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)){'));
-  assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)&&!window.COSMI_PIPELINE?.isPortraitAuto())return;'));
+  // Verify both handlers follow the selected mode, independent of indentation.
+  const savePrompt=drive.slice(drive.indexOf('$("driveSavePrompt").addEventListener'),drive.indexOf('$("driveLoadPrompt").addEventListener'));
+  const pipelineRead=drive.slice(drive.indexOf('$("pipelineRead").addEventListener'),drive.indexOf('$("pipelineSaveSettings").addEventListener'));
+  assert.match(savePrompt,/\["portrait",\s*"portrait_3d"\]\.includes\(\$\("pipelineStage"\)\.value\)\s*&&\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)/);
+  assert.match(pipelineRead,/if\s*\(\s*\["portrait",\s*"portrait_3d"\]\.includes\(\$\("pipelineStage"\)\.value\)\s*\)/);
+  assert.match(pipelineRead,/if\s*\(\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)\s*\)\s*\{\s*\$\("copy"\)\.click\(\);\s*return;/);
+  assert.match(pipelineRead,/await write\(\s*path,\s*new Blob\(\[text\],\s*\{\s*type:\s*"text\/markdown"/);
 });
-
 test('typed anatomy profiles are shipped and connected to 3D prompts', () => {
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   const build=fs.readFileSync(path.join(root,'tools/build-site.mjs'),'utf8');
@@ -125,4 +135,33 @@ test('browser anatomy planner respects mixed origins and explicit wings', () => 
   const mixed=plan('creature',{base_parents:['生物·哺乳類','幻想生物·異界/異形']},'image');
   assert.equal(mixed.anatomy,'hybrid');
   assert.equal(mixed.review_required,true);
+});
+
+test('minimal rail diagram exposes both image backends without text route headers', () => {
+  const flow=loadFlow();
+  const rows=flow.diagram('character');
+  const lanes=rows[1].lanes;
+  assert.deepEqual(Array.from(lanes[0].segments[2].tracks,t=>t[0].name),
+    ['Colab + AI + Blender','AI + Blender']);
+  assert.equal(lanes[1].segments[0].steps[0].name,'AI + Blender（文字建模）');
+  assert.equal(lanes[0].label,undefined);
+  assert.equal(lanes[1].label,undefined);
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(html,/\.task-flow-list \.flow-parallel-tracks/);
+  assert.match(html,/\.task-flow-list \.flow-lane, \.task-flow-list \.flow-parallel-track \{[^}]*border:0/);
+  assert.doesNotMatch(forge,/lane\.label|segment\.label/);
+});
+
+test('concept fields keep label buttons and options in one row on desktop tablet and phone', () => {
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/class: "field concept-field"/);
+  assert.match(forge,/"data-concept-field": key/);
+  assert.match(forge,/el\("label", \{ for: controlId, title: f\.label/);
+  assert.match(html,/#forgeView #concept \.concept-field \{[\s\S]*?display:grid !important;/);
+  assert.match(html,/#forgeView #concept \.concept-field \{[\s\S]*?grid-template-columns:[^;]+!important;/);
+  assert.match(html,/#forgeView #concept \{[^}]*overflow-x:auto/);
+  assert.match(html,/#forgeView #concept \.concept-field > \.chips \{[\s\S]*?flex-wrap:nowrap/);
+  assert.match(html,/@media \(max-width:699px\) \{\s*#forgeView #concept \.concept-field/);
 });

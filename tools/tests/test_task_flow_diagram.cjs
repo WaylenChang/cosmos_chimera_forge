@@ -45,29 +45,40 @@ test('category must be selected before route; route must be selected before node
   assert.equal(move.step, 'encyclopedia');
   assert.equal(flow.selectRoute(flow.selectCategory('move'), 'image'), null);
 });
-test('image modeling is a parallel fork, not sequential Colab then Blender', () => {
+test('both routes are visible in one horizontal diagram with shared endpoints', () => {
   const flow = flowModule();
-  const rows = Array.from(flow.diagram('character', 'image'));
-  assert.equal(rows.length, 5);
-  assert.equal(rows[3].type, 'branch');
-  assert.deepEqual(Array.from(rows[3].steps, s => s.id), ['image_colab', 'image_blender']);
-  assert.equal(rows[2].steps[0].id, 'review_portrait');
-  assert.equal(rows[4].steps[0].id, 'review_3d');
-  assert.deepEqual(Array.from(flow.diagram('creature', 'text'), r => r.steps[0].id),
-    ['appearance', 'prompt_3d', 'portrait_3d', 'review_portrait_3d', 'review_3d']);
+  for (const kind of ['character','creature']) {
+    const rows = Array.from(flow.diagram(kind));
+    assert.equal(rows.length,3);
+    assert.equal(rows[0].type,'step');
+    assert.equal(rows[0].shared,true);
+    assert.equal(rows[0].steps[0].id,'appearance');
+    assert.equal(rows[1].type,'fork');
+    assert.equal(rows[2].shared,true);
+    assert.equal(rows[2].steps[0].id,'review_3d');
+    const lanes=Array.from(rows[1].lanes);
+    assert.deepEqual(lanes.map(l=>l.id),['image','text']);
+    assert.deepEqual(Array.from(lanes[0].segments,s=>s.type),['step','step','parallel']);
+    assert.deepEqual(Array.from(lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
+    assert.deepEqual(Array.from(lanes[1].segments,s=>s.steps[0].id),
+      ['prompt_3d','portrait_3d','review_portrait_3d']);
+  }
+  assert.deepEqual(Array.from(flow.diagram('move'),r=>r.steps[0].id),['encyclopedia','move_vfx']);
 });
-test('task navigation renders flow connectors and does not infer default route', () => {
+test('task graph is horizontally scrollable and category selection needs no route switch', () => {
   assert.match(html, /<h2>任務流程圖<\/h2>/);
-  assert.match(html, /\.flow-connector/);
-  assert.match(html, /\.flow-branch-options/);
+  assert.match(html, /\.task-flow-list \{ display:flex !important; flex-direction:row/);
+  assert.match(html, /overflow-x:auto/);
+  assert.match(html, /flow-lanes/); 
+  assert.match(html, /flow-parallel-tracks/);
+  assert.doesNotMatch(html, /id="taskRoutes"/);
   assert.match(forge, /function chooseCategory\(category\)/);
-  assert.match(forge, /function chooseRoute\(route\)/);
-  assert.ok(forge.includes('label:"招式特效（VFX）"'));
-  assert.doesNotMatch(forge.slice(forge.indexOf('function chooseCategory('), forge.indexOf('function chooseRoute(')), /chooseRoute\("move"\)/);
-  assert.match(forge, /if \(!choice\?\.category \|\| !choice\.route \|\| !choice\.step\) return null/);
-  assert.match(forge, /taskFlow\.diagram\(kind, choice\.route\)/);
-  assert.match(forge, /renderAll\(\);\s*}\s*function chooseRoute/);
-  assert.doesNotMatch(forge.slice(forge.indexOf('function currentFlow()'), forge.indexOf('function chooseCategory(')), /taskFlow\.infer/);
+  assert.doesNotMatch(forge, /function chooseRoute\(route\)/);
+  assert.match(forge, /taskFlow\.diagram\(kind\)/);
+  assert.match(forge, /onclick:\(\)=>chooseFlow\(kind,route,step.id\)/);
+  assert.match(forge, /window\.matchMedia(?:\?\.)?\(/);
+  assert.match(html, /\.task-flow-list \{[^}]*flex-wrap:nowrap !important;/);
+  assert.match(forge, /window\.scrollTo\(/);
 });
 test('appearance is derived from current concept data, without duplicate input', () => {
   const pipeline = pipelineModule();
@@ -95,4 +106,17 @@ test('format JSON is located below Prompt output, with save and load controls', 
   }
   assert.match(drive, /已儲存格式參數/);
   assert.match(drive, /已載入格式參數/);
+});
+
+test('concept editor follows selected character concept flow and stage inventory is present', () => {
+  assert.match(html, /id="conceptSection"/);
+  assert.match(html, /id="flowStageInventory" hidden/);
+  assert.match(html, /id="flowStageInventoryItems"/);
+  assert.match(forge, /function renderFlowStageInventory\(\)/);
+  assert.match(forge, /const flow = currentFlow\(\)/);
+  assert.match(forge, /conceptSection\.hidden = !showConcept/);
+  assert.match(forge, /inventory\.hidden = !flow \|\| showConcept/);
+  assert.match(forge, /renderTasks\(\); renderFlowStageInventory\(\);/);
+  assert.match(forge, /if \(!\$\("#conceptSection"\)\?\.hidden\) renderConcepts\(\)/);
+  assert.match(forge, /const key = subject \+ "\\|" \+ form/);
 });
