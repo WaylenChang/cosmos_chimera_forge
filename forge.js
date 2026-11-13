@@ -1549,6 +1549,9 @@
         } else if (lines.length > 0) {
           designedState.selectedId = lines[0].line_id;
           designedState.selectedType = "creature";
+        } else if (orphaned.length) {
+          designedState.selectedId = orphaned[0].id;
+          designedState.selectedType = "uncatalogued";
         } else {
           designedState.selectedId = null;
         }
@@ -1561,6 +1564,9 @@
         } else if (chars.length > 0) {
           designedState.selectedId = chars[0].id;
           designedState.selectedType = "character";
+        } else if (orphaned.length) {
+          designedState.selectedId = orphaned[0].id;
+          designedState.selectedType = "uncatalogued";
         } else {
           designedState.selectedId = null;
         }
