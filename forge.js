@@ -4740,11 +4740,7 @@
     const railList = $("#railList"); railList.replaceChildren();
     const query = reviewState.filterQuery.toLowerCase();
     const filtered = reviewState.packages.filter(p => {
-      if (reviewState.filterCat === "pending" && p.status !== "pending") return false;
-      if (reviewState.filterCat === "chr" && !p.id.startsWith("chr")) return false;
-      if (reviewState.filterCat === "cr" && !p.id.startsWith("cr")) return false;
-      if (reviewState.filterCat === "mdl" && !p.id.startsWith("mdl") && !p.id.startsWith("anim")) return false;
-      if (reviewState.filterCat === "fx" && !p.id.startsWith("fx")) return false;
+      if (!window.COSMI_MODEL_REVIEW.matchesCategory(p, reviewState.filterCat)) return false;
       if (query && !p.id.toLowerCase().includes(query) && !p.subjectId.toLowerCase().includes(query) && !(p.manifest?.source_pack || "").toLowerCase().includes(query)) return false;
       return true;
     });
