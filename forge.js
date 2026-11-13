@@ -4862,22 +4862,37 @@
   // Single index for designed subjects and review packages.
   function renderReviewView() {
     const entries = reviewDeskEntries();
+    const filtered = ["chr", "cr", "mdl", "fx", "pending"].includes(reviewState.filterCat);
+    // The rail and the stage must use the same category. Drive models may arrive
+    // after a portrait or catalog row has already been selected.
+    const focused = filtered
+      ? window.COSMI_MODEL_REVIEW.preferredVisiblePackage(entries, reviewState.activePkgId)
+      : null;
+    if (filtered && focused && focused.id !== reviewState.activePkgId) {
+      reviewState.activePkgId = focused.id;
+      if (focused.stage) reviewState.activeStage = focused.stage;
+      if (is3dType(focused.type)) reviewState.viewMode = "3d";
+    }
+    if (["mdl", "fx", "pending"].includes(reviewState.filterCat))
+      reviewState.activeDesignedKey = null;
     const design = reviewState.activeDesignedKey &&
       reviewDeskEntries("all", "").find(e => e.key === reviewState.activeDesignedKey);
-    const pkg = design ? null : getActivePkg();
+    const pkg = design ? null : (filtered && !focused ? null : getActivePkg());
     const linkedPkg = getLinkedPackage(pkg);
     const railList = $("#railList");
     if (!railList) return;
     railList.replaceChildren();
     for (const entry of entries) {
-      const packages = entry.visiblePackages.length ? entry.visiblePackages : entry.packages;
+      const packages = entry.visiblePackages;
       const representative = sortPackagesByPriority(packages)[0] || null;
       const selected = design?.key === entry.key ||
         (!design && pkg && packages.some(p => p.id === pkg.id));
       const image = representative?.images?.[0]?.url ||
         entry.packages.find(p => p.images?.[0]?.url)?.images[0]?.url;
       const row = el("div", {class:"rl" + (selected ? " on" : ""),onclick:() => {
-        reviewState.activeDesignedKey = entry.catalog || !representative ? entry.key : null;
+        reviewState.activeDesignedKey = !representative ||
+          (entry.catalog && !["mdl", "fx", "pending"].includes(reviewState.filterCat))
+          ? entry.key : null;
         if (!reviewState.activeDesignedKey && representative) {
           reviewState.activePkgId = representative.id;
           reviewState.activeImgIdx = 0;
@@ -4894,7 +4909,7 @@
       detail.append(el("div",{class:"rl-sub"},entry.catalog?.id || representative?.subjectId || entry.key));
       const stages = el("div",{class:"stage-pills"});
       const stageRepresentatives = new Map();
-      for (const p of sortPackagesByPriority(entry.packages.filter(p => p.stage))) {
+      for (const p of sortPackagesByPriority(packages.filter(p => p.stage))) {
         if (!stageRepresentatives.has(p.stage)) stageRepresentatives.set(p.stage, p);
       }
       for (const p of stageRepresentatives.values()) {
@@ -4903,6 +4918,7 @@
           reviewState.activeDesignedKey = null;
           reviewState.activePkgId = p.id;
           reviewState.activeStage = p.stage;
+          if (is3dType(p.type)) reviewState.viewMode = "3d";
           renderReviewView();
         }}, STAGE_ZH[p.stage] || p.stage));
       }
@@ -6627,6 +6643,8 @@
         document.querySelectorAll("#catSeg .segb").forEach(b => b.classList.remove("on"));
         btn.classList.add("on");
         reviewState.filterCat = btn.dataset.cat;
+        reviewState.activeDesignedKey = null;
+        if (reviewState.filterCat === "mdl") reviewState.viewMode = "3d";
         renderReviewView();
       });
     });

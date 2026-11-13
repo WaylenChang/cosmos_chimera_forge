@@ -64,21 +64,14 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: xvfb-run -a python -m unittest discover -s tests -p 'test_anime3d_blender_smoke.py' -v
 
-  deploy:
-    name: Deploy GitHub Pages
+  pages-build:
+    name: Build and upload GitHub Pages artifact
     needs: [verify, blender-smoke]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    concurrency:
-      group: pages
-      cancel-in-progress: false
     permissions:
       contents: read
       pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -102,6 +95,42 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: '_site'
+
+  deploy:
+    name: Deploy GitHub Pages
+    needs: [pages-build]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # Artifact upload can succeed before deploy-pages can query its metadata.
+      # A dependent job plus readiness polling avoids this transient failure.
+      - name: Wait for Pages artifact metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in $(seq 1 24); do
+            if gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
+              --jq '.artifacts[] | select(.name == "github-pages" and (.expired | not)) | .id' \
+              | grep -qE '^[0-9]+$'; then
+              echo "Pages artifact is visible to the Actions API."
+              exit 0
+            fi
+            echo "Waiting for Pages artifact metadata ($attempt/24)"
+            sleep 5
+          done
+          echo "::error::Pages artifact is still unavailable to the Actions API."
+          exit 1
 
       - name: Deploy to GitHub Pages
         id: deployment
