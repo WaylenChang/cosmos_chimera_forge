@@ -57,53 +57,54 @@ HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並�
 在專案根目錄使用 HTTP 伺服器啟動（**不可直接雙擊 `index.html`**）：
 
 ```bash
-python -m http.server 8000
+python -m http.server 8687
 ```
 
-開啟 `http://localhost:8000`。若系統使用 `python3`，改用 `python3 -m http.server 8000`。
+開啟 `http://localhost:8687`。若系統使用 `python3`，改用 `python3 -m http.server 8687`。
 
 在 [Google Cloud Console](https://console.cloud.google.com/apis/credentials) 找到 `drive-config.js` 使用的 **OAuth 2.0 Web application Client ID**，在 **Authorized JavaScript origins** 新增：
 
-- `http://localhost:8000`
-- `http://127.0.0.1:8000`（如果也需要使用 127.0.0.1 存取；Google 視為另一個來源）
+- `http://localhost:8687`
+- `http://127.0.0.1:8687`（如果也需要使用 127.0.0.1 存取；Google 視為另一個來源）
 - 正式站來源 `https://changweilin.github.io` 繼續保留
 
 這些來源需與瀏覽器實際使用的 scheme、hostname 和 port 完全一致；不要添加 URL 路徑。確認 Cloud 專案已啟用 Drive API、OAuth consent screen / test users 已設定，且登入帳號具有專案 Drive 資料夾權限。本機與 GitHub Pages 可以使用同一組公開 Client ID，不需要 Client Secret。HTTP localhost 是 Google OAuth 開發環境允許的特例，其他非 localhost 網址通常需要 HTTPS。
 
 **登入持續性**：驗證 Drive 權限成功後，尚未過期的 access token 與到期時間只存放在目前分頁的 `sessionStorage`；同分頁重新整理會嘗試恢復並再次驗證根目錄。主動登出、權限失效或 token 到期會清除記錄並回到登入畫面。此方案不支援跨瀏覽器工作階段的長期自動登入；要達成真正的「記住我」與 refresh token 續期，須另建後端 OAuth authorization-code + PKCE、加密 token 儲存和 HttpOnly/Secure/SameSite session cookie。不同網站來源的 sessionStorage 彼此獨立，localhost 和 GitHub Pages 各需首次授權。
 
-
 ## 核心檔案架構
 
-| 檔案 | 內容 | 何時改 |
-|---|---|---|
-| `index.html` | 頁面結構與樣式（包含 Prompt 鍛造台與成果審查台雙視圖） | 改介面排版、CSS |
-| `forge.js` | UI 互動、隨機抽樣、任務組裝、ZIP 解析、審查與一鍵解壓指令 | 改邏輯、調整解壓或審查功能 |
-| `catalog.js` | 選項池、權重、原型清單、動作 clip、特效分類 | 加選項、調權重、改動作規格 |
-| `tasks.js` | 各任務的 prompt 模板（產出清單、檔名、JSON 欄位） | 新任務、改交付規格 |
-| `designed.js` | 已設計項目（**產生檔，勿手改**） | 改 `Data/_incoming` 批次後跑 `python gen_designed.py` |
-| `gen_designed.py` | 從 `Data/` 批次資料產生 `designed.js` | 新增已設計的進化線或修改欄位 |
-| `tools/` | 驗收腳本 (`validate_art.py`)、資料驗證 (`validate_data.py`)、一鍵解壓腳本 (`unpack_incoming.ps1`) 與單元測試 | 修改交付驗收規範、資料驗證或解壓邏輯 |
-| `pipeline.js` | 單步驟 prompt 組裝、外觀與參數隔離 | 修改角色／宙獸管線 |
-| `drive-config.js` | OAuth Web Client ID、Drive 根目錄 ID 與根路徑 | 更換 Google 登入或 Drive 專案 |
-| `drive-storage.js` | Google 授權、遞迴目錄讀寫、審查與搬移 | 修改雲端存取 |
-| `Art/_incoming/` | 本機下載／解壓暫存，正式資產位於 Drive | 本機匯出與遊戲交付 |
-| `Data/` | 宙獸、角色、招式、特性與原型圖鑑資料庫 | 兩邊專案同步保留的圖鑑資料 |
+| 檔案               | 內容                                                                                                         | 何時改                                                |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| `index.html`       | 頁面結構與樣式（包含 Prompt 鍛造台與成果審查台雙視圖）                                                       | 改介面排版、CSS                                       |
+| `forge.js`         | UI 互動、隨機抽樣、任務組裝、ZIP 解析、審查與一鍵解壓指令                                                    | 改邏輯、調整解壓或審查功能                            |
+| `catalog.js`       | 選項池、權重、原型清單、動作 clip、特效分類                                                                  | 加選項、調權重、改動作規格                            |
+| `tasks.js`         | 各任務的 prompt 模板（產出清單、檔名、JSON 欄位）                                                            | 新任務、改交付規格                                    |
+| `designed.js`      | 已設計項目（**產生檔，勿手改**）                                                                             | 改 `Data/_incoming` 批次後跑 `python gen_designed.py` |
+| `gen_designed.py`  | 從 `Data/` 批次資料產生 `designed.js`                                                                        | 新增已設計的進化線或修改欄位                          |
+| `tools/`           | 驗收腳本 (`validate_art.py`)、資料驗證 (`validate_data.py`)、一鍵解壓腳本 (`unpack_incoming.ps1`) 與單元測試 | 修改交付驗收規範、資料驗證或解壓邏輯                  |
+| `pipeline.js`      | 單步驟 prompt 組裝、外觀與參數隔離                                                                           | 修改角色／宙獸管線                                    |
+| `drive-config.js`  | OAuth Web Client ID、Drive 根目錄 ID 與根路徑                                                                | 更換 Google 登入或 Drive 專案                         |
+| `drive-storage.js` | Google 授權、遞迴目錄讀寫、審查與搬移                                                                        | 修改雲端存取                                          |
+| `Art/_incoming/`   | 本機下載／解壓暫存，正式資產位於 Drive                                                                       | 本機匯出與遊戲交付                                    |
+| `Data/`            | 宙獸、角色、招式、特性與原型圖鑑資料庫                                                                       | 兩邊專案同步保留的圖鑑資料                            |
 
 ## 版本規範（SemVer）
+
 每個 prompt 第一行是任務標頭 `[COSMIMERA-TASK spec tool catalog template@ver task_id seed]`，交付的 `manifest.json` 必須原樣抄回，讓任何產出都能追溯到產生它的規格版本。
 
-| 版本號 | 位置 | major | minor | patch |
-|---|---|---|---|---|
-| `spec` | `forge.js` `SPEC` | manifest 結構改變 | — | — |
-| `tool` | `forge.js` `TOOL_VERSION` | 任務標頭格式改變 | 新 UI 功能 | 修 bug |
-| `catalog` | `catalog.js` `version` | 改名/刪除既有選項 ID、改動作 clip ID 或事件 | 新增選項、調權重 | 改中文措辭 |
-| `template` | `tasks.js` 各任務 `version` | 改產出清單、檔名、JSON 欄位 | 新增選填項目 | 改措辭 |
+| 版本號     | 位置                        | major                                       | minor            | patch      |
+| ---------- | --------------------------- | ------------------------------------------- | ---------------- | ---------- |
+| `spec`     | `forge.js` `SPEC`           | manifest 結構改變                           | —                | —          |
+| `tool`     | `forge.js` `TOOL_VERSION`   | 任務標頭格式改變                            | 新 UI 功能       | 修 bug     |
+| `catalog`  | `catalog.js` `version`      | 改名/刪除既有選項 ID、改動作 clip ID 或事件 | 新增選項、調權重 | 改中文措辭 |
+| `template` | `tasks.js` 各任務 `version` | 改產出清單、檔名、JSON 欄位                 | 新增選填項目     | 改措辭     |
 
 - 每次 bump 都在 `CHANGELOG.md` 記一行。
 - 動作 clip ID 會被 Unity Animator 引用，改 ID 等於破壞性變更。
 
 ## 部署與工作流
+
 1. **Google 設定**：在 OAuth 所屬 Google Cloud 專案啟用 Google Drive API；OAuth 類型須為 Web application，Authorized JavaScript origins 加入 `https://changweilin.github.io`（不含路徑）。若使用本機測試，也需加入實際的 HTTP localhost 來源。Consent screen 若仍為 Testing，需加入使用者為測試帳號。
 2. **Client ID**：已在 `drive-config.js` 設定網站專用 Client ID；可用 GitHub Actions repository variable `GOOGLE_OAUTH_CLIENT_ID` 覆寫。Client ID 是公開設定，請勿放入 Client Secret。授權使用 Drive scope，因需讀取／更新既有成果包；Google Cloud 的應用程式發布與驗證要求依帳號設定辦理。
 3. **自動部署**：推送至 `main` 觸發 `.github/workflows/deploy.yml`，先執行存取測試，再執行 `node tools/build-site.mjs`。只上傳 `_site/` 的明確檔案清單；不包含 `Art/`、`Data/`、原始 Prompt 或 ZIP。
@@ -112,7 +113,6 @@ python -m http.server 8000
 GitHub Pages 提供公開的 HTML／JavaScript 殼層，前端登入畫面不是伺服器端存取控制；私人資產只由帶有 OAuth Bearer token 的 Drive API 讀取，實際授權由 Drive ACL 執行。Token 僅保存在記憶體與同分頁 sessionStorage（供頁面刷新恢復），不寫入 localStorage、網址或部署成品；登出／到期後重載清除私人 blob。鍛造參數與收藏仍保存在目前瀏覽器的本機儲存空間，並非 Drive 同步資料。
 
 參考：[Google Web 授權](https://developers.google.com/identity/oauth2/web/guides/use-token-model)、[GitHub Pages 存取控制](https://docs.github.com/en/enterprise-cloud%40latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site)。
-
 
 ### Drive 本機快取與設定（Tool 2.7.0）
 
