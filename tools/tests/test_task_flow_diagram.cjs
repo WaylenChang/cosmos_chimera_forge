@@ -75,7 +75,8 @@ test('task graph is horizontally scrollable and category selection needs no rout
   assert.doesNotMatch(forge, /function chooseRoute\(route\)/);
   assert.match(forge, /taskFlow\.diagram\(kind\)/);
   assert.match(forge, /onclick:\(\)=>chooseFlow\(kind,route,step.id\)/);
-  assert.match(forge, /window\.matchMedia\?\./);
+  assert.match(forge, /window\.matchMedia(?:\?\.)?\(/);
+  assert.match(html, /\.task-flow-list \{[^}]*flex-wrap:nowrap !important;/);
   assert.match(forge, /window\.scrollTo\(/);
 });
 test('appearance is derived from current concept data, without duplicate input', () => {
