@@ -7,6 +7,23 @@
   const state = { linked: "" };
   const isModel = pkg => /model|rig|anim/.test(pkg?.type || "");
 
+  // Drive model packages may be named asset_cr_* or asset_chr_* rather than mdl-*.
+  // Classify by manifest task type first, retaining ID fallbacks for legacy ZIPs.
+  function matchesCategory(pkg, category) {
+    if (!pkg || category === "all") return true;
+    if (category === "pending") return ["pending", "missing"].includes(pkg.status);
+    const type = String(pkg.type || pkg.manifest?.task_type || "").toLowerCase();
+    const id = String(pkg.id || "").toLowerCase();
+    const model = /model|rig|anim/.test(type) || /^(?:mdl|anim)(?:[-_]|$)/.test(id);
+    const creature = type.startsWith("creature-") || /^(?:asset_)?cr(?:[-_]|$)/.test(id);
+    const character = type.startsWith("character-") || /^(?:asset_)?chr(?:[-_]|$)/.test(id);
+    if (category === "mdl") return model;
+    if (category === "cr") return creature;
+    if (category === "chr") return character;
+    if (category === "fx") return /vfx|effect/.test(type) || /^fx(?:[-_]|$)/.test(id);
+    return true;
+  }
+
   function exactBuffer(bytes) {
     if (ArrayBuffer.isView(bytes)) return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
     if (bytes instanceof ArrayBuffer) return bytes.slice(0);
@@ -86,7 +103,7 @@
   }
 
   return Object.freeze({
-    selectRootManifest, selectModelFile, descriptorFor, packageFiles,
+    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory,
     exactBuffer, relative, orbitFor, open, onPackagesChanged, install
   });
 });
