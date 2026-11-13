@@ -946,6 +946,17 @@
     }
     window.COSMI_PIPELINE?.syncStageActions();
     renderAll();
+    // On narrow touch layouts, reveal the selected step's controls after rendering.
+    // Keep desktop selection behavior unchanged and avoid page navigation.
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      requestAnimationFrame(() => {
+        const target = document.querySelector("#pipelineControls") || document.querySelector("#prompt");
+        if (!target) return;
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const top = Math.max(0, window.scrollY + target.getBoundingClientRect().top - 72);
+        window.scrollTo({top, behavior: reducedMotion ? "instant" : "smooth"});
+      });
+    }
   }
   function renderTasks() {
     const box = $("#tasks"), categories = $("#taskCategories"), routes = $("#taskRoutes"), detail = $("#taskFlowDetail");
