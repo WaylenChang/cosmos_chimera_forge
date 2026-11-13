@@ -59,6 +59,39 @@
   }
   const folders = new Map(),
     $ = (id) => document.getElementById(id);
+  let pipelineIndexState = {
+    settings: [],
+    jobs: [],
+    wikiCharacters: [],
+    wikiCreatures: [],
+    syncedAt: 0,
+  };
+  function recordPipelineWrite(path, result) {
+    const clean = String(path || "").replace(/^\/+/, "");
+    const item = {
+      id: result?.id || "",
+      name: clean.split("/").pop(),
+      modifiedTime: new Date().toISOString(),
+    };
+    const upsert = (arr) => {
+      if (!item.name) return arr;
+      const next = arr.filter((x) => x.name !== item.name);
+      next.push(item);
+      return next;
+    };
+    if (clean.startsWith("00_settings/"))
+      pipelineIndexState.settings = upsert(pipelineIndexState.settings);
+    else if (clean.startsWith("prompts/jobs/"))
+      pipelineIndexState.jobs = upsert(pipelineIndexState.jobs);
+    else if (clean.startsWith("wiki/characters/"))
+      pipelineIndexState.wikiCharacters = upsert(
+        pipelineIndexState.wikiCharacters,
+      );
+    else if (clean.startsWith("wiki/creatures/"))
+      pipelineIndexState.wikiCreatures = upsert(
+        pipelineIndexState.wikiCreatures,
+      );
+  }
   function limitConcurrent(max) {
     let running = 0;
     const waiting = [];
@@ -234,6 +267,7 @@
     ).json();
     // A write may change asset metadata or references: never serve a stale package afterward.
     void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+    recordPipelineWrite(path, result);
     return result;
   }
   const jsonWrite = (path, data) =>
@@ -1090,6 +1124,34 @@
       lock(e.message);
     }
   }
+  async function syncPipelineIndex() {
+    if (!accessToken || Date.now() >= expiry - SESSION_SKEW) {
+      return pipelineIndexState;
+    }
+    const safeList = async (dirPath) => {
+      try {
+        const entries = await list(await folder(dirPath));
+        return entries.filter((f) => f.mimeType !== MIME);
+      } catch (_) {
+        return [];
+      }
+    };
+    const [settings, jobs, wikiCharacters, wikiCreatures] = await Promise.all([
+      safeList("00_settings"),
+      safeList("prompts/jobs"),
+      safeList("wiki/characters"),
+      safeList("wiki/creatures"),
+    ]);
+    pipelineIndexState = {
+      settings,
+      jobs,
+      wikiCharacters,
+      wikiCreatures,
+      syncedAt: Date.now(),
+    };
+    window.COSMI_FORGE?.refresh?.();
+    return pipelineIndexState;
+  }
   window.COSMI_DRIVE = Object.freeze({
     relative,
     read,
@@ -1101,6 +1163,8 @@
     saveNote,
     uploadAsset,
     syncPackages,
+    syncPipelineIndex,
+    pipelineIndex: () => pipelineIndexState,
     migratePrompt3dAssets,
     migrateWikis,
     ensureWiki,

@@ -1051,16 +1051,41 @@
   function assetName(path) {
     return String(path || "").split("/").pop().replace(/\\/g, "/").split("/").pop().replace(/\.[^.]+$/, "").toLowerCase();
   }
+  function isApprovedStatus(status) {
+    return status === "ok" || status === "approved";
+  }
+  function isProvisionalStatus(status) {
+    return status === "provisional";
+  }
+  function isAcceptedStatus(status) {
+    return isApprovedStatus(status) || isProvisionalStatus(status);
+  }
+  function packageStatusRank(pkg) {
+    if (!pkg) return -1;
+    if (isApprovedStatus(pkg.status)) return pkg.completed ? 4.5 : 4;
+    if (isProvisionalStatus(pkg.status)) return 3;
+    if (pkg.status === "pending" || !pkg.status) return 2;
+    if (pkg.status === "missing") return 1;
+    if (pkg.status === "reject") return 0;
+    return 1;
+  }
+  function sortPackagesByPriority(pkgs) {
+    return [...(pkgs || [])].sort((a, b) => {
+      const diff = packageStatusRank(b) - packageStatusRank(a);
+      if (diff !== 0) return diff;
+      return String(b.id || "").localeCompare(String(a.id || ""));
+    });
+  }
   function linkedAssetPackages(subject) {
     const key = String(subject || "").toLowerCase();
-    return reviewState.packages.filter(p => {
+    return sortPackagesByPriority(reviewState.packages.filter(p => {
       const ids = [p.subjectId, p.manifest?.subject_id, p.concept?.id, p.concept?.line_id, p.concept?.creature_id, p.id]
         .filter(Boolean).map(s => String(s).toLowerCase());
       if (ids.includes(key)) return true;
       const source = reviewState.packages.find(x => x.id === (p.sourcePack || p.manifest?.source_pack));
       return !!source && [source.subjectId, source.manifest?.subject_id, source.concept?.id, source.concept?.line_id]
         .some(s => String(s || "").toLowerCase() === key);
-    });
+    }));
   }
   function imageForView(images, view) {
     const all = images || [], pattern = new RegExp("(?:^|[_\\\\-])" + view + "$", "i");
@@ -1171,16 +1196,251 @@
   // ==================== 已設計項目台 (二欄審查檢閱工作台) ====================
   const designedState = {
     cat: "all", // "all" | "creature" | "character"
+    statusFilter: "all", // "all" | "accepted" | "ok" | "provisional" | "unprocessed"
+    reviewTab: "accepted", // "accepted" | "ok" | "provisional" | "other"
+    pipelineShowAll: false,
     selectedId: null, // line_id or char_id
     selectedType: "creature", // "creature" | "character"
     mode: "detail" // "detail" | "cards"
   };
+
+  const PIPELINE_JOBS_KEY = "cosmimera.pipeline-jobs.v1";
+  function loadLocalPipelineJobs() {
+    try {
+      const data = JSON.parse(localStorage.getItem(PIPELINE_JOBS_KEY) || "{}");
+      return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+    } catch (_) {
+      return {};
+    }
+  }
+  function recordPipelineJob(ctx, pipelineStage) {
+    if (!ctx?.taskId || !ctx?.subjectId) return;
+    try {
+      const jobs = loadLocalPipelineJobs();
+      jobs[ctx.taskId] = {
+        taskId: ctx.taskId,
+        subjectId: ctx.subjectId,
+        stage: ctx.opts?.stage || null,
+        taskType: ctx.task?.id || "",
+        pipelineStage: pipelineStage || "task",
+        updatedAt: Date.now()
+      };
+      localStorage.setItem(PIPELINE_JOBS_KEY, JSON.stringify(jobs));
+    } catch (_) {}
+  }
+
+  function parsePkgTypedState(pkg) {
+    if (!pkg?.rawFiles) return null;
+    const key = Object.keys(pkg.rawFiles).find(k => /(?:^|\/)typed_state\.json$/i.test(k));
+    if (!key) return null;
+    try {
+      const val = pkg.rawFiles[key];
+      const text = typeof val === "string" ? val : new TextDecoder().decode(val);
+      return JSON.parse(text);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function getDrivePipelineIndex() {
+    return window.COSMI_DRIVE?.pipelineIndex?.() || {
+      settings: [],
+      jobs: [],
+      wikiCharacters: [],
+      wikiCreatures: [],
+      syncedAt: 0
+    };
+  }
+
+  function findPipelineJobFiles(subjectId, stage, stageNames) {
+    const idx = getDrivePipelineIndex();
+    const localJobs = loadLocalPipelineJobs();
+    const subLower = String(subjectId || "").toLowerCase();
+    const stLower = stage ? String(stage).toLowerCase() : null;
+    const matchedTaskIds = new Set(
+      Object.values(localJobs)
+        .filter(j => String(j.subjectId || "").toLowerCase() === subLower && (!stLower || !j.stage || String(j.stage).toLowerCase() === stLower))
+        .map(j => String(j.taskId || "").toLowerCase())
+    );
+    const stageSet = new Set(stageNames.map(s => s.toLowerCase()));
+    return (idx.jobs || []).filter(f => {
+      const name = String(f.name || "").toLowerCase();
+      if (!name.endsWith(".prompt.md")) return false;
+      const parts = name.replace(/\.prompt\.md$/, "").split(".");
+      const fileStage = parts.length > 1 ? parts[parts.length - 1] : "";
+      const fileTaskId = parts.slice(0, -1).join(".") || name;
+      if (stageSet.size && !stageSet.has(fileStage)) return false;
+      if (matchedTaskIds.has(fileTaskId)) return true;
+      if (subLower && name.includes(subLower)) {
+        if (!stLower || name.includes(stLower)) return true;
+      }
+      return false;
+    });
+  }
+
+  function computeSubjectPipelinePart(subjectId, stage, kind, stageInfo = null) {
+    const matches = sortPackagesByPriority(getReviewMatches(subjectId, stage));
+    const pkgs2d = matches.filter(p => !is3dType(p.type));
+    const pkgs3d = matches.filter(p => is3dType(p.type));
+    const best2d = pkgs2d[0] || null;
+    const best3d = pkgs3d[0] || null;
+    const idx = getDrivePipelineIndex();
+    const subLower = String(subjectId || "").toLowerCase();
+    const stLower = stage ? String(stage).toLowerCase() : null;
+
+    // 1. Settings check
+    const hasSettingFile = (idx.settings || []).some(f => {
+      const n = String(f.name || "").toLowerCase();
+      return n.includes(subLower) && (!stLower || n.includes(stLower));
+    });
+    const isForgingThis = kind === "character"
+      ? state.presetChar === subjectId
+      : (state.preset === subjectId && (!stage || !state.opts[state.taskId]?.stage || state.opts[state.taskId]?.stage === stage));
+    const settingsDone = hasSettingFile || matches.length > 0 || isForgingThis;
+
+    // 2. Wiki check
+    const wikiFile = kind === "character"
+      ? `${subLower}_wiki.md`
+      : `${subLower}_${stLower || "adult"}_wiki.md`;
+    const wikiList = kind === "character" ? (idx.wikiCharacters || []) : (idx.wikiCreatures || []);
+    const hasWikiDrive = wikiList.some(f => String(f.name || "").toLowerCase() === wikiFile);
+    const hasWikiManifest = matches.some(p => Boolean(p.manifest?.encyclopedia_path));
+    const wikiDone = hasWikiDrive || hasWikiManifest;
+
+    // 3. 2D Portrait status
+    const portraitJobs = findPipelineJobFiles(subjectId, stage, ["appearance", "portrait", "review_portrait"]);
+    let portrait;
+    if (best2d && isApprovedStatus(best2d.status)) {
+      portrait = { state: "ok", label: "✅ 已通過", cls: "ok", pkg: best2d };
+    } else if (best2d && isProvisionalStatus(best2d.status)) {
+      portrait = { state: "provisional", label: "🟦 暫時採用", cls: "provisional", pkg: best2d };
+    } else if (best2d && best2d.status === "reject") {
+      portrait = { state: "rejected", label: "❌ 退回待重製", cls: "reject", pkg: best2d };
+    } else if (best2d) {
+      portrait = { state: "reviewing", label: best2d.status === "missing" ? "⚠️ 缺檔待補" : "🟨 待審查", cls: "active", pkg: best2d };
+    } else if (portraitJobs.length > 0) {
+      portrait = { state: "queued", label: "🔄 已送出 Prompt", cls: "active", jobFile: portraitJobs[0] };
+    } else if (isForgingThis && !is3dType(state.taskId)) {
+      portrait = { state: "forging", label: "⚡ 鍛造台編輯中", cls: "active" };
+    } else {
+      portrait = { state: "unprocessed", label: "⬜ 未處理", cls: "" };
+    }
+
+    // 4. 3D Model status
+    const modelJobs = findPipelineJobFiles(subjectId, stage, ["colab", "blender", "portrait_3d", "review_3d"]);
+    let model3d;
+    if (best3d && isApprovedStatus(best3d.status)) {
+      model3d = { state: "ok", label: "✅ 已通過", cls: "ok", pkg: best3d };
+    } else if (best3d && isProvisionalStatus(best3d.status)) {
+      model3d = { state: "provisional", label: "🟦 暫時採用", cls: "provisional", pkg: best3d };
+    } else if (best3d && best3d.status === "reject") {
+      model3d = { state: "rejected", label: "❌ 退回待重製", cls: "reject", pkg: best3d };
+    } else if (best3d) {
+      const ts = parsePkgTypedState(best3d);
+      const route = best3d.drivePath?.includes("/colab/") ? "Colab" : best3d.drivePath?.includes("/ai_blender/") ? "AI+Blender" : "3D";
+      if (ts?.status === "RUNNING") {
+        model3d = { state: "running", label: `⚙️ ${route} 生成中`, cls: "active", pkg: best3d, typedState: ts };
+      } else if (ts?.status === "QUEUED") {
+        model3d = { state: "queued_runner", label: `⏳ ${route} 排隊中`, cls: "active", pkg: best3d, typedState: ts };
+      } else if (ts?.status === "QA_PENDING") {
+        model3d = { state: "qa_pending", label: `🧪 ${route} 自動 QA 待檢`, cls: "active", pkg: best3d, typedState: ts };
+      } else if (ts?.status === "REVIEW_REQUIRED") {
+        model3d = { state: "reviewing", label: `🟨 ${route} 待人工審查`, cls: "active", pkg: best3d, typedState: ts };
+      } else if (best3d.manifest?.missing?.length) {
+        model3d = { state: "missing", label: `⚠️ 缺檔 (${best3d.manifest.missing.length})`, cls: "active", pkg: best3d, typedState: ts };
+      } else {
+        model3d = { state: "reviewing", label: `🟨 ${route} 待審查`, cls: "active", pkg: best3d, typedState: ts };
+      }
+    } else if (modelJobs.length > 0) {
+      model3d = { state: "queued", label: "🔄 已送出 3D Prompt", cls: "active", jobFile: modelJobs[0] };
+    } else if (isForgingThis && is3dType(state.taskId)) {
+      model3d = { state: "forging", label: "⚡ 鍛造台編輯中", cls: "active" };
+    } else {
+      model3d = { state: "unprocessed", label: "⬜ 未處理", cls: "" };
+    }
+
+    const completed = matches.some(p => p.completed) || (portrait.state === "ok" && model3d.state === "ok");
+    const isUnprocessed = !isAcceptedStatus(portrait.pkg?.status) || !isAcceptedStatus(model3d.pkg?.status);
+
+    return {
+      subjectId,
+      stage,
+      label: stageInfo ? `${STAGE_ZH[stage] || stage} · ${stageInfo.name_zh}` : subjectId,
+      settingsDone,
+      wikiDone,
+      portrait,
+      model3d,
+      completed,
+      isUnprocessed,
+      matches
+    };
+  }
+
+  function getDesignedItemSummary(id, type) {
+    const matches = getReviewMatches(id);
+    const okCount = matches.filter(p => isApprovedStatus(p.status)).length;
+    const provCount = matches.filter(p => isProvisionalStatus(p.status)).length;
+    const pendingCount = matches.filter(p => !isAcceptedStatus(p.status) && p.status !== "reject").length;
+    const rejectedCount = matches.filter(p => p.status === "reject").length;
+
+    let parts = [];
+    if (type === "character") {
+      parts = [computeSubjectPipelinePart(id, null, "character")];
+    } else {
+      const d = DESIGNED.find(x => x.line_id === id);
+      const stages = d?.concept?.locked?.stages || [];
+      parts = stages.map(st => computeSubjectPipelinePart(id, st.stage, "creature", st));
+    }
+    const unprocessedCount = parts.filter(pt => pt.isUnprocessed).length;
+    const inProgressCount = parts.filter(pt =>
+      ["reviewing", "queued", "forging", "running", "queued_runner", "qa_pending", "missing"].includes(pt.portrait.state) ||
+      ["reviewing", "queued", "forging", "running", "queued_runner", "qa_pending", "missing"].includes(pt.model3d.state)
+    ).length;
+
+    return {
+      matches,
+      okCount,
+      provCount,
+      pendingCount,
+      rejectedCount,
+      unprocessedCount,
+      inProgressCount,
+      parts
+    };
+  }
 
   function selectDesignedItem(id, type) {
     designedState.selectedId = id;
     designedState.selectedType = type;
     renderDesignedRail();
     renderDesignedDetail();
+  }
+
+  function matchesDesignedStatusFilter(id, type) {
+    const f = designedState.statusFilter || "all";
+    if (f === "all") return true;
+    const sum = getDesignedItemSummary(id, type);
+    if (f === "accepted") return sum.okCount > 0 || sum.provCount > 0;
+    if (f === "ok") return sum.okCount > 0;
+    if (f === "provisional") return sum.provCount > 0;
+    if (f === "unprocessed") return sum.unprocessedCount > 0;
+    return true;
+  }
+
+  function renderDesignedRailBadges(sum, isForging) {
+    const badges = [];
+    if (sum.okCount > 0) badges.push(el("span", { class: "rl-stat ok", title: `成果審查台已通過 ${sum.okCount} 個包` }, `✅ 通過 ${sum.okCount}`));
+    if (sum.provCount > 0) badges.push(el("span", { class: "rl-stat provisional", title: `成果審查台暫時採用 ${sum.provCount} 個包` }, `🟦 暫採 ${sum.provCount}`));
+    if (sum.pendingCount > 0) badges.push(el("span", { class: "rl-stat pending", title: `待審查或生成中 ${sum.pendingCount} 個包` }, `🟨 待審 ${sum.pendingCount}`));
+    if (sum.unprocessedCount > 0) {
+      badges.push(
+        sum.inProgressCount > 0
+          ? el("span", { class: "rl-stat pending", title: `${sum.unprocessedCount} 項尚未定案，管線進行中` }, `🔄 管線中`)
+          : el("span", { class: "rl-stat", style: "background:rgba(255,255,255,0.06);color:var(--muted)", title: `尚有 ${sum.unprocessedCount} 項未處理` }, `⬜ 未處理 ${sum.unprocessedCount}`)
+      );
+    }
+    if (isForging) badges.push(el("span", { class: "rl-stat ok", style: "border:1px solid var(--ok)" }, "⚡ 鍛造中"));
+    return badges;
   }
 
   function getDesignedFilteredItems() {
@@ -1190,6 +1450,7 @@
     let lines = [];
     if (designedState.cat === "all" || designedState.cat === "creature") {
       lines = DESIGNED.filter(d => {
+        if (!matchesDesignedStatusFilter(d.line_id, "creature")) return false;
         if (!query) return true;
         const id = (d.line_id || "").toLowerCase();
         const code = (d.code_zh || "").toLowerCase();
@@ -1204,6 +1465,7 @@
     let chars = [];
     if (designedState.cat === "all" || designedState.cat === "character") {
       chars = DESIGNED_CHARACTERS.filter(c => {
+        if (!matchesDesignedStatusFilter(c.id, "character")) return false;
         if (!query) return true;
         const id = (c.id || "").toLowerCase();
         const nameZh = (c.name_zh || "").toLowerCase();
@@ -1265,7 +1527,7 @@
       lines.forEach(d => {
         const isSelected = designedState.selectedType === "creature" && designedState.selectedId === d.line_id;
         const isForging = state.preset === d.line_id;
-        const matches = getReviewMatches(d.line_id);
+        const sum = getDesignedItemSummary(d.line_id, "creature");
 
         const crThumbUrl = getCreatureStageAssetUrls(d.line_id, "adult").primaryUrl;
         const crThumbImg = el("img", {
@@ -1289,12 +1551,7 @@
           el("div", { class: "rl-txt" },
             el("div", { class: "rl-id" }, `${d.code_zh} · ${d.title_zh}`),
             el("div", { class: "rl-sub" }, `${d.line_id} · ${d.element}`),
-            el("div", { class: "rl-badges" },
-              matches.length > 0
-                ? el("span", { class: "rl-stat ok" }, `✅ 審查 (${matches.length})`)
-                : el("span", { class: "rl-stat pending" }, "⏳ 待載審查"),
-              isForging ? el("span", { class: "rl-stat ok", style: "border:1px solid var(--ok)" }, "⚡ 鍛造中") : null
-            )
+            el("div", { class: "rl-badges" }, ...renderDesignedRailBadges(sum, isForging))
           )
         );
         listEl.append(row);
@@ -1306,7 +1563,7 @@
       chars.forEach(c => {
         const isSelected = designedState.selectedType === "character" && designedState.selectedId === c.id;
         const isForging = state.presetChar === c.id;
-        const matches = getReviewMatches(c.id);
+        const sum = getDesignedItemSummary(c.id, "character");
 
         const charThumbUrl = getCharacterAssetUrls(c.id).images[0].primaryUrl;
         const charThumbImg = el("img", {
@@ -1330,17 +1587,217 @@
           el("div", { class: "rl-txt" },
             el("div", { class: "rl-id" }, `${c.name_zh} · ${c.name_en}`),
             el("div", { class: "rl-sub" }, `${c.id} · ${c.role}`),
-            el("div", { class: "rl-badges" },
-              matches.length > 0
-                ? el("span", { class: "rl-stat ok" }, `✅ 審查 (${matches.length})`)
-                : el("span", { class: "rl-stat pending" }, "⏳ 待載審查"),
-              isForging ? el("span", { class: "rl-stat ok", style: "border:1px solid var(--ok)" }, "⚡ 鍛造中") : null
-            )
+            el("div", { class: "rl-badges" }, ...renderDesignedRailBadges(sum, isForging))
           )
         );
         listEl.append(row);
       });
     }
+  }
+
+  function renderDesignedReviewDeliverablesCard(subjectId, kind) {
+    const matches = sortPackagesByPriority(getReviewMatches(subjectId));
+    const okPkgs = matches.filter(p => isApprovedStatus(p.status));
+    const provPkgs = matches.filter(p => isProvisionalStatus(p.status));
+    const acceptedPkgs = matches.filter(p => isAcceptedStatus(p.status));
+    const otherPkgs = matches.filter(p => !isAcceptedStatus(p.status));
+
+    const tab = designedState.reviewTab || "accepted";
+    const visiblePkgs = tab === "ok" ? okPkgs : tab === "provisional" ? provPkgs : tab === "other" ? otherPkgs : acceptedPkgs;
+
+    const card = el("div", { class: "designed-detail-card", style: "margin-bottom:12px" },
+      el("div", { style: "display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px" },
+        el("h3", { style: "margin:0;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px" },
+          el("span", {}, "📦 成果審查台：已通過與暫時採用"),
+          el("span", { class: "f-badge ok" }, `✅ 通過 ${okPkgs.length}`),
+          el("span", { class: "f-badge accent" }, `🟦 暫採 ${provPkgs.length}`),
+          otherPkgs.length > 0 ? el("span", { class: "f-badge warn" }, `🟨 其他 ${otherPkgs.length}`) : null
+        ),
+        el("div", { class: "seg", style: "display:inline-flex" },
+          [
+            ["accepted", `✅🟦 通過＋暫採 (${acceptedPkgs.length})`],
+            ["ok", `✅ 已通過 (${okPkgs.length})`],
+            ["provisional", `🟦 暫時採用 (${provPkgs.length})`],
+            ["other", `🟨 待審／退回 (${otherPkgs.length})`]
+          ].map(([key, label]) => el("button", {
+            type: "button",
+            class: "segb" + (tab === key ? " on" : ""),
+            style: "font-size:11px;padding:3px 8px",
+            onclick: () => { designedState.reviewTab = key; renderDesignedDetail(); }
+          }, label))
+        )
+      )
+    );
+
+    if (!matches.length) {
+      card.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" },
+        "成果審查台目前尚未載入此項目的交付包。請登入 Drive 同步或至成果審查台載入資產目錄。"
+      ));
+      return card;
+    }
+
+    if (!visiblePkgs.length) {
+      const emptyLabel = tab === "ok" ? "尚無「已通過」成果包" : tab === "provisional" ? "尚無「暫時採用」成果包" : tab === "other" ? "尚無其他待審／退回包" : "尚無「已通過」或「暫時採用」的成果包（可切換右側「🟨 待審／退回」查看審查中項目）";
+      card.append(el("div", { class: "muted", style: "font-size:12px;padding:8px 0" }, emptyLabel));
+      return card;
+    }
+
+    visiblePkgs.forEach(pkg => {
+      const st = reviewStatusInfo(pkg.status);
+      const is3d = is3dType(pkg.type);
+      const imgs = (pkg.images || []).filter(i => i.url);
+      const mainImg = imgs[0]?.url || "";
+      const note = pkg.reviewRecord?.note || getReviewNote(pkg) || "";
+
+      const thumbEl = el("div", { class: "designed-review-thumb" },
+        mainImg
+          ? el("img", { src: mainImg, alt: pkg.id })
+          : el("span", { style: "font-size:22px;opacity:0.6" }, is3d ? "🧊" : "🎨")
+      );
+
+      const infoCol = el("div", { style: "flex:1;min-width:220px;display:flex;flex-direction:column;gap:4px" },
+        el("div", { style: "display:flex;align-items:center;gap:6px;flex-wrap:wrap" },
+          el("code", { style: "font-size:12px;color:var(--accent);font-weight:600" }, pkg.id),
+          el("span", { class: "f-badge " + st.cls }, st.badge),
+          el("span", { class: "f-badge" }, is3d ? "🧊 3D 模型" : "🎨 2D 立繪"),
+          pkg.stage ? el("span", { class: "f-badge" }, STAGE_ZH[pkg.stage] || pkg.stage) : null,
+          pkg.completed ? el("span", { class: "f-badge ok" }, "📁 03_completed") : null
+        ),
+        pkg.drivePath ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace" }, pkg.drivePath) : null,
+        note ? el("div", { style: "font-size:11.5px;color:var(--warn);background:rgba(217,182,109,0.08);padding:4px 8px;border-radius:4px;border-left:2px solid var(--warn)" }, `審查意見：${note}`) : null,
+        imgs.length > 1 ? el("div", { style: "display:flex;gap:4px;flex-wrap:wrap;margin-top:2px" },
+          imgs.slice(0, 5).map(im => el("img", {
+            src: im.url,
+            title: im.path,
+            style: "width:34px;height:34px;object-fit:cover;border-radius:4px;border:1px solid rgba(255,255,255,0.12);background:#101319;cursor:pointer",
+            onclick: () => jumpToReview(pkg.id, pkg.stage)
+          }))
+        ) : null
+      );
+
+      const actionsCol = el("div", { style: "display:flex;flex-direction:column;gap:4px;align-items:flex-end" },
+        el("button", {
+          class: "btn mini", type: "button",
+          onclick: () => jumpToReview(pkg.id, pkg.stage)
+        }, "🔍 在審查台檢視"),
+        (!is3d && isApprovedStatus(pkg.status)) ? el("button", {
+          class: "btn mini ghost", type: "button",
+          onclick: () => {
+            if (kind === "character") useDesignedCharacter(subjectId, "character-model-rig");
+            else useDesigned(subjectId, "creature-model-rig", pkg.stage || "adult");
+          }
+        }, "🧊 以此立繪鍛造 3D") : null
+      );
+
+      card.append(el("div", { class: "designed-review-item" }, thumbEl, infoCol, actionsCol));
+    });
+
+    return card;
+  }
+
+  function renderPipelineProgressCard(subjectId, kind) {
+    const sum = getDesignedItemSummary(subjectId, kind);
+    const parts = sum.parts;
+    const totalSteps = parts.length * 2; // 2D + 3D per part
+    const doneSteps = parts.reduce((acc, pt) => acc + (isApprovedStatus(pt.portrait.pkg?.status) ? 1 : 0) + (isApprovedStatus(pt.model3d.pkg?.status) ? 1 : 0), 0);
+    const provSteps = parts.reduce((acc, pt) => acc + (isProvisionalStatus(pt.portrait.pkg?.status) ? 1 : 0) + (isProvisionalStatus(pt.model3d.pkg?.status) ? 1 : 0), 0);
+    const activeSteps = parts.reduce((acc, pt) => acc + (!isAcceptedStatus(pt.portrait.pkg?.status) && pt.portrait.state !== "unprocessed" ? 1 : 0) + (!isAcceptedStatus(pt.model3d.pkg?.status) && pt.model3d.state !== "unprocessed" ? 1 : 0), 0);
+
+    const visibleParts = designedState.pipelineShowAll ? parts : parts.filter(pt => pt.isUnprocessed);
+    const idx = getDrivePipelineIndex();
+    const syncText = idx.syncedAt ? `已同步 Drive 管線索引 (${new Date(idx.syncedAt).toLocaleTimeString()})` : "尚未同步 Drive 管線索引（Prompts / Settings / Wiki）";
+
+    const card = el("div", { class: "designed-detail-card", style: "margin-bottom:12px;border-color:rgba(217,182,109,0.28)" },
+      el("div", { style: "display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px" },
+        el("h3", { style: "margin:0;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px" },
+          el("span", {}, "🔄 未處理項目與管線生成進度追蹤"),
+          el("span", { class: "f-badge ok" }, `✅ ${doneSteps}/${totalSteps}`),
+          provSteps > 0 ? el("span", { class: "f-badge accent" }, `🟦 暫採 ${provSteps}`) : null,
+          activeSteps > 0 ? el("span", { class: "f-badge warn" }, `🔄 進行中 ${activeSteps}`) : null,
+          sum.unprocessedCount > 0 ? el("span", { class: "f-badge" }, `待定案階段 ${sum.unprocessedCount}/${parts.length}`) : el("span", { class: "f-badge ok" }, "全部階段已定案")
+        ),
+        el("div", { style: "display:flex;gap:6px;align-items:center;flex-wrap:wrap" },
+          el("button", {
+            class: "btn mini ghost", type: "button",
+            onclick: () => { designedState.pipelineShowAll = !designedState.pipelineShowAll; renderDesignedDetail(); }
+          }, designedState.pipelineShowAll ? "僅顯示未處理階段" : `顯示全部階段 (${parts.length})`),
+          window.COSMI_DRIVE?.syncPipelineIndex ? el("button", {
+            class: "btn mini ghost", type: "button",
+            onclick: async () => {
+              try {
+                await window.COSMI_DRIVE.syncPipelineIndex();
+                toast("已同步 Drive 管線生成進度");
+              } catch (e) {
+                toast("同步管線進度失敗：" + e.message);
+              }
+            }
+          }, "🔄 同步管線進度") : null
+        )
+      ),
+      el("div", { class: "pipeline-progress-bar", style: "margin-bottom:8px" },
+        el("div", { class: "pipeline-progress-seg", style: `width:${totalSteps ? (doneSteps / totalSteps) * 100 : 0}%;background:var(--ok)` }),
+        el("div", { class: "pipeline-progress-seg", style: `width:${totalSteps ? (provSteps / totalSteps) * 100 : 0}%;background:var(--accent)` }),
+        el("div", { class: "pipeline-progress-seg", style: `width:${totalSteps ? (activeSteps / totalSteps) * 100 : 0}%;background:var(--warn)` })
+      ),
+      el("div", { class: "muted", style: "font-size:11px;margin-bottom:10px" }, syncText)
+    );
+
+    if (!visibleParts.length) {
+      card.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" },
+        "🎉 此項目的 2D 立繪與 3D 模型皆已通過或暫時採用（可點選「顯示全部階段」檢視完整管線步驟）。"
+      ));
+      return card;
+    }
+
+    visibleParts.forEach(pt => {
+      const ts = pt.model3d.typedState;
+      const stepSummary = ts?.steps ? Object.entries(ts.steps).map(([k, v]) => `${k}: ${v?.status || "?"}`).join(" · ") : "";
+      const detailHints = [
+        pt.portrait.jobFile ? `2D Job: ${pt.portrait.jobFile.name}` : null,
+        pt.model3d.jobFile ? `3D Job: ${pt.model3d.jobFile.name}` : null,
+        pt.model3d.pkg?.drivePath ? `3D 目錄: ${pt.model3d.pkg.drivePath}` : null,
+        stepSummary ? `Runner 步驟: ${stepSummary}` : null,
+        pt.model3d.pkg?.manifest?.missing?.length ? `缺檔: ${pt.model3d.pkg.manifest.missing.join(", ")}` : null
+      ].filter(Boolean);
+
+      const row = el("div", { class: "pipeline-row" },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px" },
+          el("div", { style: "display:flex;align-items:center;gap:6px" },
+            el("b", { style: "font-size:12.5px;color:#fff" }, pt.label),
+            pt.stage ? el("code", { style: "font-size:11px;color:var(--accent)" }, pt.stage) : null
+          ),
+          el("div", { style: "display:flex;gap:6px;flex-wrap:wrap" },
+            pt.portrait.pkg
+              ? el("button", { class: "btn mini ghost", type: "button", onclick: () => jumpToReview(pt.portrait.pkg.id, pt.stage) }, "🔍 檢視 2D")
+              : el("button", {
+                class: "btn mini ghost", type: "button",
+                onclick: () => kind === "character" ? useDesignedCharacter(subjectId, "character-concept") : useDesigned(subjectId, "creature-concept", pt.stage)
+              }, "🎨 鍛造立繪"),
+            pt.model3d.pkg
+              ? el("button", { class: "btn mini ghost", type: "button", onclick: () => jumpToReview(pt.model3d.pkg.id, pt.stage) }, "🔍 檢視 3D")
+              : el("button", {
+                class: "btn mini ghost", type: "button",
+                onclick: () => kind === "character" ? useDesignedCharacter(subjectId, "character-model-rig") : useDesigned(subjectId, "creature-model-rig", pt.stage)
+              }, "🧊 鍛造 3D")
+          )
+        ),
+        el("div", { class: "pipeline-stepper" },
+          el("span", { class: "pipeline-step " + (pt.settingsDone ? "ok" : "") }, pt.settingsDone ? "✅ ① 外觀／參數" : "⬜ ① 外觀／參數"),
+          el("span", { class: "muted" }, "→"),
+          el("span", { class: "pipeline-step " + (pt.wikiDone ? "ok" : "") }, pt.wikiDone ? "✅ ② 圖鑑" : "⬜ ② 圖鑑"),
+          el("span", { class: "muted" }, "→"),
+          el("span", { class: "pipeline-step " + pt.portrait.cls }, `③ 2D 立繪：${pt.portrait.label}`),
+          el("span", { class: "muted" }, "→"),
+          el("span", { class: "pipeline-step " + pt.model3d.cls }, `④ 3D 建模：${pt.model3d.label}`),
+          el("span", { class: "muted" }, "→"),
+          el("span", { class: "pipeline-step " + (pt.completed ? "ok" : "") }, pt.completed ? "✅ ⑤ 完成區" : "⬜ ⑤ 最終驗收")
+        ),
+        detailHints.length ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace;line-height:1.4" }, detailHints.join(" | ")) : null
+      );
+      card.append(row);
+    });
+
+    return card;
   }
 
   function renderDesignedDetail() {
@@ -1413,6 +1870,9 @@
       // Visual Assets Showcase (2D Concept & 3D Renders from cosmos_chimera)
       const assetData = getCharacterAssetUrls(c.id);
 
+      const pack2dStatus = assetData.pack ? reviewStatusInfo(assetData.pack.status) : null;
+      const pack3dStatus = assetData.mdlPack ? reviewStatusInfo(assetData.mdlPack.status) : null;
+
       const artShowcaseCard = el("div", {
         class: "designed-detail-card",
         style: "border: 1px solid rgba(58,173,200,0.3); background: linear-gradient(180deg, rgba(23,26,33,0.95) 0%, rgba(18,20,26,0.98) 100%); margin-bottom: 12px;"
@@ -1421,10 +1881,11 @@
           el("div", { style: "display:flex;align-items:center;gap:8px" },
             el("span", { style: "font-size:16px" }, "🖼️"),
             el("b", { style: "font-size:13.5px;color:#fff" }, "角色 2D 概念立繪與 3D 成果視圖"),
-            el("span", { class: "f-badge ok", style: "font-size:10.5px" }, "cosmos_chimera 外部資產連線")
+            pack2dStatus ? el("span", { class: "f-badge " + pack2dStatus.cls, style: "font-size:10.5px" }, `2D：${pack2dStatus.badge}`) : el("span", { class: "f-badge", style: "font-size:10.5px" }, "2D：⏳ 未產出"),
+            pack3dStatus ? el("span", { class: "f-badge " + pack3dStatus.cls, style: "font-size:10.5px" }, `3D：${pack3dStatus.badge}`) : el("span", { class: "f-badge", style: "font-size:10.5px" }, "3D：⏳ 未產出")
           ),
           el("div", { style: "display:flex;gap:6px;align-items:center" },
-            el("code", { style: "color:var(--accent);font-size:11px" }, `Assets/_Project/Art/Characters/${c.id}/`)
+            el("code", { style: "color:var(--accent);font-size:11px" }, assetData.pack?.drivePath || assetData.mdlPack?.drivePath || `Assets/_Project/Art/Characters/${c.id}/`)
           )
         ),
 
@@ -1623,34 +2084,11 @@
       );
       bodyEl.append(bioCard);
 
-      // Section 3: Linked Review Packages
-      const matches = getReviewMatches(c.id);
-      const revCard = el("div", { class: "designed-detail-card" },
-        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px" },
-          el("span", {}, "📦 關聯成果審查包"),
-          el("span", { class: "f-badge " + (matches.length > 0 ? "ok" : "") }, `${matches.length} 個包`)
-        )
-      );
-      if (matches.length > 0) {
-        matches.forEach(pkg => {
-          const st = reviewStatusInfo(pkg.status);
-          const pRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;margin-bottom:6px" },
-            el("div", { style: "display:flex;align-items:center;gap:8px" },
-              el("code", { style: "font-size:12px;color:var(--accent)" }, pkg.id),
-              el("span", { class: "f-badge " + st.cls }, st.badge),
-              el("span", { class: "muted", style: "font-size:11px" }, pkg.type || "character")
-            ),
-            el("button", {
-              class: "btn mini", type: "button",
-              onclick: () => jumpToReview(pkg.id)
-            }, "🔍 跳轉審查台檢驗")
-          );
-          revCard.append(pRow);
-        });
-      } else {
-        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此角色的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或選取資產資料夾。"));
-      }
-      bodyEl.append(revCard);
+      // Section 3: Approved & Provisional Review Deliverables
+      bodyEl.append(renderDesignedReviewDeliverablesCard(c.id, "character"));
+
+      // Section 4: Pipeline Progress Tracker for Unprocessed Parts
+      bodyEl.append(renderPipelineProgressCard(c.id, "character"));
 
     } else {
       // Creature Line
@@ -1828,11 +2266,17 @@
         const stDesc = el("div", { class: "muted", style: "font-size:11.5px;line-height:1.4;margin-bottom:4px" }, st.look);
         const stMove = el("div", { style: "font-size:11.5px;color:var(--warn);margin-bottom:6px" }, `專屬招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`);
 
-        const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.25);border-radius:4px;font-size:11px;margin-bottom:6px" });
-        if (stMatches.length > 0) {
-          const m = stMatches[0];
+        const stProgress = computeSubjectPipelinePart(d.line_id, st.stage, "creature", st);
+        const stOrdered = sortPackagesByPriority(stMatches);
+        const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;background:rgba(0,0,0,0.25);border-radius:4px;font-size:11px;margin-bottom:6px;flex-wrap:wrap" });
+        const stBadgesBox = el("div", { style: "display:flex;align-items:center;gap:4px;flex-wrap:wrap" },
+          el("span", { class: "f-badge " + (stProgress.portrait.cls === "active" ? "warn" : stProgress.portrait.cls), style: "font-size:10px" }, `2D ${stProgress.portrait.label}`),
+          el("span", { class: "f-badge " + (stProgress.model3d.cls === "active" ? "warn" : stProgress.model3d.cls), style: "font-size:10px" }, `3D ${stProgress.model3d.label}`)
+        );
+        if (stOrdered.length > 0) {
+          const m = stOrdered[0];
           stReviewDiv.append(
-            el("span", { style: "color:var(--ok)" }, `✅ 審查包收錄 (${m.id})`),
+            stBadgesBox,
             el("button", {
               class: "btn mini", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
               title: `跳轉審查 ${m.id}`,
@@ -1841,7 +2285,7 @@
           );
         } else {
           stReviewDiv.append(
-            el("span", { class: "muted" }, "審查：未載入包"),
+            stBadgesBox,
             el("button", {
               class: "btn mini ghost", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
               onclick: () => jumpToReview(d.line_id, st.stage)
@@ -1874,34 +2318,11 @@
       stageCardSection.append(stagesGrid);
       bodyEl.append(stageCardSection);
 
-      // Section 3: Linked Review Packages
-      const lineMatches = getReviewMatches(d.line_id);
-      const revCard = el("div", { class: "designed-detail-card" },
-        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px" },
-          el("span", {}, "📦 關聯成果審查包"),
-          el("span", { class: "f-badge " + (lineMatches.length > 0 ? "ok" : "") }, `${lineMatches.length} 個包`)
-        )
-      );
-      if (lineMatches.length > 0) {
-        lineMatches.forEach(pkg => {
-          const st = reviewStatusInfo(pkg.status);
-          const pRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;margin-bottom:6px" },
-            el("div", { style: "display:flex;align-items:center;gap:8px" },
-              el("code", { style: "font-size:12px;color:var(--accent)" }, pkg.id),
-              el("span", { class: "f-badge " + st.cls }, st.badge),
-              el("span", { class: "muted", style: "font-size:11px" }, pkg.type || "creature")
-            ),
-            el("button", {
-              class: "btn mini", type: "button",
-              onclick: () => jumpToReview(pkg.id)
-            }, "🔍 跳轉審查台檢驗")
-          );
-          revCard.append(pRow);
-        });
-      } else {
-        revCard.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" }, "成果審查台目前尚未載入此演化線的交付包。您可至審查台點選「📂 掃描本專案審查目錄」或選取資產資料夾。"));
-      }
-      bodyEl.append(revCard);
+      // Section 3: Approved & Provisional Review Deliverables
+      bodyEl.append(renderDesignedReviewDeliverablesCard(d.line_id, "creature"));
+
+      // Section 4: Pipeline Progress Tracker for Unprocessed Stages
+      bodyEl.append(renderPipelineProgressCard(d.line_id, "creature"));
     }
   }
 
@@ -2471,17 +2892,21 @@
           el("span", {}, "來源: " + d.source)
         );
 
-        // 3. Line Review Row (整線審查欄位)
-        const lineMatches = getReviewMatches(d.line_id);
+        // 3. Line Review Row (整線審查欄位 + 管線進度)
+        const lineMatches = sortPackagesByPriority(getReviewMatches(d.line_id));
+        const lineSum = getDesignedItemSummary(d.line_id, "creature");
         const reviewRow = el("div", { class: "card-review-row" });
         const reviewInfo = el("div", { class: "card-review-info" });
-        
+
         if (lineMatches.length > 0) {
           const topMatch = lineMatches[0];
           const stInfo = reviewStatusInfo(topMatch.status);
           reviewInfo.append(
-            el("span", { class: "prompt-k" }, "審查欄位："),
-            el("span", { class: "f-badge " + stInfo.cls }, `${stInfo.badge} (共收錄 ${lineMatches.length} 包)`),
+            el("span", { class: "prompt-k" }, "審查與管線："),
+            el("span", { class: "f-badge " + stInfo.cls }, stInfo.badge),
+            lineSum.okCount > 0 ? el("span", { class: "f-badge ok" }, `✅ 通過 ${lineSum.okCount}`) : null,
+            lineSum.provCount > 0 ? el("span", { class: "f-badge accent" }, `🟦 暫採 ${lineSum.provCount}`) : null,
+            lineSum.unprocessedCount > 0 ? el("span", { class: "f-badge warn" }, lineSum.inProgressCount > 0 ? `🔄 管線中 (${lineSum.unprocessedCount} 階)` : `⬜ 未處理 ${lineSum.unprocessedCount} 階`) : null,
             el("code", {}, topMatch.id)
           );
           reviewRow.append(
@@ -2494,8 +2919,8 @@
           );
         } else {
           reviewInfo.append(
-            el("span", { class: "prompt-k" }, "審查欄位："),
-            el("span", { class: "f-badge" }, "審查台尚未載入此線審查包"),
+            el("span", { class: "prompt-k" }, "審查與管線："),
+            el("span", { class: "f-badge" }, lineSum.inProgressCount > 0 ? "🔄 管線生成中" : "⬜ 尚未產出"),
             el("span", { class: "muted" }, `(${d.line_id})`)
           );
           reviewRow.append(
@@ -5745,6 +6170,9 @@
       $("#viewBtnReview").classList.remove("on");
       $("#forgeHeaderControls").style.display = "none";
       renderDesignedDesk();
+      if (!window.COSMI_DRIVE?.pipelineIndex?.()?.syncedAt) {
+        void window.COSMI_DRIVE?.syncPipelineIndex?.().catch(() => {});
+      }
     } else if (mode === "settings") {
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.remove("active");
@@ -5893,6 +6321,10 @@
     });
     $("#favSearch")?.addEventListener("input", () => renderFavorites());
     $("#designedSearch")?.addEventListener("input", () => renderDesignedDesk());
+    $("#designedStatusFilter")?.addEventListener("change", e => {
+      designedState.statusFilter = e.target.value || "all";
+      renderDesignedDesk();
+    });
 
     // 平台切換按鈕事件
     $("#platChatgpt").addEventListener("click", () => { state.platform = "chatgpt"; renderAll(); });
@@ -6300,7 +6732,7 @@
       delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
         produced_by: "", files: [], missing: []}}),
-    refresh: () => { renderAll(); renderReviewView(); },
+    refresh: () => { renderAll(); renderReviewView(); if (state.activeTab === "designed") renderDesignedDesk(); },
     setPortraitRound: round => { state.currentRound = round; renderOutput(); },
     activePackage: getActivePkg,
     packageBlob: pkg => createZipBlob(pkg.rawFiles),
@@ -6310,6 +6742,7 @@
       const b = build();
       if (b.errors.length) throw Error(b.errors.join("；"));
       const stage = document.getElementById("pipelineStage")?.value || "task";
+      recordPipelineJob(b.ctx, stage);
       const portrait = ["portrait", "portrait_3d"].includes(stage) && window.COSMI_PIPELINE?.supports(b.ctx);
       return {
         path: "prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
