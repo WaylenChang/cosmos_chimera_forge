@@ -3340,6 +3340,7 @@
   function fieldRow(kind, f) {
     if (f.when && !f.when(state)) return el("div", { style: "display:none" });
     const key = kind + "." + f.key, vals = state[kind][f.key] || [], opts = f.options(state);
+    const controlId = "concept-" + kind + "-" + f.key;
     const label = v => (opts.find(o => o.v === v) || {}).zh || v;
     
     // 改良後的按鈕式鎖定開關，排版永不跑版
@@ -3368,7 +3369,7 @@
     let control;
     const multi = (f.max || 1) > 1;
     if (!multi) {
-      control = el("select", { onchange: e => {
+      control = el("select", { id: controlId, onchange: e => {
         if (e.target.value === "__CUSTOM__") {
           edit.click();
         } else {
@@ -3382,7 +3383,7 @@
       );
     } else {
       const chips = vals.map(v => el("span", { class: "chip" }, label(v), el("button", { type: "button", title: "移除", onclick: () => { state[kind][f.key] = vals.filter(x => x !== v); renderAll(); } }, "×")));
-      const add = el("select", { onchange: e => {
+      const add = el("select", { id: controlId, onchange: e => {
         if (!e.target.value) return;
         if (e.target.value === "__CUSTOM__") {
           edit.click();
@@ -3397,7 +3398,9 @@
       );
       control = el("div", { class: "chips" }, chips, add);
     }
-    return el("div", { class: "field" }, el("label", {}, f.label), el("div", { class: "fctl" }, edit, dice, lockBtn), control);
+    return el("div", { class: "field concept-field", "data-concept-field": key },
+      el("label", { for: controlId, title: f.label, "data-tip": f.label }, f.label),
+      el("div", { class: "fctl" }, edit, dice, lockBtn), control);
   }
 
   function renderConcepts() {
