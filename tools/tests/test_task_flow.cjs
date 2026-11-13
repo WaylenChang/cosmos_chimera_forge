@@ -43,7 +43,7 @@ test('encyclopedia is integrated into appearance for character/creature and stan
   const rows=flow.diagram('creature');
   const fork=rows.find(r=>r.type==='fork');
   assert.deepEqual(Array.from(fork.lanes,l=>l.id),['image','text']);
-  assert.deepEqual(Array.from(fork.lanes[0].segments[2].steps,s=>s.id),['image_colab','image_blender']);
+  assert.deepEqual(Array.from(fork.lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
   assert.equal(rows[0].steps[0].id,'appearance');
   assert.equal(rows.at(-1).steps[0].id,'review_3d');
   assert.equal(flow.selectRoute(flow.selectCategory('move'),'move').step,'encyclopedia');
@@ -82,7 +82,7 @@ test('category controls use text and do not display a route toggle', () => {
   const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
   assert.match(forge,/}, c\.zh\)\)\)/);
   assert.doesNotMatch(forge,/function chooseRoute\(/);
-  assert.match(forge,/el\("span",\{class:"flow-lane-label"\},lane.label\)/);
+  assert.doesNotMatch(forge,/flow-lane-label|flow-alternatives-label/);\n  assert.match(forge,/class:"flow-parallel-track"/);
 });
 
 test('production build ships the task chooser module', () => {
@@ -134,4 +134,20 @@ test('browser anatomy planner respects mixed origins and explicit wings', () => 
   const mixed=plan('creature',{base_parents:['生物·哺乳類','幻想生物·異界/異形']},'image');
   assert.equal(mixed.anatomy,'hybrid');
   assert.equal(mixed.review_required,true);
+});
+
+test('minimal rail diagram exposes both image backends without text route headers', () => {
+  const flow=loadFlow();
+  const rows=flow.diagram('character');
+  const lanes=rows[1].lanes;
+  assert.deepEqual(Array.from(lanes[0].segments[2].tracks,t=>t[0].name),
+    ['Colab + AI + Blender','AI + Blender']);
+  assert.equal(lanes[1].segments[0].steps[0].name,'AI + Blender（文字建模）');
+  assert.equal(lanes[0].label,undefined);
+  assert.equal(lanes[1].label,undefined);
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(html,/\.task-flow-list \.flow-parallel-tracks/);
+  assert.match(html,/\.task-flow-list \.flow-lane, \.task-flow-list \.flow-parallel-track \{[^}]*border:0/);
+  assert.doesNotMatch(forge,/lane\.label|segment\.label/);
 });
