@@ -896,7 +896,7 @@
     curCustomCtx = null;
   }
 
-  // Explicit three-phase chooser: category -> route -> connected pipeline nodes.
+  // Choose a category, then select a node directly from the unified pipeline graph.
   const taskFlow = window.COSMI_TASK_FLOW;
   let flowSelection = null;
   function currentFlow() {
@@ -916,12 +916,6 @@
     const stage = $("#pipelineStage");
     if (stage && category !== "move") stage.value = "appearance";
     renderAll();
-  }
-  function chooseRoute(route) {
-    const choice = flowSelection || state.flowChoice;
-    const next = taskFlow?.selectRoute(choice, route);
-    if (!next) return;
-    chooseFlow(next.category, next.route, next.step);
   }
   function chooseFlow(category, route, step) {
     const selected = taskFlow?.resolve(category, route, step);
@@ -959,62 +953,65 @@
     }
   }
   function renderTasks() {
-    const box = $("#tasks"), categories = $("#taskCategories"), routes = $("#taskRoutes"), detail = $("#taskFlowDetail");
-    if (!taskFlow || !box || !categories || !routes || !detail) return;
+    const box = $("#tasks"), categories = $("#taskCategories"), detail = $("#taskFlowDetail");
+    if (!taskFlow || !box || !categories || !detail) return;
     const choice = flowSelection || state.flowChoice;
     const active = currentFlow();
     const kind = choice?.category || null;
     categories.replaceChildren(...taskFlow.categories.map(c => el("button", {
       type:"button", class:c.id === kind ? "on" : "",
       "aria-pressed":String(c.id === kind), "aria-label":"選擇" + c.zh,
-      "data-tip":"先選擇" + c.zh + "，再選管線",
+      "data-tip":"顯示" + c.zh + "的完整任務流程",
       onclick:()=>chooseCategory(c.id)
     }, c.zh)));
     if (!kind) {
-      routes.replaceChildren();
       box.replaceChildren();
       detail.hidden = false;
-      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"① 先選擇角色、宙獸或招式。"));
+      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"先選擇角色、宙獸或招式，查看完整管線流程。"));
       renderDesigned();
       return;
     }
-    const routeDefs = kind === "move"
-      ? [{id:"move", label:"招式特效（VFX）", tip:"選擇招式特效管線，生成規格、分鏡、圖層與序列圖"}]
-      : [
-        {id:"image", label:"Image-to-3D", tip:"先生成並審查立繪，再選 Colab＋Blender 或 AI＋Blender"},
-        {id:"text", label:"Prompt-to-3D", tip:"先以文字建模，再補畫主立繪與審查"}
-      ];
-    routes.replaceChildren(...routeDefs.map(d => el("button", {
-      type:"button", class:d.id === choice.route ? "on" : "",
-      "aria-pressed":String(d.id === choice.route), "aria-label":d.tip, "data-tip":d.tip,
-      onclick:()=>chooseRoute(d.id)
-    },d.label)));
-    if (!choice.route || !active) {
-      box.replaceChildren();
-      detail.hidden = false;
-      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"② 請選擇管線，接著點選流程圖節點。"));
-      renderDesigned();
-      return;
-    }
-    const rows = taskFlow.diagram(kind, choice.route);
-    function node(step) {
+    const rows = taskFlow.diagram(kind);
+    function node(step, laneRoute = null) {
+      // Shared start/end keep the last chosen lane, while branch nodes choose it directly.
+      const route = laneRoute || (kind === "move" ? "move" : choice?.route === "text" ? "text" : "image");
+      const isActive = active?.step === step.id && active?.route === route;
       const tip = step.detail + (step.output ? "\n產出：" + step.output : "");
       return el("button", {
-        type:"button", class:"task" + (step.id === active.step ? " on" : "") + (step.alternate ? " is-alternate" : ""),
-        "aria-pressed":String(step.id === active.step),
+        type:"button", class:"task" + (isActive ? " on" : "") + (step.alternate ? " is-alternate" : ""),
+        "data-route":route, "data-step":step.id,
+        "aria-pressed":String(isActive),
         "aria-label":"選擇步驟 " + step.name, "data-tip":tip, title:tip,
-        onclick:()=>chooseFlow(kind,choice.route,step.id)
+        onclick:()=>chooseFlow(kind,route,step.id)
       },el("span",{class:"tname"},step.name));
     }
+    function linkedSegments(segments, route) {
+      const elements = [];
+      segments.forEach((segment, i) => {
+        if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
+        if (segment.type === "alternatives") {
+          elements.push(el("div",{class:"flow-alternatives"},
+            el("div",{class:"flow-alternatives-label"},segment.label),
+            el("div",{class:"flow-alternatives-options"},segment.steps.map(s=>node(s,route)))));
+        } else {
+          elements.push(el("div",{class:"flow-row"},node(segment.steps[0],route)));
+        }
+      });
+      return elements;
+    }
     const elements = [];
-    rows.forEach((row,i) => {
+    rows.forEach((row, i) => {
       if (i) elements.push(el("span",{class:"flow-connector","aria-hidden":"true"}));
-      if (row.type === "branch") {
-        elements.push(el("div",{class:"flow-branch"},
-          el("p",{class:"flow-branch-label"},row.label),
-          el("div",{class:"flow-branch-options"},row.steps.map(node))));
+      if (row.type === "fork") {
+        elements.push(el("div",{class:"flow-fork"},
+          el("span",{class:"flow-split","aria-hidden":"true"}),
+          el("div",{class:"flow-lanes"},row.lanes.map(lane=>
+            el("div",{class:"flow-lane","aria-label":lane.label},
+              el("span",{class:"flow-lane-label"},lane.label),
+              el("div",{class:"flow-lane-track"},linkedSegments(lane.segments,lane.id))))),
+          el("span",{class:"flow-merge","aria-hidden":"true"})));
       } else {
-        elements.push(el("div",{class:"flow-row"},node(row.steps[0])));
+        elements.push(el("div",{class:"flow-row" + (row.shared ? " flow-shared" : "")},node(row.steps[0])));
       }
     });
     box.replaceChildren(...elements);

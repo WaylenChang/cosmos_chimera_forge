@@ -54,19 +54,25 @@
       steps(c.id, route).some(x => x.id === stage) ? stage : "appearance";
     return { category: c.id, route, step };
   }
-  // Diagram rows preserve alternate paths as a parallel fork instead of sequential tasks.
-  function diagram(kind, route) {
-    const list = steps(kind, route);
-    if (!list.length) return [];
-    if (route === "image" && kind !== "move") {
-      const branches = list.filter(step => step.alternate);
-      const before = list.slice(0, list.indexOf(branches[0]));
-      const after = list.slice(list.indexOf(branches[branches.length - 1]) + 1);
-      return [...before.map(step => ({type: "step", steps: [step]})),
-        {type: "branch", label: "二選一建模管線", steps: branches},
-        ...after.map(step => ({type: "step", steps: [step]}))];
-    }
-    return list.map(step => ({ type: "step", steps: [step] }));
+  // Both 3D routes share exactly one appearance node and one final-review node.
+  // The image route has two alternative modeling implementations, not two sequential steps.
+  // Rendering uses horizontal tracks; the route belongs to each lane, not a route toggle.
+  function diagram(kind) {
+    if (!category(kind)) return [];
+    if (kind === "move") return flow.move.map(step => ({type: "step", steps: [step]}));
+    return [
+      {type: "step", shared: true, steps: [flow.image[0]]},
+      {type: "fork", lanes: [
+        {id: "image", label: "Image-to-3D", segments: [
+          {type: "step", steps: [flow.image[1]]},
+          {type: "step", steps: [flow.image[2]]},
+          {type: "alternatives", label: "擇一建模", steps: flow.image.filter(step => step.alternate)}
+        ]},
+        {id: "text", label: "Prompt-to-3D",
+          segments: flow.text.slice(1, -1).map(step => ({type: "step", steps: [step]}))}
+      ]},
+      {type: "step", shared: true, steps: [flow.image[flow.image.length - 1]]}
+    ];
   }
   // Explicit chooser state machine: category must be chosen before route and node.
   function selectCategory(kind) {
