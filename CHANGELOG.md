@@ -1,3 +1,9 @@
+## 2026-11-13 — Tool 2.9.1：Drive 延後載入與 Pages 快取修正
+
+- 同步 metadata／預覽時容許 GLB 延後下載，資產抵達後即可開啟指定驗收連結。
+- Pages 建置依程式與樣式的實際內容雜湊產生版本 URL，避免部署後仍混用舊的 Drive 載入程式。
+- 修正 Linux CI 虛擬環境 launcher 測試檔缺少執行權限的問題，保留 production 執行權限檢查。
+
 ## 2026-11-13 — Tool 2.9.0：Drive 互動 3D 驗收
 
 - Prompt Forge 加入互動模型驗收視窗、資產選擇、實際動畫切換、暫停／時間軸、正面重設與驗收連結；GitHub Pages 以原 Google 登入讀取 Drive 的 GLB、四視角和影片，不使用 Colab runtime。

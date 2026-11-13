@@ -223,6 +223,11 @@ test('production build excludes asset and prompt directories and requires OAuth 
   assert.ok(!names.includes('Art') && !names.includes('Data') && !names.includes('.git'));
   assert.match(fs.readFileSync(path.join(root, '_site/drive-config.js'), 'utf8'), /123-test.apps.googleusercontent.com/);
   assert.match(fs.readFileSync(path.join(root, '_site/index.html'), 'utf8'), /id="driveApp" hidden/);
+  const builtHtml = fs.readFileSync(path.join(root, '_site/index.html'), 'utf8');
+  for (const asset of ['forge.js','drive-storage.js','model-review.js','model-review.css','drive-config.js']) {
+    const digest = require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'_site',asset))).digest('hex').slice(0,12);
+    assert.ok(builtHtml.includes(`="${asset}?v=${digest}"`), asset+' must bypass stale Pages cache using its content hash');
+  }
   fs.rmSync(path.join(root, '_site'), { recursive: true });
 });
 
