@@ -10,7 +10,7 @@ if (!/^\d+-[a-z0-9_-]+\.apps\.googleusercontent\.com$/i.test(clientId)) {
   throw new Error('Set repository variable GOOGLE_OAUTH_CLIENT_ID to a Google OAuth Web Client ID before deploying.');
 }
 // Only this explicit allowlist can reach the public Pages artifact.
-const files = ['index.html', 'catalog.js', 'tasks.js', 'designed.js', 'forge.js', 'drive-config.js', 'drive-storage.js', 'drive-cache.js', 'settings.js', 'pipeline.js', 'wiki.js', 'task-flow.js', 'anatomy-profiles.js', 'vendor'];
+const files = ['index.html', 'catalog.js', 'tasks.js', 'designed.js', 'forge.js', 'model-review.js', 'model-review.css', 'drive-config.js', 'drive-storage.js', 'drive-cache.js', 'settings.js', 'pipeline.js', 'wiki.js', 'task-flow.js', 'anatomy-profiles.js', 'vendor'];
 await rm(output, { recursive: true, force: true });
 await mkdir(output);
 for (const file of files) await cp(resolve(root, file), resolve(output, file), { recursive: true });

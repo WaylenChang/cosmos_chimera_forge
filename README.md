@@ -9,7 +9,15 @@
 
 ## 六類 Anime3D 分流實作（2026-11-12）
 
-2026-11-13：[逐管線查核與葉澄汐測試](docs/ANIME3D_PIPELINE_AUDIT_20261113.md) 已記錄 Notebook、續跑、來源、Blender 蒙皮及動畫保留修復。葉澄汐來源已由使用者明確核准並保存 Drive 審查紀錄；[SkinTokens 綁骨接點](docs/ANIME3D_SKINTOKENS.md) 已補上。新版程式包與 notebook 已更新至原 Drive 檔案並讀回驗證 SHA256；瀏覽器控制已恢復，真實 Colab L4 GPU 已連線。Drive 掛載權限確認與隔離模型環境安裝仍待完成，尚未執行角色推論，不能宣稱端到端通過。
+2026-11-13：[逐管線查核與葉澄汐測試](docs/ANIME3D_PIPELINE_AUDIT_20261113.md) 已記錄真實 Colab Pixal3D → [SkinTokens 綁骨](docs/ANIME3D_SKINTOKENS.md) → Blender 產物與驗收證據。葉澄汐已產生含三段動畫的 GLB／Blend，技術檢查通過、人工造型與變形驗收待審；Colab GPU 已釋放。此結果不代表六類管線皆完成端到端驗證。
+
+## Drive 互動 3D 驗收（Tool 2.9.0）
+
+登入 Google 並同步資產後，點上方 🧊「互動 3D 驗收」，或在成果審查台點「互動驗收」。可選擇角色／宙獸模型、拖曳旋轉與縮放、切換 GLB 實際動畫、暫停或拖曳時間軸，並讀取 Drive 四視角與動作影片。此流程不啟動 Colab、GPU 推論或 Blender。
+
+「複製驗收連結」產生 `?review=<asset_id>`；GitHub Pages 開啟後仍需登入有專案權限的 Google 帳號。資產保持原 Drive 權限，GLB 經 Drive API 授權讀取成暫時 Blob URL，關閉驗收視窗即釋放。Pages 的部署白名單不含私人模型或影片。
+
+在資產目錄放 `review_viewer.json`，指定 `spec: "cosmimera-model-review/1"`、`title`、`model: {path, sha256}`、`camera_orbit`、`animations`，以及 `previews`／`videos` 的 `{path,label}` 陣列。所有 `path` 都是包內相對路徑；不支援外部媒體 URL。模型 SHA256 不符時停止顯示，不以原始網格或替代模型冒充。無此檔的歷史包仍可依 manifest 的 L1 GLB 或 `models/` 優先載入。
 
 新增角色、怪物、動物、奇幻生物、機械與機甲的**解剖型態分類器**，依實際肢體、翅膀、尾巴、表面材質及可動部件產出後端優先順序、骨架／機構策略、動作與 QA 項目；混合或不明拓撲不會強制當成人形。網頁的 3D Prompt 自動帶入分類摘要。
 

@@ -1,0 +1,18 @@
+#modelReviewDialog{width:min(1100px,calc(100vw - 24px));max-height:94dvh;padding:18px;border:1px solid var(--line,#394557);border-radius:14px;background:var(--panel,#171a21);color:var(--ink,#e5eaf2);overflow:auto;box-sizing:border-box}
+#modelReviewDialog::backdrop{background:#050810bf;backdrop-filter:blur(4px)}
+#modelReviewDialog header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#modelReviewDialog h2{margin:4px 0 12px;font-size:23px}
+#modelReviewApproval{color:#dfbb75;font-size:12px}
+.model-review-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.model-review-toolbar label{display:flex;align-items:center;gap:6px;max-width:100%}
+#modelReviewAsset{max-width:min(600px,65vw)}
+#modelReviewStatus,#modelReviewNotes{font-size:13px;overflow-wrap:anywhere}
+#modelReviewStage{background:#dce5ee;border-radius:12px;min-height:300px}
+#modelReviewStage model-viewer{display:block;width:100%;height:clamp(300px,54dvh,620px)}
+#modelReviewScrub{flex:1;min-width:140px;accent-color:var(--accent,#7fd8ff)}
+#modelReviewTime{font:12px Consolas,monospace;white-space:nowrap}
+#modelReviewMedia{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:10px}
+#modelReviewMedia figure{margin:0;min-width:0}
+#modelReviewMedia img,#modelReviewMedia video{display:block;width:100%;border-radius:8px}
+#modelReviewMedia figcaption{font-size:12px;padding:6px 0;overflow-wrap:anywhere}
+@media(max-width:600px){#modelReviewDialog{padding:10px}#modelReviewDialog h2{font-size:19px}#modelReviewAsset{max-width:70vw}.model-review-toolbar{gap:6px}#modelReviewMedia{grid-template-columns:repeat(2,minmax(0,1fr))}}

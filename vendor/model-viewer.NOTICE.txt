@@ -1,0 +1,7 @@
+@google/model-viewer 4.1.0
+Copyright Google LLC. Licensed under the Apache License, Version 2.0.
+Source: https://github.com/google/model-viewer/tree/v4.1.0
+Distribution: https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js
+License: model-viewer.LICENSE.txt
+
+The bundled distribution retains its upstream third-party license notices.

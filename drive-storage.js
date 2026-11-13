@@ -125,7 +125,7 @@ async function syncPackages({force=false}={}){
    checkSession();
    if(ids.has(pkg.id))throw Error(pkg.id+" 在多個目錄重複");
    ids.add(pkg.id);pkg.drivePath=dir+"/"+entry.name;pkg.driveFolderId=entry.id;pkg.driveFiles=files;
-   const glb=files.find(f=>/\.glb$/i.test(f.path));
+   const glb=window.COSMI_MODEL_REVIEW?.selectModelFile(files,pkg.manifest||{},window.COSMI_MODEL_REVIEW.descriptorFor(pkg))||files.find(f=>/^models\/.*\.glb$/i.test(f.path))||files.find(f=>/\.glb$/i.test(f.path));
    if(glb&&!pkg.glbFile)pkg.glbFile={path:glb.path,deferred:true};
    if(reviewRecord){pkg.status=reviewRecord.status;pkg.sourcePack=reviewRecord.source_pack;pkg.reviewRecord=reviewRecord;}
    if(dir.startsWith("03_completed/"))pkg.completed=true;
@@ -213,6 +213,7 @@ async function syncPackages({force=false}={}){
   window.COSMI_FORGE.refresh();
   const errorText=errors.length?"；"+errors.slice(0,3).join("；")+(errors.length>3?"；另有 "+(errors.length-3)+" 項錯誤":""):"";
   status("Drive 已載入 "+count+" 個資產目錄"+(cachedRecords.length?"（已使用快取）":"")+errorText);
+  window.COSMI_MODEL_REVIEW?.onPackagesChanged();
   return count;
  })().finally(()=>{syncing=null;});return syncing;
 }

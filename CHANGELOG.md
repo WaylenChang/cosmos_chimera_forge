@@ -1,3 +1,9 @@
+## 2026-11-13 — Tool 2.9.0：Drive 互動 3D 驗收
+
+- Prompt Forge 加入互動模型驗收視窗、資產選擇、實際動畫切換、暫停／時間軸、正面重設與驗收連結；GitHub Pages 以原 Google 登入讀取 Drive 的 GLB、四視角和影片，不使用 Colab runtime。
+- `review_viewer.json` 指定包內最終模型、SHA256、相機方向與預覽資源。模型、貼圖與影片留在私人 Drive；Pages 僅部署程式與 Google model-viewer 4.1.0 元件，不變更資產共享權限。
+- 修正巢狀動畫 manifest 蓋過根 manifest、原始 source／rig 搶先於含動畫 models/ 的選擇、GLB typed-array 邊界，以及切換資產後沿用上一模型動作的問題。
+
 ## 2026-11-13 — Anime3D 執行修復與葉澄汐管線查核
 
 - 新增獨立 SkinTokens mesh-to-rig CLI 階段、真正 joints／weights 結構檢查及 source／rig 分開雜湊續跑；綁骨失敗不接受舊模型。葉澄汐已完成 Colab L4 真實 Pixal3D／SkinTokens 推論；任意其他骨架仍需各自驗證。

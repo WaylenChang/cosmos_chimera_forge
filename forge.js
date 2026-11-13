@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.8.0";
+  const TOOL_VERSION = "2.9.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -3461,11 +3461,12 @@
 
   async function loadAssetFiles(files, file, {silent = false} = {}) {
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
-    let animSpec = null, rigSpec = null, glbFile = null, animFiles = [];
+    const manifestPath = window.COSMI_MODEL_REVIEW.selectRootManifest(Object.keys(files));
+    if (manifestPath) prefix = manifestPath.slice(0, -"manifest.json".length);
+    let animSpec = null, rigSpec = null, glbFile = null, animFiles = [], glbCandidates = [];
     for (const path in files) {
-      if (path.endsWith("manifest.json")) {
+      if (path === manifestPath) {
         try { manifestData = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
-        prefix = path.slice(0, path.lastIndexOf("manifest.json"));
       } else if (path.endsWith("concept.json")) {
         try { conceptData = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
       } else if (path.endsWith(".prompt.md") || path.endsWith("prompt.md") || path.endsWith("prompt.txt")) {
@@ -3476,12 +3477,17 @@
         try { rigSpec = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
       } else if (path.endsWith(".glb")) {
         const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
-        const blob = new Blob([files[path]], { type: "model/gltf-binary" });
-        glbFile = { path: rel, url: URL.createObjectURL(blob), buffer: files[path].buffer, uint8: files[path] };
+        glbCandidates.push({path:rel,key:path});
       } else if (path.endsWith(".fbx") && (path.includes("anim") || path.includes("models"))) {
         const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
         animFiles.push({ path: rel, size: files[path].length });
       }
+    }
+    const selectedGlb = window.COSMI_MODEL_REVIEW.selectModelFile(glbCandidates, manifestData || {});
+    if (selectedGlb) {
+      const bytes = files[selectedGlb.key];
+      const blob = new Blob([bytes], {type:"model/gltf-binary"});
+      glbFile = {path:selectedGlb.path,url:URL.createObjectURL(blob),buffer:window.COSMI_MODEL_REVIEW.exactBuffer(bytes),uint8:bytes};
     }
     let alignedStaged = null;
     if (/\.zip$/i.test(file.name) && (!manifestData || !conceptData)) {
@@ -4631,7 +4637,7 @@
     if (!pkg) return [];
     if (pkg.animSpec?.clips?.length) return pkg.animSpec.clips;
     if (linkedPkg?.animSpec?.clips?.length) return linkedPkg.animSpec.clips;
-    if (reviewState.three.clips?.length) {
+    if (reviewState.three.clips?.length && [pkg.id, linkedPkg?.id].includes(reviewState.three.loadedPkgId)) {
       return reviewState.three.clips.map(c => ({
         clip: c.name,
         description: getClipZh(c.name, pkg),
@@ -4642,6 +4648,7 @@
         events: []
       }));
     }
+    if (pkg.glbFile || pkg.driveFolderId) return [];
     if (is3dType(pkg.type) || pkg.id.startsWith("mdl")) {
       const isChr = pkg.type === "character-model-rig" || pkg.subjectId?.startsWith("chr") || (pkg.id.startsWith("mdl") && pkg.manifest?.source_pack?.startsWith("chr"));
       const list = isChr ? (C.CLIPS?.character || C.ACTIONS?.character || []) : (C.CLIPS?.creature || C.ACTIONS?.creature || []);
@@ -4774,7 +4781,7 @@
     if (!glbBuffer && targetPkg.rawFiles) {
       for (const p in targetPkg.rawFiles) {
         if (p.endsWith(".glb")) {
-          glbBuffer = targetPkg.rawFiles[p].buffer;
+          glbBuffer = window.COSMI_MODEL_REVIEW.exactBuffer(targetPkg.rawFiles[p]);
           break;
         }
       }
@@ -4970,6 +4977,10 @@
       clip = three.clips.find(c => c.name === altName || c.name.endsWith(altName));
     }
     if (!clip) {
+      if (pkg?.glbFile || pkg?.driveFolderId) {
+        $("#stage3dClipBadge").textContent = "模型未包含此動畫：" + clipName;
+        return;
+      }
       const allClips = getPackageClips(pkg);
       const spec = allClips.find(c => c.clip === clipName || c.clip === clipName.replace(/^(chr_|cr_)/, ""));
       const dur = spec ? spec.duration_sec : 1.5;

@@ -48,7 +48,7 @@ let auth,selected='',failMoveOnce='';
 function actualForge(){
  const toast={classList:{add(){},remove(){}}};
  const c={Blob,File,URL,TextEncoder,TextDecoder,Uint8Array,ArrayBuffer,DataView,crypto,console:{log(){},warn(){},error(){}},setTimeout(){return 1;},clearTimeout(){},localStorage:{getItem(){return null;},setItem(){}},document:{addEventListener(){},querySelector:s=>s==='#toast'?toast:null,getElementById(){return null;}},addEventListener(){}};c.window=c;
- for(const file of ['catalog.js','tasks.js','designed.js','pipeline.js','forge.js'])vm.runInNewContext(fs.readFileSync(path.join(root,file),'utf8'),c,{filename:file});return c.COSMI_FORGE;
+ for(const file of ['catalog.js','tasks.js','designed.js','pipeline.js','model-review.js','forge.js'])vm.runInNewContext(fs.readFileSync(path.join(root,file),'utf8'),c,{filename:file});return c.COSMI_FORGE;
 }
 const forge=actualForge();
 const ctx={task:{id:'creature-concept'},taskId:'cr_live_prompt',subjectId:'test_transport',concept:{appearance:'isolated transport fixture'},opts:{stage:'adult'}};
