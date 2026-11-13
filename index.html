@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COSMIMERA · Prompt Forge & 交付審查台</title>
-<link rel="stylesheet" href="model-review.css">
 <style>
   :root {
     --bg: #12141a; --panel: #171a21; --subpanel: #1d222c; --ink: #dfe5ee; --muted: #7a8496;
@@ -831,7 +830,6 @@
     <button class="segb on icon-only" id="viewBtnForge" type="button" aria-label="⚡ Prompt 鍛造" data-tip="⚡ Prompt 鍛造">⚡</button>
     <button class="segb icon-only" id="viewBtnDesigned" type="button" aria-label="📋 已設計項目" data-tip="📋 已設計項目">📚</button>
     <button class="segb icon-only" id="viewBtnReview" type="button" aria-label="🔍 成果審查台" data-tip="🔍 成果審查台">🔍</button>
-    <button class="segb icon-only" id="modelReviewOpen" type="button" aria-label="互動 3D 驗收" data-tip="互動 3D 驗收：旋轉模型、切換動畫與時間軸">🧊</button>
     <button class="segb icon-only" id="viewBtnSettings" type="button" aria-label="⚙ 應用程式設定" data-tip="⚙ 應用程式設定">⚙</button>
   </div>
   <span class="grow"></span>
@@ -1187,7 +1185,6 @@
             <button class="segb on icon-only" id="btnModeSingle" data-mode="single" type="button" aria-label="單圖視圖" data-tip="單圖視圖">▣</button>
             <button class="segb icon-only" id="btnModeCompare" data-mode="compare" type="button" aria-label="⚡ 2D ⇄ 3D 雙欄對照" data-tip="⚡ 2D ⇄ 3D 雙欄對照">◫</button>
             <button class="segb icon-only" id="btnMode3D" data-mode="3d" type="button" aria-label="🧊 3D 動作檢驗" data-tip="🧊 3D 動作檢驗">🧊</button>
-            <button class="segb" id="modelReviewPackage" type="button" aria-label="開啟互動模型驗收">互動驗收</button>
           </div>
         </div>
         <div class="stagebar-group" id="viewSegGroup">
@@ -1209,6 +1206,7 @@
         <button class="btn ghost icon-only" id="btnUpgradeActive" hidden type="button" aria-label="一鍵升級為最新版 Prompt 與規格" data-tip="一鍵升級為最新版 Prompt 與規格">🔄</button>
         <button class="btn ghost mini icon-only" id="btnBackup" type="button" aria-label="移至備份區（自動加入時間戳）" data-tip="移至備份區（自動加入時間戳）">📦</button>
         <button class="btn ghost mini icon-only" id="btnCopyPath" type="button" aria-label="📋 複製路徑" data-tip="📋 複製路徑">📋</button>
+        <button class="btn ghost mini icon-only" id="btnCopyReviewLink" type="button" aria-label="🔗 複製驗收連結" data-tip="🔗 複製驗收連結">🔗</button>
         <button class="btn ghost mini icon-only" id="btnCopyPs" hidden type="button" aria-label="💻 PowerShell" data-tip="💻 PowerShell">💻</button>
       </div>
     </div>

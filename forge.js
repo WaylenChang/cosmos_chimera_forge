@@ -3479,7 +3479,9 @@
       }
     }
     // Drive initially imports only metadata/previews; binary files are deferred.
-    const selectedGlb = glbCandidates.length ? window.COSMI_MODEL_REVIEW.selectModelFile(glbCandidates, manifestData || {}) : null;
+    let descriptorData = null;
+    try { descriptorData = window.COSMI_MODEL_REVIEW?.descriptorFor?.({ id: prefix.replace(/\/$/, ""), rawFiles: files }); } catch (e) {}
+    const selectedGlb = glbCandidates.length ? window.COSMI_MODEL_REVIEW.selectModelFile(glbCandidates, manifestData || {}, descriptorData) : null;
     if (selectedGlb) {
       const bytes = files[selectedGlb.key];
       const blob = new Blob([bytes], {type:"model/gltf-binary"});
@@ -4783,6 +4785,20 @@
       }
     }
 
+    let descriptor = null;
+    try { descriptor = window.COSMI_MODEL_REVIEW?.descriptorFor?.(targetPkg) || null; } catch (e) {}
+    three.activeDescriptor = descriptor;
+    if (glbBuffer && descriptor?.model?.sha256 && crypto?.subtle) {
+      const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", glbBuffer)), x => x.toString(16).padStart(2, "0")).join("");
+      if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+      if (digest !== descriptor.model.sha256) {
+        targetPkg.glbLoadError = true;
+        $("#stage3dClipBadge").textContent = "模型 SHA256 與驗收描述檔不符，請重新同步資產";
+        $("#stage3dInfoBadge").textContent = "";
+        return;
+      }
+    }
+
     const onModelLoaded = (model, animations) => {
       targetPkg.glbLoadError = false;
       three.modelGroup = model;
@@ -4958,7 +4974,17 @@
     const stats = reviewState.three.modelStats;
     const infoBadge = $("#stage3dInfoBadge");
     if (infoBadge && stats) {
-      infoBadge.textContent = `| ${stats.faceCount.toLocaleString()} 面 · ${stats.vertCount.toLocaleString()} 頂點 · ${clips.length} 組動作`;
+      const desc = reviewState.three.activeDescriptor;
+      const loadedNames = new Set((reviewState.three.clips || []).map(c => c.name));
+      const missingAnims = (desc?.animations || []).filter(name => !loadedNames.has(name));
+      const parts = [
+        `${stats.faceCount.toLocaleString()} 面`,
+        `${stats.vertCount.toLocaleString()} 頂點`,
+        `${clips.length} 組動作`
+      ];
+      if (missingAnims.length) parts.push(`缺少：${missingAnims.join("、")}`);
+      if (desc?.notes?.length) parts.push(desc.notes.join("；"));
+      infoBadge.textContent = "| " + parts.join(" · ");
     }
   }
 
@@ -6132,6 +6158,13 @@
       const root = state.root || DEFAULT_ROOT;
       copyText(`${root}\\Art\\_incoming\\${pkg.id}`, "已複製交付資料夾路徑");
     });
+    $("#btnCopyReviewLink")?.addEventListener("click", () => {
+      const pkg = getActivePkg();
+      if (!pkg) return;
+      const url = new URL(window.location.href);
+      url.searchParams.set("review", pkg.id);
+      copyText(url.toString(), "已複製驗收連結；開啟後須登入有資產權限的 Google 帳號。");
+    });
     $("#btnCopyPs").addEventListener("click", () => {
       const pkg = getActivePkg();
       if (!pkg) return;
@@ -6229,6 +6262,14 @@
   }
   window.COSMI_FORGE = Object.freeze({
     loadZipFile, loadAssetFiles, setViewMode,
+    openReviewPackage: pkg => {
+      if (!pkg) return;
+      reviewState.activePkgId = pkg.id;
+      if (pkg.stage) reviewState.activeStage = pkg.stage;
+      reviewState.activeImgIdx = 0;
+      if (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) reviewState.viewMode = "3d";
+      setViewMode("review");
+    },
     versionInfo: () => ({tool:TOOL_VERSION,catalog:C.version,spec:SPEC,templates:Object.fromEntries(TASKS.map(t=>[t.id,t.version]))}),
     packages: () => reviewState.packages,
     removePackage: id => { reviewState.packages = reviewState.packages.filter(p => p.id !== id); },

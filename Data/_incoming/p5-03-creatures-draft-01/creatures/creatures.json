@@ -511,17 +511,17 @@
     "signature_move": "fire_ember_lash",
     "trait": "trait_fire_thermal_recharge",
     "concept": {
-      "base": "烈焰雄獅 × 砂岩熔核甲胄",
-      "stage_look": "滾燙赤褐小獅，頸圈生有一圈暗紅餘燼絨毛，爪尖踏出微小火星",
-      "archetype": "arch_apedemak",
-      "region": "非洲",
+      "base": "沙漠羱羊 × 玫瑰紅砂岩熔爐甲胄",
+      "stage_look": "踏著熾熱岩蹄的小羱羊，肩背覆有玫瑰紅砂岩鱗甲，額頂一對短彎角冒出跳動火星",
+      "archetype": "arch_dushara_petra",
+      "region": "西亞/中東",
       "motifs_used": [
-        "三首四臂雄獅像",
-        "盤蛇綻放蓮花",
-        "陡頂砂岩金字塔"
+        "玫瑰紅砂岩神殿",
+        "雙目方塊聖石",
+        "沙漠羱羊彎角"
       ],
       "role": "近戰輸出：近距橫掃，受火屬性攻擊後縮短火招 CD",
-      "palette": "赭石紅、熾金黃、玄武岩暗灰"
+      "palette": "玫瑰砂岩紅、熾金黃、玄武岩暗灰"
     }
   },
   {
@@ -566,17 +566,17 @@
     "signature_move": "fire_blaze_charge",
     "trait": "trait_fire_thermal_recharge",
     "concept": {
-      "base": "烈焰雄獅 × 砂岩熔核甲胄",
-      "stage_look": "肌肉結實的烈焰荒原獅，鬃毛如翻騰火浪，額前凝結三道熔岩裂紋",
-      "archetype": "arch_apedemak",
-      "region": "非洲",
+      "base": "沙漠羱羊 × 玫瑰紅砂岩熔爐甲胄",
+      "stage_look": "矯健的四足沙漠羱羊，後彎的環節角間流轉赤金電漿，背甲刻有峽谷岩龕散熱火口",
+      "archetype": "arch_dushara_petra",
+      "region": "西亞/中東",
       "motifs_used": [
-        "三首四臂雄獅像",
-        "盤蛇綻放蓮花",
-        "陡頂砂岩金字塔"
+        "玫瑰紅砂岩神殿",
+        "雙目方塊聖石",
+        "沙漠羱羊彎角"
       ],
       "role": "突擊手：中距直線突進，受火屬性攻擊後縮短火招 CD",
-      "palette": "赭石紅、熾金黃、玄武岩暗灰"
+      "palette": "玫瑰砂岩紅、熾金黃、玄武岩暗灰"
     }
   },
   {
@@ -612,17 +612,17 @@
     "signature_move": "fire_inferno_cataclysm",
     "trait": "trait_fire_thermal_recharge",
     "concept": {
-      "base": "烈焰雄獅 × 砂岩熔核甲胄",
-      "stage_look": "威儀萬丈的三面烈火霸獅，鬃毛化為熊熊金紅蓮華火冠，每聲咆哮皆引動砂岩爆震",
-      "archetype": "arch_apedemak",
-      "region": "非洲",
+      "base": "沙漠羱羊 × 玫瑰紅砂岩熔爐甲胄",
+      "stage_look": "威嚴的玫瑰砂岩巨羱羊，背負神殿火口與雙目方塊聖石，一對巨型後彎電漿角引動岩漿噴湧",
+      "archetype": "arch_dushara_petra",
+      "region": "西亞/中東",
       "motifs_used": [
-        "三首四臂雄獅像",
-        "盤蛇綻放蓮花",
-        "陡頂砂岩金字塔"
+        "玫瑰紅砂岩神殿",
+        "雙目方塊聖石",
+        "沙漠羱羊彎角"
       ],
       "role": "重砲手：高力量，遠距指定點範圍爆發，受火屬性攻擊後縮短火招 CD",
-      "palette": "赭石紅、熾金黃、玄武岩暗灰"
+      "palette": "玫瑰砂岩紅、熾金黃、玄武岩暗灰"
     }
   },
   {
@@ -667,14 +667,14 @@
     "signature_move": "earth_pebble_shot",
     "trait": "trait_earth_tectonic_rebound",
     "concept": {
-      "base": "黃金礦脈人形 × 儀典岩鎧石偶（人形）",
-      "stage_look": "圓潤敦實的小石偶，周身覆蓋薄金微粒，胸膛嵌有一顆微光綠寶石晶核",
+      "base": "四足重裝犰狳 × 聖湖金箔雕甲（四足獸）",
+      "stage_look": "圓潤低矮的四足小犰狳，背負帶狀鎏金陶甲，甲縫間鑲著微光翡翠碎晶",
       "archetype": "arch_el_dorado_muisca",
       "region": "美洲",
       "motifs_used": [
         "金粉覆身",
         "高山聖湖綠寶石",
-        "黃金祭偶"
+        "聖湖蘆葦金筏紋飾"
       ],
       "role": "中排：中距直線投石，受擊後提高土專精",
       "palette": "鎏金黃、翡翠綠、陶土赭褐"
@@ -722,14 +722,14 @@
     "signature_move": "earth_seismic_slam",
     "trait": "trait_earth_tectonic_rebound",
     "concept": {
-      "base": "黃金礦脈人形 × 儀典岩鎧石偶（人形）",
-      "stage_look": "佩帶幾何金面甲的岩土行者，肩背覆蓋層疊板狀黏土與生長金晶",
+      "base": "四足重裝犰狳 × 聖湖金箔雕甲（四足獸）",
+      "stage_look": "九節鎏金鱗甲包覆四足軀幹，背脊立起編織蘆葦紋飾的金盾與翡翠稜柱",
       "archetype": "arch_el_dorado_muisca",
       "region": "美洲",
       "motifs_used": [
         "金粉覆身",
         "高山聖湖綠寶石",
-        "黃金祭偶"
+        "聖湖蘆葦金筏紋飾"
       ],
       "role": "前排：自身周圍近距震波，受擊後提高土專精",
       "palette": "鎏金黃、翡翠綠、陶土赭褐"
@@ -768,14 +768,14 @@
     "signature_move": "earth_rampart_rush",
     "trait": "trait_earth_tectonic_rebound",
     "concept": {
-      "base": "黃金礦脈人形 × 儀典岩鎧石偶（人形）",
-      "stage_look": "巍然屹立的重岩金祭聖偶，雙臂如立柱，通體鎏金結晶與翡翠石脈共鳴",
+      "base": "四足重裝犰狳 × 聖湖金箔雕甲（四足獸）",
+      "stage_look": "如移動祭壇般的巨型四足金甲犰狳，層疊雕紋金甲與翡翠晶脈構成穹頂背殼",
       "archetype": "arch_el_dorado_muisca",
       "region": "美洲",
       "motifs_used": [
         "金粉覆身",
         "高山聖湖綠寶石",
-        "黃金祭偶"
+        "聖湖蘆葦金筏紋飾"
       ],
       "role": "前排：遠距直線突進，受擊後提高土專精",
       "palette": "鎏金黃、翡翠綠、陶土赭褐"
