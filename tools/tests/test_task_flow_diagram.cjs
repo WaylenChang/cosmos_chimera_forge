@@ -58,8 +58,8 @@ test('both routes are visible in one horizontal diagram with shared endpoints', 
     assert.equal(rows[2].steps[0].id,'review_3d');
     const lanes=Array.from(rows[1].lanes);
     assert.deepEqual(lanes.map(l=>l.id),['image','text']);
-    assert.deepEqual(Array.from(lanes[0].segments,s=>s.type),['step','step','alternatives']);
-    assert.deepEqual(Array.from(lanes[0].segments[2].steps,s=>s.id),['image_colab','image_blender']);
+    assert.deepEqual(Array.from(lanes[0].segments,s=>s.type),['step','step','parallel']);
+    assert.deepEqual(Array.from(lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
     assert.deepEqual(Array.from(lanes[1].segments,s=>s.steps[0].id),
       ['prompt_3d','portrait_3d','review_portrait_3d']);
   }
@@ -69,7 +69,7 @@ test('task graph is horizontally scrollable and category selection needs no rout
   assert.match(html, /<h2>任務流程圖<\/h2>/);
   assert.match(html, /\.task-flow-list \{ display:flex !important; flex-direction:row/);
   assert.match(html, /overflow-x:auto/);
-  assert.match(html, /flow-lanes/);
+  assert.match(html, /flow-lanes/);\n  assert.match(html, /flow-parallel-tracks/);
   assert.doesNotMatch(html, /id="taskRoutes"/);
   assert.match(forge, /function chooseCategory\(category\)/);
   assert.doesNotMatch(forge, /function chooseRoute\(route\)/);
