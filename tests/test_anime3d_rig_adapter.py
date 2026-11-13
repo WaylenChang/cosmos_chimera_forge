@@ -69,6 +69,7 @@ class RigContracts(unittest.TestCase):
         launcher = self.root / "venv/bin/python"
         launcher.parent.mkdir(parents=True)
         launcher.write_text("virtualenv launcher fixture")
+        launcher.chmod(0o755)
         config = self.root / "backends.json"
         entry = {"repo": str(self.root), "python": str(launcher), "checkpoint": "learned.ckpt"}
         config.write_text(json.dumps({"skintokens": entry, "pixal3d": entry}))
