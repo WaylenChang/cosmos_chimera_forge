@@ -29,7 +29,7 @@
     const d=describe(ctx), c=ctx.concept||{}, selected=c.locked?.stages?.find(s=>s.stage===d.stage)||{};
     const shared=["name_zh","name_en","elements","region","timeline","culture","bases",
       "base_parents","archetype","role","gender","age","height","ethnicity","biography","backstory_zh",
-      "disposition","dex_zh","appearance_palette","hair_palette","eye_palette","outfit_palette"];
+      "disposition","social_structure","reproduction","dex_zh","appearance_palette","hair_palette","eye_palette","outfit_palette"];
     const form=["creature_id","name_zh","name_en","stage","height_length","weight","size_class",
       "look","appearance","anatomy","limbs","signature_move","temperament","dex_zh","outfit",
       "accessories","silhouette_keywords"];

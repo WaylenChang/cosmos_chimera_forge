@@ -81,3 +81,12 @@ test("legacy extraction rejects incomplete or misordered stages",()=>{
  const w=load();
  assert.throws(()=>w.splitLegacy("1. 幼年期 (juvenile)\nyoung\n2. 成年期 (adult)\nadult","cr_test","adult"),/缺少完整/);
 });
+test("creature wiki initialMarkdown includes social_structure and reproduction",()=>{
+ const w=load();
+ const md=w.initialMarkdown({
+  task:{id:"creature-concept"},subjectId:"cr_sample",opts:{stage:"adult"},
+  concept:{name_zh:"測試宙獸",social_structure:"母系氏族部落",reproduction:"卵生·硬殼築巢"}
+ });
+ assert.match(md,/social_structure.*"母系氏族部落"/);
+ assert.match(md,/reproduction.*"卵生·硬殼築巢"/);
+});

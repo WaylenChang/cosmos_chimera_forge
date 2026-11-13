@@ -21,22 +21,23 @@ test('three entry categories are character, creature, move', () => {
 test('image route has two exclusive Blender routes after portrait approval', () => {
   const flow=loadFlow();
   const steps=Array.from(flow.steps('character','image'),s=>s.id);
-  assert.deepEqual(steps,['appearance','encyclopedia','portrait','review_portrait','image_colab','image_blender','review_3d']);
+  assert.deepEqual(steps,['appearance','portrait','review_portrait','image_colab','image_blender','review_3d']);
   assert.equal(flow.resolve('character','image','image_colab').taskId,'character-model-rig');
   assert.equal(flow.resolve('creature','image','image_blender').taskId,'creature-model-rig');
 });
 test('prompt to 3D branches before portraits, with post-model portrait and final review', () => {
   const flow=loadFlow();
   const steps=Array.from(flow.steps('creature','text'),s=>s.id);
-  assert.deepEqual(steps,['appearance','encyclopedia','prompt_3d','portrait_3d','review_portrait_3d','review_3d']);
+  assert.deepEqual(steps,['appearance','prompt_3d','portrait_3d','review_portrait_3d','review_3d']);
   assert.equal(flow.resolve('creature','text','prompt_3d').stage,'blender');
   assert.equal(flow.resolve('character','text','portrait_3d').stage,'portrait_3d');
   assert.equal(flow.resolve('character','text','image_colab'),null);
 });
-test('encyclopedia is a standalone step for all three subjects', () => {
+test('encyclopedia is integrated into appearance for character/creature and standalone for move', () => {
   const flow=loadFlow();
   for(const kind of ['character','creature']) for(const route of ['image','text']) {
-    assert.equal(flow.resolve(kind,route,'encyclopedia').stage,'encyclopedia');
+    assert.equal(flow.resolve(kind,route,'encyclopedia'),null);
+    assert.match(flow.resolve(kind,route,'appearance').output,/wiki\//);
   }
   assert.equal(flow.resolve('move','move','encyclopedia').stage,'encyclopedia');
   const rows=flow.diagram('creature','image');

@@ -340,6 +340,8 @@
       { key: "role", label: "戰鬥定位", options: () => uniform(CR.role.concat(getCustom("creature.role"))), count: [{ n: 1, w: 1 }] },
       { key: "temperament", label: "領域性情（開戰半徑）", options: () => uniform(C.TEMPERAMENTS.map(t => ({ v: t.v, zh: `${t.zh}（${t.radius_m}m 領域）` })).concat(getCustom("creature.temperament"))), count: [{ n: 1, w: 1 }] },
       { key: "disposition", label: "神態性格（外貌側寫）", options: () => uniform(C.PERSONALITIES.concat(getCustom("creature.disposition"))), count: [{ n: 1, w: 1 }] },
+      { key: "social_structure", label: "社會型態", options: () => uniform(CR.social_structure.concat(getCustom("creature.social_structure"))), count: [{ n: 1, w: 1 }] },
+      { key: "reproduction", label: "生育方式", options: () => uniform(CR.reproduction.concat(getCustom("creature.reproduction"))), count: [{ n: 1, w: 1 }] },
       { key: "size_profile", label: "體型（幼→少→成→超載）", options: () => CR.size_profile.map(p => ({ v: p.v, w: p.w })).concat(getCustom("creature.size_profile").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "height_length", label: "成體身長/高 (m)", options: s => {
         const adultClass = (s.creature.size_profile?.[0] || "S→M→L→XL").split("→")[2] || "L";
@@ -535,6 +537,8 @@
       sensitivity: a.sensitivity || "ok", role: c.role?.[0] || "未知",
       temperament: c.temperament?.[0] || "normal",
       disposition: c.disposition?.[0] || "沉穩",
+      social_structure: c.social_structure?.[0] || "未知",
+      reproduction: c.reproduction?.[0] || "未知",
       size_profile: c.size_profile?.[0] || "未知",
       height_length: c.height_length?.[0] || "未知",
       weight: c.weight?.[0] || "未知",

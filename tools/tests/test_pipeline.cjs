@@ -65,10 +65,18 @@ test('encyclopedia prompt routes three categories to isolated Markdown paths', (
   assert.doesNotMatch(wiki,/DO_NOT_LEAK/);
 });
 
-test('appearance prompt includes visual traits and excludes pipeline and format content', () => {
+test('appearance prompt includes visual traits and encyclopedia generation while excluding pipeline and format content', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='appearance';
   const text=c.COSMI_PIPELINE.build(ctx);
-  assert.match(text,/red|long coat/);assert.doesNotMatch(text,/parameters\.json|03_completed|02_3d|\.glb|999/);
+  assert.match(text,/red|long coat/);
+  assert.match(text,/wiki\/characters\/chr_one_wiki\.md/);
+  assert.doesNotMatch(text,/parameters\.json|03_completed|02_3d|\.glb|999/);
+  ctx.task.id='creature-concept';ctx.subjectId='cr_one';
+  ctx.concept={...ctx.concept,social_structure:'母系氏族部落',reproduction:'卵生·硬殼築巢'};
+  const crText=c.COSMI_PIPELINE.build(ctx);
+  assert.match(crText,/wiki\/creatures\/cr_one_adult_wiki\.md/);
+  assert.match(crText,/母系氏族部落/);
+  assert.match(crText,/卵生·硬殼築巢/);
 });
 test('source paths resolve completed portraits by exact asset identity', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='colab';
