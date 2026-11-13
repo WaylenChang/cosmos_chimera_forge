@@ -82,7 +82,8 @@ test('category controls use text and do not display a route toggle', () => {
   const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
   assert.match(forge,/}, c\.zh\)\)\)/);
   assert.doesNotMatch(forge,/function chooseRoute\(/);
-  assert.doesNotMatch(forge,/flow-lane-label|flow-alternatives-label/);\n  assert.match(forge,/class:"flow-parallel-track"/);
+  assert.doesNotMatch(forge,/flow-lane-label|flow-alternatives-label/); 
+  assert.match(forge,/class:"flow-parallel-track"/);
 });
 
 test('production build ships the task chooser module', () => {
