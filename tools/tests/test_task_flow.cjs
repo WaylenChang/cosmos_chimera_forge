@@ -86,10 +86,14 @@ test('production build ships the task chooser module', () => {
 });
 test('post-model portrait uses native copy or Drive upload, never a missing template', () => {
   const drive=fs.readFileSync(path.join(root,'drive-storage.js'),'utf8');
-  assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)){'));
-  assert.ok(drive.includes('if(["portrait","portrait_3d"].includes($("pipelineStage").value)&&!window.COSMI_PIPELINE?.isPortraitAuto())return;'));
+  // Verify both handlers follow the selected mode, independent of indentation.
+  const savePrompt=drive.slice(drive.indexOf('$("driveSavePrompt").addEventListener'),drive.indexOf('$("driveLoadPrompt").addEventListener'));
+  const pipelineRead=drive.slice(drive.indexOf('$("pipelineRead").addEventListener'),drive.indexOf('$("pipelineSaveSettings").addEventListener'));
+  assert.match(savePrompt,/\["portrait",\s*"portrait_3d"\]\.includes\(\$\("pipelineStage"\)\.value\)\s*&&\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)/);
+  assert.match(pipelineRead,/if\s*\(\s*\["portrait",\s*"portrait_3d"\]\.includes\(\$\("pipelineStage"\)\.value\)\s*\)/);
+  assert.match(pipelineRead,/if\s*\(\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)\s*\)\s*\{\s*\$\("copy"\)\.click\(\);\s*return;/);
+  assert.match(pipelineRead,/await write\(\s*path,\s*new Blob\(\[text\],\s*\{\s*type:\s*"text\/markdown"/);
 });
-
 test('typed anatomy profiles are shipped and connected to 3D prompts', () => {
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   const build=fs.readFileSync(path.join(root,'tools/build-site.mjs'),'utf8');
