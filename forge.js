@@ -4808,7 +4808,11 @@
         entry.label));
       detail.append(el("div",{class:"rl-sub"},entry.catalog?.id || representative?.subjectId || entry.key));
       const stages = el("div",{class:"stage-pills"});
-      for (const p of entry.packages.filter(p => p.stage)) {
+      const stageRepresentatives = new Map();
+      for (const p of sortPackagesByPriority(entry.packages.filter(p => p.stage))) {
+        if (!stageRepresentatives.has(p.stage)) stageRepresentatives.set(p.stage, p);
+      }
+      for (const p of stageRepresentatives.values()) {
         stages.append(el("button",{class:"stage-pill",type:"button",title:p.id,onclick:event => {
           event.stopPropagation();
           reviewState.activeDesignedKey = null;
@@ -6158,11 +6162,19 @@
       $("#forgeHeaderControls").style.display = "none";
       renderReviewView();
     } else if (mode === "designed") {
-      reviewState.activeDesignedKey = reviewDeskEntries("designed", "")[0]?.key || null;
-      reviewState.filterCat = "designed";
-      reviewState.filterQuery = "";
-      if ($("#railSearch")) $("#railSearch").value = "";
-      return setViewMode("review");
+      $("#forgeView").style.display = "none";
+      $("#reviewView").classList.remove("active");
+      $("#designedView")?.classList.add("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnSettings")?.classList.remove("on");
+      $("#viewBtnForge").classList.remove("on");
+      $("#viewBtnDesigned")?.classList.add("on");
+      $("#viewBtnReview").classList.remove("on");
+      $("#forgeHeaderControls").style.display = "none";
+      renderDesignedDesk();
+      if (!window.COSMI_DRIVE?.pipelineIndex?.()?.syncedAt) {
+        void window.COSMI_DRIVE?.syncPipelineIndex?.().catch(() => {});
+      }
     } else if (mode === "settings") {
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.remove("active");
