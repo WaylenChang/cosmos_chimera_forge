@@ -107,3 +107,16 @@ test('format JSON is located below Prompt output, with save and load controls', 
   assert.match(drive, /已儲存格式參數/);
   assert.match(drive, /已載入格式參數/);
 });
+
+test('concept editor follows selected character concept flow and stage inventory is present', () => {
+  assert.match(html, /id="conceptSection"/);
+  assert.match(html, /id="flowStageInventory" hidden/);
+  assert.match(html, /id="flowStageInventoryItems"/);
+  assert.match(forge, /function renderFlowStageInventory\(\)/);
+  assert.match(forge, /const flow = currentFlow\(\)/);
+  assert.match(forge, /conceptSection\.hidden = !showConcept/);
+  assert.match(forge, /inventory\.hidden = !flow \|\| showConcept/);
+  assert.match(forge, /renderTasks\(\); renderFlowStageInventory\(\);/);
+  assert.match(forge, /if \(!\$\("#conceptSection"\)\?\.hidden\) renderConcepts\(\)/);
+  assert.match(forge, /const key = subject \+ "\\|" \+ form/);
+});
