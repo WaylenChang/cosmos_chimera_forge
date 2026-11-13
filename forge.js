@@ -1443,6 +1443,46 @@
     return badges;
   }
 
+  // Accepted Drive assets must remain visible even without a generated designed.js entry.
+  function acceptedUncataloguedPackages() {
+    const known = new Set([
+      ...DESIGNED.map(d => String(d.line_id).toLowerCase()),
+      ...DESIGNED_CHARACTERS.map(d => String(d.id).toLowerCase())
+    ]);
+    const grouped = new Map();
+    for (const pkg of reviewState.packages || []) {
+      if (!isAcceptedStatus(pkg.status)) continue;
+      const subject = String(pkg.subjectId || pkg.manifest?.subject_id || pkg.concept?.line_id ||
+        pkg.concept?.creature_id || pkg.concept?.id || pkg.id || "").trim();
+      if (!subject || known.has(subject.toLowerCase())) continue;
+      const key = subject.toLowerCase();
+      if (!grouped.has(key)) grouped.set(key, { id: subject, packages: [] });
+      grouped.get(key).packages.push(pkg);
+    }
+    return [...grouped.values()];
+  }
+
+  function renderUncataloguedDesignedDetail(group) {
+    const header = $("#designedStageHeader"), body = $("#designedDetailView");
+    if (!header || !body) return;
+    header.replaceChildren(el("b", {}, group.id), el("span", { class: "f-badge accent" }, "已採用 · 尚未建檔"));
+    body.replaceChildren();
+    body.append(el("div", { class: "designed-detail-card" },
+      el("h3", {}, "已採用成果"),
+      el("div", { class: "muted" }, "此項目尚未建立完整設計資料，仍可查看已採用成果；請補齊資料與缺件。"),
+      ...group.packages.map(pkg => el("div", { class: "designed-review-item" },
+        el("div", { style: "flex:1;min-width:0" },
+          el("b", {}, pkg.id),
+          el("span", { class: "f-badge " + reviewStatusInfo(pkg.status).cls }, reviewStatusInfo(pkg.status).badge),
+          el("div", { class: "muted" }, pkg.drivePath || ""),
+          el("div", { style: "color:var(--warn);font-size:12px" },
+            "需補件：" + (pkg.manifest?.missing?.length ? pkg.manifest.missing.join("、") : "請確認尚缺的設計資料與交付檔案"))
+        ),
+        el("button", { class: "btn mini", type: "button", onclick: () => jumpToReview(pkg.id, pkg.stage) }, "檢視成果")
+      ))
+    ));
+  }
+
   function getDesignedFilteredItems() {
     const searchInput = $("#designedSearch");
     const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
@@ -1479,7 +1519,15 @@
       });
     }
 
-    return { lines, chars };
+    const orphaned = acceptedUncataloguedPackages().filter(group => {
+      if (designedState.cat !== "all") return false;
+      if (designedState.statusFilter === "unprocessed") return false;
+      if (designedState.statusFilter === "ok" && !group.packages.some(p => isApprovedStatus(p.status))) return false;
+      if (designedState.statusFilter === "provisional" && !group.packages.some(p => isProvisionalStatus(p.status))) return false;
+      return !query || group.id.toLowerCase().includes(query) ||
+        group.packages.some(p => String(p.id).toLowerCase().includes(query));
+    });
+    return { lines, chars, orphaned };
   }
 
   function renderDesignedRail() {
@@ -1487,12 +1535,14 @@
     if (!listEl) return;
     listEl.replaceChildren();
 
-    const { lines, chars } = getDesignedFilteredItems();
+    const { lines, chars, orphaned } = getDesignedFilteredItems();
     const countEl = $("#designedRailCount");
-    if (countEl) countEl.textContent = `${lines.length + chars.length} / ${DESIGNED.length + DESIGNED_CHARACTERS.length}`;
+    if (countEl) countEl.textContent = `${lines.length + chars.length + orphaned.length} / ${DESIGNED.length + DESIGNED_CHARACTERS.length + acceptedUncataloguedPackages().length}`;
 
     // 確保有預設選取項目
-    if (designedState.selectedType === "character") {
+    if (designedState.selectedType === "uncatalogued" && orphaned.some(g => g.id === designedState.selectedId)) {
+      // Preserve selection of a Drive-only accepted item.
+    } else if (designedState.selectedType === "character") {
       if (!chars.some(c => c.id === designedState.selectedId)) {
         if (chars.length > 0) {
           designedState.selectedId = chars[0].id;
@@ -1517,9 +1567,22 @@
       }
     }
 
-    if (!lines.length && !chars.length) {
+    if (!lines.length && !chars.length && !orphaned.length) {
       listEl.append(el("div", { class: "muted", style: "padding:16px;text-align:center;font-size:12px" }, "無符合搜尋條件的項目"));
       return;
+    }
+
+    if (orphaned.length) {
+      listEl.append(el("div", { class: "muted", style: "padding:8px" }, "📦 已採用（待補設計資料）"));
+      orphaned.forEach(group => listEl.append(el("button", {
+        type: "button", class: "rl" + (designedState.selectedType === "uncatalogued" && designedState.selectedId === group.id ? " on" : ""),
+        onclick: () => selectDesignedItem(group.id, "uncatalogued")
+      }, el("div", { class: "rl-txt" },
+        el("div", { class: "rl-id" }, group.id),
+        el("div", { class: "rl-badges" },
+          ...group.packages.map(pkg => el("span", { class: "rl-stat " + (isApprovedStatus(pkg.status) ? "ok" : "provisional") }, reviewStatusInfo(pkg.status).zh))
+        )
+      ))));
     }
 
     if (lines.length > 0) {
@@ -1665,6 +1728,8 @@
         ),
         pkg.drivePath ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace" }, pkg.drivePath) : null,
         note ? el("div", { style: "font-size:11.5px;color:var(--warn);background:rgba(217,182,109,0.08);padding:4px 8px;border-radius:4px;border-left:2px solid var(--warn)" }, `審查意見：${note}`) : null,
+        pkg.manifest?.missing?.length ? el("div", { style: "color:var(--warn);font-size:12px" },
+          `⚠️ 需補件：${pkg.manifest.missing.join("、")}（不影響目前審查狀態）`) : null,
         imgs.length > 1 ? el("div", { style: "display:flex;gap:4px;flex-wrap:wrap;margin-top:2px" },
           imgs.slice(0, 5).map(im => el("img", {
             src: im.url,
@@ -1810,6 +1875,12 @@
 
     if (!designedState.selectedId) {
       bodyEl.append(el("div", { class: "muted", style: "padding:32px;text-align:center;font-size:13px" }, "請從左側名冊欄選取已設計項目進行審查檢驗。"));
+      return;
+    }
+
+    if (designedState.selectedType === "uncatalogued") {
+      const group = acceptedUncataloguedPackages().find(g => g.id === designedState.selectedId);
+      if (group) renderUncataloguedDesignedDetail(group);
       return;
     }
 
