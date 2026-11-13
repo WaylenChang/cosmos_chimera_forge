@@ -86,7 +86,7 @@
   .designed .row { display: flex; flex-wrap: wrap; gap: 6px; }
 
   .subhead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .field { display: grid; grid-template-columns: 115px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; border-top: 1px dashed var(--line); }
+  .field { display: grid; grid-template-columns: 115px auto minmax(0, 1fr); gap: 8px; align-items: center; padding: 5px 0; border-top: 1px dashed var(--line); }
   .field.opt { grid-template-columns: 115px 1fr; }
   .field > label { color: var(--muted); font-size: 12.5px; }
   .fctl { display: inline-flex; gap: 4px; align-items: center; flex: none; }
@@ -142,7 +142,8 @@
   #forgeView .stack { display: flex; flex-direction: column; gap: 12px; }
   #forgeView .stack > section + section { margin-top: 0; }
   #forgeView section { overflow: hidden; }
-  #forgeView .field, #forgeView .field.opt { grid-template-columns: minmax(0, 120px) minmax(0, 1fr); }
+  #forgeView .field { grid-template-columns: minmax(0, 110px) auto minmax(0, 1fr); }
+  #forgeView .field.opt { grid-template-columns: minmax(0, 120px) minmax(0, 1fr); }
   #forgeView .field > *, #forgeView .field.opt > * { min-width: 0; }
   #forgeView .subhead { align-items: flex-start; gap: 8px; }
   #forgeView .subhead > h2 { flex: 1 1 100%; }
@@ -532,19 +533,6 @@
   }
 
   .pipeline-map {padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
-  .pipeline-map h2 {margin-bottom:8px}
-  .pipeline-flow {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:900px}
-  .pipeline-node {width:100%;padding:9px 7px;border:1px solid var(--line);border-radius:8px;background:var(--subpanel);color:var(--ink);text-align:center;white-space:normal;min-height:42px}
-  .pipeline-node:hover,.pipeline-node:focus-visible {border-color:var(--accent)}
-  .pipeline-node[aria-pressed="true"] {border-color:var(--accent);background:#27364b}
-  .pipeline-wide {grid-column:1/-1}
-  .pipeline-lane {display:grid;gap:7px;align-content:start;border:1px dashed var(--line);border-radius:9px;padding:8px;min-width:0}
-  .pipeline-lane h3 {font-size:12px;text-align:center;color:var(--muted)}
-  .pipeline-arrow {text-align:center;color:var(--muted);line-height:1}
-  #pipelineStepDetail {margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:10px;overflow-wrap:anywhere}
-  #pipelineStepDetail p {color:var(--muted);font-size:12px;margin-top:4px}
-  #pipelineStepDetail pre {white-space:pre-wrap;overflow-wrap:anywhere;max-height:240px;overflow:auto;background:var(--code);padding:10px;margin-top:8px;border-radius:6px;font-size:12px}
-  @media(max-width:550px){.pipeline-map{padding:10px}.pipeline-flow{gap:5px}.pipeline-lane{padding:5px}.pipeline-node{font-size:11px;padding:7px 4px}}
 </style>
 </head>
 <body>
@@ -595,7 +583,7 @@
   .card-title, .card-meta-row, .prompt-card, .stage-mini-card { min-width: 0; overflow-wrap: anywhere; }
   .stagebar { min-width: 0; }
   .stagebar-group, #zoomSeg, #viewSeg, #stage3dSpeedSeg { max-width: 100%; }
-  #forgeView .field .fctl { flex-wrap: wrap; }
+  #forgeView .field .fctl { flex-wrap: nowrap; }
   #forgeView .round-seg { min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: thin; }
   #forgeView .round-seg .segb { flex: 1 0 auto; }
   #pipelineSource { max-width: 100%; }
@@ -836,48 +824,6 @@
   <button class="btn ghost mini icon-only" id="driveLoadPrompt" type="button" aria-label="讀取 Prompt" data-tip="讀取 Prompt">📖</button>
   <span id="driveStatus" role="status" aria-live="polite"></span>
 </div>
-<section class="pipeline-map" id="pipelineMap" aria-label="互動式管線流程圖">
-  <h2>管線流程 · 點選步驟查看內容與 Prompt</h2>
-  <div class="pipeline-flow">
-    <button class="pipeline-node pipeline-wide" data-pipeline-node="appearance" type="button">外觀設定與生成圖鑑</button>
-    <div class="pipeline-arrow pipeline-wide">↓ 立繪生成前分岔</div>
-    <div class="pipeline-lane"><h3>Image-to-3D</h3>
-      <button class="pipeline-node" data-pipeline-node="portrait" type="button">立繪生成</button><div class="pipeline-arrow">↓</div>
-      <button class="pipeline-node" data-pipeline-node="review_portrait" type="button">立繪審查</button><div class="pipeline-arrow">↓</div>
-      <button class="pipeline-node" data-pipeline-node="colab" type="button">管線 A：Colab GPU → Blender 修整</button>
-      <div class="pipeline-arrow">或（獨立管線）</div><button class="pipeline-node" data-pipeline-node="blender_image" type="button">管線 B：AI Blender（圖片建模）</button>
-    </div>
-    <div class="pipeline-lane"><h3>Prompt-to-3D</h3>
-      <button class="pipeline-node" data-pipeline-node="blender_prompt" type="button">管線 B：AI Blender（文字建模）</button><div class="pipeline-arrow">↓</div>
-      <button class="pipeline-node" data-pipeline-node="portrait_after_3d" type="button">依完成模型補主立繪</button><div class="pipeline-arrow">↓</div>
-      <span class="muted" style="text-align:center">無需 T-pose／正面圖</span>
-    </div>
-    <div class="pipeline-arrow pipeline-wide">↓</div>
-    <button class="pipeline-node pipeline-wide" data-pipeline-node="review_3d" type="button">最終驗收（模型 + 立繪）</button>
-  </div>
-  <div id="pipelineStepDetail" aria-live="polite"><strong id="pipelineStepTitle">選擇流程步驟</strong><p id="pipelineStepDescription">點選上方區塊，顯示步驟說明及對應 Prompt。</p><pre id="pipelineStepPrompt" hidden></pre></div>
-</section>
-<details id="pipelineControls" style="padding:8px 16px;border-bottom:1px solid var(--line)">
-  <summary title="外觀、立繪、3D、審查與交付設定">⚙ 管線設定</summary>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
-    <label hidden>目前步驟 <select id="pipelineStage">
-      <option value="appearance">0 · 外觀設定與生成圖鑑（Gemini Flash／Codex）</option>
-      <option value="encyclopedia">圖鑑 · 招式 Markdown（獨立步驟）</option>
-      <option value="move_vfx">招式與特效設計</option>
-      <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
-      <option value="portrait_3d">1-b · 3D 完成後補畫主立繪（無 T-pose）</option>
-      <option value="review_portrait">2 · 立繪審查</option>
-      <option value="colab">3-a · Colab GPU + Blender</option>
-      <option value="blender">3-b · AI Blender 獨立管線（Argon／Codex）</option>
-      <option value="portrait_after_3d">3-c · 建模後補主立繪</option>
-      <option value="review_3d">4 · 立繪與 3D 最終審查</option>
-    </select></label>
-    <button id="pipelineRead" class="btn mini icon-only" type="button" aria-label="複製目前立繪 Prompt，貼入生成平台" data-tip="複製目前立繪 Prompt，貼入生成平台">📋</button>
-    
-  </div>
-  <label>來源立繪資產 ID <input id="pipelineSource" placeholder="cr-… 或 chr-…"></label>
-  <button id="pipelineBindSource" class="btn ghost mini icon-only" type="button" aria-label="綁定目前 3D 的來源立繪" data-tip="綁定目前 3D 的來源立繪">🔗</button>
-</details>
 
 <header>
   <h1>COSMIMERA<small id="ver"></small></h1>
@@ -943,6 +889,26 @@
           </select>
         </label>
         <p class="muted">偏好儲存在目前瀏覽器，與 Google 帳號分開管理。</p>
+      </section>
+      <section class="settings-card" id="pipelineControls">
+        <h3>管線與來源設定</h3>
+        <label hidden>目前步驟 <select id="pipelineStage">
+          <option value="appearance">0 · 外觀設定與生成圖鑑（Gemini Flash／Codex）</option>
+          <option value="encyclopedia">圖鑑 · 招式 Markdown（獨立步驟）</option>
+          <option value="move_vfx">招式與特效設計</option>
+          <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
+          <option value="portrait_3d">1-b · 3D 完成後補畫主立繪（無 T-pose）</option>
+          <option value="review_portrait">2 · 立繪審查</option>
+          <option value="colab">3-a · Colab GPU + Blender</option>
+          <option value="blender">3-b · AI Blender 獨立管線（Argon／Codex）</option>
+          <option value="portrait_after_3d">3-c · 建模後補主立繪</option>
+          <option value="review_3d">4 · 立繪與 3D 最終審查</option>
+        </select></label>
+        <div class="settings-actions">
+          <label class="settings-field" style="flex:1">來源立繪資產 ID <input id="pipelineSource" placeholder="cr-… 或 chr-…"></label>
+          <button id="pipelineBindSource" class="btn ghost mini icon-only" type="button" aria-label="綁定目前 3D 的來源立繪" data-tip="綁定目前 3D 的來源立繪">🔗</button>
+          <button id="pipelineRead" class="btn mini icon-only" type="button" aria-label="複製目前立繪 Prompt，貼入生成平台" data-tip="複製目前立繪 Prompt，貼入生成平台">📋</button>
+        </div>
       </section>
       <section class="settings-card">
         <h3>帳號與隱私</h3>

@@ -962,6 +962,7 @@
     if (!kind) {
       routes.replaceChildren();
       box.replaceChildren();
+      detail.hidden = false;
       detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"① 先選擇角色、宙獸或招式。"));
       renderDesigned();
       return;
@@ -979,18 +980,20 @@
     },d.label)));
     if (!choice.route || !active) {
       box.replaceChildren();
+      detail.hidden = false;
       detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"② 請選擇管線，接著點選流程圖節點。"));
       renderDesigned();
       return;
     }
     const rows = taskFlow.diagram(kind, choice.route);
     function node(step) {
+      const tip = step.detail + (step.output ? "\n產出：" + step.output : "");
       return el("button", {
         type:"button", class:"task" + (step.id === active.step ? " on" : "") + (step.alternate ? " is-alternate" : ""),
         "aria-pressed":String(step.id === active.step),
-        "aria-label":"選擇步驟 " + step.name, "data-tip":step.detail,
+        "aria-label":"選擇步驟 " + step.name, "data-tip":tip, title:tip,
         onclick:()=>chooseFlow(kind,choice.route,step.id)
-      },el("span",{class:"tname"},step.name),el("span",{class:"tmeta"},step.output));
+      },el("span",{class:"tname"},step.name));
     }
     const elements = [];
     rows.forEach((row,i) => {
@@ -1004,12 +1007,8 @@
       }
     });
     box.replaceChildren(...elements);
-    detail.replaceChildren(
-      el("strong",{},active.name),
-      el("p",{},active.detail),
-      el("p",{},"產出：",el("code",{},active.output)),
-      el("p",{class:"muted"},"點選流程節點以切換右側 Prompt 與對應任務選項。")
-    );
+    detail.replaceChildren();
+    detail.hidden = true;
     renderDesigned();
   }
 
@@ -2861,7 +2860,7 @@
       );
       control = el("div", { class: "chips" }, chips, add);
     }
-    return el("div", { class: "field" }, el("label", {}, f.label), control, el("div", { class: "fctl" }, edit, dice, lockBtn));
+    return el("div", { class: "field" }, el("label", {}, f.label), el("div", { class: "fctl" }, edit, dice, lockBtn), control);
   }
 
   function renderConcepts() {
