@@ -6,6 +6,60 @@ const vm = require('node:vm');
 const review = require('../../model-review.js');
 const root = path.resolve(__dirname, '../..');
 
+test('Drive AI Blender creature assets appear in 3D and creature filters regardless of asset_ prefix', () => {
+  const model = {
+    id: 'asset_cr_chrono_beetle_adult',
+    type: 'creature-model-rig',
+    manifest: {task_type:'creature-model-rig',stage:'adult',missing:[{item:'source portrait'}]},
+    status: 'missing'
+  };
+  assert.equal(review.matchesCategory(model, 'mdl'), true);
+  assert.equal(review.matchesCategory(model, 'cr'), true);
+  assert.equal(review.matchesCategory(model, 'pending'), true);
+  assert.equal(review.matchesCategory(model, 'chr'), false);
+  assert.equal(review.matchesCategory({id:'asset_cr_aqua_slime_juvenile',type:'creature-model-rig',status:'provisional'},'mdl'),true);
+  assert.equal(review.matchesCategory({id:'asset_chr_actor_adult',type:'character-model-rig',status:'ok'},'mdl'),true);
+  assert.equal(review.matchesCategory({id:'asset_chr_actor_adult',type:'character-model-rig'},'chr'),true);
+  assert.equal(review.matchesCategory({id:'cr_01',type:'creature-concept'},'mdl'),false);
+});
+
+test('unified review desk deduplicates catalog and Drive packages with acceptance stars', () => {
+  const creature = {line_id:'cr_sun',code_zh:'日',title_zh:'太陽獸',
+    concept:{locked:{stages:[{stage:'adult',creature_id:'sun_adult'}]}}};
+  const char = {id:'chr_hero',name_zh:'英雄'};
+  const packages = [
+    {id:'cr-old-adult',type:'creature-concept',subjectId:'sun_adult',stage:'adult',status:'pending'},
+    {id:'mdl-new-adult',type:'creature-model-rig',subjectId:'cr_sun',stage:'adult',status:'ok',
+      manifest:{missing:['rig.blend']}},
+    {id:'asset_cr_guest_adult',type:'creature-model-rig',subjectId:'cr_guest',stage:'adult',status:'provisional'},
+    {id:'asset_chr_hero_adult',type:'character-model-rig',subjectId:'chr_hero',stage:'adult',status:'missing'},
+    {id:'asset_chr_hero_juvenile',type:'character-model-rig',subjectId:'chr_hero',stage:'juvenile',status:'provisional'}
+  ];
+  const all=review.unifiedEntries(packages,[creature],[char]);
+  assert.equal(all.length,3,'same subject has one row, regardless of stages or 2D/3D packages');
+  const sun=all.find(x=>x.catalog?.id==='cr_sun');
+  assert.equal(sun.star,'★');
+  assert.equal(sun.packages.length,2);
+  assert.equal(sun.packages[1].manifest.missing[0],'rig.blend','missing outputs do not demote approved state');
+  const hero=all.find(x=>x.catalog?.id==='chr_hero');
+  assert.equal(hero.star,'☆');
+  assert.equal(hero.packages.length,2);
+  const orphan=all.find(x=>x.label==='cr_guest');
+  assert.equal(orphan.star,'☆','provisional Drive-only asset is a designed item');
+  assert.equal(review.unifiedEntries(packages,[creature],[char],'designed').length,3);
+  assert.equal(review.unifiedEntries(packages,[creature],[char],'mdl').length,3);
+  assert.equal(review.unifiedEntries(packages,[creature],[char],'pending').length,2);
+  assert.equal(review.unifiedEntries(packages,[creature],[char],'all','太陽獸').length,1);
+});
+
+test('designed-only catalog rows receive hollow stars before any delivery exists', () => {
+  const rows=review.unifiedEntries([], [{line_id:'sun_01',title_zh:'日獸'}], []);
+  assert.equal(rows.length,1);
+  assert.equal(rows[0].star,'☆');
+  assert.equal(rows[0].packages.length,0);
+  assert.equal(review.unifiedEntries([], [{line_id:'sun_01'}], [], 'pending').length,0);
+});
+
 test('root manifest cannot be replaced by animation or video manifests', () => {
   assert.equal(review.selectRootManifest(['asset/qa/review_video_manifest.json', 'asset/animations/animations_manifest.json',
     'asset/manifest.json', 'asset/nested/manifest.json']), 'asset/manifest.json');

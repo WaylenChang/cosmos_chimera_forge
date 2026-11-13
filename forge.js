@@ -113,7 +113,7 @@
 
   const reviewState = {
     packages: [], activePkgId: null, activeStage: "adult", activeImgIdx: 0,
-    filterCat: "all", filterQuery: "", viewMode: "single", // "single" | "compare" | "3d"
+    filterCat: "all", filterQuery: "", activeDesignedKey: null, viewMode: "single", // "single" | "compare" | "3d"
     zoomLevel: 1.0, panX: 0, panY: 0,
     reviews: {},
     three: {
@@ -2499,6 +2499,7 @@
   }
 
   async function jumpToReview(pkgIdOrSubject, stage = null) {
+    reviewState.activeDesignedKey = null;
     await setViewMode("review");
     const s = (pkgIdOrSubject || "").trim().toLowerCase();
 
@@ -4818,110 +4819,111 @@
     $("#upgradeModal").classList.add("show");
   }
 
-  // 渲染成果審查台主要畫面
-  function renderReviewView() {
-    const pkg = getActivePkg();
-    const linkedPkg = getLinkedPackage(pkg);
-
-    // 渲染名冊清單
-    // 渲染名冊清單（依 groupKey 分組，同宙獸之四種型態收合於同一項目）
-    const railList = $("#railList"); railList.replaceChildren();
-    const query = reviewState.filterQuery.toLowerCase();
-    const filtered = reviewState.packages.filter(p => {
-      if (reviewState.filterCat === "pending" && p.status !== "pending") return false;
-      if (reviewState.filterCat === "chr" && !p.id.startsWith("chr")) return false;
-      if (reviewState.filterCat === "cr" && !p.id.startsWith("cr")) return false;
-      if (reviewState.filterCat === "mdl" && !p.id.startsWith("mdl") && !p.id.startsWith("anim")) return false;
-      if (reviewState.filterCat === "fx" && !p.id.startsWith("fx")) return false;
-      if (query && !p.id.toLowerCase().includes(query) && !p.subjectId.toLowerCase().includes(query) && !(p.manifest?.source_pack || "").toLowerCase().includes(query)) return false;
-      return true;
-    });
-
-    const groups = [];
-    const groupMap = new Map();
-    filtered.forEach(p => {
-      const gk = (p.type === "creature-concept" || p.id.startsWith("cr"))
-        ? (p.groupKey || p.baseId || p.id)
-        : (is3dType(p.type) || p.id.startsWith("mdl"))
-        ? (p.groupKey || p.baseId || p.id)
-        : p.id;
-      if (!groupMap.has(gk)) {
-        const g = { key: gk, packages: [], baseId: p.baseId || p.id, type: p.type, subjectId: p.subjectId };
-        groupMap.set(gk, g);
-        groups.push(g);
-      }
-      groupMap.get(gk).packages.push(p);
-    });
-
-    groups.forEach(g => {
-      const isSel = pkg && (pkg.groupKey === g.key || pkg.id === g.key || g.packages.some(p => p.id === pkg.id));
-      let repPkg = (isSel && pkg) ? pkg : null;
-      if (!repPkg) {
-        repPkg = g.packages.find(p => p.stage === reviewState.activeStage)
-          || g.packages.find(p => p.stage === "adult")
-          || g.packages[0];
-      }
-
-      const thumbUrl = repPkg.images?.[0]?.url || g.packages.find(p => p.images?.[0]?.url)?.images[0].url;
-      const statZh = reviewStatusInfo(repPkg.status).badge;
-      const pLinked = getLinkedPackage(repPkg);
-
-      // 若群組有多種型態或具備型態屬性，顯示型態標籤 pills
-      let stagePillsEl = null;
-      const hasStages = g.packages.some(p => p.stage);
-      if (hasStages) {
-        const pills = STAGE_KEYS.map(stKey => {
-          const matchP = g.packages.find(p => p.stage === stKey);
-          if (!matchP) return null;
-          const isStOn = isSel && repPkg.stage === stKey;
-          return el("span", {
-            class: "stage-pill" + (isStOn ? " on" : ""),
-            title: STAGE_ZH[stKey] + " (" + matchP.id + ")",
-            onclick: (e) => {
-              e.stopPropagation();
-              reviewState.activeStage = stKey;
-              reviewState.activePkgId = matchP.id;
-              reviewState.activeImgIdx = 0;
-              renderReviewView();
-            }
-          }, STAGE_ZH[stKey]);
-        }).filter(Boolean);
-        stagePillsEl = el("div", { class: "stage-pills" }, pills);
-      }
-
-      const badges = el("div", { class: "rl-badges" },
-        el("span", { class: "rl-stat " + repPkg.status }, statZh),
-        repPkg.manifest?.source_pack ? el("span", { class: "rl-link-tag", title: "參照立繪: " + repPkg.manifest.source_pack }, "⬅ " + repPkg.manifest.source_pack.slice(0, 10)) : null,
-        (!repPkg.manifest?.source_pack && pLinked && !is3dType(repPkg.type)) ? el("span", { class: "rl-link-tag", title: "已關聯 3D 模型" }, "➡ 3D") : null
-      );
-
-      const item = el("div", {
-        class: "rl" + (isSel ? " on" : ""),
-        onclick: () => {
-          reviewState.activePkgId = repPkg.id;
-          if (repPkg.stage) reviewState.activeStage = repPkg.stage;
-          reviewState.activeImgIdx = 0;
-          if ((is3dType(repPkg.type) || repPkg.id.startsWith("mdl")) && reviewState.viewMode === "single") {
-            reviewState.viewMode = "3d";
-          }
-          renderReviewView();
-        }
-      },
-        el("div", { class: "rl-thumb" }, thumbUrl ? el("img", { src: thumbUrl }) : "📦"),
-        el("div", { class: "rl-txt" },
-          el("div", { class: "rl-id" }, g.baseId || repPkg.id),
-          el("div", { class: "rl-sub" }, repPkg.type + (repPkg.subjectId ? " · " + repPkg.subjectId : "") + (repPkg.stage ? " · " + STAGE_ZH[repPkg.stage] : "")),
-          stagePillsEl,
-          badges
-        )
-      );
-      railList.append(item);
-    });
-
-    if (!groups.length) {
-      railList.append(el("div", { class: "muted", style: "padding:16px 8px;text-align:center" }, "無符合條件的任務包"));
+  function reviewDeskEntries(category = reviewState.filterCat, query = reviewState.filterQuery) {
+    return window.COSMI_MODEL_REVIEW.unifiedEntries(reviewState.packages,
+      DESIGNED, DESIGNED_CHARACTERS, category, query);
+  }
+  function renderReviewDesigned(entry) {
+    const overlay = $("#reviewDesignedDetails");
+    if (!overlay) return;
+    overlay.style.display = "block";
+    const header = $("#designedStageHeader"), body = $("#designedDetailView");
+    if (header.parentNode !== overlay) overlay.append(header);
+    if (body.parentNode !== overlay) overlay.append(body);
+    header.replaceChildren();
+    body.replaceChildren();
+    if (entry.catalog) {
+      designedState.selectedId = entry.catalog.id;
+      designedState.selectedType = entry.catalog.kind;
+      renderDesignedDetail();
+    } else {
+      header.append(el("b", {}, entry.label));
+      body.append(el("div", {class:"designed-detail-card"}, "已採用 · 尚未建立完整設計資料"));
     }
-
+    if (entry.packages.length) {
+      const card = el("div", {class:"designed-detail-card"}, el("h3", {}, "相關交付成果"));
+      for (const p of sortPackagesByPriority(entry.packages)) {
+        const missing = p.manifest?.missing || [];
+        const note = missing.length ? " · ⚠️ 需補件：" +
+          missing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、") : "";
+        card.append(el("button", {class:"btn mini",type:"button",onclick:() => {
+          reviewState.activeDesignedKey = null;
+          reviewState.activePkgId = p.id;
+          if (p.stage) reviewState.activeStage = p.stage;
+          renderReviewView();
+        }}, p.id + " · " + reviewStatusInfo(p.status).zh + note));
+      }
+      body.prepend(card);
+    }
+    for (const id of ["stageEmpty","stageSingleView","stageCompareView","stage3dView","stageTag"]) {
+      const node = $("#" + id); if (node) node.style.display = "none";
+    }
+    $("#stageCarousel").replaceChildren();
+    $("#viewSeg").replaceChildren();
+    $("#panelBody").replaceChildren(el("div",{class:"muted"},entry.star + " " + entry.starTitle));
+  }
+  // Single index for designed subjects and review packages.
+  function renderReviewView() {
+    const entries = reviewDeskEntries();
+    const design = reviewState.activeDesignedKey &&
+      reviewDeskEntries("all", "").find(e => e.key === reviewState.activeDesignedKey);
+    const pkg = design ? null : getActivePkg();
+    const linkedPkg = getLinkedPackage(pkg);
+    const railList = $("#railList");
+    if (!railList) return;
+    railList.replaceChildren();
+    for (const entry of entries) {
+      const packages = entry.visiblePackages.length ? entry.visiblePackages : entry.packages;
+      const representative = sortPackagesByPriority(packages)[0] || null;
+      const selected = design?.key === entry.key ||
+        (!design && pkg && packages.some(p => p.id === pkg.id));
+      const image = representative?.images?.[0]?.url ||
+        entry.packages.find(p => p.images?.[0]?.url)?.images[0]?.url;
+      const row = el("div", {class:"rl" + (selected ? " on" : ""),onclick:() => {
+        reviewState.activeDesignedKey = entry.catalog || !representative ? entry.key : null;
+        if (!reviewState.activeDesignedKey && representative) {
+          reviewState.activePkgId = representative.id;
+          reviewState.activeImgIdx = 0;
+          if (representative.stage) reviewState.activeStage = representative.stage;
+          if (is3dType(representative.type)) reviewState.viewMode = "3d";
+        }
+        renderReviewView();
+      }});
+      row.append(el("div",{class:"rl-thumb"},image ? el("img",{src:image}) : "📦"));
+      const detail = el("div",{class:"rl-txt"});
+      detail.append(el("div",{class:"rl-id"},entry.star ?
+        el("span",{title:entry.starTitle,style:"color:var(--warn);margin-right:6px"},entry.star) : null,
+        entry.label));
+      detail.append(el("div",{class:"rl-sub"},entry.catalog?.id || representative?.subjectId || entry.key));
+      const stages = el("div",{class:"stage-pills"});
+      const stageRepresentatives = new Map();
+      for (const p of sortPackagesByPriority(entry.packages.filter(p => p.stage))) {
+        if (!stageRepresentatives.has(p.stage)) stageRepresentatives.set(p.stage, p);
+      }
+      for (const p of stageRepresentatives.values()) {
+        stages.append(el("button",{class:"stage-pill",type:"button",title:p.id,onclick:event => {
+          event.stopPropagation();
+          reviewState.activeDesignedKey = null;
+          reviewState.activePkgId = p.id;
+          reviewState.activeStage = p.stage;
+          renderReviewView();
+        }}, STAGE_ZH[p.stage] || p.stage));
+      }
+      if (stages.children.length) detail.append(stages);
+      const badges = el("div",{class:"rl-badges"});
+      if (representative) badges.append(el("span",{class:"rl-stat "+representative.status},
+        reviewStatusInfo(representative.status).badge));
+      if (entry.packages.length > 1) badges.append(el("span",{class:"rl-stat"},entry.packages.length+" 個交付包"));
+      if (entry.packages.some(p => p.manifest?.missing?.length))
+        badges.append(el("span",{class:"rl-stat missing"},"⚠️ 需補件"));
+      detail.append(badges);
+      row.append(detail);
+      railList.append(row);
+    }
+    if (!entries.length) railList.append(el("div",{class:"muted"},"無符合條件的項目"));
+    if (design) { renderReviewDesigned(design); return; }
+    const overlay = $("#reviewDesignedDetails");
+    if (overlay) overlay.style.display = "none";
     // 渲染舞台
     if (!pkg) {
       $("#stageEmpty").style.display = "block";
@@ -6785,6 +6787,7 @@
     openReviewPackage: pkg => {
       if (!pkg) return;
       reviewState.activePkgId = pkg.id;
+      reviewState.activeDesignedKey = null;
       if (pkg.stage) reviewState.activeStage = pkg.stage;
       reviewState.activeImgIdx = 0;
       if (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) reviewState.viewMode = "3d";
