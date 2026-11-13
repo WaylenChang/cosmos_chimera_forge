@@ -809,8 +809,8 @@
 
   // Pipeline steps are isolated: native portraits never inherit old ZIP/storage instructions.
   TASKS.forEach(t => {
-    const build = t.build;
-    t.nativeBuild = build;
+    const nativeBuild = t.build;
+    t.nativeBuild = nativeBuild;
     t.build = ctx => {
       if (window.COSMI_PIPELINE?.supports(ctx)) {
         return document.getElementById("pipelineStage")?.value === "portrait" ? nativeBuild(ctx) : window.COSMI_PIPELINE.build(ctx);

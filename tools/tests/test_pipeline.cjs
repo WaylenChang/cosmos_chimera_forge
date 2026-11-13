@@ -95,7 +95,7 @@ test('final review uses the active model source instead of another forge task so
 
 test('a previous review binding does not become an image source for prompt-only modeling', () => {
  const {c,nodes,ctx}=harness();nodes.pipelineStage.value='blender';nodes.pipelineSource.value='unrelated-old-source';ctx.opts.source_pack='';
- const text=c.COSMI_PIPELINE.build(ctx);assert.doesNotMatch(text,/unrelated-old-source/);assert.match(text,/未指定/);
+ const text=c.COSMI_PIPELINE.build(ctx);assert.doesNotMatch(text,/unrelated-old-source/);assert.match(text,/純文字外觀/);
 });
 
 
@@ -125,7 +125,7 @@ test('manual image path is image-to-3D even without source pack',()=>{
   ctx.task.id='creature-model-rig';ctx.task.needs='creature';ctx.subjectId='cr_one';
   nodes.pipelineStage.value='blender';
   ctx.opts.source_pack='';ctx.opts.input_img='images/custom_view.png';
-  nodes.pipelineAppearance.value='STALE_MANUAL_TEXT';
+  ctx.notes='STALE_MANUAL_TEXT';
   const text=c.COSMI_PIPELINE.build(ctx);
   assert.match(text,/images\/custom_view\.png/);
   assert.doesNotMatch(text,/bestiary\.md|宙獸圖鑑|STALE_MANUAL_TEXT|long coat/);
