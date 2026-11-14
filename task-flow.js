@@ -8,7 +8,7 @@
   ]);
   const flow = Object.freeze({
     image: [
-      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "設計外觀與辨識特徵，並依概念參數建立角色／宙獸專屬各型態獨立圖鑑（存於 wiki），不混入 3D 或交付指令。", output: "appearance.md、wiki/<characters|creatures>/<subject_id>[_<stage>]_wiki.md" },
+      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "設計外觀與辨識特徵，並依概念參數建立角色／宙獸專屬各型態獨立圖鑑（存於 wiki），不混入 3D 或交付指令。", output: "appearance.md、<characters|creatures>/wiki/<subject_id>[_<stage>]_wiki.md" },
       { id: "portrait", stage: "portrait", task: "concept", name: "生成立繪", detail: "正面基準圖 → T-pose 多視角 → 動態主立繪；可選手動複製或 Drive 自動模式。", output: "立繪圖片" },
       { id: "review_portrait", stage: "review_portrait", task: "concept", name: "立繪審查", detail: "核對各視角一致性與缺陷；通過後才允許圖片建模。", output: "立繪審查紀錄" },
       { id: "image_colab", stage: "colab", task: "model", name: "Colab + AI + Blender", detail: "Image-to-3D 分支 A：使用已核准立繪，Colab 生成初始模型，由 AI 協助 Blender 修復、檢查與輸出。與 AI + Blender 二選一。", output: ".glb ＋ .blend、骨架、動作、QA", alternate: true },
@@ -16,14 +16,14 @@
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "檢查模型與已核准立繪、材質、骨架、動作及 manifest；人工確認後才歸檔。", output: "最終審查紀錄" }
     ],
     text: [
-      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "先確定原創外觀與辨識特徵，並建立目前角色／宙獸型態獨立 Markdown 圖鑑；不需要先畫正面圖。", output: "appearance.md、wiki/<characters|creatures>/<subject_id>_<stage>_wiki.md" },
+      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "先確定原創外觀與辨識特徵，並建立目前角色／宙獸型態獨立 Markdown 圖鑑；不需要先畫正面圖。", output: "appearance.md、<characters|creatures>/wiki/<subject_id>_<stage>_wiki.md" },
       { id: "prompt_3d", stage: "blender", task: "model", name: "AI + Blender（文字建模）", detail: "在立繪之前分岔。以文字直接在 Blender 原創建模、綁骨、製作動作並輸出 .glb／.blend；所有管線均引用獨立圖鑑，禁止在此重複生成。", output: ".glb ＋ .blend；關聯 wiki 路徑" },
       { id: "portrait_3d", stage: "portrait_3d", task: "concept", name: "補畫主立繪", detail: "建模完成後依 3D 模型與多角度預覽補畫動態主立繪，不需要正面基準圖或 T-pose 三視圖。", output: "動態主立繪" },
       { id: "review_portrait_3d", stage: "review_portrait", task: "concept", name: "補繪立繪審查", detail: "檢查補畫立繪是否和模型一致，核准並綁定到 3D 成果，才能進入最終驗收。", output: "立繪審查與來源綁定" },
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "同時查驗已完成的 3D 與補繪立繪；缺立繪、綁定或 .glb／.blend 均不得通過。", output: "最終審查紀錄" }
     ],
     move: [
-      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成招式圖鑑", detail: "先按招式的屬性、功能、外觀與動作需求生成獨立 Markdown 圖鑑，存於 wiki/moves。", output: "wiki/moves/<subject_id>_wiki.md" },
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成招式圖鑑", detail: "先按招式的屬性、功能、外觀與動作需求生成獨立 Markdown 圖鑑，存於 moves/wiki。", output: "moves/wiki/<subject_id>_wiki.md" },
       { id: "move_vfx", stage: "move_vfx", task: "concept", name: "招式與特效設計", detail: "獨立招式圖鑑條目：設定屬性、形狀與強度，生成規格、六格分鏡、分層拆解與序列圖。施放者僅用於示範。", output: "spec.json、storyboard、layers、flipbook" }
     ]
   });
