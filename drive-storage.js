@@ -190,7 +190,7 @@
     "03_completed/portraits",
     "03_completed/models",
   ];
-  const dirs = [...categoryDirs, ...legacyDirs];
+  const dirs = categoryDirs; // Legacy roots are migration sources only, never active asset scans.
   function relative(path) {
     if (
       typeof path !== "string" ||
@@ -366,8 +366,7 @@
     if (!file && !reviewIndex) {
       const root = pipelineRoot(hint || id);
       file =
-        (await find(root + "/reviews/" + id + ".json")).file ||
-        (await find("reviews/" + id + ".json")).file;
+        (await find(root + "/reviews/" + id + ".json")).file;
     }
     return file
       ? JSON.parse(
@@ -459,7 +458,6 @@
       const reviewIndexPromise = (async () => {
         const merged = new Map();
         for (const revDir of [
-          "reviews",
           "characters/reviews",
           "creatures/reviews",
           "moves/reviews",
@@ -896,7 +894,9 @@
     };
     try {
       const oldFolder = "04_encyclopedia/creatures";
-      const sourceFiles = await list(await folder(oldFolder));
+      let sourceFiles = [];
+      try { sourceFiles = await list(await folder(oldFolder)); }
+      catch (e) { if (!/不存在/.test(e.message)) throw e; }
       await folder("creatures/wiki", true);
       await folder("creatures/wiki/_legacy", true);
       const backupId = await folder("creatures/wiki/_legacy");
@@ -1011,8 +1011,7 @@
         wikiFiles = await list(await folder(wikiBase));
       } catch (e) {
         if (!/不存在/.test(e.message)) throw e;
-        wikiBase = "wiki/creatures";
-        wikiFiles = await list(await folder(wikiBase));
+        throw Error("正式圖鑑目錄 creatures/wiki 不存在，請先完成分類搬移");
       }
       const wikiNames = new Set(wikiFiles.map((f) => f.name));
       report.total = assets.length;
@@ -1332,34 +1331,26 @@
       settingsChar,
       settingsCreature,
       settingsMove,
-      settingsLegacy,
       jobsChar,
       jobsCreature,
       jobsMove,
-      jobsLegacy,
       wikiCharNew,
-      wikiCharLegacy,
       wikiCreatureNew,
-      wikiCreatureLegacy,
     ] = await Promise.all([
       safeList("characters/00_settings"),
       safeList("creatures/00_settings"),
       safeList("moves/00_settings"),
-      safeList("00_settings"),
       safeList("characters/prompts/jobs"),
       safeList("creatures/prompts/jobs"),
       safeList("moves/prompts/jobs"),
-      safeList("prompts/jobs"),
       safeList("characters/wiki"),
-      safeList("wiki/characters"),
       safeList("creatures/wiki"),
-      safeList("wiki/creatures"),
     ]);
     pipelineIndexState = {
-      settings: [...settingsChar, ...settingsCreature, ...settingsMove, ...settingsLegacy],
-      jobs: [...jobsChar, ...jobsCreature, ...jobsMove, ...jobsLegacy],
-      wikiCharacters: [...wikiCharNew, ...wikiCharLegacy],
-      wikiCreatures: [...wikiCreatureNew, ...wikiCreatureLegacy],
+      settings: [...settingsChar, ...settingsCreature, ...settingsMove],
+      jobs: [...jobsChar, ...jobsCreature, ...jobsMove],
+      wikiCharacters: wikiCharNew,
+      wikiCreatures: wikiCreatureNew,
       syncedAt: Date.now(),
     };
     window.COSMI_FORGE?.refresh?.();
