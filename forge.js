@@ -120,7 +120,7 @@
       scene: null, camera: null, renderer: null, controls: null, mixer: null, clock: null,
       currentAction: null, currentClipName: "", clips: [], isPlaying: true, playbackSpeed: 1.0,
       isLoop: true, showSkeleton: false, skeletonHelper: null, showWireframe: false,
-      showGrid: true, gridHelper: null, loadedPkgId: null, isLooping: false,
+      showGrid: true, gridHelper: null, loadedPkgId: null, loadSeq: 0, isLooping: false,
       modelGroup: null, modelStats: null, animFilter: "all", animSearch: ""
     }
   };
@@ -5342,6 +5342,27 @@
     window.addEventListener("resize", resize3D);
   }
 
+  function clearThreeModel(three) {
+    if (!three) return;
+    const prevModel = three.modelGroup;
+    if (prevModel && three.scene) {
+      three.scene.remove(prevModel);
+    }
+    three.modelGroup = null;
+    if (three.skeletonHelper && three.scene) {
+      three.scene.remove(three.skeletonHelper);
+    }
+    three.skeletonHelper = null;
+    if (three.mixer) {
+      three.mixer.stopAllAction();
+      if (prevModel) three.mixer.uncacheRoot(prevModel);
+      three.mixer = null;
+    }
+    three.currentAction = null;
+    three.currentClipName = "";
+    three.clips = [];
+  }
+
   async function loadModelForPackage(pkg, linkedPkg) {
     if (!pkg) return;
     initThreeViewer();
@@ -5355,20 +5376,8 @@
       return;
     }
 
-    if (three.modelGroup) {
-      three.scene.remove(three.modelGroup);
-      three.modelGroup = null;
-    }
-    if (three.skeletonHelper) {
-      three.scene.remove(three.skeletonHelper);
-      three.skeletonHelper = null;
-    }
-    if (three.mixer) {
-      three.mixer.stopAllAction();
-      three.mixer = null;
-    }
-    three.currentAction = null;
-    three.clips = [];
+    const loadSeq = (three.loadSeq = (three.loadSeq || 0) + 1);
+    clearThreeModel(three);
     three.loadedPkgId = targetPkg.id;
 
     $("#stage3dClipBadge").textContent = "🎬 正在載入 3D 模型與動作...";
@@ -5379,9 +5388,9 @@
       try {
         const blob = await window.COSMI_DRIVE.read(targetPkg.drivePath + "/" + targetPkg.glbFile.path);
         // A different package may have been selected while the network request was running.
-        if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
         glbBuffer = await blob.arrayBuffer();
-        if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
         targetPkg.glbFile = {...targetPkg.glbFile, buffer:glbBuffer, url:URL.createObjectURL(blob), deferred:false};
       } catch (error) {
         targetPkg.glbLoadError = true;
@@ -5403,7 +5412,7 @@
     three.activeDescriptor = descriptor;
     if (glbBuffer && descriptor?.model?.sha256 && crypto?.subtle) {
       const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", glbBuffer)), x => x.toString(16).padStart(2, "0")).join("");
-      if (three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
       if (digest !== descriptor.model.sha256) {
         targetPkg.glbLoadError = true;
         $("#stage3dClipBadge").textContent = "模型 SHA256 與驗收描述檔不符，請重新同步資產";
@@ -5413,6 +5422,8 @@
     }
 
     const onModelLoaded = (model, animations) => {
+      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+      clearThreeModel(three);
       targetPkg.glbLoadError = false;
       three.modelGroup = model;
       three.scene.add(model);
@@ -5623,16 +5634,15 @@
       three.clips.push(clip);
     }
 
-    const prevAction = three.currentAction;
+    three.mixer.stopAllAction();
     const newAction = three.mixer.clipAction(clip);
     newAction.setLoop(three.isLoop ? THREE.LoopRepeat : THREE.LoopOnce, Infinity);
     newAction.clampWhenFinished = true;
     newAction.reset();
-
-    if (prevAction && prevAction !== newAction) {
-      prevAction.crossFadeTo(newAction, 0.2, true);
-    }
+    if (typeof newAction.setEffectiveTimeScale === "function") newAction.setEffectiveTimeScale(1);
+    if (typeof newAction.setEffectiveWeight === "function") newAction.setEffectiveWeight(1);
     newAction.play();
+    three.mixer.update(0);
     three.currentAction = newAction;
     three.currentClipName = clipName;
     three.isPlaying = true;
