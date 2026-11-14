@@ -12,11 +12,11 @@ function load(){
 test("all subject types share a canonical _wiki.md suffix",()=>{
  const w=load();
  const make=(id,subjectId,stage)=>({task:{id},subjectId,opts:{stage}});
- assert.equal(w.describe(make("creature-concept","cr_fox","juvenile")).path,"wiki/creatures/cr_fox_juvenile_wiki.md");
- assert.equal(w.describe(make("creature-model-rig","cr_fox","juvenile")).path,"wiki/creatures/cr_fox_juvenile_wiki.md");
- assert.equal(w.describe(make("character-concept","chr_fox")).path,"wiki/characters/chr_fox_wiki.md");
- assert.equal(w.describe(make("move-vfx","fx_burst")).path,"wiki/moves/fx_burst_wiki.md");
- assert.equal(w.describe(make("creature-concept","cr_fox_adult","adult")).path,"wiki/creatures/cr_fox_adult_wiki.md");
+ assert.equal(w.describe(make("creature-concept","cr_fox","juvenile")).path,"creatures/wiki/cr_fox_juvenile_wiki.md");
+ assert.equal(w.describe(make("creature-model-rig","cr_fox","juvenile")).path,"creatures/wiki/cr_fox_juvenile_wiki.md");
+ assert.equal(w.describe(make("character-concept","chr_fox")).path,"characters/wiki/chr_fox_wiki.md");
+ assert.equal(w.describe(make("move-vfx","fx_burst")).path,"moves/wiki/fx_burst_wiki.md");
+ assert.equal(w.describe(make("creature-concept","cr_fox_adult","adult")).path,"creatures/wiki/cr_fox_adult_wiki.md");
  for(const stage of w.STAGES)assert.equal(w.describe(make("creature-concept","cr_fox",stage)).stage,stage);
 });
 test("legacy extraction selects each stage independently and refuses missing stages",()=>{

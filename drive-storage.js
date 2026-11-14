@@ -66,6 +66,58 @@
     wikiCreatures: [],
     syncedAt: 0,
   };
+  function pipelineRoot(input) {
+    if (!input) return "creatures";
+    if (typeof input === "object") {
+      const drivePath = String(input.drivePath || "");
+      const m = /^(characters|creatures|moves)\//.exec(drivePath);
+      if (m) return m[1];
+      const t = String(input.manifest?.task_type || input.type || input.task?.id || "");
+      if (t === "move-vfx" || t === "move") return "moves";
+      if (t.startsWith("character")) return "characters";
+      if (t.startsWith("creature")) return "creatures";
+      return pipelineRoot(
+        input.manifest?.subject_id ||
+          input.subjectId ||
+          input.id ||
+          input.taskId ||
+          "",
+      );
+    }
+    const s = String(input).trim();
+    const pathMatch = /^(characters|creatures|moves)\//.exec(s);
+    if (pathMatch) return pathMatch[1];
+    if (
+      s === "move" ||
+      s === "moves" ||
+      s === "move-vfx" ||
+      /^(?:asset_)?(?:fx|vsl)[-_]/i.test(s)
+    )
+      return "moves";
+    if (
+      s === "character" ||
+      s === "characters" ||
+      s.startsWith("character-") ||
+      /^(?:asset_)?chr[-_]/i.test(s)
+    )
+      return "characters";
+    if (
+      s === "creature" ||
+      s === "creatures" ||
+      s.startsWith("creature-") ||
+      /^(?:asset_)?cr[-_]/i.test(s)
+    )
+      return "creatures";
+    return "creatures";
+  }
+  function packageDir(type, subjectOrId, stage) {
+    const root = pipelineRoot(subjectOrId ? { type, id: subjectOrId } : type);
+    if (root === "moves") return "moves/01_vfx";
+    if (/model|rig|anim/.test(type)) {
+      return root + "/02_3d/" + (stage === "colab" ? "colab" : "ai_blender");
+    }
+    return root + "/01_portraits";
+  }
   function recordPipelineWrite(path, result) {
     const clean = String(path || "").replace(/^\/+/, "");
     const item = {
@@ -79,15 +131,15 @@
       next.push(item);
       return next;
     };
-    if (clean.startsWith("00_settings/"))
+    if (/^(?:(?:characters|creatures|moves)\/)?00_settings\//.test(clean))
       pipelineIndexState.settings = upsert(pipelineIndexState.settings);
-    else if (clean.startsWith("prompts/jobs/"))
+    else if (/^(?:(?:characters|creatures|moves)\/)?prompts\/jobs\//.test(clean))
       pipelineIndexState.jobs = upsert(pipelineIndexState.jobs);
-    else if (clean.startsWith("wiki/characters/"))
+    else if (/^(?:characters\/wiki|wiki\/characters)\//.test(clean))
       pipelineIndexState.wikiCharacters = upsert(
         pipelineIndexState.wikiCharacters,
       );
-    else if (clean.startsWith("wiki/creatures/"))
+    else if (/^(?:creatures\/wiki|wiki\/creatures)\//.test(clean))
       pipelineIndexState.wikiCreatures = upsert(
         pipelineIndexState.wikiCreatures,
       );
@@ -114,7 +166,23 @@
         drain();
       });
   }
-  const dirs = [
+  const categoryDirs = [
+    "characters/01_portraits",
+    "characters/02_3d/colab",
+    "characters/02_3d/ai_blender",
+    "characters/02_3d/legacy",
+    "characters/03_completed/portraits",
+    "characters/03_completed/models",
+    "creatures/01_portraits",
+    "creatures/02_3d/colab",
+    "creatures/02_3d/ai_blender",
+    "creatures/02_3d/legacy",
+    "creatures/03_completed/portraits",
+    "creatures/03_completed/models",
+    "moves/01_vfx",
+    "moves/03_completed",
+  ];
+  const legacyDirs = [
     "01_portraits",
     "02_3d/colab",
     "02_3d/ai_blender",
@@ -122,6 +190,7 @@
     "03_completed/portraits",
     "03_completed/models",
   ];
+  const dirs = [...categoryDirs, ...legacyDirs];
   function relative(path) {
     if (
       typeof path !== "string" ||
@@ -292,10 +361,14 @@
       result.push(...children);
     return result;
   }
-  async function record(id, reviewIndex) {
-    const file = reviewIndex
-      ? reviewIndex.get(id + ".json")
-      : (await find("reviews/" + id + ".json")).file;
+  async function record(id, reviewIndex, hint) {
+    let file = reviewIndex ? reviewIndex.get(id + ".json") : null;
+    if (!file && !reviewIndex) {
+      const root = pipelineRoot(hint || id);
+      file =
+        (await find(root + "/reviews/" + id + ".json")).file ||
+        (await find("reviews/" + id + ".json")).file;
+    }
     return file
       ? JSON.parse(
           await (await request(API + "/" + file.id + "?alt=media")).text(),
@@ -354,7 +427,7 @@
           pkg.sourcePack = reviewRecord.source_pack;
           pkg.reviewRecord = reviewRecord;
         }
-        if (dir.startsWith("03_completed/")) pkg.completed = true;
+        if (/(?:^|\/)03_completed(?:\/|$)/.test(dir)) pkg.completed = true;
         window.COSMI_MODEL_REVIEW?.onPackagesChanged();
         return pkg;
       };
@@ -384,17 +457,24 @@
         status("已從快取顯示 " + ids.size + " 個資產，正在確認雲端更新…");
       }
       const reviewIndexPromise = (async () => {
-        try {
-          const reviewFiles = await list(await folder("reviews"));
-          return new Map(
-            reviewFiles
-              .filter((f) => f.name.endsWith(".json"))
-              .map((f) => [f.name, f]),
-          );
-        } catch (e) {
-          if (!/不存在/.test(e.message)) errors.push("reviews: " + e.message);
-          return new Map();
+        const merged = new Map();
+        for (const revDir of [
+          "reviews",
+          "characters/reviews",
+          "creatures/reviews",
+          "moves/reviews",
+        ]) {
+          try {
+            const reviewFiles = await list(await folder(revDir));
+            for (const f of reviewFiles) {
+              if (f.name.endsWith(".json")) merged.set(f.name, f);
+            }
+          } catch (e) {
+            if (!/不存在/.test(e.message))
+              errors.push(revDir + ": " + e.message);
+          }
         }
+        return merged;
       })();
       const groups = await Promise.all(
         dirs.map(async (dir) => {
@@ -404,7 +484,7 @@
               .filter((f) => f.mimeType === MIME && !f.name.startsWith("_"))
               .map((entry) => ({ dir, entry }));
           } catch (e) {
-            errors.push(dir + ": " + e.message);
+            if (!/不存在/.test(e.message)) errors.push(dir + ": " + e.message);
             return [];
           }
         }),
@@ -598,6 +678,7 @@
     busy = true;
     try {
       const isModel = modelType(pkg),
+        root = pipelineRoot(pkg),
         sourceId = pkg.sourcePack || pkg.manifest?.source_pack || "",
         ops = [];
       const r = {
@@ -611,8 +692,13 @@
         throw Error("立繪必須具有可預覽影像");
       if (status === "reject") {
         const dir =
-          "backup/" +
-          (isModel ? "rejected_3d" : "rejected_portraits") +
+          root +
+          "/backup/" +
+          (root === "moves"
+            ? "rejected_vfx"
+            : isModel
+              ? "rejected_3d"
+              : "rejected_portraits") +
           "/" +
           pkg.id +
           "_" +
@@ -651,12 +737,12 @@
         )
           throw Error("來源立繪與模型型態不符");
         for (const [asset, dir] of [
-          [pkg, "03_completed/models"],
-          [src, "03_completed/portraits"],
+          [pkg, root + "/03_completed/models"],
+          [src, pipelineRoot(src) + "/03_completed/portraits"],
         ]) {
           if (asset.completed) continue;
           const name = asset.drivePath.split("/").pop(),
-            to = await folder(dir);
+            to = await folder(dir, true);
           if ((await list(to, "name = '" + escapeQuery(name) + "'")).length)
             throw Error("完成區已有同名資產，請使用新版本 ID");
           ops.push({
@@ -676,7 +762,7 @@
           done.push(op);
         }
         r.drive_path = ops.find((o) => o.pkg === pkg)?.path || pkg.drivePath;
-        await jsonWrite("reviews/" + pkg.id + ".json", r);
+        await jsonWrite(root + "/reviews/" + pkg.id + ".json", r);
       } catch (e) {
         const failures = [];
         for (const op of done.reverse()) {
@@ -730,7 +816,7 @@
         note,
         time: new Date().toISOString(),
       };
-      await jsonWrite("reviews/" + pkg.id + ".json", r);
+      await jsonWrite(pipelineRoot(pkg) + "/reviews/" + pkg.id + ".json", r);
       pkg.reviewRecord = r;
       window.COSMI_FORGE.persistReview?.(pkg, note);
       return r;
@@ -741,10 +827,11 @@
   async function uploadAsset(pkg) {
     if (!pkg?.rawFiles) throw Error("請先載入資產資料夾");
     if (pkg.driveFolderId) return pkg.drivePath;
-    const dir = modelType(pkg)
-        ? "02_3d/" +
-          ($("pipelineStage")?.value === "colab" ? "colab" : "ai_blender")
-        : "01_portraits",
+    const dir = packageDir(
+        pkg.manifest?.task_type || pkg.type,
+        pkg.manifest?.subject_id || pkg.subjectId || pkg.id,
+        $("pipelineStage")?.value,
+      ),
       path = dir + "/" + pkg.id;
     if ((await find(path)).file)
       throw Error("已有同名資產，請重新載入或使用新版本 ID");
@@ -773,7 +860,7 @@
     const pending = (async () => {
       if (syncing || busy)
         throw Error("Drive 正在處理其他資產，請稍後再建立圖鑑");
-      const destination = await folder("wiki/" + wiki.kind, true);
+      const destination = await folder(wiki.kind + "/wiki", true);
       // Serialize same-path requests within this browser tab, and never
       // overwrite or fork a previously generated wiki.
       const found = await list(
@@ -810,10 +897,10 @@
     try {
       const oldFolder = "04_encyclopedia/creatures";
       const sourceFiles = await list(await folder(oldFolder));
-      await folder("wiki/creatures", true);
-      await folder("wiki/_legacy/creatures", true);
-      const backupId = await folder("wiki/_legacy/creatures");
-      const targetId = await folder("wiki/creatures");
+      await folder("creatures/wiki", true);
+      await folder("creatures/wiki/_legacy", true);
+      const backupId = await folder("creatures/wiki/_legacy");
+      const targetId = await folder("creatures/wiki");
       const archiveFiles = await list(backupId);
       const existingArchive = new Set(archiveFiles.map((f) => f.name));
       // Include previously archived family wikis on repeat runs to repair missing stages.
@@ -856,10 +943,10 @@
                 file.name,
               );
               await write(
-                "wiki/creatures/" + name,
+                "creatures/wiki/" + name,
                 new Blob([content], { type: "text/markdown" }),
               );
-              const saved = await read("wiki/creatures/" + name);
+              const saved = await read("creatures/wiki/" + name);
               if (!(await saved.text()).includes("- stage: " + stage))
                 throw Error("圖鑑回讀不符");
               report.created++;
@@ -902,7 +989,15 @@
     busy = true;
     const report = { total: 0, updated: 0, skipped: 0, errors: [] };
     try {
-      const entries = await list(await folder("02_3d/ai_blender"));
+      let baseDir = "creatures/02_3d/ai_blender";
+      let entries = [];
+      try {
+        entries = await list(await folder(baseDir));
+      } catch (e) {
+        if (!/不存在/.test(e.message)) throw e;
+        baseDir = "02_3d/ai_blender";
+        entries = await list(await folder(baseDir));
+      }
       const assets = entries.filter(
         (f) =>
           f.mimeType === MIME &&
@@ -910,7 +1005,15 @@
             f.name,
           ),
       );
-      const wikiFiles = await list(await folder("wiki/creatures"));
+      let wikiBase = "creatures/wiki";
+      let wikiFiles = [];
+      try {
+        wikiFiles = await list(await folder(wikiBase));
+      } catch (e) {
+        if (!/不存在/.test(e.message)) throw e;
+        wikiBase = "wiki/creatures";
+        wikiFiles = await list(await folder(wikiBase));
+      }
       const wikiNames = new Set(wikiFiles.map((f) => f.name));
       report.total = assets.length;
       for (const asset of assets) {
@@ -1019,9 +1122,7 @@
             produced_by: manifest.produced_by || "historical Prompt-to-3D",
             input_mode: "text",
             pipeline: "ai_blender",
-            encyclopedia_path: wikiNames.has(wiki)
-              ? "wiki/creatures/" + wiki
-              : "",
+            encyclopedia_path: wikiNames.has(wiki) ? wikiBase + "/" + wiki : "",
             qa_status: "REVIEW_REQUIRED",
             files: [...indexed.values()],
             missing,
@@ -1036,14 +1137,14 @@
           // Preserve all historical manifest bytes in a separate backup before update.
           if (manifestFile) {
             const backupPath =
-              "backup/manifest_snapshots/" +
+              "creatures/backup/manifest_snapshots/" +
               asset.name +
               ".before_prompt3d_migration.json";
-            await folder("backup/manifest_snapshots", true);
+            await folder("creatures/backup/manifest_snapshots", true);
             if (!(await find(backupPath)).file)
               await jsonWrite(backupPath, manifest);
           }
-          const target = "02_3d/ai_blender/" + asset.name + "/manifest.json";
+          const target = baseDir + "/" + asset.name + "/manifest.json";
           await jsonWrite(target, next);
           const check = JSON.parse(await (await read(target)).text());
           if (check.task_id !== next.task_id || check.input_mode !== "text")
@@ -1124,6 +1225,97 @@
       lock(e.message);
     }
   }
+  async function migratePipelineDirectories() {
+    if (syncing || busy) throw Error("Drive 正在同步或審查，請稍後再執行");
+    busy = true;
+    const report = { moved: 0, skipped: 0, errors: [] };
+    const knownRoots = new Map();
+    const safeEntries = async (dirPath) => {
+      try {
+        const id = await folder(dirPath);
+        return { id, items: await list(id) };
+      } catch (e) {
+        if (!/不存在/.test(e.message)) report.errors.push(dirPath + ": " + e.message);
+        return { id: "", items: [] };
+      }
+    };
+    const moveIfFree = async (item, fromId, targetDir) => {
+      try {
+        const toId = await folder(targetDir, true);
+        if (fromId === toId) {
+          report.skipped++;
+          return;
+        }
+        const existing = await list(toId, "name = '" + escapeQuery(item.name) + "'");
+        if (existing.length) {
+          report.skipped++;
+          return;
+        }
+        await move(item.id, fromId, toId);
+        report.moved++;
+      } catch (e) {
+        report.errors.push(item.name + ": " + e.message);
+      }
+    };
+    try {
+      for (const dir of legacyDirs) {
+        const { id: fromId, items } = await safeEntries(dir);
+        if (!fromId) continue;
+        for (const entry of items) {
+          if (entry.mimeType !== MIME || entry.name.startsWith("_")) continue;
+          let manifest = null;
+          try {
+            const children = await list(entry.id);
+            const mf = children.find((f) => f.name === "manifest.json");
+            if (mf) {
+              manifest = JSON.parse(
+                await (await request(API + "/" + mf.id + "?alt=media")).text(),
+              );
+            }
+          } catch (_) {}
+          const root = pipelineRoot({ id: entry.name, manifest });
+          knownRoots.set(entry.name, root);
+          if (manifest?.subject_id) knownRoots.set(manifest.subject_id, root);
+          const targetSubdir =
+            root === "moves"
+              ? dir.startsWith("03_completed")
+                ? "moves/03_completed"
+                : "moves/01_vfx"
+              : root + "/" + dir;
+          await moveIfFree(entry, fromId, targetSubdir);
+        }
+      }
+      const classifyFile = (name) => {
+        const stem = name.replace(/\.(json|md|prompt\.md|parameters\.json|appearance\.md)$/i, "");
+        const base = stem.split(".")[0];
+        return knownRoots.get(base) || pipelineRoot(base);
+      };
+      for (const [oldDir, buildTarget] of [
+        ["reviews", (f) => classifyFile(f.name) + "/reviews"],
+        ["00_settings", (f) => classifyFile(f.name) + "/00_settings"],
+        ["prompts/jobs", (f) => classifyFile(f.name) + "/prompts/jobs"],
+        ["wiki/characters", () => "characters/wiki"],
+        ["wiki/creatures", () => "creatures/wiki"],
+        ["wiki/moves", () => "moves/wiki"],
+        ["wiki/_legacy/creatures", () => "creatures/wiki/_legacy"],
+      ]) {
+        const { id: fromId, items } = await safeEntries(oldDir);
+        if (!fromId) continue;
+        for (const item of items) {
+          if (item.mimeType === MIME) continue;
+          if (oldDir === "00_settings" && item.name === "default.parameters.json") {
+            report.skipped++;
+            continue;
+          }
+          await moveIfFree(item, fromId, buildTarget(item));
+        }
+      }
+      void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+      return report;
+    } finally {
+      busy = false;
+    }
+  }
   async function syncPipelineIndex() {
     if (!accessToken || Date.now() >= expiry - SESSION_SKEW) {
       return pipelineIndexState;
@@ -1136,17 +1328,38 @@
         return [];
       }
     };
-    const [settings, jobs, wikiCharacters, wikiCreatures] = await Promise.all([
+    const [
+      settingsChar,
+      settingsCreature,
+      settingsMove,
+      settingsLegacy,
+      jobsChar,
+      jobsCreature,
+      jobsMove,
+      jobsLegacy,
+      wikiCharNew,
+      wikiCharLegacy,
+      wikiCreatureNew,
+      wikiCreatureLegacy,
+    ] = await Promise.all([
+      safeList("characters/00_settings"),
+      safeList("creatures/00_settings"),
+      safeList("moves/00_settings"),
       safeList("00_settings"),
+      safeList("characters/prompts/jobs"),
+      safeList("creatures/prompts/jobs"),
+      safeList("moves/prompts/jobs"),
       safeList("prompts/jobs"),
+      safeList("characters/wiki"),
       safeList("wiki/characters"),
+      safeList("creatures/wiki"),
       safeList("wiki/creatures"),
     ]);
     pipelineIndexState = {
-      settings,
-      jobs,
-      wikiCharacters,
-      wikiCreatures,
+      settings: [...settingsChar, ...settingsCreature, ...settingsMove, ...settingsLegacy],
+      jobs: [...jobsChar, ...jobsCreature, ...jobsMove, ...jobsLegacy],
+      wikiCharacters: [...wikiCharNew, ...wikiCharLegacy],
+      wikiCreatures: [...wikiCreatureNew, ...wikiCreatureLegacy],
       syncedAt: Date.now(),
     };
     window.COSMI_FORGE?.refresh?.();
@@ -1165,6 +1378,8 @@
     syncPackages,
     syncPipelineIndex,
     pipelineIndex: () => pipelineIndexState,
+    pipelineRoot,
+    migratePipelineDirectories,
     migratePrompt3dAssets,
     migrateWikis,
     ensureWiki,
@@ -1177,8 +1392,7 @@
     },
     signOut: () => lock("已登出"),
     rootPath: config.rootPath,
-    packageDir: (type) =>
-      /model|rig|anim/.test(type) ? "02_3d/ai_blender" : "01_portraits",
+    packageDir,
   });
   document.addEventListener("DOMContentLoaded", () => {
     $("driveSignIn").addEventListener("click", () => {
@@ -1213,10 +1427,35 @@
     $("driveSync").addEventListener("click", () =>
       run(() => syncPackages({ force: true })),
     );
+    $("settingsMigratePipeline")?.addEventListener("click", () => {
+      if (
+        !window.confirm(
+          "將舊共用目錄（01_portraits、02_3d、03_completed、00_settings、prompts/jobs、wiki、reviews）中的既有檔案依角色／宙獸／招式分類移入 characters/、creatures/、moves/？保留 Drive 檔案 ID，同名目標已存在時跳過。",
+        )
+      )
+        return;
+      run(async () => {
+        $("driveStatus").textContent = "正在依角色／宙獸／招式分類 Drive 目錄…";
+        const report = await migratePipelineDirectories();
+        $("driveStatus").textContent =
+          "管線目錄分類：" +
+          report.moved +
+          " 已移動、" +
+          report.skipped +
+          " 跳過、" +
+          report.errors.length +
+          " 項錯誤";
+        $("settingsMessage").textContent =
+          report.errors.slice(0, 6).join("；") ||
+          "已完成角色／宙獸／招式 Drive 目錄分類。";
+        await syncPackages({ force: true });
+        await syncPipelineIndex();
+      });
+    });
     $("settingsMigrateWiki")?.addEventListener("click", () => {
       if (
         !window.confirm(
-          "將現有 15 份系列圖鑑拆成各型態獨立 Markdown？原圖鑑移至 wiki/_legacy 備份；既有階段圖鑑不覆寫。",
+          "將現有 15 份系列圖鑑拆成各型態獨立 Markdown？原圖鑑移至 creatures/wiki/_legacy 備份；既有階段圖鑑不覆寫。",
         )
       )
         return;
@@ -1235,13 +1474,13 @@
           " 項錯誤";
         $("settingsMessage").textContent =
           report.errors.slice(0, 6).join("；") ||
-          "各型態圖鑑已整理，原始系列文件保留於 wiki/_legacy。";
+          "各型態圖鑑已整理，原始系列文件保留於 creatures/wiki/_legacy。";
       });
     });
     $("settingsMigratePrompt3d")?.addEventListener("click", () => {
       if (
         !window.confirm(
-          "整理 02_3d/ai_blender 的歷史 Prompt-to-3D 資產描述檔？原 GLB/Blend 不會修改；既有 manifest 先備份，全部保持待審狀態。",
+          "整理 creatures/02_3d/ai_blender（或舊 02_3d/ai_blender）的歷史 Prompt-to-3D 資產描述檔？原 GLB/Blend 不會修改；既有 manifest 先備份，全部保持待審狀態。",
         )
       )
         return;
@@ -1277,8 +1516,12 @@
     $("driveLoadPrompt").addEventListener("click", () =>
       run(async () => {
         const path = $("drivePromptPath").value.trim();
-        if (!path.startsWith("prompts/") || !path.endsWith(".md"))
-          throw Error("請輸入 prompts/ 下的 Markdown 相對路徑");
+        if (
+          !/^(?:(?:characters|creatures|moves)\/)?prompts\/.*\.md$/.test(path)
+        )
+          throw Error(
+            "請輸入 prompts/ 或 <類別>/prompts/ 下的 Markdown 相對路徑",
+          );
         window.COSMI_FORGE.showPrompt(await (await read(path)).text());
         $("driveStatus").textContent = "已讀取 " + path;
       }),
@@ -1336,8 +1579,9 @@
     $("pipelineSaveSettings").addEventListener("click", () =>
       run(async () => {
         const d = window.COSMI_FORGE.settings(),
-          p = window.COSMI_PIPELINE.parameters();
-        await jsonWrite("00_settings/" + d.assetId + ".parameters.json", {
+          p = window.COSMI_PIPELINE.parameters(),
+          root = pipelineRoot(d.delivery?.task_type || d.assetId);
+        await jsonWrite(root + "/00_settings/" + d.assetId + ".parameters.json", {
           ...p,
           delivery: d.delivery,
         });
@@ -1346,10 +1590,18 @@
     );
     $("pipelineLoadSettings").addEventListener("click", () =>
       run(async () => {
-        const id = window.COSMI_FORGE.settings().assetId,
+        const d = window.COSMI_FORGE.settings(),
+          id = d.assetId,
+          root = pipelineRoot(d.delivery?.task_type || id);
+        let p;
+        try {
           p = await (
-            await read("00_settings/" + id + ".parameters.json")
+            await read(root + "/00_settings/" + id + ".parameters.json")
           ).text();
+        } catch (e) {
+          if (!/不存在/.test(e.message)) throw e;
+          p = await (await read("00_settings/" + id + ".parameters.json")).text();
+        }
         JSON.parse(p);
         $("pipelineParameters").value = p;
         window.COSMI_PIPELINE.parameters();
@@ -1366,7 +1618,7 @@
           );
         if (!pkg?.driveFolderId || !modelType(pkg) || pkg.completed || !src)
           throw Error("請選取待審 3D 並填入已載入的立繪資產 ID");
-        await jsonWrite("reviews/" + pkg.id + ".json", {
+        await jsonWrite(pipelineRoot(pkg) + "/reviews/" + pkg.id + ".json", {
           task_id: pkg.id,
           status: pkg.status,
           source_pack: id,

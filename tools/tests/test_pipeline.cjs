@@ -37,7 +37,7 @@ test('portrait always uses the native task builder even with a legacy Drive temp
       assert.equal(received,ctx);
       return expected;
     };
-    assert.match(c.COSMI_PIPELINE.build(ctx),new RegExp('^'+expected+'\\n\\n圖鑑：wiki/'));
+    assert.match(c.COSMI_PIPELINE.build(ctx),new RegExp('^'+expected+'\\n\\n圖鑑：(characters|creatures|moves)/wiki/'));
   }
 });
 
@@ -55,12 +55,12 @@ test('Drive template loading skips the native portrait stage', async () => {
 
 test('encyclopedia prompt routes three categories to isolated Markdown paths', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='encyclopedia';
-  assert.match(c.COSMI_PIPELINE.build(ctx),/wiki\/characters\/chr_one_wiki\.md/);
+  assert.match(c.COSMI_PIPELINE.build(ctx),/characters\/wiki\/chr_one_wiki\.md/);
   ctx.task.id='creature-concept';
-  assert.match(c.COSMI_PIPELINE.build(ctx),/wiki\/creatures\/chr_one_adult_wiki\.md/);
+  assert.match(c.COSMI_PIPELINE.build(ctx),/creatures\/wiki\/chr_one_adult_wiki\.md/);
   ctx.task.id='move-vfx';ctx.subjectId='fx_fire_burst';ctx.opts={element:'fire',shape:'burst',tier:'heavy'};
   const wiki=c.COSMI_PIPELINE.build(ctx);
-  assert.match(wiki,/wiki\/moves\/fx_fire_burst_wiki\.md/);
+  assert.match(wiki,/moves\/wiki\/fx_fire_burst_wiki\.md/);
   assert.match(wiki,/fire|burst/);
   assert.doesNotMatch(wiki,/DO_NOT_LEAK/);
 });
@@ -69,12 +69,12 @@ test('appearance prompt includes visual traits and encyclopedia generation while
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='appearance';
   const text=c.COSMI_PIPELINE.build(ctx);
   assert.match(text,/red|long coat/);
-  assert.match(text,/wiki\/characters\/chr_one_wiki\.md/);
+  assert.match(text,/characters\/wiki\/chr_one_wiki\.md/);
   assert.doesNotMatch(text,/parameters\.json|03_completed|02_3d|\.glb|999/);
   ctx.task.id='creature-concept';ctx.subjectId='cr_one';
   ctx.concept={...ctx.concept,social_structure:'母系氏族部落',reproduction:'卵生·硬殼築巢'};
   const crText=c.COSMI_PIPELINE.build(ctx);
-  assert.match(crText,/wiki\/creatures\/cr_one_adult_wiki\.md/);
+  assert.match(crText,/creatures\/wiki\/cr_one_adult_wiki\.md/);
   assert.match(crText,/母系氏族部落/);
   assert.match(crText,/卵生·硬殼築巢/);
 });

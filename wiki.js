@@ -22,7 +22,7 @@
     // Creatures have four independently maintained forms; characters may be un-staged.
     const stage=STAGES.includes(candidate)?candidate:(kind==="creatures"?"adult":"");
     const base=stage&&subject.endsWith("_"+stage)?subject.slice(0,-stage.length-1):subject;
-    const path=ROOT+"/"+kind+"/"+base+(stage?"_"+stage:"")+"_wiki.md";
+    const path=kind+"/wiki/"+base+(stage?"_"+stage:"")+"_wiki.md";
     return {kind,subject:base,stage,path,key:kind+"/"+base+(stage?"/"+stage:"")};
   }
   function initialMarkdown(ctx) {
@@ -117,7 +117,7 @@
       "## 系列基本資料",intro||"請參照原始系列圖鑑。", "",
       "## 本型態專屬設定",block, "",
       "## 原始資料與驗收",
-      "系列共通生態與跨階演化資訊保留於 wiki/_legacy/creatures/ 的原始檔案。",
+      "系列共通生態與跨階演化資訊保留於 creatures/wiki/_legacy/ 的原始檔案。",
       "本文件只代表文字資料拆分，3D、骨架、動畫與立繪仍須人工審查。",
       ""].join("\n");
   }

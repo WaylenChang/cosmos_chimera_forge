@@ -8,16 +8,23 @@
     "柔和卡通著色（2–3 階明暗）、乾淨深色描邊、色塊分明、剪影鮮明、微弱邊緣光；純色平光背景，主體不與背景融合。無文字、無簽名浮水印、原創設計。";
 
   // All paths below are relative to project/cosmos_chimera_forge on Google Drive.
+  function driveRoot(taskId) {
+    if (taskId === "move-vfx") return "moves";
+    if (String(taskId || "").startsWith("character")) return "characters";
+    return "creatures";
+  }
   const DRIVE_IN = "01_portraits";
   const DRIVE_OUT = "02_3d/ai_blender";
   const DRIVE_BACKUP = "backup/image_backup";
 
   function storageSection(ctx) {
-    const dir = /model|rig|anim/.test(ctx.task.id) ? DRIVE_OUT : DRIVE_IN;
+    const root = driveRoot(ctx.task.id);
+    const dir = root === "moves" ? "moves/01_vfx"
+      : /model|rig|anim/.test(ctx.task.id) ? root + "/" + DRIVE_OUT : root + "/" + DRIVE_IN;
     return [
       "## Google Drive 讀寫與存放",
       "- 專案根目錄：`project/cosmos_chimera_forge/`；以下路徑皆相對於此根目錄，不使用本機絕對路徑。",
-      "- 本次 prompt：`prompts/" + ctx.taskId + ".prompt.md`；參考立繪：`image_in/` 或已歸檔的 `image_backup/`；3D 參考及輸出：`3D_out/`。",
+      "- 本次 prompt：`" + root + "/prompts/jobs/" + ctx.taskId + ".prompt.md`；參考立繪：`image_in/` 或已歸檔的 `image_backup/`；3D 參考及輸出：`3D_out/`。",
       "- 成果包儲存為 `" + dir + "/" + ctx.taskId + ".zip`，包內參照仍相對於 task_id 資料夾（例如 `images/`、`models/`）。",
       "- 無法直接寫入 Drive 時，提供下載並指明上述相對存放位置；不要宣稱已上傳。"
     ].join("\n");
@@ -515,11 +522,11 @@
           "",
           "## 1. 輸入立繪參照與歸檔",
           batch
-            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（批次處理所有吻合條件之 \`cr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。\n- 歸檔移動：每包處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
+            ? `- 輸入資料夾：\`creatures/${DRIVE_IN}/\`（批次處理所有吻合條件之 \`cr-*.zip\`，略過 \`creatures/${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。\n- 歸檔移動：每包處理完成後，立即將該來源立繪包移動至相鄰之 \`creatures/${DRIVE_BACKUP}/\`。`
             : [
-              `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "cr-" + S + "-" + curStage + ".zip"}\``,
+              `- 來源立繪包：\`creatures/${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "cr-" + S + "-" + curStage + ".zip"}\``,
               `- 核心輸入圖：${src}`,
-              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
+              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`creatures/${DRIVE_BACKUP}/\`。`
             ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
@@ -541,7 +548,7 @@
           "",
           modelQualityRules(),
           "",
-          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `creatures/" + DRIVE_OUT + "/`）",
           "```",
           outId + "/",
           "├── manifest.json",
@@ -614,11 +621,11 @@
           "",
           "## 1. 輸入立繪參照與歸檔",
           batch
-            ? `- 輸入資料夾：\`${DRIVE_IN}/\`（批次處理所有吻合條件之 \`chr-*.zip\`，略過 \`${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。\n- 歸檔移動：每包處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
+            ? `- 輸入資料夾：\`characters/${DRIVE_IN}/\`（批次處理所有吻合條件之 \`chr-*.zip\`，略過 \`characters/${DRIVE_OUT}/\` 已有對應 manifest.source_pack 者）。\n- 歸檔移動：每包處理完成後，立即將該來源立繪包移動至相鄰之 \`characters/${DRIVE_BACKUP}/\`。`
             : [
-              `- 來源立繪包：\`${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "chr-" + S + ".zip"}\``,
+              `- 來源立繪包：\`characters/${DRIVE_IN}/${o.source_pack ? o.source_pack + ".zip" : "chr-" + S + ".zip"}\``,
               `- 核心輸入圖：${src}`,
-              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`${DRIVE_BACKUP}/\`。`
+              `- 歸檔移動：處理完成後，立即將該來源立繪包移動至相鄰之 \`characters/${DRIVE_BACKUP}/\`。`
             ].join("\n"),
           "",
           "## 2. 3D 拓撲與貼圖規格",
@@ -641,7 +648,7 @@
           "",
           modelQualityRules(),
           "",
-          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `" + DRIVE_OUT + "/`）",
+          "## 6. 交付檔案架構（打包為 `" + outId + ".zip` 上傳至 `characters/" + DRIVE_OUT + "/`）",
           "```",
           outId + "/",
           "├── manifest.json",

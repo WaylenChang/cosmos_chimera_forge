@@ -2,28 +2,53 @@
 
 ```text
 cosmos_chimera_forge/
-  00_settings/                  # default.parameters.json； <asset_id>.appearance.md、<asset_id>.parameters.json
-  01_portraits/<asset_id>/      # concept.json、manifest.json、images/
-  02_3d/
-    colab/<asset_id>/           # Colab GPU 輸出
-    ai_blender/<asset_id>/      # Argon／Codex Blender 輸出
-    legacy/<asset_id>/          # 既有待審成果
-  wiki/
-    characters/<subject_id>_wiki.md   # 原創角色圖鑑
-    creatures/<subject_id>_<stage>_wiki.md  # 每個階段一份
-    moves/<move_id>_wiki.md           # 招式圖鑑
-  03_completed/
-    portraits/<asset_id>/
-    models/<asset_id>/
-  prompts/                     # 六個單步驟 prompt.md、TRIGGERS.md
-    jobs/                      # HTML 填入參數後的單步驟 prompt
-  reviews/<asset_id>.json       # 審查結果、來源立繪 ID、時間、意見
-  backup/
-    rejected_portraits/<revision>/<asset_id>/
-    rejected_3d/<revision>/<asset_id>/
-    legacy_archives/            # 已核對展開的歷史 ZIP
-    legacy_prompts/             # 舊的跨步驟長 prompt
-    image_backup/              # 歷史立繪備份，不代表已核准
+  00_settings/
+    default.parameters.json       # 全域預設格式參數
+  prompts/                        # 共用單步驟 prompt.md、TRIGGERS.md、DIRECTORY.md
+
+  characters/                     # 角色管線獨立目錄
+    00_settings/                  # <asset_id>.appearance.md、<asset_id>.parameters.json
+    01_portraits/<asset_id>/      # concept.json、manifest.json、images/
+    02_3d/
+      colab/<asset_id>/           # Colab GPU 輸出
+      ai_blender/<asset_id>/      # Argon／Codex Blender 輸出
+      legacy/<asset_id>/          # 既有待審成果
+    03_completed/
+      portraits/<asset_id>/
+      models/<asset_id>/
+    wiki/<subject_id>[_<stage>]_wiki.md
+    prompts/jobs/                 # HTML 填入參數後的單步驟 prompt
+    reviews/<asset_id>.json       # 審查結果、來源立繪 ID、時間、意見
+    backup/
+      rejected_portraits/<revision>/<asset_id>/
+      rejected_3d/<revision>/<asset_id>/
+
+  creatures/                      # 宙獸管線獨立目錄
+    00_settings/                  # <asset_id>.appearance.md、<asset_id>.parameters.json
+    01_portraits/<asset_id>/      # concept.json、manifest.json、images/
+    02_3d/
+      colab/<asset_id>/
+      ai_blender/<asset_id>/
+      legacy/<asset_id>/
+    03_completed/
+      portraits/<asset_id>/
+      models/<asset_id>/
+    wiki/<subject_id>_<stage>_wiki.md  # 每個階段一份（含 _legacy/）
+    prompts/jobs/
+    reviews/<asset_id>.json
+    backup/
+      rejected_portraits/<revision>/<asset_id>/
+      rejected_3d/<revision>/<asset_id>/
+
+  moves/                          # 招式管線獨立目錄
+    00_settings/
+    01_vfx/<asset_id>/            # spec.json、storyboard、layers、flipbook
+    03_completed/<asset_id>/
+    wiki/<move_id>_wiki.md
+    prompts/jobs/
+    reviews/<asset_id>.json
+    backup/
+      rejected_vfx/<revision>/<asset_id>/
 ```
 
 3D 資產目錄內用 models/、rig/、animations/、previews/、manifest.json。

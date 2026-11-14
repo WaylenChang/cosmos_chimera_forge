@@ -195,7 +195,7 @@ test('all concurrent Prompt-to-Image and 3D wiki calls create one stage-specific
     h.context.COSMI_DRIVE.ensureWiki(ctx)
   ]);
   assert.equal(uploads,1);
-  assert.equal(a.path,'wiki/creatures/cr_new_juvenile_wiki.md');
+  assert.equal(a.path,'creatures/wiki/cr_new_juvenile_wiki.md');
   assert.equal(a.id,b.id);
   assert.equal(c.id,a.id);
   const later=await h.context.COSMI_DRIVE.ensureWiki(ctx);
@@ -270,7 +270,7 @@ test('final approval moves model and approved source directories and preserves f
  const {h,assets,parents}=reviewHarness();await h.login();
  await h.context.COSMI_DRIVE.review(assets[0],'ok');
  assert.equal(parents['model-folder'],'models-id');assert.equal(parents['portrait-folder'],'portraits-id');
- assert.equal(assets[0].drivePath,'03_completed/models/model');assert.equal(assets[1].completed,true);
+ assert.equal(assets[0].drivePath,'creatures/03_completed/models/model');assert.equal(assets[1].completed,true);
 });
 
 test('prompt-only model cannot complete until an approved portrait is bound',async()=>{
@@ -299,15 +299,16 @@ test('review record failure rolls back both directory moves',async()=>{
 test('rejection moves only the rejected directory to backup',async()=>{
  const {h,assets,parents}=reviewHarness();await h.login();const p=assets[0];
  await h.context.COSMI_DRIVE.review(p,'reject','bad anatomy');
- assert.match(p.drivePath,/^backup\/rejected_3d\//);assert.equal(parents['portrait-folder'],'01_portraits-id');
+ assert.match(p.drivePath,/^creatures\/backup\/rejected_3d\//);assert.equal(parents['portrait-folder'],'01_portraits-id');
  assert.equal(assets.length,1);assert.equal(p.status,'reject');
 });
 
 
-test('sync reads nested asset directories, ignores ZIP, and keeps blend metadata without preview download', async()=>{
+ test('sync reads nested asset directories, ignores ZIP, and keeps blend metadata without preview download', async()=>{
  let loaded;
  const h=harness({handle:u=>{
   const q=u.searchParams.get('q')||'';
+  if(q.includes("'project-root' in parents")&&(q.includes("name = 'characters'")||q.includes("name = 'creatures'")||q.includes("name = 'moves'")))return Response.json({files:[]});
   if(q.includes("name = 'asset.json'"))return Response.json({files:[]});
   if(q==="'01_portraits-id' in parents and trashed = false")return Response.json({files:[{id:'asset-folder',name:'asset',mimeType:'application/vnd.google-apps.folder'},{id:'old-zip',name:'old.zip',mimeType:'application/zip'}]});
   if(q==="'asset-folder' in parents and trashed = false")return Response.json({files:[{id:'mf',name:'manifest.json',mimeType:'application/json'},{id:'imgs',name:'images',mimeType:'application/vnd.google-apps.folder'},{id:'blend',name:'model.blend',mimeType:'application/octet-stream'}]});
@@ -352,6 +353,7 @@ test('AI Blender Drive scan imports nested GLB and BLEND entries as one reviewab
   };
   const h = harness({handle:url=>{
     const q=url.searchParams.get('q') || '';
+    if(q.includes("'project-root' in parents")&&(q.includes("name = 'characters'")||q.includes("name = 'moves'")||q.includes("name = '02_3d'")||q.includes("name = '01_portraits'")||q.includes("name = '03_completed'"))) return Response.json({files:[]});
     if(Object.hasOwn(directory,q)) return Response.json({files:directory[q]});
     if(url.pathname.endsWith('/manifest-id'))
       return new Response(JSON.stringify(manifest),{headers:{'Content-Type':'application/json'}});
@@ -374,7 +376,7 @@ test('AI Blender Drive scan imports nested GLB and BLEND entries as one reviewab
   await h.login();
   assert.equal(packages.length,1);
   const pkg=packages[0];
-  assert.equal(pkg.drivePath,'02_3d/ai_blender/'+taskId);
+  assert.equal(pkg.drivePath,'creatures/02_3d/ai_blender/'+taskId);
   assert.equal(pkg.driveFiles.length,3);
   assert.equal(pkg.glbFile.path,'models/cr_chrono_beetle_adult.glb');
   assert.equal(pkg.glbFile.deferred,true);
@@ -382,5 +384,97 @@ test('AI Blender Drive scan imports nested GLB and BLEND entries as one reviewab
   assert.match(h.node('driveStatus').textContent,/Drive 已載入 1 個資產目錄/);
   assert.ok(!h.calls.some(c=>c.url.pathname.endsWith('/glb-id') ||
     c.url.pathname.endsWith('/blend-id')), 'never fetch large model binaries when listing');
+});
+
+test('pipelineRoot and packageDir route character, creature, and move pipelines separately', () => {
+  const h = harness();
+  const d = h.context.COSMI_DRIVE;
+  assert.equal(d.pipelineRoot('character-concept'), 'characters');
+  assert.equal(d.pipelineRoot('creature-model-rig'), 'creatures');
+  assert.equal(d.pipelineRoot('move-vfx'), 'moves');
+  assert.equal(d.pipelineRoot('chr-20261114-abcd-0001'), 'characters');
+  assert.equal(d.pipelineRoot('cr-20261114-abcd-0001'), 'creatures');
+  assert.equal(d.pipelineRoot('fx-20261114-abcd-0001'), 'moves');
+  assert.equal(d.packageDir('character-concept', 'chr_hero'), 'characters/01_portraits');
+  assert.equal(d.packageDir('character-model-rig', 'chr_hero', 'colab'), 'characters/02_3d/colab');
+  assert.equal(d.packageDir('creature-model-rig', 'cr_fox', 'blender'), 'creatures/02_3d/ai_blender');
+  assert.equal(d.packageDir('move-vfx', 'fx_burst'), 'moves/01_vfx');
+});
+
+test('migratePipelineDirectories classifies and moves legacy Drive items into characters/creatures/moves', async () => {
+  const parents = {
+    'chr-folder': 'legacy-portraits-id',
+    'cr-folder': 'legacy-ai-id',
+    'chr-rev': 'legacy-reviews-id',
+    'cr-set': 'legacy-settings-id',
+    'def-set': 'legacy-settings-id',
+    'fx-job': 'legacy-jobs-id',
+    'cr-wiki': 'legacy-wiki-creatures-id'
+  };
+  const folderIds = {
+    'project-root:01_portraits': 'legacy-portraits-id',
+    'project-root:02_3d': 'legacy-02_3d-id',
+    'legacy-02_3d-id:ai_blender': 'legacy-ai-id',
+    'project-root:reviews': 'legacy-reviews-id',
+    'project-root:00_settings': 'legacy-settings-id',
+    'project-root:prompts': 'legacy-prompts-id',
+    'legacy-prompts-id:jobs': 'legacy-jobs-id',
+    'project-root:wiki': 'legacy-wiki-id',
+    'legacy-wiki-id:creatures': 'legacy-wiki-creatures-id'
+  };
+  const listByParent = {
+    'legacy-portraits-id': [{ id: 'chr-folder', name: 'chr-20261106-7f3a', mimeType: 'application/vnd.google-apps.folder' }],
+    'legacy-ai-id': [{ id: 'cr-folder', name: 'asset_cr_fox_adult', mimeType: 'application/vnd.google-apps.folder' }],
+    'legacy-reviews-id': [{ id: 'chr-rev', name: 'chr-20261106-7f3a.json', mimeType: 'application/json' }],
+    'legacy-settings-id': [
+      { id: 'cr-set', name: 'cr-20261106-7f3a.parameters.json', mimeType: 'application/json' },
+      { id: 'def-set', name: 'default.parameters.json', mimeType: 'application/json' }
+    ],
+    'legacy-jobs-id': [{ id: 'fx-job', name: 'fx-20261106-7f3a.move_vfx.prompt.md', mimeType: 'text/markdown' }],
+    'legacy-wiki-creatures-id': [{ id: 'cr-wiki', name: 'cr_fox_adult_wiki.md', mimeType: 'text/markdown' }]
+  };
+  const h = harness({
+    handle: (u, o) => {
+      const q = u.searchParams.get('q') || '';
+      if (u.pathname.endsWith('/files') && o.method === 'POST') {
+        const body = JSON.parse(o.body);
+        const key = body.parents[0] + ':' + body.name;
+        const id = folderIds[key] ||= 'created:' + key;
+        return Response.json({ id, name: body.name });
+      }
+      const pMatch = q.match(/^'([^']+)' in parents and trashed = false(.*)$/);
+      if (pMatch) {
+        const [, pid, extra] = pMatch;
+        const nameMatch = extra.match(/name = '([^']+)'/);
+        if (nameMatch) {
+          const name = nameMatch[1];
+          const key = pid + ':' + name;
+          if (folderIds[key]) return Response.json({ files: [{ id: folderIds[key], name }] });
+          return Response.json({ files: [] });
+        }
+        return Response.json({ files: listByParent[pid] || [] });
+      }
+      const id = decodeURIComponent(u.pathname.split('/').pop());
+      if (id in parents) {
+        if (o.method === 'PATCH') {
+          parents[id] = u.searchParams.get('addParents');
+          return Response.json({ id, parents: [parents[id]] });
+        }
+        return Response.json({ id, parents: [parents[id]] });
+      }
+    }
+  });
+  await h.login();
+  const report = await h.context.COSMI_DRIVE.migratePipelineDirectories();
+  assert.equal(report.errors.length, 0, report.errors.join('; '));
+  assert.equal(report.moved, 6);
+  assert.equal(report.skipped, 1); // default.parameters.json stays in root 00_settings
+  assert.match(parents['chr-folder'], /characters.*01_portraits/);
+  assert.match(parents['cr-folder'], /creatures.*ai_blender/);
+  assert.match(parents['chr-rev'], /characters.*reviews/);
+  assert.match(parents['cr-set'], /creatures.*00_settings/);
+  assert.equal(parents['def-set'], 'legacy-settings-id');
+  assert.match(parents['fx-job'], /moves.*jobs/);
+  assert.match(parents['cr-wiki'], /creatures.*wiki/);
 });
 

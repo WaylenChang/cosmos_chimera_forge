@@ -1143,7 +1143,7 @@
     if (!images.length) images.push({ view: "missing", label: "尚無立繪", primaryUrl: "", fallbackUrl: "" });
     const modelFront = imageForView(mdlPack?.images, "front") || mdlPack?.images?.[0] || null;
     return {
-      conceptDir: pack?.drivePath || "01_portraits/", modelDir: mdlPack?.drivePath || "02_3d/legacy/",
+      conceptDir: pack?.drivePath || "characters/01_portraits/", modelDir: mdlPack?.drivePath || "characters/02_3d/legacy/",
       images, modelFront: { primaryUrl: modelFront?.url || "", fallbackUrl: modelFront?.url || "" },
       glbUrl: mdlPack?.glbFile?.url || "", fbxUrl: "", pack, mdlPack
     };
@@ -3802,8 +3802,10 @@
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const encyclopediaKind = t.id === "move-vfx" ? "moves" : t.id.startsWith("character") ? "characters" : "creatures";
     const wikiPath = window.COSMI_WIKI.describe(b.ctx).path;
-    const dir = $("#pipelineStage")?.value === "encyclopedia"
-      ? "wiki/" + encyclopediaKind : window.COSMI_DRIVE.packageDir(t.id);
+    const stageVal = document.getElementById("pipelineStage")?.value || "task";
+    const dir = stageVal === "encyclopedia"
+      ? encyclopediaKind + "/wiki" : window.COSMI_DRIVE.packageDir(t.id, b.ctx.subjectId || b.ctx.taskId, stageVal);
+    const jobPromptPath = encyclopediaKind + "/prompts/jobs/" + b.ctx.taskId + "." + stageVal + ".prompt.md";
     const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && ["portrait", "portrait_3d"].includes($("#pipelineStage")?.value) && !window.COSMI_PIPELINE?.isPortraitAuto();
     const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
     $("#download").hidden = Boolean(portraitCopyOnly);
@@ -3822,10 +3824,10 @@
         portraitCopyOnly
           ? el("li", {}, "手動模式：使用 📋 或 ①／②／③ 複製，貼入生成平台；不需建立 .md 檔或上傳 Drive。")
           : portraitAuto
-          ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
-          : el("li", {}, "Prompt 讀寫：", el("code", {}, "prompts/jobs/" + b.ctx.taskId + "." + (document.getElementById("pipelineStage")?.value || "task") + ".prompt.md"), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果包存放：", el("code", {}, $("#pipelineStage")?.value === "encyclopedia" ? wikiPath : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
-        el("li", {}, "立繪參考：", el("code", {}, "01_portraits/"), " 或 ", el("code", {}, "backup/image_backup/"), "；3D 成果與參考：", el("code", {}, "02_3d/legacy/"), "。"),
+          ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, encyclopediaKind + "/prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
+          : el("li", {}, "Prompt 讀寫：", el("code", {}, jobPromptPath), "，可用上方 Drive 儲存與讀取按鈕。"),
+        el("li", {}, "成果包存放：", el("code", {}, stageVal === "encyclopedia" ? wikiPath : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
+        el("li", {}, encyclopediaKind === "moves" ? "特效參考：" : "立繪參考：", el("code", {}, encyclopediaKind === "moves" ? "moves/01_vfx/" : encyclopediaKind + "/01_portraits/"), " 或 ", el("code", {}, encyclopediaKind + "/backup/image_backup/"), encyclopediaKind === "moves" ? "" : "；3D 成果與參考：", encyclopediaKind === "moves" ? "" : el("code", {}, encyclopediaKind + "/02_3d/legacy/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
     );
@@ -6933,8 +6935,10 @@
       const stage = document.getElementById("pipelineStage")?.value || "task";
       recordPipelineJob(b.ctx, stage);
       const portrait = ["portrait", "portrait_3d"].includes(stage) && window.COSMI_PIPELINE?.supports(b.ctx);
+      const root = window.COSMI_DRIVE?.pipelineRoot?.(b.ctx)
+        || (b.ctx.task?.id === "move-vfx" ? "moves" : b.ctx.task?.id?.startsWith("character") ? "characters" : "creatures");
       return {
-        path: "prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
+        path: root + "/prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
         text: portrait ? (stage === "portrait_3d" ? ($("#prompt")?.value || b.text) : b.text) : ($("#prompt")?.value || b.text)
       };
     },

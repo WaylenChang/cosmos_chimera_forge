@@ -45,6 +45,16 @@
     "review_3d": "# 3D 模型審查\n模型：{{input_path}}/；來源立繪：{{source_path}}/\n依立繪、參數與 manifest 檢查 GLB／Blend 可用性、拓撲、材質、骨架及動畫變形、穿插與來源追溯。\nImage-to-3D 須有已核准來源立繪；Prompt-to-3D 須在建模後補正式主立繪（不需 T-pose、正面圖），未補齊不得建議通過。缺 `.glb`／`.blend` 亦不得通過。列明問題檔案及建議通過／退件；不補檔、不移動資產或代為核准。"
   };
   const templateMarker = stage => "<!-- COSMI-PIPELINE/2:" + stage + " -->";
+  function pipelineRootFor(ctx) {
+    if (window.COSMI_DRIVE?.pipelineRoot) return window.COSMI_DRIVE.pipelineRoot(ctx);
+    const id = String(ctx?.task?.id || "");
+    if (id === "move-vfx") return "moves";
+    if (id.startsWith("character")) return "characters";
+    if (id.startsWith("creature")) return "creatures";
+    return /^chr[-_]/i.test(ctx?.subjectId || ctx?.taskId || "") ? "characters"
+      : /^(?:fx|vsl)[-_]/i.test(ctx?.subjectId || ctx?.taskId || "") ? "moves"
+      : "creatures";
+  }
   function isCreature(ctx) {
     const id = ctx.task?.id || "";
     return id.startsWith("creature-") || ctx.task?.needs === "creature" ||
@@ -86,13 +96,14 @@
     if (stage === "portrait_3d") {
       const model = window.COSMI_FORGE?.activePackage?.();
       const subject = ctx.concept?.name_zh || ctx.subjectId;
+      const root = pipelineRootFor(ctx);
       return [
         "# 3D 完成後補畫主立繪：" + subject,
         "依已完成的 3D 模型、材質與多角度預覽，繪製一張全身動態主立繪。",
         "維持模型的外觀、比例、五官、服裝或肢體、配色及辨識特徵。",
         "不要生成正面基準圖、T-pose 或三視圖；只輸出動態主立繪。",
         "3D 來源：" + (model?.drivePath || "請指定已完成的 3D 模型目錄"),
-        "輸出至 01_portraits/" + ctx.taskId + "/images/，並建立可追溯的來源關聯。",
+        "輸出至 " + root + "/01_portraits/" + ctx.taskId + "/images/，並建立可追溯的來源關聯。",
         "完成後須人工審查立繪並綁定 3D，才可最終驗收。"
       ].join("\n");
     }
@@ -106,14 +117,15 @@
     const active = window.COSMI_FORGE?.activePackage();
     const sourceId = String((stage === "review_3d" ? active?.sourcePack || active?.manifest?.source_pack : ctx.opts?.source_pack) || "").trim();
     const source = sourceId || "未指定";
-    const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? "01_portraits/" + sourceId : "未指定");
+    const root = pipelineRootFor(ctx);
+    const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? root + "/01_portraits/" + sourceId : "未指定");
     const imageHint = String(ctx.opts?.input_img || "").trim();
     const hasImage = stage === "blender" && graphMode === "prompt" ? false : Boolean(sourceId || imageHint || stage === "colab");
     const visual = stage === "appearance" || (stage === "blender" && !hasImage) ? appearance(ctx) : "";
     let modelInput = "";
     if (is3D) {
       if (hasImage) {
-        const absoluteHint = /^(?:https?:\/\/|01_portraits\/|03_completed\/portraits\/|backup\/)/.test(imageHint);
+        const absoluteHint = /^(?:https?:\/\/|(?:(?:characters|creatures|moves)\/)?(?:01_portraits|03_completed\/portraits|01_vfx)\/|backup\/)/.test(imageHint);
         const imgPath = imageHint ? (sourceId && !absoluteHint ? sourcePath + "/" + imageHint.replace(/^\/+/, "") : imageHint) : (sourceId ? sourcePath + "/" : "未指定");
         modelInput = "輸入圖片：" + imgPath + "\nsource_pack：" + source;
       } else {
@@ -124,14 +136,14 @@
       ? "宙獸圖鑑：另建 `bestiary.md` 並列入 manifest.files；命名本種，分述幼年（juvenile）、少年（adolescent）、成年（adult）、超載（overload）的外觀、生態田野觀察與演化過程。未建模的形態註明概念推演。"
       : "";
     const activePath = String(active?.drivePath || "");
-    const portraitPath = /^(?:01_portraits|03_completed\/portraits)\//.test(activePath) ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
-    const modelPath = /^(?:02_3d|03_completed\/models)\//.test(activePath) ? activePath : "請指定待審模型目錄";
+    const portraitPath = /^(?:(?:characters|creatures|moves)\/)?(?:01_portraits|03_completed\/portraits)\//.test(activePath) ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
+    const modelPath = /^(?:(?:characters|creatures|moves)\/)?(?:02_3d|03_completed\/models)\//.test(activePath) ? activePath : "請指定待審模型目錄";
     const values = {
       appearance: visual, model_input: modelInput, bestiary,
       asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source, source_path: sourcePath,
       input_path: stage === "review_portrait" ? portraitPath : modelPath,
-      output_path: (stage === "colab" ? "02_3d/colab/" : stage === "blender" ? "02_3d/ai_blender/" : "01_portraits/") + ctx.taskId,
-      parameters_path: "00_settings/" + ctx.taskId + ".parameters.json"
+      output_path: (stage === "colab" ? root + "/02_3d/colab/" : stage === "blender" ? root + "/02_3d/ai_blender/" : root === "moves" ? "moves/01_vfx/" : root + "/01_portraits/") + ctx.taskId,
+      parameters_path: root + "/00_settings/" + ctx.taskId + ".parameters.json"
     };
     const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定").replace(/\n{3,}/g, "\n\n").trim();
     if (stage === "appearance" && window.COSMI_WIKI && supports(ctx)) {
