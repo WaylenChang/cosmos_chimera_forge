@@ -125,7 +125,7 @@
     let modelInput = "";
     if (is3D) {
       if (hasImage) {
-        const absoluteHint = /^(?:https?:\/\/|(?:(?:characters|creatures|moves)\/)?(?:01_portraits|03_completed\/portraits|01_vfx)\/|backup\/)/.test(imageHint);
+        const absoluteHint = /^(?:https?:\/\/|(?:characters|creatures|moves)\/(?:01_portraits|03_completed\/portraits|01_vfx|backup)\/)/.test(imageHint);
         const imgPath = imageHint ? (sourceId && !absoluteHint ? sourcePath + "/" + imageHint.replace(/^\/+/, "") : imageHint) : (sourceId ? sourcePath + "/" : "未指定");
         modelInput = "輸入圖片：" + imgPath + "\nsource_pack：" + source;
       } else {
@@ -136,8 +136,8 @@
       ? "宙獸圖鑑：另建 `bestiary.md` 並列入 manifest.files；命名本種，分述幼年（juvenile）、少年（adolescent）、成年（adult）、超載（overload）的外觀、生態田野觀察與演化過程。未建模的形態註明概念推演。"
       : "";
     const activePath = String(active?.drivePath || "");
-    const portraitPath = /^(?:(?:characters|creatures|moves)\/)?(?:01_portraits|03_completed\/portraits)\//.test(activePath) ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
-    const modelPath = /^(?:(?:characters|creatures|moves)\/)?(?:02_3d|03_completed\/models)\//.test(activePath) ? activePath : "請指定待審模型目錄";
+    const portraitPath = /^(?:characters|creatures)\/(?:01_portraits|03_completed\/portraits)\//.test(activePath) ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
+    const modelPath = /^(?:characters|creatures)\/(?:02_3d|03_completed\/models)\//.test(activePath) ? activePath : "請指定待審模型目錄";
     const values = {
       appearance: visual, model_input: modelInput, bestiary,
       asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source, source_path: sourcePath,
