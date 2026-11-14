@@ -1,7 +1,7 @@
 // Canonical stage-scoped wiki paths and conservative legacy family-wiki extraction.
 (function () {
   "use strict";
-  const ROOT = "wiki";
+  const ROOT = "category/wiki"; // The category is characters, creatures or moves.
   const STAGES = Object.freeze(["juvenile", "adolescent", "adult", "overload"]);
   const STAGE_ZH = Object.freeze({juvenile:"幼年", adolescent:"少年", adult:"成年", overload:"超載"});
   const KIND = Object.freeze({characters:"角色", creatures:"宙獸", moves:"招式"});

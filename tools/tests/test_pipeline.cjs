@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
 function harness() {
   const nodes = {pipelineStage: {value: 'portrait'}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
-  const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({drivePath: '02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'03_completed/portraits/source'}]}};
+  const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({drivePath: 'characters/02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'characters/03_completed/portraits/source'}]}};
   c.window = c;
   vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);

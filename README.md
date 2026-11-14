@@ -28,7 +28,7 @@
 
 ## Prompt-to-3D 歷史模型與獨立圖鑑（PR #11）
 
-Google Drive 已建立 `wiki/{characters,creatures,moves}/` 及 `wiki/_legacy/creatures/`。原有 15 份系列圖鑑已完成實際遷移，拆成 60 份 `wiki/creatures/<subject_id>_<stage>_wiki.md`（15 家族 × 4 型態，全部為真正的 Markdown，無重複檔名）。15 份原始系列文件保留原檔 ID，已移到 `wiki/_legacy/creatures/`；舊 `04_encyclopedia/creatures/` 已清空。已驗證各階段檔案與格式；文字遷移不代表模型或動畫已獲人工 QA 核准。角色與招式使用 `<subject_id>_wiki.md`。所有管線以主體與型態定位同一圖鑑，生成只在缺檔時建立待審 Markdown 草稿。
+Google Drive 已建立 `{characters,creatures,moves}/wiki/` 及 `creatures/wiki/_legacy/`。原有 15 份系列圖鑑已完成實際遷移，拆成 60 份 `creatures/wiki/<subject_id>_<stage>_wiki.md`（15 家族 × 4 型態，全部為真正的 Markdown，無重複檔名）。15 份原始系列文件保留原檔 ID，已移到 `creatures/wiki/_legacy/`；舊 `04_encyclopedia/creatures/` 已清空。已驗證各階段檔案與格式；文字遷移不代表模型或動畫已獲人工 QA 核准。角色與招式使用 `<subject_id>_wiki.md`。所有管線以主體與型態定位同一圖鑑，生成只在缺檔時建立待審 Markdown 草稿。
 
 `02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已生成的 **Prompt-to-3D** 原始 GLB/Blend。設定頁的「整理歷史 Prompt-to-3D 目錄」提供經使用者確認的原位整理：為現存模型建立待審 `manifest.json`、記錄圖鑑關聯和缺失項、備份舊索引。原模型不改、不搬，不將未驗證骨架或動作當成完成。登入 Google 並明確執行整理後才會對 Drive 寫入索引；GitHub CI 不會替使用者自動修改雲端資產。
 
@@ -38,15 +38,15 @@ Google Drive 已建立 `wiki/{characters,creatures,moves}/` 及 `wiki/_legacy/cr
 
 正式資產使用 Google Drive 深層資料夾，逐檔讀取與交付。每個資產版本以唯一 asset_id 建目錄，保留 manifest.json、concept.json、images/ 或 models/、rig/、animations/、previews/。角色與宙獸共用結構，以 task_type 區分。
 
-1. HTML 隨機／圖鑑設定或 AI 生成基礎外觀；外觀 Markdown 與格式參數 JSON 分開保存於 `00_settings/`。
-2. 立繪輸出至 `01_portraits/<asset_id>/`。主用 ChatGPT／Codex，Gemini／Antigravity 輔助。
+1. HTML 隨機／圖鑑設定或 AI 生成基礎外觀；外觀 Markdown 與格式參數 JSON 分開保存於 `<category>/00_settings/`。
+2. 立繪輸出至 `<category>/01_portraits/<asset_id>/`。主用 ChatGPT／Codex，Gemini／Antigravity 輔助。
 3. 審查台核准立繪時原位保存；退件時整個目錄搬到 `backup/rejected_portraits/<revision>/`。
-4. Colab GPU 路線輸出至 `02_3d/colab/<asset_id>/`；AI Blender（Argon／Codex）輸出至 `02_3d/ai_blender/<asset_id>/`。歷史待審模型在 `02_3d/legacy/`。Colab 模型與修復細節尚待實機決定。
-5. 最終人工核准前須有已核准的來源立繪及 .glb／.blend。核准後模型與立繪分別移至 `03_completed/models/`、`03_completed/portraits/`；模型退件搬到 `backup/rejected_3d/`，保留立繪原位。純 prompt 建模須補立繪後綁定 source_pack。
+4. Colab GPU 路線輸出至 `<category>/02_3d/colab/<asset_id>/`；AI Blender（Argon／Codex）輸出至 `<category>/02_3d/ai_blender/<asset_id>/`。歷史待審模型在 `<category>/02_3d/legacy/`。Colab 模型與修復細節尚待實機決定。
+5. 最終人工核准前須有已核准的來源立繪及 .glb／.blend。核准後模型與立繪分別移至 `<category>/03_completed/models/`、`<category>/03_completed/portraits/`；模型退件搬到 `backup/rejected_3d/`，保留立繪原位。純 prompt 建模須補立繪後綁定 source_pack。
 
-審查結果存 `reviews/<asset_id>.json`。目錄移動保留 Drive ID，搬移或寫入失敗時嘗試回復；回復失敗會明示需重新載入核對。不同資產版本不得同名。歷史 ZIP 僅留在 `backup/legacy_archives/`，不再用於正式交付。
+審查結果存 `<category>/reviews/<asset_id>.json`。目錄移動保留 Drive ID，搬移或寫入失敗時嘗試回復；回復失敗會明示需重新載入核對。不同資產版本不得同名。歷史 ZIP 僅留在 `backup/legacy_archives/`，不再用於正式交付。
 
-`prompts/` 存六個互相獨立的單步驟 `.prompt.md`、`TRIGGERS.md` 與 `DIRECTORY.md`；已填入資產路徑的版本另存 `prompts/jobs/`。舊的跨步驟長 prompt 放 `backup/legacy_prompts/`。本機同步來源見 [docs/pipeline](docs/pipeline/DIRECTORY.md)。
+`prompts/` 存六個互相獨立的單步驟 `.prompt.md`、`TRIGGERS.md` 與 `DIRECTORY.md`；已填入資產路徑的版本另存 `<category>/prompts/jobs/`。舊的跨步驟長 prompt 放 `backup/legacy_prompts/`。本機同步來源見 [docs/pipeline](docs/pipeline/DIRECTORY.md)。
 
 HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。各步驟只使用本次資產與任務內容；宙獸僅在 Blender **純文字 Prompt-to-3D** 建模時輸出四形態 `bestiary.md`，所有 Image-to-3D 均不產生圖鑑。立繪原生三輪 Prompt 不再附加過時的 ZIP／舊存放路徑。Drive 的單步驟模板若無相容版本標記，網頁採用內建精簡版本；可將 `docs/pipeline/` 中新版 `.prompt.md` 同步至 Drive 的 `prompts/`。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
 
