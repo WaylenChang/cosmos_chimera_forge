@@ -308,7 +308,6 @@ test('rejection moves only the rejected directory to backup',async()=>{
  let loaded;
  const h=harness({handle:u=>{
   const q=u.searchParams.get('q')||'';
-  if(q.includes("'project-root' in parents")&&(q.includes("name = 'characters'")||q.includes("name = 'creatures'")||q.includes("name = 'moves'")))return Response.json({files:[]});
   if(q.includes("name = 'asset.json'"))return Response.json({files:[]});
   if(q==="'01_portraits-id' in parents and trashed = false")return Response.json({files:[{id:'asset-folder',name:'asset',mimeType:'application/vnd.google-apps.folder'},{id:'old-zip',name:'old.zip',mimeType:'application/zip'}]});
   if(q==="'asset-folder' in parents and trashed = false")return Response.json({files:[{id:'mf',name:'manifest.json',mimeType:'application/json'},{id:'imgs',name:'images',mimeType:'application/vnd.google-apps.folder'},{id:'blend',name:'model.blend',mimeType:'application/octet-stream'}]});
