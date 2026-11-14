@@ -60,7 +60,7 @@ cosmos_chimera_forge/
 - `Image-to-3D / Colab＋Blender`：`02_3d/colab/<asset_id>/`。
 - `Image-to-3D / AI＋Blender`：`02_3d/ai_blender/<asset_id>/`。
 - `Prompt-to-3D / AI＋Blender`：`02_3d/ai_blender/<asset_id>/`；先產 3D，後補 `01_portraits/<portrait_id>/` 的動態主立繪並審查綁定。
-- `02_3d/legacy/` 與既有 `02_3d/ai_blender/` 歷史版本**原位保留**，不可因命名不同就搬移／重寫。
+- `<category>/02_3d/legacy/` 與既有 `02_3d/ai_blender/` 歷史版本**原位保留**，不可因命名不同就搬移／重寫。
 - 每個新的 typed runner 產出標準 `manifest.json`，由 `anatomy`、`input_mode`、`pipeline` 與 `source_pack` 識別分流；沒有產生的檔案應列為 `missing`，不應假裝完成。
 
 每個 3D 資產包允許新增以下**同一資產目錄內**的子路徑，而非額外頂層資料夾：
@@ -83,7 +83,7 @@ cosmos_chimera_forge/
 
 `00_settings/` 可繼續儲存資產專屬 `asset_spec.json`、外觀與格式設定；`prompts/jobs/` 存實際需要的自動化 prompt，不需替手動立繪複製流程建立空的 Markdown。對 Prompt-to-3D，不得因尚未補繪立繪就強行設定假 `source_pack`；在人工核准之前仍留待審狀態。
 
-目前 Drive 盤點：`02_3d/colab/` 為空；`02_3d/ai_blender/` 有既有資產與 `_briefs`、`_scripts`；`02_3d/legacy/` 有待審模型；`03_completed/` 尚無模型與立繪；`reviews/` 尚無審查紀錄。**沒有執行任何 Drive 搬移、刪除或大規模建立目錄**。開始 Image-to-3D 批次作業前，必須先完成實際來源立繪的審查紀錄；不能為了讓程序執行而自動假核准歷史素材。
+目前 Drive 盤點：`<category>/02_3d/colab/` 為空；`02_3d/ai_blender/` 有既有資產與 `_briefs`、`_scripts`；`<category>/02_3d/legacy/` 有待審模型；`03_completed/` 尚無模型與立繪；`reviews/` 尚無審查紀錄。**2026-11-15 已執行分類搬移，原始檔案 ID 保留；此段原始盤點僅為歷史紀錄**。開始 Image-to-3D 批次作業前，必須先完成實際來源立繪的審查紀錄；不能為了讓程序執行而自動假核准歷史素材。
 
 每個版本使用唯一 asset_id；角色與宙獸共用結構，由 manifest.task_type 區別。立繪包涵蓋多個型態時，各模型 source_pack 皆指向同一立繪資產 ID，stage 指定型態。
 
@@ -93,15 +93,15 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 ## Prompt-to-3D 原有成果整理（2026-11-13）
 
-`02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已由 AI＋Blender **Prompt-to-3D** 生成的模型，不能將其重新視為 Image-to-3D；`.glb`、`.blend` 留在原本的 `models/`，保留 Google Drive 檔案 ID。這些模型是否已綁骨、包含動畫或符合品質要求，仍須逐件驗證。
+`creatures/02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已由 AI＋Blender **Prompt-to-3D** 生成的模型，不能將其重新視為 Image-to-3D；`.glb`、`.blend` 留在原本的 `models/`，保留 Google Drive 檔案 ID。這些模型是否已綁骨、包含動畫或符合品質要求，仍須逐件驗證。
 
-原先 `02_3d/ai_blender/_briefs/` 的 15 份 `cr_*_wiki.md` 已完成拆分並移轉：`wiki/creatures/` 現有 60 份獨立型態 Markdown（15 × 4），15 份系列原檔保留在 `wiki/_legacy/creatures/`，原 `04_encyclopedia/creatures/` 已清空。`wiki/characters/` 與 `wiki/moves/` 亦已建立。新規則改為每個階段一份：`<subject_id>_<stage>_wiki.md`。舊系列圖鑑經設定頁拆分後保存在 `wiki/_legacy/creatures/`，防止資料遺失。圖鑑獨立於模型檔案，模型的 `manifest.encyclopedia_path` 指向該 Markdown。
+原先 `creatures/backup/legacy_blender_briefs/` 的 15 份 `cr_*_wiki.md` 已完成拆分並移轉：`creatures/wiki/` 現有 60 份獨立型態 Markdown（15 × 4），15 份系列原檔保留在 `creatures/wiki/_legacy/`，原 `04_encyclopedia/creatures/` 已清空。`characters/wiki/` 與 `moves/wiki/` 亦已建立。新規則改為每個階段一份：`<subject_id>_<stage>_wiki.md`。舊系列圖鑑經設定頁拆分後保存在 `creatures/wiki/_legacy/`，防止資料遺失。圖鑑獨立於模型檔案，模型的 `manifest.encyclopedia_path` 指向該 Markdown。
 
 為避免大量空目錄及將尚未執行的 QA 假報為完成，既有模型包保留 `models/`，待實際產生骨架、動作、預覽及驗證資料才建立 `rig/`、`animations/`、`previews/`、`qa/` 等子目錄。既有模型的原始 `.glb` 不應複製冒充已完成 QA 的 `source/`。
 
 登入網頁後，設定頁提供 **「整理歷史 Prompt-to-3D 目錄」**，需明確點擊及確認後才會檢查實際 `.glb`／`.blend`，建立或更新 `manifest.json`，標記 `input_mode=text`、`pipeline=ai_blender`、`encyclopedia_path` 和待審項目。若原有 manifest，先保存到 `backup/manifest_snapshots/`；不改模型、不自動移至完成區。此自助整理需在網站完成 OAuth 登入後執行，並非由 GitHub CI 在 Drive 背景操作。
 
-角色／宙獸的 Image-to-3D 與 Prompt-to-3D 流程，以及招式特效流程，現在均有獨立的「生成圖鑑」節點。生成 Prompt 使用當前主體概念，輸出到對應的 `wiki/<kind>/`，不得讀取或覆寫別的資產。宙獸 Prompt-to-3D 的圖鑑可先於建模產生；建模時只引用該圖鑑，不再把 `bestiary.md` 當作模型目錄中必須重複保存的副本。
+角色／宙獸的 Image-to-3D 與 Prompt-to-3D 流程，以及招式特效流程，現在均有獨立的「生成圖鑑」節點。生成 Prompt 使用當前主體概念，輸出到對應的 `<kind>/wiki/`，不得讀取或覆寫別的資產。宙獸 Prompt-to-3D 的圖鑑可先於建模產生；建模時只引用該圖鑑，不再把 `bestiary.md` 當作模型目錄中必須重複保存的副本。
 
 ## HTML 操作
 
@@ -126,9 +126,9 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 ## Wiki 單一產檔規則（PR #11 更新）
 
-- 角色：`wiki/characters/<subject_id>_wiki.md`，有明確型態時使用 `<subject_id>_<stage>_wiki.md`。
-- 宙獸：`wiki/creatures/<subject_id>_<juvenile|adolescent|adult|overload>_wiki.md`，每階段各一份。
-- 招式：`wiki/moves/<move_id>_wiki.md`。
+- 角色：`characters/wiki/<subject_id>_wiki.md`，有明確型態時使用 `<subject_id>_<stage>_wiki.md`。
+- 宙獸：`creatures/wiki/<subject_id>_<juvenile|adolescent|adult|overload>_wiki.md`，每階段各一份。
+- 招式：`moves/wiki/<move_id>_wiki.md`。
 - Prompt-to-Image、Image-to-3D（Colab/AI Blender）、Prompt-to-3D 使用相同 `wiki` 主鍵。獨立圖鑑步驟只在檔案不存在時建立 Markdown 草稿；下游僅關聯現有檔案，禁止重複產生。
-- 設定頁「拆分舊圖鑑」可重複執行：從舊 `wiki` 前身 `04_encyclopedia/creatures/` 的 15 個原始系列文件擷取四階描述，轉為新 Markdown；四階都有檔案才將原始文件移到 `wiki/_legacy/creatures/`。Google Docs 先透過 export 讀取，既有新檔不覆寫；型態段落無法辨識時列入錯誤而不猜造。
+- 設定頁「拆分舊圖鑑」可重複執行：從舊 `wiki` 前身 `04_encyclopedia/creatures/` 的 15 個原始系列文件擷取四階描述，轉為新 Markdown；四階都有檔案才將原始文件移到 `creatures/wiki/_legacy/`。Google Docs 先透過 export 讀取，既有新檔不覆寫；型態段落無法辨識時列入錯誤而不猜造。
 - 使用獨立草稿時 `status: draft / review_required`，不假稱已完成畫作、模型或 QA。本次 15→60 雲端資料遷移已透過授權 Drive 操作完成並回讀驗證；網頁端的遷移按鈕保留作為可重試的缺檔修復流程，不會覆寫既有階段圖鑑。
