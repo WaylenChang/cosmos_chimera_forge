@@ -1107,22 +1107,34 @@
     return idx === -1 ? STAGE_KEYS.length : idx;
   }
   function sortPackagesByPriority(pkgs) {
+    const rev = window.COSMI_MODEL_REVIEW;
+    const complexityRank = p => rev?.isHighComplexityCharacterModel?.(p) ? 2 : (rev?.isSimpleCharacterModel?.(p) ? 0 : 1);
     return [...(pkgs || [])].sort((a, b) => {
       const diff = packageStatusRank(b) - packageStatusRank(a);
       if (diff !== 0) return diff;
+      const cDiff = complexityRank(b) - complexityRank(a);
+      if (cDiff !== 0) return cDiff;
       return String(b.id || "").localeCompare(String(a.id || ""));
     });
   }
   function linkedAssetPackages(subject) {
-    const key = String(subject || "").toLowerCase();
-    return sortPackagesByPriority(reviewState.packages.filter(p => {
-      const ids = [p.subjectId, p.manifest?.subject_id, p.concept?.id, p.concept?.line_id, p.concept?.creature_id, p.id]
-        .filter(Boolean).map(s => String(s).toLowerCase());
-      if (ids.includes(key)) return true;
+    const rev = window.COSMI_MODEL_REVIEW;
+    const norm = s => String(s || "").trim().toLowerCase();
+    const baseId = s => norm(s)
+      .replace(/^asset_(?=(?:cr|chr)[_-])/, "")
+      .replace(/[-_](juvenile|adolescent|adult|overload)$/, "");
+    const key = norm(subject);
+    const aliasSet = new Set([key, ...(rev?.CHARACTER_ALIASES?.[subject] || []).map(norm)]);
+    const matches = reviewState.packages.filter(p => {
+      const ids = [p.id, p.manifest?.source_pack, p.subjectId, p.manifest?.subject_id, p.concept?.id, p.concept?.line_id, p.concept?.creature_id]
+        .filter(Boolean);
+      if (ids.some(s => aliasSet.has(norm(s)) || aliasSet.has(baseId(s)))) return true;
       const source = reviewState.packages.find(x => x.id === (p.sourcePack || p.manifest?.source_pack));
-      return !!source && [source.subjectId, source.manifest?.subject_id, source.concept?.id, source.concept?.line_id]
-        .some(s => String(s || "").toLowerCase() === key);
-    }));
+      return !!source && [source.id, source.subjectId, source.manifest?.subject_id, source.concept?.id, source.concept?.line_id]
+        .some(s => aliasSet.has(norm(s)) || aliasSet.has(baseId(s)));
+    });
+    const filtered = rev?.preferHighComplexityCharacters ? rev.preferHighComplexityCharacters(matches) : matches;
+    return sortPackagesByPriority(filtered);
   }
   function imageForView(images, view) {
     const all = images || [], pattern = new RegExp("(?:^|[_\\\\-])" + view + "$", "i");
@@ -1152,11 +1164,24 @@
     };
   }
   function getCreatureStageAssetUrls(lineId, stage) {
-    const packs = linkedAssetPackages(lineId).filter(p => !is3dType(p.type));
-    const images = packs.flatMap(p => p.images || []);
-    const forStage = images.filter(i => new RegExp("(?:^|[_\\\\-])" + stage + "(?:[_\\\\-]|$)", "i").test(assetName(i.path)));
+    const linked = linkedAssetPackages(lineId);
+    const packs2d = linked.filter(p => !is3dType(p.type));
+    const packs3d = linked.filter(p => is3dType(p.type));
+    const stageRe = new RegExp("(?:^|[_\\\\-])" + stage + "(?:[_\\\\-]|$)", "i");
+    const pickImages = packs => {
+      const imgs = [];
+      for (const p of packs) {
+        const pStage = p.stage || p.manifest?.stage || "";
+        for (const im of (p.images || [])) {
+          if (pStage === stage || stageRe.test(assetName(im.path))) imgs.push(im);
+        }
+      }
+      return imgs;
+    };
+    let forStage = pickImages(packs2d);
+    if (!forStage.length) forStage = pickImages(packs3d);
     const image = suffix => imageForView(forStage, suffix)?.url || "";
-    const url = image("main") || forStage[0]?.url || "";
+    const url = image("main") || image("front") || forStage[0]?.url || "";
     return { primaryUrl: url, fallbackUrl: url, turnaroundUrl: image("turnaround"), frontUrl: image("front") };
   }
   function getCreatureOverviewAssetUrls(lineId) {
@@ -4973,6 +4998,8 @@
     }
     if (["mdl", "fx", "pending"].includes(reviewState.filterCat))
       reviewState.activeDesignedKey = null;
+    else if (!reviewState.activeDesignedKey && !reviewState.activePkgId && entries[0]?.catalog)
+      reviewState.activeDesignedKey = entries[0].key;
     const design = reviewState.activeDesignedKey &&
       reviewDeskEntries("all", "").find(e => e.key === reviewState.activeDesignedKey);
     const pkg = design ? null : (filtered && !focused ? null : getActivePkg());

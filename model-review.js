@@ -24,6 +24,33 @@
     return true;
   }
 
+  const CHARACTER_ALIASES = {
+    chr_yeh_chengxi: ["chr_yeh_chengxi", "chr_1286", "chr-20261106-1286-2039", "mdl-20261113-1286-0000"],
+    chr_amemori_sumiha: ["chr_amemori_sumiha", "chr_1855", "chr-20261106-1286-1855", "chr-20261106-1855-1855", "mdl-20261114-1855-0000", "mdl-20261109-f048-1847-chr_1286_1855"],
+    chr_roen: ["chr_roen", "chr_3d04", "chr-20261106-3d04-2100", "mdl-20261114-3d04-0000"]
+  };
+  const isCharacterModelPkg = pkg => isModel(pkg) && (
+    String(pkg?.type || pkg?.manifest?.task_type || "").toLowerCase().startsWith("character-") ||
+    /^(?:asset_)?chr(?:[-_]|$)|-chr_/i.test(String(pkg?.id || "")) ||
+    /^chr_/i.test(String(pkg?.subjectId || pkg?.manifest?.subject_id || ""))
+  );
+  const isHighComplexityCharacterModel = pkg => isCharacterModelPkg(pkg) && (
+    pkg?.manifest?.pipeline === "colab" ||
+    String(pkg?.drivePath || "").includes("/02_3d/colab/") ||
+    /Anime3D/i.test(String(pkg?.manifest?.produced_by || "")) ||
+    /^mdl-2026111[34]-/i.test(String(pkg?.id || ""))
+  );
+  const isSimpleCharacterModel = pkg => isCharacterModelPkg(pkg) && !isHighComplexityCharacterModel(pkg) && (
+    /\/02_3d\/(?:ai_blender|legacy)\//i.test(String(pkg?.drivePath || "")) ||
+    /^mdl-20261109-/i.test(String(pkg?.id || "")) ||
+    /Gemini Argon/i.test(String(pkg?.manifest?.produced_by || "")) ||
+    pkg?.manifest?.pipeline === "ai_blender"
+  );
+  function preferHighComplexityCharacters(pkgs = []) {
+    const hasHigh = pkgs.some(isHighComplexityCharacterModel);
+    return hasHigh ? pkgs.filter(p => !isSimpleCharacterModel(p)) : pkgs;
+  }
+
   // One subject = one review-desk row. Catalog designs and real Drive packages
   // are views of the same subject, never separate items in the rail.
   function unifiedEntries(packages = [], creatures = [], characters = [], category = "all", search = "") {
@@ -46,14 +73,16 @@
         [d.line_id, ...(d.concept?.locked?.stages || []).map(s => s.creature_id)]);
     }
     for (const c of characters) {
-      addCatalog("character", c.id, [c.name_zh, c.name_en].filter(Boolean).join(" · ") || c.id, c, [c.id]);
+      const charAliases = [c.id, ...(CHARACTER_ALIASES[c.id] || [])];
+      addCatalog("character", c.id, [c.name_zh, c.name_en].filter(Boolean).join(" · ") || c.id, c, charAliases);
     }
     const byId = new Map(packages.map(p => [norm(p.id), p]));
     const resolveCatalog = p => {
       const src = byId.get(norm(p.manifest?.source_pack));
-      const ids = [p.subjectId, p.manifest?.subject_id, p.concept?.line_id,
-        p.concept?.creature_id, p.concept?.id, src?.subjectId,
-        src?.manifest?.subject_id, p.baseId, p.groupKey, p.id];
+      // Check package id and source_pack before subject_id to disambiguate legacy chr_1286 collisions.
+      const ids = [p.id, p.manifest?.source_pack, src?.subjectId, src?.manifest?.subject_id,
+        p.subjectId, p.manifest?.subject_id, p.concept?.line_id,
+        p.concept?.creature_id, p.concept?.id, p.baseId, p.groupKey];
       for (const id of ids) {
         const match = aliases.get(norm(id)) || aliases.get(base(id));
         if (match) return match;
@@ -78,6 +107,9 @@
       ensure(key, p.subjectId || p.manifest?.subject_id || subject || p.id).packages.push(p);
     }
     for (const [key, design] of catalogs) ensure(key, design.label);
+    for (const g of groups.values()) {
+      g.packages = preferHighComplexityCharacters(g.packages);
+    }
     const q = norm(search);
     return [...groups.values()].filter(g => {
       const accepted = g.packages.some(p => ["ok", "approved", "provisional"].includes(p.status));
@@ -190,6 +222,7 @@
   }
 
   return Object.freeze({
+    CHARACTER_ALIASES, isHighComplexityCharacterModel, isSimpleCharacterModel, preferHighComplexityCharacters,
     selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage,
     exactBuffer, relative, orbitFor, open, onPackagesChanged, install
   });

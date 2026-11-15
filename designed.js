@@ -1940,6 +1940,4845 @@ window.COSMI_DESIGNED = {
           "overload": "笛風天舟（wind_zephyr_archcruiser · XL）：傳奇風舟在超載中幻化為空靈雲海巨艦；幾何刺繡風帆化作千層半透明光羽流雲翼，舟身百孔排笛在以太狂風中演奏出撕裂長空的音波風暴，周身環繞著高速平流層氣流環"
         }
       }
+    },
+    {
+      "line_id": "line_metal_citadelbull",
+      "code_zh": "金",
+      "element": "metal",
+      "title_zh": "城門鐵牛",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_metal_citadelbull",
+        "elements": [
+          "metal（金）",
+          "earth（土，成年副專精）"
+        ],
+        "element_palettes": [
+          "青銅綠、古銅金、玄鐵黑"
+        ],
+        "base_parents": [
+          "生物·哺乳類",
+          "幻想生物·美索不達米亞神獸",
+          "器械·城防/機關"
+        ],
+        "bases": [
+          "青銅翼牛",
+          "楔形護符胸甲",
+          "浮雕城門連桿"
+        ],
+        "appearance_palette": [
+          "黃銅金",
+          "古銅綠",
+          "玄鐵青黑",
+          "鍍銀鋼白"
+        ],
+        "timeline": "遠古神話（美索不達米亞城邦）",
+        "region": "西亞/中東",
+        "archetype": "arch_lamassu",
+        "archetype_name": "拉瑪蘇神牛門衛",
+        "archetype_type": "P5-02 考據庫·神話守護神獸",
+        "meaning": "立於古城門扉兩側、以五足雙翼鎮守秩序的青銅人首翼牛",
+        "motifs": "蓄鬚人首角冠、五足石雕公牛、雙重雄鷹巨翼、亞述王城拱門",
+        "sensitivity": "ok",
+        "role": "後排砲擊、控距：遠距定點範圍墜擊（高血量時縮短金招 CD）",
+        "temperament": "territorial",
+        "disposition": "威嚴守禦、不動如山",
+        "size_profile": "S→M→XL→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.60 m",
+            "weight": "28 kg",
+            "body_fat": "11%"
+          },
+          "adolescent": {
+            "height_length": "1.55 m",
+            "weight": "210 kg",
+            "body_fat": "9%"
+          },
+          "adult": {
+            "height_length": "2.80 m",
+            "weight": "920 kg",
+            "body_fat": "8%"
+          },
+          "overload": {
+            "height_length": "6.2 m",
+            "weight": "7400 kg",
+            "body_fat": "6%"
+          }
+        },
+        "height_length": "2.80 m",
+        "weight": "920 kg",
+        "body_fat": "8%",
+        "formula": "metal（金） + earth（土，成年副專精） × 青銅翼牛 + 楔形護符胸甲 + 浮雕城門連桿 × 拉瑪蘇神牛門衛",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "metal_gate_calf",
+              "name_zh": "城門鐵牛",
+              "name_en": "Lamassugate",
+              "naming_note": "四階段統一命名；青銅門環化作幼牛雙角。",
+              "size_class": "S",
+              "temperament": "cautious",
+              "height_length": "0.60 m",
+              "weight": "28 kg",
+              "body_fat": "11%",
+              "look": "青銅鑄造守護幼牛 × 城門浮雕銅環與小巧摺疊羽翼；四足短壯的青銅小牛，背脊嵌有迷你雙翼銅板與拱門紋章護額，踏步沉穩",
+              "dex_zh": "圓鈍的青銅幼牛肩上貼著浮雕翼板，額間嵌有微溫門環。牠穩穩守在夥伴身前，見敵靠近便以蝕紋銳角向前頂撞。",
+              "dex_en": "A stout bronze calf bearing relief wing-plates on its shoulders and a warm gate-ring on its brow. It holds the line before its allies and butts approaching foes with etched horns.",
+              "signature_move": {
+                "move_id": "metal_corrosion_edge",
+                "name_zh": "蝕紋角突",
+                "name_en": "Corrosion Edge",
+                "element": "metal",
+                "range_class": "melee",
+                "shape": "front",
+                "movement": "none",
+                "naming_note": "青銅蝕紋短距突擊。",
+                "desc_zh": "壓低青銅雙角，以帶蝕刻紋路的金屬銳鋒向前短距頂撞。",
+                "desc_en": "Lowers its etched bronze horns to deliver a short-range metallic thrust.",
+                "visual": "壓低青銅雙角，以帶蝕刻紋路的金屬銳鋒向前短距頂撞。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "metal_winged_bull",
+              "name_zh": "城門鐵牛",
+              "name_en": "Lamassugate",
+              "naming_note": "四階段統一命名；翼刃展開，門扉裝甲成形。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.55 m",
+              "weight": "210 kg",
+              "body_fat": "9%",
+              "look": "五足雕像級銅甲公牛 × 展開半幅的疊層鐵羽與城門鎖扣；肩甲化為拱門門楣造型，雙翼可彈射金屬破片，靜止時呈現五足浮雕姿態",
+              "dex_zh": "雙翼由層層青銅羽片鍛成，胸甲刻滿楔形護符。牠守住陣線要衝，振動金屬翼片向四周拋灑銳利碎鐵。",
+              "dex_en": "Forged bronze wing-blades unfold from its shoulders while cuneiform talismans line its breastplate. Anchoring the vanguard, it rattles its metal pinions to scatter razor scrap.",
+              "signature_move": {
+                "move_id": "metal_scrap_barrage",
+                "name_zh": "鐵羽散射",
+                "name_en": "Scrap Barrage",
+                "element": "metal",
+                "range_class": "mid",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "振動翼羽灑落碎鐵。",
+                "desc_zh": "劇烈振動青銅翼片，向周身近中距離拋灑如雨的銳利碎鐵片。",
+                "desc_en": "Rattles its bronze wing-blades to scatter a close-range hail of razor scrap.",
+                "visual": "劇烈振動青銅翼片，向周身近中距離拋灑如雨的銳利碎鐵片。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "metal_citadel_colossus",
+              "name_zh": "城門鐵牛",
+              "name_en": "Lamassugate",
+              "naming_note": "四階段統一命名；五足神牛鎮守城門。",
+              "size_class": "XL",
+              "temperament": "territorial",
+              "height_length": "2.80 m",
+              "weight": "920 kg",
+              "body_fat": "8%",
+              "look": "巨型銅岩王城翼獸 × 雙重雄鷹鋼翼與五足承重柱構裝；體型如城門巨像，額戴角冠與青銅髭紋假面，雙重鋼翼可高拋重鐵砧轟擊遠距目標",
+              "dex_zh": "巍峨的青銅翼牛如移動城門般矗立戰場，雙翼垂落如城牆垛口。牠與敵拉開距離後，引動巨型鐵砧般的高壓重擊鎮壓全場。",
+              "dex_en": "A towering bronze winged bull standing like a living citadel gate, its pinions draped like battlements. Keeping distance, it drops an anvil-weight kinetic slam across the field.",
+              "signature_move": {
+                "move_id": "metal_anvil_drop",
+                "name_zh": "巨砧墜擊",
+                "name_en": "Anvil Drop",
+                "element": "metal",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "城門鎮嶽般的重錘落地。",
+                "desc_zh": "高舉雙翼凝聚萬鈞玄鐵重壓，朝遠處目標砸下鐵砧般的毀滅震波。",
+                "desc_en": "Channels monumental bronze mass through its wings to drop an anvil-force shockwave at range.",
+                "visual": "高舉雙翼凝聚萬鈞玄鐵重壓，朝遠處目標砸下鐵砧般的毀滅震波。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "metal_citadel_overload",
+              "temperament": "apex",
+              "disposition": "萬鈞鎮嶽、不動城塞",
+              "name_zh": "城門鐵牛",
+              "name_en": "Lamassugate",
+              "naming_note": "四階段統一命名；五足青銅城塞完全展開。",
+              "size_class": "XL",
+              "height_length": "6.2 m",
+              "weight": "7400 kg",
+              "body_fat": "6%",
+              "look": "古城門扉裝甲徹底展開為移動青銅堡壘；五足踏地引動大地磁場，雙翼化作十二道楔形浮雕砲翼，額間太陽門環燃起熾白熔金光焰",
+              "dex_zh": "超載讓城門鐵牛化作無法撼動的活體城塞。其展開的青銅翼牆能彈開重砲轟擊，高壓鐵砧震波一落便足以粉碎整片岩層。",
+              "dex_en": "Overload transforms Lamassugate into an immovable bronze bastion. Its unfurled wing-walls deflect heavy barrages before dropping a tectonic anvil shockwave.",
+              "signature_move": {
+                "move_id": "metal_citadel_cataclysm",
+                "name_zh": "萬鈞城塞天砧落",
+                "name_en": "Citadel Sky-Anvil",
+                "element": "metal",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "城門鎮嶽，萬鈞壓頂。",
+                "desc_zh": "將十二道青銅翼牆聚合為巨型城塞鐵砧，從高空垂直鎮壓整片戰場。",
+                "desc_en": "Converges twelve bronze wing-walls into a colossal sky-anvil that crushes the entire arena.",
+                "visual": "將十二道青銅翼牆聚合為巨型城塞鐵砧，從高空垂直鎮壓整片戰場。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_metal_clockwork_precision",
+            "name_zh": "發條準律",
+            "idea_zh": "金屬機關與城門軸承分毫不差，提升防禦穩定度與準確度。"
+          },
+          "overload": "城門鐵牛（metal_citadel_overload · XL）：古城門扉裝甲徹底展開為移動青銅堡壘；五足踏地引動大地磁場，雙翼化作十二道楔形浮雕砲翼，額間太陽門環燃起熾白熔金光焰"
+        }
+      }
+    },
+    {
+      "line_id": "line_wood_crownvine",
+      "code_zh": "木",
+      "element": "wood",
+      "title_zh": "蓮蔓龍蛇",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_wood_crownvine",
+        "elements": [
+          "wood（木）",
+          "water（水，成年副專精）"
+        ],
+        "element_palettes": [
+          "翡翠綠、象牙白、蓮粉紅"
+        ],
+        "base_parents": [
+          "生物·爬蟲類",
+          "植物·水生花卉",
+          "幻想生物·東南亞龍蛇"
+        ],
+        "bases": [
+          "濕地巨蛇",
+          "七瓣玉蓮冠冕",
+          "茉莉與檳榔花藤"
+        ],
+        "appearance_palette": [
+          "蒼翡翠",
+          "湖水綠",
+          "琥珀金",
+          "月華白"
+        ],
+        "timeline": "遠古神話（湄公河濕地創世傳說）",
+        "region": "東南亞",
+        "archetype": "arch_neang_neak",
+        "archetype_name": "蓮冠龍女納迦",
+        "archetype_type": "P5-02 考據庫·神話靈蛇",
+        "meaning": "頭戴七首蓮冠、盤踞濕地聖泉守護生機的翡翠龍蛇",
+        "motifs": "七頭那伽冠冕、檳榔花枝、海底漩渦龍宮、絲綢披肩",
+        "sensitivity": "ok",
+        "role": "後排輸出、續戰：遠距範圍巨木墜落轟擊（施放木招回復自身生命）",
+        "temperament": "normal",
+        "disposition": "謹慎優雅、守護水源",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.52 m",
+            "weight": "2.6 kg",
+            "body_fat": "14%"
+          },
+          "adolescent": {
+            "height_length": "1.70 m",
+            "weight": "42 kg",
+            "body_fat": "13%"
+          },
+          "adult": {
+            "height_length": "3.40 m",
+            "weight": "185 kg",
+            "body_fat": "12%"
+          },
+          "overload": {
+            "height_length": "7.5 m",
+            "weight": "1900 kg",
+            "body_fat": "10%"
+          }
+        },
+        "height_length": "3.40 m",
+        "weight": "185 kg",
+        "body_fat": "12%",
+        "formula": "wood（木） + water（水，成年副專精） × 濕地巨蛇 + 七瓣玉蓮冠冕 + 茉莉與檳榔花藤 × 蓮冠龍女納迦",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "wood_betel_sprout",
+              "name_zh": "蓮蔓龍蛇",
+              "name_en": "Neaklotus",
+              "naming_note": "四階段統一命名；檳榔花苞纏繞幼蛇頭冠。",
+              "size_class": "XS",
+              "temperament": "timid",
+              "height_length": "0.52 m",
+              "weight": "2.6 kg",
+              "body_fat": "14%",
+              "look": "掌心大小的嫩芽小水蛇 × 頭頂含苞檳榔花枝；盤繞在枝條上的翡翠細蛇，頭頂綻開一束潔白檳榔小花與細絲飄帶",
+              "dex_zh": "翠綠幼蛇頸側生出嫩白花苞與細鬚，性格謹慎而敏銳。牠盤踞在隊伍周邊，藉柔韌木刺朝近身敵人疾刺。",
+              "dex_en": "A cautious emerald serpentling crowned with pale betel buds and slender tendrils. Coiling near its companions, it lashes out with supple wooden splinters at close threats.",
+              "signature_move": {
+                "move_id": "wood_splinter_thrust",
+                "name_zh": "木棘疾刺",
+                "name_en": "Splinter Thrust",
+                "element": "wood",
+                "range_class": "melee",
+                "shape": "front",
+                "movement": "none",
+                "naming_note": "柔韌藤刺近身點刺。",
+                "desc_zh": "繃緊頸側嫩藤，朝前方近距離目標連貫刺出銳利木刺。",
+                "desc_en": "Tenses its young vines to jab sharp wooden splinters forward at close range.",
+                "visual": "繃緊頸側嫩藤，朝前方近距離目標連貫刺出銳利木刺。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "wood_garland_serpent",
+              "name_zh": "蓮蔓龍蛇",
+              "name_en": "Neaklotus",
+              "naming_note": "四階段統一命名；花環藤蔓沿鱗脊攀附。",
+              "size_class": "M",
+              "temperament": "cautious",
+              "height_length": "1.70 m",
+              "weight": "42 kg",
+              "body_fat": "13%",
+              "look": "修長藤蔓靈蛇 × 三瓣花枝冠冕與柔韌葉脈披肩；鱗片如青翠棕櫚葉交疊，頸側展開花枝與綢緞般半透明木葉領巾",
+              "dex_zh": "修長蛇軀纏滿綻放的茉莉與蓮葉藤蔓，尾端如濕地長鞭。牠沉著地守住陣腳，甩出帶刺藤索將來犯者牢牢纏縛。",
+              "dex_en": "Flowering jasmine and lotus vines twine along its lithe serpent spine down to a marsh-whip tail. Holding steady, it flings thorny snares to bind encroaching foes.",
+              "signature_move": {
+                "move_id": "wood_thorn_snare",
+                "name_zh": "荊蔓纏縛",
+                "name_en": "Thorn Snare",
+                "element": "wood",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "帶刺花環藤蔓鎖敵。",
+                "desc_zh": "甩出盤繞脊背的荊棘花藤，在前方範圍形成纏繞束縛敵人的蔓網。",
+                "desc_en": "Flings thorny garland vines forward to ensnare targets within a tangled perimeter.",
+                "visual": "甩出盤繞脊背的荊棘花藤，在前方範圍形成纏繞束縛敵人的蔓網。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "wood_lotus_wyrm",
+              "name_zh": "蓮蔓龍蛇",
+              "name_en": "Neaklotus",
+              "naming_note": "四階段統一命名；七首蓮冠化作古樹龍威。",
+              "size_class": "L",
+              "temperament": "normal",
+              "height_length": "3.40 m",
+              "weight": "185 kg",
+              "body_fat": "12%",
+              "look": "盤旋水林巨龍 × 七冠花枝頭飾與水波絲綢垂帶；七重繁花蛇冠高聳展開，修長軀體纏繞巨樹藤蔓與漩渦水花披肩，氣勢華麗",
+              "dex_zh": "七瓣玉蓮冠冕盛放於巨蛇額首，周身藤木與翡翠鱗甲交織成林。牠在安全距離外喚起蒼穹巨木轟然砸落。",
+              "dex_en": "A seven-petaled jade lotus crowns this regal wyrm, its emerald scales woven with ancient boughs. From afar, it summons colossal timber to crash down upon rivals.",
+              "signature_move": {
+                "move_id": "wood_timber_fall",
+                "name_zh": "古木天墜",
+                "name_en": "Timber Fall",
+                "element": "wood",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "喚起濕地蒼穹巨木砸落。",
+                "desc_zh": "自遠方地脈催生參天古木與巨藤，從天而降轟然砸碎敵陣。",
+                "desc_en": "Summons an ancient bough from distant roots to crash down upon distant rivals.",
+                "visual": "自遠方地脈催生參天古木與巨藤，從天而降轟然砸碎敵陣。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "wood_crownvine_overload",
+              "temperament": "apex",
+              "disposition": "神聖威儀、森羅萬象",
+              "name_zh": "蓮蔓龍蛇",
+              "name_en": "Neaklotus",
+              "naming_note": "四階段統一命名；七首玉蓮化作遮天聖林。",
+              "size_class": "XL",
+              "height_length": "7.5 m",
+              "weight": "1900 kg",
+              "body_fat": "10%",
+              "look": "七瓣玉蓮冠冕綻放成懸浮翡翠光輪，修長龍蛇身軀與千年古樹根系共生，萬千茉莉花藤化作覆蓋戰場的翠綠天幕",
+              "dex_zh": "超載喚醒濕地聖泉的遠古生機。蓮蔓龍蛇吐息之間便能催生整片翡翠巨木林，以神聖根脈封鎖並淨化一切侵擾。",
+              "dex_en": "Overload awakens the primordial vitality of sacred wetlands, sprouting an emerald canopy of ancient roots that seals and purifies the battlefield.",
+              "signature_move": {
+                "move_id": "wood_sacred_lotus_canopy",
+                "name_zh": "七蓮聖林覆天陣",
+                "name_en": "Sacred Lotus Canopy",
+                "element": "wood",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "七蓮齊放，古木參天。",
+                "desc_zh": "催動七瓣玉蓮光輪，令無數翡翠巨木破土而出並交織成壓頂聖林。",
+                "desc_en": "Pulses its seven-petaled lotus halo to erupt a towering canopy of emerald timber across the field.",
+                "visual": "催動七瓣玉蓮光輪，令無數翡翠巨木破土而出並交織成壓頂聖林。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_wood_spore_regeneration",
+            "name_zh": "孢蔓回生",
+            "idea_zh": "花冠與藤蔓持續汲取濕地生機，在戰局中緩慢修復受損甲殼。"
+          },
+          "overload": "蓮蔓龍蛇（wood_crownvine_overload · XL）：七瓣玉蓮冠冕綻放成懸浮翡翠光輪，修長龍蛇身軀與千年古樹根系共生，萬千茉莉花藤化作覆蓋戰場的翠綠天幕"
+        }
+      }
+    },
+    {
+      "line_id": "line_water_whalemaelstrom",
+      "code_zh": "水",
+      "element": "water",
+      "title_zh": "白鯨巨渦",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_water_whalemaelstrom",
+        "elements": [
+          "water（水）"
+        ],
+        "element_palettes": [
+          "象牙白、深海靛藍、鹽晶銀"
+        ],
+        "base_parents": [
+          "生物·海洋哺乳類",
+          "自然·洋流/漩渦",
+          "物質·鹽晶礦物"
+        ],
+        "bases": [
+          "象牙白巨鯨",
+          "斷裂銅製標槍繩索",
+          "鹽晶深海脊柱"
+        ],
+        "appearance_palette": [
+          "月華白",
+          "海軍深藍",
+          "玄鐵青黑",
+          "鍍銀鋼白"
+        ],
+        "timeline": "近代文學（19 世紀遠洋捕鯨史詩）",
+        "region": "美洲",
+        "archetype": "arch_moby_dick",
+        "archetype_name": "白鯨莫比·迪克",
+        "archetype_type": "P5-02 考據庫·海洋文學巨獸",
+        "meaning": "額刻風暴疤痕、統領深海巨渦與遠洋狂潮的傳奇白鯨",
+        "motifs": "傷痕白抹香鯨、斷裂魚叉、怒海大漩渦、捕鯨木桅",
+        "sensitivity": "ok",
+        "role": "長距突進：遠距巨浪直線衝鋒（生命首次跌破門檻時回復 12%）",
+        "temperament": "fierce",
+        "disposition": "桀驁狂放、領潮破浪",
+        "size_profile": "S→L→XL→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.85 m",
+            "weight": "35 kg",
+            "body_fat": "24%"
+          },
+          "adolescent": {
+            "height_length": "2.60 m",
+            "weight": "480 kg",
+            "body_fat": "23%"
+          },
+          "adult": {
+            "height_length": "5.80 m",
+            "weight": "2400 kg",
+            "body_fat": "22%"
+          },
+          "overload": {
+            "height_length": "11.5 m",
+            "weight": "14000 kg",
+            "body_fat": "20%"
+          }
+        },
+        "height_length": "5.80 m",
+        "weight": "2400 kg",
+        "body_fat": "22%",
+        "formula": "water（水） × 象牙白巨鯨 + 斷裂銅製標槍繩索 + 鹽晶深海脊柱 × 白鯨莫比·迪克",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "water_ivory_calf",
+              "name_zh": "白鯨巨渦",
+              "name_en": "Mobymael",
+              "naming_note": "四階段統一命名；象牙白幼鯨額頭浮現鹽晶紋。",
+              "size_class": "S",
+              "temperament": "cautious",
+              "height_length": "0.85 m",
+              "weight": "35 kg",
+              "body_fat": "24%",
+              "look": "白膚抹香小鯨 × 背鰭插著一小截鈍化青銅魚叉；圓潤雪白的小鯨魚，額頭有淡淡舊傷痕與小型水花噴孔，魚叉飾角閃爍微光",
+              "dex_zh": "通體象牙白的幼鯨在淺浪間游弋，尾鰭帶起細碎水花。牠小心翼翼護在隊友身側，以激流短衝擊退逼近的威脅。",
+              "dex_en": "An ivory-white whale calf gliding through shallow swells with sparkling fin spray. Staying guarded beside allies, it jabs forward with a crisp cascade of seawater.",
+              "signature_move": {
+                "move_id": "water_cascade_jab",
+                "name_zh": "飛瀑短衝",
+                "name_en": "Cascade Jab",
+                "element": "water",
+                "range_class": "melee",
+                "shape": "front",
+                "movement": "none",
+                "naming_note": "迎浪破水的短距突進。",
+                "desc_zh": "拍動尾鰭激起高壓水沫，沿直線向前發動俐落的水流短衝。",
+                "desc_en": "Slaps its tail fin to surge forward along a brisk, foaming cascade.",
+                "visual": "拍動尾鰭激起高壓水沫，沿直線向前發動俐落的水流短衝。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "water_harpoon_cetacean",
+              "name_zh": "白鯨巨渦",
+              "name_en": "Mobymael",
+              "naming_note": "四階段統一命名；背鰭纏繞斷裂捕鯨繩索與鹽霜。",
+              "size_class": "L",
+              "temperament": "territorial",
+              "height_length": "2.60 m",
+              "weight": "480 kg",
+              "body_fat": "23%",
+              "look": "斑駁疤痕白鯨 × 嵌在背甲上的斷裂捕鯨木桅與繩索；體側布滿交錯暗藍海蝕疤痕，背上拖曳半截木桅與幾枚斷裂鐵叉，游動捲起暗流",
+              "dex_zh": "巨鯨額頭刻著風暴疤痕，背鰭纏繞著舊時代的銅製標槍與海藻。牠一旦鎖定獵物便捲起暗流，毫無畏懼地正面衝鋒。",
+              "dex_en": "Storm-scarred brow and bronze harpoon lines tangled around its dorsal fin mark this fierce cetacean. Locking onto a target, it rides a surging undertow straight into battle.",
+              "signature_move": {
+                "move_id": "water_undertow_rush",
+                "name_zh": "暗流突襲",
+                "name_en": "Undertow Rush",
+                "element": "water",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "捲動深海暗流猛撞。",
+                "desc_zh": "將周身海水化作漩渦暗流包裹身軀，以捕鯨標槍般的銳勢直線衝鋒。",
+                "desc_en": "Wraps itself in a roaring undertow and charges straight through foes like a harpoon.",
+                "visual": "將周身海水化作漩渦暗流包裹身軀，以捕鯨標槍般的銳勢直線衝鋒。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "water_abyssal_leviathan",
+              "name_zh": "白鯨巨渦",
+              "name_en": "Mobymael",
+              "naming_note": "四階段統一命名；白鯨破浪，漩渦翻湧。",
+              "size_class": "XL",
+              "temperament": "fierce",
+              "height_length": "5.80 m",
+              "weight": "2400 kg",
+              "body_fat": "22%",
+              "look": "巨無霸白鯨海王 × 渦流繞身與殘破艦桅鐵叉冠；巨尾掀動咆哮大漩渦，額頭與脊背橫斜著數支鋼製斷叉與船桅殘骨，威壓迫人",
+              "dex_zh": "如移動冰山般的象牙白巨鯨統領深海怒潮，體側鹽晶脊柱閃耀幽藍光輝。牠張口吞吐海嘯旋渦，以排山倒海之勢撞碎敵陣。",
+              "dex_en": "A mountain-sized white leviathan commanding abyssal tides, its salt-crystal ridge glowing deep blue. It unleashes a maelstrom tsunami charge that shatters entire formations.",
+              "signature_move": {
+                "move_id": "water_tsunami_charge",
+                "name_zh": "海嘯怒衝",
+                "name_en": "Tsunami Charge",
+                "element": "water",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "白鯨領潮，排山倒海。",
+                "desc_zh": "喚起百丈深海巨浪與鹽晶旋渦，化作不可阻擋的海嘯正面碾壓全場。",
+                "desc_en": "Rides a towering wall of abyssal seawater and salt-crystal eddies to crush the battlefield.",
+                "visual": "喚起百丈深海巨浪與鹽晶旋渦，化作不可阻擋的海嘯正面碾壓全場。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "water_whalemaelstrom_overload",
+              "temperament": "apex",
+              "disposition": "狂暴深海、無可阻擋",
+              "name_zh": "白鯨巨渦",
+              "name_en": "Mobymael",
+              "naming_note": "四階段統一命名；白鯨化作吞天海嘯漩渦。",
+              "size_class": "XL",
+              "height_length": "11.5 m",
+              "weight": "14000 kg",
+              "body_fat": "20%",
+              "look": "象牙白巨鯨周身環繞三道百丈深海漩渦，體側鹽晶脊柱釋放幽藍高壓水柱，舊時代銅製標槍化作引導雷潮的避雷長戟",
+              "dex_zh": "進入超載的白鯨巨渦宛如移動的深海風暴核心，所過之處洋流倒捲、巨浪排空，連鐵甲戰艦也會被漩渦吞沒。",
+              "dex_en": "In overload, Mobymael becomes the eye of an abyssal tempest, reversing ocean currents and swallowing ironclad formations in towering maelstroms.",
+              "signature_move": {
+                "move_id": "water_abyssal_maelstrom",
+                "name_zh": "深海歸墟大漩渦",
+                "name_en": "Abyssal Maelstrom",
+                "element": "water",
+                "range_class": "long",
+                "shape": "sweep",
+                "movement": "forward",
+                "naming_note": "白鯨領潮，歸墟吞天。",
+                "desc_zh": "引動深海歸墟巨渦向前席捲，將沿途目標捲入高壓水牆之中徹底粉碎。",
+                "desc_en": "Unleashes a sweeping abyssal maelstrom forward, crushing everything caught in its roaring wall of water.",
+                "visual": "引動深海歸墟巨渦向前席捲，將沿途目標捲入高壓水牆之中徹底粉碎。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_water_cleansing_tide",
+            "name_zh": "淨潮滌塵",
+            "idea_zh": "周身流轉的潔淨海潮能沖刷異常狀態與焦灼塵垢。"
+          },
+          "overload": "白鯨巨渦（water_whalemaelstrom_overload · XL）：象牙白巨鯨周身環繞三道百丈深海漩渦，體側鹽晶脊柱釋放幽藍高壓水柱，舊時代銅製標槍化作引導雷潮的避雷長戟"
+        }
+      }
+    },
+    {
+      "line_id": "line_fire_baobabhearth",
+      "code_zh": "火",
+      "element": "fire",
+      "title_zh": "猴麵包火蜥",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_fire_baobabhearth",
+        "elements": [
+          "fire（火）"
+        ],
+        "element_palettes": [
+          "赤木棕、炭火橘、玄武岩灰"
+        ],
+        "base_parents": [
+          "生物·爬蟲類",
+          "植物·巨木",
+          "自然·火山/地熱"
+        ],
+        "bases": [
+          "巨型陸行火蜥",
+          "猴麵包樹耐熱樹皮甲",
+          "背脊火山口爐心"
+        ],
+        "appearance_palette": [
+          "熔岩赤紅",
+          "陶土磚紅",
+          "玄鐵青黑",
+          "晨曦金"
+        ],
+        "timeline": "遠古神話（馬達加斯加英雄史詩）",
+        "region": "非洲",
+        "archetype": "arch_ibonia",
+        "archetype_name": "伊博尼亞聖火巨木",
+        "archetype_type": "P5-02 考據庫·英雄史詩",
+        "meaning": "身披猴麵包樹皮岩甲、懷抱不滅聖火與火山爐心的熾焰巨蜥",
+        "motifs": "烈火誕生紅光、巨型猴麵包樹、深潭巨鱷、高地立石",
+        "sensitivity": "ok",
+        "role": "後排砲擊、控距：遠距定點火山爆發（施放火招短暫提高閃避率）",
+        "temperament": "territorial",
+        "disposition": "沉穩熾烈、護火守土",
+        "size_profile": "S→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.50 m",
+            "weight": "8 kg",
+            "body_fat": "14%"
+          },
+          "adolescent": {
+            "height_length": "1.45 m",
+            "weight": "98 kg",
+            "body_fat": "12%"
+          },
+          "adult": {
+            "height_length": "2.60 m",
+            "weight": "420 kg",
+            "body_fat": "11%"
+          },
+          "overload": {
+            "height_length": "6.0 m",
+            "weight": "4500 kg",
+            "body_fat": "9%"
+          }
+        },
+        "height_length": "2.60 m",
+        "weight": "420 kg",
+        "body_fat": "11%",
+        "formula": "fire（火） × 巨型陸行火蜥 + 猴麵包樹耐熱樹皮甲 + 背脊火山口爐心 × 伊博尼亞聖火巨木",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "fire_spark_barkling",
+              "name_zh": "猴麵包火蜥",
+              "name_en": "Baobabhearth",
+              "naming_note": "四階段統一命名；樹皮甲片下藏著跳動炭火。",
+              "size_class": "S",
+              "temperament": "cautious",
+              "height_length": "0.50 m",
+              "weight": "8 kg",
+              "body_fat": "14%",
+              "look": "炭木鱗甲幼鱷 × 背上冒出暖紅火芽；披著厚實木皮斑紋甲殼的小鱷魚，甲縫透出微弱紅火光澤與零星火星",
+              "dex_zh": "覆著粗糙紅木甲片的幼蜥腹中懷著暖橘火種，呼吸時鼻尖冒出細小火星。牠守在營地邊緣，對迫近者噴出灼熱火花。",
+              "dex_en": "Rough redwood armor shields the warm ember heart inside this cautious hatchling. Guarding the camp perimeter, it snaps sparks at anything venturing too close.",
+              "signature_move": {
+                "move_id": "fire_spark_jab",
+                "name_zh": "火星嚙擊",
+                "name_en": "Spark Jab",
+                "element": "fire",
+                "range_class": "melee",
+                "shape": "front",
+                "movement": "none",
+                "naming_note": "樹皮甲縫迸出熱火。",
+                "desc_zh": "張口噴出跳躍的橘紅火星並伴隨短距撲咬，灼傷近身目標。",
+                "desc_en": "Snaps forward with crackling orange sparks bursting from its armored jaws.",
+                "visual": "張口噴出跳躍的橘紅火星並伴隨短距撲咬，灼傷近身目標。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "fire_ember_crocodilian",
+              "name_zh": "猴麵包火蜥",
+              "name_en": "Baobabhearth",
+              "naming_note": "四階段統一命名；背脊木瘤化作熔岩爐口。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.45 m",
+              "weight": "98 kg",
+              "body_fat": "12%",
+              "look": "熔炭樹皮大顎鱷 × 背脊生出粗壯猴麵包樹瘤；背甲呈現猴麵包樹般圓碩樹瘤，內部燃燒熾紅火脈，橫掃尾擊揚起灼熱灰燼",
+              "dex_zh": "粗壯的火蜥背部隆起猴麵包樹幹般的耐熱岩甲，縫隙透出暗紅餘燼。牠穩守中線，揮動燒紅的利爪劈出烈焰裂痕。",
+              "dex_en": "Baobab-thick heatproof plates rise along its back, glowing with banked embers between cracks. Holding the center, it slashes with white-hot claws trailing cinders.",
+              "signature_move": {
+                "move_id": "fire_cinder_slash",
+                "name_zh": "餘燼裂爪",
+                "name_en": "Cinder Slash",
+                "element": "fire",
+                "range_class": "melee",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "燒紅利爪劃出火痕。",
+                "desc_zh": "引燃體內爐火覆於前爪，朝前方弧形揮劈出殘留灼熱餘燼的烈焰爪痕。",
+                "desc_en": "Ignites its claws with furnace heat to carve a sweeping arc of burning cinders.",
+                "visual": "引燃體內爐火覆於前爪，朝前方弧形揮劈出殘留灼熱餘燼的烈焰爪痕。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "fire_hearth_monolith",
+              "name_zh": "猴麵包火蜥",
+              "name_en": "Baobabhearth",
+              "naming_note": "四階段統一命名；巨木化灶，火山口生於背脊。",
+              "size_class": "L",
+              "temperament": "territorial",
+              "height_length": "2.60 m",
+              "weight": "420 kg",
+              "body_fat": "11%",
+              "look": "巨鱷石林熔爐獸 × 高地立石火口與巨大猴麵包樹冠甲殼；背負如高地立石與猴麵包巨樹共生的火山口甲盾，深淵大顎含著赤紅火球",
+              "dex_zh": "宛如行走的古樹熔爐，厚實樹皮與玄武岩甲保護著體內永不熄滅的聖火。牠在後方穩立陣腳，令火山口驟然噴發焚盡四野。",
+              "dex_en": "A walking monolith of ancient bark and basalt housing an undying hearth-flame. Anchored at range, it triggers a caldera eruption that engulfs the battlefield.",
+              "signature_move": {
+                "move_id": "fire_caldera_burst",
+                "name_zh": "火口轟炎",
+                "name_en": "Caldera Burst",
+                "element": "fire",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "背脊火山口全面噴發。",
+                "desc_zh": "打開背脊厚重樹皮岩甲下的火山口，向遠處區域傾瀉高溫熔岩爆炎。",
+                "desc_en": "Opens the caldera vents along its back to rain searing volcanic blasts across distant ground.",
+                "visual": "打開背脊厚重樹皮岩甲下的火山口，向遠處區域傾瀉高溫熔岩爆炎。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "fire_baobabhearth_overload",
+              "temperament": "apex",
+              "disposition": "熾烈護土、聖火長明",
+              "name_zh": "猴麵包火蜥",
+              "name_en": "Baobabhearth",
+              "naming_note": "四階段統一命名；古木火山徹底甦醒。",
+              "size_class": "XL",
+              "height_length": "6.0 m",
+              "weight": "4500 kg",
+              "body_fat": "9%",
+              "look": "背脊猴麵包樹皮化作黑曜岩冠冕，體內聖火透過六座火山爐口衝天噴湧，熾金岩漿脈絡沿著四肢甲片流淌",
+              "dex_zh": "超載點燃了遠古巨木深處的地熱爐心。猴麵包火蜥每踏一步皆迸發金紅火蓮，以焚天熔岩守護領土。",
+              "dex_en": "Overload ignites the geothermal hearth within its ancient bark, erupting golden-red lava blooms from six dorsal vents.",
+              "signature_move": {
+                "move_id": "fire_sacred_hearth_eruption",
+                "name_zh": "聖木火口大噴發",
+                "name_en": "Sacred Hearth Eruption",
+                "element": "fire",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "六口齊噴，烈焰焚野。",
+                "desc_zh": "六座背脊火山口同時向天際噴發，降下覆蓋全場的熾金熔岩火雨。",
+                "desc_en": "Erupts all six dorsal caldera vents skyward, raining molten gold fire across the battlefield.",
+                "visual": "六座背脊火山口同時向天際噴發，降下覆蓋全場的熾金熔岩火雨。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_fire_cinder_screen",
+            "name_zh": "灰燼火幕",
+            "idea_zh": "體表散逸的熾熱餘燼形成護幕，削弱遠距突襲帶來的衝擊。"
+          },
+          "overload": "猴麵包火蜥（fire_baobabhearth_overload · XL）：背脊猴麵包樹皮化作黑曜岩冠冕，體內聖火透過六座火山爐口衝天噴湧，熾金岩漿脈絡沿著四肢甲片流淌"
+        }
+      }
+    },
+    {
+      "line_id": "line_earth_pillarbeast",
+      "code_zh": "土",
+      "element": "earth",
+      "title_zh": "石柱獠牙獸",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_earth_pillarbeast",
+        "elements": [
+          "earth（土）"
+        ],
+        "element_palettes": [
+          "砂岩赭、花崗岩灰、玉石翠"
+        ],
+        "base_parents": [
+          "生物·哺乳類",
+          "幻想生物·南亞神殿石獸",
+          "物質·礦物/岩石"
+        ],
+        "bases": [
+          "獅象混合石獸",
+          "神殿千柱浮雕甲",
+          "玉石彎曲獠牙"
+        ],
+        "appearance_palette": [
+          "大地赭石",
+          "陶土磚紅",
+          "砂岩黃",
+          "琥珀金"
+        ],
+        "timeline": "古代建築想像（南亞石雕神殿）",
+        "region": "南亞",
+        "archetype": "arch_yali",
+        "archetype_name": "亞利神殿石柱獸",
+        "archetype_type": "P5-02 考據庫·神殿建築神獸",
+        "meaning": "融合獅鬃、象鼻與千柱浮雕岩盤、鎮守南亞石殿的剛猛守護獸",
+        "motifs": "獅身象鼻長牙、神廟石雕廊柱、騰躍利爪、蓮座浮雕",
+        "sensitivity": "ok",
+        "role": "後排貫穿、控距：遠距直線地脈岩槍（施放土招提高移動速度）",
+        "temperament": "fierce",
+        "disposition": "剛猛威武、撼動地脈",
+        "size_profile": "S→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.52 m",
+            "weight": "14 kg",
+            "body_fat": "12%"
+          },
+          "adolescent": {
+            "height_length": "1.35 m",
+            "weight": "140 kg",
+            "body_fat": "11%"
+          },
+          "adult": {
+            "height_length": "2.50 m",
+            "weight": "580 kg",
+            "body_fat": "10%"
+          },
+          "overload": {
+            "height_length": "5.8 m",
+            "weight": "5600 kg",
+            "body_fat": "8%"
+          }
+        },
+        "height_length": "2.50 m",
+        "weight": "580 kg",
+        "body_fat": "10%",
+        "formula": "earth（土） × 獅象混合石獸 + 神殿千柱浮雕甲 + 玉石彎曲獠牙 × 亞利神殿石柱獸",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "earth_lotus_cub",
+              "name_zh": "石柱獠牙獸",
+              "name_en": "Yalipillar",
+              "naming_note": "四階段統一命名；浮雕蓮座托起幼獸四蹄。",
+              "size_class": "S",
+              "temperament": "normal",
+              "height_length": "0.52 m",
+              "weight": "14 kg",
+              "body_fat": "12%",
+              "look": "石雕幼獅 × 卷曲短象鼻與浮雕蓮瓣項圈；灰褐砂岩雕塑般的小獅獸，鼻尖翹起小巧象牙，四爪踩踏碎石迅速滑步",
+              "dex_zh": "結合獅首與象鼻特徵的砂岩幼獸，腳掌踩著碎石滑行自如。牠性格好戰果決，一聲低吼便踏碎石塊疾衝向前。",
+              "dex_en": "A sandstone cub blending lion mane and trunk-crest, skating smoothly across loose gravel. Bold by nature, it skims forward over stone to strike head-on.",
+              "signature_move": {
+                "move_id": "earth_stone_skate",
+                "name_zh": "滑石突進",
+                "name_en": "Stone Skate",
+                "element": "earth",
+                "range_class": "melee",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "足踏碎岩高速滑行。",
+                "desc_zh": "踩踏砂岩滑板順著地脈隆起高速滑行，沿直線衝撞前方敵人。",
+                "desc_en": "Skates swiftly over raised sandstone slabs to ram targets straight ahead.",
+                "visual": "踩踏砂岩滑板順著地脈隆起高速滑行，沿直線衝撞前方敵人。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "earth_pillar_chimera",
+              "name_zh": "石柱獠牙獸",
+              "name_en": "Yalipillar",
+              "naming_note": "四階段統一命名；神殿石柱與獠牙合而為一。",
+              "size_class": "M",
+              "temperament": "territorial",
+              "height_length": "1.35 m",
+              "weight": "140 kg",
+              "body_fat": "11%",
+              "look": "浮雕石獅象獸 × 肩胛鑲嵌廊柱石墩與修長石牙；雙肩扛著神廟石柱護甲，象鼻與利爪皆為硬質花崗岩構造，騰躍撲擊極具衝擊力",
+              "dex_zh": "花崗岩雕紋覆滿雙肩，顎側生出弧形玉石獠牙，如神殿門柱般威嚴。牠踏步震裂地表，沿斷層線發動猛烈突襲。",
+              "dex_en": "Temple-carved granite armors its shoulders while curved jade tusks frame its jaws. Splitting the ground underfoot, it dashes fiercely along the fault line.",
+              "signature_move": {
+                "move_id": "earth_fault_dash",
+                "name_zh": "斷層破襲",
+                "name_en": "Fault Dash",
+                "element": "earth",
+                "range_class": "melee",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "踏裂地殼發動突進。",
+                "desc_zh": "雙足猛踏震開裂隙，順著斷層衝擊波的軌道猛烈突刺。",
+                "desc_en": "Splits the earth underfoot and surges down the fault-line shockwave.",
+                "visual": "雙足猛踏震開裂隙，順著斷層衝擊波的軌道猛烈突刺。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "earth_temple_tuskbeast",
+              "name_zh": "石柱獠牙獸",
+              "name_en": "Yalipillar",
+              "naming_note": "四階段統一命名；百柱神獸，地動山搖。",
+              "size_class": "L",
+              "temperament": "fierce",
+              "height_length": "2.50 m",
+              "weight": "580 kg",
+              "body_fat": "10%",
+              "look": "神廟守護巨雕獅象 × 蓮座浮雕肩盾與岩柱重砲象鼻；身披蓮座與神廟石柱雕刻的宏偉石獸，象牙如雙重岩槍向前延伸，能遠距貫穿岩脈",
+              "dex_zh": "背負千柱神殿浮雕與黃金寶輪的巨型土靈獸，每步皆伴隨沉悶地鳴。牠在遠處凝聚大地岩脈之力，轟出貫穿戰線的岩層長槍。",
+              "dex_en": "A colossal guardian sculpted like a living temple pillar with golden wheel reliefs. Channeling tectonic veins from afar, it hurls a massive lance of bedrock.",
+              "signature_move": {
+                "move_id": "earth_tectonic_lance",
+                "name_zh": "岩脈長槍",
+                "name_en": "Tectonic Lance",
+                "element": "earth",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "神殿石柱化作地脈長槍。",
+                "desc_zh": "在遠處引動深層岩盤劇烈隆起，刺出如神殿巨柱般的銳利岩石長槍。",
+                "desc_en": "Raises deep bedrock plates from afar into a colossal, piercing stone lance.",
+                "visual": "在遠處引動深層岩盤劇烈隆起，刺出如神殿巨柱般的銳利岩石長槍。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "earth_pillarbeast_overload",
+              "temperament": "apex",
+              "disposition": "威震八方、地動山搖",
+              "name_zh": "石柱獠牙獸",
+              "name_en": "Yalipillar",
+              "naming_note": "四階段統一命名；千柱神殿化作移動山嶽。",
+              "size_class": "XL",
+              "height_length": "5.8 m",
+              "weight": "5600 kg",
+              "body_fat": "8%",
+              "look": "神殿千柱浮雕在超載中展開為懸浮黃金寶輪與花崗岩拱門，玉石獠牙延伸為丈長破岩巨刃，周身環繞浮空碎岩",
+              "dex_zh": "超載的石柱獠牙獸如一座甦醒的古代石殿，足踏地脈即可掀起百丈岩柱林海，令敵陣無從立足。",
+              "dex_en": "In overload, Yalipillar awakens like a living stone temple, raising forests of monolithic pillars along subterranean fault lines.",
+              "signature_move": {
+                "move_id": "earth_thousand_pillar_quake",
+                "name_zh": "千柱神殿裂地陣",
+                "name_en": "Thousand-Pillar Quake",
+                "element": "earth",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "千柱齊出，地脈崩摧。",
+                "desc_zh": "猛踏大地喚起神殿千柱從地底穿刺而出，同時引發劇烈岩脈震盪。",
+                "desc_en": "Stomps the earth to erupt a forest of temple stone pillars beneath opposing ranks.",
+                "visual": "猛踏大地喚起神殿千柱從地底穿刺而出，同時引發劇烈岩脈震盪。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_earth_landslide_charge",
+            "name_zh": "崩岩重勢",
+            "idea_zh": "如山崩岩柱般的厚重慣性，使每一次突進都伴隨震懾地鳴。"
+          },
+          "overload": "石柱獠牙獸（earth_pillarbeast_overload · XL）：神殿千柱浮雕在超載中展開為懸浮黃金寶輪與花崗岩拱門，玉石獠牙延伸為丈長破岩巨刃，周身環繞浮空碎岩"
+        }
+      }
+    },
+    {
+      "line_id": "line_ice_driftvessel",
+      "code_zh": "冰",
+      "element": "ice",
+      "title_zh": "極地破冰獸",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_ice_driftvessel",
+        "elements": [
+          "ice（冰）"
+        ],
+        "element_palettes": [
+          "冰川藍、原木棕、極夜雪白"
+        ],
+        "base_parents": [
+          "裝備·載具/舟艇",
+          "器械·極地測繪儀器",
+          "自然·冰川/浮冰"
+        ],
+        "bases": [
+          "破冰木船殼體",
+          "極地冰橇滑刃",
+          "測風桅杆冰翼"
+        ],
+        "appearance_palette": [
+          "純淨冰藍",
+          "稜鏡淡紫",
+          "月華白",
+          "古銅綠"
+        ],
+        "timeline": "近代探險（19 世紀末極地漂流遠征）",
+        "region": "極地",
+        "archetype": "arch_fridtjof_nansen",
+        "archetype_name": "南森前進號冰舟",
+        "archetype_type": "P5-02 考據庫·極地探險史",
+        "meaning": "以耐壓圓弧船身順應極冰擠壓、載著風標桅杆突破冰原的探險冰獸",
+        "motifs": "圓底抗冰木帆船、深海採水瓶、浮冰觀測儀、極地雙板雪橇",
+        "sensitivity": "ok",
+        "role": "長距突進：雪崩直線衝鋒（施放冰招暫時提高冰專精）",
+        "temperament": "normal",
+        "disposition": "堅毅無畏、破冰前行",
+        "size_profile": "XS→M→XL→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.45 m",
+            "weight": "6 kg",
+            "body_fat": "16%"
+          },
+          "adolescent": {
+            "height_length": "1.60 m",
+            "weight": "180 kg",
+            "body_fat": "15%"
+          },
+          "adult": {
+            "height_length": "3.20 m",
+            "weight": "890 kg",
+            "body_fat": "14%"
+          },
+          "overload": {
+            "height_length": "7.2 m",
+            "weight": "6800 kg",
+            "body_fat": "12%"
+          }
+        },
+        "height_length": "3.20 m",
+        "weight": "890 kg",
+        "body_fat": "14%",
+        "formula": "ice（冰） × 破冰木船殼體 + 極地冰橇滑刃 + 測風桅杆冰翼 × 南森前進號冰舟",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "ice_sled_buoy",
+              "name_zh": "極地破冰獸",
+              "name_en": "Framdrift",
+              "naming_note": "四階段統一命名；木製雪橇滑板與冰標浮筒結合。",
+              "size_class": "XS",
+              "temperament": "timid",
+              "height_length": "0.45 m",
+              "weight": "6 kg",
+              "body_fat": "16%",
+              "look": "微型極地木雪橇 × 懸掛深海採水瓶的浮冰探測儀；手掌大小的雙橇冰滑裝置，中央玻璃採水瓶閃著冰藍結晶，貼地滑行無聲",
+              "dex_zh": "圓滾的極地小獸腹下貼著流線冰橇板，頭頂插著紅白航海測標。牠膽小卻靈活，遇敵時貼著冰面高速滑行閃避。",
+              "dex_en": "A round polar buoy-creature riding twin sled runners beneath a red-and-white survey mast. Shy yet nimble, it glides swiftly across glazed ice to evade danger.",
+              "signature_move": {
+                "move_id": "ice_glaze_slide",
+                "name_zh": "冰橇滑擊",
+                "name_en": "Glaze Slide",
+                "element": "ice",
+                "range_class": "melee",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "冰橇貼地高速滑掠。",
+                "desc_zh": "壓低身軀貼著凝結的鏡面薄冰高速滑行，撞擊路徑上的目標。",
+                "desc_en": "Drops low onto its ice-sled runners to glide swiftly into targets along a slick path.",
+                "visual": "壓低身軀貼著凝結的鏡面薄冰高速滑行，撞擊路徑上的目標。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "ice_hull_cutter",
+              "name_zh": "極地破冰獸",
+              "name_en": "Framdrift",
+              "naming_note": "四階段統一命名；圓弧木船殼包覆耐壓冰甲。",
+              "size_class": "M",
+              "temperament": "cautious",
+              "height_length": "1.60 m",
+              "weight": "180 kg",
+              "body_fat": "15%",
+              "look": "抗冰圓底探險快艇 × 浮冰觀測儀與雙板滑冰龍骨；弧形木甲船身覆滿冰晶裝甲，桅頂架設旋轉觀測銅儀，能乘浮冰衝撞敵陣",
+              "dex_zh": "船首破冰刃從胸前延伸而出，兩側木質舷板覆著厚實霜晶。牠迎著暴雪破浪前行，借浮冰撞擊之勢碾開障礙。",
+              "dex_en": "An icebreaking prow juts from its chest while frost-rimed timber hulls protect its flanks. Pushing through blizzards, it rams forward with crashing ice-floe momentum.",
+              "signature_move": {
+                "move_id": "ice_floe_crash",
+                "name_zh": "浮冰衝撞",
+                "name_en": "Floe Crash",
+                "element": "ice",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "船首破冰刃劈開冰原。",
+                "desc_zh": "推進船首破冰厚刃正面衝鋒，將沿途碎冰如浪般撞向敵群。",
+                "desc_en": "Drives its icebreaker prow forward, hurling shattered floes into opposing ranks.",
+                "visual": "推進船首破冰厚刃正面衝鋒，將沿途碎冰如浪般撞向敵群。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "ice_polar_icebreaker",
+              "name_zh": "極地破冰獸",
+              "name_en": "Framdrift",
+              "naming_note": "四階段統一命名；前進行艦，無懼冰封。",
+              "size_class": "XL",
+              "temperament": "normal",
+              "height_length": "3.20 m",
+              "weight": "890 kg",
+              "body_fat": "14%",
+              "look": "極地抗冰巨型方舟 × 雪橇破冰撞角與觀測塔桅；圓弧重裝木船底配巨型冰刃雪橇，甲板列滿深海採水柱與天文觀測儀，破冰全速突襲",
+              "dex_zh": "如極地探險船般宏偉的冰原巨獸，雙肩聳立著桅杆與測風冰翼。牠無懼最酷烈的極夜狂嵐，領著雪崩般的寒潮一路破冰突進。",
+              "dex_en": "A grand icebreaker behemoth crowned with frost-rigged masts and anemometer fins. Undaunted by polar gales, it charges ahead at the crest of an avalanche.",
+              "signature_move": {
+                "move_id": "ice_avalanche_charge",
+                "name_zh": "雪崩破冰突",
+                "name_en": "Avalanche Charge",
+                "element": "ice",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "極夜艦首領雪崩衝鋒。",
+                "desc_zh": "掀起鋪天蓋地的極地雪崩狂潮，以極限破冰之勢長距突進碾碎前路。",
+                "desc_en": "Commands a thundering polar avalanche, charging across the field behind an unstoppable prow.",
+                "visual": "掀起鋪天蓋地的極地雪崩狂潮，以極限破冰之勢長距突進碾碎前路。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "ice_driftvessel_overload",
+              "temperament": "apex",
+              "disposition": "極地領航、破冰不息",
+              "name_zh": "極地破冰獸",
+              "name_en": "Framdrift",
+              "naming_note": "四階段統一命名；前進號化作極光破冰巨艦。",
+              "size_class": "XL",
+              "height_length": "7.2 m",
+              "weight": "6800 kg",
+              "body_fat": "12%",
+              "look": "圓弧木船殼與萬年藍冰融合成極地巨艦，三座測風冰桅閃耀翡翠極光，船首破冰巨刃散發絕對零度寒霧",
+              "dex_zh": "超載讓極地破冰獸承載整座極夜冰川之勢，無論多厚的冰封屏障都能一撞而碎，在極光下開闢航道。",
+              "dex_en": "Overload fuses Framdrift with glacial mass, its aurora-lit masts and zero-degree prow shattering any frozen barrier.",
+              "signature_move": {
+                "move_id": "ice_aurora_icebreaker",
+                "name_zh": "極光萬年破冰艦",
+                "name_en": "Aurora Icebreaker",
+                "element": "ice",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "極光引航，冰川開道。",
+                "desc_zh": "借極光寒流加速破冰巨刃，沿直線貫穿全場並留下永凍冰牆。",
+                "desc_en": "Accelerates its aurora-charged prow in a devastating linear charge that leaves frozen spires behind.",
+                "visual": "借極光寒流加速破冰巨刃，沿直線貫穿全場並留下永凍冰牆。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_ice_frostbite_edge",
+            "name_zh": "凍鋒破冰",
+            "idea_zh": "船首與冰刃帶著極地嚴寒，觸及目標時使其動作凝滯。"
+          },
+          "overload": "極地破冰獸（ice_driftvessel_overload · XL）：圓弧木船殼與萬年藍冰融合成極地巨艦，三座測風冰桅閃耀翡翠極光，船首破冰巨刃散發絕對零度寒霧"
+        }
+      }
+    },
+    {
+      "line_id": "line_wind_mistwing",
+      "code_zh": "風",
+      "element": "wind",
+      "title_zh": "霧翼信天翁",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_wind_mistwing",
+        "elements": [
+          "wind（風）"
+        ],
+        "element_palettes": [
+          "海霧灰白、青銅綠、暴風眼青"
+        ],
+        "base_parents": [
+          "生物·鳥類",
+          "器械·航海羅盤/星盤",
+          "自然·海霧/氣流"
+        ],
+        "bases": [
+          "遠洋巨信天翁",
+          "十字弓型修長展翼",
+          "青銅航海星盤"
+        ],
+        "appearance_palette": [
+          "薄荷淺青",
+          "青瓷灰綠",
+          "月華白",
+          "暮雲灰藍"
+        ],
+        "timeline": "近代文學（18 世紀航海敘事詩）",
+        "region": "極地",
+        "archetype": "arch_ancient_mariner_albatross",
+        "archetype_name": "古舟子霧翼信天翁",
+        "archetype_type": "P5-02 考據庫·海洋詩篇",
+        "meaning": "穿梭南極海霧、胸懸青銅星盤指引季風與洋流的跨洋巨鳥",
+        "motifs": "穿霧巨翼信天翁、翠綠高聳冰山、冰封古帆船、木柄十字弩",
+        "sensitivity": "ok",
+        "role": "後排控場、高機動：遠距扇形颶風橫掃（高血量時提高閃避率）",
+        "temperament": "normal",
+        "disposition": "孤高警覺、乘霧遠翔",
+        "size_profile": "S→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.44 m",
+            "weight": "2.4 kg",
+            "body_fat": "13%"
+          },
+          "adolescent": {
+            "height_length": "1.25 m",
+            "weight": "21 kg",
+            "body_fat": "11%"
+          },
+          "adult": {
+            "height_length": "2.40 m",
+            "weight": "72 kg",
+            "body_fat": "9%"
+          },
+          "overload": {
+            "height_length": "5.8 m",
+            "weight": "960 kg",
+            "body_fat": "7%"
+          }
+        },
+        "height_length": "2.40 m",
+        "weight": "72 kg",
+        "body_fat": "9%",
+        "formula": "wind（風） × 遠洋巨信天翁 + 十字弓型修長展翼 + 青銅航海星盤 × 古舟子霧翼信天翁",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "wind_crossbow_fledgling",
+              "name_zh": "霧翼信天翁",
+              "name_en": "Mistalbatross",
+              "naming_note": "四階段統一命名；幼雛頸間掛著羅盤風標。",
+              "size_class": "S",
+              "temperament": "timid",
+              "height_length": "0.44 m",
+              "weight": "2.4 kg",
+              "body_fat": "13%",
+              "look": "海霧幼信天翁 × 翼緣帶著木質弩臂紋飾；白灰絨毛小海鳥，翼梢刻有細緻木弓張弦紋路，順著海風疾速貼地竄行",
+              "dex_zh": "潔白帶灰羽的信天翁雛鳥總縮在船桅高處張望海霧，爪間繫著細小青銅風標。牠擅長乘著上升氣流輕巧滑步閃躲。",
+              "dex_en": "A pale sea-mist fledgling keeping watch from high masts with a tiny bronze wind-vane. Agile on rising drafts, it sidesteps danger on silent air currents.",
+              "signature_move": {
+                "move_id": "wind_draft_step",
+                "name_zh": "順風輕掠",
+                "name_en": "Draft Step",
+                "element": "wind",
+                "range_class": "melee",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "借微風氣流短距滑步。",
+                "desc_zh": "扇動細小海霧翼羽捲起上升氣流，靈巧貼近並以風壓掠擊目標。",
+                "desc_en": "Catches a brisk updraft on mist-tipped wings to skim forward and buffet foes.",
+                "visual": "扇動細小海霧翼羽捲起上升氣流，靈巧貼近並以風壓掠擊目標。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "wind_bergglider_gull",
+              "name_zh": "霧翼信天翁",
+              "name_en": "Mistalbatross",
+              "naming_note": "四階段統一命名；長翼展開，如十字弓弦拉滿。",
+              "size_class": "M",
+              "temperament": "cautious",
+              "height_length": "1.25 m",
+              "weight": "21 kg",
+              "body_fat": "11%",
+              "look": "巨翼寒霧海禽 × 翠綠冰山風帆翼膜；修長雙翼如古船橫帆展開，羽尖折射翠綠冰山霧光，俯衝如氣旋利箭",
+              "dex_zh": "修長窄翼在濃霧中劃出冷冽氣流，胸前掛著斑駁航海星盤。牠居高臨下俯瞰海面，化作疾風之箭高速突刺。",
+              "dex_en": "Long narrow wings slice through sea fog beneath a weathered brass astrolabe. Surveying the swells from above, it darts downward like a cyclone bolt.",
+              "signature_move": {
+                "move_id": "wind_cyclone_dart",
+                "name_zh": "旋風疾矢",
+                "name_en": "Cyclone Dart",
+                "element": "wind",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "窄翼拉滿如十字弓矢。",
+                "desc_zh": "將長翼收束成十字弓箭矢狀，包裹在高速氣旋中沿直線疾射突刺。",
+                "desc_en": "Folds its long wings into a crossbow-bolt silhouette and darts forward inside a tight cyclone.",
+                "visual": "將長翼收束成十字弓箭矢狀，包裹在高速氣旋中沿直線疾射突刺。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "wind_pelagic_soarer",
+              "name_zh": "霧翼信天翁",
+              "name_en": "Mistalbatross",
+              "naming_note": "四階段統一命名；跨洋巨翼，御風不墜。",
+              "size_class": "L",
+              "temperament": "normal",
+              "height_length": "2.40 m",
+              "weight": "72 kg",
+              "body_fat": "9%",
+              "look": "遠洋巨翼信天翁 × 古帆船雙桅翼骨與十字弩尾舵；翼展蔽天、羽梢拖著幽海霧氣與破冰帆布流蘇，振翼即可掀出遠距扇形狂颶",
+              "dex_zh": "雙翼展開足有數丈寬的遠洋風靈，羽尖拖曳著半透明雲霧與暴風眼微光。牠盤旋高空拉開距離，揮翼捲起橫掃海天的颶風。",
+              "dex_en": "A pelagic sovereign whose vast wings trail translucent mist and storm-eye glints. Soaring high out of reach, it sweeps its pinions to unleash a horizon-wide hurricane.",
+              "signature_move": {
+                "move_id": "wind_hurricane_sweep",
+                "name_zh": "遠洋颶風掃",
+                "name_en": "Hurricane Sweep",
+                "element": "wind",
+                "range_class": "long",
+                "shape": "cone",
+                "movement": "none",
+                "naming_note": "巨翼振起跨海狂風。",
+                "desc_zh": "在遠距離高空展開巨翼橫掃，喚起吞沒海平線的猛烈颶風環流。",
+                "desc_en": "Sweeps its vast pelagic wings from high altitude to unleash a horizon-spanning hurricane.",
+                "visual": "在遠距離高空展開巨翼橫掃，喚起吞沒海平線的猛烈颶風環流。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "wind_mistwing_overload",
+              "temperament": "apex",
+              "disposition": "御風千里、海天莫測",
+              "name_zh": "霧翼信天翁",
+              "name_en": "Mistalbatross",
+              "naming_note": "四階段統一命名；海霧巨翼化作暴風眼。",
+              "size_class": "XL",
+              "height_length": "5.8 m",
+              "weight": "960 kg",
+              "body_fat": "7%",
+              "look": "遠洋巨翼展開化作半透明雲嵐天幕，胸前青銅星盤化為三環氣流儀，羽尖拖曳著環繞戰場的銀白暴風眼環流",
+              "dex_zh": "超載使霧翼信天翁成為南極洋流的化身，雙翼一振便能召來吞沒天際的海霧與超音速信風。",
+              "dex_en": "In overload, Mistalbatross embodies the southern ocean gales, summoning blinding sea-mist and supersonic trade winds.",
+              "signature_move": {
+                "move_id": "wind_tempest_astrolabe",
+                "name_zh": "星盤極洋大暴風",
+                "name_en": "Tempest Astrolabe",
+                "element": "wind",
+                "range_class": "long",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "星盤定風，巨翼掀濤。",
+                "desc_zh": "轉動胸前星盤氣流儀，喚起橫掃全場的超音速海霧颶風。",
+                "desc_en": "Spins its aerial astrolabe to sweep the entire field with supersonic sea-mist gales.",
+                "visual": "轉動胸前星盤氣流儀，喚起橫掃全場的超音速海霧颶風。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_wind_aloft_vigilance",
+            "name_zh": "高空守望",
+            "idea_zh": "乘著高空氣流盤旋警戒，大幅提升閃避遠距襲擊的反應速度。"
+          },
+          "overload": "霧翼信天翁（wind_mistwing_overload · XL）：遠洋巨翼展開化作半透明雲嵐天幕，胸前青銅星盤化為三環氣流儀，羽尖拖曳著環繞戰場的銀白暴風眼環流"
+        }
+      }
+    },
+    {
+      "line_id": "line_thunder_redburrower",
+      "code_zh": "雷",
+      "element": "thunder",
+      "title_zh": "戈壁赤電蟲",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_thunder_redburrower",
+        "elements": [
+          "thunder（雷）",
+          "fire（火，成年副專精）"
+        ],
+        "element_palettes": [
+          "赤紅砂礫、銅線圈橙、電漿紫藍"
+        ],
+        "base_parents": [
+          "生物·無脊椎/蟲類",
+          "幻想生物·戈壁傳說",
+          "科幻機械·電磁磁軌"
+        ],
+        "bases": [
+          "赤紅戈壁沙蟲",
+          "高壓銅質電容環",
+          "結晶化磁軌脊刺"
+        ],
+        "appearance_palette": [
+          "熔岩赤紅",
+          "閃電熾黃",
+          "雷電曜紫",
+          "大地赭石"
+        ],
+        "timeline": "近代神秘傳說（中亞戈壁口傳）",
+        "region": "中亞/北亞",
+        "archetype": "arch_olgoi_khorkhoi",
+        "archetype_name": "戈壁死亡赤蟲",
+        "archetype_type": "P5-02 考據庫·荒漠傳說",
+        "meaning": "潛伏乾燥戈壁沙丘之下、以雙極銅環蓄電轟出電漿雷光的赤紅沙蟲",
+        "motifs": "戈壁紅沙丘、放電赤紅巨蟲、梭梭木荒原、灼熱沙暴",
+        "sensitivity": "ok",
+        "role": "後排貫穿、控距：遠距直線高壓電漿炮擊（施放雷招短暫延長攻擊距離）",
+        "temperament": "fierce",
+        "disposition": "詭譎迅猛、蓄電狙擊",
+        "size_profile": "XS→M→XL→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.48 m",
+            "weight": "3.2 kg",
+            "body_fat": "12%"
+          },
+          "adolescent": {
+            "height_length": "1.80 m",
+            "weight": "110 kg",
+            "body_fat": "11%"
+          },
+          "adult": {
+            "height_length": "4.20 m",
+            "weight": "640 kg",
+            "body_fat": "10%"
+          },
+          "overload": {
+            "height_length": "9.0 m",
+            "weight": "5200 kg",
+            "body_fat": "8%"
+          }
+        },
+        "height_length": "4.20 m",
+        "weight": "640 kg",
+        "body_fat": "10%",
+        "formula": "thunder（雷） + fire（火，成年副專精） × 赤紅戈壁沙蟲 + 高壓銅質電容環 + 結晶化磁軌脊刺 × 戈壁死亡赤蟲",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "thunder_dune_larva",
+              "name_zh": "戈壁赤電蟲",
+              "name_en": "Khorkhoivolt",
+              "naming_note": "四階段統一命名；沙漠赤蟲體節閃爍靜電微光。",
+              "size_class": "XS",
+              "temperament": "cautious",
+              "height_length": "0.48 m",
+              "weight": "3.2 kg",
+              "body_fat": "12%",
+              "look": "掌心大小的赤紅沙地電蟲 × 節環閃著靜電火花；圓潤鮮紅的沙漠幼蟲，身軀節環纏繞跳躍的明黃電弧，遇警即釋放近身電流環",
+              "dex_zh": "暗紅色沙蟲幼體表面覆著絕緣沙殼，尾端每隔數秒便迸出細小脈衝電環。牠潛行於沙丘側翼，謹慎試探周遭動靜。",
+              "dex_en": "A crimson sand-larva sheathed in insulating grit, pulsing tiny static rings from its tail. Flanking across dunes, it probes threats cautiously with electric ripples.",
+              "signature_move": {
+                "move_id": "thunder_pulse_ring",
+                "name_zh": "靜電脈衝環",
+                "name_en": "Pulse Ring",
+                "element": "thunder",
+                "range_class": "melee",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "沙層間迸發環狀電流。",
+                "desc_zh": "震動沙殼體節，向周圍近距離釋放麻痺目標的環狀靜電脈衝。",
+                "desc_en": "Vibrates its segmented grit shell to emit a stunning ring of static electricity.",
+                "visual": "震動沙殼體節，向周圍近距離釋放麻痺目標的環狀靜電脈衝。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "thunder_crimson_crawler",
+              "name_zh": "戈壁赤電蟲",
+              "name_en": "Khorkhoivolt",
+              "naming_note": "四階段統一命名；口器化作雙極電弧線圈。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.80 m",
+              "weight": "110 kg",
+              "body_fat": "11%",
+              "look": "砂岩棘皮赤蟲 × 頭冠發電雙顎與紅沙背脊；赤紅軀體佈滿荒原梭梭木般枯硬棘刺，張開雙顎可噴出扇形高壓電弧",
+              "dex_zh": "體節膨脹為赤銅色高壓電容環，口器張開時跳躍著藍紫電弧。牠穩踞沙窩陣地，朝逼近之敵連續釋放高壓放電。",
+              "dex_en": "Segmented copper capacitor rings line its body while blue-violet arcs crackle between its mandibles. Holding its sand-pit ground, it fires chained arc discharges.",
+              "signature_move": {
+                "move_id": "thunder_arc_discharge",
+                "name_zh": "赤銅電弧",
+                "name_en": "Arc Discharge",
+                "element": "thunder",
+                "range_class": "mid",
+                "shape": "cone",
+                "movement": "none",
+                "naming_note": "雙極電容轟出高壓電弧。",
+                "desc_zh": "張開顎部雙極線圈，向前方扇形區域連續轟出跳躍的藍紫電弧。",
+                "desc_en": "Spreads its bipolar mandibles to unleash jumping arcs of high-voltage plasma ahead.",
+                "visual": "張開顎部雙極線圈，向前方扇形區域連續轟出跳躍的藍紫電弧。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "thunder_gobi_voltwyrm",
+              "name_zh": "戈壁赤電蟲",
+              "name_en": "Khorkhoivolt",
+              "naming_note": "四階段統一命名；戈壁赤煞，電磁貫日。",
+              "size_class": "XL",
+              "temperament": "fierce",
+              "height_length": "4.20 m",
+              "weight": "640 kg",
+              "body_fat": "10%",
+              "look": "巨型沙漠電磁沙蟲 × 灼熱沙暴尾渦與高壓電漿口器；龐大赤紅蟲軀半潛沙浪，背脊磁環對準遠方蓄能後轟出極長直線電漿雷射",
+              "dex_zh": "盤踞荒漠地平線的赤紅雷龍蟲，背脊排列著結晶化的磁軌線圈。牠在遠處蓄積熾烈電漿，沿直線轟出貫穿砂岩的電磁雷砲。",
+              "dex_en": "An apex desert voltwyrm whose spine bristles with crystallized rail-coils. Charging plasma from afar, it fires a blinding electromagnetic rail-beam across the sands.",
+              "signature_move": {
+                "move_id": "thunder_plasma_rail",
+                "name_zh": "沙海電磁軌砲",
+                "name_en": "Plasma Rail",
+                "element": "thunder",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "戈壁赤龍貫穿天際的磁軌砲。",
+                "desc_zh": "鎖定遠方目標後沿脊背磁軌加速電漿，轟出撕裂荒漠的直線雷光砲。",
+                "desc_en": "Accelerates superheated plasma along its dorsal rail-coils into a blistering linear beam.",
+                "visual": "鎖定遠方目標後沿脊背磁軌加速電漿，轟出撕裂荒漠的直線雷光砲。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "thunder_redburrower_overload",
+              "temperament": "apex",
+              "disposition": "狂雷奔湧、荒漠霸主",
+              "name_zh": "戈壁赤電蟲",
+              "name_en": "Khorkhoivolt",
+              "naming_note": "四階段統一命名；高壓磁軌環徹底超頻。",
+              "size_class": "XL",
+              "height_length": "9.0 m",
+              "weight": "5200 kg",
+              "body_fat": "8%",
+              "look": "赤紅砂龍蟲體節化作十二座懸浮超導磁軌環，口器噴湧熾白電漿弧光，周身砂礫因靜電懸浮成玻璃化晶環",
+              "dex_zh": "超載的戈壁赤電蟲能將方圓數里的沙粒瞬間熔成閃電玻璃，脊背磁軌砲一擊足以貫穿山嶺。",
+              "dex_en": "Overload turns Khorkhoivolt into a living particle railgun, fusing desert sands into fulgurite rings around twelve floating coils.",
+              "signature_move": {
+                "move_id": "thunder_fulgurite_hyperrail",
+                "name_zh": "超導赤砂天雷砲",
+                "name_en": "Fulgurite Hyperrail",
+                "element": "thunder",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "十二磁環超頻齊射。",
+                "desc_zh": "十二座超導磁環同步充能，沿直線轟出將沙塵熔為晶柱的極限電漿雷砲。",
+                "desc_en": "Fires an overcharged plasma rail-beam through twelve floating coils, vitrifying everything in its path.",
+                "visual": "十二座超導磁環同步充能，沿直線轟出將沙塵熔為晶柱的極限電漿雷砲。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_thunder_fulgur_reach",
+            "name_zh": "沙電遠掣",
+            "idea_zh": "體內高壓電容在乾燥沙地中更易導通，延伸電弧攻擊的有效距離。"
+          },
+          "overload": "戈壁赤電蟲（thunder_redburrower_overload · XL）：赤紅砂龍蟲體節化作十二座懸浮超導磁軌環，口器噴湧熾白電漿弧光，周身砂礫因靜電懸浮成玻璃化晶環"
+        }
+      }
+    },
+    {
+      "line_id": "line_light_foilprism",
+      "code_zh": "光",
+      "element": "light",
+      "title_zh": "金箔光環獸",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_light_foilprism",
+        "elements": [
+          "light（光）",
+          "thunder（雷，成年副專精）"
+        ],
+        "element_palettes": [
+          "純金箔黃、暖白核心、虹彩稜鏡光"
+        ],
+        "base_parents": [
+          "物質·金屬箔片",
+          "器械·粒子加速器",
+          "自然·光學稜鏡"
+        ],
+        "bases": [
+          "極薄折紙金箔環",
+          "迴旋加速器核球",
+          "七彩光譜散射扇"
+        ],
+        "appearance_palette": [
+          "耀日光金",
+          "晨曦金",
+          "櫻花粉",
+          "閃電熾黃"
+        ],
+        "timeline": "現代科學想像（20 世紀初原子核物理）",
+        "region": "大洋洲",
+        "archetype": "arch_ernest_rutherford",
+        "archetype_name": "拉塞福金箔散射環",
+        "archetype_type": "P5-02 考據庫·科學發現象徵",
+        "meaning": "以極薄金箔稜鏡環繞高能粒子核心、將撞擊光束折射為極光扇陣的科學光靈",
+        "motifs": "金箔散射光束、原子行星軌跡、放射線閃爍屏、電磁線圈",
+        "sensitivity": "ok",
+        "role": "後排輸出、續戰：遠距扇形折射光束齊射（施放光招回復 6% 生命）",
+        "temperament": "normal",
+        "disposition": "敏銳純淨、折射萬象",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.35 m",
+            "weight": "0.9 kg",
+            "body_fat": "5%"
+          },
+          "adolescent": {
+            "height_length": "1.05 m",
+            "weight": "12 kg",
+            "body_fat": "5%"
+          },
+          "adult": {
+            "height_length": "1.95 m",
+            "weight": "48 kg",
+            "body_fat": "5%"
+          },
+          "overload": {
+            "height_length": "4.5 m",
+            "weight": "420 kg",
+            "body_fat": "4%"
+          }
+        },
+        "height_length": "1.95 m",
+        "weight": "48 kg",
+        "body_fat": "5%",
+        "formula": "light（光） + thunder（雷，成年副專精） × 極薄折紙金箔環 + 迴旋加速器核球 + 七彩光譜散射扇 × 拉塞福金箔散射環",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "light_foil_spark",
+              "name_zh": "金箔光環獸",
+              "name_en": "Foilprism",
+              "naming_note": "四階段統一命名；微光金箔折疊成精巧多面體。",
+              "size_class": "XS",
+              "temperament": "timid",
+              "height_length": "0.35 m",
+              "weight": "0.9 kg",
+              "body_fat": "5%",
+              "look": "迷你金箔稜鏡球儀 × 繞軸旋轉的雙點微光；漂浮在半空的金色薄箔稜鏡，表面不時閃爍螢光點點，近身以光刺自衛",
+              "dex_zh": "像懸浮折紙金箔般的光屬性小精靈，核心閃耀著暖白粒子微光。牠性格害羞卻專注，遇近敵便折射出一道銳利光刺。",
+              "dex_en": "A floating origami-gold sprite housing a warm white core of dancing particles. Shy yet focused, it refracts a crisp glint of light at anything drawing near.",
+              "signature_move": {
+                "move_id": "light_glint_jab",
+                "name_zh": "金箔閃刺",
+                "name_en": "Glint Jab",
+                "element": "light",
+                "range_class": "melee",
+                "shape": "front",
+                "movement": "none",
+                "naming_note": "折射微光刺破陰影。",
+                "desc_zh": "調整金箔切面角度，向近前方瞬間射出一道聚斂的銳利閃光。",
+                "desc_en": "Tilts its gold-foil facets to snap a focused flash of light straight ahead.",
+                "visual": "調整金箔切面角度，向近前方瞬間射出一道聚斂的銳利閃光。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "light_orbit_beacon",
+              "name_zh": "金箔光環獸",
+              "name_en": "Foilprism",
+              "naming_note": "四階段統一命名；雙重金箔環帶繞核高速旋轉。",
+              "size_class": "M",
+              "temperament": "cautious",
+              "height_length": "1.05 m",
+              "weight": "12 kg",
+              "body_fat": "5%",
+              "look": "人形半身光學儀偶 × 環繞肩側的三重星軌光環與電磁線圈；外框為半圓閃爍螢光屏，胸口金箔核心射出筆直聚焦光槍",
+              "dex_zh": "薄如蟬翼的金箔稜鏡環繞中央核球旋轉，散射出細密光譜軌跡。牠守在陣列後方，將散射光束聚斂為精準的光學長槍。",
+              "dex_en": "Paper-thin gold-foil prisms orbit a central luminous nucleus, scattering spectral trails. Guarding the rear, it focuses scattered beams into a piercing optic lance.",
+              "signature_move": {
+                "move_id": "light_optic_lance",
+                "name_zh": "光學折槍",
+                "name_en": "Optic Lance",
+                "element": "light",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "雙環稜鏡聚光成槍。",
+                "desc_zh": "令雙重金箔環帶同步對焦，沿直線向遠處貫穿射出純淨光學長槍。",
+                "desc_en": "Aligns its twin foil rings to project a razor-sharp optic lance across the field.",
+                "visual": "令雙重金箔環帶同步對焦，沿直線向遠處貫穿射出純淨光學長槍。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "light_radiant_cyclotron",
+              "name_zh": "金箔光環獸",
+              "name_en": "Foilprism",
+              "naming_note": "四階段統一命名；千層金箔散射極光扇陣。",
+              "size_class": "L",
+              "temperament": "normal",
+              "height_length": "1.95 m",
+              "weight": "48 kg",
+              "body_fat": "5%",
+              "look": "人形幾何磁環聖像 × 展開的扇形金箔折射螢幕與三重軌環；懸浮電磁線圈托起璀璨七彩散射光扇，行星軌環高速公轉，可向遠方傾瀉扇形稜鏡光束",
+              "dex_zh": "層層嵌套的精密金箔環陣宛如微型迴旋加速器，中央核心綻放太陽般的純淨光輝。牠在遠距展開扇形光譜，將來襲衝擊全數折射反彈。",
+              "dex_en": "Concentric gold-foil rings spin like a living cyclotron around a radiant sun-core. From range, it fans out chromatic rays that dazzle and deflect incoming force.",
+              "signature_move": {
+                "move_id": "light_chromatic_fan",
+                "name_zh": "極光扇射陣",
+                "name_en": "Chromatic Fan",
+                "element": "light",
+                "range_class": "long",
+                "shape": "cone",
+                "movement": "none",
+                "naming_note": "千層金箔展開光譜扇陣。",
+                "desc_zh": "高速旋轉迴旋光環並展開金箔扇面，向遠方區域傾瀉七彩高能光束。",
+                "desc_en": "Spins its cyclotron rings to fan out a dazzling barrage of chromatic light beams at range.",
+                "visual": "高速旋轉迴旋光環並展開金箔扇面，向遠方區域傾瀉七彩高能光束。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "light_foilprism_overload",
+              "temperament": "apex",
+              "disposition": "純淨耀眼、萬光歸一",
+              "name_zh": "金箔光環獸",
+              "name_en": "Foilprism",
+              "naming_note": "四階段統一命名；千重金箔展開為太陽迴旋陣。",
+              "size_class": "XL",
+              "height_length": "4.5 m",
+              "weight": "420 kg",
+              "body_fat": "4%",
+              "look": "千片極薄金箔在空中組成對稱幾何星盤，中央原子核球綻放宛如微型恆星的純白輝光，萬道七彩稜鏡射線交織成光之聖殿",
+              "dex_zh": "超載將金箔光環獸的散射效率推向極限，任何接觸其金箔光陣的能量都會被分解為無數道致盲極光。",
+              "dex_en": "Overload expands Foilprism into a stellar geometric mandala of gold-foil mirrors, refracting incoming energy into blinding aurora rays.",
+              "signature_move": {
+                "move_id": "light_stellar_cyclotron",
+                "name_zh": "恆星金箔大迴旋",
+                "name_en": "Stellar Cyclotron",
+                "element": "light",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "千箔散射，極光漫天。",
+                "desc_zh": "展開幾何金箔星盤高速迴旋，向全場折射出覆蓋天地的七彩高能粒子光雨。",
+                "desc_en": "Spins a vast mandala of gold-foil mirrors to rain refracted high-energy aurora beams across the arena.",
+                "visual": "展開幾何金箔星盤高速迴旋，向全場折射出覆蓋天地的七彩高能粒子光雨。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_light_halo_rebound",
+            "name_zh": "金箔折反",
+            "idea_zh": "環繞身軀的金箔稜鏡能偏折部分正面光熱與能量衝擊。"
+          },
+          "overload": "金箔光環獸（light_foilprism_overload · XL）：千片極薄金箔在空中組成對稱幾何星盤，中央原子核球綻放宛如微型恆星的純白輝光，萬道七彩稜鏡射線交織成光之聖殿"
+        }
+      }
+    },
+    {
+      "line_id": "line_shadow_ironsteed",
+      "code_zh": "影",
+      "element": "shadow",
+      "title_zh": "玄鐵幽駒",
+      "source": "Data/_incoming/p5-03-creatures-draft-02",
+      "concept": {
+        "line_id": "line_shadow_ironsteed",
+        "elements": [
+          "shadow（影）"
+        ],
+        "element_palettes": [
+          "啞光玄鐵黑、幽冥銀灰、極夜深藍"
+        ],
+        "base_parents": [
+          "生物·哺乳類",
+          "裝備·重甲戰馬具",
+          "自然·極夜暮影"
+        ],
+        "bases": [
+          "極北玄鐵戰馬",
+          "寒鐵弧刃護甲",
+          "幽影披風長鬃"
+        ],
+        "appearance_palette": [
+          "虛空深紫",
+          "暗影幽黑",
+          "玄鐵青黑",
+          "冰晶天藍"
+        ],
+        "timeline": "遠古神話（薩哈／雅庫特英雄史詩）",
+        "region": "中亞/北亞",
+        "archetype": "arch_nyurgun_bootur",
+        "archetype_name": "紐爾貢·博圖爾黑鐵駿馬",
+        "archetype_type": "P5-02 考據庫·北亞英雄史詩",
+        "meaning": "身披啞光玄鐵戰甲、在極夜雪原踏出幽影殘像的忠誠鐵騎",
+        "motifs": "玄鐵重鎧黑駒、繁枝世界巨樹、口簧琴音波、極寒凍土",
+        "sensitivity": "ok",
+        "role": "長距突進：遠距幽影直線衝鋒（施放影招短暫提高移動速度）",
+        "temperament": "territorial",
+        "disposition": "冷峻忠誠、無聲突襲",
+        "size_profile": "S→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.58 m",
+            "weight": "16 kg",
+            "body_fat": "15%"
+          },
+          "adolescent": {
+            "height_length": "1.45 m",
+            "weight": "135 kg",
+            "body_fat": "13%"
+          },
+          "adult": {
+            "height_length": "2.45 m",
+            "weight": "490 kg",
+            "body_fat": "12%"
+          },
+          "overload": {
+            "height_length": "5.5 m",
+            "weight": "3900 kg",
+            "body_fat": "10%"
+          }
+        },
+        "height_length": "2.45 m",
+        "weight": "490 kg",
+        "body_fat": "12%",
+        "formula": "shadow（影） × 極北玄鐵戰馬 + 寒鐵弧刃護甲 + 幽影披風長鬃 × 紐爾貢·博圖爾黑鐵駿馬",
+        "locked": {
+          "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "shadow_tundra_foal",
+              "name_zh": "玄鐵幽駒",
+              "name_en": "Bootursteed",
+              "naming_note": "四階段統一命名；黑鐵蹄印在雪地化作幽影。",
+              "size_class": "S",
+              "temperament": "cautious",
+              "height_length": "0.58 m",
+              "weight": "16 kg",
+              "body_fat": "15%",
+              "look": "玄鐵色幼駒 × 頸繫迷你銀製口簧琴護符；墨黑短毛覆著冷硬青灰鐵斑的小馬駒，奔跑時頸側發出低沉共鳴震音",
+              "dex_zh": "披著啞光黑鐵細甲的極北幼駒，鬃毛如夜間寒煙般輕輕飄散。牠善於繞行敵陣側翼，乘暮色掩護以暗影利齒突襲。",
+              "dex_en": "A northern foal clad in matte black-iron barding with a mane like drifting night smoke. Slipping along flanks, it strikes under dusk cover with shadow-edged fangs.",
+              "signature_move": {
+                "move_id": "shadow_dusk_fang",
+                "name_zh": "暮影噬咬",
+                "name_en": "Dusk Fang",
+                "element": "shadow",
+                "range_class": "melee",
+                "shape": "front",
+                "movement": "none",
+                "naming_note": "借暮色掩護突襲咬擊。",
+                "desc_zh": "融入地面的狹長影子之中疾步迫近，以附著寒鐵微光的暗影利齒啃咬。",
+                "desc_en": "Slips through lengthening dusk shadows to lunge with cold iron-edged fangs.",
+                "visual": "融入地面的狹長影子之中疾步迫近，以附著寒鐵微光的暗影利齒啃咬。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "shadow_reverb_charger",
+              "name_zh": "玄鐵幽駒",
+              "name_en": "Bootursteed",
+              "naming_note": "四階段統一命名；雙重影甲疊映，踏步無聲。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.45 m",
+              "weight": "135 kg",
+              "body_fat": "13%",
+              "look": "重甲黑戰馬 × 冰霜枝杈鬃飾與音波弦片肩鎧；披覆層疊玄鐵甲片的修長戰駒，鬃毛宛如世界巨樹枝枒結著黑霜，直線突進迅捷",
+              "dex_zh": "胸甲與護額鑄成寒鐵弧刃，奔馳時身後拖出數道半透明幽影殘像。牠在相位閃爍間穿越障礙，發動令敵防不勝防的突擊。",
+              "dex_en": "Forged black-iron crescents armor its chest and brow, trailing translucent afterimages at full gallop. Phasing between twilight shadows, it charges past defenses.",
+              "signature_move": {
+                "move_id": "shadow_twilight_phase",
+                "name_zh": "極夜相位衝",
+                "name_en": "Twilight Phase",
+                "element": "shadow",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "殘像閃爍穿越陣線。",
+                "desc_zh": "身形化作半透明幽影閃爍加速，沿直線無聲穿透敵方防線。",
+                "desc_en": "Phases into translucent twilight afterimages, dashing silently straight through defenses.",
+                "visual": "身形化作半透明幽影閃爍加速，沿直線無聲穿透敵方防線。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "shadow_iron_cavalier",
+              "name_zh": "玄鐵幽駒",
+              "name_en": "Bootursteed",
+              "naming_note": "四階段統一命名；幽冥鐵騎，永夜不屈。",
+              "size_class": "L",
+              "temperament": "territorial",
+              "height_length": "2.45 m",
+              "weight": "490 kg",
+              "body_fat": "12%",
+              "look": "玄鐵重裝幽騎獸 × 凍土暗影鬃冠與共鳴琴弦鎧片；身披繁枝巨樹紋玄鐵重鎧的極寒黑馬，蹄踏霜影伴隨共鳴嘯音，發動超長距貫穿衝鋒",
+              "dex_zh": "身披重型玄鐵戰甲的蒼穹幽影天馬，披風般的暗影長鬃隨寒風獵獵作響。牠鎮守領地邊界，化作幽靈鐵騎貫穿所有敵陣。",
+              "dex_en": "An iron-armored shadow cavalier whose dark mantle-mane ripples in freezing winds. Guarding its territory, it leads a phantom charge that pierces any vanguard.",
+              "signature_move": {
+                "move_id": "shadow_wraith_charge",
+                "name_zh": "玄鐵幽騎衝",
+                "name_en": "Wraith Charge",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "永夜鐵騎貫陣而過。",
+                "desc_zh": "披風般的暗影長鬃狂舞，化身重甲幽靈鐵騎發動貫穿全場的直線衝鋒。",
+                "desc_en": "Billowing a cloak of dark mist, it charges straight across the battlefield like a phantom knight.",
+                "visual": "披風般的暗影長鬃狂舞，化身重甲幽靈鐵騎發動貫穿全場的直線衝鋒。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "shadow_ironsteed_overload",
+              "temperament": "apex",
+              "disposition": "永夜鐵騎、孤高無雙",
+              "name_zh": "玄鐵幽駒",
+              "name_en": "Bootursteed",
+              "naming_note": "四階段統一命名；永夜玄鐵重騎降臨。",
+              "size_class": "XL",
+              "height_length": "5.5 m",
+              "weight": "3900 kg",
+              "body_fat": "10%",
+              "look": "啞光玄鐵戰甲與極夜暗影徹底融合，馬首生出雙重寒鐵戰角，身後展開如極夜極光般的墨黑影翼，四蹄踏過之處凝結黑霜",
+              "dex_zh": "超載的玄鐵幽駒如北亞史詩中踏破冥界的神駒，化作無聲黑鐵疾風貫穿戰場，將一切光芒吞入永夜。",
+              "dex_en": "In overload, Bootursteed becomes the mythic iron steed of the northern epics, galloping on black frost with shadowy wings.",
+              "signature_move": {
+                "move_id": "shadow_eternal_night_stampede",
+                "name_zh": "永夜玄鐵奔騰斬",
+                "name_en": "Eternal Night Stampede",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "冥界鐵騎，踏破永夜。",
+                "desc_zh": "展開墨黑影翼率領無數幽影殘像沿直線奔騰衝鋒，斬裂並吞沒沿途光影。",
+                "desc_en": "Charges forward with shadowy wings and phantom afterimages, cleaving through the entire battlefield.",
+                "visual": "展開墨黑影翼率領無數幽影殘像沿直線奔騰衝鋒，斬裂並吞沒沿途光影。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_shadow_fade_step",
+            "name_zh": "幽影隱步",
+            "idea_zh": "在極夜與暮色中融入環境陰影，降低移動時被鎖定的機率。"
+          },
+          "overload": "玄鐵幽駒（shadow_ironsteed_overload · XL）：啞光玄鐵戰甲與極夜暗影徹底融合，馬首生出雙重寒鐵戰角，身後展開如極夜極光般的墨黑影翼，四蹄踏過之處凝結黑霜"
+        }
+      }
+    },
+    {
+      "line_id": "cr_aqua_slime",
+      "code_zh": "水",
+      "element": "water",
+      "title_zh": "靈澤凝膠史萊姆",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_aqua_slime",
+        "elements": [
+          "water（水）"
+        ],
+        "element_palettes": [
+          "靈澤碧藍",
+          "半透明水白",
+          "珍珠泡沫銀"
+        ],
+        "base_parents": [
+          "幻想生物·史萊姆",
+          "自然·泉水/潭澤"
+        ],
+        "bases": [
+          "半透明凝膠軟體",
+          "深潭水紋核心",
+          "浮動氣泡護膜"
+        ],
+        "appearance_palette": [
+          "靈澤碧藍",
+          "半透明水白",
+          "珍珠泡沫銀"
+        ],
+        "timeline": "遠古自然精靈（星海湖澤傳說）",
+        "region": "大洋洲·珊瑚環礁",
+        "archetype": "arch_spring_nymph",
+        "archetype_name": "靈澤泉精",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "凝聚清澈泉水與浮動氣泡、隨環境形態流動的潔淨水靈",
+        "motifs": "半透明凝膠軟體、深潭水紋核心、浮動氣泡護膜",
+        "sensitivity": "ok",
+        "role": "控場 / 緩衝",
+        "temperament": "cautious",
+        "disposition": "溫順好奇、喜歡貼近水邊",
+        "size_profile": "XS→S→M→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.35 m",
+            "weight": "1.2 kg",
+            "body_fat": "5%"
+          },
+          "adolescent": {
+            "height_length": "0.85 m",
+            "weight": "18 kg",
+            "body_fat": "5%"
+          },
+          "adult": {
+            "height_length": "1.65 m",
+            "weight": "95 kg",
+            "body_fat": "5%"
+          },
+          "overload": {
+            "height_length": "4.2 m",
+            "weight": "1450 kg",
+            "body_fat": "4%"
+          }
+        },
+        "height_length": "1.65 m",
+        "weight": "95 kg",
+        "body_fat": "5%",
+        "formula": "water（水） × 半透明凝膠軟體 + 深潭水紋核心 + 浮動氣泡護膜 × 靈澤泉精",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_aqua_slime_juvenile",
+              "name_zh": "靈澤凝膠史萊姆",
+              "name_en": "Aquagel Slime",
+              "naming_note": "四階段統一命名；靈澤泉精。",
+              "size_class": "XS",
+              "temperament": "cautious",
+              "height_length": "0.35 m",
+              "weight": "1.2 kg",
+              "body_fat": "5%",
+              "look": "圓潤透亮的水藍色凝膠球體，頂端冒出兩顆小氣泡與呆萌水滴眼，體內懸浮微弱藍光核",
+              "dex_zh": "剛從靈澤泉眼凝結出的水滴史萊姆，受驚時會把自己縮成彈跳水球。",
+              "dex_en": "A translucent aqua slime droplet newly condensed from sacred spring water.",
+              "signature_move": {
+                "move_id": "water_bubble_pop",
+                "name_zh": "泡沫彈擊",
+                "name_en": "Bubble Pop",
+                "element": "water",
+                "range_class": "close",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "靈澤凝膠史萊姆 juvenile 專屬招式。",
+                "desc_zh": "鼓起氣泡向前彈射微涼水球。",
+                "desc_en": "Aquagel Slime unleashes Bubble Pop.",
+                "visual": "鼓起氣泡向前彈射微涼水球。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_aqua_slime_adolescent",
+              "name_zh": "靈澤凝膠史萊姆",
+              "name_en": "Aquagel Slime",
+              "naming_note": "四階段統一命名；靈澤泉精。",
+              "size_class": "S",
+              "temperament": "cautious",
+              "height_length": "0.85 m",
+              "weight": "18 kg",
+              "body_fat": "5%",
+              "look": "身軀延展成流線水母傘蓋狀，周圍環繞三條半透明水帶觸手，核心折射出波紋光暈",
+              "dex_zh": "學會利用水流張力塑形，能將多餘水分壓縮為彈性水環防禦。",
+              "dex_en": "Learns to shape currents into resilient water rings around its translucent core.",
+              "signature_move": {
+                "move_id": "water_ripple_whip",
+                "name_zh": "水紋鞭擊",
+                "name_en": "Ripple Whip",
+                "element": "water",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "靈澤凝膠史萊姆 adolescent 專屬招式。",
+                "desc_zh": "甩出凝膠水帶向前抽擊並留下水漬。",
+                "desc_en": "Aquagel Slime unleashes Ripple Whip.",
+                "visual": "甩出凝膠水帶向前抽擊並留下水漬。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_aqua_slime_adult",
+              "name_zh": "靈澤凝膠史萊姆",
+              "name_en": "Aquagel Slime",
+              "naming_note": "四階段統一命名；靈澤泉精。",
+              "size_class": "M",
+              "temperament": "cautious",
+              "height_length": "1.65 m",
+              "weight": "95 kg",
+              "body_fat": "5%",
+              "look": "半人形與巨型水母交融的優雅凝膠體，肩披透明水膜披肩，胸口浮現多層波紋水環",
+              "dex_zh": "能自由操控方圓數丈的淡水凝結為護盾與高壓水刃，守護棲息水域。",
+              "dex_en": "Commands freshwater currents to form barriers and pressurized blades.",
+              "signature_move": {
+                "move_id": "water_hydro_surge",
+                "name_zh": "靈澤湧潮",
+                "name_en": "Hydro Surge",
+                "element": "water",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "靈澤凝膠史萊姆 adult 專屬招式。",
+                "desc_zh": "展開半透明水膜向四周湧出高壓淨水浪潮。",
+                "desc_en": "Aquagel Slime unleashes Hydro Surge.",
+                "visual": "展開半透明水膜向四周湧出高壓淨水浪潮。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_aqua_slime_overload",
+              "name_zh": "靈澤凝膠史萊姆",
+              "name_en": "Aquagel Slime",
+              "naming_note": "四階段統一命名；靈澤泉精。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.2 m",
+              "weight": "1450 kg",
+              "body_fat": "4%",
+              "look": "巨大結晶水冠在頭頂展開，全身化作深海琉璃漩渦巨像，周身懸浮數十顆高壓水球陣列",
+              "dex_zh": "超載時全身轉化為高純度結晶水渦，能瞬間撫平烈焰並重塑河道地形。",
+              "dex_en": "Transforms into a crystalline hydro-maelstrom colossus in overload.",
+              "signature_move": {
+                "move_id": "water_abyssal_deluge",
+                "name_zh": "蒼穹靈澤洪流",
+                "name_en": "Abyssal Deluge",
+                "element": "water",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "靈澤凝膠史萊姆 overload 專屬招式。",
+                "desc_zh": "引爆全部懸浮水球降下覆蓋全場的靈澤暴雨。",
+                "desc_en": "Aquagel Slime unleashes Abyssal Deluge.",
+                "visual": "引爆全部懸浮水球降下覆蓋全場的靈澤暴雨。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_aqua_gel_buffer",
+            "name_zh": "凝膠緩衝",
+            "idea_zh": "半流質水體能吸收鈍擊衝力，並緩慢平復自身表面裂紋。"
+          },
+          "overload": "靈澤凝膠史萊姆（cr_aqua_slime_overload · XL）：巨大結晶水冠在頭頂展開，全身化作深海琉璃漩渦巨像，周身懸浮數十顆高壓水球陣列"
+        }
+      }
+    },
+    {
+      "line_id": "cr_chrono_beetle",
+      "code_zh": "金",
+      "element": "metal",
+      "title_zh": "懷錶犀角金龜",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_chrono_beetle",
+        "elements": [
+          "metal（金）"
+        ],
+        "element_palettes": [
+          "黃銅金",
+          "琺瑯白",
+          "發條深棕"
+        ],
+        "base_parents": [
+          "生物·節肢昆蟲",
+          "器械·鐘錶/計時儀器"
+        ],
+        "bases": [
+          "重裝犀角甲蟲",
+          "精密懷錶錶盤",
+          "黃銅齒輪翼鞘"
+        ],
+        "appearance_palette": [
+          "黃銅金",
+          "琺瑯白",
+          "發條深棕"
+        ],
+        "timeline": "近代工藝想像（19 世紀精密製錶）",
+        "region": "歐洲·阿爾卑斯鐘錶谷",
+        "archetype": "arch_pocket_chronometer",
+        "archetype_name": "航海懷錶機關",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "將精密擺輪與羅馬數字錶盤嵌於鞘翅之中的發條金龜",
+        "motifs": "重裝犀角甲蟲、精密懷錶錶盤、黃銅齒輪翼鞘",
+        "sensitivity": "ok",
+        "role": "前排重裝 / 反擊",
+        "temperament": "territorial",
+        "disposition": "守時執著、分秒必爭",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.38 m",
+            "weight": "4.5 kg",
+            "body_fat": "6%"
+          },
+          "adolescent": {
+            "height_length": "1.15 m",
+            "weight": "68 kg",
+            "body_fat": "6%"
+          },
+          "adult": {
+            "height_length": "2.10 m",
+            "weight": "340 kg",
+            "body_fat": "5%"
+          },
+          "overload": {
+            "height_length": "4.8 m",
+            "weight": "3200 kg",
+            "body_fat": "4%"
+          }
+        },
+        "height_length": "2.10 m",
+        "weight": "340 kg",
+        "body_fat": "5%",
+        "formula": "metal（金） × 重裝犀角甲蟲 + 精密懷錶錶盤 + 黃銅齒輪翼鞘 × 航海懷錶機關",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_chrono_beetle_juvenile",
+              "name_zh": "懷錶犀角金龜",
+              "name_en": "Chronobeetle",
+              "naming_note": "四階段統一命名；航海懷錶機關。",
+              "size_class": "XS",
+              "temperament": "territorial",
+              "height_length": "0.38 m",
+              "weight": "4.5 kg",
+              "body_fat": "6%",
+              "look": "背甲像一只小巧圓潤的黃銅懷錶，頭頂長出短短單齒角，走動時發出輕快滴答聲",
+              "dex_zh": "幼體每天固定在整點甦醒覓食，背殼上的小指針會隨體力擺動。",
+              "dex_en": "A pocket-watch sized bronze beetle whose tiny dorsal hands tick with its heartbeat.",
+              "signature_move": {
+                "move_id": "metal_tick_butt",
+                "name_zh": "滴答角撞",
+                "name_en": "Tick Butt",
+                "element": "metal",
+                "range_class": "close",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "懷錶犀角金龜 juvenile 專屬招式。",
+                "desc_zh": "壓低黃銅短角順著發條節奏向前頂撞。",
+                "desc_en": "Chronobeetle unleashes Tick Butt.",
+                "visual": "壓低黃銅短角順著發條節奏向前頂撞。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_chrono_beetle_adolescent",
+              "name_zh": "懷錶犀角金龜",
+              "name_en": "Chronobeetle",
+              "naming_note": "四階段統一命名；航海懷錶機關。",
+              "size_class": "M",
+              "temperament": "territorial",
+              "height_length": "1.15 m",
+              "weight": "68 kg",
+              "body_fat": "6%",
+              "look": "鞘翅裂開露出雙層齒輪擺輪，前足包覆黃銅護腕，額角分叉為游標卡尺般的雙刃",
+              "dex_zh": "開始能精準預判對手動作節拍，在交鋒瞬間卡住敵方兵器。",
+              "dex_en": "Times its parries to the millisecond using exposed brass escapement gears.",
+              "signature_move": {
+                "move_id": "metal_gear_cleave",
+                "name_zh": "齒輪剪擊",
+                "name_en": "Gear Cleave",
+                "element": "metal",
+                "range_class": "close",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "懷錶犀角金龜 adolescent 專屬招式。",
+                "desc_zh": "展開雙叉卡尺角夾擊並高速旋轉齒輪斬落。",
+                "desc_en": "Chronobeetle unleashes Gear Cleave.",
+                "visual": "展開雙叉卡尺角夾擊並高速旋轉齒輪斬落。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_chrono_beetle_adult",
+              "name_zh": "懷錶犀角金龜",
+              "name_en": "Chronobeetle",
+              "naming_note": "四階段統一命名；航海懷錶機關。",
+              "size_class": "L",
+              "temperament": "territorial",
+              "height_length": "2.10 m",
+              "weight": "340 kg",
+              "body_fat": "5%",
+              "look": "雄偉的雙角犀金龜戰甲，胸前嵌著發光琺瑯羅馬錶盤，展開鞘翅時露出高速旋轉的陀飛輪核心",
+              "dex_zh": "每當陀飛輪全速運轉，其衝鋒幾乎無視風阻與時間差，穩如鋼鐵堡壘。",
+              "dex_en": "Unleashes unstoppable momentum once its chest tourbillon reaches peak RPM.",
+              "signature_move": {
+                "move_id": "metal_chronos_ram",
+                "name_zh": "時輪破甲衝",
+                "name_en": "Chronos Ram",
+                "element": "metal",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "懷錶犀角金龜 adult 專屬招式。",
+                "desc_zh": "鎖定整點節拍將雙角化作高壓撞角沿直線衝撞。",
+                "desc_en": "Chronobeetle unleashes Chronos Ram.",
+                "visual": "鎖定整點節拍將雙角化作高壓撞角沿直線衝撞。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_chrono_beetle_overload",
+              "name_zh": "懷錶犀角金龜",
+              "name_en": "Chronobeetle",
+              "naming_note": "四階段統一命名；航海懷錶機關。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.8 m",
+              "weight": "3200 kg",
+              "body_fat": "4%",
+              "look": "背甲化作三層懸浮天文鐘環，黃金齒輪翼片噴射金色以太蒸汽，額角延伸為巨型時針長戟",
+              "dex_zh": "超載使時間齒輪超越極限，揮角之間連空氣振動彷彿都陷入短暫凝滯。",
+              "dex_en": "Overdrives its astrolabe wing-rings, turning its horn into a colossal clock-hand lance.",
+              "signature_move": {
+                "move_id": "metal_grand_horology",
+                "name_zh": "大天文鐘絕響",
+                "name_en": "Grand Horology",
+                "element": "metal",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "懷錶犀角金龜 overload 專屬招式。",
+                "desc_zh": "展開三層天文鐘環敲響震碎戰場的金屬時鐘震波。",
+                "desc_en": "Chronobeetle unleashes Grand Horology.",
+                "visual": "展開三層天文鐘環敲響震碎戰場的金屬時鐘震波。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_chrono_gear_lock",
+            "name_zh": "發條鎖定",
+            "idea_zh": "每次承受撞擊都會替體內主發條上弦，強化下一次突擊力道。"
+          },
+          "overload": "懷錶犀角金龜（cr_chrono_beetle_overload · XL）：背甲化作三層懸浮天文鐘環，黃金齒輪翼片噴射金色以太蒸汽，額角延伸為巨型時針長戟"
+        }
+      }
+    },
+    {
+      "line_id": "cr_earth_golem",
+      "code_zh": "土",
+      "element": "earth",
+      "title_zh": "陶泥厚岩偶",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_earth_golem",
+        "elements": [
+          "earth（土）"
+        ],
+        "element_palettes": [
+          "陶土赭紅",
+          "花崗岩灰",
+          "苔蘚綠"
+        ],
+        "base_parents": [
+          "物質·陶器/黏土",
+          "自然·岩石/礦脈"
+        ],
+        "bases": [
+          "素燒陶土偶",
+          "厚實花崗岩塊",
+          "嵌石古文符印"
+        ],
+        "appearance_palette": [
+          "陶土赭紅",
+          "花崗岩灰",
+          "苔蘚綠"
+        ],
+        "timeline": "遠古工藝（新石器彩陶文明）",
+        "region": "東亞·黃土高原",
+        "archetype": "arch_terracotta_guardian",
+        "archetype_name": "古窯陶岩護衛",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "以千年窯火燒製的陶土與地脈厚岩凝結而成的忠誠守護偶",
+        "motifs": "素燒陶土偶、厚實花崗岩塊、嵌石古文符印",
+        "sensitivity": "ok",
+        "role": "重裝坦衛",
+        "temperament": "territorial",
+        "disposition": "鈍重忠厚、一步一印",
+        "size_profile": "S→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.50 m",
+            "weight": "22 kg",
+            "body_fat": "4%"
+          },
+          "adolescent": {
+            "height_length": "1.35 m",
+            "weight": "195 kg",
+            "body_fat": "4%"
+          },
+          "adult": {
+            "height_length": "2.40 m",
+            "weight": "780 kg",
+            "body_fat": "3%"
+          },
+          "overload": {
+            "height_length": "5.5 m",
+            "weight": "6200 kg",
+            "body_fat": "2%"
+          }
+        },
+        "height_length": "2.40 m",
+        "weight": "780 kg",
+        "body_fat": "3%",
+        "formula": "earth（土） × 素燒陶土偶 + 厚實花崗岩塊 + 嵌石古文符印 × 古窯陶岩護衛",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_earth_golem_juvenile",
+              "name_zh": "陶泥厚岩偶",
+              "name_en": "Terragolem",
+              "naming_note": "四階段統一命名；古窯陶岩護衛。",
+              "size_class": "S",
+              "temperament": "territorial",
+              "height_length": "0.50 m",
+              "weight": "22 kg",
+              "body_fat": "4%",
+              "look": "圓墩墩的紅陶小泥偶，頭頂嵌著一塊發芽的鵝卵石，雙手是鈍實的陶土小拳",
+              "dex_zh": "剛從古窯餘溫中甦醒的陶偶，最喜歡把自己埋進濕潤泥土裡曬太陽。",
+              "dex_en": "A chubby terracotta sprite topped with a mossy pebble, fond of basking in warm clay.",
+              "signature_move": {
+                "move_id": "earth_clay_bump",
+                "name_zh": "陶拳重敲",
+                "name_en": "Clay Bump",
+                "element": "earth",
+                "range_class": "close",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "陶泥厚岩偶 juvenile 專屬招式。",
+                "desc_zh": "邁開短腿以厚實陶拳向前捶擊。",
+                "desc_en": "Terragolem unleashes Clay Bump.",
+                "visual": "邁開短腿以厚實陶拳向前捶擊。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_earth_golem_adolescent",
+              "name_zh": "陶泥厚岩偶",
+              "name_en": "Terragolem",
+              "naming_note": "四階段統一命名；古窯陶岩護衛。",
+              "size_class": "M",
+              "temperament": "territorial",
+              "height_length": "1.35 m",
+              "weight": "195 kg",
+              "body_fat": "4%",
+              "look": "肩部與雙臂披上層疊花崗岩塊，胸口刻出螺旋彩陶紋，眼神沉穩閃爍琥珀光",
+              "dex_zh": "岩石與陶土融合得更加緊密，即使碎裂也能透過泥漿重新黏合。",
+              "dex_en": "Layered granite plates armor its shoulders, mending cracks with wet clay.",
+              "signature_move": {
+                "move_id": "earth_boulder_slam",
+                "name_zh": "厚岩震地",
+                "name_en": "Boulder Slam",
+                "element": "earth",
+                "range_class": "close",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "陶泥厚岩偶 adolescent 專屬招式。",
+                "desc_zh": "高舉岩石雙臂重砸地面掀起環狀碎石波。",
+                "desc_en": "Terragolem unleashes Boulder Slam.",
+                "visual": "高舉岩石雙臂重砸地面掀起環狀碎石波。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_earth_golem_adult",
+              "name_zh": "陶泥厚岩偶",
+              "name_en": "Terragolem",
+              "naming_note": "四階段統一命名；古窯陶岩護衛。",
+              "size_class": "L",
+              "temperament": "territorial",
+              "height_length": "2.40 m",
+              "weight": "780 kg",
+              "body_fat": "3%",
+              "look": "巍峨如城牆般的古窯巨偶，背部背負兩座苔蘚石碑，雙拳大如磨盤且嵌滿黑曜石碎塊",
+              "dex_zh": "立於陣前便如不動山嶽，曾有記載單隻陶泥厚岩偶獨自擋下山洪改道。",
+              "dex_en": "Stands like an immovable mountain wall with moss-covered monoliths on its back.",
+              "signature_move": {
+                "move_id": "earth_monolith_crush",
+                "name_zh": "石碑壓頂",
+                "name_en": "Monolith Crush",
+                "element": "earth",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "陶泥厚岩偶 adult 專屬招式。",
+                "desc_zh": "踏碎地脈向前突進，雙拳如磨盤般合擊敵陣。",
+                "desc_en": "Terragolem unleashes Monolith Crush.",
+                "visual": "踏碎地脈向前突進，雙拳如磨盤般合擊敵陣。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_earth_golem_overload",
+              "name_zh": "陶泥厚岩偶",
+              "name_en": "Terragolem",
+              "naming_note": "四階段統一命名；古窯陶岩護衛。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "5.5 m",
+              "weight": "6200 kg",
+              "body_fat": "2%",
+              "look": "全身陶甲龜裂並透出地心赤金岩漿脈絡，頭頂升起浮空石環與古窯聖火炬",
+              "dex_zh": "超載喚醒地核窯火，每一步都在戰場上留下隆起的玄武岩柱。",
+              "dex_en": "Overload awakens kiln-magma beneath its cracked plates, raising basalt pillars.",
+              "signature_move": {
+                "move_id": "earth_kiln_cataclysm",
+                "name_zh": "地核古窯崩落",
+                "name_en": "Kiln Cataclysm",
+                "element": "earth",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "陶泥厚岩偶 overload 專屬招式。",
+                "desc_zh": "喚起無數燒紅巨岩從天而降鎮壓全場。",
+                "desc_en": "Terragolem unleashes Kiln Cataclysm.",
+                "visual": "喚起無數燒紅巨岩從天而降鎮壓全場。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_terra_kiln_shell",
+            "name_zh": "古窯厚甲",
+            "idea_zh": "乾燥堅硬的陶岩外殼能大幅減免物理撞擊與火焰燒灼。"
+          },
+          "overload": "陶泥厚岩偶（cr_earth_golem_overload · XL）：全身陶甲龜裂並透出地心赤金岩漿脈絡，頭頂升起浮空石環與古窯聖火炬"
+        }
+      }
+    },
+    {
+      "line_id": "cr_fire_wisp",
+      "code_zh": "火",
+      "element": "fire",
+      "title_zh": "熾焰火灶靈",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_fire_wisp",
+        "elements": [
+          "fire（火）"
+        ],
+        "element_palettes": [
+          "爐火橘紅",
+          "木炭黑",
+          "暖金白"
+        ],
+        "base_parents": [
+          "自然·火焰/炭火",
+          "器械·火灶/提燈"
+        ],
+        "bases": [
+          "浮動火焰精靈",
+          "鑄鐵火灶燈籠",
+          "赤紅炭火核"
+        ],
+        "appearance_palette": [
+          "爐火橘紅",
+          "木炭黑",
+          "暖金白"
+        ],
+        "timeline": "古代生活想像（傳統鍛鐵火爐）",
+        "region": "東亞·山村鐵匠坊",
+        "archetype": "arch_kamado_spirit",
+        "archetype_name": "火灶爐魂",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "誕生於永不熄滅的鐵匠火灶之中、兼具溫暖與爆裂火勢的精靈",
+        "motifs": "浮動火焰精靈、鑄鐵火灶燈籠、赤紅炭火核",
+        "sensitivity": "ok",
+        "role": "遠距火力",
+        "temperament": "normal",
+        "disposition": "活潑躁動、愛吃木炭",
+        "size_profile": "XS→S→M→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.32 m",
+            "weight": "0.6 kg",
+            "body_fat": "2%"
+          },
+          "adolescent": {
+            "height_length": "0.95 m",
+            "weight": "14 kg",
+            "body_fat": "2%"
+          },
+          "adult": {
+            "height_length": "1.75 m",
+            "weight": "88 kg",
+            "body_fat": "2%"
+          },
+          "overload": {
+            "height_length": "4.3 m",
+            "weight": "920 kg",
+            "body_fat": "1%"
+          }
+        },
+        "height_length": "1.75 m",
+        "weight": "88 kg",
+        "body_fat": "2%",
+        "formula": "fire（火） × 浮動火焰精靈 + 鑄鐵火灶燈籠 + 赤紅炭火核 × 火灶爐魂",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_fire_wisp_juvenile",
+              "name_zh": "熾焰火灶靈",
+              "name_en": "Hearthwisp",
+              "naming_note": "四階段統一命名；火灶爐魂。",
+              "size_class": "XS",
+              "temperament": "normal",
+              "height_length": "0.32 m",
+              "weight": "0.6 kg",
+              "body_fat": "2%",
+              "look": "一團裹著小鑄鐵火盆底座的橘紅火苗精靈，頭頂冒著兩撮跳動火星小角",
+              "dex_zh": "喜歡蹲在營火旁幫忙點火，高興時會噴出噼啪作響的小火花。",
+              "dex_en": "A cheerful flame sprite nested in a tiny cast-iron brazier, popping happy sparks.",
+              "signature_move": {
+                "move_id": "fire_ember_puff",
+                "name_zh": "炭火噗吐",
+                "name_en": "Ember Puff",
+                "element": "fire",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "熾焰火灶靈 juvenile 專屬招式。",
+                "desc_zh": "鼓起臉頰朝前方吐出一串跳動火星。",
+                "desc_en": "Hearthwisp unleashes Ember Puff.",
+                "visual": "鼓起臉頰朝前方吐出一串跳動火星。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_fire_wisp_adolescent",
+              "name_zh": "熾焰火灶靈",
+              "name_en": "Hearthwisp",
+              "naming_note": "四階段統一命名；火灶爐魂。",
+              "size_class": "S",
+              "temperament": "normal",
+              "height_length": "0.95 m",
+              "weight": "14 kg",
+              "body_fat": "2%",
+              "look": "鑄鐵燈籠外框包覆火靈核心，雙臂化作可伸縮的火鉗與火舌披風",
+              "dex_zh": "開始學會控制燃燒溫度，能把散亂火星聚成高溫火球投擲。",
+              "dex_en": "Enclosed in a wrought-iron lantern frame, focusing wild sparks into tight fireballs.",
+              "signature_move": {
+                "move_id": "fire_brazier_flare",
+                "name_zh": "火灶爆燃",
+                "name_en": "Brazier Flare",
+                "element": "fire",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "熾焰火灶靈 adolescent 專屬招式。",
+                "desc_zh": "打開鑄鐵爐門向扇形前方噴湧炙熱火浪。",
+                "desc_en": "Hearthwisp unleashes Brazier Flare.",
+                "visual": "打開鑄鐵爐門向扇形前方噴湧炙熱火浪。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_fire_wisp_adult",
+              "name_zh": "熾焰火灶靈",
+              "name_en": "Hearthwisp",
+              "naming_note": "四階段統一命名；火灶爐魂。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.75 m",
+              "weight": "88 kg",
+              "body_fat": "2%",
+              "look": "優雅懸浮的赤紅鍛爐精靈，身披六片浮動鑄鐵護片與白熾火焰羽翼",
+              "dex_zh": "體內爐溫足以熔化精鋼，是冒險隊伍在極寒雪原中最可靠的移動暖爐。",
+              "dex_en": "A radiant forge-spirit with six floating iron plates and white-hot flame wings.",
+              "signature_move": {
+                "move_id": "fire_furnace_lance",
+                "name_zh": "熔爐貫焰",
+                "name_en": "Furnace Lance",
+                "element": "fire",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "熾焰火灶靈 adult 專屬招式。",
+                "desc_zh": "將鍛爐烈焰壓縮為細長白熾火槍沿直線貫射。",
+                "desc_en": "Hearthwisp unleashes Furnace Lance.",
+                "visual": "將鍛爐烈焰壓縮為細長白熾火槍沿直線貫射。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_fire_wisp_overload",
+              "name_zh": "熾焰火灶靈",
+              "name_en": "Hearthwisp",
+              "naming_note": "四階段統一命名；火灶爐魂。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.3 m",
+              "weight": "920 kg",
+              "body_fat": "1%",
+              "look": "化為三層懸浮鐵鑄天燈巨像，中央白金太陽爐火燃起沖天烈焰冠冕",
+              "dex_zh": "超載讓火灶靈成為照亮黑夜的太陽鍛爐，方圓百步冰雪瞬間氣化。",
+              "dex_en": "Becomes a towering triple-tiered iron sky-lantern blazing with white-gold solar fire.",
+              "signature_move": {
+                "move_id": "fire_supernova_hearth",
+                "name_zh": "天灶焚星烈焰",
+                "name_en": "Supernova Hearth",
+                "element": "fire",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "熾焰火灶靈 overload 專屬招式。",
+                "desc_zh": "釋放太陽鍛爐般的環形火海吞沒整片戰場。",
+                "desc_en": "Hearthwisp unleashes Supernova Hearth.",
+                "visual": "釋放太陽鍛爐般的環形火海吞沒整片戰場。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_hearth_ember_feed",
+            "name_zh": "添炭升溫",
+            "idea_zh": "在場上停留時間越久，體內爐火溫度越高，火屬性招式威力隨之攀升。"
+          },
+          "overload": "熾焰火灶靈（cr_fire_wisp_overload · XL）：化為三層懸浮鐵鑄天燈巨像，中央白金太陽爐火燃起沖天烈焰冠冕"
+        }
+      }
+    },
+    {
+      "line_id": "cr_frostblade_penguin",
+      "code_zh": "冰",
+      "element": "ice",
+      "title_zh": "冰刀企鵝",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_frostblade_penguin",
+        "elements": [
+          "ice（冰）"
+        ],
+        "element_palettes": [
+          "冰刃青藍",
+          "深海藏青",
+          "雪白"
+        ],
+        "base_parents": [
+          "生物·鳥類",
+          "裝備·冰刀/競技護具"
+        ],
+        "bases": [
+          "極地企鵝",
+          "雙足競速冰刀",
+          "半透明冰晶翼刃"
+        ],
+        "appearance_palette": [
+          "冰刃青藍",
+          "深海藏青",
+          "雪白"
+        ],
+        "timeline": "現代運動想像（極地競速滑冰）",
+        "region": "極地·南極冰棚",
+        "archetype": "arch_speed_skater",
+        "archetype_name": "極速冰刃手",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "足踏天然冰刀、在冰原上以高速彎道斬擊聞名的企鵝劍士",
+        "motifs": "極地企鵝、雙足競速冰刀、半透明冰晶翼刃",
+        "sensitivity": "ok",
+        "role": "高速突擊",
+        "temperament": "fierce",
+        "disposition": "好勝敏捷、講究身法",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.42 m",
+            "weight": "3.8 kg",
+            "body_fat": "14%"
+          },
+          "adolescent": {
+            "height_length": "1.15 m",
+            "weight": "38 kg",
+            "body_fat": "12%"
+          },
+          "adult": {
+            "height_length": "1.85 m",
+            "weight": "92 kg",
+            "body_fat": "10%"
+          },
+          "overload": {
+            "height_length": "4.0 m",
+            "weight": "780 kg",
+            "body_fat": "8%"
+          }
+        },
+        "height_length": "1.85 m",
+        "weight": "92 kg",
+        "body_fat": "10%",
+        "formula": "ice（冰） × 極地企鵝 + 雙足競速冰刀 + 半透明冰晶翼刃 × 極速冰刃手",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_frostblade_penguin_juvenile",
+              "name_zh": "冰刀企鵝",
+              "name_en": "Frostblade",
+              "naming_note": "四階段統一命名；極速冰刃手。",
+              "size_class": "XS",
+              "temperament": "fierce",
+              "height_length": "0.42 m",
+              "weight": "3.8 kg",
+              "body_fat": "14%",
+              "look": "圓滾滾的灰白絨毛小企鵝，雙腳踩著一對小巧透藍冰刀片，平衡感還在練習",
+              "dex_zh": "常在冰面上滑倒又立刻爬起來繼續衝，翼尖已經能凝出細小冰稜。",
+              "dex_en": "A fluffy penguin chick on tiny translucent ice skates, always eager to race.",
+              "signature_move": {
+                "move_id": "ice_skate_dash",
+                "name_zh": "冰刀滑撞",
+                "name_en": "Skate Dash",
+                "element": "ice",
+                "range_class": "close",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "冰刀企鵝 juvenile 專屬招式。",
+                "desc_zh": "俯低身子踏著冰刀沿直線快速滑撞。",
+                "desc_en": "Frostblade unleashes Skate Dash.",
+                "visual": "俯低身子踏著冰刀沿直線快速滑撞。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_frostblade_penguin_adolescent",
+              "name_zh": "冰刀企鵝",
+              "name_en": "Frostblade",
+              "naming_note": "四階段統一命名；極速冰刃手。",
+              "size_class": "M",
+              "temperament": "fierce",
+              "height_length": "1.15 m",
+              "weight": "38 kg",
+              "body_fat": "12%",
+              "look": "換上流線黑白防風羽衣，雙翼邊緣長出半透明鋸齒冰刃，足下冰刀帶有護踝冰甲",
+              "dex_zh": "能在冰面上急轉甩尾，用雙翼冰刃斬斷堅硬浮冰。",
+              "dex_en": "Sleek plumage and serrated wing-blades let it carve tight turns across pack ice.",
+              "signature_move": {
+                "move_id": "ice_cross_slash",
+                "name_zh": "雙翼冰斬",
+                "name_en": "Cross Slash",
+                "element": "ice",
+                "range_class": "close",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "冰刀企鵝 adolescent 專屬招式。",
+                "desc_zh": "貼近敵身高速旋轉並以雙翼冰刃交叉揮斬。",
+                "desc_en": "Frostblade unleashes Cross Slash.",
+                "visual": "貼近敵身高速旋轉並以雙翼冰刃交叉揮斬。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_frostblade_penguin_adult",
+              "name_zh": "冰刀企鵝",
+              "name_en": "Frostblade",
+              "naming_note": "四階段統一命名；極速冰刃手。",
+              "size_class": "L",
+              "temperament": "fierce",
+              "height_length": "1.85 m",
+              "weight": "92 kg",
+              "body_fat": "10%",
+              "look": "身姿挺拔的極速冰刃戰士，頭頂豎起兩道結晶冰冠，雙翼化作修長水晶軍刀",
+              "dex_zh": "滑行速度快到只剩殘影，冰刀劃過處立刻綻開銳利冰錐。",
+              "dex_en": "A poised ice-blade duelist whose crystal sabers leave frost-spires in its wake.",
+              "signature_move": {
+                "move_id": "ice_glacial_lunge",
+                "name_zh": "極速冰鋒突",
+                "name_en": "Glacial Lunge",
+                "element": "ice",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "冰刀企鵝 adult 專屬招式。",
+                "desc_zh": "俯衝加速化作藍白極光箭矢貫穿敵陣。",
+                "desc_en": "Frostblade unleashes Glacial Lunge.",
+                "visual": "俯衝加速化作藍白極光箭矢貫穿敵陣。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_frostblade_penguin_overload",
+              "name_zh": "冰刀企鵝",
+              "name_en": "Frostblade",
+              "naming_note": "四階段統一命名；極速冰刃手。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.0 m",
+              "weight": "780 kg",
+              "body_fat": "8%",
+              "look": "雙翼展開為六枚浮空結晶巨刃，足下冰刀噴射極寒噴流，全身覆蓋流線冰晶競速裝甲",
+              "dex_zh": "超載使冰刀企鵝突破音障，每一次急轉都在戰場上掀起雪暴刀陣。",
+              "dex_en": "Breaks the sound barrier on frost jets, trailing six floating crystal greatswords.",
+              "signature_move": {
+                "move_id": "ice_zero_tempest_rink",
+                "name_zh": "絕對零度冰舞陣",
+                "name_en": "Zero Tempest Rink",
+                "element": "ice",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "冰刀企鵝 overload 專屬招式。",
+                "desc_zh": "以極速繞行戰場畫出巨大冰環並引爆全場冰刃風暴。",
+                "desc_en": "Frostblade unleashes Zero Tempest Rink.",
+                "visual": "以極速繞行戰場畫出巨大冰環並引爆全場冰刃風暴。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_ice_blade_momentum",
+            "name_zh": "冰面加速",
+            "idea_zh": "連續直線衝刺時移動速度遞增，滑行軌跡會短暫凝結滑溜冰面。"
+          },
+          "overload": "冰刀企鵝（cr_frostblade_penguin_overload · XL）：雙翼展開為六枚浮空結晶巨刃，足下冰刀噴射極寒噴流，全身覆蓋流線冰晶競速裝甲"
+        }
+      }
+    },
+    {
+      "line_id": "cr_ice_snowman",
+      "code_zh": "冰",
+      "element": "ice",
+      "title_zh": "霜魄冰晶雪人",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_ice_snowman",
+        "elements": [
+          "ice（冰）"
+        ],
+        "element_palettes": [
+          "純淨雪白",
+          "冰晶藍",
+          "圍巾赤紅"
+        ],
+        "base_parents": [
+          "自然·積雪/冰晶",
+          "器物·冬日雪人"
+        ],
+        "bases": [
+          "雪球疊層身軀",
+          "六角冰晶核心",
+          "編織紅圍巾"
+        ],
+        "appearance_palette": [
+          "純淨雪白",
+          "冰晶藍",
+          "圍巾赤紅"
+        ],
+        "timeline": "近代民間冬日傳說（北歐雪夜）",
+        "region": "歐洲·北歐雪原",
+        "archetype": "arch_winter_snowman",
+        "archetype_name": "冬夜霜魄雪人",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "凝聚初雪與極夜霜魄誕生的雪人精靈，越冷越精神奕奕",
+        "motifs": "雪球疊層身軀、六角冰晶核心、編織紅圍巾",
+        "sensitivity": "ok",
+        "role": "範圍控場",
+        "temperament": "normal",
+        "disposition": "樂天溫厚、怕熱怕曬",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.45 m",
+            "weight": "6 kg",
+            "body_fat": "10%"
+          },
+          "adolescent": {
+            "height_length": "1.30 m",
+            "weight": "85 kg",
+            "body_fat": "10%"
+          },
+          "adult": {
+            "height_length": "2.30 m",
+            "weight": "460 kg",
+            "body_fat": "9%"
+          },
+          "overload": {
+            "height_length": "5.4 m",
+            "weight": "4800 kg",
+            "body_fat": "8%"
+          }
+        },
+        "height_length": "2.30 m",
+        "weight": "460 kg",
+        "body_fat": "9%",
+        "formula": "ice（冰） × 雪球疊層身軀 + 六角冰晶核心 + 編織紅圍巾 × 冬夜霜魄雪人",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_ice_snowman_juvenile",
+              "name_zh": "霜魄冰晶雪人",
+              "name_en": "Frostsoul",
+              "naming_note": "四階段統一命名；冬夜霜魄雪人。",
+              "size_class": "XS",
+              "temperament": "normal",
+              "height_length": "0.45 m",
+              "weight": "6 kg",
+              "body_fat": "10%",
+              "look": "兩顆雪球疊成的迷你雪人，圍著一條過長的紅毛線圍巾，鼻頭是一小顆冰晶",
+              "dex_zh": "冬天清晨最先醒來的小雪人，喜歡用圓滾滾的雪球丟夥伴玩。",
+              "dex_en": "A two-sphere snowling wearing an oversized red scarf and a crystal nose.",
+              "signature_move": {
+                "move_id": "ice_snowball_toss",
+                "name_zh": "雪球拋擊",
+                "name_en": "Snowball Toss",
+                "element": "ice",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "霜魄冰晶雪人 juvenile 專屬招式。",
+                "desc_zh": "雙手搓出圓滾滾的實心雪球擲向目標。",
+                "desc_en": "Frostsoul unleashes Snowball Toss.",
+                "visual": "雙手搓出圓滾滾的實心雪球擲向目標。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_ice_snowman_adolescent",
+              "name_zh": "霜魄冰晶雪人",
+              "name_en": "Frostsoul",
+              "naming_note": "四階段統一命名；冬夜霜魄雪人。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.30 m",
+              "weight": "85 kg",
+              "body_fat": "10%",
+              "look": "三層雪軀外覆上剔透冰晶肩甲，雙手能凝結實心冰錘與雪暴披風",
+              "dex_zh": "學會召喚局地飄雪替隊友降溫，揮動冰錘能擊飛靠近的威脅。",
+              "dex_en": "Three-tiered snow body armored with crystal pauldrons and solid ice mallets.",
+              "signature_move": {
+                "move_id": "ice_frost_hammer",
+                "name_zh": "霜晶雪錘",
+                "name_en": "Frost Hammer",
+                "element": "ice",
+                "range_class": "close",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "霜魄冰晶雪人 adolescent 專屬招式。",
+                "desc_zh": "揮舞雙手凝結的巨大雪錘橫掃前方敵群。",
+                "desc_en": "Frostsoul unleashes Frost Hammer.",
+                "visual": "揮舞雙手凝結的巨大雪錘橫掃前方敵群。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_ice_snowman_adult",
+              "name_zh": "霜魄冰晶雪人",
+              "name_en": "Frostsoul",
+              "naming_note": "四階段統一命名；冬夜霜魄雪人。",
+              "size_class": "L",
+              "temperament": "normal",
+              "height_length": "2.30 m",
+              "weight": "460 kg",
+              "body_fat": "9%",
+              "look": "威嚴的北歐霜晶巨雪人，胸口露出發光的六角冰晶心臟，肩披飄飛冰霜長袍",
+              "dex_zh": "暴風雪中宛如冬之精靈王，隨手一揮便能築起厚實冰牆抵擋攻勢。",
+              "dex_en": "A majestic frost-spirit whose glowing hexagonal ice-heart commands blizzards.",
+              "signature_move": {
+                "move_id": "ice_blizzard_veil",
+                "name_zh": "極夜暴雪幕",
+                "name_en": "Blizzard Veil",
+                "element": "ice",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "霜魄冰晶雪人 adult 專屬招式。",
+                "desc_zh": "自胸口冰晶核心向全場釋放夾帶冰雹的狂暴雪幕。",
+                "desc_en": "Frostsoul unleashes Blizzard Veil.",
+                "visual": "自胸口冰晶核心向全場釋放夾帶冰雹的狂暴雪幕。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_ice_snowman_overload",
+              "name_zh": "霜魄冰晶雪人",
+              "name_en": "Frostsoul",
+              "naming_note": "四階段統一命名；冬夜霜魄雪人。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "5.4 m",
+              "weight": "4800 kg",
+              "body_fat": "8%",
+              "look": "身軀化作移動雪山城堡，六角冰晶核心化作巨大星芒光環懸浮於背後",
+              "dex_zh": "超載讓周圍大氣瞬間凝結成萬年雪原，連陽光都只能透過冰晶折射。",
+              "dex_en": "Becomes a walking glacial citadel crowned by a massive six-pointed frost halo.",
+              "signature_move": {
+                "move_id": "ice_eternal_snowfall",
+                "name_zh": "永冬霜魄降臨",
+                "name_en": "Eternal Snowfall",
+                "element": "ice",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "霜魄冰晶雪人 overload 專屬招式。",
+                "desc_zh": "召喚覆蓋天際的極寒暴雪徹底冰封整片戰場。",
+                "desc_en": "Frostsoul unleashes Eternal Snowfall.",
+                "visual": "召喚覆蓋天際的極寒暴雪徹底冰封整片戰場。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_frost_snowpack",
+            "name_zh": "積雪再生",
+            "idea_zh": "在寒冷環境或冰屬性招式影響下能不斷吸附雪花修補自身體積。"
+          },
+          "overload": "霜魄冰晶雪人（cr_ice_snowman_overload · XL）：身軀化作移動雪山城堡，六角冰晶核心化作巨大星芒光環懸浮於背後"
+        }
+      }
+    },
+    {
+      "line_id": "cr_ink_stele",
+      "code_zh": "影",
+      "element": "shadow",
+      "title_zh": "墨影碑帖",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_ink_stele",
+        "elements": [
+          "shadow（影）"
+        ],
+        "element_palettes": [
+          "松煙墨黑",
+          "宣紙素白",
+          "硃砂印紅"
+        ],
+        "base_parents": [
+          "器物·碑帖/書法",
+          "自然·墨煙/陰影"
+        ],
+        "bases": [
+          "浮空石碑帖",
+          "流動松煙墨跡",
+          "硃砂印章核"
+        ],
+        "appearance_palette": [
+          "松煙墨黑",
+          "宣紙素白",
+          "硃砂印紅"
+        ],
+        "timeline": "古代文化想像（唐宋書法碑林）",
+        "region": "東亞·江南書院",
+        "archetype": "arch_calligraphy_stele",
+        "archetype_name": "墨林碑魂",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "吸納千年書法筆意與松煙墨韻而甦醒的無形碑帖之靈",
+        "motifs": "浮空石碑帖、流動松煙墨跡、硃砂印章核",
+        "sensitivity": "ok",
+        "role": "法術干擾",
+        "temperament": "cautious",
+        "disposition": "沉靜孤高、惜墨如金",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.40 m",
+            "weight": "5 kg",
+            "body_fat": "0%"
+          },
+          "adolescent": {
+            "height_length": "1.35 m",
+            "weight": "72 kg",
+            "body_fat": "0%"
+          },
+          "adult": {
+            "height_length": "2.45 m",
+            "weight": "310 kg",
+            "body_fat": "0%"
+          },
+          "overload": {
+            "height_length": "5.2 m",
+            "weight": "2600 kg",
+            "body_fat": "0%"
+          }
+        },
+        "height_length": "2.45 m",
+        "weight": "310 kg",
+        "body_fat": "0%",
+        "formula": "shadow（影） × 浮空石碑帖 + 流動松煙墨跡 + 硃砂印章核 × 墨林碑魂",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_ink_stele_juvenile",
+              "name_zh": "墨影碑帖",
+              "name_en": "Inkstele",
+              "naming_note": "四階段統一命名；墨林碑魂。",
+              "size_class": "XS",
+              "temperament": "cautious",
+              "height_length": "0.40 m",
+              "weight": "5 kg",
+              "body_fat": "0%",
+              "look": "一塊巴掌大的浮空青石小碑，表面閃著未乾墨跡，周圍飄著兩條小墨魚",
+              "dex_zh": "安靜懸浮在書案旁吸收筆氣，受驚時會潑出墨點掩護自己逃走。",
+              "dex_en": "A floating palm-sized stone tablet trailing wet ink ribbons and tiny ink-fish.",
+              "signature_move": {
+                "move_id": "shadow_ink_blot",
+                "name_zh": "飛墨點染",
+                "name_en": "Ink Blot",
+                "element": "shadow",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "墨影碑帖 juvenile 專屬招式。",
+                "desc_zh": "碑面筆劃閃動，彈出一道高速墨點射向敵人。",
+                "desc_en": "Inkstele unleashes Ink Blot.",
+                "visual": "碑面筆劃閃動，彈出一道高速墨點射向敵人。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_ink_stele_adolescent",
+              "name_zh": "墨影碑帖",
+              "name_en": "Inkstele",
+              "naming_note": "四階段統一命名；墨林碑魂。",
+              "size_class": "M",
+              "temperament": "cautious",
+              "height_length": "1.35 m",
+              "weight": "72 kg",
+              "body_fat": "0%",
+              "look": "修長青石碑身裂成三段浮空拼接，硃砂印章懸於頂端，周圍飛舞流動書法墨帶",
+              "dex_zh": "碑文筆意化為實體墨劍與鎖鏈，能從陰影中束縛對手行動。",
+              "dex_en": "Three-piece floating stele crowned by a vermilion seal, weaving ink-ribbon chains.",
+              "signature_move": {
+                "move_id": "shadow_brush_bind",
+                "name_zh": "狂草墨鎖",
+                "name_en": "Brush Bind",
+                "element": "shadow",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "墨影碑帖 adolescent 專屬招式。",
+                "desc_zh": "揮動飛舞的狂草墨帶橫掃並遲滯前方敵人。",
+                "desc_en": "Inkstele unleashes Brush Bind.",
+                "visual": "揮動飛舞的狂草墨帶橫掃並遲滯前方敵人。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_ink_stele_adult",
+              "name_zh": "墨影碑帖",
+              "name_en": "Inkstele",
+              "naming_note": "四階段統一命名；墨林碑魂。",
+              "size_class": "L",
+              "temperament": "cautious",
+              "height_length": "2.45 m",
+              "weight": "310 kg",
+              "body_fat": "0%",
+              "look": "古雅巍峨的墨影巨碑，碑面刻滿發光銀白篆書，雙側浮現如龍蛇盤繞的立體水墨巨筆",
+              "dex_zh": "大筆一揮便能將立體水墨化為實體異獸與黑霧，令敵人迷失於潑墨畫境。",
+              "dex_en": "An ancient monolith inscribed with glowing script, flanked by living sumi-e dragons.",
+              "signature_move": {
+                "move_id": "shadow_calligraphy_slash",
+                "name_zh": "鐵畫銀鉤斬",
+                "name_en": "Calligraphy Slash",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "墨影碑帖 adult 專屬招式。",
+                "desc_zh": "引動巨型水墨筆鋒沿直線劈出破空墨斬。",
+                "desc_en": "Inkstele unleashes Calligraphy Slash.",
+                "visual": "引動巨型水墨筆鋒沿直線劈出破空墨斬。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_ink_stele_overload",
+              "name_zh": "墨影碑帖",
+              "name_en": "Inkstele",
+              "naming_note": "四階段統一命名；墨林碑魂。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "5.2 m",
+              "weight": "2600 kg",
+              "body_fat": "0%",
+              "look": "化為環繞九座浮空斷碑的墨海硯台陣，中央升起巨大的硃砂天印與遮天水墨山河圖",
+              "dex_zh": "超載展開整幅水墨山河領域，戰場瞬間化為黑白分明的書法畫卷。",
+              "dex_en": "Surrounded by nine floating steles and a colossal vermilion seal, unfolding an ink-wash domain.",
+              "signature_move": {
+                "move_id": "shadow_ink_cosmos",
+                "name_zh": "潑墨山河印",
+                "name_en": "Ink Cosmos",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "墨影碑帖 overload 專屬招式。",
+                "desc_zh": "落下巨大硃砂天印，以吞天水墨洪流洗刷全場。",
+                "desc_en": "Inkstele unleashes Ink Cosmos.",
+                "visual": "落下巨大硃砂天印，以吞天水墨洪流洗刷全場。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_ink_wash_veil",
+            "name_zh": "墨韻暈染",
+            "idea_zh": "攻擊會在目標身上留下墨跡標記，降低其下次攻擊的命中精準度。"
+          },
+          "overload": "墨影碑帖（cr_ink_stele_overload · XL）：化為環繞九座浮空斷碑的墨海硯台陣，中央升起巨大的硃砂天印與遮天水墨山河圖"
+        }
+      }
+    },
+    {
+      "line_id": "cr_light_khepri",
+      "code_zh": "光",
+      "element": "light",
+      "title_zh": "阿頓曦光聖甲蟲",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_light_khepri",
+        "elements": [
+          "light（光）"
+        ],
+        "element_palettes": [
+          "日輪聖金",
+          "青金石藍",
+          "象牙白"
+        ],
+        "base_parents": [
+          "生物·節肢昆蟲",
+          "幻想生物·古埃及太陽象徵"
+        ],
+        "bases": [
+          "黃金聖甲蟲",
+          "太陽日輪球體",
+          "青金石鑲嵌甲"
+        ],
+        "appearance_palette": [
+          "日輪聖金",
+          "青金石藍",
+          "象牙白"
+        ],
+        "timeline": "遠古神話（尼羅河日出信仰）",
+        "region": "非洲·尼羅河谷",
+        "archetype": "arch_khepri_scarab",
+        "archetype_name": "凱布利推日聖甲蟲",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "雙足推動黎明太陽金輪升起、象徵新生與永恆光輝的聖甲蟲",
+        "motifs": "黃金聖甲蟲、太陽日輪球體、青金石鑲嵌甲",
+        "sensitivity": "ok",
+        "role": "輔助 / 光砲",
+        "temperament": "normal",
+        "disposition": "莊嚴虔誠、向光而行",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.36 m",
+            "weight": "2.5 kg",
+            "body_fat": "4%"
+          },
+          "adolescent": {
+            "height_length": "1.10 m",
+            "weight": "55 kg",
+            "body_fat": "4%"
+          },
+          "adult": {
+            "height_length": "2.05 m",
+            "weight": "240 kg",
+            "body_fat": "3%"
+          },
+          "overload": {
+            "height_length": "4.8 m",
+            "weight": "2100 kg",
+            "body_fat": "2%"
+          }
+        },
+        "height_length": "2.05 m",
+        "weight": "240 kg",
+        "body_fat": "3%",
+        "formula": "light（光） × 黃金聖甲蟲 + 太陽日輪球體 + 青金石鑲嵌甲 × 凱布利推日聖甲蟲",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_light_khepri_juvenile",
+              "name_zh": "阿頓曦光聖甲蟲",
+              "name_en": "Kheprisun",
+              "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
+              "size_class": "XS",
+              "temperament": "normal",
+              "height_length": "0.36 m",
+              "weight": "2.5 kg",
+              "body_fat": "4%",
+              "look": "青金石藍小甲蟲推動著一顆發光的微型金珠，背甲閃耀柔和晨曦光暈",
+              "dex_zh": "每天黎明準時出現，認真地把小小太陽珠推上沙丘頂端。",
+              "dex_en": "A lapis-blue scarab pup diligently rolling a miniature glowing golden sun-pearl.",
+              "signature_move": {
+                "move_id": "light_dawn_spark",
+                "name_zh": "晨曦微光",
+                "name_en": "Dawn Spark",
+                "element": "light",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "阿頓曦光聖甲蟲 juvenile 專屬招式。",
+                "desc_zh": "從日輪珠彈出一道聚光晨曦射線。",
+                "desc_en": "Kheprisun unleashes Dawn Spark.",
+                "visual": "從日輪珠彈出一道聚光晨曦射線。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_light_khepri_adolescent",
+              "name_zh": "阿頓曦光聖甲蟲",
+              "name_en": "Kheprisun",
+              "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.10 m",
+              "weight": "55 kg",
+              "body_fat": "4%",
+              "look": "黃金胸甲展開四片半透明薄翼，頭頂雙角托起一顆不斷旋轉的熾熱日輪",
+              "dex_zh": "已能將太陽珠舉至高空照射戰場，替隊友驅散黑暗與迷霧。",
+              "dex_en": "Gold-plated thorax with four translucent wings cradling a spinning solar orb.",
+              "signature_move": {
+                "move_id": "light_scarab_ray",
+                "name_zh": "聖甲日光線",
+                "name_en": "Scarab Ray",
+                "element": "light",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "阿頓曦光聖甲蟲 adolescent 專屬招式。",
+                "desc_zh": "令頭頂日輪聚光射出筆直的金色淨化光束。",
+                "desc_en": "Kheprisun unleashes Scarab Ray.",
+                "visual": "令頭頂日輪聚光射出筆直的金色淨化光束。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_light_khepri_adult",
+              "name_zh": "阿頓曦光聖甲蟲",
+              "name_en": "Kheprisun",
+              "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
+              "size_class": "L",
+              "temperament": "normal",
+              "height_length": "2.05 m",
+              "weight": "240 kg",
+              "body_fat": "3%",
+              "look": "華麗的黃金與青金石雕花聖甲蟲，展開雙翼時背後浮現巨大太陽羽輪與光環法陣",
+              "dex_zh": "宛如清晨第一道破曉曙光，其推動的太陽日輪能輕易融化極夜寒冰。",
+              "dex_en": "Ornate gold and lapis scarab whose unfurled wings reveal a radiant solar disk.",
+              "signature_move": {
+                "move_id": "light_helios_roll",
+                "name_zh": "日輪巡天擊",
+                "name_en": "Helios Roll",
+                "element": "light",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "阿頓曦光聖甲蟲 adult 專屬招式。",
+                "desc_zh": "將巨大熾熱日輪向前滾壓並散射金色光環。",
+                "desc_en": "Kheprisun unleashes Helios Roll.",
+                "visual": "將巨大熾熱日輪向前滾壓並散射金色光環。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_light_khepri_overload",
+              "name_zh": "阿頓曦光聖甲蟲",
+              "name_en": "Kheprisun",
+              "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.8 m",
+              "weight": "2100 kg",
+              "body_fat": "2%",
+              "look": "全身化作懸浮黃金太陽神舟形聖甲蟲，雙翼展開為十二道日冕光翼，托舉微型恆星",
+              "dex_zh": "超載點燃真正的微型太陽，方圓數里化作永晝領域，陰影無所遁形。",
+              "dex_en": "Transforms into a solar-barque colossus with twelve coronal wings holding a miniature star.",
+              "signature_move": {
+                "move_id": "light_aten_zenith",
+                "name_zh": "阿頓正午神輝",
+                "name_en": "Aten Zenith",
+                "element": "light",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "阿頓曦光聖甲蟲 overload 專屬招式。",
+                "desc_zh": "將托舉的太陽日輪升至天頂並釋放照耀全場的淨化光瀑。",
+                "desc_en": "Kheprisun unleashes Aten Zenith.",
+                "visual": "將托舉的太陽日輪升至天頂並釋放照耀全場的淨化光瀑。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_khepri_solar_orb",
+            "name_zh": "推日蓄光",
+            "idea_zh": "每回合為前方日輪累積光能，釋放光屬性招式時附加額外淨化輝光。"
+          },
+          "overload": "阿頓曦光聖甲蟲（cr_light_khepri_overload · XL）：全身化作懸浮黃金太陽神舟形聖甲蟲，雙翼展開為十二道日冕光翼，托舉微型恆星"
+        }
+      }
+    },
+    {
+      "line_id": "cr_metal_vault",
+      "code_zh": "金",
+      "element": "metal",
+      "title_zh": "模組折疊集裝機兵",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_metal_vault",
+        "elements": [
+          "metal（金）"
+        ],
+        "element_palettes": [
+          "工業灰鐵",
+          "警示琥珀黃",
+          "裝甲軍綠"
+        ],
+        "base_parents": [
+          "科幻機械·重工模組",
+          "器物·貨櫃/保險庫"
+        ],
+        "bases": [
+          "摺疊集裝箱體",
+          "液壓連桿機械臂",
+          "裝甲防爆門盾"
+        ],
+        "appearance_palette": [
+          "工業灰鐵",
+          "警示琥珀黃",
+          "裝甲軍綠"
+        ],
+        "timeline": "近未來工業（軌道貨運機甲）",
+        "region": "東亞·近未來港灣都市",
+        "archetype": "arch_modular_container",
+        "archetype_name": "模組貨櫃機兵",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "待機時折疊成標準貨櫃方塊、接戰時瞬間展開武裝的工業守護機兵",
+        "motifs": "摺疊集裝箱體、液壓連桿機械臂、裝甲防爆門盾",
+        "sensitivity": "ok",
+        "role": "變形重裝",
+        "temperament": "territorial",
+        "disposition": "嚴謹機械、執行指令",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.45 m",
+            "weight": "18 kg",
+            "body_fat": "0%"
+          },
+          "adolescent": {
+            "height_length": "1.45 m",
+            "weight": "260 kg",
+            "body_fat": "0%"
+          },
+          "adult": {
+            "height_length": "2.40 m",
+            "weight": "980 kg",
+            "body_fat": "0%"
+          },
+          "overload": {
+            "height_length": "5.0 m",
+            "weight": "8400 kg",
+            "body_fat": "0%"
+          }
+        },
+        "height_length": "2.40 m",
+        "weight": "980 kg",
+        "body_fat": "0%",
+        "formula": "metal（金） × 摺疊集裝箱體 + 液壓連桿機械臂 + 裝甲防爆門盾 × 模組貨櫃機兵",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_metal_vault_juvenile",
+              "name_zh": "模組折疊集裝機兵",
+              "name_en": "Vaultmech",
+              "naming_note": "四階段統一命名；模組貨櫃機兵。",
+              "size_class": "XS",
+              "temperament": "territorial",
+              "height_length": "0.45 m",
+              "weight": "18 kg",
+              "body_fat": "0%",
+              "look": "一只方方正正的迷你金屬工具箱，展開四隻小液壓腳與單眼琥珀感測燈",
+              "dex_zh": "平時安靜蹲在角落像個安全箱，一旦偵測到異常就會彈出機械小鉗。",
+              "dex_en": "A compact metal tool-box bot that pops out hydraulic legs and an amber sensor eye.",
+              "signature_move": {
+                "move_id": "metal_clamp_snap",
+                "name_zh": "液壓夾擊",
+                "name_en": "Clamp Snap",
+                "element": "metal",
+                "range_class": "close",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "模組折疊集裝機兵 juvenile 專屬招式。",
+                "desc_zh": "彈出液壓機械鉗向前精準夾擊。",
+                "desc_en": "Vaultmech unleashes Clamp Snap.",
+                "visual": "彈出液壓機械鉗向前精準夾擊。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_metal_vault_adolescent",
+              "name_zh": "模組折疊集裝機兵",
+              "name_en": "Vaultmech",
+              "naming_note": "四階段統一命名；模組貨櫃機兵。",
+              "size_class": "M",
+              "temperament": "territorial",
+              "height_length": "1.45 m",
+              "weight": "260 kg",
+              "body_fat": "0%",
+              "look": "標準小型貨櫃展開成雙足工業機兵，左臂為防爆門盾，右臂裝備伸縮撞錘",
+              "dex_zh": "能在兩秒內完成收納與戰鬥展開，是前線最可靠的機動掩體。",
+              "dex_en": "Unfolds from a compact cargo pod into a bipedal mech armed with a blast-door shield.",
+              "signature_move": {
+                "move_id": "metal_piston_punch",
+                "name_zh": "重錘推進拳",
+                "name_en": "Piston Punch",
+                "element": "metal",
+                "range_class": "close",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "模組折疊集裝機兵 adolescent 專屬招式。",
+                "desc_zh": "啟動背後推進噴口配合液壓重拳直線突擊。",
+                "desc_en": "Vaultmech unleashes Piston Punch.",
+                "visual": "啟動背後推進噴口配合液壓重拳直線突擊。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_metal_vault_adult",
+              "name_zh": "模組折疊集裝機兵",
+              "name_en": "Vaultmech",
+              "naming_note": "四階段統一命名；模組貨櫃機兵。",
+              "size_class": "L",
+              "temperament": "territorial",
+              "height_length": "2.40 m",
+              "weight": "980 kg",
+              "body_fat": "0%",
+              "look": "厚重全武裝模組集裝機兵，雙肩搭載多聯裝裝甲艙蓋，胸前保險庫轉盤閃爍鎖定紅光",
+              "dex_zh": "全身裝甲皆可獨立彈射或組合成移動堡壘，防禦力堪比戰列艦主裝甲。",
+              "dex_en": "A heavy modular vault-mech with multi-pod shoulder launchers and a rotating chest lock.",
+              "signature_move": {
+                "move_id": "metal_vault_barrage",
+                "name_zh": "貨櫃模組齊射",
+                "name_en": "Vault Barrage",
+                "element": "metal",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "模組折疊集裝機兵 adult 專屬招式。",
+                "desc_zh": "打開肩部與胸口裝甲艙蓋向前方傾瀉金屬彈幕。",
+                "desc_en": "Vaultmech unleashes Vault Barrage.",
+                "visual": "打開肩部與胸口裝甲艙蓋向前方傾瀉金屬彈幕。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_metal_vault_overload",
+              "name_zh": "模組折疊集裝機兵",
+              "name_en": "Vaultmech",
+              "naming_note": "四階段統一命名；模組貨櫃機兵。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "5.0 m",
+              "weight": "8400 kg",
+              "body_fat": "0%",
+              "look": "三個集裝機兵模組超載合體成移動鋼鐵要塞，雙臂化作巨型磁軌攻城錘與全覆式防爆壁",
+              "dex_zh": "超載啟動最高安全鎖定，將整座移動軍械庫的火力與裝甲同時釋放。",
+              "dex_en": "Fuses triple container modules into a walking steel fortress with siege rail-hammers.",
+              "signature_move": {
+                "move_id": "metal_fortress_protocol",
+                "name_zh": "最終保險庫協定",
+                "name_en": "Fortress Protocol",
+                "element": "metal",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "模組折疊集裝機兵 overload 專屬招式。",
+                "desc_zh": "展開全機裝甲艙並發射覆蓋全場的磁軌穿甲齊射。",
+                "desc_en": "Vaultmech unleashes Fortress Protocol.",
+                "visual": "展開全機裝甲艙並發射覆蓋全場的磁軌穿甲齊射。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_vault_armor_fold",
+            "name_zh": "裝甲閉鎖",
+            "idea_zh": "切換防禦姿態時將肢體收進厚實貨櫃外殼內，大幅提升抗打擊能力。"
+          },
+          "overload": "模組折疊集裝機兵（cr_metal_vault_overload · XL）：三個集裝機兵模組超載合體成移動鋼鐵要塞，雙臂化作巨型磁軌攻城錘與全覆式防爆壁"
+        }
+      }
+    },
+    {
+      "line_id": "cr_shadow_eye",
+      "code_zh": "影",
+      "element": "shadow",
+      "title_zh": "幽影虛空瞳",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_shadow_eye",
+        "elements": [
+          "shadow（影）"
+        ],
+        "element_palettes": [
+          "虛空黑紫",
+          "星雲品紅",
+          "幽冥銀"
+        ],
+        "base_parents": [
+          "幻想生物·虛空魔眼",
+          "自然·星雲/黑洞"
+        ],
+        "bases": [
+          "浮空單眼魔核",
+          "黑霧觸鬚斗篷",
+          "破碎星環瞳孔"
+        ],
+        "appearance_palette": [
+          "虛空黑紫",
+          "星雲品紅",
+          "幽冥銀"
+        ],
+        "timeline": "遠古星界想像（深空觀測神話）",
+        "region": "極地·永夜觀星台",
+        "archetype": "arch_void_oculus",
+        "archetype_name": "深空虛空之瞳",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "凝視星界裂隙而生的浮空單眼精靈，瞳孔深處映照著扭曲的星雲暗影",
+        "motifs": "浮空單眼魔核、黑霧觸鬚斗篷、破碎星環瞳孔",
+        "sensitivity": "ok",
+        "role": "遠距干擾",
+        "temperament": "cautious",
+        "disposition": "沉默凝視、神出鬼沒",
+        "size_profile": "XS→S→M→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.35 m",
+            "weight": "1.0 kg",
+            "body_fat": "0%"
+          },
+          "adolescent": {
+            "height_length": "0.95 m",
+            "weight": "15 kg",
+            "body_fat": "0%"
+          },
+          "adult": {
+            "height_length": "1.80 m",
+            "weight": "65 kg",
+            "body_fat": "0%"
+          },
+          "overload": {
+            "height_length": "4.6 m",
+            "weight": "1100 kg",
+            "body_fat": "0%"
+          }
+        },
+        "height_length": "1.80 m",
+        "weight": "65 kg",
+        "body_fat": "0%",
+        "formula": "shadow（影） × 浮空單眼魔核 + 黑霧觸鬚斗篷 + 破碎星環瞳孔 × 深空虛空之瞳",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_shadow_eye_juvenile",
+              "name_zh": "幽影虛空瞳",
+              "name_en": "Voideye",
+              "naming_note": "四階段統一命名；深空虛空之瞳。",
+              "size_class": "XS",
+              "temperament": "cautious",
+              "height_length": "0.35 m",
+              "weight": "1.0 kg",
+              "body_fat": "0%",
+              "look": "一顆拳頭大的紫黑色小眼球，裹著一圈半透明黑煙小斗篷安靜飄浮",
+              "dex_zh": "好奇心極強卻非常害羞，被直視時會立刻躲進自己的影子裡。",
+              "dex_en": "A fist-sized violet-black eye sprite wrapped in a wispy cloak of dark mist.",
+              "signature_move": {
+                "move_id": "shadow_gaze_ping",
+                "name_zh": "幽瞳微刺",
+                "name_en": "Gaze Ping",
+                "element": "shadow",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "幽影虛空瞳 juvenile 專屬招式。",
+                "desc_zh": "瞳孔縮緊，朝目標射出一道細小黑紫視線光束。",
+                "desc_en": "Voideye unleashes Gaze Ping.",
+                "visual": "瞳孔縮緊，朝目標射出一道細小黑紫視線光束。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_shadow_eye_adolescent",
+              "name_zh": "幽影虛空瞳",
+              "name_en": "Voideye",
+              "naming_note": "四階段統一命名；深空虛空之瞳。",
+              "size_class": "S",
+              "temperament": "cautious",
+              "height_length": "0.95 m",
+              "weight": "15 kg",
+              "body_fat": "0%",
+              "look": "眼球周圍長出兩道破碎銀環與三條飄逸黑霧觸手，瞳仁呈現旋轉星雲狀",
+              "dex_zh": "開始能扭曲周圍光線製造殘像，讓敵人分不清真正的本體位置。",
+              "dex_en": "Orbited by broken silver rings and dark-mist tendrils with a swirling nebula pupil.",
+              "signature_move": {
+                "move_id": "shadow_rift_beam",
+                "name_zh": "裂隙凝視波",
+                "name_en": "Rift Beam",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "幽影虛空瞳 adolescent 專屬招式。",
+                "desc_zh": "旋轉銀環對焦後射出扭曲空間的紫黑光束。",
+                "desc_en": "Voideye unleashes Rift Beam.",
+                "visual": "旋轉銀環對焦後射出扭曲空間的紫黑光束。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_shadow_eye_adult",
+              "name_zh": "幽影虛空瞳",
+              "name_en": "Voideye",
+              "naming_note": "四階段統一命名；深空虛空之瞳。",
+              "size_class": "M",
+              "temperament": "cautious",
+              "height_length": "1.80 m",
+              "weight": "65 kg",
+              "body_fat": "0%",
+              "look": "莊嚴詭譎的虛空魔眼，三道刻有星圖符文的銀環繞瞳旋轉，下方垂落如斗篷般的暗影觸鬚",
+              "dex_zh": "凝視之間便能撕開微型空間裂隙，將敵方的遠距攻擊吞入虛無。",
+              "dex_en": "Three star-charted silver rings orbit its core above flowing shadow-mantle tendrils.",
+              "signature_move": {
+                "move_id": "shadow_abyss_stare",
+                "name_zh": "深淵魔眼凝視",
+                "name_en": "Abyss Stare",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "幽影虛空瞳 adult 專屬招式。",
+                "desc_zh": "瞳孔全開向扇形區域釋放吞噬光線的暗影視界波。",
+                "desc_en": "Voideye unleashes Abyss Stare.",
+                "visual": "瞳孔全開向扇形區域釋放吞噬光線的暗影視界波。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_shadow_eye_overload",
+              "name_zh": "幽影虛空瞳",
+              "name_en": "Voideye",
+              "naming_note": "四階段統一命名；深空虛空之瞳。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.6 m",
+              "weight": "1100 kg",
+              "body_fat": "0%",
+              "look": "化為直徑數丈的星界黑洞巨瞳，七重破碎星環交錯旋轉，背後展開遮蔽星光的暗影羽翼",
+              "dex_zh": "超載開啟深空觀測視界，所見之處連空間座標都會產生短暫坍縮。",
+              "dex_en": "Manifests as a colossal black-hole oculus framed by seven intersecting star-rings.",
+              "signature_move": {
+                "move_id": "shadow_event_horizon",
+                "name_zh": "視界坍縮宣告",
+                "name_en": "Event Horizon",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "幽影虛空瞳 overload 專屬招式。",
+                "desc_zh": "張開星界黑洞巨瞳，在戰場中央引發吞噬萬物的暗影引力波。",
+                "desc_en": "Voideye unleashes Event Horizon.",
+                "visual": "張開星界黑洞巨瞳，在戰場中央引發吞噬萬物的暗影引力波。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_void_gaze_lock",
+            "name_zh": "虛空凝視",
+            "idea_zh": "被其瞳孔鎖定的敵人會感到空間錯位，移動與閃避反應變慢。"
+          },
+          "overload": "幽影虛空瞳（cr_shadow_eye_overload · XL）：化為直徑數丈的星界黑洞巨瞳，七重破碎星環交錯旋轉，背後展開遮蔽星光的暗影羽翼"
+        }
+      }
+    },
+    {
+      "line_id": "cr_solmane_lion",
+      "code_zh": "火",
+      "element": "fire",
+      "title_zh": "火鬃聖獅",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_solmane_lion",
+        "elements": [
+          "fire（火）"
+        ],
+        "element_palettes": [
+          "熾金紅",
+          "象牙白",
+          "太陽金"
+        ],
+        "base_parents": [
+          "生物·哺乳類",
+          "自然·太陽光冕"
+        ],
+        "bases": [
+          "草原雄獅",
+          "燃燒太陽鬃毛",
+          "黃金護肩爪甲"
+        ],
+        "appearance_palette": [
+          "熾金紅",
+          "象牙白",
+          "太陽金"
+        ],
+        "timeline": "遠古神話（撒哈拉日輪王國）",
+        "region": "非洲·熱帶草原",
+        "archetype": "arch_solar_lion",
+        "archetype_name": "日輪火鬃聖獅",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "頸繞永恆日冕火鬃、咆哮如正午太陽般威嚴的草原王獅",
+        "motifs": "草原雄獅、燃燒太陽鬃毛、黃金護肩爪甲",
+        "sensitivity": "ok",
+        "role": "近戰強攻",
+        "temperament": "fierce",
+        "disposition": "光明磊落、王者氣度",
+        "size_profile": "S→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.52 m",
+            "weight": "12 kg",
+            "body_fat": "12%"
+          },
+          "adolescent": {
+            "height_length": "1.30 m",
+            "weight": "95 kg",
+            "body_fat": "11%"
+          },
+          "adult": {
+            "height_length": "2.25 m",
+            "weight": "280 kg",
+            "body_fat": "10%"
+          },
+          "overload": {
+            "height_length": "5.0 m",
+            "weight": "2900 kg",
+            "body_fat": "8%"
+          }
+        },
+        "height_length": "2.25 m",
+        "weight": "280 kg",
+        "body_fat": "10%",
+        "formula": "fire（火） × 草原雄獅 + 燃燒太陽鬃毛 + 黃金護肩爪甲 × 日輪火鬃聖獅",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_solmane_lion_juvenile",
+              "name_zh": "火鬃聖獅",
+              "name_en": "Solmane",
+              "naming_note": "四階段統一命名；日輪火鬃聖獅。",
+              "size_class": "S",
+              "temperament": "fierce",
+              "height_length": "0.52 m",
+              "weight": "12 kg",
+              "body_fat": "12%",
+              "look": "奶白色小獅崽頸間冒出一圈蓬鬆橘紅小火毛，雙爪帶著淡淡金紋",
+              "dex_zh": "精力充沛愛晒太陽，打噴嚏時會從鼻尖冒出一小朵金色火苗。",
+              "dex_en": "An ivory lion cub with a fluffy ring of orange-red flame-fur around its neck.",
+              "signature_move": {
+                "move_id": "fire_cub_pounce",
+                "name_zh": "火爪撲擊",
+                "name_en": "Cub Pounce",
+                "element": "fire",
+                "range_class": "close",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "火鬃聖獅 juvenile 專屬招式。",
+                "desc_zh": "帶著橘紅火星向前躍起撲擊目標。",
+                "desc_en": "Solmane unleashes Cub Pounce.",
+                "visual": "帶著橘紅火星向前躍起撲擊目標。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_solmane_lion_adolescent",
+              "name_zh": "火鬃聖獅",
+              "name_en": "Solmane",
+              "naming_note": "四階段統一命名；日輪火鬃聖獅。",
+              "size_class": "M",
+              "temperament": "fierce",
+              "height_length": "1.30 m",
+              "weight": "95 kg",
+              "body_fat": "11%",
+              "look": "修長健壯的少年獅王，火鬃如烈焰圍巾般向後飄揚，四肢套上鍛金護脛",
+              "dex_zh": "奔跑時身後拖出長長火尾，咆哮聲已帶著震懾群獸的威勢。",
+              "dex_en": "Lithe adolescent lion trailing a sweeping flame-mane and gilded greaves.",
+              "signature_move": {
+                "move_id": "fire_mane_charge",
+                "name_zh": "烈鬃突進",
+                "name_en": "Mane Charge",
+                "element": "fire",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "火鬃聖獅 adolescent 專屬招式。",
+                "desc_zh": "壓低獅首讓火鬃化作火球沿直線高速猛撞。",
+                "desc_en": "Solmane unleashes Mane Charge.",
+                "visual": "壓低獅首讓火鬃化作火球沿直線高速猛撞。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_solmane_lion_adult",
+              "name_zh": "火鬃聖獅",
+              "name_en": "Solmane",
+              "naming_note": "四階段統一命名；日輪火鬃聖獅。",
+              "size_class": "L",
+              "temperament": "fierce",
+              "height_length": "2.25 m",
+              "weight": "280 kg",
+              "body_fat": "10%",
+              "look": "威風凜凜的日輪聖獅，龐大鬃毛燃燒成太陽日冕狀雙環，額嵌黃金太陽徽記",
+              "dex_zh": "一聲獅吼足以引燃乾燥草原氣流，被視為太陽神殿最忠誠的守衛王獸。",
+              "dex_en": "A regal lion crowned with twin coronal flame-rings and a golden solar crest.",
+              "signature_move": {
+                "move_id": "fire_solar_roar",
+                "name_zh": "聖獅日冕吼",
+                "name_en": "Solar Roar",
+                "element": "fire",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "火鬃聖獅 adult 專屬招式。",
+                "desc_zh": "仰天咆哮噴出扇形太陽日冕火浪橫掃前方。",
+                "desc_en": "Solmane unleashes Solar Roar.",
+                "visual": "仰天咆哮噴出扇形太陽日冕火浪橫掃前方。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_solmane_lion_overload",
+              "name_zh": "火鬃聖獅",
+              "name_en": "Solmane",
+              "naming_note": "四階段統一命名；日輪火鬃聖獅。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "5.0 m",
+              "weight": "2900 kg",
+              "body_fat": "8%",
+              "look": "全身披上黃金太陽神鎧，火鬃膨脹成三層旋轉熾白恆星光環，四爪踏火凌空",
+              "dex_zh": "超載化作行走的太陽化身，每一次揮爪都伴隨耀眼日珥噴發。",
+              "dex_en": "Clad in golden solar armor with triple spinning stellar-corona rings around its mane.",
+              "signature_move": {
+                "move_id": "fire_coronal_sovereign",
+                "name_zh": "太陽王權大日珥",
+                "name_en": "Coronal Sovereign",
+                "element": "fire",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "火鬃聖獅 overload 專屬招式。",
+                "desc_zh": "躍至半空引爆三層日冕火環，降下熾金火雨焚盡全場。",
+                "desc_en": "Solmane unleashes Coronal Sovereign.",
+                "visual": "躍至半空引爆三層日冕火環，降下熾金火雨焚盡全場。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_solmane_radiance",
+            "name_zh": "日冕威壓",
+            "idea_zh": "熾熱鬃毛散發耀眼熱浪，使近身交鋒的敵人難以直視其動作。"
+          },
+          "overload": "火鬃聖獅（cr_solmane_lion_overload · XL）：全身披上黃金太陽神鎧，火鬃膨脹成三層旋轉熾白恆星光環，四爪踏火凌空"
+        }
+      }
+    },
+    {
+      "line_id": "cr_thunder_drone",
+      "code_zh": "雷",
+      "element": "thunder",
+      "title_zh": "超導電容巡航無人機",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_thunder_drone",
+        "elements": [
+          "thunder（雷）"
+        ],
+        "element_palettes": [
+          "電漿青藍",
+          "航空鈦白",
+          "碳纖黑"
+        ],
+        "base_parents": [
+          "科幻機械·無人飛行載具",
+          "器械·電容/線圈"
+        ],
+        "bases": [
+          "多旋翼巡航無人機",
+          "超導電容環陣",
+          "高壓電漿尾翼"
+        ],
+        "appearance_palette": [
+          "電漿青藍",
+          "航空鈦白",
+          "碳纖黑"
+        ],
+        "timeline": "近未來科技（大氣層電離巡邏網）",
+        "region": "美洲·高空觀測站",
+        "archetype": "arch_capacitor_drone",
+        "archetype_name": "超導巡航電翼",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "搭載環形超導電容與無葉片離子推進器的高空雷屬性無人機獸",
+        "motifs": "多旋翼巡航無人機、超導電容環陣、高壓電漿尾翼",
+        "sensitivity": "ok",
+        "role": "高機動狙擊",
+        "temperament": "normal",
+        "disposition": "冷靜精準、持續盤旋",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.38 m",
+            "weight": "2.2 kg",
+            "body_fat": "0%"
+          },
+          "adolescent": {
+            "height_length": "1.15 m",
+            "weight": "42 kg",
+            "body_fat": "0%"
+          },
+          "adult": {
+            "height_length": "2.10 m",
+            "weight": "180 kg",
+            "body_fat": "0%"
+          },
+          "overload": {
+            "height_length": "4.8 m",
+            "weight": "1650 kg",
+            "body_fat": "0%"
+          }
+        },
+        "height_length": "2.10 m",
+        "weight": "180 kg",
+        "body_fat": "0%",
+        "formula": "thunder（雷） × 多旋翼巡航無人機 + 超導電容環陣 + 高壓電漿尾翼 × 超導巡航電翼",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_thunder_drone_juvenile",
+              "name_zh": "超導電容巡航無人機",
+              "name_en": "Voltcraft",
+              "naming_note": "四階段統一命名；超導巡航電翼。",
+              "size_class": "XS",
+              "temperament": "normal",
+              "height_length": "0.38 m",
+              "weight": "2.2 kg",
+              "body_fat": "0%",
+              "look": "圓盤狀白色小偵察機，兩側掛著迷你藍光電容筒，飛行時發出輕微電流嗡鳴",
+              "dex_zh": "總是在高處盤旋掃描環境，電力不足時會自己飛去避雷針充電。",
+              "dex_en": "A compact white scout drone flanked by miniature blue capacitor pods.",
+              "signature_move": {
+                "move_id": "thunder_spark_ping",
+                "name_zh": "脈衝微彈",
+                "name_en": "Spark Ping",
+                "element": "thunder",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "超導電容巡航無人機 juvenile 專屬招式。",
+                "desc_zh": "從機首感測器射出一發精準藍色電漿彈。",
+                "desc_en": "Voltcraft unleashes Spark Ping.",
+                "visual": "從機首感測器射出一發精準藍色電漿彈。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_thunder_drone_adolescent",
+              "name_zh": "超導電容巡航無人機",
+              "name_en": "Voltcraft",
+              "naming_note": "四階段統一命名；超導巡航電翼。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.15 m",
+              "weight": "42 kg",
+              "body_fat": "0%",
+              "look": "雙翼展開為前掠翼構型，中央嵌著發光超導環，機腹掛載雙聯電弧導軌",
+              "dex_zh": "能在暴風雨雲層中自如穿梭，利用雷雲靜電替自己瞬間滿電。",
+              "dex_en": "Forward-swept wings and a central superconducting ring let it harvest storm clouds.",
+              "signature_move": {
+                "move_id": "thunder_arc_strafe",
+                "name_zh": "電弧掃射",
+                "name_en": "Arc Strafe",
+                "element": "thunder",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "超導電容巡航無人機 adolescent 專屬招式。",
+                "desc_zh": "低空高速掠過並向下方扇形區域傾瀉電弧。",
+                "desc_en": "Voltcraft unleashes Arc Strafe.",
+                "visual": "低空高速掠過並向下方扇形區域傾瀉電弧。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_thunder_drone_adult",
+              "name_zh": "超導電容巡航無人機",
+              "name_en": "Voltcraft",
+              "naming_note": "四階段統一命名；超導巡航電翼。",
+              "size_class": "L",
+              "temperament": "normal",
+              "height_length": "2.10 m",
+              "weight": "180 kg",
+              "body_fat": "0%",
+              "look": "流線型隱形戰機級電容無人機，四具無葉片環形離子引擎噴吐藍紫電漿尾焰",
+              "dex_zh": "巡航速度超越音速，主電容蓄滿後能精準狙擊數里外的單一目標。",
+              "dex_en": "Stealth-class cruiser drone powered by four bladeless plasma-ring thrusters.",
+              "signature_move": {
+                "move_id": "thunder_rail_snipe",
+                "name_zh": "超導雷光狙擊",
+                "name_en": "Rail Snipe",
+                "element": "thunder",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "超導電容巡航無人機 adult 專屬招式。",
+                "desc_zh": "將四具環形電容電力匯聚機首，射出極速穿甲雷射電漿。",
+                "desc_en": "Voltcraft unleashes Rail Snipe.",
+                "visual": "將四具環形電容電力匯聚機首，射出極速穿甲雷射電漿。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_thunder_drone_overload",
+              "name_zh": "超導電容巡航無人機",
+              "name_en": "Voltcraft",
+              "naming_note": "四階段統一命名；超導巡航電翼。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.8 m",
+              "weight": "1650 kg",
+              "body_fat": "0%",
+              "look": "展開為龐大戰略級空中電離航母，機翼延伸出六枚浮空磁軌浮游砲與電離護盾",
+              "dex_zh": "超載連結高空電離層，令戰場上空化為持續放電的電磁風暴區。",
+              "dex_en": "Expands into an atmospheric carrier drone deploying six floating rail-bits.",
+              "signature_move": {
+                "move_id": "thunder_ionosphere_strike",
+                "name_zh": "電離層軌道雷擊",
+                "name_en": "Ionosphere Strike",
+                "element": "thunder",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "超導電容巡航無人機 overload 專屬招式。",
+                "desc_zh": "導引六枚浮游砲從天際降下覆蓋全場的交叉雷網。",
+                "desc_en": "Voltcraft unleashes Ionosphere Strike.",
+                "visual": "導引六枚浮游砲從天際降下覆蓋全場的交叉雷網。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_drone_superconduct",
+            "name_zh": "超導迴路",
+            "idea_zh": "高速巡航時線圈持續累積靜電電荷，下次遠程雷擊射程與速度提升。"
+          },
+          "overload": "超導電容巡航無人機（cr_thunder_drone_overload · XL）：展開為龐大戰略級空中電離航母，機翼延伸出六枚浮空磁軌浮游砲與電離護盾"
+        }
+      }
+    },
+    {
+      "line_id": "cr_verdant_aquila",
+      "code_zh": "木",
+      "element": "wood",
+      "title_zh": "葉冠鷲",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_verdant_aquila",
+        "elements": [
+          "wood（木）"
+        ],
+        "element_palettes": [
+          "森葉翠綠",
+          "原木深棕",
+          "金秋琥珀"
+        ],
+        "base_parents": [
+          "生物·鳥類",
+          "植物·蕨葉/橡木"
+        ],
+        "bases": [
+          "高空金雕/鷲",
+          "層疊蕨葉羽翼",
+          "橡木枝角冠冕"
+        ],
+        "appearance_palette": [
+          "森葉翠綠",
+          "原木深棕",
+          "金秋琥珀"
+        ],
+        "timeline": "遠古森林神話（高原古林守護鳥）",
+        "region": "美洲·安地斯雲霧林",
+        "archetype": "arch_forest_aquila",
+        "archetype_name": "森冠巨鷲",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "雙翼由層疊翠綠葉片織成、頭戴橡實枝角冠冕的高空木屬性猛禽",
+        "motifs": "高空金雕/鷲、層疊蕨葉羽翼、橡木枝角冠冕",
+        "sensitivity": "ok",
+        "role": "空中突襲",
+        "temperament": "territorial",
+        "disposition": "銳利警覺、守護林冠",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.40 m",
+            "weight": "1.8 kg",
+            "body_fat": "11%"
+          },
+          "adolescent": {
+            "height_length": "1.20 m",
+            "weight": "26 kg",
+            "body_fat": "10%"
+          },
+          "adult": {
+            "height_length": "2.15 m",
+            "weight": "78 kg",
+            "body_fat": "9%"
+          },
+          "overload": {
+            "height_length": "5.2 m",
+            "weight": "980 kg",
+            "body_fat": "7%"
+          }
+        },
+        "height_length": "2.15 m",
+        "weight": "78 kg",
+        "body_fat": "9%",
+        "formula": "wood（木） × 高空金雕/鷲 + 層疊蕨葉羽翼 + 橡木枝角冠冕 × 森冠巨鷲",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_verdant_aquila_juvenile",
+              "name_zh": "葉冠鷲",
+              "name_en": "Verdaquila",
+              "naming_note": "四階段統一命名；森冠巨鷲。",
+              "size_class": "XS",
+              "temperament": "territorial",
+              "height_length": "0.40 m",
+              "weight": "1.8 kg",
+              "body_fat": "11%",
+              "look": "絨毛間夾雜著嫩綠新葉的小鷲雛，頭頂冒出兩片小小的三葉草羽冠",
+              "dex_zh": "最愛棲息在樹梢最高處觀察雲霧，振翅時會飄落清香葉粉。",
+              "dex_en": "A downy eaglet sprouted with fresh green leaf-feathers and a clover crest.",
+              "signature_move": {
+                "move_id": "wood_leaf_flutter",
+                "name_zh": "葉羽飛鏢",
+                "name_en": "Leaf Flutter",
+                "element": "wood",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "葉冠鷲 juvenile 專屬招式。",
+                "desc_zh": "抖落翼間幾片硬化嫩葉化作飛鏢射向目標。",
+                "desc_en": "Verdaquila unleashes Leaf Flutter.",
+                "visual": "抖落翼間幾片硬化嫩葉化作飛鏢射向目標。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_verdant_aquila_adolescent",
+              "name_zh": "葉冠鷲",
+              "name_en": "Verdaquila",
+              "naming_note": "四階段統一命名；森冠巨鷲。",
+              "size_class": "M",
+              "temperament": "territorial",
+              "height_length": "1.20 m",
+              "weight": "26 kg",
+              "body_fat": "10%",
+              "look": "雙翼換上堅韌深綠劍葉長羽，雙爪覆著老樹皮鱗甲，頭冠長出分叉小木角",
+              "dex_zh": "俯衝速度極快，葉片邊緣如鋸齒般鋒利，能輕易斬斷藤蔓與木樁。",
+              "dex_en": "Broad sword-leaf pinions and bark-armored talons slice cleanly through thickets.",
+              "signature_move": {
+                "move_id": "wood_razor_dive",
+                "name_zh": "翠羽俯衝斬",
+                "name_en": "Razor Dive",
+                "element": "wood",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "葉冠鷲 adolescent 專屬招式。",
+                "desc_zh": "收攏葉翼自空中高速俯衝沿直線掠斬。",
+                "desc_en": "Verdaquila unleashes Razor Dive.",
+                "visual": "收攏葉翼自空中高速俯衝沿直線掠斬。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_verdant_aquila_adult",
+              "name_zh": "葉冠鷲",
+              "name_en": "Verdaquila",
+              "naming_note": "四階段統一命名；森冠巨鷲。",
+              "size_class": "L",
+              "temperament": "territorial",
+              "height_length": "2.15 m",
+              "weight": "78 kg",
+              "body_fat": "9%",
+              "look": "氣勢非凡的森林霸主巨鷲，頭頂繁茂橡枝冠冕綻放金琥珀花蕾，尾羽如孔雀蕨扇展開",
+              "dex_zh": "翼展遮蔽林間日光，一振翅便能掀起夾帶萬千葉刃的森林綠風。",
+              "dex_en": "Majestic forest sovereign crowned with blooming oak branches and fern-fan tail.",
+              "signature_move": {
+                "move_id": "wood_canopy_gale",
+                "name_zh": "林冠葉刃風暴",
+                "name_en": "Canopy Gale",
+                "element": "wood",
+                "range_class": "long",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "葉冠鷲 adult 專屬招式。",
+                "desc_zh": "高空振翅向下方扇形區域捲起無數銳利葉刃狂風。",
+                "desc_en": "Verdaquila unleashes Canopy Gale.",
+                "visual": "高空振翅向下方扇形區域捲起無數銳利葉刃狂風。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_verdant_aquila_overload",
+              "name_zh": "葉冠鷲",
+              "name_en": "Verdaquila",
+              "naming_note": "四階段統一命名；森冠巨鷲。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "5.2 m",
+              "weight": "980 kg",
+              "body_fat": "7%",
+              "look": "全身羽翼化作百層發光翡翠世界樹枝葉，橡木王冠綻放金色聖花光環",
+              "dex_zh": "超載讓葉冠鷲成為移動的空中聖林，所過之處枯木逢春、萬葉化劍。",
+              "dex_en": "Transforms into a luminous canopy colossus with hundred-layered emerald boughs.",
+              "signature_move": {
+                "move_id": "wood_worldtree_tempest",
+                "name_zh": "世界樹翠羽天嵐",
+                "name_en": "Worldtree Tempest",
+                "element": "wood",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "葉冠鷲 overload 專屬招式。",
+                "desc_zh": "召喚遮天蔽日的翠綠葉劍風暴覆蓋整片戰場。",
+                "desc_en": "Verdaquila unleashes Worldtree Tempest.",
+                "visual": "召喚遮天蔽日的翠綠葉劍風暴覆蓋整片戰場。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_aquila_leaf_glide",
+            "name_zh": "林冠乘風",
+            "idea_zh": "從高處俯衝時葉羽自動張開減阻，命中後可迅速拉升脫離近戰。"
+          },
+          "overload": "葉冠鷲（cr_verdant_aquila_overload · XL）：全身羽翼化作百層發光翡翠世界樹枝葉，橡木王冠綻放金色聖花光環"
+        }
+      }
+    },
+    {
+      "line_id": "cr_wind_bird",
+      "code_zh": "風",
+      "element": "wind",
+      "title_zh": "氣旋羽雲雀",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_wind_bird",
+        "elements": [
+          "wind（風）"
+        ],
+        "element_palettes": [
+          "天青藍",
+          "雲絮白",
+          "薄荷綠"
+        ],
+        "base_parents": [
+          "生物·鳥類",
+          "自然·積雲/氣流"
+        ],
+        "bases": [
+          "高速鳴禽雲雀",
+          "雙層雲絮尾羽",
+          "流線氣旋風環"
+        ],
+        "appearance_palette": [
+          "天青藍",
+          "雲絮白",
+          "薄荷綠"
+        ],
+        "timeline": "遠古自然傳說（高原牧歌）",
+        "region": "中亞·天山草原",
+        "archetype": "arch_sky_lark",
+        "archetype_name": "天嵐雲雀",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "歌聲能喚來晴朗順風、雙翼常伴隨雲絮氣旋翻飛的靈動飛鳥",
+        "motifs": "高速鳴禽雲雀、雙層雲絮尾羽、流線氣旋風環",
+        "sensitivity": "ok",
+        "role": "輔助 / 高速遊擊",
+        "temperament": "normal",
+        "disposition": "開朗愛唱、隨風翱翔",
+        "size_profile": "XS→S→M→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.28 m",
+            "weight": "0.7 kg",
+            "body_fat": "10%"
+          },
+          "adolescent": {
+            "height_length": "0.85 m",
+            "weight": "11 kg",
+            "body_fat": "9%"
+          },
+          "adult": {
+            "height_length": "1.65 m",
+            "weight": "45 kg",
+            "body_fat": "8%"
+          },
+          "overload": {
+            "height_length": "4.2 m",
+            "weight": "680 kg",
+            "body_fat": "6%"
+          }
+        },
+        "height_length": "1.65 m",
+        "weight": "45 kg",
+        "body_fat": "8%",
+        "formula": "wind（風） × 高速鳴禽雲雀 + 雙層雲絮尾羽 + 流線氣旋風環 × 天嵐雲雀",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_wind_bird_juvenile",
+              "name_zh": "氣旋羽雲雀",
+              "name_en": "Zephyrlark",
+              "naming_note": "四階段統一命名；天嵐雲雀。",
+              "size_class": "XS",
+              "temperament": "normal",
+              "height_length": "0.28 m",
+              "weight": "0.7 kg",
+              "body_fat": "10%",
+              "look": "蓬鬆像一團白色雲朵的小雲雀，雙頰帶有天青色羽斑，尾羽捲成小氣旋",
+              "dex_zh": "喜歡乘著微風打轉玩耍，邊飛邊發出清脆悅耳的風鈴般叫聲。",
+              "dex_en": "A puffball cloud-lark with sky-blue cheek tufts and a curled cyclone tail.",
+              "signature_move": {
+                "move_id": "wind_chirp_gust",
+                "name_zh": "風鈴微風",
+                "name_en": "Chirp Gust",
+                "element": "wind",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "氣旋羽雲雀 juvenile 專屬招式。",
+                "desc_zh": "清脆啼鳴並扇出一道輕快氣流彈擊退敵人。",
+                "desc_en": "Zephyrlark unleashes Chirp Gust.",
+                "visual": "清脆啼鳴並扇出一道輕快氣流彈擊退敵人。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_wind_bird_adolescent",
+              "name_zh": "氣旋羽雲雀",
+              "name_en": "Zephyrlark",
+              "naming_note": "四階段統一命名；天嵐雲雀。",
+              "size_class": "S",
+              "temperament": "normal",
+              "height_length": "0.85 m",
+              "weight": "11 kg",
+              "body_fat": "9%",
+              "look": "翼羽拉長為流線燕尾型，頸間圍著一圈漂浮的半透明雲霧環",
+              "dex_zh": "能在強風中懸停不動並靈活翻滾，用氣旋尾羽捲起小型塵捲風。",
+              "dex_en": "Swallow-tailed flyer wearing a floating mist collar, able to hover in gales.",
+              "signature_move": {
+                "move_id": "wind_vortex_loop",
+                "name_zh": "氣旋迴旋斬",
+                "name_en": "Vortex Loop",
+                "element": "wind",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "氣旋羽雲雀 adolescent 專屬招式。",
+                "desc_zh": "包裹在旋轉氣流中沿弧線高速撞擊並拉升。",
+                "desc_en": "Zephyrlark unleashes Vortex Loop.",
+                "visual": "包裹在旋轉氣流中沿弧線高速撞擊並拉升。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_wind_bird_adult",
+              "name_zh": "氣旋羽雲雀",
+              "name_en": "Zephyrlark",
+              "naming_note": "四階段統一命名；天嵐雲雀。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.65 m",
+              "weight": "45 kg",
+              "body_fat": "8%",
+              "look": "優雅的天空舞者，雙翼拖曳著兩條長長的薄荷綠風帶與雲絮羽尾",
+              "dex_zh": "歌聲響徹雲霄時能驅散陰霾烏雲，替隊伍引導出最順暢的高空航道。",
+              "dex_en": "An aerial dancer trailing twin mint-green wind ribbons and billowing cloud-plumes.",
+              "signature_move": {
+                "move_id": "wind_skyward_sonata",
+                "name_zh": "天嵐鳴囀波",
+                "name_en": "Skyward Sonata",
+                "element": "wind",
+                "range_class": "long",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "氣旋羽雲雀 adult 專屬招式。",
+                "desc_zh": "高鳴一曲同時振翅釋放橫掃前方的聲波氣旋。",
+                "desc_en": "Zephyrlark unleashes Skyward Sonata.",
+                "visual": "高鳴一曲同時振翅釋放橫掃前方的聲波氣旋。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_wind_bird_overload",
+              "name_zh": "氣旋羽雲雀",
+              "name_en": "Zephyrlark",
+              "naming_note": "四階段統一命名；天嵐雲雀。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.2 m",
+              "weight": "680 kg",
+              "body_fat": "6%",
+              "look": "幻化為拖曳百尺白雲與極光風帶的蒼穹鳳雀，背後懸浮三道高速旋轉氣旋風環",
+              "dex_zh": "超載使氣旋羽雲雀化作整片晴空順風的化身，振翼間便能吹散一切迷霧。",
+              "dex_en": "Ascends into a celestial skylark trailing aurora wind-ribbons and triple cyclone rings.",
+              "signature_move": {
+                "move_id": "wind_stratosphere_chorus",
+                "name_zh": "九霄晴嵐大合唱",
+                "name_en": "Stratosphere Chorus",
+                "element": "wind",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "氣旋羽雲雀 overload 專屬招式。",
+                "desc_zh": "展開三道氣旋風環向全場捲起清澈猛烈的上升颶風。",
+                "desc_en": "Zephyrlark unleashes Stratosphere Chorus.",
+                "visual": "展開三道氣旋風環向全場捲起清澈猛烈的上升颶風。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_lark_tailwind_song",
+            "name_zh": "順風鳴囀",
+            "idea_zh": "啼鳴後能替周圍同伴帶來順風氣流，略微提升移動與出招流暢度。"
+          },
+          "overload": "氣旋羽雲雀（cr_wind_bird_overload · XL）：幻化為拖曳百尺白雲與極光風帶的蒼穹鳳雀，背後懸浮三道高速旋轉氣旋風環"
+        }
+      }
+    },
+    {
+      "line_id": "cr_wood_puppet",
+      "code_zh": "木",
+      "element": "wood",
+      "title_zh": "機巧靈木偶",
+      "source": "Drive (creatures/ · 已完成 2D/3D 交付)",
+      "concept": {
+        "line_id": "cr_wood_puppet",
+        "elements": [
+          "wood（木）"
+        ],
+        "element_palettes": [
+          "胡桃木棕",
+          "翡翠絲線",
+          "象牙白"
+        ],
+        "base_parents": [
+          "器物·懸絲木偶",
+          "植物·靈木/嫩芽"
+        ],
+        "bases": [
+          "球體關節木偶",
+          "懸絲木十字架",
+          "發芽原木機關"
+        ],
+        "appearance_palette": [
+          "胡桃木棕",
+          "翡翠絲線",
+          "象牙白"
+        ],
+        "timeline": "近代劇場工藝（18 世紀歐洲木偶戲）",
+        "region": "歐洲·波希米亞木偶工坊",
+        "archetype": "arch_living_marionette",
+        "archetype_name": "靈木懸絲偶",
+        "archetype_type": "Drive 實作宙獸系列",
+        "meaning": "因工匠傾注心血而長出嫩芽、自行剪斷控制線卻仍保留十字翼架的活木偶",
+        "motifs": "球體關節木偶、懸絲木十字架、發芽原木機關",
+        "sensitivity": "ok",
+        "role": "技巧 / 控場",
+        "temperament": "normal",
+        "disposition": "戲劇化、優雅敬禮",
+        "size_profile": "XS→M→L→XL",
+        "stage_dims": {
+          "juvenile": {
+            "height_length": "0.42 m",
+            "weight": "3.0 kg",
+            "body_fat": "0%"
+          },
+          "adolescent": {
+            "height_length": "1.25 m",
+            "weight": "34 kg",
+            "body_fat": "0%"
+          },
+          "adult": {
+            "height_length": "2.00 m",
+            "weight": "110 kg",
+            "body_fat": "0%"
+          },
+          "overload": {
+            "height_length": "4.6 m",
+            "weight": "1200 kg",
+            "body_fat": "0%"
+          }
+        },
+        "height_length": "2.00 m",
+        "weight": "110 kg",
+        "body_fat": "0%",
+        "formula": "wood（木） × 球體關節木偶 + 懸絲木十字架 + 發芽原木機關 × 靈木懸絲偶",
+        "locked": {
+          "status": "已設計（Drive 實作宙獸；四階與文字資料補齊）",
+          "stages": [
+            {
+              "stage": "juvenile",
+              "creature_id": "cr_wood_puppet_juvenile",
+              "name_zh": "機巧靈木偶",
+              "name_en": "Woodpuppet",
+              "naming_note": "四階段統一命名；靈木懸絲偶。",
+              "size_class": "XS",
+              "temperament": "normal",
+              "height_length": "0.42 m",
+              "weight": "3.0 kg",
+              "body_fat": "0%",
+              "look": "雕工精細的小核桃木人偶，關節以翡翠木珠連接，頭頂冒出一片小嫩葉",
+              "dex_zh": "總是一本正經地向人鞠躬行禮，走起路來關節會發出清脆木響。",
+              "dex_en": "A finely carved walnut marionette with jade bead joints and a tiny head-sprout.",
+              "signature_move": {
+                "move_id": "wood_thread_flick",
+                "name_zh": "木絲彈指",
+                "name_en": "Thread Flick",
+                "element": "wood",
+                "range_class": "mid",
+                "shape": "single",
+                "movement": "none",
+                "naming_note": "機巧靈木偶 juvenile 專屬招式。",
+                "desc_zh": "指尖彈出翠綠靈絲輕巧抽擊敵方手腳。",
+                "desc_en": "Woodpuppet unleashes Thread Flick.",
+                "visual": "指尖彈出翠綠靈絲輕巧抽擊敵方手腳。"
+              }
+            },
+            {
+              "stage": "adolescent",
+              "creature_id": "cr_wood_puppet_adolescent",
+              "name_zh": "機巧靈木偶",
+              "name_en": "Woodpuppet",
+              "naming_note": "四階段統一命名；靈木懸絲偶。",
+              "size_class": "M",
+              "temperament": "normal",
+              "height_length": "1.25 m",
+              "weight": "34 kg",
+              "body_fat": "0%",
+              "look": "身手敏捷的劇場木偶劍士，背後懸浮著木製十字線架，十指拖曳發光翡翠絲線",
+              "dex_zh": "不需要操偶師也能隨心舞動，能用靈絲操縱樹枝與石塊協助戰鬥。",
+              "dex_en": "An agile marionette duelist with a floating wooden control-cross and glowing jade strings.",
+              "signature_move": {
+                "move_id": "wood_marionette_snare",
+                "name_zh": "懸絲木舞陣",
+                "name_en": "Marionette Snare",
+                "element": "wood",
+                "range_class": "mid",
+                "shape": "sweep",
+                "movement": "none",
+                "naming_note": "機巧靈木偶 adolescent 專屬招式。",
+                "desc_zh": "揮動十字線架灑出交錯翡翠絲線牽制前方。",
+                "desc_en": "Woodpuppet unleashes Marionette Snare.",
+                "visual": "揮動十字線架灑出交錯翡翠絲線牽制前方。"
+              }
+            },
+            {
+              "stage": "adult",
+              "creature_id": "cr_wood_puppet_adult",
+              "name_zh": "機巧靈木偶",
+              "name_en": "Woodpuppet",
+              "naming_note": "四階段統一命名；靈木懸絲偶。",
+              "size_class": "L",
+              "temperament": "normal",
+              "height_length": "2.00 m",
+              "weight": "110 kg",
+              "body_fat": "0%",
+              "look": "華麗的古木舞台騎士，披著鑲邊劇服斗篷，背後十字線架化作雙翼木骨滑翔機",
+              "dex_zh": "結合木偶機關與靈木魔法，戰鬥時宛如在舞台上演出一場完美劍舞。",
+              "dex_en": "A theatrical wooden knight whose control-cross unfolds into articulated wing-frames.",
+              "signature_move": {
+                "move_id": "wood_puppet_finale",
+                "name_zh": "靈木謝幕斬",
+                "name_en": "Puppet Finale",
+                "element": "wood",
+                "range_class": "mid",
+                "shape": "line",
+                "movement": "forward",
+                "naming_note": "機巧靈木偶 adult 專屬招式。",
+                "desc_zh": "藉背後靈絲彈射加速，沿直線揮出木劍連斬。",
+                "desc_en": "Woodpuppet unleashes Puppet Finale.",
+                "visual": "藉背後靈絲彈射加速，沿直線揮出木劍連斬。"
+              }
+            },
+            {
+              "stage": "overload",
+              "creature_id": "cr_wood_puppet_overload",
+              "name_zh": "機巧靈木偶",
+              "name_en": "Woodpuppet",
+              "naming_note": "四階段統一命名；靈木懸絲偶。",
+              "size_class": "XL",
+              "temperament": "apex",
+              "height_length": "4.6 m",
+              "weight": "1200 kg",
+              "body_fat": "0%",
+              "look": "化為三層劇院懸絲巨像，背後展開巨大古樹十字架並垂落數十道翡翠光絲操控戰局",
+              "dex_zh": "超載將整片戰場變成自己的劇場舞台，萬千木靈絲線隨指尖起舞。",
+              "dex_en": "Expands into a towering theater-colossus beneath a great ancient-tree control cross.",
+              "signature_move": {
+                "move_id": "wood_grand_marionette",
+                "name_zh": "森羅傀儡大劇院",
+                "name_en": "Grand Marionette",
+                "element": "wood",
+                "range_class": "long",
+                "shape": "area",
+                "movement": "none",
+                "naming_note": "機巧靈木偶 overload 專屬招式。",
+                "desc_zh": "拉動萬千翡翠光絲令全場木藤與機關同步絞殺敵陣。",
+                "desc_en": "Woodpuppet unleashes Grand Marionette.",
+                "visual": "拉動萬千翡翠光絲令全場木藤與機關同步絞殺敵陣。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_puppet_jade_threads",
+            "name_zh": "翡翠絲線",
+            "idea_zh": "能將無形木靈絲線附著於目標關節，短暫牽制其出招角度。"
+          },
+          "overload": "機巧靈木偶（cr_wood_puppet_overload · XL）：化為三層劇院懸絲巨像，背後展開巨大古樹十字架並垂落數十道翡翠光絲操控戰局"
+        }
+      }
     }
   ],
   "characters": [

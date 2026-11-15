@@ -1,0 +1,288 @@
+{
+  "creatures": [
+    {
+      "id": "metal_gate_calf",
+      "name_zh": "城門鐵牛",
+      "name_en": "Lamassugate",
+      "naming_note": "四階段統一命名；青銅門環化作幼牛雙角。",
+      "dex_zh": "圓鈍的青銅幼牛肩上貼著浮雕翼板，額間嵌有微溫門環。牠穩穩守在夥伴身前，見敵靠近便以蝕紋銳角向前頂撞。",
+      "dex_en": "A stout bronze calf bearing relief wing-plates on its shoulders and a warm gate-ring on its brow. It holds the line before its allies and butts approaching foes with etched horns."
+    },
+    {
+      "id": "metal_winged_bull",
+      "name_zh": "城門鐵牛",
+      "name_en": "Lamassugate",
+      "naming_note": "四階段統一命名；翼刃展開，門扉裝甲成形。",
+      "dex_zh": "雙翼由層層青銅羽片鍛成，胸甲刻滿楔形護符。牠守住陣線要衝，振動金屬翼片向四周拋灑銳利碎鐵。",
+      "dex_en": "Forged bronze wing-blades unfold from its shoulders while cuneiform talismans line its breastplate. Anchoring the vanguard, it rattles its metal pinions to scatter razor scrap."
+    },
+    {
+      "id": "metal_citadel_colossus",
+      "name_zh": "城門鐵牛",
+      "name_en": "Lamassugate",
+      "naming_note": "四階段統一命名；五足神牛鎮守城門。",
+      "dex_zh": "巍峨的青銅翼牛如移動城門般矗立戰場，雙翼垂落如城牆垛口。牠與敵拉開距離後，引動巨型鐵砧般的高壓重擊鎮壓全場。",
+      "dex_en": "A towering bronze winged bull standing like a living citadel gate, its pinions draped like battlements. Keeping distance, it drops an anvil-weight kinetic slam across the field."
+    },
+    {
+      "id": "wood_betel_sprout",
+      "name_zh": "蓮蔓龍蛇",
+      "name_en": "Neaklotus",
+      "naming_note": "四階段統一命名；檳榔花苞纏繞幼蛇頭冠。",
+      "dex_zh": "翠綠幼蛇頸側生出嫩白花苞與細鬚，性格謹慎而敏銳。牠盤踞在隊伍周邊，藉柔韌木刺朝近身敵人疾刺。",
+      "dex_en": "A cautious emerald serpentling crowned with pale betel buds and slender tendrils. Coiling near its companions, it lashes out with supple wooden splinters at close threats."
+    },
+    {
+      "id": "wood_garland_serpent",
+      "name_zh": "蓮蔓龍蛇",
+      "name_en": "Neaklotus",
+      "naming_note": "四階段統一命名；花環藤蔓沿鱗脊攀附。",
+      "dex_zh": "修長蛇軀纏滿綻放的茉莉與蓮葉藤蔓，尾端如濕地長鞭。牠沉著地守住陣腳，甩出帶刺藤索將來犯者牢牢纏縛。",
+      "dex_en": "Flowering jasmine and lotus vines twine along its lithe serpent spine down to a marsh-whip tail. Holding steady, it flings thorny snares to bind encroaching foes."
+    },
+    {
+      "id": "wood_lotus_wyrm",
+      "name_zh": "蓮蔓龍蛇",
+      "name_en": "Neaklotus",
+      "naming_note": "四階段統一命名；七首蓮冠化作古樹龍威。",
+      "dex_zh": "七瓣玉蓮冠冕盛放於巨蛇額首，周身藤木與翡翠鱗甲交織成林。牠在安全距離外喚起蒼穹巨木轟然砸落。",
+      "dex_en": "A seven-petaled jade lotus crowns this regal wyrm, its emerald scales woven with ancient boughs. From afar, it summons colossal timber to crash down upon rivals."
+    },
+    {
+      "id": "water_ivory_calf",
+      "name_zh": "白鯨巨渦",
+      "name_en": "Mobymael",
+      "naming_note": "四階段統一命名；象牙白幼鯨額頭浮現鹽晶紋。",
+      "dex_zh": "通體象牙白的幼鯨在淺浪間游弋，尾鰭帶起細碎水花。牠小心翼翼護在隊友身側，以激流短衝擊退逼近的威脅。",
+      "dex_en": "An ivory-white whale calf gliding through shallow swells with sparkling fin spray. Staying guarded beside allies, it jabs forward with a crisp cascade of seawater."
+    },
+    {
+      "id": "water_harpoon_cetacean",
+      "name_zh": "白鯨巨渦",
+      "name_en": "Mobymael",
+      "naming_note": "四階段統一命名；背鰭纏繞斷裂捕鯨繩索與鹽霜。",
+      "dex_zh": "巨鯨額頭刻著風暴疤痕，背鰭纏繞著舊時代的銅製標槍與海藻。牠一旦鎖定獵物便捲起暗流，毫無畏懼地正面衝鋒。",
+      "dex_en": "Storm-scarred brow and bronze harpoon lines tangled around its dorsal fin mark this fierce cetacean. Locking onto a target, it rides a surging undertow straight into battle."
+    },
+    {
+      "id": "water_abyssal_leviathan",
+      "name_zh": "白鯨巨渦",
+      "name_en": "Mobymael",
+      "naming_note": "四階段統一命名；白鯨破浪，漩渦翻湧。",
+      "dex_zh": "如移動冰山般的象牙白巨鯨統領深海怒潮，體側鹽晶脊柱閃耀幽藍光輝。牠張口吞吐海嘯旋渦，以排山倒海之勢撞碎敵陣。",
+      "dex_en": "A mountain-sized white leviathan commanding abyssal tides, its salt-crystal ridge glowing deep blue. It unleashes a maelstrom tsunami charge that shatters entire formations."
+    },
+    {
+      "id": "fire_spark_barkling",
+      "name_zh": "猴麵包火蜥",
+      "name_en": "Baobabhearth",
+      "naming_note": "四階段統一命名；樹皮甲片下藏著跳動炭火。",
+      "dex_zh": "覆著粗糙紅木甲片的幼蜥腹中懷著暖橘火種，呼吸時鼻尖冒出細小火星。牠守在營地邊緣，對迫近者噴出灼熱火花。",
+      "dex_en": "Rough redwood armor shields the warm ember heart inside this cautious hatchling. Guarding the camp perimeter, it snaps sparks at anything venturing too close."
+    },
+    {
+      "id": "fire_ember_crocodilian",
+      "name_zh": "猴麵包火蜥",
+      "name_en": "Baobabhearth",
+      "naming_note": "四階段統一命名；背脊木瘤化作熔岩爐口。",
+      "dex_zh": "粗壯的火蜥背部隆起猴麵包樹幹般的耐熱岩甲，縫隙透出暗紅餘燼。牠穩守中線，揮動燒紅的利爪劈出烈焰裂痕。",
+      "dex_en": "Baobab-thick heatproof plates rise along its back, glowing with banked embers between cracks. Holding the center, it slashes with white-hot claws trailing cinders."
+    },
+    {
+      "id": "fire_hearth_monolith",
+      "name_zh": "猴麵包火蜥",
+      "name_en": "Baobabhearth",
+      "naming_note": "四階段統一命名；巨木化灶，火山口生於背脊。",
+      "dex_zh": "宛如行走的古樹熔爐，厚實樹皮與玄武岩甲保護著體內永不熄滅的聖火。牠在後方穩立陣腳，令火山口驟然噴發焚盡四野。",
+      "dex_en": "A walking monolith of ancient bark and basalt housing an undying hearth-flame. Anchored at range, it triggers a caldera eruption that engulfs the battlefield."
+    },
+    {
+      "id": "earth_lotus_cub",
+      "name_zh": "石柱獠牙獸",
+      "name_en": "Yalipillar",
+      "naming_note": "四階段統一命名；浮雕蓮座托起幼獸四蹄。",
+      "dex_zh": "結合獅首與象鼻特徵的砂岩幼獸，腳掌踩著碎石滑行自如。牠性格好戰果決，一聲低吼便踏碎石塊疾衝向前。",
+      "dex_en": "A sandstone cub blending lion mane and trunk-crest, skating smoothly across loose gravel. Bold by nature, it skims forward over stone to strike head-on."
+    },
+    {
+      "id": "earth_pillar_chimera",
+      "name_zh": "石柱獠牙獸",
+      "name_en": "Yalipillar",
+      "naming_note": "四階段統一命名；神殿石柱與獠牙合而為一。",
+      "dex_zh": "花崗岩雕紋覆滿雙肩，顎側生出弧形玉石獠牙，如神殿門柱般威嚴。牠踏步震裂地表，沿斷層線發動猛烈突襲。",
+      "dex_en": "Temple-carved granite armors its shoulders while curved jade tusks frame its jaws. Splitting the ground underfoot, it dashes fiercely along the fault line."
+    },
+    {
+      "id": "earth_temple_tuskbeast",
+      "name_zh": "石柱獠牙獸",
+      "name_en": "Yalipillar",
+      "naming_note": "四階段統一命名；百柱神獸，地動山搖。",
+      "dex_zh": "背負千柱神殿浮雕與黃金寶輪的巨型土靈獸，每步皆伴隨沉悶地鳴。牠在遠處凝聚大地岩脈之力，轟出貫穿戰線的岩層長槍。",
+      "dex_en": "A colossal guardian sculpted like a living temple pillar with golden wheel reliefs. Channeling tectonic veins from afar, it hurls a massive lance of bedrock."
+    },
+    {
+      "id": "ice_sled_buoy",
+      "name_zh": "極地破冰獸",
+      "name_en": "Framdrift",
+      "naming_note": "四階段統一命名；木製雪橇滑板與冰標浮筒結合。",
+      "dex_zh": "圓滾的極地小獸腹下貼著流線冰橇板，頭頂插著紅白航海測標。牠膽小卻靈活，遇敵時貼著冰面高速滑行閃避。",
+      "dex_en": "A round polar buoy-creature riding twin sled runners beneath a red-and-white survey mast. Shy yet nimble, it glides swiftly across glazed ice to evade danger."
+    },
+    {
+      "id": "ice_hull_cutter",
+      "name_zh": "極地破冰獸",
+      "name_en": "Framdrift",
+      "naming_note": "四階段統一命名；圓弧木船殼包覆耐壓冰甲。",
+      "dex_zh": "船首破冰刃從胸前延伸而出，兩側木質舷板覆著厚實霜晶。牠迎著暴雪破浪前行，借浮冰撞擊之勢碾開障礙。",
+      "dex_en": "An icebreaking prow juts from its chest while frost-rimed timber hulls protect its flanks. Pushing through blizzards, it rams forward with crashing ice-floe momentum."
+    },
+    {
+      "id": "ice_polar_icebreaker",
+      "name_zh": "極地破冰獸",
+      "name_en": "Framdrift",
+      "naming_note": "四階段統一命名；前進行艦，無懼冰封。",
+      "dex_zh": "如極地探險船般宏偉的冰原巨獸，雙肩聳立著桅杆與測風冰翼。牠無懼最酷烈的極夜狂嵐，領著雪崩般的寒潮一路破冰突進。",
+      "dex_en": "A grand icebreaker behemoth crowned with frost-rigged masts and anemometer fins. Undaunted by polar gales, it charges ahead at the crest of an avalanche."
+    },
+    {
+      "id": "wind_crossbow_fledgling",
+      "name_zh": "霧翼信天翁",
+      "name_en": "Mistalbatross",
+      "naming_note": "四階段統一命名；幼雛頸間掛著羅盤風標。",
+      "dex_zh": "潔白帶灰羽的信天翁雛鳥總縮在船桅高處張望海霧，爪間繫著細小青銅風標。牠擅長乘著上升氣流輕巧滑步閃躲。",
+      "dex_en": "A pale sea-mist fledgling keeping watch from high masts with a tiny bronze wind-vane. Agile on rising drafts, it sidesteps danger on silent air currents."
+    },
+    {
+      "id": "wind_bergglider_gull",
+      "name_zh": "霧翼信天翁",
+      "name_en": "Mistalbatross",
+      "naming_note": "四階段統一命名；長翼展開，如十字弓弦拉滿。",
+      "dex_zh": "修長窄翼在濃霧中劃出冷冽氣流，胸前掛著斑駁航海星盤。牠居高臨下俯瞰海面，化作疾風之箭高速突刺。",
+      "dex_en": "Long narrow wings slice through sea fog beneath a weathered brass astrolabe. Surveying the swells from above, it darts downward like a cyclone bolt."
+    },
+    {
+      "id": "wind_pelagic_soarer",
+      "name_zh": "霧翼信天翁",
+      "name_en": "Mistalbatross",
+      "naming_note": "四階段統一命名；跨洋巨翼，御風不墜。",
+      "dex_zh": "雙翼展開足有數丈寬的遠洋風靈，羽尖拖曳著半透明雲霧與暴風眼微光。牠盤旋高空拉開距離，揮翼捲起橫掃海天的颶風。",
+      "dex_en": "A pelagic sovereign whose vast wings trail translucent mist and storm-eye glints. Soaring high out of reach, it sweeps its pinions to unleash a horizon-wide hurricane."
+    },
+    {
+      "id": "thunder_dune_larva",
+      "name_zh": "戈壁赤電蟲",
+      "name_en": "Khorkhoivolt",
+      "naming_note": "四階段統一命名；沙漠赤蟲體節閃爍靜電微光。",
+      "dex_zh": "暗紅色沙蟲幼體表面覆著絕緣沙殼，尾端每隔數秒便迸出細小脈衝電環。牠潛行於沙丘側翼，謹慎試探周遭動靜。",
+      "dex_en": "A crimson sand-larva sheathed in insulating grit, pulsing tiny static rings from its tail. Flanking across dunes, it probes threats cautiously with electric ripples."
+    },
+    {
+      "id": "thunder_crimson_crawler",
+      "name_zh": "戈壁赤電蟲",
+      "name_en": "Khorkhoivolt",
+      "naming_note": "四階段統一命名；口器化作雙極電弧線圈。",
+      "dex_zh": "體節膨脹為赤銅色高壓電容環，口器張開時跳躍著藍紫電弧。牠穩踞沙窩陣地，朝逼近之敵連續釋放高壓放電。",
+      "dex_en": "Segmented copper capacitor rings line its body while blue-violet arcs crackle between its mandibles. Holding its sand-pit ground, it fires chained arc discharges."
+    },
+    {
+      "id": "thunder_gobi_voltwyrm",
+      "name_zh": "戈壁赤電蟲",
+      "name_en": "Khorkhoivolt",
+      "naming_note": "四階段統一命名；戈壁赤煞，電磁貫日。",
+      "dex_zh": "盤踞荒漠地平線的赤紅雷龍蟲，背脊排列著結晶化的磁軌線圈。牠在遠處蓄積熾烈電漿，沿直線轟出貫穿砂岩的電磁雷砲。",
+      "dex_en": "An apex desert voltwyrm whose spine bristles with crystallized rail-coils. Charging plasma from afar, it fires a blinding electromagnetic rail-beam across the sands."
+    },
+    {
+      "id": "light_foil_spark",
+      "name_zh": "金箔光環獸",
+      "name_en": "Foilprism",
+      "naming_note": "四階段統一命名；微光金箔折疊成精巧多面體。",
+      "dex_zh": "像懸浮折紙金箔般的光屬性小精靈，核心閃耀著暖白粒子微光。牠性格害羞卻專注，遇近敵便折射出一道銳利光刺。",
+      "dex_en": "A floating origami-gold sprite housing a warm white core of dancing particles. Shy yet focused, it refracts a crisp glint of light at anything drawing near."
+    },
+    {
+      "id": "light_orbit_beacon",
+      "name_zh": "金箔光環獸",
+      "name_en": "Foilprism",
+      "naming_note": "四階段統一命名；雙重金箔環帶繞核高速旋轉。",
+      "dex_zh": "薄如蟬翼的金箔稜鏡環繞中央核球旋轉，散射出細密光譜軌跡。牠守在陣列後方，將散射光束聚斂為精準的光學長槍。",
+      "dex_en": "Paper-thin gold-foil prisms orbit a central luminous nucleus, scattering spectral trails. Guarding the rear, it focuses scattered beams into a piercing optic lance."
+    },
+    {
+      "id": "light_radiant_cyclotron",
+      "name_zh": "金箔光環獸",
+      "name_en": "Foilprism",
+      "naming_note": "四階段統一命名；千層金箔散射極光扇陣。",
+      "dex_zh": "層層嵌套的精密金箔環陣宛如微型迴旋加速器，中央核心綻放太陽般的純淨光輝。牠在遠距展開扇形光譜，將來襲衝擊全數折射反彈。",
+      "dex_en": "Concentric gold-foil rings spin like a living cyclotron around a radiant sun-core. From range, it fans out chromatic rays that dazzle and deflect incoming force."
+    },
+    {
+      "id": "shadow_tundra_foal",
+      "name_zh": "玄鐵幽駒",
+      "name_en": "Bootursteed",
+      "naming_note": "四階段統一命名；黑鐵蹄印在雪地化作幽影。",
+      "dex_zh": "披著啞光黑鐵細甲的極北幼駒，鬃毛如夜間寒煙般輕輕飄散。牠善於繞行敵陣側翼，乘暮色掩護以暗影利齒突襲。",
+      "dex_en": "A northern foal clad in matte black-iron barding with a mane like drifting night smoke. Slipping along flanks, it strikes under dusk cover with shadow-edged fangs."
+    },
+    {
+      "id": "shadow_reverb_charger",
+      "name_zh": "玄鐵幽駒",
+      "name_en": "Bootursteed",
+      "naming_note": "四階段統一命名；雙重影甲疊映，踏步無聲。",
+      "dex_zh": "胸甲與護額鑄成寒鐵弧刃，奔馳時身後拖出數道半透明幽影殘像。牠在相位閃爍間穿越障礙，發動令敵防不勝防的突擊。",
+      "dex_en": "Forged black-iron crescents armor its chest and brow, trailing translucent afterimages at full gallop. Phasing between twilight shadows, it charges past defenses."
+    },
+    {
+      "id": "shadow_iron_cavalier",
+      "name_zh": "玄鐵幽駒",
+      "name_en": "Bootursteed",
+      "naming_note": "四階段統一命名；幽冥鐵騎，永夜不屈。",
+      "dex_zh": "身披重型玄鐵戰甲的蒼穹幽影天馬，披風般的暗影長鬃隨寒風獵獵作響。牠鎮守領地邊界，化作幽靈鐵騎貫穿所有敵陣。",
+      "dex_en": "An iron-armored shadow cavalier whose dark mantle-mane ripples in freezing winds. Guarding its territory, it leads a phantom charge that pierces any vanguard."
+    }
+  ],
+  "moves": [
+    { "id": "metal_corrosion_edge", "name_zh": "蝕紋角突", "name_en": "Corrosion Edge", "naming_note": "青銅蝕紋短距突擊。", "desc_zh": "壓低青銅雙角，以帶蝕刻紋路的金屬銳鋒向前短距頂撞。", "desc_en": "Lowers its etched bronze horns to deliver a short-range metallic thrust." },
+    { "id": "metal_scrap_barrage", "name_zh": "鐵羽散射", "name_en": "Scrap Barrage", "naming_note": "振動翼羽灑落碎鐵。", "desc_zh": "劇烈振動青銅翼片，向周身近中距離拋灑如雨的銳利碎鐵片。", "desc_en": "Rattles its bronze wing-blades to scatter a close-range hail of razor scrap." },
+    { "id": "metal_anvil_drop", "name_zh": "巨砧墜擊", "name_en": "Anvil Drop", "naming_note": "城門鎮嶽般的重錘落地。", "desc_zh": "高舉雙翼凝聚萬鈞玄鐵重壓，朝遠處目標砸下鐵砧般的毀滅震波。", "desc_en": "Channels monumental bronze mass through its wings to drop an anvil-force shockwave at range." },
+    { "id": "wood_splinter_thrust", "name_zh": "木棘疾刺", "name_en": "Splinter Thrust", "naming_note": "柔韌藤刺近身點刺。", "desc_zh": "繃緊頸側嫩藤，朝前方近距離目標連貫刺出銳利木刺。", "desc_en": "Tenses its young vines to jab sharp wooden splinters forward at close range." },
+    { "id": "wood_thorn_snare", "name_zh": "荊蔓纏縛", "name_en": "Thorn Snare", "naming_note": "帶刺花環藤蔓鎖敵。", "desc_zh": "甩出盤繞脊背的荊棘花藤，在前方範圍形成纏繞束縛敵人的蔓網。", "desc_en": "Flings thorny garland vines forward to ensnare targets within a tangled perimeter." },
+    { "id": "wood_timber_fall", "name_zh": "古木天墜", "name_en": "Timber Fall", "naming_note": "喚起濕地蒼穹巨木砸落。", "desc_zh": "自遠方地脈催生參天古木與巨藤，從天而降轟然砸碎敵陣。", "desc_en": "Summons an ancient bough from distant roots to crash down upon distant rivals." },
+    { "id": "water_cascade_jab", "name_zh": "飛瀑短衝", "name_en": "Cascade Jab", "naming_note": "迎浪破水的短距突進。", "desc_zh": "拍動尾鰭激起高壓水沫，沿直線向前發動俐落的水流短衝。", "desc_en": "Slaps its tail fin to surge forward along a brisk, foaming cascade." },
+    { "id": "water_undertow_rush", "name_zh": "暗流突襲", "name_en": "Undertow Rush", "naming_note": "捲動深海暗流猛撞。", "desc_zh": "將周身海水化作漩渦暗流包裹身軀，以捕鯨標槍般的銳勢直線衝鋒。", "desc_en": "Wraps itself in a roaring undertow and charges straight through foes like a harpoon." },
+    { "id": "water_tsunami_charge", "name_zh": "海嘯怒衝", "name_en": "Tsunami Charge", "naming_note": "白鯨領潮，排山倒海。", "desc_zh": "喚起百丈深海巨浪與鹽晶旋渦，化作不可阻擋的海嘯正面碾壓全場。", "desc_en": "Rides a towering wall of abyssal seawater and salt-crystal eddies to crush the battlefield." },
+    { "id": "fire_spark_jab", "name_zh": "火星嚙擊", "name_en": "Spark Jab", "naming_note": "樹皮甲縫迸出熱火。", "desc_zh": "張口噴出跳躍的橘紅火星並伴隨短距撲咬，灼傷近身目標。", "desc_en": "Snaps forward with crackling orange sparks bursting from its armored jaws." },
+    { "id": "fire_cinder_slash", "name_zh": "餘燼裂爪", "name_en": "Cinder Slash", "naming_note": "燒紅利爪劃出火痕。", "desc_zh": "引燃體內爐火覆於前爪，朝前方弧形揮劈出殘留灼熱餘燼的烈焰爪痕。", "desc_en": "Ignites its claws with furnace heat to carve a sweeping arc of burning cinders." },
+    { "id": "fire_caldera_burst", "name_zh": "火口轟炎", "name_en": "Caldera Burst", "naming_note": "背脊火山口全面噴發。", "desc_zh": "打開背脊厚重樹皮岩甲下的火山口，向遠處區域傾瀉高溫熔岩爆炎。", "desc_en": "Opens the caldera vents along its back to rain searing volcanic blasts across distant ground." },
+    { "id": "earth_stone_skate", "name_zh": "滑石突進", "name_en": "Stone Skate", "naming_note": "足踏碎岩高速滑行。", "desc_zh": "踩踏砂岩滑板順著地脈隆起高速滑行，沿直線衝撞前方敵人。", "desc_en": "Skates swiftly over raised sandstone slabs to ram targets straight ahead." },
+    { "id": "earth_fault_dash", "name_zh": "斷層破襲", "name_en": "Fault Dash", "naming_note": "踏裂地殼發動突進。", "desc_zh": "雙足猛踏震開裂隙，順著斷層衝擊波的軌道猛烈突刺。", "desc_en": "Splits the earth underfoot and surges down the fault-line shockwave." },
+    { "id": "earth_tectonic_lance", "name_zh": "岩脈長槍", "name_en": "Tectonic Lance", "naming_note": "神殿石柱化作地脈長槍。", "desc_zh": "在遠處引動深層岩盤劇烈隆起，刺出如神殿巨柱般的銳利岩石長槍。", "desc_en": "Raises deep bedrock plates from afar into a colossal, piercing stone lance." },
+    { "id": "ice_glaze_slide", "name_zh": "冰橇滑擊", "name_en": "Glaze Slide", "naming_note": "冰橇貼地高速滑掠。", "desc_zh": "壓低身軀貼著凝結的鏡面薄冰高速滑行，撞擊路徑上的目標。", "desc_en": "Drops low onto its ice-sled runners to glide swiftly into targets along a slick path." },
+    { "id": "ice_floe_crash", "name_zh": "浮冰衝撞", "name_en": "Floe Crash", "naming_note": "船首破冰刃劈開冰原。", "desc_zh": "推進船首破冰厚刃正面衝鋒，將沿途碎冰如浪般撞向敵群。", "desc_en": "Drives its icebreaker prow forward, hurling shattered floes into opposing ranks." },
+    { "id": "ice_avalanche_charge", "name_zh": "雪崩破冰突", "name_en": "Avalanche Charge", "naming_note": "極夜艦首領雪崩衝鋒。", "desc_zh": "掀起鋪天蓋地的極地雪崩狂潮，以極限破冰之勢長距突進碾碎前路。", "desc_en": "Commands a thundering polar avalanche, charging across the field behind an unstoppable prow." },
+    { "id": "wind_draft_step", "name_zh": "順風輕掠", "name_en": "Draft Step", "naming_note": "借微風氣流短距滑步。", "desc_zh": "扇動細小海霧翼羽捲起上升氣流，靈巧貼近並以風壓掠擊目標。", "desc_en": "Catches a brisk updraft on mist-tipped wings to skim forward and buffet foes." },
+    { "id": "wind_cyclone_dart", "name_zh": "旋風疾矢", "name_en": "Cyclone Dart", "naming_note": "窄翼拉滿如十字弓矢。", "desc_zh": "將長翼收束成十字弓箭矢狀，包裹在高速氣旋中沿直線疾射突刺。", "desc_en": "Folds its long wings into a crossbow-bolt silhouette and darts forward inside a tight cyclone." },
+    { "id": "wind_hurricane_sweep", "name_zh": "遠洋颶風掃", "name_en": "Hurricane Sweep", "naming_note": "巨翼振起跨海狂風。", "desc_zh": "在遠距離高空展開巨翼橫掃，喚起吞沒海平線的猛烈颶風環流。", "desc_en": "Sweeps its vast pelagic wings from high altitude to unleash a horizon-spanning hurricane." },
+    { "id": "thunder_pulse_ring", "name_zh": "靜電脈衝環", "name_en": "Pulse Ring", "naming_note": "沙層間迸發環狀電流。", "desc_zh": "震動沙殼體節，向周圍近距離釋放麻痺目標的環狀靜電脈衝。", "desc_en": "Vibrates its segmented grit shell to emit a stunning ring of static electricity." },
+    { "id": "thunder_arc_discharge", "name_zh": "赤銅電弧", "name_en": "Arc Discharge", "naming_note": "雙極電容轟出高壓電弧。", "desc_zh": "張開顎部雙極線圈，向前方扇形區域連續轟出跳躍的藍紫電弧。", "desc_en": "Spreads its bipolar mandibles to unleash jumping arcs of high-voltage plasma ahead." },
+    { "id": "thunder_plasma_rail", "name_zh": "沙海電磁軌砲", "name_en": "Plasma Rail", "naming_note": "戈壁赤龍貫穿天際的磁軌砲。", "desc_zh": "鎖定遠方目標後沿脊背磁軌加速電漿，轟出撕裂荒漠的直線雷光砲。", "desc_en": "Accelerates superheated plasma along its dorsal rail-coils into a blistering linear beam." },
+    { "id": "light_glint_jab", "name_zh": "金箔閃刺", "name_en": "Glint Jab", "naming_note": "折射微光刺破陰影。", "desc_zh": "調整金箔切面角度，向近前方瞬間射出一道聚斂的銳利閃光。", "desc_en": "Tilts its gold-foil facets to snap a focused flash of light straight ahead." },
+    { "id": "light_optic_lance", "name_zh": "光學折槍", "name_en": "Optic Lance", "naming_note": "雙環稜鏡聚光成槍。", "desc_zh": "令雙重金箔環帶同步對焦，沿直線向遠處貫穿射出純淨光學長槍。", "desc_en": "Aligns its twin foil rings to project a razor-sharp optic lance across the field." },
+    { "id": "light_chromatic_fan", "name_zh": "極光扇射陣", "name_en": "Chromatic Fan", "naming_note": "千層金箔展開光譜扇陣。", "desc_zh": "高速旋轉迴旋光環並展開金箔扇面，向遠方區域傾瀉七彩高能光束。", "desc_en": "Spins its cyclotron rings to fan out a dazzling barrage of chromatic light beams at range." },
+    { "id": "shadow_dusk_fang", "name_zh": "暮影噬咬", "name_en": "Dusk Fang", "naming_note": "借暮色掩護突襲咬擊。", "desc_zh": "融入地面的狹長影子之中疾步迫近，以附著寒鐵微光的暗影利齒啃咬。", "desc_en": "Slips through lengthening dusk shadows to lunge with cold iron-edged fangs." },
+    { "id": "shadow_twilight_phase", "name_zh": "極夜相位衝", "name_en": "Twilight Phase", "naming_note": "殘像閃爍穿越陣線。", "desc_zh": "身形化作半透明幽影閃爍加速，沿直線無聲穿透敵方防線。", "desc_en": "Phases into translucent twilight afterimages, dashing silently straight through defenses." },
+    { "id": "shadow_wraith_charge", "name_zh": "玄鐵幽騎衝", "name_en": "Wraith Charge", "naming_note": "永夜鐵騎貫陣而過。", "desc_zh": "披風般的暗影長鬃狂舞，化身重甲幽靈鐵騎發動貫穿全場的直線衝鋒。", "desc_en": "Billowing a cloak of dark mist, it charges straight across the battlefield like a phantom knight." }
+  ],
+  "traits": [
+    { "id": "trait_metal_clockwork_precision", "name_zh": "發條準律", "name_en": "Clockwork Precision", "desc_zh": "金屬機關與城門軸承分毫不差，提升防禦穩定度與準確度。" },
+    { "id": "trait_wood_spore_regeneration", "name_zh": "孢蔓回生", "name_en": "Spore Regeneration", "desc_zh": "花冠與藤蔓持續汲取濕地生機，在戰局中緩慢修復受損甲殼。" },
+    { "id": "trait_water_cleansing_tide", "name_zh": "淨潮滌塵", "name_en": "Cleansing Tide", "desc_zh": "周身流轉的潔淨海潮能沖刷異常狀態與焦灼塵垢。" },
+    { "id": "trait_fire_cinder_screen", "name_zh": "灰燼火幕", "name_en": "Cinder Screen", "desc_zh": "體表散逸的熾熱餘燼形成護幕，削弱遠距突襲帶來的衝擊。" },
+    { "id": "trait_earth_landslide_charge", "name_zh": "崩岩重勢", "name_en": "Landslide Charge", "desc_zh": "如山崩岩柱般的厚重慣性，使每一次突進都伴隨震懾地鳴。" },
+    { "id": "trait_ice_frostbite_edge", "name_zh": "凍鋒破冰", "name_en": "Frostbite Edge", "desc_zh": "船首與冰刃帶著極地嚴寒，觸及目標時使其動作凝滯。" },
+    { "id": "trait_wind_aloft_vigilance", "name_zh": "高空守望", "name_en": "Aloft Vigilance", "desc_zh": "乘著高空氣流盤旋警戒，大幅提升閃避遠距襲擊的反應速度。" },
+    { "id": "trait_thunder_fulgur_reach", "name_zh": "沙電遠掣", "name_en": "Fulgur Reach", "desc_zh": "體內高壓電容在乾燥沙地中更易導通，延伸電弧攻擊的有效距離。" },
+    { "id": "trait_light_halo_rebound", "name_zh": "金箔折反", "name_en": "Halo Rebound", "desc_zh": "環繞身軀的金箔稜鏡能偏折部分正面光熱與能量衝擊。" },
+    { "id": "trait_shadow_fade_step", "name_zh": "幽影隱步", "name_en": "Fade Step", "desc_zh": "在極夜與暮色中融入環境陰影，降低移動時被鎖定的機率。" }
+  ]
+}

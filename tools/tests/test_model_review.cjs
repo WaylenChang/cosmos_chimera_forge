@@ -173,3 +173,96 @@ test('3D viewer isolates forms and animation clips without overlapping models or
   assert.match(playBlock, /three\.mixer\.update\(0\);/);
   assert.doesNotMatch(playBlock, /crossFadeTo/);
 });
+
+test('all 35 designed creature lines (including 15 Drive cr_* and draft-02) have complete text data and unify under catalog rows', () => {
+  const ctx = vm.createContext({ window: {} });
+  vm.runInContext(fs.readFileSync(path.join(root, 'designed.js'), 'utf8'), ctx);
+  const designed = ctx.window.COSMI_DESIGNED;
+  assert.equal(designed.items.length, 35);
+  for (const item of designed.items) {
+    assert.ok(item.title_zh, `${item.line_id} missing title_zh`);
+    assert.ok(item.concept?.archetype_name, `${item.line_id} missing archetype_name`);
+    assert.ok(item.concept?.meaning, `${item.line_id} missing meaning`);
+    assert.equal(item.concept?.locked?.stages?.length, 4, `${item.line_id} must have 4 stages`);
+    for (const st of item.concept.locked.stages) {
+      assert.ok(st.name_zh && st.name_en, `${item.line_id}/${st.stage} missing names`);
+      assert.ok(st.look && st.dex_zh && st.dex_en, `${item.line_id}/${st.stage} missing look/dex`);
+      assert.ok(st.signature_move?.name_zh, `${item.line_id}/${st.stage} missing move name_zh`);
+    }
+  }
+  const driveModel = {
+    id: 'asset_cr_aqua_slime_adult',
+    type: 'creature-model-rig',
+    subjectId: 'cr_aqua_slime',
+    stage: 'adult',
+    status: 'provisional'
+  };
+  const entries = review.unifiedEntries([driveModel], designed.items, designed.characters, 'all');
+  const aqua = entries.find(e => e.catalog?.id === 'cr_aqua_slime');
+  assert.ok(aqua && aqua.catalog, 'Drive cr_aqua_slime must resolve to a catalog row');
+  assert.equal(aqua.packages.length, 1);
+  assert.equal(entries.filter(e => e.key.includes('cr_aqua_slime')).length, 1);
+});
+
+test('high-complexity Colab character models replace simple legacy/ai_blender models and disambiguate chr_1286', () => {
+  const characters = [
+    { id: 'chr_yeh_chengxi', name_zh: '葉澄汐', name_en: 'Chengxi Yeh' },
+    { id: 'chr_amemori_sumiha', name_zh: '雨森澄羽', name_en: 'Amemori Sumiha' },
+    { id: 'chr_roen', name_zh: '洛恩', name_en: 'Roen' }
+  ];
+  const packages = [
+    {
+      id: 'mdl-20261109-f048-1847-chr_1286',
+      type: 'character-model-rig',
+      subjectId: 'chr_1286',
+      drivePath: 'characters/02_3d/ai_blender/mdl-20261109-f048-1847-chr_1286',
+      status: 'provisional',
+      manifest: { subject_id: 'chr_1286', source_pack: 'chr-20261106-1286-2039', produced_by: 'Gemini Argon（任務模式）' }
+    },
+    {
+      id: 'mdl-20261113-1286-0000',
+      type: 'character-model-rig',
+      subjectId: 'chr_1286',
+      drivePath: 'characters/02_3d/colab/mdl-20261113-1286-0000',
+      status: 'ok',
+      manifest: { subject_id: 'chr_1286', source_pack: 'chr-20261106-1286-2039', pipeline: 'colab', produced_by: 'Anime3D typed runner' }
+    },
+    {
+      id: 'mdl-20261109-f048-1847-chr_1286_1855',
+      type: 'character-model-rig',
+      subjectId: 'chr_1286',
+      drivePath: 'characters/02_3d/ai_blender/mdl-20261109-f048-1847-chr_1286_1855',
+      status: 'provisional',
+      manifest: { subject_id: 'chr_1286', source_pack: 'chr-20261106-1286-1855', produced_by: 'Gemini Argon（任務模式）' }
+    },
+    {
+      id: 'mdl-20261114-1855-0000',
+      type: 'character-model-rig',
+      subjectId: 'chr_1855',
+      drivePath: 'characters/02_3d/colab/mdl-20261114-1855-0000',
+      status: 'provisional',
+      manifest: { subject_id: 'chr_1855', source_pack: 'chr-20261106-1855-1855', pipeline: 'colab', produced_by: 'Anime3D typed runner' }
+    },
+    {
+      id: 'mdl-20261109-f048-1847-chr_3d04',
+      type: 'character-model-rig',
+      subjectId: 'chr_3d04',
+      drivePath: 'characters/02_3d/ai_blender/mdl-20261109-f048-1847-chr_3d04',
+      status: 'provisional',
+      manifest: { subject_id: 'chr_3d04', source_pack: 'chr-20261106-3d04-2100', produced_by: 'Gemini Argon（任務模式）' }
+    },
+    {
+      id: 'mdl-20261114-3d04-0000',
+      type: 'character-model-rig',
+      subjectId: 'chr_3d04',
+      drivePath: 'characters/02_3d/colab/mdl-20261114-3d04-0000',
+      status: 'provisional',
+      manifest: { subject_id: 'chr_3d04', source_pack: 'chr-20261106-3d04-2100', pipeline: 'colab', produced_by: 'Anime3D typed runner' }
+    }
+  ];
+  const entries = review.unifiedEntries(packages, [], characters, 'chr');
+  assert.equal(entries.length, 3, 'all 6 character model packages must collapse into 3 canonical characters');
+  assert.deepEqual(entries.find(e => e.catalog.id === 'chr_yeh_chengxi').packages.map(p => p.id), ['mdl-20261113-1286-0000']);
+  assert.deepEqual(entries.find(e => e.catalog.id === 'chr_amemori_sumiha').packages.map(p => p.id), ['mdl-20261114-1855-0000']);
+  assert.deepEqual(entries.find(e => e.catalog.id === 'chr_roen').packages.map(p => p.id), ['mdl-20261114-3d04-0000']);
+});
