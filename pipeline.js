@@ -7,6 +7,8 @@
     encyclopedia: "05_encyclopedia"
   };
   const templates = {};
+  const templatesByKind = new Map();
+  let loadedTemplateKind = null;
   const modeKey = "cosmimera.portrait-mode.v1";
   let portraitMode = "manual";
   let graphMode = null;
@@ -108,7 +110,7 @@
       ].join("\n");
     }
     if (stage === "portrait_after_3d") return "# 建模後補主立繪\n依本次已完成且通過模型品質檢查的 GLB／Blend 與預覽，繪製一致的正式全身動態主立繪。無需 T-pose、正面圖或三視圖；不得自行變更模型外觀。輸出 PNG 並記錄對應模型資產 ID，供最終驗收。";
-    const raw = templates[stage];
+    const raw = templatesByKind.get(pipelineRootFor(ctx))?.[stage];
     const normalized = typeof raw === "string" ? raw.replace(/\r\n?/g, "\n").trim() : "";
     const prefix = templateMarker(stage);
     const template = normalized.startsWith(prefix + "\n") ? normalized.slice(prefix.length).trim() : localTemplates[stage];
@@ -172,16 +174,17 @@
     return typed + "\n共用圖鑑：" + wiki.path + "。此管線只引用既有圖鑑，不重新生成；若尚無該圖鑑，先於「外觀設定」步驟建立。manifest.encyclopedia_path 記錄同一路徑。";
   }
   async function loadTemplates() {
+    const root = pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {});
+    const kindTemplates = templatesByKind.get(root) || {};
     const entries = Object.entries(stages).filter(([key]) => !["portrait", "encyclopedia"].includes(key));
     const jobs = entries.map(async ([key, name]) => {
       try {
-        const root = pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {});
         const canonical = root + "/prompts/" + name + ".prompt.md";
         try {
-          templates[key] = await (await window.COSMI_DRIVE.read(canonical)).text();
+          kindTemplates[key] = await (await window.COSMI_DRIVE.read(canonical)).text();
         } catch (canonicalError) {
           // Read-only compatibility while legacy templates are being retired.
-          templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
+          kindTemplates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
         }
       } catch (error) {
         console.warn("無法讀取管線模板：" + name, error);
@@ -196,6 +199,12 @@
       }
     })());
     await Promise.all(jobs);
+    templatesByKind.set(root, kindTemplates);
+    if (pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {}) === root) {
+      for (const key of Object.keys(templates)) delete templates[key];
+      Object.assign(templates, kindTemplates);
+      loadedTemplateKind = root;
+    }
   }
   function isPortraitAuto() {
     return ["portrait", "portrait_3d"].includes($("pipelineStage")?.value) && portraitMode === "auto";
