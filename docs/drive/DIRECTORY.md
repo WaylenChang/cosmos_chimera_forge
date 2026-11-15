@@ -8,53 +8,49 @@
 ### 1.1 分類管線目錄（`characters/`、`creatures/`、`moves/`）
 
 ```text
-cosmos_chimera_forge/                          [1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0]
-├── 00_settings/                               [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV]  # 全域 default.parameters.json 與歷史設定
-├── prompts/                                   [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz]  # 共用管線參考 Prompt、TRIGGERS.md、DIRECTORY.md
-├── characters/                                [1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD]
-│   ├── 00_settings/                           [1uCAzOorzZJqOzpo1aUb8i7Dzcq1SR7cb]
-│   ├── 01_portraits/                          [1usiRK_rjxP2CBhgWpwpPkwmWgAzyUwni]
-│   ├── 02_3d/                                 [1Yu9ndz_6jy0_akEYAMh6r5oqMXjCSqBC]
-│   │   ├── colab/                             [1muzUS-m0KJvz18PQzHwKhDc5t4LWb7qZ]
-│   │   ├── ai_blender/                        [1k0W--TI0DUPRzIUPF9UttkOuvrhE8Tym]
-│   │   └── legacy/                            [1qFQNX6sw6kF2b6Dv3iIZA5D3DPiOdeGk]
-│   ├── 03_completed/                          [1McKIbN9l2Ka0oE7pVG0Ph7rV_X7E3gJY]
-│   │   ├── portraits/                         [1OJN4nv9_3DtXcnnoRndyEO9_ga8mWO30]
-│   │   └── models/                            [15syK63j1ZLYJ0PKP09pD97JX_Z4xtQvf]
-│   ├── wiki/                                  [1d8m0KbAOVNinotEK85h_AVF-chkVURpP]
-│   ├── prompts/                               [1axJmP6h1JJirCF28ovl-JgEGDk3YRpdb]
-│   │   └── jobs/                              [1qM_iP6-pRSP6bgcGULJa-8cpjf6PU7Sw]
-│   ├── reviews/                               [10x4xig1t2Dp7EjNDTKxwFcI5Fl1AGBYG]
-│   └── backup/                                [1PS9053w41gNIhLhduOXECISoYccRXUOo]
-│       ├── rejected_portraits/                [1GE9a6k2RwfHojbARHVeV8hjNrMoUjNP0]
-│       └── rejected_3d/                       [1yXflSiox_ct02KpWGKfV_M8keTVGmhkf]
-├── creatures/                                 [1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C]
-│   ├── 00_settings/                           [1Wn0VSasKLGo_n2gBvRVO-4ItiSFrNjna]
-│   ├── 01_portraits/                          [1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE]
-│   ├── 02_3d/                                 [1W8Gokkr5ZbIVPYqjb9eLsbRQpxgr9-do]
-│   │   ├── colab/                             [1JHlUoO5wRGM3NURXEoZcYlYg6tz_KXbH]
-│   │   ├── ai_blender/                        [1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s]
-│   │   └── legacy/                            [1UtfyeCUHJQZ_MWthFDzlkKZjTL9fr_i3]
-│   ├── 03_completed/                          [181E4GIBMBx6FDpJeg1tFTHsXlb2shSx7]
-│   │   ├── portraits/                         [1cJVlRhu86TfmYvvxfeAaYCoKMpt3NPYb]
-│   │   └── models/                            [1SJRqzXzrryLY8AibZpcbdCQZwiKpJWsp]
-│   ├── wiki/                                  [1XYWg2Qvhv4Pr8dGAjmOn6iMVbteTBiWQ]
-│   ├── prompts/                               [1gbeK2IxSW62qvGoSXg6qVLsW7btCAKwY]
-│   │   └── jobs/                              [1KEXvJpJnDA2Icu4zfjLhoY5qg1E5HRiy]
-│   ├── reviews/                               [1rQCwId-7tBG10Qm5w8ADx0oWkoOXcKdJ]
-│   └── backup/                                [1eawR_YgbTHufPATI6LeEQlYl9w42p5BM]
-│       ├── rejected_portraits/                [10QfNoi7er91KAsWxsJ1wmb36zhzO0WYl]
-│       └── rejected_3d/                       [1QBL61mbwa1ExUPUAfgQXDFFsZMu5au3u]
-└── moves/                                     [1alulsIhFcb8m8UKXaA-9-orBCEr__P8B]
-    ├── 00_settings/                           [1NEffTj77sxkNoJI1BeMA1HvcRTe5ihfM]
-    ├── 01_vfx/                                [1nspS2MHinS-z4kMRKy0BvmUqVYAeZMyj]
-    ├── prompts/                               [1YBKLfe6wSoxYDrBNWXLB1cBjjAAyxqeV]
-    │   └── jobs/                              [1tBB6vVd4DG_XT5f4QEf1XTQbZOiadcAt]
-    └── backup/                                [11LG5ahUWuSd19Xg8ja2Prwc7WO37tQXj]
-        └── rejected_vfx/                      [1_mdEMJeeEV5Cdfoq4YZmGWlGTBANiKZr]
-│
-# 歷史保留目錄（原位保留，不搬移／不覆寫既有資產）
-├── backup/                                    [1j1URF-pjZA_AJKj6MzG4vNVWrD2-ziqy]
+cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0]
+├── characters/                                    [1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD]
+│   ├── 00_settings/                              [1uCAzOorzZJqOzpo1aUb8i7Dzcq1SR7cb]
+│   ├── 01_portraits/                             [1usiRK_rjxP2CBhgWpwpPkwmWgAzyUwni]
+│   ├── 02_3d/                                    [1Yu9ndz_6jy0_akEYAMh6r5oqMXjCSqBC]
+│   │   ├── colab/                                [1muzUS-m0KJvz18PQzHwKhDc5t4LWb7qZ]
+│   │   ├── ai_blender/                           [1k0W--TI0DUPRzIUPF9UttkOuvrhE8Tym]
+│   │   └── legacy/                               [1qFQNX6sw6kF2b6Dv3iIZA5D3DPiOdeGk]
+│   ├── 03_completed/                             [1McKIbN9l2Ka0oE7pVG0Ph7rV_X7E3gJY]
+│   │   ├── portraits/                            [1OJN4nv9_3DtXcnnoRndyEO9_ga8mWO30]
+│   │   └── models/                               [15syK63j1ZLYJ0PKP09pD97JX_Z4xtQvf]
+│   ├── wiki/                                     [1d8m0KbAOVNinotEK85h_AVF-chkVURpP]
+│   ├── prompts/jobs/                             [1qM_iP6-pRSP6bgcGULJa-8cpjf6PU7Sw]
+│   ├── reviews/                                  [10x4xig1t2Dp7EjNDTKxwFcI5Fl1AGBYG]
+│   └── backup/                                   [1PS9053w41gNIhLhduOXECISoYccRXUOo]
+├── creatures/                                    [1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C]
+│   ├── 00_settings/                              [1Wn0VSasKLGo_n2gBvRVO-4ItiSFrNjna]
+│   ├── 01_portraits/                             [1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE]
+│   ├── 02_3d/                                    [1W8Gokkr5ZbIVPYqjb9eLsbRQpxgr9-do]
+│   │   ├── colab/                                [1JHlUoO5wRGM3NURXEoZcYlYg6tz_KXbH]
+│   │   ├── ai_blender/                           [1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s]
+│   │   └── legacy/                               [1UtfyeCUHJQZ_MWthFDzlkKZjTL9fr_i3]
+│   ├── 03_completed/                             [181E4GIBMBx6FDpJeg1tFTHsXlb2shSx7]
+│   │   ├── portraits/                            [1cJVlRhu86TfmYvvxfeAaYCoKMpt3NPYb]
+│   │   └── models/                               [1SJRqzXzrryLY8AibZpcbdCQZwiKpJWsp]
+│   ├── wiki/                                     [1XYWg2Qvhv4Pr8dGAjmOn6iMVbteTBiWQ]
+│   │   └── _legacy/                              [1heUsQcXsjP3vBrJ9SD023zqKv_uyv9DQ]
+│   ├── prompts/jobs/                             [1KEXvJpJnDA2Icu4zfjLhoY5qg1E5HRiy]
+│   ├── reviews/                                  [1rQCwId-7tBG10Qm5w8ADx0oWkoOXcKdJ]
+│   └── backup/                                   [1eawR_YgbTHufPATI6LeEQlYl9w42p5BM]
+├── moves/                                        [1alulsIhFcb8m8UKXaA-9-orBCEr__P8B]
+│   ├── 00_settings/                              [1NEffTj77sxkNoJI1BeMA1HvcRTe5ihfM]
+│   ├── 01_vfx/                                   [1nspS2MHinS-z4kMRKy0BvmUqVYAeZMyj]
+│   ├── 03_completed/                             [1b8MXP0Nk8eVCkImpTLSzQ9UmGthYj17Q]
+│   ├── wiki/                                     [1ziI5BLlIovEk_a6TcwOB-S0x4NsAGhj6]
+│   ├── prompts/jobs/                             [1tBB6vVd4DG_XT5f4QEf1XTQbZOiadcAt]
+│   ├── reviews/                                  [1gW4XG7fsXI0fNcGXHMHOxNkupPeLJGOz]
+│   └── backup/                                   [11LG5ahUWuSd19Xg8ja2Prwc7WO37tQXj]
+├── 00_settings/                                 [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV] # 全域預設
+├── prompts/                                     [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz] # 共用模板
+├── DIRECTORY.md                                 [1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7]
+├── AGENT_QUICKSTART.md                          [1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O]
+└── backup/                                      [1j1URF-pjZA_AJKj6MzG4vNVWrD2-ziqy] # 退役資料夾與歷史索引
 ```
 
 ## 2. 管線流程各步驟參考 Prompt（`prompts/`）
@@ -69,7 +65,7 @@ cosmos_chimera_forge/                          [1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC
 | 03b | `prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 支援 Image-to-3D（需已核准立繪）與 Prompt-to-3D（純文字外觀） |
 | 03c | `prompts/03c_portrait_after_3d.prompt.md` | 建模後補主立繪 | Prompt-to-3D 專用：依完成之 3D 模型補畫全身動態主立繪（不需 T-pose／正面圖） |
 | 04 | `prompts/04_review_3d.prompt.md` | 3D 最終驗收 | 核對 `.glb`、`.blend`、manifest、骨架動畫與來源立繪綁定 |
-| 05 | `prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 僅於目標 `<kind>/wiki/ 路徑不存在時建立原創角色／宙獸／招式圖鑑 |
+| 05 | `prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 僅於目標 `<kind>/wiki/` 路徑不存在時建立原創角色／宙獸／招式圖鑑 |
 | — | `prompts/TRIGGERS.md` | 簡易觸發語句 | 各步驟觸發指令與管線分支說明 |
 
 ## 3. 角色（Characters）名稱與 ID 對照
@@ -350,4 +346,4 @@ cosmos_chimera_forge/                          [1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC
 - **不依生物類型新增 Drive 頂層分類資料夾**：六大資產類別與解剖型態寫入各資產的 `profile.json` 與 `manifest.json`。
 - **3D 資產包標準子目錄**：`models/<asset_id>.glb`、`.blend`、`manifest.json`、`profile.json`、`typed_state.json`、`rig/rig_report.json`、`animations/animations_manifest.json`、`previews/qa_*.png`、`qa/typed_metrics.json`。
 - **Wiki 單一產檔規則**：角色 `characters/wiki/<subject_id>[_<stage>]_wiki.md`、宙獸 `creatures/wiki/<subject_id>_<stage>_wiki.md`、招式 `moves/wiki/<move_id>_wiki.md`；下游僅關聯路徑，禁止重複產生。
-- **歷史資產原位保留**：`01_portraits/`、`02_3d/`、`03_completed/`、`<kind>/wiki/ 既有檔案保留原位與原 Drive ID，未經人工審查核准不得移入完成區。
+- **歷史資產分類與審查規則**：2026-11-15 已將舊頂層資產移入 `characters/`、`creatures/`、`moves/`，退役空目錄封存於共用 `backup/`，保留每個檔案及資料夾原 Drive ID；資產未經人工核准不得移入 `<kind>/03_completed/`。
