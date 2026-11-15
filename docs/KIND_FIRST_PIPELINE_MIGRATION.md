@@ -38,3 +38,9 @@ Pipeline IDs must be defined centrally and independently of UI labels. Character
 - Inspected legacy `prompts/jobs/` and all three category-specific `prompts/jobs/` folders: all four were empty at inspection time. No job data was moved.
 - **Still pending:** audit the actual runtime template readers and switch them to category-local paths; recursively inventory and migrate legacy 3D assets; resolve legacy `DIRECTORY.md`/`TRIGGERS.md`; verify category-specific copies, reference integrity, and CI. Do not retire root `prompts/` or consider PR #22 complete until these checks pass.
 
+
+## Legacy 3D inventory checkpoint
+- `characters/02_3d/legacy/` contains three asset folders: `mdl-20261109-f048-1847-chr_3d04`, `mdl-20261109-f048-1847-chr_1286_1855`, and `mdl-20261109-f048-1847-chr_1286`. Each contains a `manifest.json` plus model/rig/image/texture/animation subfolders. They are **not yet moved** because the correct new 3D branch must be derived from the manifest, not inferred from the `legacy` folder name.
+- `creatures/02_3d/legacy/` contains 12 `mdl-20261111-*` asset folders (a111/b111/c111, four stages each). The `creatures/02_3d/ai_blender/` destination already contains many stage-specific `asset_cr_*` folders; check identity and duplicate collisions before any move.
+- `characters/02_3d/colab/` already contains active model folders and runtime files; `characters/02_3d/ai_blender/` and `creatures/02_3d/colab/` were empty when inspected.
+- No legacy 3D folder was moved during this checkpoint. The manifest-based branch mapping and collision audit remain mandatory.
