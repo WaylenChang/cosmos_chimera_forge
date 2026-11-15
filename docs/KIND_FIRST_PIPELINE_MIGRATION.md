@@ -188,3 +188,11 @@ Fetched the **raw bytes** of all three current Colab `manifest.json` files via t
 - Readback of live Drive root `AGENT_QUICKSTART.md` (file `1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O`) still shows stale `prompts/TRIGGERS.md`, root `prompts/*.prompt.md`, and premature legacy-retirement wording. **GitHub changes have not yet been synced to this Drive file.** Live Drive root `DIRECTORY.md` (file `1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7`) is readable and remains a separate sync target.
 - Inspected `drive-storage.js`: `pipelineDirectory` routes `colab_ai_blender` to `<kind>/02_3d/colab`, `ai_blender` to `<kind>/02_3d/ai_blender`, and explicitly refuses new writes to `legacy`. `categoryDirs` are active scan roots; `legacyDirs` remain migration-only. `migratePrompt3dAssets` still has a historical fallback to `02_3d/ai_blender` for migration input; audit this as a compatibility read, not an approved write target.
 - **M04 remains PARTIAL:** GitHub Quickstart updated, Drive Quickstart not synced. **M05 remains PARTIAL:** selected resolver/read paths inspected, full writer/read-path and CI audit pending. **M01–M03 unchanged:** no model moves, no deduplication, no verified binary QA. No CI pass claimed.
+
+
+### 2026-11-15 continuation: GitHub Actions failure triage and regression fixtures
+
+- Inspected PR workflow run `43719707826` at commit `8d1597f6cba621070a98562b4a52fdc736c4072c`: Blender GLB/animation round-trip job passed; Node regression job failed with **119 passed / 3 failed out of 122**, so Pages build/deploy was skipped.
+- Failing tests: `tools/tests/test_category_directory_contract.cjs` category-switch fixture lacked `COSMI_FORGE.activePackage`; `tools/tests/test_pipeline.cjs` template-load test still expected root `prompts/`; versioned-template test mutated a legacy global template instead of loading the canonical kind-scoped Drive template.
+- Commit `962190a304a9237d88569586282092eb0f3815e9` updated the category-switch fixture to provide `activePackage`/`packages`; commit `85a079b03b07f00dabf4b7982c5c053dd1bc4017` updated both pipeline tests to use category-scoped template loading.
+- **M09 in progress, not green:** no workflow run was yet returned for the latest commit when queried; do not claim tests passed until GitHub Actions confirms a new successful run. No Drive assets moved or overwritten.
