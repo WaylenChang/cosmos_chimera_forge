@@ -158,3 +158,17 @@ Status meanings: **BLOCKED** = prerequisite or verification missing; **PENDING**
 - `mdl-20261113-1286-0000` (Drive folder `1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9`; manifest `1ODpUAo41jq9nL1q8HkjrxO47jrdAW2Nm`) includes an additional review ZIP and viewer assets. Do not equate it with legacy `mdl-20261109-f048-1847-chr_1286` solely from the numeric suffix.
 - The comparison above is **task-root structure and ID evidence only**. Destination manifest identities, actual binary hashes, provenance and QA approval are still unverified; these remain mandatory before any merge or deduplication.
 - **M02 finding:** three existing Colab destinations are potential *related* tasks, not proven identical replacements. Preserve legacy and destination task IDs independently. **M03 still blocked**; no Drive move/write or CI run performed.
+
+### 2026-11-15 continuation: authoritative Colab manifest provenance comparison
+
+Fetched the **raw bytes** of all three current Colab `manifest.json` files via the Drive connector and decoded their JSON; this supersedes the preceding folder-name-only comparison:
+
+| Existing Colab task | manifest subject_id | manifest source_pack | input_mode / pipeline | qa_status | Legacy relationship |
+|---|---|---|---|---|---|
+| `mdl-20261114-3d04-0000` | `chr_3d04` | `chr-20261106-3d04-2100` | `image / colab` | `REVIEW_REQUIRED` | Exact subject and source_pack match with legacy `mdl-20261109-f048-1847-chr_3d04`; distinct task IDs, producers and deliverables; **not byte-equivalent by evidence** |
+| `mdl-20261114-1855-0000` | `chr_1855` | `chr-20261106-1855-1855` | `image / colab` | `REVIEW_REQUIRED` | **Not an identity match** for legacy `mdl-20261109-f048-1847-chr_1286_1855` (`subject_id=chr_1286`, `source_pack=chr-20261106-1286-1855`), despite `1855` in both task names |
+| `mdl-20261113-1286-0000` | `chr_1286` | `chr-20261106-1286-2039` | `image / colab` | `APPROVED_READY` | Exact subject and source_pack match with legacy `mdl-20261109-f048-1847-chr_1286`; distinct task IDs/producers and model outputs; **do not deduplicate without content/QA evidence** |
+
+- All three destination manifests explicitly identify `pipeline=colab`, `input_mode=image`, `produced_by=Anime3D typed runner` (the `chr_1286` manifest includes a more specific runner note). Legacy character manifests identify `produced_by=Gemini Argon（任務模式）` and **do not independently assert a Colab/AI Blender pipeline**. Same subject/source pack means related work, not the same output or permission to overwrite.
+- Destination manifests declare 18, 18 and 48 files respectively, each `missing=[]`. Declared files/QA status are not independently verified content hashes, Blender open tests, human approval, or animation acceptance. `APPROVED_READY` is a manifest value only; do not treat it as a human review decision.
+- **M02 partial resolution:** two related subject+source-pack pairs are now verified; one filename-based false match has been rejected. The legacy `chr_1286_1855` design must retain a distinct identity until its correct canonical ID is established. M03 remains blocked, and no Drive assets were moved or overwritten.
