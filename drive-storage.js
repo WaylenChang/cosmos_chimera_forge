@@ -110,13 +110,28 @@
       return "creatures";
     return "creatures";
   }
+  // One canonical directory resolver for all category-specific pipeline outputs.
+  // Historical stage names are accepted as aliases, not as separate output trees.
+  function pipelineDirectory(kind, stage) {
+    const root = pipelineRoot(kind);
+    if (root === "moves") {
+      if (stage === "vfx" || stage === "move_vfx" || stage === "01_vfx") return "moves/01_vfx";
+      throw Error("招式僅支援 VFX 資產管線");
+    }
+    if (stage === "colab" || stage === "03a_colab" || stage === "colab_ai_blender")
+      return root + "/02_3d/colab";
+    if (stage === "blender" || stage === "03b_blender" || stage === "ai_blender")
+      return root + "/02_3d/ai_blender";
+    if (stage === "legacy") return root + "/02_3d/legacy";
+    if (stage === "portrait" || stage === "01_portrait" || stage === "portrait_3d")
+      return root + "/01_portraits";
+    throw Error("未知管線階段：" + String(stage));
+  }
   function packageDir(type, subjectOrId, stage) {
     const root = pipelineRoot(subjectOrId ? { type, id: subjectOrId } : type);
-    if (root === "moves") return "moves/01_vfx";
-    if (/model|rig|anim/.test(type)) {
-      return root + "/02_3d/" + (stage === "colab" ? "colab" : "ai_blender");
-    }
-    return root + "/01_portraits";
+    if (root === "moves") return pipelineDirectory(root, "vfx");
+    if (/model|rig|anim/.test(type)) return pipelineDirectory(root, stage || "blender");
+    return pipelineDirectory(root, "portrait");
   }
   function recordPipelineWrite(path, result) {
     const clean = String(path || "").replace(/^\/+/, "");
@@ -1430,6 +1445,7 @@
     signOut: () => lock("已登出"),
     rootPath: config.rootPath,
     packageDir,
+    pipelineDirectory,
   });
   document.addEventListener("DOMContentLoaded", () => {
     $("driveSignIn").addEventListener("click", () => {
