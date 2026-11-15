@@ -4,7 +4,7 @@
 cosmos_chimera_forge/
   00_settings/
     default.parameters.json       # 全域預設格式參數
-  prompts/                        # 共用單步驟 prompt.md、TRIGGERS.md、DIRECTORY.md
+  prompts/                        # 舊版共用模板；僅唯讀相容，不再寫入新工作
 
   characters/                     # 角色管線獨立目錄
     00_settings/                  # <asset_id>.appearance.md、<asset_id>.parameters.json
@@ -17,7 +17,8 @@ cosmos_chimera_forge/
       portraits/<asset_id>/
       models/<asset_id>/
     wiki/<subject_id>[_<stage>]_wiki.md
-    prompts/jobs/                 # HTML 填入參數後的單步驟 prompt
+    prompts/                      # 角色專屬階段模板（8 份）
+      jobs/                       # HTML 填入參數後的角色工作 prompt
     reviews/<asset_id>.json       # 審查結果、來源立繪 ID、時間、意見
     backup/
       rejected_portraits/<revision>/<asset_id>/
@@ -34,7 +35,8 @@ cosmos_chimera_forge/
       portraits/<asset_id>/
       models/<asset_id>/
     wiki/<subject_id>_<stage>_wiki.md  # 每個階段一份（含 _legacy/）
-    prompts/jobs/
+    prompts/                      # 宙獸專屬階段模板（8 份）
+      jobs/
     reviews/<asset_id>.json
     backup/
       rejected_portraits/<revision>/<asset_id>/
@@ -45,11 +47,14 @@ cosmos_chimera_forge/
     01_vfx/<asset_id>/            # spec.json、storyboard、layers、flipbook
     03_completed/<asset_id>/
     wiki/<move_id>_wiki.md
-    prompts/jobs/
+    prompts/                      # 招式專屬 01b_move_vfx.prompt.md
+      jobs/
     reviews/<asset_id>.json
     backup/
       rejected_vfx/<revision>/<asset_id>/
 ```
+
+所有新提示詞讀寫均採分類優先：`characters/prompts/`、`creatures/prompts/`、`moves/prompts/`；根目錄 `prompts/` 僅保留舊版讀取相容。`TRIGGERS.md` 與 `DIRECTORY.md` 的規範版本以 GitHub `docs/pipeline/` 為準，不代表根目錄為新寫入位置。
 
 3D 資產目錄內用 models/、rig/、animations/、previews/、manifest.json。
 
