@@ -12,7 +12,7 @@
   - `docs/pipeline/TRIGGERS.md`：各步驟觸發語句與分支說明
   - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；招式使用 `moves/prompts/01b_move_vfx.prompt.md`
 
-> **分類優先的唯一正式路徑**：所有角色／宙獸／招式資產都在 `<kind>/` 之下，`<kind>` 僅能是 `characters`、`creatures`、`moves`。圖鑑位於 `<kind>/wiki/`，模型與立繪也只由對應分類讀取。舊根目錄已退役並歸入 `backup/`，不得再作為正常搜尋或輸出位置。
+> **分類優先的唯一正式路徑**：所有角色／宙獸／招式資產都在 `<kind>/` 之下，`<kind>` 僅能是 `characters`、`creatures`、`moves`。圖鑑位於 `<kind>/wiki/`，模型與立繪也只由對應分類讀取。舊根目錄及 `<kind>/02_3d/legacy/` 仍可能保留待核對資料；只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。完成來源、衝突、備份及驗收驗證前，不得宣稱已退役或刪除。
 
 ---
 
