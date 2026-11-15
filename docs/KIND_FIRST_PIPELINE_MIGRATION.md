@@ -107,3 +107,28 @@ Status meanings: **BLOCKED** = prerequisite or verification missing; **PENDING**
 2. Compare all 15 packages against existing production tasks and `asset_cr_*` folders; do not use the target folder's emptiness as proof of correct pipeline branch.
 3. Verify non-model descendants, Blender/GLB integrity, provenance and acceptance gates; then move only uniquely mapped packages with parent-ID readback and rollback manifest.
 4. Independently complete M04–M09 (documentation, code references, wiki/review/jobs, tests and CI) while keeping compatibility reads and legacy writes disabled.
+
+## Continuation checkpoint — 2026-11-15 (PR #22)
+
+### Verified this session
+- GitHub PR #22 remains open/draft; migration is not signed off.
+- Committed kind-first trigger documentation correction in `docs/pipeline/TRIGGERS.md` (commit `c3d55d57d76ba1b219df3943be327f6a96bdd48e`): category-local template paths, moves VFX path, root prompt read-only compatibility, and wiki reuse rules. GitHub file readback confirmed the update.
+- Re-listed Drive root `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`: top-level `characters`, `creatures`, `moves` coexist with root `prompts`, `00_settings`, `backup`, `DIRECTORY.md`, and `AGENT_QUICKSTART.md`. Root `prompts` remains a compatibility/migration item, not an approved asset write target.
+- Re-listed `characters/02_3d/legacy` (3 task folders) and `creatures/02_3d/legacy` (12 task folders); all 15 task folder identities are still present at their original legacy parent locations.
+- Re-listed three character legacy task roots and one creature sample (`mdl-20261111-c111-1301`): **4/4 sampled roots contain `manifest.json`**. The creature sample also has `build_report.json`, `motion_spec.json`, and `rig_spec.json`. This confirms that the earlier negative manifest inventory is stale; use the later positive reconciliation checkpoint above.
+- No model folder was moved or deleted this session. The existing 15/15 model-presence checkpoint remains historical evidence, not a fresh binary integrity test.
+
+### Remaining action / blocking conditions
+- **M01 PARTIAL/VERIFY:** inventory remaining descendants for all 15 assets, capture actual file IDs/sizes and source lineage, and validate manifest declarations against observed children; the current session only sampled four roots.
+- **M02 BLOCKED:** determine authoritative pipeline provenance and identity/collision mapping, especially the two distinct `chr_1286` source packs and existing creature `asset_cr_*` targets. Do not classify a branch by folder name.
+- **M03 BLOCKED:** do not move legacy assets until M01/M02 are complete and a reversible source-ID/target-ID manifest is prepared.
+- **M04 PARTIAL:** GitHub `docs/pipeline/TRIGGERS.md` is corrected and read back; Drive root `DIRECTORY.md` and other root documentation still require content reconciliation and readback.
+- **M05–M08 PENDING/VERIFY:** audit every runtime writer/resolver, wiki deduplication, reviews/jobs and both 3D routes; verify per-kind template cache switching.
+- **M09 BLOCKED/UNVERIFIED:** no green CI or executed integration tests were established in this session.
+- **M10–M11 PENDING:** do not retire compatibility paths or mark PR ready until Drive and GitHub references reconcile and checks pass.
+
+### Next execution order
+1. Extract manifests and observed descendants into a per-asset evidence matrix (Drive ID, task ID, subject, stage, source pack, producer, actual deliverables).
+2. Cross-check destination `colab`/`ai_blender` assets for duplicate content and identity collisions before any move.
+3. Complete Drive root documentation updates and GitHub code reference scan; preserve read-only compatibility until verified.
+4. Run tests/CI, read back Drive paths, record rollback manifest, and only then perform individually verified moves.
