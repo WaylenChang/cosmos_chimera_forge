@@ -179,3 +179,12 @@ Fetched the **raw bytes** of all three current Colab `manifest.json` files via t
 - Updated GitHub `docs/pipeline/DIRECTORY.md` and `docs/drive/DIRECTORY.md` to use kind-first stage-template references and mark root `prompts/` read-only compatibility. Updated the Drive directory's prompt index, including `moves/prompts/01b_move_vfx.prompt.md` and canonical GitHub `docs/pipeline/TRIGGERS.md`.
 - These are **GitHub documentation changes only**; Drive root `DIRECTORY.md` and `AGENT_QUICKSTART.md` contents still require a separate live-document update/readback. No asset relocation, no destructive changes, and no CI run in this pass.
 - **M04 progress:** GitHub directory/trigger specifications now align with observed category-local templates; Drive root docs and runtime references remain outstanding.
+
+
+### 2026-11-15 continuation: quickstart reference and quarantine wording
+
+- Commit `01a0aca26a722a21bdeeceb488b750380a800210` updated GitHub `docs/drive/AGENT_QUICKSTART.md` to reference `docs/pipeline/TRIGGERS.md` and category-local `<kind>/prompts/` templates. Readback verified the changed references.
+- Commit `51ab6a4538cdfee67aaf418f982e3fe9849923d2` corrected a misleading statement that all legacy root assets were already retired into `backup/`. Existing `<kind>/02_3d/legacy/` folders remain quarantined and must not be deleted or treated as approved production assets.
+- Readback of live Drive root `AGENT_QUICKSTART.md` (file `1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O`) still shows stale `prompts/TRIGGERS.md`, root `prompts/*.prompt.md`, and premature legacy-retirement wording. **GitHub changes have not yet been synced to this Drive file.** Live Drive root `DIRECTORY.md` (file `1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7`) is readable and remains a separate sync target.
+- Inspected `drive-storage.js`: `pipelineDirectory` routes `colab_ai_blender` to `<kind>/02_3d/colab`, `ai_blender` to `<kind>/02_3d/ai_blender`, and explicitly refuses new writes to `legacy`. `categoryDirs` are active scan roots; `legacyDirs` remain migration-only. `migratePrompt3dAssets` still has a historical fallback to `02_3d/ai_blender` for migration input; audit this as a compatibility read, not an approved write target.
+- **M04 remains PARTIAL:** GitHub Quickstart updated, Drive Quickstart not synced. **M05 remains PARTIAL:** selected resolver/read paths inspected, full writer/read-path and CI audit pending. **M01–M03 unchanged:** no model moves, no deduplication, no verified binary QA. No CI pass claimed.
