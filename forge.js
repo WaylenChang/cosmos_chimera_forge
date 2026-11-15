@@ -1102,6 +1102,10 @@
     if (pkg.status === "reject") return 0;
     return 1;
   }
+  function stageRank(stage) {
+    const idx = STAGE_KEYS.indexOf(stage);
+    return idx === -1 ? STAGE_KEYS.length : idx;
+  }
   function sortPackagesByPriority(pkgs) {
     return [...(pkgs || [])].sort((a, b) => {
       const diff = packageStatusRank(b) - packageStatusRank(a);
@@ -3405,14 +3409,17 @@
   // The task graph is the single source of truth for which editor is visible.
   function renderFlowStageInventory() {
     const conceptSection = $("#conceptSection");
+    const conceptTitle = $("#conceptSectionTitle");
+    const conceptBox = $("#concept");
     const inventory = $("#flowStageInventory");
     const items = $("#flowStageInventoryItems");
     const title = $("#flowStageInventoryTitle");
-    if (!conceptSection || !inventory || !items || !title) return;
+    if (!conceptSection || !conceptBox || !inventory || !items || !title) return;
     const flow = currentFlow();
     const showConcept = flow?.taskId === "character-concept" &&
       ["appearance", "portrait", "review_portrait"].includes(flow.step);
-    conceptSection.hidden = !showConcept;
+    conceptBox.hidden = !showConcept;
+    if (conceptTitle) conceptTitle.textContent = showConcept ? "角色設計概念" : "任務選項";
     inventory.hidden = !flow || showConcept;
     if (inventory.hidden) return;
     title.textContent = flow.name + " · 階段角色／宙獸";
@@ -3852,7 +3859,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderFlowStageInventory(); if (!$("#conceptSection")?.hidden) renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
+    renderTasks(); renderFlowStageInventory(); if (!$("#concept")?.hidden) renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
     save();
   }
 
@@ -4929,7 +4936,8 @@
     }
     if (entry.packages.length) {
       const card = el("div", {class:"designed-detail-card"}, el("h3", {}, "相關交付成果"));
-      for (const p of sortPackagesByPriority(entry.packages)) {
+      const orderedPkgs = sortPackagesByPriority(entry.packages).sort((a, b) => stageRank(a.stage) - stageRank(b.stage));
+      for (const p of orderedPkgs) {
         const missing = p.manifest?.missing || [];
         const note = missing.length ? " · ⚠️ 需補件：" +
           missing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、") : "";
@@ -5002,7 +5010,12 @@
       for (const p of sortPackagesByPriority(packages.filter(p => p.stage))) {
         if (!stageRepresentatives.has(p.stage)) stageRepresentatives.set(p.stage, p);
       }
-      for (const p of stageRepresentatives.values()) {
+      const orderedStages = [
+        ...STAGE_KEYS.filter(k => stageRepresentatives.has(k)),
+        ...[...stageRepresentatives.keys()].filter(k => !STAGE_KEYS.includes(k))
+      ];
+      for (const stKey of orderedStages) {
+        const p = stageRepresentatives.get(stKey);
         stages.append(el("button",{class:"stage-pill",type:"button",title:p.id,onclick:event => {
           event.stopPropagation();
           reviewState.activeDesignedKey = null;
@@ -5123,6 +5136,7 @@
       stage3dView.style.display = "block";
       const zSeg = $("#zoomSeg"); if (zSeg) zSeg.style.display = "none";
       const cEl = $("#stageCarousel"); if (cEl) cEl.style.bottom = "58px";
+      resize3D();
       loadModelForPackage(pkg, linkedPkg);
     } else if (isCompare) {
       singleView.style.display = "none";
@@ -5441,9 +5455,21 @@
       model.position.y = -box.min.y;
       model.position.z = -center.z;
 
-      const maxDim = Math.max(size.x, size.y, size.z) || 1.8;
-      const camY = (size.y * 0.55) || 0.9;
-      three.camera.position.set(0, camY, maxDim * 1.8);
+      resize3D();
+      const maxHorizontal = Math.max(size.x, size.z) || 1.0;
+      const height = size.y || 1.0;
+      const fovRad = (three.camera.fov * Math.PI) / 180;
+      const tanHalfV = Math.tan(fovRad / 2);
+      const aspect = Math.max(three.camera.aspect || 1, 0.4);
+      const tanHalfH = tanHalfV * aspect;
+      const distV = (height / 2) / (tanHalfV * 0.55) + maxHorizontal / 2;
+      const distH = (maxHorizontal / 2) / (tanHalfH * 0.65) + maxHorizontal / 2;
+      const dist = Math.max(distV, distH, 1.8);
+      const camY = (size.y * 0.52) || 0.9;
+      three.defaultDist = dist;
+      three.defaultTargetY = camY;
+      three.controls.maxDistance = Math.max(20, dist * 3);
+      three.camera.position.set(0, camY, dist);
       three.controls.target.set(0, camY, 0);
       three.controls.update();
 
@@ -5756,8 +5782,8 @@
   function set3dCameraPreset(preset) {
     const three = reviewState.three;
     if (!three.camera || !three.controls) return;
-    const targetY = three.controls.target.y || 0.9;
-    const dist = 3.2;
+    const targetY = three.defaultTargetY ?? three.controls.target.y ?? 0.9;
+    const dist = three.defaultDist || 4.2;
     if (preset === "front") {
       three.camera.position.set(0, targetY, dist);
     } else if (preset === "side") {
@@ -5765,7 +5791,7 @@
     } else if (preset === "back") {
       three.camera.position.set(0, targetY, -dist);
     } else if (preset === "iso") {
-      three.camera.position.set(dist * 0.7, targetY + 0.8, dist * 0.7);
+      three.camera.position.set(dist * 0.72, targetY + dist * 0.25, dist * 0.72);
     } else if (preset === "reset") {
       three.camera.position.set(0, targetY, dist);
       three.controls.target.set(0, targetY, 0);
