@@ -57,3 +57,35 @@ Pipeline IDs must be defined centrally and independently of UI labels. Character
 - Enumerated each asset's `models/` folder (15/15). **All 15 model directories returned zero children** and no continuation token. No `.blend` or `.glb` deliverable was found in these model folders.
 - Therefore these 15 folders cannot be treated as completed model packages or automatically migrated into `colab/` or `ai_blender/`. Retain their Drive IDs and legacy quarantine placement; do not delete or overwrite them. Inspect any remaining non-model subfolders and source records separately before deciding whether the placeholders are disposable.
 - CI is still unverified: the PR head's combined status has no entries and the queried commit returned no pull-request workflow runs. Local `git ls-remote` failed because GitHub DNS resolution was unavailable in the execution container; **do not mark tests passed**.
+
+## Outstanding work and blockers — handoff checklist (2026-11-15)
+
+Status meanings: **BLOCKED** = prerequisite or verification missing; **PENDING** = not yet executed; **VERIFY** = code/data changed but no passing readback or test evidence. Do not treat any item as complete merely because its directory exists.
+
+| ID | Status | Remaining action | Blocker / reason | Exit evidence |
+| --- | --- | --- | --- | --- |
+| M01 | BLOCKED | Inspect all remaining legacy `textures/`, `review/`, `rig/`, `images/`, `anims/` descendants and relevant external source records | All 15 legacy asset roots lack direct-child `manifest.json`; all 15 `models/` folders returned empty; full non-model inventory and provenance are not verified | Recursive inventory with IDs, file types, sizes, manifests/source lineage and explicit per-asset disposition |
+| M02 | BLOCKED | Map each legacy package to its canonical `colab/` or `ai_blender/` target, kind, asset ID and evolution stage | No reliable branch/source metadata; possible destination identity collisions, especially existing creature `asset_cr_*` | Collision report and one unambiguous mapping per asset; do not infer from folder names |
+| M03 | BLOCKED | Move only validated legacy Drive packages and verify parent IDs after each move | Depends on M01–M02; currently zero validated complete legacy model packages | Source/target Drive IDs, pre/post parents, size/hash where available, readback and migration log; leave incomplete placeholders quarantined |
+| M04 | PENDING | Audit root `DIRECTORY.md`, `TRIGGERS.md`, quickstarts and Drive documentation; correct stale root `prompts/` references to kind-first paths | Root `DIRECTORY.md` still documents stage prompts as `prompts/*.prompt.md`; other references not exhaustively checked | Updated documentation and verified Drive readback |
+| M05 | PENDING | Exhaustively scan GitHub runtime, scripts, workflows and tests for legacy read/write path literals (`drive-storage.js`, `forge.js`, `catalog.js`, `model-review.js`, wiki/review flows) | Only selected resolvers and template loaders were updated; all writers/readers have not been audited | Reference inventory and tests proving writes always begin `characters/`, `creatures/` or `moves/` |
+| M06 | VERIFY | Verify category-local template copies, fallback behavior, and kind-switch cache isolation | Copies were reported and resolver/cache updated, but no full integration test or successful CI evidence | Drive file readbacks for all templates, unit tests for character→creature→character and missing-template fallback |
+| M07 | PENDING | Verify wiki files are separated by kind and creature evolution stage, use `_wiki.md`, and are generated once | Existing wiki asset inventory and deduplication by subject+stage have not been fully checked | No duplicates/overwrites; creation and re-run idempotence tests |
+| M08 | PENDING | Verify `reviews/`, `prompts/jobs/`, `01_portraits/`, `02_3d/`, `moves/01_vfx/` discovery, review, cache invalidation and acceptance gates | Cross-kind and cross-branch end-to-end paths not exercised | End-to-end cases for characters, creatures, moves, both 3D branches and post-Prompt-to-3D portrait |
+| M09 | BLOCKED | Execute tests and inspect CI for PR #22 head | Queried GitHub combined commit statuses and PR workflow runs returned no entries; local `git ls-remote` failed on DNS resolution | Successful test command output, green required checks, deployment/build evidence |
+| M10 | PENDING | Retire root shared prompt paths and `legacy/` read/write routes only after compatibility verification | Readers may still require read-only fallback; legacy package classification incomplete | No live references; migration readbacks and CI pass; preserve backup/rollback |
+| M11 | PENDING | Final Drive ↔ GitHub directory/reference reconciliation and PR acceptance | Depends on M01–M10 | Final tree diff, orphan/duplicate report, verified links and passing CI; only then mark PR ready |
+
+### Explicitly completed, but not sufficient for sign-off
+- Kind-first canonical directory contract and initial resolver changes are in PR #22.
+- `01b_move_vfx.prompt.md` was moved into `moves/prompts/` and 16 character/creature template copies were reported; root `prompts/` remains compatibility-only.
+- The four inspected `prompts/jobs/` directories were empty at the inspection checkpoint.
+- `pipeline.js` now keeps per-kind template caches and reads the selected kind's template when building prompts. A category-switch regression test was committed; **test execution has not been confirmed**.
+- All 15 legacy model directories were enumerated and returned empty; no legacy asset has been moved or deleted.
+
+### Safety / sequencing rules
+1. Run M01 → M02 → M03; never move incomplete legacy model placeholders into production branches.
+2. Run M04–M08 independently where possible; keep root compatibility paths read-only.
+3. Run M09 after changes and rerun after fixes; do not interpret absence of statuses as success.
+4. Complete M10–M11 only after Drive readback, deduplication, and green CI.
+5. Keep PR #22 **draft** until all exit evidence is attached. Do not merge, delete legacy data, or silently rewrite approved assets.
