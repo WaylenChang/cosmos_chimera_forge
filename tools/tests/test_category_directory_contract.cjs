@@ -36,3 +36,23 @@ test("task-flow documentation never produces wiki/category paths", () => {
   assert.doesNotMatch(flow, /wiki\/moves\//);
   assert.match(flow, /moves\/wiki\//);
 });
+
+test("category-first pipeline directory resolver handles aliases and rejects invalid stages", () => {
+  const context = {
+    window: { COSMI_DRIVE_CONFIG: {} },
+    document: { addEventListener() {} },
+  };
+  vm.runInNewContext(source("drive-storage.js"), context, { filename: "drive-storage.js" });
+  const drive = context.window.COSMI_DRIVE;
+  for (const [kind, stage, expected] of [
+    ["characters", "portrait", "characters/01_portraits"],
+    ["creatures", "03a_colab", "creatures/02_3d/colab"],
+    ["characters", "colab_ai_blender", "characters/02_3d/colab"],
+    ["creatures", "ai_blender", "creatures/02_3d/ai_blender"],
+    ["moves", "vfx", "moves/01_vfx"],
+  ]) {
+    assert.equal(drive.pipelineDirectory(kind, stage), expected);
+  }
+  assert.throws(() => drive.pipelineDirectory("moves", "colab"), /VFX/);
+  assert.throws(() => drive.pipelineDirectory("creatures", "unrecognized"), /未知管線/);
+});
