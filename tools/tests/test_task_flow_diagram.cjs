@@ -110,13 +110,14 @@ test('format JSON is located below Prompt output, with save and load controls', 
 
 test('concept editor follows selected character concept flow and stage inventory is present', () => {
   assert.match(html, /id="conceptSection"/);
+  assert.match(html, /id="concept"/);
   assert.match(html, /id="flowStageInventory" hidden/);
   assert.match(html, /id="flowStageInventoryItems"/);
   assert.match(forge, /function renderFlowStageInventory\(\)/);
   assert.match(forge, /const flow = currentFlow\(\)/);
-  assert.match(forge, /conceptSection\.hidden = !showConcept/);
+  assert.match(forge, /conceptBox\.hidden = !showConcept/);
   assert.match(forge, /inventory\.hidden = !flow \|\| showConcept/);
   assert.match(forge, /renderTasks\(\); renderFlowStageInventory\(\);/);
-  assert.match(forge, /if \(!\$\("#conceptSection"\)\?\.hidden\) renderConcepts\(\)/);
+  assert.match(forge, /if \(!\$\("#concept"\)\?\.hidden\) renderConcepts\(\)/);
   assert.match(forge, /const key = subject \+ "\\|" \+ form/);
 });
