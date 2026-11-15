@@ -142,7 +142,7 @@
       appearance: visual, model_input: modelInput, bestiary,
       asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source, source_path: sourcePath,
       input_path: stage === "review_portrait" ? portraitPath : modelPath,
-      output_path: (stage === "colab" ? root + "/02_3d/colab/" : stage === "blender" ? root + "/02_3d/ai_blender/" : root === "moves" ? "moves/01_vfx/" : root + "/01_portraits/") + ctx.taskId,
+      output_path: (window.COSMI_DRIVE?.pipelineDirectory?.(root, stage === "colab" || stage === "blender" ? stage : root === "moves" ? "vfx" : "portrait") || (stage === "colab" ? root + "/02_3d/colab" : stage === "blender" ? root + "/02_3d/ai_blender" : root === "moves" ? "moves/01_vfx" : root + "/01_portraits")) + "/" + ctx.taskId,
       parameters_path: root + "/00_settings/" + ctx.taskId + ".parameters.json"
     };
     const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定").replace(/\n{3,}/g, "\n\n").trim();
