@@ -273,10 +273,16 @@ test('final approval moves model and approved source directories and preserves f
  assert.equal(assets[0].drivePath,'creatures/03_completed/models/model');assert.equal(assets[1].completed,true);
 });
 
-test('prompt-only model cannot complete until an approved portrait is bound',async()=>{
+test('prompt-only model can complete without a bound portrait, while image-to-3d still requires one',async()=>{
  const {h,assets,parents}=reviewHarness();await h.login();assets[0].sourcePack='';
- await assert.rejects(h.context.COSMI_DRIVE.review(assets[0],'ok'),/綁定已核准/);
- assert.equal(parents['model-folder'],'legacy-id');assert.equal(assets[0].status,'pending');
+ await h.context.COSMI_DRIVE.review(assets[0],'ok');
+ assert.equal(parents['model-folder'],'models-id');
+ assert.equal(parents['portrait-folder'],'01_portraits-id');
+ assert.equal(assets[0].status,'ok');
+
+ const {h:h2,assets:a2,parents:p2}=reviewHarness();await h2.login();a2[0].sourcePack='';a2[0].drivePath='creatures/02_3d/colab/model';
+ await assert.rejects(h2.context.COSMI_DRIVE.review(a2[0],'ok'),/綁定已核准/);
+ assert.equal(p2['model-folder'],'legacy-id');assert.equal(a2[0].status,'pending');
 });
 
 test('missing blend prevents completion',async()=>{

@@ -61,7 +61,7 @@ test('both routes are visible in one horizontal diagram with shared endpoints', 
     assert.deepEqual(Array.from(lanes[0].segments,s=>s.type),['step','step','parallel']);
     assert.deepEqual(Array.from(lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
     assert.deepEqual(Array.from(lanes[1].segments,s=>s.steps[0].id),
-      ['prompt_3d','portrait_3d','review_portrait_3d']);
+      ['prompt_3d']);
   }
   assert.deepEqual(Array.from(flow.diagram('move'),r=>r.steps[0].id),['encyclopedia','move_vfx']);
 });

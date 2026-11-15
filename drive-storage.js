@@ -726,16 +726,21 @@
         const src = window.COSMI_FORGE.packages().find(
           (p) => p.id === sourceId,
         );
+        const isImage3d =
+          Boolean(sourceId) ||
+          pkg.drivePath?.includes("/02_3d/colab/") ||
+          pkg.manifest?.pipeline === "colab" ||
+          pkg.manifest?.input_mode === "image" ||
+          Boolean(pkg.manifest?.input_img);
         if (
-          !src ||
-          modelType(src) ||
-          src.status !== "ok" ||
-          !src.images?.length ||
-          !src.driveFolderId
+          isImage3d &&
+          (!src ||
+            modelType(src) ||
+            src.status !== "ok" ||
+            !src.images?.length ||
+            !src.driveFolderId)
         )
-          throw Error(
-            "請先綁定已核准的來源立繪；prompt 建模需補立繪並審查通過",
-          );
+          throw Error("請先綁定已核准的來源立繪");
         if (pkg.glbLoadError) throw Error("GLB 載入失敗，修復後才能完成");
         if (
           !pkg.glbFile ||
@@ -743,16 +748,16 @@
         )
           throw Error("3D 需同時具有可預覽 GLB 與 .blend 原檔");
         if (
+          src &&
           pkg.stage &&
           src.stage &&
           pkg.stage !== src.stage &&
           !src.images.some((im) => im.path.includes(pkg.stage))
         )
           throw Error("來源立繪與模型型態不符");
-        for (const [asset, dir] of [
-          [pkg, root + "/03_completed/models"],
-          [src, pipelineRoot(src) + "/03_completed/portraits"],
-        ]) {
+        const toComplete = [[pkg, root + "/03_completed/models"]];
+        if (src) toComplete.push([src, pipelineRoot(src) + "/03_completed/portraits"]);
+        for (const [asset, dir] of toComplete) {
           if (asset.completed) continue;
           const name = asset.drivePath.split("/").pop(),
             to = await folder(dir, true);
@@ -1557,7 +1562,7 @@
     });
     $("driveSavePrompt").addEventListener("click", () => {
       if (
-        ["portrait", "portrait_3d"].includes($("pipelineStage").value) &&
+        $("pipelineStage").value === "portrait" &&
         !window.COSMI_PIPELINE?.isPortraitAuto()
       )
         return;
@@ -1581,7 +1586,7 @@
       }),
     );
     $("pipelineRead").addEventListener("click", () => {
-      if (["portrait", "portrait_3d"].includes($("pipelineStage").value)) {
+      if ($("pipelineStage").value === "portrait") {
         if (!window.COSMI_PIPELINE?.isPortraitAuto()) {
           $("copy").click();
           return;
@@ -1615,7 +1620,6 @@
             "colab",
             "blender",
             "review_3d",
-            "portrait_3d",
             "move_vfx",
           ].includes(key)
         ) {

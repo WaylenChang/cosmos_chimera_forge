@@ -64,7 +64,7 @@ cosmos_chimera_forge/
 
 - `Image-to-3D / Colab＋Blender`：`<category>/02_3d/colab/<asset_id>/`。
 - `Image-to-3D / AI＋Blender`：`<category>/02_3d/ai_blender/<asset_id>/`。
-- `Prompt-to-3D / AI＋Blender`：`<category>/02_3d/ai_blender/<asset_id>/`；先產 3D，後補 `<category>/01_portraits/<portrait_id>/` 的動態主立繪並審查綁定。
+- `Prompt-to-3D / AI＋Blender`：`<category>/02_3d/ai_blender/<asset_id>/`；純文字外觀直接建模、綁骨與動作，無需補立繪。
 - `<category>/02_3d/legacy/` 與既有 `<category>/02_3d/ai_blender/` 歷史版本**於分類後的位置保留**，不可因命名不同就搬移／重寫。
 - 每個新的 typed runner 產出標準 `manifest.json`，由 `anatomy`、`input_mode`、`pipeline` 與 `source_pack` 識別分流；沒有產生的檔案應列為 `missing`，不應假裝完成。
 
@@ -86,13 +86,13 @@ cosmos_chimera_forge/
   # 不再放入 bestiary.md；以 manifest.encyclopedia_path 指向 wiki
 ```
 
-`<category>/00_settings/` 可繼續儲存資產專屬 `asset_spec.json`、外觀與格式設定；`<category>/prompts/jobs/` 存實際需要的自動化 prompt，不需替手動立繪複製流程建立空的 Markdown。對 Prompt-to-3D，不得因尚未補繪立繪就強行設定假 `source_pack`；在人工核准之前仍留待審狀態。
+`<category>/00_settings/` 可繼續儲存資產專屬 `asset_spec.json`、外觀與格式設定；`<category>/prompts/jobs/` 存實際需要的自動化 prompt，不需替手動立繪複製流程建立空的 Markdown。對 Prompt-to-3D，無需補繪立繪，也不應設定假 `source_pack`。
 
 2026-11-15 實際 Drive 查核：`characters/02_3d/colab/` 已有角色模型；`creatures/02_3d/ai_blender/` 已分類保存 60 個宙獸型態模型；歷史 `_briefs`、`_scripts` 已移至 `creatures/backup/`。所有正式資產均使用分類優先路徑，退役頂層目錄置於共用 `backup/`。本次檢查 90 份 manifest，其中 71 份的圖鑑引用已實際更新，19 份原已符合規範。開始 Image-to-3D 批次作業前，仍需實際審查來源立繪，不得假核准歷史素材。
 
 每個版本使用唯一 asset_id；角色與宙獸共用結構，由 manifest.task_type 區別。立繪包涵蓋多個型態時，各模型 source_pack 皆指向同一立繪資產 ID，stage 指定型態。
 
-格式參數獨立存 JSON；外觀 prompt 不夾帶格式與遊戲數值。審查通過的立繪先不移動；退件整個目錄搬到備份。只有最終人工核可後才能移入完成區；歷史資產不自動視為核可。Prompt 建模缺立繪時，必須補畫、核准並綁定來源才可完成。
+格式參數獨立存 JSON；外觀 prompt 不夾帶格式與遊戲數值。審查通過的立繪先不移動；退件整個目錄搬到備份。只有最終人工核可後才能移入完成區；歷史資產不自動視為核可。Image-to-3D 必須有已核准並綁定之來源立繪才可完成；Prompt-to-3D 無需補立繪。
 
 Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄與步驟指令，未聲稱已執行 GPU／建模。Blender 可在中途或後續修復。
 
@@ -114,7 +114,7 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 立繪生成後重新載入 Drive，在「審查覆核」核准或退件。核准立繪可按「指定 3D Prompt」，再選 Colab 或 AI Blender；Colab 與指定圖片建模均要求來源立繪已核准。AI Blender 純文字建模可取消圖片來源。
 
-模型完成後重新載入 Drive。純文字建模須補立繪、核准，再填入來源立繪資產 ID 並按「綁定目前 3D 的來源立繪」。最終人工核准才會移至完成區，審查意見可儲存至 Drive。完成區與歷史備份不會被當作新的待審輸入。
+模型完成後重新載入 Drive。Image-to-3D 須確認已綁定來源立繪；Prompt-to-3D 無需補立繪即可直接進行最終審查。最終人工核准才會移至完成區，審查意見可儲存至 Drive。完成區與歷史備份不會被當作新的待審輸入。
 
 歷史參考：原 Argon 說明文件在 `creatures/backup/legacy_blender_briefs/`；原 3D_out 散裝輸出與總覽已依資產歸屬分流至 `creatures/backup/legacy_loose_outputs/` 與 `characters/backup/legacy_loose_outputs/`。完整封裝保留於歷史備份。正式目錄保留 GLB／Blend、材質、骨架／動作規格及主要審查圖，其他歷史截圖、中間檔與替代格式留在原封裝。
 
@@ -123,8 +123,8 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 先選 **角色／宙獸／招式**，再依管線流程選擇工作節點。每個節點可點擊查看當前任務說明與交付項目，Prompt 輸出同步切換；原有任務 ID、Google Drive 路徑與歷史紀錄仍保留。
 
-- **角色／宙獸，Image-to-3D**：外觀設定 → 三輪立繪 → 立繪審查 → **Colab＋AI＋Blender** 或 **AI＋Blender**（兩條獨立路線）→ 最終驗收。Colab 路線可在 GPU 建模後使用 AI 輔助 Blender 修整，不代表另啟一個獨立的 AI Blender 資產管線；兩條路線均需已核准的來源立繪，並保留各自 `pipeline` 與來源追蹤。
-- **角色／宙獸，Prompt-to-3D**：外觀設定 → **AI＋Blender 文字建模**（在立繪前分岔）→ **補畫動態主立繪**（不需要正面基準圖或 T-pose）→ 補繪立繪審查／綁定來源 → 最終驗收。所有管線共用獨立階段圖鑑，僅在缺少時建立草稿，不在建模時重複產生。
+- **角色／宙獸，Image-to-3D**：外觀設定 → 角色三輪立繪（宙獸僅需正面圖與三視圖，不需主立繪）→ 立繪審查 → **Colab＋AI＋Blender** 或 **AI＋Blender**（兩條獨立路線）→ 最終驗收。Colab 路線可在 GPU 建模後使用 AI 輔助 Blender 修整，不代表另啟一個獨立的 AI Blender 資產管線；兩條路線均需已核准的來源立繪，並保留各自 `pipeline` 與來源追蹤。
+- **角色／宙獸，Prompt-to-3D**：外觀設定 → **AI＋Blender 文字建模**（在立繪前分岔，無需補立繪）→ 最終驗收。所有管線共用獨立階段圖鑑，僅在缺少時建立草稿，不在建模時重複產生。
 - **招式**：獨立招式效果動畫／特效設計，不混入角色或宙獸 3D 管線。
 
 切換類別與路徑時，前端保留既有概念資料及任務選項；選取文字建模會清除上一個圖片來源，以避免誤用 Image-to-3D。流程節點選擇保存於本機狀態，重新整理後可恢復。最終核准仍由審查台人工決定，不因切換流程自動通過。

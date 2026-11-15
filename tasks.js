@@ -284,10 +284,7 @@
           },
           def: "auto",
           when: o => (o.stage || "adult") !== "juvenile"
-        },
-        { key: "scene_theme", type: "select", label: "【第 3 輪主立繪】場景主題", items: () => C.SCENE_THEMES, def: "auto" },
-        { key: "scene_lighting", type: "select", label: "【第 3 輪主立繪】光影氣候", items: () => C.SCENE_LIGHTINGS, def: "auto" },
-        { key: "scene_action", type: "select", label: "【第 3 輪主立繪】動態姿態", items: () => C.SCENE_ACTIONS, def: "auto" }
+        }
       ],
       buildRounds(ctx) {
         const S = ctx.subjectId, c = ctx.concept, o = ctx.opts || {};
@@ -304,7 +301,6 @@
           curStage === "adult" ? "成熟勻稱威嚴，文化原型主體特徵完備" :
           "超載戰鬥極致爆發態，裝甲展開、光環浮現、能量外溢粒子流";
 
-        const sceneInfo = C.resolveDynamicScene(c, false, o, curStage);
         const evoInfo = C.resolveEvolutionPrompt ? C.resolveEvolutionPrompt(o.evolution_mode, curStage, c, S) : null;
         const isJuvenile = curStage === "juvenile";
 
@@ -365,21 +361,9 @@
           "- **格式**：單張 16:9 合圖，無文字標籤、無數值浮水印。"
         ].join("\n");
 
-        // 第 3 輪：全身戰鬥主立繪
-        const r3Prompt = [
-          "# 宙獸【" + stageDef.zh + "型態】全身戰鬥主立繪",
-          "",
-          "嚴格參考上方「正面基準圖」確立的生物造型與配色，繪製動態戰鬥主立繪：",
-          lockedStage?.signature_move ? ("- **招式演出**：" + lockedStage.signature_move.visual) : null,
-          curStage === "overload" ? "- **超載爆發**：裝甲展開、核心光環浮現、高密度能量粒子外溢" : null,
-          "",
-          sceneInfo.fullPromptSection
-        ].filter(Boolean).join("\n");
-
         return [
           { round: 1, title: isJuvenile ? "第 1 輪：正面正交基準圖 (1:1)" : "第 1 輪：正面正交基準圖 (1:1 · 基於前階進化)", filename: "cr_" + S + "_" + curStage + "_front.png", prompt: r1Prompt },
-          { round: 2, title: "第 2 輪：正交三視圖合圖 (16:9)", filename: "cr_" + S + "_" + curStage + "_turnaround.png", prompt: r2Prompt },
-          { round: 3, title: "第 3 輪：動態主立繪 (場景強化)", filename: "cr_" + S + "_" + curStage + "_main.png", prompt: r3Prompt }
+          { round: 2, title: "第 2 輪：正交三視圖合圖 (16:9)", filename: "cr_" + S + "_" + curStage + "_turnaround.png", prompt: r2Prompt }
         ];
       },
       build(ctx) {
@@ -397,7 +381,6 @@
           curStage === "adult" ? "成熟勻稱威嚴，文化原型主體特徵完備" :
           "超載戰鬥極致爆發態，裝甲展開、光環浮現、能量外溢粒子流";
 
-        const sceneInfo = C.resolveDynamicScene(c, false, o, curStage);
         const evoInfo = C.resolveEvolutionPrompt ? C.resolveEvolutionPrompt(o.evolution_mode, curStage, c, S) : null;
         const isJuvenile = curStage === "juvenile";
 
@@ -416,14 +399,6 @@
           "- **內容**：**正交三視圖合圖 16:9**（正面 / 側面 / 背面 / 3/4 視角同比例排布）。嚴格以本型態「步驟 1 正面圖」為基準多角度延伸，自然站姿、平光無透視，背景同為 " + bgInfo.hex + "。"
         ];
 
-        const step3Lines = [
-          "### 步驟 3（動態主立繪）：`images/cr_" + S + "_" + curStage + "_main.png`",
-          "- **內容**：**全身戰鬥主立繪 1:1**（場景氛圍與招式演出強化）。嚴格以本型態「步驟 1 正面圖」之造型為基準繪製動態姿勢：",
-          lockedStage?.signature_move ? ("- **招式演出**：" + lockedStage.signature_move.visual) : null,
-          curStage === "overload" ? "- **超載爆發**：裝甲展開、核心光環浮現、高密度能量粒子流外溢" : null,
-          sceneInfo.fullPromptSection
-        ].filter(Boolean);
-
         const elemZh = (c.elements || []).map(e => C.ELEMENTS.find(el => el.v === e)?.zh || e).join("、");
         const body = [
           "## 主體設定：【" + (lockedStage ? lockedStage.name_zh : (c.name_zh || "原創奇幻生物")) + "】（" + stageDef.zh + "型態）",
@@ -433,17 +408,15 @@
           c.archetype ? ("- 原型意象：" + c.archetype + (c.motifs ? "（圖騰：" + c.motifs + "）" : "")) : null,
           lockedStage?.look ? ("- 外觀特徵：" + lockedStage.look) : null,
           "",
-          "## 🎯 三步驟生圖順序（同對話分輪獨立出圖）",
+          "## 🎯 二步驟生圖順序（同對話分輪獨立出圖）",
           ...step1Lines,
           "",
           ...step2Lines,
           "",
-          ...step3Lines,
-          "",
           "## ⚠️ 核心規範",
-          "- **同對話獨立出圖**：三張圖片必須在同一個對話中依序生成（1 → 2 → 3），且分別輸出為獨立圖片，嚴禁合併拼貼。",
-          "- **背景防汙染**：步驟 1 與 2 必須維持純淨平光灰底（" + bgInfo.hex + "），嚴禁被步驟 3 的動態光影或複雜背景汙染。",
-          "- **演化機制**：第一階（幼年）不加演化 prompt；第二階/第三階/超載之步驟 1 需先上傳前一階正面圖並描述本階進化；步驟 2 與 3 不加演化 prompt，純粹以本階步驟 1 為基準。"
+          "- **同對話獨立出圖**：兩張圖片必須在同一個對話中依序生成（1 → 2），且分別輸出為獨立圖片，嚴禁合併拼貼。",
+          "- **背景防汙染**：步驟 1 與 2 必須維持純淨平光灰底（" + bgInfo.hex + "），嚴禁出現複雜場景或動態陰影汙染。",
+          "- **演化機制**：第一階（幼年）不加演化 prompt；第二階/第三階/超載之步驟 1 需先上傳前一階正面圖並描述本階進化；步驟 2 不加演化 prompt，純粹以本階步驟 1 為基準。"
         ].filter(Boolean).join("\n");
 
         return common(ctx, body, true);

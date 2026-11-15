@@ -198,7 +198,7 @@ test('native portrait full and 3-round prompts do not recurse or inherit legacy 
     assert.doesNotMatch(full,/OLD_NOTE_CONTEXT|image_in\/|3D_out\/|\.zip|storageSection|bestiary\.md/);
     assert.ok(full.length<2300);
     const rounds=task.buildRounds(ctx);
-    assert.equal(rounds.length,3);
+    assert.equal(rounds.length,id==='creature-concept'?2:3);
     for(const round of rounds){
       assert.ok(round.prompt.length<1300);
       assert.doesNotMatch(round.prompt,/OLD_NOTE_CONTEXT|image_in\/|3D_out\/|\.zip|bestiary\.md/);

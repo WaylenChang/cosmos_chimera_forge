@@ -60,13 +60,12 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 | 步驟 | 檔案名稱 | 對應流程節點 | 說明 |
 | :--- | :--- | :--- | :--- |
 | 00 | `<kind>/prompts/00_appearance.prompt.md` | 外觀設定 | 依素材撰寫繁體中文原創外觀，不夾帶格式與遊戲數值 |
-| 01 | `<kind>/prompts/01_portrait.prompt.md` | 立繪生成 | 依外觀與 `parameters.json` 繪製三視角／主立繪，輸出 `images/`、`concept.json`、`manifest.json` |
+| 01 | `<kind>/prompts/01_portrait.prompt.md` | 立繪生成 | 依外觀與 `parameters.json` 繪製（角色：正面／三視角／主立繪；宙獸：僅正面圖與三視圖，不需主立繪），輸出 `images/`、`concept.json`、`manifest.json` |
 | 01b | `moves/prompts/01b_move_vfx.prompt.md` | 招式特效 | 招式效果動畫／VFX 設計，輸出至 `moves/01_vfx/<asset_id>/` |
 | 02 | `<kind>/prompts/02_review_portrait.prompt.md` | 立繪審查 | 檢查圖檔完整性、結構、視角與配色一致性；只輸出建議，不代為核准 |
 | 03a | `<kind>/prompts/03a_colab.prompt.md` | Colab Image-to-3D | 已核准立繪 → Colab GPU 網格 → Blender 修整、綁骨與匯出 |
-| 03b | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 支援 Image-to-3D（需已核准立繪）與 Prompt-to-3D（純文字外觀） |
-| 03c | `<kind>/prompts/03c_portrait_after_3d.prompt.md` | 建模後補主立繪 | Prompt-to-3D 專用：依完成之 3D 模型補畫全身動態主立繪（不需 T-pose／正面圖） |
-| 04 | `<kind>/prompts/04_review_3d.prompt.md` | 3D 最終驗收 | 核對 `.glb`、`.blend`、manifest、骨架動畫與來源立繪綁定 |
+| 03b | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 支援 Image-to-3D（需已核准立繪）與 Prompt-to-3D（純文字外觀，無需補立繪） |
+| 04 | `<kind>/prompts/04_review_3d.prompt.md` | 3D 最終驗收 | 核對 `.glb`、`.blend`、manifest、骨架動畫與（Image-to-3D）來源立繪綁定 |
 | 05 | `<kind>/prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 僅於目標 `<kind>/wiki/` 路徑不存在時建立原創角色／宙獸／招式圖鑑 |
 | — | `docs/pipeline/TRIGGERS.md` | 簡易觸發語句 | 各步驟觸發指令與管線分支說明 |
 

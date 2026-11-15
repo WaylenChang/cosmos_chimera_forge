@@ -25,12 +25,12 @@ test('image route has two exclusive Blender routes after portrait approval', () 
   assert.equal(flow.resolve('character','image','image_colab').taskId,'character-model-rig');
   assert.equal(flow.resolve('creature','image','image_blender').taskId,'creature-model-rig');
 });
-test('prompt to 3D branches before portraits, with post-model portrait and final review', () => {
+test('prompt to 3D branches before portraits and goes directly to final review without post-model portrait', () => {
   const flow=loadFlow();
   const steps=Array.from(flow.steps('creature','text'),s=>s.id);
-  assert.deepEqual(steps,['appearance','prompt_3d','portrait_3d','review_portrait_3d','review_3d']);
+  assert.deepEqual(steps,['appearance','prompt_3d','review_3d']);
   assert.equal(flow.resolve('creature','text','prompt_3d').stage,'blender');
-  assert.equal(flow.resolve('character','text','portrait_3d').stage,'portrait_3d');
+  assert.equal(flow.resolve('character','text','portrait_3d'),null);
   assert.equal(flow.resolve('character','text','image_colab'),null);
 });
 test('encyclopedia is integrated into appearance for character/creature and standalone for move', () => {
@@ -61,10 +61,10 @@ test('page loads flow before forge and includes category, route, step and detail
   for(const id of ['taskCategories','tasks','taskFlowDetail']) assert.match(html,new RegExp('id="'+id+'"'));
   assert.doesNotMatch(html,/id="taskRoutes"/);
 });
-test('post-model portrait does not ask for front view or T-pose', () => {
+test('prompt-to-3D does not require post-model portrait', () => {
   const code=fs.readFileSync(path.join(root,'pipeline.js'),'utf8');
-  assert.match(code,/stage === "portrait_3d"/);
-  assert.match(code,/不要生成正面基準圖、T-pose 或三視圖/);
+  assert.doesNotMatch(code,/stage === "portrait_3d"/);
+  assert.match(code,/Prompt-to-3D 無需補繪立繪/);
   assert.match(code,/nativeBuild/);
 });
 
@@ -90,13 +90,13 @@ test('production build ships the task chooser module', () => {
   const build=fs.readFileSync(path.join(root,'tools/build-site.mjs'),'utf8');
   assert.ok(build.includes("'task-flow.js'"));
 });
-test('post-model portrait uses native copy or Drive upload, never a missing template', () => {
+test('portrait uses native copy or Drive upload, never a missing template', () => {
   const drive=fs.readFileSync(path.join(root,'drive-storage.js'),'utf8');
   // Verify both handlers follow the selected mode, independent of indentation.
   const savePrompt=drive.slice(drive.indexOf('$("driveSavePrompt").addEventListener'),drive.indexOf('$("driveLoadPrompt").addEventListener'));
   const pipelineRead=drive.slice(drive.indexOf('$("pipelineRead").addEventListener'),drive.indexOf('$("pipelineSaveSettings").addEventListener'));
-  assert.match(savePrompt,/\["portrait",\s*"portrait_3d"\]\.includes\(\$\("pipelineStage"\)\.value\)\s*&&\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)/);
-  assert.match(pipelineRead,/if\s*\(\s*\["portrait",\s*"portrait_3d"\]\.includes\(\$\("pipelineStage"\)\.value\)\s*\)/);
+  assert.match(savePrompt,/\$\("pipelineStage"\)\.value === "portrait"\s*&&\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)/);
+  assert.match(pipelineRead,/if\s*\(\s*\$\("pipelineStage"\)\.value === "portrait"\s*\)/);
   assert.match(pipelineRead,/if\s*\(\s*!window\.COSMI_PIPELINE\?\.isPortraitAuto\(\)\s*\)\s*\{\s*\$\("copy"\)\.click\(\);\s*return;/);
   assert.match(pipelineRead,/await write\(\s*path,\s*new Blob\(\[text\],\s*\{\s*type:\s*"text\/markdown"/);
 });

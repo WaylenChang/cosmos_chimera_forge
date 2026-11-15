@@ -57,24 +57,23 @@
 | 步驟代碼 | 常見別名 | Prompt 模板（`<kind>/prompts/`） | 必要前置條件 | 主要輸入 | 輸出位置與交付物 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `00_appearance` | 外觀設定 | `00_appearance.prompt.md` | 無 | 概念／圖鑑素材 | `<kind>/00_settings/<asset_id>.appearance.md`（繁中純外觀，不含數值與製圖指令） |
-| `01_portrait` | 生成立繪、立繪 | `01_portrait.prompt.md` | 已有外觀與參數 | `appearance.md`、`parameters.json`（引用既有 wiki，不覆寫） | `<kind>/01_portraits/<asset_id>/`（`images/`、`concept.json`、`manifest.json`） |
+| `01_portrait` | 生成立繪、立繪 | `01_portrait.prompt.md` | 已有外觀與參數 | `appearance.md`、`parameters.json`（引用既有 wiki，不覆寫） | `<kind>/01_portraits/<asset_id>/`（`images/`：角色含正面／三視圖／主立繪；宙獸僅需正面圖與三視圖、不含主立繪、`concept.json`、`manifest.json`） |
 | `01b_move_vfx` | 招式特效 | `01b_move_vfx.prompt.md` | 若無招式圖鑑須先建 | 招式規格、`moves/wiki/<id>_wiki.md` | `moves/01_vfx/<asset_id>/`（`spec.json`、`storyboard/`、`layers/`、`flipbook/`、`manifest.json`） |
 | `02_review_portrait` | 立繪審查 | `02_review_portrait.prompt.md` | 已有待審立繪包 | `<kind>/01_portraits/<asset_id>/`、`appearance.md`、`parameters.json` | 輸出逐檔檢查報告與通過／退件建議（**不可自動核准或搬移資產**） |
 | `03a_colab` | Colab 3D、Colab | `03a_colab.prompt.md` | **Image-to-3D 須有已核准立繪**（`<kind>/reviews/<id>.json` `status == "ok"`） | 已核准立繪圖檔、`parameters.json` | `<kind>/02_3d/colab/<asset_id>/`（`models/<id>.glb`、`.blend`、`rig/`、`animations/`、`previews/`、`manifest.json`） |
 | `03b_blender` | AI Blender、Blender 3D | `03b_blender.prompt.md` | Image-to-3D 須立繪已核准；Prompt-to-3D 可無立繪 | 已核准立繪（Image-to-3D）或 `appearance.md`＋`wiki`（Prompt-to-3D） | `<kind>/02_3d/ai_blender/<asset_id>/`（同上結構；無圖則標記 `input_mode: "text"`，不可填假 `source_pack`） |
-| `03c_portrait_after_3d` | 補畫主立繪 | `03c_portrait_after_3d.prompt.md` | 僅限 **Prompt-to-3D** 建模完成後 | `<kind>/02_3d/ai_blender/<model_id>/` 模型與預覽 | `<kind>/01_portraits/<portrait_id>/`（全身動態主立繪 PNG 與來源模型 `asset_id` 關聯；不畫 T-pose／三視圖） |
-| `04_review_3d` | 3D 審查、最終審查 | `04_review_3d.prompt.md` | Image-to-3D 須有核准來源立繪；Prompt-to-3D 須已補主立繪 | `<kind>/02_3d/.../<model_id>/`、對應立繪、`manifest.json` | 逐項檢查 `.glb`/`.blend`/骨架/動畫/材質並提出通過／退件建議（**不可自動核准或移至 `<kind>/03_completed/`**） |
+| `04_review_3d` | 3D 審查、最終審查 | `04_review_3d.prompt.md` | Image-to-3D 須有核准來源立繪；Prompt-to-3D 無需補立繪 | `<kind>/02_3d/.../<model_id>/`、對應立繪（若有）、`manifest.json` | 逐項檢查 `.glb`/`.blend`/骨架/動畫/材質並提出通過／退件建議（**不可自動核准或移至 `<kind>/03_completed/`**） |
 | `05_encyclopedia` | 生成圖鑑、圖鑑 | `05_encyclopedia.prompt.md` | **目標圖鑑檔不得已存在**（存在則直接沿用，禁止覆寫或建副本） | 當前 `subject_id`（與 `stage`）概念／外觀 | `<kind>/wiki/<subject_id>[_<stage>]_wiki.md`（草稿標示 `status: draft / review_required`） |
 
 ---
 
 ## 4. 不可違反的鐵則（Guardrails）
 
-1. **管線分流**：Image-to-3D 有 `Colab＋AI＋Blender` 與 `AI＋Blender` 兩條獨立路線；Prompt-to-3D 使用 `AI＋Blender`，建模後須補主立繪。`03a_colab` 是 Colab 路線的 GPU 建模階段，後續允許 AI 輔助 Blender 修整；`03b_blender` 是獨立的 AI Blender 建模入口，不得把同一資產誤當作兩次獨立建模交付。各路線必須保留 `pipeline`、`input_mode`、來源與審查狀態，不得因串接工具而重複產生圖鑑。
+1. **管線分流**：Image-to-3D 有 `Colab＋AI＋Blender` 與 `AI＋Blender` 兩條獨立路線；Prompt-to-3D 使用 `AI＋Blender`，建模後無需補立繪。`03a_colab` 是 Colab 路線的 GPU 建模階段，後續允許 AI 輔助 Blender 修整；`03b_blender` 是獨立的 AI Blender 建模入口，不得把同一資產誤當作兩次獨立建模交付。各路線必須保留 `pipeline`、`input_mode`、來源與審查狀態，不得因串接工具而重複產生圖鑑。
 2. **禁止代為核准**：Agent 執行審查步驟（`02_review_portrait`、`04_review_3d`）時，只能輸出檢查報告與建議；只有人類審核者可寫入 `<kind>/reviews/<asset_id>.json` (`status: "ok"`) 或將資產搬入 `<kind>/03_completed/`。
 3. **嚴禁造假與覆寫**：
    - 未產生的檔案（如缺少 `.glb`、`.blend`、動畫、預覽）必須在 `manifest.json` 如實標記 `missing` 或 `REVIEW_REQUIRED`。
-   - Prompt-to-3D 尚未補畫並核准主立繪前，不得填入假的 `source_pack`。
+   - Prompt-to-3D 不得填入假的 `source_pack`。
    - 保留 `source/<asset_id>.glb` 原始輸出不被覆蓋。
 4. **交付格式**：所有資產一律逐檔交付至對應展開目錄，**禁止交付 ZIP 壓縮檔**。
 5. **不跨資產混用**：只讀取當前 `subject_id`（與指定 `stage`）的資料，不得借用其他角色或進化階段的圖鑑或外觀。
