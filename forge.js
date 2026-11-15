@@ -1143,7 +1143,7 @@
     if (!images.length) images.push({ view: "missing", label: "尚無立繪", primaryUrl: "", fallbackUrl: "" });
     const modelFront = imageForView(mdlPack?.images, "front") || mdlPack?.images?.[0] || null;
     return {
-      conceptDir: pack?.drivePath || "characters/01_portraits/", modelDir: mdlPack?.drivePath || "characters/02_3d/legacy/",
+      conceptDir: pack?.drivePath || "characters/01_portraits/", modelDir: mdlPack?.drivePath || "characters/02_3d/",
       images, modelFront: { primaryUrl: modelFront?.url || "", fallbackUrl: modelFront?.url || "" },
       glbUrl: mdlPack?.glbFile?.url || "", fbxUrl: "", pack, mdlPack
     };
@@ -3827,7 +3827,7 @@
           ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, encyclopediaKind + "/prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, jobPromptPath), "，可用上方 Drive 儲存與讀取按鈕。"),
         el("li", {}, "成果包存放：", el("code", {}, stageVal === "encyclopedia" ? wikiPath : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
-        el("li", {}, encyclopediaKind === "moves" ? "特效參考：" : "立繪參考：", el("code", {}, encyclopediaKind === "moves" ? "moves/01_vfx/" : encyclopediaKind + "/01_portraits/"), " 或 ", el("code", {}, encyclopediaKind + "/backup/image_backup/"), encyclopediaKind === "moves" ? "" : "；3D 成果與參考：", encyclopediaKind === "moves" ? "" : el("code", {}, encyclopediaKind + "/02_3d/legacy/"), "。"),
+        el("li", {}, encyclopediaKind === "moves" ? "特效參考：" : "立繪參考：", el("code", {}, encyclopediaKind === "moves" ? "moves/01_vfx/" : encyclopediaKind + "/01_portraits/"), " 或 ", el("code", {}, encyclopediaKind + "/backup/image_backup/"), encyclopediaKind === "moves" ? "" : "；3D 成果與參考：", encyclopediaKind === "moves" ? "" : el("code", {}, encyclopediaKind + "/02_3d/"), "。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
     );

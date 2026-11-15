@@ -196,3 +196,15 @@ Fetched the **raw bytes** of all three current Colab `manifest.json` files via t
 - Failing tests: `tools/tests/test_category_directory_contract.cjs` category-switch fixture lacked `COSMI_FORGE.activePackage`; `tools/tests/test_pipeline.cjs` template-load test still expected root `prompts/`; versioned-template test mutated a legacy global template instead of loading the canonical kind-scoped Drive template.
 - Commit `962190a304a9237d88569586282092eb0f3815e9` updated the category-switch fixture to provide `activePackage`/`packages`; commit `85a079b03b07f00dabf4b7982c5c053dd1bc4017` updated both pipeline tests to use category-scoped template loading.
 - **M09 in progress, not green:** no workflow run was yet returned for the latest commit when queried; do not claim tests passed until GitHub Actions confirms a new successful run. No Drive assets moved or overwritten.
+
+### 2026-11-15 continuation: legacy 3D consolidation, Drive doc sync, and test repair
+
+- **Legacy 3D consolidation (M01–M03):**
+  - Moved all 3 character legacy packages (`mdl-20261109-f048-1847-chr_1286`, `mdl-20261109-f048-1847-chr_1286_1855`, `mdl-20261109-f048-1847-chr_3d04`, produced by Gemini Argon) from `characters/02_3d/legacy/` (`1qFQNX6sw6kF2b6Dv3iIZA5D3DPiOdeGk`) to `characters/02_3d/ai_blender/` (`1k0W--TI0DUPRzIUPF9UttkOuvrhE8Tym`), preserving all Drive IDs and avoiding collisions with `characters/02_3d/colab/`.
+  - Verified `creatures/02_3d/legacy/` (`1UtfyeCUHJQZ_MWthFDzlkKZjTL9fr_i3`) procedural Blender builds (`build_report.json`) and zero name collisions in `creatures/02_3d/ai_blender/` (`1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s`); moved all 12 `mdl-20261111-{a111,b111,c111}-{1300..1303}` packages into `creatures/02_3d/ai_blender/` (72 total folders verified, both `legacy/` folders now empty).
+- **Drive ↔ GitHub documentation & code reference alignment (M04–M05):**
+  - Updated `forge.js` remaining `02_3d/legacy/` UI/fallback references to `02_3d/`.
+  - Fixed literal `\n` escaping in `docs/pipeline/TRIGGERS.md`.
+  - Synced Drive root `AGENT_QUICKSTART.md` (`1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O`), Drive root `DIRECTORY.md` (`1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7`), Drive `prompts/DIRECTORY.md` (`1FqyBHoHZ_wCYjx2mvi5cGK4Lm9Sejfb-`), and Drive `prompts/TRIGGERS.md` (`10SZhbqOpWbVUl-7i3ukSuD3SywI_kKFr`) with GitHub `docs/`.
+- **Local regression suite (M09):**
+  - Fixed `tools/tests/test_pipeline.cjs` (`versioned Drive templates` test missing `COSMI_FORGE.currentContext` and escaped `\\n` literal). All 15 local `tools/tests/test_*.cjs` test suites pass locally.
