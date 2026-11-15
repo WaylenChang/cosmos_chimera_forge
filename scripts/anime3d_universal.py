@@ -440,7 +440,7 @@ def run(a):
             state["status"] = "REVIEW_REQUIRED"
             state["stage_completed"] = "post_gpu"
         state["warnings"] += qa.get("warnings", [])
-    if requires_bestiary and not wiki_exists and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
+    if requires_bestiary and not wiki_exists :
         state["status"] = "REVIEW_REQUIRED"
         write(state_path, state)
         write_asset_manifest(out, a.asset_id, spec, profile, state)
