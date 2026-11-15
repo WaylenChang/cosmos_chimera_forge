@@ -84,6 +84,9 @@ test("pipeline templates stay isolated across category switches", async () => {
   assert.equal(pipeline.templates.review_portrait.includes("creatures/prompts/"), true);
   assert.equal(requested.some(x => x === "creatures/prompts/02_review_portrait.prompt.md"), true);
   current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
-  assert.equal(pipeline.templates.review_portrait.includes("creatures/prompts/"), true, "public mirror reflects most recently loaded kind");
-  assert.equal(pipeline.build !== undefined, true);
+  const characterPrompt = pipeline.build(current);
+  assert.match(characterPrompt, /characters\/prompts\/02_review_portrait\.prompt\.md/);
+  current = { task: { id: "creature-model-rig" }, subjectId: "cr_fox", taskId: "cr_fox" };
+  const creaturePrompt = pipeline.build(current);
+  assert.match(creaturePrompt, /creatures\/prompts\/02_review_portrait\.prompt\.md/);
 });
