@@ -1937,11 +1937,93 @@
     return card;
   }
 
+  function restoreStage3dView() {
+    const view3d = $("#stage3dView");
+    const stage = $("#stage");
+    const compareView = $("#stageCompareView");
+    if (!view3d || !stage) return;
+    view3d.classList.remove("stage3d-embedded");
+    if (view3d.parentElement !== stage) {
+      view3d.style.display = "none";
+      if (compareView && compareView.parentElement === stage) compareView.after(view3d);
+      else stage.append(view3d);
+    }
+  }
+
+  function isStage3dActive() {
+    const viewEl = $("#stage3dView");
+    if (!viewEl || !viewEl.isConnected || viewEl.style.display === "none") return false;
+    if (viewEl.classList.contains("stage3d-embedded")) {
+      return state.activeTab === "designed" || $("#reviewDesignedDetails")?.style.display === "block";
+    }
+    return state.activeTab === "review" && reviewState.viewMode === "3d";
+  }
+
+  function mountDesigned3dViewer(host, pkg, linkedPkg) {
+    const view3d = $("#stage3dView");
+    if (!view3d || !host) return;
+    view3d.classList.add("stage3d-embedded");
+    view3d.style.display = "block";
+    host.append(view3d);
+    const run = () => {
+      resize3D();
+      loadModelForPackage(pkg, linkedPkg);
+    };
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);
+    else run();
+  }
+
+  function buildDesigned3dClipBar(pkg, linkedPkg) {
+    const clips = getPackageClips(pkg, linkedPkg);
+    if (!clips.length) return null;
+    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "互動撫摸"];
+    let activeCat = "all";
+    const wrap = el("div", { class: "designed-3d-clips" });
+    const chipsRow = el("div", { class: "anim-filter-chips" });
+    const listBox = el("div", { class: "designed-3d-clip-list" });
+
+    const renderClips = () => {
+      listBox.replaceChildren();
+      const filtered = activeCat === "all" ? clips : clips.filter(c => getClipCategory(c.clip) === activeCat);
+      filtered.forEach(c => {
+        const isActive = reviewState.three.currentClipName === c.clip;
+        listBox.append(el("button", {
+          type: "button",
+          class: "designed-3d-clip-btn" + (isActive ? " active" : ""),
+          dataset: { clip: c.clip },
+          title: `${c.clip} · ${c.duration_sec}s`,
+          onclick: () => play3dClip(c.clip, pkg)
+        }, `${c.description || getClipZh(c.clip, pkg)}`));
+      });
+    };
+
+    categories.forEach(cat => {
+      const count = cat === "all" ? clips.length : clips.filter(c => getClipCategory(c.clip) === cat).length;
+      if (count === 0 && cat !== "all") return;
+      const chip = el("button", {
+        type: "button",
+        class: "segb mini" + (activeCat === cat ? " on" : ""),
+        onclick: () => {
+          activeCat = cat;
+          chipsRow.querySelectorAll(".segb").forEach(b => b.classList.remove("on"));
+          chip.classList.add("on");
+          renderClips();
+        }
+      }, `${cat === "all" ? "全部動作" : cat} (${count})`);
+      chipsRow.append(chip);
+    });
+
+    renderClips();
+    wrap.append(chipsRow, listBox);
+    return wrap;
+  }
+
   function renderDesignedDetail() {
     const headerEl = $("#designedStageHeader");
     const bodyEl = $("#designedDetailView");
     if (!headerEl || !bodyEl) return;
 
+    restoreStage3dView();
     headerEl.replaceChildren();
     bodyEl.replaceChildren();
 
@@ -2111,57 +2193,53 @@
             )
           ),
 
-          // Col 2: 3D Model & Renders
-          el("div", { style: "background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;display:flex;flex-direction:column;" },
-            el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px" },
-              el("span", { style: "font-weight:600;font-size:12.5px;color:#a9d9df" }, "🧊 3D 成果視圖與模型"),
-              el("span", { class: "f-badge ok" }, "LOD0 Humanoid")
-            ),
-
-            // 3D Front Render Preview
-            el("div", {
-              style: "width:100%;height:260px;background:#101319;border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px;"
-            },
-              el("img", {
-                src: assetData.modelFront.primaryUrl || undefined,
-                alt: `${c.name_zh} 3D 正面正交`,
-                style: "max-width:100%;max-height:100%;object-fit:contain;" + (assetData.modelFront.primaryUrl ? "" : "display:none;"),
-                onerror: function() {
-                  if (assetData.modelFront.fallbackUrl && this.src !== assetData.modelFront.fallbackUrl) {
-                    this.src = assetData.modelFront.fallbackUrl;
-                  }
-                }
-              }),
-              !assetData.modelFront.primaryUrl ? el("span", { class: "muted" }, "Drive 尚無 3D 預覽圖") : null
-            ),
-
-            // 3D Asset Files Info
-            el("div", { style: "display:flex;flex-direction:column;gap:6px;font-size:11.5px;margin-bottom:12px;" },
-              el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
-                el("span", { class: "muted" }, "3D 模型 (GLB)"),
-                el("span", { style: "color:var(--ok);font-family:monospace" }, `${c.id}.glb`)
+          // Col 2: 3D Model & Interactive Viewer
+          (() => {
+            const target3dPkg = assetData.mdlPack || {
+              id: c.id,
+              type: "character-model-rig",
+              subjectId: c.id,
+              concept: c
+            };
+            const stage3dHost = el("div", {
+              class: "designed-3d-stage-host",
+              style: "width:100%;margin-bottom:10px;"
+            });
+            const clipBar = buildDesigned3dClipBar(target3dPkg, assetData.pack);
+            const col2 = el("div", { style: "background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;display:flex;flex-direction:column;" },
+              el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:6px;flex-wrap:wrap" },
+                el("span", { style: "font-weight:600;font-size:12.5px;color:#a9d9df" }, "🧊 3D 成果視圖與模型"),
+                el("div", { style: "display:flex;gap:4px;align-items:center" },
+                  el("span", { class: "f-badge " + (assetData.mdlPack?.glbFile ? "ok" : "warn") }, assetData.mdlPack?.glbFile ? "GLB 已載入" : "預覽骨架"),
+                  el("span", { class: "f-badge ok" }, "LOD0 Humanoid")
+                )
               ),
-              el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
-                el("span", { class: "muted" }, "骨架規格 (Rig)"),
-                el("span", { style: "color:var(--ok)" }, "Unity Humanoid 28 骨")
-              ),
-              el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
-                el("span", { class: "muted" }, "動作動畫 (Anim)"),
-                el("span", { style: "color:var(--ok)" }, "32 支完整動態 FBX")
+              stage3dHost,
+              clipBar,
+              // 3D Asset Files Info
+              el("div", { style: "display:flex;flex-direction:column;gap:6px;font-size:11.5px;" },
+                el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+                  el("span", { class: "muted" }, "3D 模型 (GLB)"),
+                  el("span", { style: "color:var(--ok);font-family:monospace" }, assetData.mdlPack?.glbFile?.path || `${c.id}.glb`)
+                ),
+                el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+                  el("span", { class: "muted" }, "骨架規格 (Rig)"),
+                  el("span", { style: "color:var(--ok)" }, "Unity Humanoid 28 骨")
+                ),
+                el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+                  el("span", { class: "muted" }, "動作動畫 (Anim)"),
+                  el("span", { style: "color:var(--ok)" }, `${getPackageClips(target3dPkg, assetData.pack).length} 支完整動態`)
+                )
               )
-            ),
-
-            // Action button to open in 3D viewer
-            el("button", {
-              type: "button",
-              class: "btn ok",
-              style: "width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;",
-              onclick: () => jumpToReview(c.id)
-            }, "🔍 在成果審查台 3D 檢視器旋轉與播放動作")
-          )
+            );
+            col2._mount3d = () => mountDesigned3dViewer(stage3dHost, target3dPkg, assetData.pack);
+            return col2;
+          })()
         )
       );
       bodyEl.append(artShowcaseCard);
+      const col2El = artShowcaseCard.children?.[1]?.children?.[1];
+      col2El?._mount3d?.();
 
       // Section 1: Specs
       const hexSwatches = el("div", { style: "display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px" });
@@ -3448,7 +3526,7 @@
     const showConcept = flow?.taskId === "character-concept" &&
       ["appearance", "portrait", "review_portrait"].includes(flow.step);
     conceptBox.hidden = !showConcept;
-    if (conceptTitle) conceptTitle.textContent = showConcept ? "角色設計概念" : "任務選項";
+    if (conceptTitle) conceptTitle.textContent = "角色設計概念";
     inventory.hidden = !flow || showConcept;
     if (inventory.hidden) return;
     title.textContent = flow.name + " · 階段角色／宙獸";
@@ -3780,7 +3858,9 @@
       }
       box.append(el("div", { class: "field opt" }, el("label", {}, d.label), control));
     });
-    if (!box.children.length) box.append(el("p", { class: "muted" }, "此任務沒有額外選項。"));
+    const showConcept = flow?.taskId === "character-concept" &&
+      ["appearance", "portrait", "review_portrait"].includes(flow.step);
+    if (!box.children.length && !showConcept) box.append(el("p", { class: "muted" }, "此任務沒有額外選項。"));
   }
 
   function renderOutput() {
@@ -5063,6 +5143,7 @@
     }
     if (!entries.length) railList.append(el("div",{class:"muted"},"無符合條件的項目"));
     if (design) { renderReviewDesigned(design); return; }
+    restoreStage3dView();
     const overlay = $("#reviewDesignedDetails");
     if (overlay) overlay.style.display = "none";
     // 渲染舞台
@@ -5292,6 +5373,7 @@
 
   function getPackageClips(pkg, linkedPkg) {
     if (!pkg) return [];
+    if (!linkedPkg && pkg === reviewState.three.activePkg) linkedPkg = reviewState.three.activeLinkedPkg;
     if (pkg.animSpec?.clips?.length) return pkg.animSpec.clips;
     if (linkedPkg?.animSpec?.clips?.length) return linkedPkg.animSpec.clips;
     if (reviewState.three.clips?.length && [pkg.id, linkedPkg?.id].includes(reviewState.three.loadedPkgId)) {
@@ -5416,6 +5498,8 @@
     if (!three.scene) return;
 
     const targetPkg = (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) ? pkg : (linkedPkg?.glbFile || linkedPkg?.animSpec) ? linkedPkg : pkg;
+    three.activePkg = targetPkg;
+    three.activeLinkedPkg = linkedPkg || null;
 
     if (three.loadedPkgId === targetPkg.id && three.modelGroup) {
       resize3D();
@@ -5436,9 +5520,9 @@
           ? await window.COSMI_DRIVE.readById(targetPkg.glbFile.id)
           : await window.COSMI_DRIVE.read(targetPkg.drivePath + "/" + targetPkg.glbFile.path);
         // A different package may have been selected while the network request was running.
-        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
         glbBuffer = await blob.arrayBuffer();
-        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
         targetPkg.glbFile = {...targetPkg.glbFile, buffer:glbBuffer, url:URL.createObjectURL(blob), deferred:false};
       } catch (error) {
         targetPkg.glbLoadError = true;
@@ -5460,7 +5544,7 @@
     three.activeDescriptor = descriptor;
     if (glbBuffer && descriptor?.model?.sha256 && crypto?.subtle) {
       const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", glbBuffer)), x => x.toString(16).padStart(2, "0")).join("");
-      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
       if (digest !== descriptor.model.sha256) {
         targetPkg.glbLoadError = true;
         $("#stage3dClipBadge").textContent = "模型 SHA256 與驗收描述檔不符，請重新同步資產";
@@ -5470,7 +5554,7 @@
     }
 
     const onModelLoaded = (model, animations) => {
-      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
+      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
       clearThreeModel(three);
       targetPkg.glbLoadError = false;
       three.modelGroup = model;
@@ -5685,7 +5769,7 @@
   function play3dClip(clipName, pkg) {
     const three = reviewState.three;
     if (!three.mixer) return;
-    if (!pkg) pkg = getActivePkg();
+    if (!pkg) pkg = three.activePkg || getActivePkg();
 
     let clip = three.clips.find(c => c.name === clipName);
     if (!clip) {
@@ -5752,6 +5836,9 @@
       const btn = card.querySelector(".anim-play-btn");
       if (btn) btn.textContent = isCardActive ? "⏸" : "▶";
     });
+    document.querySelectorAll(".designed-3d-clip-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.clip === clipName);
+    });
   }
 
   function toggle3dPlayPause() {
@@ -5763,7 +5850,7 @@
   }
 
   function step3dClip(dir) {
-    const pkg = getActivePkg();
+    const pkg = reviewState.three.activePkg || getActivePkg();
     const clips = getPackageClips(pkg);
     if (!clips.length) return;
     const curIdx = clips.findIndex(c => c.clip === reviewState.three.currentClipName);
@@ -5841,7 +5928,7 @@
   function animate3dLoop() {
     requestAnimationFrame(animate3dLoop);
     const three = reviewState.three;
-    if (reviewState.viewMode !== "3d" || !three.renderer || !three.scene || !three.camera) return;
+    if (!isStage3dActive() || !three.renderer || !three.scene || !three.camera) return;
 
     const delta = three.clock.getDelta();
     if (three.mixer && three.isPlaying) {

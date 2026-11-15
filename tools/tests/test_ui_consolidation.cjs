@@ -44,3 +44,10 @@ test('no one-choice 3D mode switch or redundant manual portrait copy action',()=
   assert.match(html,/id="copy"/);
   assert.match(html,/id="pipelineRead"/);
 });
+test('designed 3D showcase embeds full 3D viewer directly and removes redundant task options title',()=>{
+  assert.doesNotMatch(forge,/在成果審查台 3D 檢視器旋轉與播放動作/);
+  assert.match(forge,/mountDesigned3dViewer\(/);
+  assert.match(forge,/buildDesigned3dClipBar\(/);
+  assert.doesNotMatch(forge,/conceptTitle\.textContent\s*=\s*showConcept\s*\?\s*"角色設計概念"\s*:\s*"任務選項"/);
+  assert.match(html,/stage3d-embedded/);
+});

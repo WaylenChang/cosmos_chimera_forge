@@ -167,7 +167,7 @@ test('3D viewer isolates forms and animation clips without overlapping models or
   const forge = fs.readFileSync(path.join(root,'forge.js'),'utf8');
   const loadBlock = forge.slice(forge.indexOf('function clearThreeModel('), forge.indexOf('function buildProcedural3dRig('));
   assert.match(loadBlock, /const loadSeq = \(three\.loadSeq = \(three\.loadSeq \|\| 0\) \+ 1\);/);
-  assert.match(loadBlock, /const onModelLoaded = \(model, animations\) => \{\s*if \(three\.loadSeq !== loadSeq \|\| three\.loadedPkgId !== targetPkg\.id \|\| reviewState\.viewMode !== "3d"\) return;\s*clearThreeModel\(three\);/);
+  assert.match(loadBlock, /const onModelLoaded = \(model, animations\) => \{\s*if \(three\.loadSeq !== loadSeq \|\| three\.loadedPkgId !== targetPkg\.id \|\| !isStage3dActive\(\)\) return;\s*clearThreeModel\(three\);/);
   const playBlock = forge.slice(forge.indexOf('function play3dClip('), forge.indexOf('function toggle3dPlayPause('));
   assert.match(playBlock, /three\.mixer\.stopAllAction\(\);/);
   assert.match(playBlock, /three\.mixer\.update\(0\);/);
