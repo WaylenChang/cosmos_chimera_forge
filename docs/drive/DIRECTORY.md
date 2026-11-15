@@ -47,26 +47,28 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 │   ├── reviews/                                  [1gW4XG7fsXI0fNcGXHMHOxNkupPeLJGOz]
 │   └── backup/                                   [11LG5ahUWuSd19Xg8ja2Prwc7WO37tQXj]
 ├── 00_settings/                                 [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV] # 全域預設
-├── prompts/                                     [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz] # 共用模板
+├── prompts/                                     [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz] # 舊版唯讀相容模板
 ├── DIRECTORY.md                                 [1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7]
 ├── AGENT_QUICKSTART.md                          [1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O]
 └── backup/                                      [1j1URF-pjZA_AJKj6MzG4vNVWrD2-ziqy] # 退役資料夾與歷史索引
 ```
 
-## 2. 管線流程各步驟參考 Prompt（`prompts/`）
+## 2. 管線流程各步驟參考 Prompt（分類專屬 `<kind>/prompts/`）
+
+新工作一律從 `characters/prompts/`、`creatures/prompts/` 或 `moves/prompts/` 讀取模板並寫入各自的 `jobs/`。根目錄 `prompts/` 僅供舊版讀取相容，不再作為新工作寫入路徑。2026-11-15 實際 Drive 讀取確認：角色與宙獸各 8 份階段模板；招式獨立 1 份 VFX 模板。
 
 | 步驟 | 檔案名稱 | 對應流程節點 | 說明 |
 | :--- | :--- | :--- | :--- |
-| 00 | `prompts/00_appearance.prompt.md` | 外觀設定 | 依素材撰寫繁體中文原創外觀，不夾帶格式與遊戲數值 |
-| 01 | `prompts/01_portrait.prompt.md` | 立繪生成 | 依外觀與 `parameters.json` 繪製三視角／主立繪，輸出 `images/`、`concept.json`、`manifest.json` |
-| 01b | `prompts/01b_move_vfx.prompt.md` | 招式特效 | 招式效果動畫／VFX 設計，輸出至 `moves/01_vfx/<asset_id>/` |
-| 02 | `prompts/02_review_portrait.prompt.md` | 立繪審查 | 檢查圖檔完整性、結構、視角與配色一致性；只輸出建議，不代為核准 |
-| 03a | `prompts/03a_colab.prompt.md` | Colab Image-to-3D | 已核准立繪 → Colab GPU 網格 → Blender 修整、綁骨與匯出 |
-| 03b | `prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 支援 Image-to-3D（需已核准立繪）與 Prompt-to-3D（純文字外觀） |
-| 03c | `prompts/03c_portrait_after_3d.prompt.md` | 建模後補主立繪 | Prompt-to-3D 專用：依完成之 3D 模型補畫全身動態主立繪（不需 T-pose／正面圖） |
-| 04 | `prompts/04_review_3d.prompt.md` | 3D 最終驗收 | 核對 `.glb`、`.blend`、manifest、骨架動畫與來源立繪綁定 |
-| 05 | `prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 僅於目標 `<kind>/wiki/` 路徑不存在時建立原創角色／宙獸／招式圖鑑 |
-| — | `prompts/TRIGGERS.md` | 簡易觸發語句 | 各步驟觸發指令與管線分支說明 |
+| 00 | `<kind>/prompts/00_appearance.prompt.md` | 外觀設定 | 依素材撰寫繁體中文原創外觀，不夾帶格式與遊戲數值 |
+| 01 | `<kind>/prompts/01_portrait.prompt.md` | 立繪生成 | 依外觀與 `parameters.json` 繪製三視角／主立繪，輸出 `images/`、`concept.json`、`manifest.json` |
+| 01b | `moves/prompts/01b_move_vfx.prompt.md` | 招式特效 | 招式效果動畫／VFX 設計，輸出至 `moves/01_vfx/<asset_id>/` |
+| 02 | `<kind>/prompts/02_review_portrait.prompt.md` | 立繪審查 | 檢查圖檔完整性、結構、視角與配色一致性；只輸出建議，不代為核准 |
+| 03a | `<kind>/prompts/03a_colab.prompt.md` | Colab Image-to-3D | 已核准立繪 → Colab GPU 網格 → Blender 修整、綁骨與匯出 |
+| 03b | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 支援 Image-to-3D（需已核准立繪）與 Prompt-to-3D（純文字外觀） |
+| 03c | `<kind>/prompts/03c_portrait_after_3d.prompt.md` | 建模後補主立繪 | Prompt-to-3D 專用：依完成之 3D 模型補畫全身動態主立繪（不需 T-pose／正面圖） |
+| 04 | `<kind>/prompts/04_review_3d.prompt.md` | 3D 最終驗收 | 核對 `.glb`、`.blend`、manifest、骨架動畫與來源立繪綁定 |
+| 05 | `<kind>/prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 僅於目標 `<kind>/wiki/` 路徑不存在時建立原創角色／宙獸／招式圖鑑 |
+| — | `docs/pipeline/TRIGGERS.md` | 簡易觸發語句 | 各步驟觸發指令與管線分支說明 |
 
 ## 3. 角色（Characters）名稱與 ID 對照
 

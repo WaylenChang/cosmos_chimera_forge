@@ -9,10 +9,10 @@
 - **Drive 專案根目錄**：`project/cosmos_chimera_forge/`（Folder ID：`1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`）
 - **核心參考文件**：
   - `DIRECTORY.md`：完整目錄結構、PR #11 型態化 3D 與 Wiki 規範
-  - `prompts/TRIGGERS.md`：各步驟觸發語句與分支說明
-  - `prompts/*.prompt.md`：各單步驟正式指令模板
+  - `docs/pipeline/TRIGGERS.md`：各步驟觸發語句與分支說明
+  - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；招式使用 `moves/prompts/01b_move_vfx.prompt.md`
 
-> **分類優先的唯一正式路徑**：所有角色／宙獸／招式資產都在 `<kind>/` 之下，`<kind>` 僅能是 `characters`、`creatures`、`moves`。圖鑑位於 `<kind>/wiki/`，模型與立繪也只由對應分類讀取。舊根目錄已退役並歸入 `backup/`，不得再作為正常搜尋或輸出位置。
+> **分類優先的唯一正式路徑**：所有角色／宙獸／招式資產都在 `<kind>/` 之下，`<kind>` 僅能是 `characters`、`creatures`、`moves`。圖鑑位於 `<kind>/wiki/`，模型與立繪也只由對應分類讀取。舊根目錄及 `<kind>/02_3d/legacy/` 仍可能保留待核對資料；只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。完成來源、衝突、備份及驗收驗證前，不得宣稱已退役或刪除。
 
 ---
 
@@ -52,9 +52,9 @@
 
 ## 3. 管線步驟對照表（步驟名稱／代碼 → 模板與規範）
 
-收到任務時，先讀取 `prompts/<對應模板>`，將解析出的 `subject_id`、`asset_id`、路徑與參數代入模板後執行：
+收到任務時，先讀取 `<kind>/prompts/<對應模板>`，將解析出的 `subject_id`、`asset_id`、路徑與參數代入模板後執行：
 
-| 步驟代碼 | 常見別名 | Prompt 模板（`prompts/`） | 必要前置條件 | 主要輸入 | 輸出位置與交付物 |
+| 步驟代碼 | 常見別名 | Prompt 模板（`<kind>/prompts/`） | 必要前置條件 | 主要輸入 | 輸出位置與交付物 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `00_appearance` | 外觀設定 | `00_appearance.prompt.md` | 無 | 概念／圖鑑素材 | `<kind>/00_settings/<asset_id>.appearance.md`（繁中純外觀，不含數值與製圖指令） |
 | `01_portrait` | 生成立繪、立繪 | `01_portrait.prompt.md` | 已有外觀與參數 | `appearance.md`、`parameters.json`（引用既有 wiki，不覆寫） | `<kind>/01_portraits/<asset_id>/`（`images/`、`concept.json`、`manifest.json`） |

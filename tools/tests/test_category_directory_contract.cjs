@@ -36,3 +36,57 @@ test("task-flow documentation never produces wiki/category paths", () => {
   assert.doesNotMatch(flow, /wiki\/moves\//);
   assert.match(flow, /moves\/wiki\//);
 });
+
+test("category-first pipeline directory resolver handles aliases and rejects invalid stages", () => {
+  const context = {
+    window: { COSMI_DRIVE_CONFIG: {} },
+    document: { addEventListener() {} },
+  };
+  vm.runInNewContext(source("drive-storage.js"), context, { filename: "drive-storage.js" });
+  const drive = context.window.COSMI_DRIVE;
+  for (const [kind, stage, expected] of [
+    ["characters", "portrait", "characters/01_portraits"],
+    ["creatures", "03a_colab", "creatures/02_3d/colab"],
+    ["characters", "colab_ai_blender", "characters/02_3d/colab"],
+    ["creatures", "ai_blender", "creatures/02_3d/ai_blender"],
+    ["moves", "vfx", "moves/01_vfx"],
+  ]) {
+    assert.equal(drive.pipelineDirectory(kind, stage), expected);
+  }
+  assert.throws(() => drive.pipelineDirectory("moves", "colab"), /VFX/);
+  assert.throws(() => drive.pipelineDirectory("creatures", "unrecognized"), /未知管線/);
+});
+
+test("pipeline templates stay isolated across category switches", async () => {
+  const requested = [];
+  let current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
+  const context = {
+    window: {
+      COSMI_FORGE: { currentContext: () => current, activePackage: () => null, packages: () => [] },
+      COSMI_DRIVE: {
+        pipelineRoot: ctx => ctx.task.id.startsWith("character") ? "characters" : "creatures",
+        read: async name => {
+          requested.push(name);
+          if (name === "00_settings/default.parameters.json") return { text: async () => "{}" };
+          return { text: async () => "<!-- COSMI-PIPELINE/2:review_portrait -->\n" + name };
+        }
+      }
+    },
+    document: { addEventListener() {}, getElementById: id => id === "pipelineStage" ? { value: "review_portrait" } : null },
+    console
+  };
+  vm.runInNewContext(source("pipeline.js"), context, { filename: "pipeline.js" });
+  const pipeline = context.window.COSMI_PIPELINE;
+  await pipeline.loadTemplates();
+  assert.equal(pipeline.templates.review_portrait.includes("characters/prompts/"), true);
+  current = { task: { id: "creature-model-rig" }, subjectId: "cr_fox", taskId: "cr_fox" };
+  await pipeline.loadTemplates();
+  assert.equal(pipeline.templates.review_portrait.includes("creatures/prompts/"), true);
+  assert.equal(requested.some(x => x === "creatures/prompts/02_review_portrait.prompt.md"), true);
+  current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
+  const characterPrompt = pipeline.build(current);
+  assert.match(characterPrompt, /characters\/prompts\/02_review_portrait\.prompt\.md/);
+  current = { task: { id: "creature-model-rig" }, subjectId: "cr_fox", taskId: "cr_fox" };
+  const creaturePrompt = pipeline.build(current);
+  assert.match(creaturePrompt, /creatures\/prompts\/02_review_portrait\.prompt\.md/);
+});

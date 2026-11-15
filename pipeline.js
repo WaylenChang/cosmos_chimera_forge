@@ -7,6 +7,8 @@
     encyclopedia: "05_encyclopedia"
   };
   const templates = {};
+  const templatesByKind = new Map();
+  let loadedTemplateKind = null;
   const modeKey = "cosmimera.portrait-mode.v1";
   let portraitMode = "manual";
   let graphMode = null;
@@ -108,7 +110,7 @@
       ].join("\n");
     }
     if (stage === "portrait_after_3d") return "# 建模後補主立繪\n依本次已完成且通過模型品質檢查的 GLB／Blend 與預覽，繪製一致的正式全身動態主立繪。無需 T-pose、正面圖或三視圖；不得自行變更模型外觀。輸出 PNG 並記錄對應模型資產 ID，供最終驗收。";
-    const raw = templates[stage];
+    const raw = templatesByKind.get(pipelineRootFor(ctx))?.[stage];
     const normalized = typeof raw === "string" ? raw.replace(/\r\n?/g, "\n").trim() : "";
     const prefix = templateMarker(stage);
     const template = normalized.startsWith(prefix + "\n") ? normalized.slice(prefix.length).trim() : localTemplates[stage];
@@ -142,7 +144,7 @@
       appearance: visual, model_input: modelInput, bestiary,
       asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source, source_path: sourcePath,
       input_path: stage === "review_portrait" ? portraitPath : modelPath,
-      output_path: (stage === "colab" ? root + "/02_3d/colab/" : stage === "blender" ? root + "/02_3d/ai_blender/" : root === "moves" ? "moves/01_vfx/" : root + "/01_portraits/") + ctx.taskId,
+      output_path: (window.COSMI_DRIVE?.pipelineDirectory?.(root, stage === "colab" || stage === "blender" ? stage : root === "moves" ? "vfx" : "portrait") || (stage === "colab" ? root + "/02_3d/colab" : stage === "blender" ? root + "/02_3d/ai_blender" : root === "moves" ? "moves/01_vfx" : root + "/01_portraits")) + "/" + ctx.taskId,
       parameters_path: root + "/00_settings/" + ctx.taskId + ".parameters.json"
     };
     const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定").replace(/\n{3,}/g, "\n\n").trim();
@@ -172,10 +174,18 @@
     return typed + "\n共用圖鑑：" + wiki.path + "。此管線只引用既有圖鑑，不重新生成；若尚無該圖鑑，先於「外觀設定」步驟建立。manifest.encyclopedia_path 記錄同一路徑。";
   }
   async function loadTemplates() {
+    const root = pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {});
+    const kindTemplates = templatesByKind.get(root) || {};
     const entries = Object.entries(stages).filter(([key]) => !["portrait", "encyclopedia"].includes(key));
     const jobs = entries.map(async ([key, name]) => {
       try {
-        templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
+        const canonical = root + "/prompts/" + name + ".prompt.md";
+        try {
+          kindTemplates[key] = await (await window.COSMI_DRIVE.read(canonical)).text();
+        } catch (canonicalError) {
+          // Read-only compatibility while legacy templates are being retired.
+          kindTemplates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
+        }
       } catch (error) {
         console.warn("無法讀取管線模板：" + name, error);
       }
@@ -189,6 +199,12 @@
       }
     })());
     await Promise.all(jobs);
+    templatesByKind.set(root, kindTemplates);
+    if (pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {}) === root) {
+      for (const key of Object.keys(templates)) delete templates[key];
+      Object.assign(templates, kindTemplates);
+      loadedTemplateKind = root;
+    }
   }
   function isPortraitAuto() {
     return ["portrait", "portrait_3d"].includes($("pipelineStage")?.value) && portraitMode === "auto";
