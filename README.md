@@ -108,7 +108,7 @@ python -m http.server 8687
 1. **Google 設定**：在 OAuth 所屬 Google Cloud 專案啟用 Google Drive API；OAuth 類型須為 Web application，Authorized JavaScript origins 加入 `https://changweilin.github.io`（不含路徑）。若使用本機測試，也需加入實際的 HTTP localhost 來源。Consent screen 若仍為 Testing，需加入使用者為測試帳號。
 2. **Client ID**：已在 `drive-config.js` 設定網站專用 Client ID；可用 GitHub Actions repository variable `GOOGLE_OAUTH_CLIENT_ID` 覆寫。Client ID 是公開設定，請勿放入 Client Secret。授權使用 Drive scope，因需讀取／更新既有成果包；Google Cloud 的應用程式發布與驗證要求依帳號設定辦理。
 3. **自動部署**：推送至 `main` 觸發 `.github/workflows/deploy.yml`，先執行存取測試，再執行 `node tools/build-site.mjs`。只上傳 `_site/` 的明確檔案清單；不包含 `Art/`、`Data/`、原始 Prompt 或 ZIP。
-4. **驗證**：`node --test tools/tests/test_drive_storage.cjs tools/tests/test_pipeline.cjs tools/tests/test_asset_directories.cjs`；`node tools/build-site.mjs`。正式 OAuth 登入、同意授權與 Drive 寫入仍需在已允許的網站來源，以有權限的 Google 帳號驗證。
+4. **驗證**：`node --test tools/tests/test_drive_storage.cjs tools/tests/test_pipeline.cjs tools/tests/test_asset_directories.cjs tools/tests/test_category_directory_contract.cjs`；`node tools/build-site.mjs`。正式 OAuth 登入、同意授權與 Drive 寫入仍需在已允許的網站來源，以有權限的 Google 帳號驗證。
 
 GitHub Pages 提供公開的 HTML／JavaScript 殼層，前端登入畫面不是伺服器端存取控制；私人資產只由帶有 OAuth Bearer token 的 Drive API 讀取，實際授權由 Drive ACL 執行。Token 僅保存在記憶體與同分頁 sessionStorage（供頁面刷新恢復），不寫入 localStorage、網址或部署成品；登出／到期後重載清除私人 blob。鍛造參數與收藏仍保存在目前瀏覽器的本機儲存空間，並非 Drive 同步資料。
 
