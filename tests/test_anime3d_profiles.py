@@ -145,11 +145,11 @@ class TypedRoutingTests(unittest.TestCase):
     def test_central_creature_encyclopedia_is_referenced_not_duplicated(self):
         from anime3d_universal import write_asset_manifest
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp) / "creatures"
             out = root / "02_3d" / "ai_blender" / "asset_cr_test_adult"
             (out / "models").mkdir(parents=True)
             (out / "models" / "asset_cr_test_adult.glb").write_bytes(b"synthetic test marker")
-            wiki = root / "04_encyclopedia" / "creatures" / "cr_test_wiki.md"
+            wiki = root / "wiki" / "cr_test_adult_wiki.md"
             wiki.parent.mkdir(parents=True)
             wiki.write_text("Original dedicated creature wiki", encoding="utf8")
             spec = {"asset_class": "fantasy_creature", "category": "creature",
@@ -157,7 +157,8 @@ class TypedRoutingTests(unittest.TestCase):
             profile = classify(spec)
             manifest = write_asset_manifest(out, out.name, spec, profile,
                                             {"status": "REVIEW_REQUIRED", "pipeline": "ai_blender"})
-            self.assertEqual(manifest["encyclopedia_path"], "04_encyclopedia/creatures/cr_test_wiki.md")
+            self.assertEqual(manifest["encyclopedia_path"], "creatures/wiki/cr_test_adult_wiki.md")
+            self.assertNotIn("wiki", [x["item"] for x in manifest["missing"]])
             self.assertNotIn("bestiary.md", [x["item"] for x in manifest["missing"]])
             self.assertIn("models/asset_cr_test_adult.blend", [x["item"] for x in manifest["missing"]])
 

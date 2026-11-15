@@ -165,12 +165,12 @@ class ColabContracts(unittest.TestCase):
 
     def test_canonical_wiki_keeps_creature_stage_and_character_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            wiki = root / "wiki/creatures/cr_test_juvenile_wiki.md"
+            root = Path(tmp) / "creatures"
+            wiki = root / "wiki/cr_test_juvenile_wiki.md"
             wiki.parent.mkdir(parents=True)
             wiki.write_text("Original juvenile entry")
             spec = {"subject_id": "cr_test", "stage": "juvenile", "category": "creature"}
-            self.assertEqual(runner.encyclopedia_path(root, spec, classify(spec)), "wiki/creatures/cr_test_juvenile_wiki.md")
+            self.assertEqual(runner.encyclopedia_path(root, spec, classify(spec)), "creatures/wiki/cr_test_juvenile_wiki.md")
             self.assertEqual(runner.encyclopedia_path(root, dict(spec, stage="adult"), classify(spec)), "")
 
     def test_real_chengxi_spec_preflight_never_fabricates_approval(self):
