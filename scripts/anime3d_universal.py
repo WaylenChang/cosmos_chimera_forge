@@ -402,14 +402,13 @@ def run(a):
         write(state_path, state)
         write_asset_manifest(out, a.asset_id, spec, profile, state)
         return 0
-    # Text-only creature modeling owns the original bestiary; image-to-3D
-    # and characters must not inherit an unrelated previous bestiary.
+    # Text-only creature modeling requires the category-local stage wiki.
     subject_kind = str(spec.get("category") or spec.get("subject_type") or "")
     task_kind = str(spec.get("task_type") or "")
-    requires_bestiary = profile["input_mode"] == "text" and (
+    requires_wiki = profile["input_mode"] == "text" and (
         subject_kind == "creature" or task_kind.startswith("creature"))
     wiki_exists = bool(encyclopedia_path(root, spec, profile))
-    if requires_bestiary and not wiki_exists :
+    if requires_wiki and not wiki_exists:
         state["warnings"].append("Text-to-3D creature requires creatures/wiki/<subject_id>_<stage>_wiki.md")
     if not a.blender or not Path(a.blender).is_file():
         state["status"] = "QA_PENDING"
@@ -440,7 +439,7 @@ def run(a):
             state["status"] = "REVIEW_REQUIRED"
             state["stage_completed"] = "post_gpu"
         state["warnings"] += qa.get("warnings", [])
-    if requires_bestiary and not wiki_exists :
+    if requires_wiki and not wiki_exists:
         state["status"] = "REVIEW_REQUIRED"
         write(state_path, state)
         write_asset_manifest(out, a.asset_id, spec, profile, state)
