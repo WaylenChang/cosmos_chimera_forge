@@ -1061,7 +1061,6 @@
           <button class="btn ghost icon-only" id="open" type="button" aria-label="↗ 開啟平台" data-tip="↗ 開啟平台">↗</button>
           <button class="btn ghost icon-only" id="download" type="button" aria-label="⬇ prompt.md" data-tip="⬇ prompt.md">⬇</button>
           <button class="btn ghost icon-only" id="export" type="button" aria-label="⬇ 概念 JSON" data-tip="⬇ 概念 JSON">{}</button>
-          <button class="btn ghost icon-only" id="btnUpgradeForge" hidden type="button" aria-label="🔄 升級舊版包" data-tip="🔄 升級舊版包">🔄</button>
           <button class="btn ghost icon-only" id="toReview" type="button" aria-label="🔍 轉至審查台" data-tip="🔍 轉至審查台">🔍</button>
           <span class="muted" id="chars"></span>
         </div>
@@ -1156,16 +1155,10 @@
         <div class="rail-tools">
           <button class="btn icon-only" id="btnScanDir" type="button" aria-label="選取本專案 Art/_incoming 目錄進行自動掃描審查" data-tip="選取本專案 Art/_incoming 目錄進行自動掃描審查">📂</button>
           <div class="rail-tools-sub">
-            <button class="btn ghost icon-only" id="btnDirectUnpackZip" hidden type="button" aria-label="選取 Zip 載入審查並解壓至本專案" data-tip="選取 Zip 載入審查並解壓至本專案">⚡</button>
-            <button class="btn ghost icon-only" id="btnLoadZip" hidden type="button" aria-label="選擇本機下載的 .zip 或解壓檔案" data-tip="選擇本機下載的 .zip 或解壓檔案">🗜</button>
             <button class="btn ghost icon-only" id="btnLoadFixtures" type="button" aria-label="載入系統內建測試包快速體驗" data-tip="載入系統內建測試包快速體驗">🧪</button>
-            <button class="btn ghost icon-only" id="btnUpgradeZip" hidden type="button" aria-label="一鍵升級舊版立繪或3D壓縮包格式" data-tip="一鍵升級舊版立繪或3D壓縮包格式">🔄</button>
           </div>
         </div>
         <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display:none">
-        <input type="file" id="zipFileInput" accept=".zip,application/zip" multiple style="display:none">
-        <input type="file" id="directUnpackFileInput" accept=".zip,application/zip" multiple style="display:none">
-        <input type="file" id="upgradeFileInput" accept=".zip,application/zip" style="display:none">
         <div class="seg" id="catSeg">
           <button class="segb on" data-cat="all" type="button">全部</button>
           <button class="segb" data-cat="designed" type="button">☆ 已設計</button>

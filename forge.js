@@ -1218,10 +1218,12 @@
         el("button", {
           type: "button", class: "btn mini ghost", style: "width:100%;margin-top:6px;font-size:11px",
           onclick: () => {
-            selectDesignedItem(state.preset, "creature");
-            setViewMode("designed");
+            reviewState.activeDesignedKey = "creature:" + state.preset.toLowerCase();
+            reviewState.filterCat = "all";
+            document.querySelectorAll("#catSeg .segb").forEach(b => b.classList.toggle("on", b.dataset.cat === "all"));
+            setViewMode("review");
           }
-        }, "📋 前往已設計項目台檢閱 →")
+        }, "📋 前往審查台檢閱 →")
       );
       box.append(banner);
       return;
@@ -1243,10 +1245,12 @@
         el("button", {
           type: "button", class: "btn mini ghost", style: "width:100%;margin-top:6px;font-size:11px",
           onclick: () => {
-            selectDesignedItem(state.presetChar, "character");
-            setViewMode("designed");
+            reviewState.activeDesignedKey = "character:" + state.presetChar.toLowerCase();
+            reviewState.filterCat = "all";
+            document.querySelectorAll("#catSeg .segb").forEach(b => b.classList.toggle("on", b.dataset.cat === "all"));
+            setViewMode("review");
           }
-        }, "📋 前往已設計項目台檢閱 →")
+        }, "📋 前往審查台檢閱 →")
       );
       box.append(banner);
       return;
@@ -4076,13 +4080,6 @@
     return "unknown";
   }
 
-  // 載入 Zip 檔轉換為審查 Package 物件
-  async function loadZipFile(file) {
-    const buf = await file.arrayBuffer();
-    const files = await parseZipBuffer(buf);
-    return loadAssetFiles(files, file);
-  }
-
   async function loadAssetFiles(files, file, {silent = false} = {}) {
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
     const manifestPath = window.COSMI_MODEL_REVIEW.selectRootManifest(Object.keys(files));
@@ -4099,7 +4096,7 @@
         try { animSpec = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
       } else if (path.endsWith("rig_spec.json")) {
         try { rigSpec = JSON.parse(new TextDecoder().decode(files[path])); } catch (e) {}
-      } else if (path.endsWith(".glb")) {
+      } else if (/\.glb$/i.test(path)) {
         const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
         glbCandidates.push({path:rel,key:path});
       } else if (path.endsWith(".fbx") && (path.includes("anim") || path.includes("models"))) {
@@ -4970,6 +4967,7 @@
           reviewState.activeDesignedKey = null;
           reviewState.activePkgId = p.id;
           if (p.stage) reviewState.activeStage = p.stage;
+          if (is3dType(p.type) || p.glbFile || p.animSpec) reviewState.viewMode = "3d";
           renderReviewView();
         }}, p.id + " · " + reviewStatusInfo(p.status).zh + note));
       }
@@ -5072,6 +5070,7 @@
       $("#stageEmpty").style.display = "block";
       $("#stageSingleView").style.display = "none";
       $("#stageCompareView").style.display = "none";
+      $("#stage3dView").style.display = "none";
       $("#stageTag").style.display = "none";
       $("#stageCarousel").replaceChildren();
       $("#viewSeg").replaceChildren();
@@ -5137,14 +5136,15 @@
     const compareView = $("#stageCompareView");
     const singleView = $("#stageSingleView");
     const stage3dView = $("#stage3dView");
-    const is3d = (reviewState.viewMode === "3d");
+    const has3dData = is3dType(pkg.type) || pkg.glbFile || pkg.animSpec || linkedPkg?.glbFile || linkedPkg?.animSpec;
+    if (reviewState.viewMode === "3d" && !has3dData) reviewState.viewMode = "single";
+    const is3d = (reviewState.viewMode === "3d") && has3dData;
     const isCompare = (reviewState.viewMode === "compare");
 
     $("#btnModeSingle")?.classList.toggle("on", reviewState.viewMode === "single");
     $("#btnModeCompare")?.classList.toggle("on", isCompare);
     $("#btnMode3D")?.classList.toggle("on", is3d);
 
-    const has3dData = is3dType(pkg.type) || pkg.glbFile || pkg.animSpec || linkedPkg?.glbFile || linkedPkg?.animSpec;
     if ($("#btnMode3D")) {
       $("#btnMode3D").style.display = has3dData ? "inline-flex" : "none";
     }
@@ -5432,7 +5432,9 @@
     let glbBuffer = targetPkg.glbFile?.buffer || null;
     if (!glbBuffer && targetPkg.glbFile?.deferred && targetPkg.driveFolderId) {
       try {
-        const blob = await window.COSMI_DRIVE.read(targetPkg.drivePath + "/" + targetPkg.glbFile.path);
+        const blob = (targetPkg.glbFile.id && window.COSMI_DRIVE.readById)
+          ? await window.COSMI_DRIVE.readById(targetPkg.glbFile.id)
+          : await window.COSMI_DRIVE.read(targetPkg.drivePath + "/" + targetPkg.glbFile.path);
         // A different package may have been selected while the network request was running.
         if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || reviewState.viewMode !== "3d") return;
         glbBuffer = await blob.arrayBuffer();
@@ -5446,7 +5448,7 @@
     }
     if (!glbBuffer && targetPkg.rawFiles) {
       for (const p in targetPkg.rawFiles) {
-        if (p.endsWith(".glb")) {
+        if (/\.glb$/i.test(p)) {
           glbBuffer = window.COSMI_MODEL_REVIEW.exactBuffer(targetPkg.rawFiles[p]);
           break;
         }
@@ -5475,12 +5477,14 @@
       three.scene.add(model);
 
       const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
+      const size = box.isEmpty() ? new THREE.Vector3(1, 1.8, 1) : box.getSize(new THREE.Vector3());
+      const center = box.isEmpty() ? new THREE.Vector3() : box.getCenter(new THREE.Vector3());
 
-      model.position.x = -center.x;
-      model.position.y = -box.min.y;
-      model.position.z = -center.z;
+      if (!box.isEmpty()) {
+        model.position.x = -center.x;
+        model.position.y = -box.min.y;
+        model.position.z = -center.z;
+      }
 
       resize3D();
       const maxHorizontal = Math.max(size.x, size.z) || 1.0;
@@ -5495,6 +5499,9 @@
       const camY = (size.y * 0.52) || 0.9;
       three.defaultDist = dist;
       three.defaultTargetY = camY;
+      three.camera.near = Math.max(0.01, Math.min(0.05, dist / 1000));
+      three.camera.far = Math.max(100, dist * 10);
+      three.camera.updateProjectionMatrix();
       three.controls.maxDistance = Math.max(20, dist * 3);
       three.camera.position.set(0, camY, dist);
       three.controls.target.set(0, camY, 0);
@@ -5538,6 +5545,11 @@
       }
       if (defClip) {
         play3dClip(defClip, targetPkg);
+      } else {
+        $("#stage3dClipBadge").textContent = `🧊 ${targetPkg.id}（靜態模型，無動畫片段）`;
+        const track = $("#stage3dEventsTrack");
+        if (track) track.replaceChildren();
+        updateStage3dTimeDisplay(0, 0);
       }
 
       if (!three.isLooping) {
@@ -5866,7 +5878,7 @@
     const three = reviewState.three;
     if (!three.renderer || !three.camera) return;
     const container = $("#stage3dView");
-    if (!container || container.clientWidth === 0) return;
+    if (!container || container.clientWidth === 0 || container.clientHeight === 0) return;
     const w = container.clientWidth;
     const h = container.clientHeight;
     three.camera.aspect = w / h;
@@ -6653,45 +6665,10 @@
       state.root = value || DEFAULT_ROOT; renderOutput(); save();
     });
 
-    // 鍛造台升級舊版包按鈕
-    $("#btnUpgradeForge").addEventListener("click", () => $("#upgradeFileInput").click());
-
     // 審查台控制列事件
     $("#btnScanDir").addEventListener("click", scanIncomingDirectory);
     $("#folderFileInput")?.addEventListener("change", e => handleFolderUpload(e.target.files));
-    $("#btnDirectUnpackZip")?.addEventListener("click", () => $("#directUnpackFileInput").click());
-    $("#directUnpackFileInput")?.addEventListener("change", async e => {
-      const files = e.target.files;
-      if (!files || !files.length) return;
-      for (const f of files) {
-        if (f.name.endsWith(".zip")) {
-          toast("正在讀取並解析 " + f.name + "...");
-          const pkg = await loadZipFile(f);
-          if (pkg) {
-            await unpackPackageToDisk(pkg);
-          }
-        }
-      }
-    });
-    $("#btnLoadZip").addEventListener("click", () => $("#zipFileInput").click());
-    $("#zipFileInput").addEventListener("change", async e => {
-      const files = e.target.files;
-      for (const f of files) {
-        if (f.name.endsWith(".zip")) await loadZipFile(f);
-      }
-    });
     $("#btnLoadFixtures").addEventListener("click", loadSampleFixtures);
-    $("#btnUpgradeZip").addEventListener("click", () => $("#upgradeFileInput").click());
-    $("#upgradeFileInput").addEventListener("change", async e => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      toast("正在讀取並解析壓縮包...");
-      const pkg = await loadZipFile(file);
-      if (pkg) {
-        const upg = upgradePackageFormat(pkg);
-        if (upg) showUpgradeModal(upg);
-      }
-    });
 
     // 舞台檢視模式切換 (單圖 vs 2D ⇄ 3D 雙欄對比 vs 3D 動作檢視)
     $("#btnModeSingle").addEventListener("click", () => {
@@ -6778,9 +6755,8 @@
       e.preventDefault();
       stageHost.style.background = "#12141a";
       if (e.dataTransfer.files?.length) {
-        for (const f of e.dataTransfer.files) {
-          if (f.name.endsWith(".zip")) await loadZipFile(f);
-        }
+        const hasZip = Array.from(e.dataTransfer.files).some(f => /\.zip$/i.test(f.name));
+        if (hasZip) toast("已移除載入 ZIP 功能，請直接選取展開後的資產資料夾");
       }
     });
 
@@ -6951,7 +6927,7 @@
     if (had) renderAll(); else reseed(newSeed(), true);
   }
   window.COSMI_FORGE = Object.freeze({
-    loadZipFile, loadAssetFiles, setViewMode,
+    loadAssetFiles, setViewMode,
     openReviewPackage: pkg => {
       if (!pkg) return;
       reviewState.activePkgId = pkg.id;

@@ -318,6 +318,10 @@
     if (!file) throw Error(path + " 不存在");
     return (await request(API + "/" + file.id + "?alt=media")).blob();
   }
+  async function readById(id) {
+    if (!id) throw Error("缺少 Drive 檔案 ID");
+    return (await request(API + "/" + encodeURIComponent(id) + "?alt=media")).blob();
+  }
   async function write(path, blob) {
     const { file, parent, name } = await find(path, true),
       boundary = "cosmi_" + crypto.randomUUID();
@@ -435,7 +439,7 @@
           files.find((f) => /^models\/.*\.glb$/i.test(f.path)) ||
           files.find((f) => /\.glb$/i.test(f.path));
         if (glb && !pkg.glbFile)
-          pkg.glbFile = { path: glb.path, deferred: true };
+          pkg.glbFile = { path: glb.path, id: glb.id, deferred: true };
         if (reviewRecord) {
           pkg.status = reviewRecord.status;
           pkg.sourcePack = reviewRecord.source_pack;
@@ -1424,6 +1428,7 @@
   window.COSMI_DRIVE = Object.freeze({
     relative,
     read,
+    readById,
     write,
     folder,
     list,
