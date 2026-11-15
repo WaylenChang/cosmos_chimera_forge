@@ -25,6 +25,25 @@
     const path=kind+"/wiki/"+base+(stage?"_"+stage:"")+"_wiki.md";
     return {kind,subject:base,stage,path,key:kind+"/"+base+(stage?"/"+stage:"")};
   }
+  // Historical Drive manifests may still contain paths from before the category-first move.
+  // Normalize references only, never rename an asset file or mark its QA as complete.
+  function normalizeWikiPath(path) {
+    return typeof path === "string"
+      ? path.replace(/^wiki\/(characters|creatures|moves)\//, "$1/wiki/")
+      : path;
+  }
+  function normalizeManifest(manifest) {
+    if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) return manifest;
+    const next = {...manifest};
+    if (typeof next.encyclopedia_path === "string")
+      next.encyclopedia_path = normalizeWikiPath(next.encyclopedia_path);
+    if (next.encyclopedia_paths && typeof next.encyclopedia_paths === "object" && !Array.isArray(next.encyclopedia_paths)) {
+      next.encyclopedia_paths = Object.fromEntries(
+        Object.entries(next.encyclopedia_paths).map(([stage, path]) => [stage, normalizeWikiPath(path)])
+      );
+    }
+    return next;
+  }
   function initialMarkdown(ctx) {
     const d=describe(ctx), c=ctx.concept||{}, selected=c.locked?.stages?.find(s=>s.stage===d.stage)||{};
     const shared=["name_zh","name_en","elements","region","timeline","culture","bases",
@@ -121,5 +140,5 @@
       "本文件只代表文字資料拆分，3D、骨架、動畫與立繪仍須人工審查。",
       ""].join("\n");
   }
-  window.COSMI_WIKI=Object.freeze({ROOT,STAGES,STAGE_ZH,describe,initialMarkdown,splitLegacy,headerStage});
+  window.COSMI_WIKI=Object.freeze({ROOT,STAGES,STAGE_ZH,describe,initialMarkdown,splitLegacy,headerStage,normalizeWikiPath,normalizeManifest});
 })();

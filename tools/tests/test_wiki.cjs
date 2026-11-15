@@ -90,3 +90,23 @@ test("creature wiki initialMarkdown includes social_structure and reproduction",
  assert.match(md,/social_structure.*"母系氏族部落"/);
  assert.match(md,/reproduction.*"卵生·硬殼築巢"/);
 });
+
+test("old manifest wiki links are normalized without touching asset files or QA", () => {
+ const w = load();
+ const original = {
+   task_id:"asset_cr_fox_adult",
+   encyclopedia_path:"wiki/creatures/cr_fox_adult_wiki.md",
+   encyclopedia_paths:{juvenile:"wiki/creatures/cr_fox_juvenile_wiki.md",adult:"creatures/wiki/cr_fox_adult_wiki.md"},
+   files:[{path:"models/cr_fox_adult.glb"}],
+   qa_status:"REVIEW_REQUIRED"
+ };
+ const updated = w.normalizeManifest(original);
+ assert.equal(updated.encyclopedia_path,"creatures/wiki/cr_fox_adult_wiki.md");
+ assert.equal(updated.encyclopedia_paths.juvenile,"creatures/wiki/cr_fox_juvenile_wiki.md");
+ assert.equal(original.encyclopedia_path,"wiki/creatures/cr_fox_adult_wiki.md");
+ assert.deepEqual(updated.files,original.files);
+ assert.equal(updated.qa_status,"REVIEW_REQUIRED");
+ assert.equal(w.normalizeWikiPath("wiki/characters/chr_1286_wiki.md"),"characters/wiki/chr_1286_wiki.md");
+ assert.equal(w.normalizeWikiPath("wiki/moves/fx_burst_wiki.md"),"moves/wiki/fx_burst_wiki.md");
+ assert.equal(w.normalizeWikiPath("creatures/wiki/cr_fox_adult_wiki.md"),"creatures/wiki/cr_fox_adult_wiki.md");
+});
