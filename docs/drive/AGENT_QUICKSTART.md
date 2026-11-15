@@ -70,7 +70,7 @@
 
 ## 4. 不可違反的鐵則（Guardrails）
 
-1. **分支互斥**：`03a_colab` 與 `03b_blender` 為替代路線，**嚴禁**串接成 `Colab → AI Blender`。
+1. **管線分流**：Image-to-3D 有 `Colab＋AI＋Blender` 與 `AI＋Blender` 兩條獨立路線；Prompt-to-3D 使用 `AI＋Blender`，建模後須補主立繪。`03a_colab` 是 Colab 路線的 GPU 建模階段，後續允許 AI 輔助 Blender 修整；`03b_blender` 是獨立的 AI Blender 建模入口，不得把同一資產誤當作兩次獨立建模交付。各路線必須保留 `pipeline`、`input_mode`、來源與審查狀態，不得因串接工具而重複產生圖鑑。
 2. **禁止代為核准**：Agent 執行審查步驟（`02_review_portrait`、`04_review_3d`）時，只能輸出檢查報告與建議；只有人類審核者可寫入 `<kind>/reviews/<asset_id>.json` (`status: "ok"`) 或將資產搬入 `<kind>/03_completed/`。
 3. **嚴禁造假與覆寫**：
    - 未產生的檔案（如缺少 `.glb`、`.blend`、動畫、預覽）必須在 `manifest.json` 如實標記 `missing` 或 `REVIEW_REQUIRED`。
