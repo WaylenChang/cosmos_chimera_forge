@@ -89,3 +89,21 @@ Status meanings: **BLOCKED** = prerequisite or verification missing; **PENDING**
 3. Run M09 after changes and rerun after fixes; do not interpret absence of statuses as success.
 4. Complete M10–M11 only after Drive readback, deduplication, and green CI.
 5. Keep PR #22 **draft** until all exit evidence is attached. Do not merge, delete legacy data, or silently rewrite approved assets.
+
+## Reconciliation checkpoint: actual Drive readback (2026-11-15, supersedes earlier negative inventory)
+
+**Correction:** Earlier sections saying all 15 legacy roots lack direct-child `manifest.json` and all 15 `models/` directories are empty are **superseded by later verified Drive listings**. They are retained above solely as historical checkpoints, not as current migration blockers.
+
+- Re-listed all 15 legacy roots: **15/15 contain a direct-child `manifest.json`** (3 characters, 12 creatures). Each root also has its corresponding `models/` directory.
+- Re-listed all 15 `models/` folders: **15/15 contain one nonzero-size `.glb` and one nonzero-size `.blend`**, 30 model files total. These are presence/size checks only, not Blender openability, rigging, animation, or acceptance tests.
+- Character task folders: `mdl-20261109-f048-1847-chr_3d04`, `mdl-20261109-f048-1847-chr_1286_1855`, `mdl-20261109-f048-1847-chr_1286`. Their manifests identify `character-model-rig` tasks and source packs. The two `chr_1286` tasks have distinct source packs/identities but both name `models/chr_1286.glb` and `models/chr_1286.blend`; **do not deduplicate by filename or subject ID alone**.
+- Creature task folders: `mdl-20261111-{a111,b111,c111}-{1300,1301,1302,1303}`. Manifests identify creature-model-rig tasks with subject/stage/source-pack fields; e.g. `c111-1301` is `starter_star_line` / `adolescent` / `cr-20261111-c111-1200`. The creature manifests state `produced_by: legacy migration index` and explicitly note that human visual/animation review remains pending.
+- Existing destinations were listed: `characters/02_3d/colab/` contains three active model task folders plus runtime files; `characters/02_3d/ai_blender/` and `creatures/02_3d/colab/` are empty; `creatures/02_3d/ai_blender/` contains many `asset_cr_*` stage-specific folders. These listings do **not** establish branch provenance or content equivalence.
+- **M01 updated to PARTIAL/VERIFY:** manifests and 3D deliverable presence verified; recursively inventory non-model descendants and verify actual bytes/source provenance. **M02 remains BLOCKED:** determine `colab_ai_blender` versus `ai_blender` from authoritative provenance, compare target assets by subject+stage+source and content, and resolve the `chr_1286` naming ambiguity. **M03 remains BLOCKED:** no production move without M01/M02 evidence and collision-safe mapping.
+- **No legacy folder moved/deleted; no asset accepted; no CI pass claimed.** Preserve legacy Drive IDs and read-only quarantine pending safe mapping.
+
+### Next executable steps
+1. Build an asset-level manifest index: task ID, Drive folder ID, subject, stage, source pack, producer, declared relative files, observed file IDs/sizes, and missing-file discrepancies.
+2. Compare all 15 packages against existing production tasks and `asset_cr_*` folders; do not use the target folder's emptiness as proof of correct pipeline branch.
+3. Verify non-model descendants, Blender/GLB integrity, provenance and acceptance gates; then move only uniquely mapped packages with parent-ID readback and rollback manifest.
+4. Independently complete M04–M09 (documentation, code references, wiki/review/jobs, tests and CI) while keeping compatibility reads and legacy writes disabled.
