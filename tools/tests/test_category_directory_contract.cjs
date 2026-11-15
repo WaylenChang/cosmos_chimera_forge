@@ -62,13 +62,13 @@ test("pipeline templates stay isolated across category switches", async () => {
   let current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
   const context = {
     window: {
-      COSMI_FORGE: { currentContext: () => current },
+      COSMI_FORGE: { currentContext: () => current, activePackage: () => null, packages: () => [] },
       COSMI_DRIVE: {
         pipelineRoot: ctx => ctx.task.id.startsWith("character") ? "characters" : "creatures",
         read: async name => {
           requested.push(name);
           if (name === "00_settings/default.parameters.json") return { text: async () => "{}" };
-          return { text: async () => "<!-- COSMI-PIPELINE/2:review_portrait -->\\n" + name };
+          return { text: async () => "<!-- COSMI-PIPELINE/2:review_portrait -->\n" + name };
         }
       }
     },
