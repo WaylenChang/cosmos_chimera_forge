@@ -122,7 +122,7 @@
       return root + "/02_3d/colab";
     if (stage === "blender" || stage === "03b_blender" || stage === "ai_blender")
       return root + "/02_3d/ai_blender";
-    if (stage === "legacy") return root + "/02_3d/legacy";
+    if (stage === "legacy") throw Error("舊版 3D 管線僅供唯讀遷移，不允許新輸出");
     if (stage === "portrait" || stage === "01_portrait" || stage === "portrait_3d")
       return root + "/01_portraits";
     throw Error("未知管線階段：" + String(stage));
@@ -1624,7 +1624,7 @@
         }
         const name = window.COSMI_PIPELINE.stages[key];
         window.COSMI_PIPELINE.templates[key] = await (
-          await read("prompts/" + name + ".prompt.md")
+          await read(pipelineRoot(context || window.COSMI_FORGE.currentContext?.() || "creatures") + "/prompts/" + name + ".prompt.md")
         ).text();
         window.COSMI_FORGE.refresh();
         window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);
