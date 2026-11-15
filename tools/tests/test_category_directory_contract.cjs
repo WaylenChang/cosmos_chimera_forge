@@ -56,3 +56,34 @@ test("category-first pipeline directory resolver handles aliases and rejects inv
   assert.throws(() => drive.pipelineDirectory("moves", "colab"), /VFX/);
   assert.throws(() => drive.pipelineDirectory("creatures", "unrecognized"), /未知管線/);
 });
+
+test("pipeline templates stay isolated across category switches", async () => {
+  const requested = [];
+  let current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
+  const context = {
+    window: {
+      COSMI_FORGE: { currentContext: () => current },
+      COSMI_DRIVE: {
+        pipelineRoot: ctx => ctx.task.id.startsWith("character") ? "characters" : "creatures",
+        read: async name => {
+          requested.push(name);
+          if (name === "00_settings/default.parameters.json") return { text: async () => "{}" };
+          return { text: async () => "<!-- COSMI-PIPELINE/2:review_portrait -->\\n" + name };
+        }
+      }
+    },
+    document: { addEventListener() {}, getElementById: () => null },
+    console
+  };
+  vm.runInNewContext(source("pipeline.js"), context, { filename: "pipeline.js" });
+  const pipeline = context.window.COSMI_PIPELINE;
+  await pipeline.loadTemplates();
+  assert.equal(pipeline.templates.review_portrait.includes("characters/prompts/"), true);
+  current = { task: { id: "creature-model-rig" }, subjectId: "cr_fox", taskId: "cr_fox" };
+  await pipeline.loadTemplates();
+  assert.equal(pipeline.templates.review_portrait.includes("creatures/prompts/"), true);
+  assert.equal(requested.some(x => x === "creatures/prompts/02_review_portrait.prompt.md"), true);
+  current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
+  assert.equal(pipeline.templates.review_portrait.includes("creatures/prompts/"), true, "public mirror reflects most recently loaded kind");
+  assert.equal(pipeline.build !== undefined, true);
+});
