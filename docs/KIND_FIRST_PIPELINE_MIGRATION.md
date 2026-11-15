@@ -40,7 +40,14 @@ Pipeline IDs must be defined centrally and independently of UI labels. Character
 
 
 ## Legacy 3D inventory checkpoint
-- `characters/02_3d/legacy/` contains three asset folders: `mdl-20261109-f048-1847-chr_3d04`, `mdl-20261109-f048-1847-chr_1286_1855`, and `mdl-20261109-f048-1847-chr_1286`. Each contains a `manifest.json` plus model/rig/image/texture/animation subfolders. They are **not yet moved** because the correct new 3D branch must be derived from the manifest, not inferred from the `legacy` folder name.
+- `characters/02_3d/legacy/` contains three asset folders: `mdl-20261109-f048-1847-chr_3d04`, `mdl-20261109-f048-1847-chr_1286_1855`, and `mdl-20261109-f048-1847-chr_1286`. Direct-child listings currently show model/rig/image/texture/animation subfolders but **do not show `manifest.json`**; verify manifest existence and metadata before any branch classification. They are **not yet moved** because the correct new 3D branch must be derived from the manifest, not inferred from the `legacy` folder name.
 - `creatures/02_3d/legacy/` contains 12 `mdl-20261111-*` asset folders (a111/b111/c111, four stages each). The `creatures/02_3d/ai_blender/` destination already contains many stage-specific `asset_cr_*` folders; check identity and duplicate collisions before any move.
 - `characters/02_3d/colab/` already contains active model folders and runtime files; `characters/02_3d/ai_blender/` and `creatures/02_3d/colab/` were empty when inspected.
 - No legacy 3D folder was moved during this checkpoint. The manifest-based branch mapping and collision audit remain mandatory.
+
+## Verification checkpoint: missing direct-child manifests (2026-11-15)
+- Re-read all three character legacy asset folder IDs (`1mDwl_qmIzzRMRztG5MKmExHZugZMjozo`, `1n4ZmoOT6RWx3wlZzV2zZIa12WmpekQY3`, `1tEyXR0YExqH7VwnGEPZzrtVXIGGInJlE`). Their immediate children are directories only; no direct-child `manifest.json` was returned.
+- Sampled creature legacy asset folder `1A7bpdzLs0XvDFPn8HIQZ8tPSfgMtGgAs` (`mdl-20261111-c111-1301`): immediate children are `textures/`, `review/`, and `models/`, without a direct-child manifest.
+- Sampled model/rig subfolders under these assets; the queried folders returned no files. A folder name alone is **not** evidence that `.glb`, `.blend`, or rig content exists.
+- Treat these as **unverified/incomplete**, not approved models. Do not move or delete their Drive IDs until a manifest, source lineage, actual deliverables, target branch, and destination collision checks are recorded. Preserve `legacy/` as read-only quarantine.
+- `pipeline.js` currently loads category-specific templates using the kind selected at `loadTemplates()` time. A later category switch can reuse cached templates from the previous kind. Add kind-keyed cache and a category-switch regression test before retiring root template fallback.
