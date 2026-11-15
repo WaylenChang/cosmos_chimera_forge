@@ -7,8 +7,12 @@ Shared `prompts/` contains legacy stage templates; `characters/02_3d` and `creat
 `AGENT_QUICKSTART.md` currently describes Colab and AI Blender as mutually exclusive. This conflicts with the intended Colab + AI + Blender branch.
 
 ## Canonical structure
-All asset-specific read/write paths MUST begin with `<kind>/`, where kind is one of `characters`, `creatures`, `moves`. Under each kind, the pipeline branch comes before stage-specific outputs:
-- `<kind>/pipelines/<pipeline_id>/<asset_id>/...`
+All asset-specific read/write paths MUST begin with `<kind>/`, where kind is one of `characters`, `creatures`, `moves`. Under each kind, keep the existing production stage folders until the runtime and Drive have migrated together:
+- `<kind>/01_portraits/<asset_id>/...`
+- `<kind>/02_3d/colab/<asset_id>/...` (Colab + AI + Blender)
+- `<kind>/02_3d/ai_blender/<asset_id>/...` (AI + Blender)
+- `moves/01_vfx/<asset_id>/...`
+Do not introduce an additional `pipelines/` nesting layer without updating all readers and writers first.
 - `<kind>/wiki/<subject_id>[_<stage>]_wiki.md`
 - `<kind>/reviews/<asset_id>.json`
 - `<kind>/prompts/jobs/...`
@@ -24,6 +28,9 @@ Pipeline IDs must be defined centrally and independently of UI labels. Character
 6. Preserve existing wiki files and deduplicate by subject + stage; never overwrite approved work.
 7. Test each kind and each pipeline branch for discovery, review, generation, cache invalidation, and idempotence.
 8. Only retire legacy routes after CI and Drive readback pass.
+
+## Verified correction
+`docs/drive/AGENT_QUICKSTART.md` already correctly documents the two parallel 3D routes; the earlier initial audit mistakenly described this guardrail as obsolete. The remaining migration work concerns path references, old stage template identifiers, and legacy asset inventory.
 
 ## Status
 Audit specification only. No Drive assets have been moved, and runtime code has not yet been migrated. Do not treat this document as evidence of completed migration.
