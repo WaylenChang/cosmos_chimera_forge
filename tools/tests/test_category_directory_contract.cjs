@@ -72,7 +72,7 @@ test("pipeline templates stay isolated across category switches", async () => {
         }
       }
     },
-    document: { addEventListener() {}, getElementById: () => null },
+    document: { addEventListener() {}, getElementById: id => id === "pipelineStage" ? { value: "review_portrait" } : null },
     console
   };
   vm.runInNewContext(source("pipeline.js"), context, { filename: "pipeline.js" });
