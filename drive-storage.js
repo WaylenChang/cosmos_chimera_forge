@@ -110,13 +110,28 @@
       return "creatures";
     return "creatures";
   }
+  // One canonical directory resolver for all category-specific pipeline outputs.
+  // Historical stage names are accepted as aliases, not as separate output trees.
+  function pipelineDirectory(kind, stage) {
+    const root = pipelineRoot(kind);
+    if (root === "moves") {
+      if (stage === "vfx" || stage === "move_vfx" || stage === "01_vfx") return "moves/01_vfx";
+      throw Error("招式僅支援 VFX 資產管線");
+    }
+    if (stage === "colab" || stage === "03a_colab" || stage === "colab_ai_blender")
+      return root + "/02_3d/colab";
+    if (stage === "blender" || stage === "03b_blender" || stage === "ai_blender")
+      return root + "/02_3d/ai_blender";
+    if (stage === "legacy") throw Error("舊版 3D 管線僅供唯讀遷移，不允許新輸出");
+    if (stage === "portrait" || stage === "01_portrait" || stage === "portrait_3d")
+      return root + "/01_portraits";
+    throw Error("未知管線階段：" + String(stage));
+  }
   function packageDir(type, subjectOrId, stage) {
     const root = pipelineRoot(subjectOrId ? { type, id: subjectOrId } : type);
-    if (root === "moves") return "moves/01_vfx";
-    if (/model|rig|anim/.test(type)) {
-      return root + "/02_3d/" + (stage === "colab" ? "colab" : "ai_blender");
-    }
-    return root + "/01_portraits";
+    if (root === "moves") return pipelineDirectory(root, "vfx");
+    if (/model|rig|anim/.test(type)) return pipelineDirectory(root, stage || "blender");
+    return pipelineDirectory(root, "portrait");
   }
   function recordPipelineWrite(path, result) {
     const clean = String(path || "").replace(/^\/+/, "");
@@ -190,7 +205,7 @@
     "03_completed/portraits",
     "03_completed/models",
   ];
-  const dirs = [...categoryDirs, ...legacyDirs];
+  const dirs = categoryDirs; // Legacy roots are migration sources only, never active asset scans.
   function relative(path) {
     if (
       typeof path !== "string" ||
@@ -366,8 +381,7 @@
     if (!file && !reviewIndex) {
       const root = pipelineRoot(hint || id);
       file =
-        (await find(root + "/reviews/" + id + ".json")).file ||
-        (await find("reviews/" + id + ".json")).file;
+        (await find(root + "/reviews/" + id + ".json")).file;
     }
     return file
       ? JSON.parse(
@@ -459,7 +473,6 @@
       const reviewIndexPromise = (async () => {
         const merged = new Map();
         for (const revDir of [
-          "reviews",
           "characters/reviews",
           "creatures/reviews",
           "moves/reviews",
@@ -896,7 +909,9 @@
     };
     try {
       const oldFolder = "04_encyclopedia/creatures";
-      const sourceFiles = await list(await folder(oldFolder));
+      let sourceFiles = [];
+      try { sourceFiles = await list(await folder(oldFolder)); }
+      catch (e) { if (!/不存在/.test(e.message)) throw e; }
       await folder("creatures/wiki", true);
       await folder("creatures/wiki/_legacy", true);
       const backupId = await folder("creatures/wiki/_legacy");
@@ -1011,8 +1026,7 @@
         wikiFiles = await list(await folder(wikiBase));
       } catch (e) {
         if (!/不存在/.test(e.message)) throw e;
-        wikiBase = "wiki/creatures";
-        wikiFiles = await list(await folder(wikiBase));
+        throw Error("正式圖鑑目錄 creatures/wiki 不存在，請先完成分類搬移");
       }
       const wikiNames = new Set(wikiFiles.map((f) => f.name));
       report.total = assets.length;
@@ -1316,6 +1330,51 @@
       busy = false;
     }
   }
+  // Explicit, repeatable cleanup for the on-disk manifest references left by earlier
+  // Drive directory moves. Updates only link fields and retains the same Drive file ID.
+  async function migrateManifestWikiReferences() {
+    if (syncing || busy) throw Error("Drive 正在同步或審查，請稍後再執行");
+    busy = true;
+    const report = { examined: 0, updated: 0, skipped: 0, errors: [] };
+    try {
+      for (const dir of categoryDirs) {
+        let entries;
+        try { entries = await list(await folder(dir)); }
+        catch (e) { if (!/不存在/.test(e.message)) report.errors.push(dir + ": " + e.message); continue; }
+        for (const entry of entries.filter(item => item.mimeType === MIME)) {
+          try {
+            const children = await list(entry.id);
+            const manifests = children.filter(item => item.name === "manifest.json" && item.mimeType !== MIME);
+            if (manifests.length > 1) throw Error("同一資產包含多份 manifest.json");
+            if (!manifests.length) { report.skipped++; continue; }
+            const file = manifests[0];
+            const raw = await (await request(API + "/" + file.id + "?alt=media")).text();
+            let manifest;
+            try { manifest = JSON.parse(raw); } catch (_) { throw Error("manifest.json 不是合法 JSON"); }
+            if (!manifest || typeof manifest !== "object" || Array.isArray(manifest))
+              throw Error("manifest.json 必須是物件");
+            report.examined++;
+            const updated = window.COSMI_WIKI?.normalizeManifest?.(manifest);
+            if (!updated || JSON.stringify(updated) === JSON.stringify(manifest)) {
+              report.skipped++; continue;
+            }
+            const location = dir + "/" + entry.name + "/manifest.json";
+            await jsonWrite(location, updated);
+            const verify = JSON.parse(await (await read(location)).text());
+            if (JSON.stringify(verify) !== JSON.stringify(updated))
+              throw Error("更新後 manifest 回讀不符");
+            report.updated++;
+          } catch (e) {
+            report.errors.push(dir + "/" + entry.name + ": " + e.message);
+          }
+        }
+      }
+      return report;
+    } finally {
+      busy = false;
+      void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+    }
+  }
   async function syncPipelineIndex() {
     if (!accessToken || Date.now() >= expiry - SESSION_SKEW) {
       return pipelineIndexState;
@@ -1332,34 +1391,26 @@
       settingsChar,
       settingsCreature,
       settingsMove,
-      settingsLegacy,
       jobsChar,
       jobsCreature,
       jobsMove,
-      jobsLegacy,
       wikiCharNew,
-      wikiCharLegacy,
       wikiCreatureNew,
-      wikiCreatureLegacy,
     ] = await Promise.all([
       safeList("characters/00_settings"),
       safeList("creatures/00_settings"),
       safeList("moves/00_settings"),
-      safeList("00_settings"),
       safeList("characters/prompts/jobs"),
       safeList("creatures/prompts/jobs"),
       safeList("moves/prompts/jobs"),
-      safeList("prompts/jobs"),
       safeList("characters/wiki"),
-      safeList("wiki/characters"),
       safeList("creatures/wiki"),
-      safeList("wiki/creatures"),
     ]);
     pipelineIndexState = {
-      settings: [...settingsChar, ...settingsCreature, ...settingsMove, ...settingsLegacy],
-      jobs: [...jobsChar, ...jobsCreature, ...jobsMove, ...jobsLegacy],
-      wikiCharacters: [...wikiCharNew, ...wikiCharLegacy],
-      wikiCreatures: [...wikiCreatureNew, ...wikiCreatureLegacy],
+      settings: [...settingsChar, ...settingsCreature, ...settingsMove],
+      jobs: [...jobsChar, ...jobsCreature, ...jobsMove],
+      wikiCharacters: wikiCharNew,
+      wikiCreatures: wikiCreatureNew,
       syncedAt: Date.now(),
     };
     window.COSMI_FORGE?.refresh?.();
@@ -1380,6 +1431,7 @@
     pipelineIndex: () => pipelineIndexState,
     pipelineRoot,
     migratePipelineDirectories,
+    migrateManifestWikiReferences,
     migratePrompt3dAssets,
     migrateWikis,
     ensureWiki,
@@ -1393,6 +1445,7 @@
     signOut: () => lock("已登出"),
     rootPath: config.rootPath,
     packageDir,
+    pipelineDirectory,
   });
   document.addEventListener("DOMContentLoaded", () => {
     $("driveSignIn").addEventListener("click", () => {
@@ -1430,24 +1483,25 @@
     $("settingsMigratePipeline")?.addEventListener("click", () => {
       if (
         !window.confirm(
-          "將舊共用目錄（01_portraits、02_3d、03_completed、00_settings、prompts/jobs、wiki、reviews）中的既有檔案依角色／宙獸／招式分類移入 characters/、creatures/、moves/？保留 Drive 檔案 ID，同名目標已存在時跳過。",
+          "按角色／宙獸／招式整理舊共用目錄，並修正既有 manifest.json 的 wiki 引用？保留所有檔案 ID，同名檔案不覆寫，僅更新已知舊路徑。",
         )
       )
         return;
       run(async () => {
         $("driveStatus").textContent = "正在依角色／宙獸／招式分類 Drive 目錄…";
         const report = await migratePipelineDirectories();
+        const links = await migrateManifestWikiReferences();
         $("driveStatus").textContent =
           "管線目錄分類：" +
           report.moved +
           " 已移動、" +
           report.skipped +
           " 跳過、" +
-          report.errors.length +
-          " 項錯誤";
+          (report.errors.length + links.errors.length) +
+          " 項錯誤；另有 " + links.updated + " 份 manifest 圖鑑引用已校正";
         $("settingsMessage").textContent =
-          report.errors.slice(0, 6).join("；") ||
-          "已完成角色／宙獸／招式 Drive 目錄分類。";
+          [...report.errors, ...links.errors].slice(0, 6).join("；") ||
+          "已完成角色／宙獸／招式 Drive 目錄分類與 manifest 引用校正。";
         await syncPackages({ force: true });
         await syncPipelineIndex();
       });
@@ -1570,7 +1624,7 @@
         }
         const name = window.COSMI_PIPELINE.stages[key];
         window.COSMI_PIPELINE.templates[key] = await (
-          await read("prompts/" + name + ".prompt.md")
+          await read(pipelineRoot(context || window.COSMI_FORGE.currentContext?.() || "creatures") + "/prompts/" + name + ".prompt.md")
         ).text();
         window.COSMI_FORGE.refresh();
         window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);

@@ -4074,6 +4074,10 @@
         animFiles.push({ path: rel, size: files[path].length });
       }
     }
+    // Display canonical wiki links even when an imported historical manifest has not
+    // yet been rewritten in Google Drive. Migration writes are handled separately.
+    if (manifestData && window.COSMI_WIKI?.normalizeManifest)
+      manifestData = window.COSMI_WIKI.normalizeManifest(manifestData);
     // Drive initially imports only metadata/previews; binary files are deferred.
     let descriptorData = null;
     try { descriptorData = window.COSMI_MODEL_REVIEW?.descriptorFor?.({ id: prefix.replace(/\/$/, ""), rawFiles: files }); } catch (e) {}
