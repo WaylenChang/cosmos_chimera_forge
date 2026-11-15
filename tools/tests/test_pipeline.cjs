@@ -49,8 +49,8 @@ test('Drive template loading skips the native portrait stage', async () => {
     return {text: async () => file.startsWith('00_settings/') ? '{}' : 'template'};
   }};
   await c.COSMI_PIPELINE.loadTemplates();
-  assert.ok(!requests.includes('prompts/01_portrait.prompt.md'));
-  assert.equal(requests.filter(file => file.startsWith('prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
+  assert.ok(!requests.some(file => file.endsWith('/01_portrait.prompt.md')));
+  assert.equal(requests.filter(file => file.startsWith('creatures/prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
 });
 
 test('encyclopedia prompt routes three categories to isolated Markdown paths', () => {
@@ -163,13 +163,16 @@ test('other stages ignore stale Drive templates and unrelated project context',(
   assert.doesNotMatch(review,/bestiary\.md/);
 });
 
-test('versioned Drive templates still apply, without passing their metadata to the AI',()=>{
+test('versioned Drive templates still apply, without passing their metadata to the AI',async()=>{
   const {c,nodes,ctx}=harness();
   nodes.pipelineStage.value='review_portrait';
-  c.COSMI_PIPELINE.templates.review_portrait='<!-- COSMI-PIPELINE/2:review_portrait -->\n# CUSTOM VERIFIED REVIEW\n待審：{{input_path}}';
+  c.COSMI_DRIVE={read: async file => ({text: async () => file.endsWith('/02_review_portrait.prompt.md')
+    ? '<!-- COSMI-PIPELINE/2:review_portrait -->\\n# CUSTOM VERIFIED REVIEW\\n待審：{{input_path}}'
+    : '{}'})};
+  await c.COSMI_PIPELINE.loadTemplates();
   const text=c.COSMI_PIPELINE.build(ctx);
   assert.match(text,/CUSTOM VERIFIED REVIEW/);
-  assert.doesNotMatch(text,/<!--|\{\{/);
+  assert.doesNotMatch(text,/<!--|\\{\\{/);
 });
 
 test('native portrait full and 3-round prompts do not recurse or inherit legacy storage and notes',()=>{
