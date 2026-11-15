@@ -175,7 +175,14 @@
     const entries = Object.entries(stages).filter(([key]) => !["portrait", "encyclopedia"].includes(key));
     const jobs = entries.map(async ([key, name]) => {
       try {
-        templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
+        const root = pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {});
+        const canonical = root + "/prompts/" + name + ".prompt.md";
+        try {
+          templates[key] = await (await window.COSMI_DRIVE.read(canonical)).text();
+        } catch (canonicalError) {
+          // Read-only compatibility while legacy templates are being retired.
+          templates[key] = await (await window.COSMI_DRIVE.read("prompts/" + name + ".prompt.md")).text();
+        }
       } catch (error) {
         console.warn("無法讀取管線模板：" + name, error);
       }
