@@ -51,3 +51,9 @@ Pipeline IDs must be defined centrally and independently of UI labels. Character
 - Sampled model/rig subfolders under these assets; the queried folders returned no files. A folder name alone is **not** evidence that `.glb`, `.blend`, or rig content exists.
 - Treat these as **unverified/incomplete**, not approved models. Do not move or delete their Drive IDs until a manifest, source lineage, actual deliverables, target branch, and destination collision checks are recorded. Preserve `legacy/` as read-only quarantine.
 - `pipeline.js` currently loads category-specific templates using the kind selected at `loadTemplates()` time. A later category switch can reuse cached templates from the previous kind. Add kind-keyed cache and a category-switch regression test before retiring root template fallback.
+
+## Full legacy model-directory checkpoint (2026-11-15)
+- Enumerated the immediate children of **all 15** legacy asset folders: three under `characters/02_3d/legacy/` and twelve under `creatures/02_3d/legacy/`. All 15 contain only subfolders at the immediate level; **none lists a direct-child `manifest.json`**.
+- Enumerated each asset's `models/` folder (15/15). **All 15 model directories returned zero children** and no continuation token. No `.blend` or `.glb` deliverable was found in these model folders.
+- Therefore these 15 folders cannot be treated as completed model packages or automatically migrated into `colab/` or `ai_blender/`. Retain their Drive IDs and legacy quarantine placement; do not delete or overwrite them. Inspect any remaining non-model subfolders and source records separately before deciding whether the placeholders are disposable.
+- CI is still unverified: the PR head's combined status has no entries and the queried commit returned no pull-request workflow runs. Local `git ls-remote` failed because GitHub DNS resolution was unavailable in the execution container; **do not mark tests passed**.
