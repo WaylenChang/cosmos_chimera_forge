@@ -33,18 +33,24 @@ def write(path, value):
 
 
 def encyclopedia_path(root, spec, profile):
-    subject = spec.get("subject_id") or ""
+    """Resolve only the canonical category-local wiki; never use retired roots."""
+    subject = str(spec.get("subject_id") or "")
     if not subject or any(x in subject for x in ("/", "\\", "..")):
         return ""
-    creature = str(spec.get("category") or spec.get("subject_type") or "") == "creature" or str(spec.get("task_type") or "").startswith("creature") or profile["asset_class"] != "humanoid"
-    stage = spec.get("stage") or "adult"
-    if any(x in str(stage) for x in ("/", "\\", "..")):
+    category = str(spec.get("category") or spec.get("subject_type") or "")
+    task_type = str(spec.get("task_type") or "")
+    creature = category in {"creature", "creatures"} or task_type.startswith("creature")
+    character = category in {"character", "characters"} or task_type.startswith("character")
+    if not creature and not character:
+        creature = profile["asset_class"] != "humanoid"
+    stage = str(spec.get("stage") or "adult")
+    if any(x in stage for x in ("/", "\\", "..")):
         raise ValueError("Unsafe creature stage")
-    paths = ([f"wiki/creatures/{subject}_{stage}_wiki.md",
-              f"04_encyclopedia/creatures/{subject}_wiki.md"] if creature else
-             [f"wiki/characters/{subject}_wiki.md"])
-    return next((p for p in paths if (root / p).is_file() and (root / p).read_text(encoding="utf8").strip()), "")
-
+    wiki_dir = root / "wiki"
+    names = ([f"{subject}_{stage}_wiki.md"] if creature else
+             [f"{subject}_{stage}_wiki.md", f"{subject}_wiki.md"])
+    return next((f"{root.name}/wiki/{name}" for name in names
+                 if (wiki_dir / name).is_file() and (wiki_dir / name).read_text(encoding="utf8").strip()), "")
 
 
 def write_asset_manifest(out, asset_id, spec, profile, state):
@@ -69,7 +75,7 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
                 rel = file.relative_to(out).as_posix()
                 level = "L1" if rel in {f"models/{asset_id}.glb", f"models/{asset_id}.blend"} else "L2"
                 files.append({"path": rel, "kind": "model" if file.suffix.lower() in {".glb", ".blend"} else "report", "level": level})
-    for name in ("profile.json", "typed_state.json", "agent_backend_spec.json", "material_profile.json", "bestiary.md"):
+    for name in ("profile.json", "typed_state.json", "agent_backend_spec.json", "material_profile.json"):
         if (out / name).is_file():
             files.append({"path": name, "kind": "spec", "level": "L2"})
     missing = []
@@ -83,9 +89,9 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
     result_wiki = encyclopedia_path(out.parents[2], spec, profile)
     if profile["input_mode"] == "text" and (
         category == "creature" or str(kind).startswith("creature")
-    ) and not (out / "bestiary.md").is_file() and not result_wiki:
-        missing.append({"item": "bestiary.md", "level": "L1",
-                        "reason": "Original bestiary required for text-to-3D creatures"})
+    ) and not result_wiki:
+        missing.append({"item": "wiki", "level": "L1",
+                        "reason": "Category-local stage wiki required for text-to-3D creatures"})
     result = {
         "spec": "cosmimera-art-task/1",
         "task_header": spec.get("task_header", ""),
@@ -402,10 +408,9 @@ def run(a):
     task_kind = str(spec.get("task_type") or "")
     requires_bestiary = profile["input_mode"] == "text" and (
         subject_kind == "creature" or task_kind.startswith("creature"))
-    bestiary = out / "bestiary.md"
     wiki_exists = bool(encyclopedia_path(root, spec, profile))
-    if requires_bestiary and not wiki_exists and (not bestiary.is_file() or not bestiary.read_text(encoding="utf8").strip()):
-        state["warnings"].append("Text-to-3D creature requires wiki/creatures/<subject_id>_<stage>_wiki.md or legacy bestiary.md")
+    if requires_bestiary and not wiki_exists :
+        state["warnings"].append("Text-to-3D creature requires creatures/wiki/<subject_id>_<stage>_wiki.md")
     if not a.blender or not Path(a.blender).is_file():
         state["status"] = "QA_PENDING"
         state["warnings"].append("Blender binary unavailable; geometry and export QA not run")
