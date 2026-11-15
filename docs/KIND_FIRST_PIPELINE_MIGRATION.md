@@ -4,7 +4,7 @@
 Google Drive root ID: `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`.
 Top-level subject folders: `characters`, `creatures`, `moves`.
 Shared `prompts/` contains legacy stage templates; `characters/02_3d` and `creatures/02_3d` contain `colab`, `ai_blender`, and `legacy`.
-`AGENT_QUICKSTART.md` currently describes Colab and AI Blender as mutually exclusive. This conflicts with the intended Colab + AI + Blender branch.
+`AGENT_QUICKSTART.md` already documents the two parallel 3D routes; no correction is needed there.
 
 ## Canonical structure
 All asset-specific read/write paths MUST begin with `<kind>/`, where kind is one of `characters`, `creatures`, `moves`. Under each kind, keep the existing production stage folders until the runtime and Drive have migrated together:
@@ -32,5 +32,9 @@ Pipeline IDs must be defined centrally and independently of UI labels. Character
 ## Verified correction
 `docs/drive/AGENT_QUICKSTART.md` already correctly documents the two parallel 3D routes; the earlier initial audit mistakenly described this guardrail as obsolete. The remaining migration work concerns path references, old stage template identifiers, and legacy asset inventory.
 
-## Status
-Audit specification only. No Drive assets have been moved, and runtime code has not yet been migrated. Do not treat this document as evidence of completed migration.
+## Migration progress (2026-11-15)
+- Moved the existing `01b_move_vfx.prompt.md` Drive file (ID `1CTREBY6jf__0QhpuS-FUXYVtoZ-9oXAX`) from root `prompts/` to `moves/prompts/`; verified its parent folder is `1YBKLfe6wSoxYDrBNWXLB1cBjjAAyxqeV`.
+- Copied eight shared stage templates into **each** of `characters/prompts/` and `creatures/prompts/` (16 category-local copies in total): `00_appearance`, `01_portrait`, `02_review_portrait`, `03a_colab`, `03b_blender`, `03c_portrait_after_3d`, `04_review_3d`, and `05_encyclopedia` (`*.prompt.md`). Source templates remain in root `prompts/` as compatibility references until readers are switched and verified.
+- Inspected legacy `prompts/jobs/` and all three category-specific `prompts/jobs/` folders: all four were empty at inspection time. No job data was moved.
+- **Still pending:** audit the actual runtime template readers and switch them to category-local paths; recursively inventory and migrate legacy 3D assets; resolve legacy `DIRECTORY.md`/`TRIGGERS.md`; verify category-specific copies, reference integrity, and CI. Do not retire root `prompts/` or consider PR #22 complete until these checks pass.
+
