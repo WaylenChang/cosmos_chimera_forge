@@ -132,3 +132,12 @@ Status meanings: **BLOCKED** = prerequisite or verification missing; **PENDING**
 2. Cross-check destination `colab`/`ai_blender` assets for duplicate content and identity collisions before any move.
 3. Complete Drive root documentation updates and GitHub code reference scan; preserve read-only compatibility until verified.
 4. Run tests/CI, read back Drive paths, record rollback manifest, and only then perform individually verified moves.
+
+### 2026-11-15 follow-up: complete legacy task/model folder readback
+
+- Independently re-listed **all 15/15** legacy task folders: **15/15** direct-child `manifest.json`, **15/15** direct-child `models/`. The three character tasks each have `textures/`, `rig/`, `images/`, `anims/`; all 12 creature tasks each have `build_report.json`, `motion_spec.json`, `rig_spec.json`, `textures/`, `review/`, `models/`.
+- Independently re-listed **all 15/15** `models/` folders: each contains exactly one nonzero-size `.glb` and one nonzero-size `.blend` (**30/30 observed model files**). Character GLBs: 2,173,940; 2,171,932; 2,165,208 bytes; corresponding BLENDs: 381,502; 381,486; 379,554 bytes. Creature GLBs range from 2,948,880 to 8,148,984 bytes; BLENDs from 7,582,994 to 12,820,794 bytes. These are metadata/size checks, not parse, rig, animation or visual QA.
+- **Confirmed collision risk:** `mdl-20261109-f048-1847-chr_1286_1855` and `mdl-20261109-f048-1847-chr_1286` each contain `chr_1286.glb` and `chr_1286.blend`, but their file IDs and sizes differ (GLB 2,171,932 vs 2,165,208 bytes; BLEND 381,486 vs 379,554 bytes). Preserve both as distinct assets pending provenance validation; never deduplicate by basename.
+- The 12 creature GLB/BLEND pairs cover star, moon and sun lines, each at juvenile, adolescent, adult and overload stages, based on file names; subject/stage claims still require manifest verification.
+- Attempted to fetch all 15 manifest bodies. The Drive connector returned empty inline text while exposing downloaded-file attachments, so **manifest content was not successfully parsed in this pass**. Presence is verified, contents/provenance are not; this is an explicit M01/M02 blocker. Do not infer provenance from folder/file names.
+- **M01 advanced:** complete direct-child inventory and model size census, but deep descendant integrity and manifest parsing still pending. **M02/M03 remain blocked**; no files moved/deleted and no CI executed in this pass.
