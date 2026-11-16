@@ -2016,7 +2016,7 @@
     const viewEl = $("#stage3dView");
     if (!viewEl || !viewEl.isConnected || viewEl.style.display === "none") return false;
     if (viewEl.classList.contains("stage3d-embedded")) {
-      return state.activeTab === "designed" || $("#reviewDesignedDetails")?.style.display === "block";
+      return state.activeTab === "designed" || (state.activeTab === "review" && $("#reviewDesignedDetails")?.style.display === "block");
     }
     return state.activeTab === "review" && reviewState.viewMode === "3d";
   }
@@ -5688,18 +5688,25 @@
     three.activeLinkedPkg = linkedPkg || null;
 
     const hasGlbSource = Boolean(targetPkg.glbFile || targetPkg.glbUrl);
-    if (three.loadedPkgId === targetPkg.id && three.modelGroup && three.loadedHasGlb === hasGlbSource) {
-      resize3D();
-      populateStage3dControls(targetPkg);
-      three.onDesignedSync?.(targetPkg, linkedPkg);
-      if (three.renderer && three.scene && three.camera) three.renderer.render(three.scene, three.camera);
-      return;
+    if (three.loadedPkgId === targetPkg.id && three.loadedHasGlb === hasGlbSource) {
+      if (three.modelGroup) {
+        resize3D();
+        populateStage3dControls(targetPkg);
+        three.onDesignedSync?.(targetPkg, linkedPkg);
+        if (three.renderer && three.scene && three.camera) three.renderer.render(three.scene, three.camera);
+        return;
+      }
+      if (three.loadingPkgId === targetPkg.id) {
+        resize3D();
+        return;
+      }
     }
 
     const loadSeq = (three.loadSeq = (three.loadSeq || 0) + 1);
     clearThreeModel(three);
     three.loadedPkgId = targetPkg.id;
     three.loadedHasGlb = hasGlbSource;
+    three.loadingPkgId = targetPkg.id;
 
     $("#stage3dClipBadge").textContent = "🎬 正在載入 3D 模型與動作...";
     $("#stage3dInfoBadge").textContent = "";
@@ -5710,12 +5717,15 @@
         const blob = (targetPkg.glbFile.id && window.COSMI_DRIVE.readById)
           ? await window.COSMI_DRIVE.readById(targetPkg.glbFile.id)
           : await window.COSMI_DRIVE.read(targetPkg.drivePath + "/" + targetPkg.glbFile.path);
-        // A different package may have been selected while the network request was running.
-        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
         glbBuffer = await blob.arrayBuffer();
-        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
         targetPkg.glbFile = {...targetPkg.glbFile, buffer:glbBuffer, url:URL.createObjectURL(blob), deferred:false};
+        // A different package may have been selected while the network request was running.
+        if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) {
+          if (three.loadSeq === loadSeq) three.loadingPkgId = null;
+          return;
+        }
       } catch (error) {
+        if (three.loadSeq === loadSeq) three.loadingPkgId = null;
         targetPkg.glbLoadError = true;
         $("#stage3dClipBadge").textContent = "GLB 下載失敗："+error.message;
         return;
@@ -5735,8 +5745,12 @@
     three.activeDescriptor = descriptor;
     if (glbBuffer && descriptor?.model?.sha256 && crypto?.subtle) {
       const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", glbBuffer)), x => x.toString(16).padStart(2, "0")).join("");
-      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
+      if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) {
+        if (three.loadSeq === loadSeq) three.loadingPkgId = null;
+        return;
+      }
       if (digest !== descriptor.model.sha256) {
+        three.loadingPkgId = null;
         targetPkg.glbLoadError = true;
         $("#stage3dClipBadge").textContent = "模型 SHA256 與驗收描述檔不符，請重新同步資產";
         $("#stage3dInfoBadge").textContent = "";
@@ -5747,6 +5761,7 @@
     const onModelLoaded = (model, animations) => {
       if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) return;
       clearThreeModel(three);
+      three.loadingPkgId = null;
       targetPkg.glbLoadError = false;
       three.modelGroup = model;
       three.scene.add(model);
@@ -5844,6 +5859,7 @@
     }
     const glbUrl = targetPkg.glbUrl || targetPkg.glbFile?.url || "";
     const reportGlbLoadError = (prefixMsg, err) => {
+      if (three.loadSeq === loadSeq) three.loadingPkgId = null;
       const detail = err?.message || (typeof err === "string" ? err : "");
       if (targetPkg.driveFolderId) {
         targetPkg.glbLoadError = true;
@@ -7263,7 +7279,7 @@
       delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
         produced_by: "", files: [], missing: []}}),
-    refresh: () => { renderAll(); renderReviewView(); if (state.activeTab === "designed") renderDesignedDesk(); },
+    refresh: () => { renderAll(); if (state.activeTab === "review") renderReviewView(); if (state.activeTab === "designed") renderDesignedDesk(); },
     setPortraitRound: round => { state.currentRound = round; renderOutput(); },
     activePackage: getActivePkg,
     packageBlob: pkg => createZipBlob(pkg.rawFiles),
