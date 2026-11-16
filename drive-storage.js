@@ -1810,10 +1810,10 @@
       run(async () => {
         const path = $("drivePromptPath").value.trim();
         if (
-          !/^(?:(?:characters|creatures|moves)\/)?prompts\/.*\.md$/.test(path)
+          !/^(?:(?:characters|creatures|moves)\/(?:prompts\/.*|[^/]+\/[^/]+)|prompts\/.*)\.md$/.test(path)
         )
           throw Error(
-            "請輸入 prompts/ 或 <類別>/prompts/ 下的 Markdown 相對路徑",
+            "請輸入 <類別>/<id>/ 或 <類別>/prompts/ 下的 Markdown 相對路徑",
           );
         window.COSMI_FORGE.showPrompt(await (await read(path)).text());
         $("driveStatus").textContent = "已讀取 " + path;

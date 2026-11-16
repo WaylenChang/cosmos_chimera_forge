@@ -6850,8 +6850,15 @@
       const portrait = stage === "portrait" && window.COSMI_PIPELINE?.supports(b.ctx);
       const root = window.COSMI_DRIVE?.pipelineRoot?.(b.ctx)
         || (b.ctx.task?.id === "move-vfx" ? "moves" : b.ctx.task?.id?.startsWith("character") ? "characters" : "creatures");
+      const subject = window.COSMI_DRIVE?.cleanSubjectId?.(root, b.ctx.subjectId || b.ctx.taskId) || b.ctx.subjectId || b.ctx.taskId;
+      const stem = window.COSMI_DRIVE?.assetStem?.({
+        kind: root,
+        id: subject,
+        stage: b.ctx.opts?.stage || b.ctx.concept?.stage,
+        step: stage,
+      }) || (subject + "_" + stage);
       return {
-        path: root + "/prompts/jobs/" + b.ctx.taskId + "." + stage + ".prompt.md",
+        path: root + "/" + subject + "/" + stem + "_prompt.md",
         text: portrait ? b.text : ($("#prompt")?.value || b.text)
       };
     },

@@ -37,11 +37,13 @@
   const isHighComplexityCharacterModel = pkg => isCharacterModelPkg(pkg) && (
     pkg?.manifest?.pipeline === "colab" ||
     String(pkg?.drivePath || "").includes("/02_3d/colab/") ||
+    String(pkg?.id || "").includes("_03a_colab") ||
     /Anime3D/i.test(String(pkg?.manifest?.produced_by || "")) ||
     /^mdl-2026111[34]-/i.test(String(pkg?.id || ""))
   );
   const isSimpleCharacterModel = pkg => isCharacterModelPkg(pkg) && !isHighComplexityCharacterModel(pkg) && (
     /\/02_3d\/(?:ai_blender|legacy)\//i.test(String(pkg?.drivePath || "")) ||
+    String(pkg?.id || "").includes("_03b_blender") ||
     /^mdl-20261109-/i.test(String(pkg?.id || "")) ||
     /Gemini Argon/i.test(String(pkg?.manifest?.produced_by || "")) ||
     pkg?.manifest?.pipeline === "ai_blender"
