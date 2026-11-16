@@ -1214,6 +1214,14 @@
     const url = image("main") || image("front") || forStage[0]?.url || "";
     return { primaryUrl: url, fallbackUrl: url, turnaroundUrl: image("turnaround"), frontUrl: image("front") };
   }
+  function getCreatureStage3dBundle(lineId, stage) {
+    const matches = sortPackagesByPriority(getReviewMatches(lineId, stage));
+    const pack2d = matches.find(p => !is3dType(p.type)) || null;
+    const mdlPack = matches.find(p => is3dType(p.type) && (p.glbFile || p.animSpec || p.images?.length))
+      || matches.find(p => is3dType(p.type))
+      || null;
+    return { pack2d, mdlPack };
+  }
   function getCreatureOverviewAssetUrls(lineId) {
     const images = linkedAssetPackages(lineId).flatMap(p => p.images || []);
     const lineupUrl = imageForView(images, "lineup")?.url || "";
@@ -1297,7 +1305,9 @@
     pipelineShowAll: false,
     selectedId: null, // line_id or char_id
     selectedType: "creature", // "creature" | "character"
-    mode: "detail" // "detail" | "cards"
+    mode: "detail", // "detail" | "cards"
+    creature3dStage: {}, // line_id -> "juvenile" | "adolescent" | "adult" | "overload"
+    _switchCreature3dStage: null
   };
 
   const PIPELINE_JOBS_KEY = "cosmimera.pipeline-jobs.v1";
@@ -1956,7 +1966,13 @@
                 onclick: () => useDesignedCharacter(subjectId, "character-concept")
               }, "🎨 鍛造立繪") : null),
             pt.model3d.pkg
-              ? el("button", { class: "btn mini ghost", type: "button", onclick: () => jumpToReview(pt.model3d.pkg.id, pt.stage) }, "🔍 檢視 3D")
+              ? el("button", { class: "btn mini ghost", type: "button", onclick: () => {
+                  if (isCreature && pt.stage && typeof designedState._switchCreature3dStage === "function" && designedState.selectedId === subjectId && designedState.selectedType === "creature") {
+                    designedState._switchCreature3dStage(subjectId, pt.stage);
+                    return;
+                  }
+                  jumpToReview(pt.model3d.pkg.id, pt.stage);
+                } }, "🔍 檢視 3D")
               : el("button", {
                 class: "btn mini ghost", type: "button",
                 onclick: () => isCreature ? useDesigned(subjectId, "creature-model-rig", pt.stage) : useDesignedCharacter(subjectId, "character-model-rig")
@@ -2070,6 +2086,7 @@
     if (!headerEl || !bodyEl) return;
 
     restoreStage3dView();
+    designedState._switchCreature3dStage = null;
     headerEl.replaceChildren();
     bodyEl.replaceChildren();
 
@@ -2408,6 +2425,105 @@
       );
       bodyEl.append(toolCard);
 
+      // Section 0: Interactive 3D Showcase with Stage Switcher (default: adult)
+      const stages = d.concept?.locked?.stages || [];
+      const stageOrder = STAGE_KEYS.filter(k => stages.some(s => s.stage === k));
+      const availableStages = stageOrder.length ? stageOrder : STAGE_KEYS;
+      const default3dStage = availableStages.includes("adult") ? "adult" : availableStages[0];
+      let active3dStage = designedState.creature3dStage[d.line_id] || default3dStage;
+      if (!availableStages.includes(active3dStage)) active3dStage = default3dStage;
+      designedState.creature3dStage[d.line_id] = active3dStage;
+
+      const stageSeg = el("div", { class: "seg", id: "creature3dStageSeg", role: "tablist" });
+      const glbBadge = el("span", { class: "f-badge warn" }, "預覽骨架");
+      const stageBadge = el("span", { class: "f-badge ok" }, STAGE_ZH[active3dStage] || active3dStage);
+      const stage3dHost = el("div", {
+        class: "designed-3d-stage-host",
+        style: "width:100%;margin-bottom:10px;"
+      });
+      const clipBarHost = el("div", {});
+      const glbPathVal = el("span", { style: "color:var(--ok);font-family:monospace" }, "—");
+      const rigVal = el("span", { style: "color:var(--ok)" }, "宙獸骨架");
+      const animCountVal = el("span", { style: "color:var(--ok)" }, "0 支完整動態");
+
+      const creature3dCard = el("div", { class: "designed-detail-card", style: "margin-bottom:12px" },
+        el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap" },
+          el("div", { style: "display:flex;align-items:center;gap:8px;flex-wrap:wrap" },
+            el("span", { style: "font-weight:600;font-size:12.5px;color:#a9d9df" }, "🧊 3D 成果視圖與模型"),
+            stageSeg
+          ),
+          el("div", { style: "display:flex;gap:4px;align-items:center" },
+            glbBadge,
+            stageBadge
+          )
+        ),
+        stage3dHost,
+        clipBarHost,
+        el("div", { style: "display:flex;flex-direction:column;gap:6px;font-size:11.5px;" },
+          el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+            el("span", { class: "muted" }, "3D 模型 (GLB)"),
+            glbPathVal
+          ),
+          el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+            el("span", { class: "muted" }, "骨架規格 (Rig)"),
+            rigVal
+          ),
+          el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
+            el("span", { class: "muted" }, "動作動畫 (Anim)"),
+            animCountVal
+          )
+        )
+      );
+
+      const stageButtons = new Map();
+      const applyCreature3dStage = (stKey, { scroll = false } = {}) => {
+        if (!availableStages.includes(stKey)) return;
+        active3dStage = stKey;
+        designedState.creature3dStage[d.line_id] = stKey;
+        for (const [k, btn] of stageButtons.entries()) {
+          if (k === stKey) btn.classList.add("on");
+          else btn.classList.remove("on");
+        }
+        const stObj = stages.find(s => s.stage === stKey) || null;
+        const bundle = getCreatureStage3dBundle(d.line_id, stKey);
+        const target3dPkg = bundle.mdlPack || {
+          id: stObj?.creature_id || `${d.line_id}_${stKey}`,
+          type: "creature-model-rig",
+          subjectId: d.line_id,
+          stage: stKey,
+          concept: stObj || d
+        };
+        glbBadge.className = "f-badge " + (bundle.mdlPack?.glbFile ? "ok" : "warn");
+        glbBadge.textContent = bundle.mdlPack?.glbFile ? "GLB 已載入" : "預覽骨架";
+        stageBadge.textContent = `${STAGE_ZH[stKey] || stKey}${stObj?.size_class ? ` (${stObj.size_class})` : ""}`;
+        glbPathVal.textContent = bundle.mdlPack?.glbFile?.path || `${stObj?.creature_id || `${d.line_id}_${stKey}`}.glb`;
+        rigVal.textContent = bundle.mdlPack?.animSpec?.rig || "宙獸骨架";
+        const clips = getPackageClips(target3dPkg, bundle.pack2d);
+        animCountVal.textContent = `${clips.length} 支完整動態`;
+        const clipBar = buildDesigned3dClipBar(target3dPkg, bundle.pack2d);
+        clipBarHost.replaceChildren(...(clipBar ? [clipBar] : []));
+        mountDesigned3dViewer(stage3dHost, target3dPkg, bundle.pack2d);
+        if (scroll) creature3dCard.scrollIntoView?.({ behavior: "smooth", block: "center" });
+      };
+
+      availableStages.forEach(stKey => {
+        const btn = el("button", {
+          class: "segb" + (stKey === active3dStage ? " on" : ""),
+          type: "button",
+          "data-stage": stKey,
+          onclick: () => applyCreature3dStage(stKey)
+        }, STAGE_ZH[stKey] || stKey);
+        stageButtons.set(stKey, btn);
+        stageSeg.append(btn);
+      });
+
+      designedState._switchCreature3dStage = (lineId, stKey) => {
+        if (lineId === d.line_id) applyCreature3dStage(stKey, { scroll: true });
+      };
+
+      bodyEl.append(creature3dCard);
+      applyCreature3dStage(active3dStage);
+
       // Section: Overview Banner (Lineup & Scale from cosmos_chimera)
       const ovData = getCreatureOverviewAssetUrls(d.line_id);
       const ovCard = el("div", {
@@ -2478,7 +2594,6 @@
       bodyEl.append(specCard);
 
       // Section 2: Four Stages
-      const stages = d.concept?.locked?.stages || [];
       const stageCardSection = el("div", { class: "designed-detail-card" },
         el("h3", { style: "margin:0 0 10px;font-size:13px;color:var(--text);display:flex;align-items:center;justify-content:space-between" },
           el("span", {}, `🐾 四階型態演化檢驗 (${stages.length} 階)`),
@@ -5140,7 +5255,10 @@
     railList.replaceChildren();
     for (const entry of entries) {
       const packages = entry.visiblePackages;
-      const representative = sortPackagesByPriority(packages)[0] || null;
+      const sortedPkgs = sortPackagesByPriority(packages);
+      const representative = (sortedPkgs[0] && sortedPkgs.find(p => p.stage === "adult" && packageStatusRank(p) === packageStatusRank(sortedPkgs[0])))
+        || sortedPkgs[0]
+        || null;
       const selected = design?.key === entry.key ||
         (!design && pkg && packages.some(p => p.id === pkg.id));
       const image = representative?.images?.[0]?.url ||
@@ -5236,7 +5354,11 @@
 
     // 型態切換按鈕組 (按鍵切換型態：幼年、少年、成年、超載)
     let stageSwitchSeg = $("#stageSwitchSeg");
-    const siblingStages = reviewState.packages.filter(p => p.groupKey === pkg.groupKey && p.type === pkg.type && p.stage);
+    const siblingStages = reviewState.packages.filter(p =>
+      p.stage &&
+      (p.groupKey === pkg.groupKey || (pkg.subjectId && p.subjectId === pkg.subjectId)) &&
+      (p.type === pkg.type || (is3dType(pkg.type) && is3dType(p.type)))
+    );
     if (siblingStages.length > 0 || (pkg.type === "creature-concept" || pkg.id.startsWith("cr-"))) {
       if (!stageSwitchSeg) {
         stageSwitchSeg = el("div", { class: "seg stage-switch-seg", id: "stageSwitchSeg" });

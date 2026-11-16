@@ -224,3 +224,64 @@ test('creature-concept and character-concept mark front and turnaround as L2 img
   assert.match(forgeSrc, /front\.png`, kind: "front", level: "L2"/);
   assert.match(forgeSrc, /turnaround\.png`, kind: "turnaround", level: "L2"/);
 });
+
+test('reviewDesignedDetails embeds creature 3D viewer defaulting to adult and switches stages inline without popup', async () => {
+  const { c, nodes } = createHarness();
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const creature = c.DESIGNED[0];
+
+  await f.loadAssetFiles({
+    'mdl-cr-juv/manifest.json': encode({
+      task_id: 'mdl-cr-juv',
+      task_type: 'creature-model-rig',
+      subject_id: creature.line_id,
+      stage: 'juvenile',
+      files: [{ path: 'models/juv.glb', kind: 'model', level: 'L1' }]
+    }),
+    'mdl-cr-juv/models/juv.glb': new Uint8Array([1, 2, 3])
+  }, { name: 'mdl-cr-juv' }, { silent: true });
+
+  await f.loadAssetFiles({
+    'mdl-cr-adult/manifest.json': encode({
+      task_id: 'mdl-cr-adult',
+      task_type: 'creature-model-rig',
+      subject_id: creature.line_id,
+      stage: 'adult',
+      files: [{ path: 'models/adult.glb', kind: 'model', level: 'L1' }]
+    }),
+    'mdl-cr-adult/models/adult.glb': new Uint8Array([4, 5, 6])
+  }, { name: 'mdl-cr-adult' }, { silent: true });
+
+  await f.setViewMode('review');
+  const creatureRow = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
+  assert.ok(creatureRow, 'creature row should appear in review rail');
+  creatureRow.listeners.click[0]();
+
+  assert.equal(nodes.reviewDesignedDetails.style.display, 'block');
+  assert.equal(nodes.stage3dView.classList.contains('stage3d-embedded'), true);
+  assert.equal(nodes.stage3dView.style.display, 'block');
+
+  const findAll = (rootNode, pred, acc = []) => {
+    if (!rootNode || typeof rootNode !== 'object') return acc;
+    if (pred(rootNode)) acc.push(rootNode);
+    for (const ch of (rootNode.children || [])) findAll(ch, pred, acc);
+    return acc;
+  };
+
+  const stageBtns = findAll(nodes.designedDetailView, n => n.tagName === 'BUTTON' && n['data-stage']);
+  assert.equal(stageBtns.length, 4, 'all 4 stage buttons should be rendered');
+  const adultBtn = stageBtns.find(b => b['data-stage'] === 'adult');
+  const juvBtn = stageBtns.find(b => b['data-stage'] === 'juvenile');
+  assert.equal(adultBtn.classList.contains('on'), true, 'adult stage must be active by default');
+  assert.equal(juvBtn.classList.contains('on'), false);
+  assert.match(collectText(nodes.designedDetailView), /models\/adult\.glb/);
+
+  // Switch to juvenile inline
+  juvBtn.listeners.click[0]();
+  assert.equal(nodes.reviewDesignedDetails.style.display, 'block', 'must stay inline without popup or leaving reviewDesignedDetails');
+  assert.equal(nodes.stage3dView.classList.contains('stage3d-embedded'), true);
+  assert.equal(juvBtn.classList.contains('on'), true, 'juvenile stage should become active');
+  assert.equal(adultBtn.classList.contains('on'), false);
+  assert.match(collectText(nodes.designedDetailView), /models\/juv\.glb/);
+});
