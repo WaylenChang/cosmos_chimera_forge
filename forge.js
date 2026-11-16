@@ -2003,6 +2003,11 @@
     const view3d = $("#stage3dView");
     const stage = $("#stageViewport");
     const compareView = $("#stageCompareView");
+    if (reviewState.three.mountRaf && typeof cancelAnimationFrame === "function") {
+      cancelAnimationFrame(reviewState.three.mountRaf);
+    }
+    reviewState.three.mountRaf = 0;
+    reviewState.three.mountSeq = (reviewState.three.mountSeq || 0) + 1;
     if (!view3d || !stage) return;
     view3d.classList.remove("stage3d-embedded");
     if (view3d.parentElement !== stage) {
@@ -2024,15 +2029,21 @@
   function mountDesigned3dViewer(host, pkg, linkedPkg, onLoaded) {
     const view3d = $("#stage3dView");
     if (!view3d || !host) return;
+    if (reviewState.three.mountRaf && typeof cancelAnimationFrame === "function") {
+      cancelAnimationFrame(reviewState.three.mountRaf);
+    }
+    const seq = (reviewState.three.mountSeq = (reviewState.three.mountSeq || 0) + 1);
     reviewState.three.onDesignedSync = typeof onLoaded === "function" ? onLoaded : null;
     view3d.classList.add("stage3d-embedded");
     view3d.style.display = "block";
     host.append(view3d);
     const run = () => {
+      reviewState.three.mountRaf = 0;
+      if (reviewState.three.mountSeq !== seq || view3d.parentElement !== host || !isStage3dActive()) return;
       resize3D();
       loadModelForPackage(pkg, linkedPkg);
     };
-    if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);
+    if (typeof requestAnimationFrame === "function") reviewState.three.mountRaf = requestAnimationFrame(run);
     else run();
   }
 
@@ -4138,7 +4149,7 @@
     }
 
     $("#rec").textContent = task().platform === "gemini" ? "建議：Gemini Argon" : "建議：ChatGPT";
-    renderTasks(); renderFlowStageInventory(); if (!$("#concept")?.hidden) renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); renderDesignedDesk(); updateFavButton();
+    renderTasks(); renderFlowStageInventory(); if (!$("#concept")?.hidden) renderConcepts(); renderOptions(); renderForge3dModeTabs(); renderForgeStageTabs(); renderOutput(); renderHistory(); renderFavorites(); if (state.activeTab === "designed") renderDesignedDesk(); updateFavButton();
     save();
   }
 
@@ -5688,7 +5699,8 @@
     three.activeLinkedPkg = linkedPkg || null;
 
     const hasGlbSource = Boolean(targetPkg.glbFile || targetPkg.glbUrl);
-    if (three.loadedPkgId === targetPkg.id && three.loadedHasGlb === hasGlbSource) {
+    const glbKey = targetPkg.glbUrl || (targetPkg.glbFile ? `${targetPkg.glbFile.id || targetPkg.glbFile.path || ""}:${targetPkg.glbFile.modifiedTime || ""}` : "");
+    if (three.loadedPkgId === targetPkg.id && three.loadedHasGlb === hasGlbSource && three.loadedGlbKey === glbKey) {
       if (three.modelGroup) {
         resize3D();
         populateStage3dControls(targetPkg);
@@ -5706,6 +5718,7 @@
     clearThreeModel(three);
     three.loadedPkgId = targetPkg.id;
     three.loadedHasGlb = hasGlbSource;
+    three.loadedGlbKey = glbKey;
     three.loadingPkgId = targetPkg.id;
 
     $("#stage3dClipBadge").textContent = "🎬 正在載入 3D 模型與動作...";
@@ -5883,6 +5896,10 @@
           } catch (e) {
             console.error("3D model viewer setup error:", e);
             reportGlbLoadError("3D 視圖初始化失敗", e);
+          } finally {
+            if (three.loadSeq === loadSeq && three.loadingPkgId === targetPkg.id && !three.modelGroup) {
+              three.loadingPkgId = null;
+            }
           }
         };
         if (glbBuffer) {
@@ -7279,7 +7296,7 @@
       delivery: {spec: "cosmimera-art-task/1", task_header: lastBuild.ctx.header, task_id: lastBuild.ctx.taskId,
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
         produced_by: "", files: [], missing: []}}),
-    refresh: () => { renderAll(); if (state.activeTab === "review") renderReviewView(); if (state.activeTab === "designed") renderDesignedDesk(); },
+    refresh: () => { renderAll(); if (state.activeTab === "review") renderReviewView(); },
     setPortraitRound: round => { state.currentRound = round; renderOutput(); },
     activePackage: getActivePkg,
     packageBlob: pkg => createZipBlob(pkg.rawFiles),

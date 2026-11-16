@@ -316,6 +316,12 @@ test('GLB animations populate designed 3D clip bar and count after model loads',
     Clock: class { getDelta() { return 0.016; } },
     Box3: class { constructor() { this.min = vec3(0, 0, 0); } setFromObject() { return this; } isEmpty() { return false; } getSize() { return vec3(1, 1.5, 1); } getCenter() { return vec3(0, 0.75, 0); } },
     Vector3: class { constructor(x = 0, y = 0, z = 0) { return vec3(x, y, z); } },
+    Group: class { constructor() { this.position = vec3(); this.children = []; } add(...xs) { this.children.push(...xs); } traverse() {} },
+    Mesh: class { constructor() { this.position = vec3(); this.rotation = vec3(); this.scale = vec3(1, 1, 1); } },
+    BoxGeometry: class {}, SphereGeometry: class {}, CylinderGeometry: class {}, ConeGeometry: class {},
+    MeshStandardMaterial: class {},
+    VectorKeyframeTrack: class {},
+    AnimationClip: class { constructor(name, duration) { this.name = name; this.duration = duration || 1; } },
     SkeletonHelper: class {},
     AnimationMixer: class {
       stopAllAction() {}
@@ -343,6 +349,13 @@ test('GLB animations populate designed 3D clip bar and count after model loads',
     }
   };
   nodes.stage3dView.append(nodes.stage3dCanvas);
+  c.COSMI_WIKI = { describe: () => ({ path: 'creatures/wiki/test.md' }) };
+  c.COSMI_DRIVE = { packageDir: () => 'creatures/01_portraits' };
+  for (const id of ['seed', 'rec', 'tasks', 'options', 'prompt', 'copy', 'download', 'header', 'chars', 'deliver', 'history', 'favorites', 'favBtn', 'concept', 'outStats', 'forge3dModeTabs', 'forgeStageTabs']) {
+    nodes[id] = c.document.createElement('div');
+    nodes[id].id = id;
+    if (id === 'concept') nodes[id].hidden = true;
+  }
   const rafQueue = [];
   c.requestAnimationFrame = fn => { rafQueue.push(fn); return rafQueue.length; };
 
@@ -363,4 +376,110 @@ test('GLB animations populate designed 3D clip bar and count after model loads',
   assert.match(detailText, /GLB 已載入/);
   assert.match(detailText, /2 支完整動態/);
   assert.match(detailText, /cr_idle|待機/);
+});
+
+test('Drive refresh during active 3D review keeps stage3dView in stageViewport without designed rAF clobbering', async () => {
+  const { c, nodes } = createHarness();
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const charId = c.DESIGNED_CHARACTERS[0].id;
+  const creature = c.DESIGNED[0];
+
+  const vec3 = (x = 0, y = 0, z = 0) => ({ x, y, z, set(nx, ny, nz) { this.x = nx; this.y = ny; this.z = nz; } });
+  const parsedModels = [];
+  c.THREE = {
+    Scene: class { add() {} remove() {} },
+    PerspectiveCamera: class { constructor() { this.position = vec3(); this.fov = 45; this.aspect = 1; } updateProjectionMatrix() {} },
+    WebGLRenderer: class { constructor() { this.domElement = nodes.stage3dCanvas; } setSize() {} setPixelRatio() {} render() {} },
+    OrbitControls: class { constructor() { this.target = vec3(); } update() {} },
+    AmbientLight: class {},
+    HemisphereLight: class {},
+    DirectionalLight: class { constructor() { this.position = vec3(); } },
+    GridHelper: class { constructor() { this.position = vec3(); } },
+    Clock: class { getDelta() { return 0.016; } },
+    Box3: class { constructor() { this.min = vec3(0, 0, 0); } setFromObject() { return this; } isEmpty() { return false; } getSize() { return vec3(1, 1.5, 1); } getCenter() { return vec3(0, 0.75, 0); } },
+    Vector3: class { constructor(x = 0, y = 0, z = 0) { return vec3(x, y, z); } },
+    Group: class { constructor() { this.position = vec3(); this.children = []; } add(...xs) { this.children.push(...xs); } traverse() {} },
+    Mesh: class { constructor() { this.position = vec3(); this.rotation = vec3(); this.scale = vec3(1, 1, 1); } },
+    BoxGeometry: class {}, SphereGeometry: class {}, CylinderGeometry: class {}, ConeGeometry: class {},
+    MeshStandardMaterial: class {},
+    VectorKeyframeTrack: class {},
+    AnimationClip: class { constructor(name, duration) { this.name = name; this.duration = duration || 1; } },
+    SkeletonHelper: class {},
+    AnimationMixer: class {
+      stopAllAction() {}
+      uncacheRoot() {}
+      update() {}
+      clipAction(clip) {
+        return {
+          setLoop() {}, reset() {}, play() {}, setEffectiveTimeScale() {}, setEffectiveWeight() {},
+          getClip() { return clip; }, time: 0
+        };
+      }
+    },
+    LoopRepeat: 2201,
+    LoopOnce: 2200,
+    GLTFLoader: class {
+      parse(buf, _path, onLoad) {
+        parsedModels.push(new Uint8Array(buf)[4]);
+        onLoad({
+          scene: { position: vec3(), traverse() {} },
+          animations: [{ name: 'chr_idle', duration: 1.0 }]
+        });
+      }
+    }
+  };
+  nodes.stage3dView.append(nodes.stage3dCanvas);
+  c.COSMI_WIKI = { describe: () => ({ path: 'creatures/wiki/test.md' }) };
+  c.COSMI_DRIVE = { packageDir: () => 'creatures/01_portraits' };
+  for (const id of ['seed', 'rec', 'tasks', 'options', 'prompt', 'copy', 'download', 'header', 'chars', 'deliver', 'history', 'favorites', 'favBtn', 'concept', 'outStats', 'forge3dModeTabs', 'forgeStageTabs']) {
+    nodes[id] = c.document.createElement('div');
+    nodes[id].id = id;
+    if (id === 'concept') nodes[id].hidden = true;
+  }
+  const rafQueue = [];
+  c.requestAnimationFrame = fn => { rafQueue.push(fn); return rafQueue.length; };
+  c.cancelAnimationFrame = id => { if (rafQueue[id - 1]) rafQueue[id - 1] = () => {}; };
+
+  // First select a designed creature so designedState.selectedId is populated.
+  await f.setViewMode('designed');
+  const designedRow = nodes.designedRailList.children.find(r => collectText(r).includes(creature.line_id));
+  if (designedRow?.listeners?.click?.[0]) designedRow.listeners.click[0]();
+  rafQueue.splice(0, rafQueue.length).forEach(fn => fn());
+
+  // Load a Drive-backed 3D character package and open it in the Review 3D stage.
+  const pkg = await f.loadAssetFiles({
+    'mdl-chr/manifest.json': encode({ task_id: 'mdl-chr', task_type: 'character-model-rig', subject_id: charId, files: [{ path: 'models/chr.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-chr/models/chr.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 11, 0, 0, 0])
+  }, { name: 'mdl-chr' }, { silent: true });
+  pkg.driveFolderId = 'folder-chr';
+  pkg.drivePath = 'characters/02_3d/colab/mdl-chr';
+  pkg.glbFile = { path: 'models/chr.glb', id: 'glb-v1', modifiedTime: '2026-11-16T00:00:00Z', buffer: new Uint8Array([0x67, 0x6c, 0x54, 0x46, 11, 0, 0, 0]).buffer, deferred: false };
+
+  f.openReviewPackage(pkg);
+  assert.equal(nodes.stage3dView.parentElement, nodes.stageViewport);
+  assert.equal(nodes.stage3dView.classList.contains('stage3d-embedded'), false);
+  assert.equal(nodes.stage3dView.style.display, 'block');
+  assert.deepEqual(parsedModels.slice(-1), [11]);
+
+  // Simulate Drive sync calling refresh() while Review 3D stage is active.
+  f.refresh();
+  for (const fn of rafQueue.splice(0, rafQueue.length)) await fn();
+
+  assert.equal(nodes.stage3dView.parentElement, nodes.stageViewport, 'refresh() must not move stage3dView out of stageViewport');
+  assert.equal(nodes.stage3dView.classList.contains('stage3d-embedded'), false);
+  assert.equal(nodes.stage3dView.style.display, 'block');
+  assert.match(nodes.stage3dClipBadge.textContent, /chr_idle/, 'Review 3D model must not be overwritten by Designed tab rAF');
+
+  // Simulate updated GLB arriving from Drive sync with new file id/modifiedTime.
+  const updatedPkg = await f.loadAssetFiles({
+    'mdl-chr/manifest.json': encode({ task_id: 'mdl-chr', task_type: 'character-model-rig', subject_id: charId, files: [{ path: 'models/chr.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-chr/models/chr.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 22, 0, 0, 0])
+  }, { name: 'mdl-chr' }, { silent: true });
+  updatedPkg.driveFolderId = 'folder-chr';
+  updatedPkg.drivePath = 'characters/02_3d/colab/mdl-chr';
+  updatedPkg.glbFile = { path: 'models/chr.glb', id: 'glb-v2', modifiedTime: '2026-11-16T01:00:00Z', buffer: new Uint8Array([0x67, 0x6c, 0x54, 0x46, 22, 0, 0, 0]).buffer, deferred: false };
+
+  f.refresh();
+  assert.deepEqual(parsedModels.slice(-1), [22], 'updated Drive GLB must reload instead of keeping stale model');
 });

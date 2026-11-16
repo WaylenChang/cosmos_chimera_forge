@@ -439,7 +439,7 @@
           files.find((f) => /^models\/.*\.glb$/i.test(f.path)) ||
           files.find((f) => /\.glb$/i.test(f.path));
         if (glb && !pkg.glbFile)
-          pkg.glbFile = { path: glb.path, id: glb.id, deferred: true };
+          pkg.glbFile = { path: glb.path, id: glb.id, modifiedTime: glb.modifiedTime || "", deferred: true };
         if (reviewRecord) {
           pkg.status = reviewRecord.status;
           pkg.sourcePack = reviewRecord.source_pack;
@@ -455,8 +455,8 @@
       status(
         cachedRecords.length ? "正在顯示本機快取…" : "正在取得 Drive 資產清單…",
       );
-      window.COSMI_FORGE.clearDrivePackages?.();
       if (cachedRecords.length) {
+        window.COSMI_FORGE.clearDrivePackages?.();
         for (const item of cachedRecords) {
           try {
             await importPackage(
@@ -510,6 +510,13 @@
       const entries = groups.flat(),
         reviewIndex = await reviewIndexPromise;
       const currentFolders = new Set(entries.map((item) => item.entry.id));
+      if (!cachedRecords.length && window.COSMI_FORGE.clearDrivePackages && window.COSMI_FORGE.packages && window.COSMI_FORGE.removePackage) {
+        for (const p of window.COSMI_FORGE.packages()) {
+          if (p.driveFolderId && !currentFolders.has(p.driveFolderId)) {
+            window.COSMI_FORGE.removePackage(p.id);
+          }
+        }
+      }
       // Folder removals are not safely observable from local cache; remove any missing folder.
       for (const item of cachedRecords.filter(
         (record) => !currentFolders.has(record.entry.id),
