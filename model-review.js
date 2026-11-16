@@ -162,18 +162,33 @@
       .sort((a, b) => a.split("/").length - b.split("/").length || a.localeCompare(b))[0] || "";
   }
 
+  function matchGlbCandidate(candidates, expectedPath) {
+    const exact = candidates.find(f => f.path === expectedPath);
+    if (exact) return exact;
+    // Migrated 3-level Drive folders flatten nested manifest paths (e.g. models/foo.glb -> <stem>.glb).
+    if (expectedPath.includes("/") && candidates.length && candidates.every(f => !f.path.includes("/"))) {
+      const base = expectedPath.split("/").pop();
+      const byName = candidates.find(f => f.path === base);
+      if (byName) return byName;
+      if (/^(?:models|rig|source)\//i.test(expectedPath)) {
+        return candidates.slice().sort((a, b) => a.path.length - b.path.length || a.path.localeCompare(b.path))[0];
+      }
+    }
+    return null;
+  }
+
   function selectModelFile(files, manifest = {}, descriptor = null) {
     const candidates = files.filter(f => /\.glb$/i.test(f.path));
     const declared = descriptor?.model?.path;
     if (declared) {
       relative(declared);
-      const match = candidates.find(f => f.path === declared);
+      const match = matchGlbCandidate(candidates, declared);
       if (!match) throw Error("驗收描述檔指定的最終 GLB 不存在：" + declared);
       return match;
     }
     const primary = (manifest.files || []).filter(f => f.kind === "model" && f.level === "L1" && /\.glb$/i.test(f.path));
     for (const entry of primary) {
-      const match = candidates.find(f => f.path === entry.path);
+      const match = matchGlbCandidate(candidates, entry.path);
       if (match) return match;
     }
     if (primary.length) throw Error("manifest 指定的最終 GLB 不存在，請確認交付檔案");

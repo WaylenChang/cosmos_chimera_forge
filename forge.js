@@ -150,7 +150,7 @@
   const STAGE_ZH = { juvenile: "幼年", adolescent: "少年", adult: "成年", overload: "超載" };
 
   function parsePackageStage(pkgId, manifest, concept) {
-    const stageRegex = /[-_](juvenile|adolescent|adult|overload)(?:\.zip)?$/i;
+    const stageRegex = /[-_](juvenile|adolescent|adult|overload)(?:_(?:00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?)?(?:\.zip)?$/i;
     const m = (pkgId || "").match(stageRegex);
     if (m) {
       return { stage: m[1].toLowerCase(), baseId: pkgId.slice(0, m.index) };
@@ -1436,7 +1436,7 @@
 
   function parsePkgTypedState(pkg) {
     if (!pkg?.rawFiles) return null;
-    const key = Object.keys(pkg.rawFiles).find(k => /(?:^|\/)typed_state\.json$/i.test(k));
+    const key = Object.keys(pkg.rawFiles).find(k => /(?:^|[/_])typed_state\.json$/i.test(k));
     if (!key) return null;
     try {
       const val = pkg.rawFiles[key];
@@ -1467,12 +1467,23 @@
         .filter(j => String(j.subjectId || "").toLowerCase() === subLower && (!stLower || !j.stage || String(j.stage).toLowerCase() === stLower))
         .map(j => String(j.taskId || "").toLowerCase())
     );
+    const stepToStage = {
+      "00_appearance": "appearance",
+      "01_portrait": "portrait",
+      "01b_vfx": "move_vfx",
+      "02_review_portrait": "review_portrait",
+      "03a_colab": "colab",
+      "03b_blender": "blender",
+      "04_review_3d": "review_3d",
+      "05_wiki": "encyclopedia"
+    };
     const stageSet = new Set(stageNames.map(s => s.toLowerCase()));
     return (idx.jobs || []).filter(f => {
       const name = String(f.name || "").toLowerCase();
       if (!name.endsWith(".prompt.md")) return false;
+      const stemMatch = /_(00_appearance|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?\.prompt\.md$/i.exec(name);
       const parts = name.replace(/\.prompt\.md$/, "").split(".");
-      const fileStage = parts.length > 1 ? parts[parts.length - 1] : "";
+      const fileStage = stemMatch ? (stepToStage[stemMatch[1]] || "") : (parts.length > 1 ? parts[parts.length - 1] : "");
       const fileTaskId = parts.slice(0, -1).join(".") || name;
       if (stageSet.size && !stageSet.has(fileStage)) return false;
       if (matchedTaskIds.has(fileTaskId)) return true;
@@ -1504,11 +1515,11 @@
     const settingsDone = hasSettingFile || matches.length > 0 || isForgingThis;
 
     // 2. Wiki check
-    const wikiFile = kind === "character"
-      ? `${subLower}_wiki.md`
-      : `${subLower}_${stLower || "adult"}_wiki.md`;
+    const wikiFiles = kind === "character"
+      ? new Set([`${subLower}_05_wiki.md`, `${subLower}_wiki.md`])
+      : new Set([`${subLower}_${stLower || "adult"}_05_wiki.md`, `${subLower}_${stLower || "adult"}_wiki.md`]);
     const wikiList = kind === "character" ? (idx.wikiCharacters || []) : (idx.wikiCreatures || []);
-    const hasWikiDrive = wikiList.some(f => String(f.name || "").toLowerCase() === wikiFile);
+    const hasWikiDrive = wikiList.some(f => wikiFiles.has(String(f.name || "").toLowerCase()));
     const hasWikiManifest = matches.some(p => Boolean(p.manifest?.encyclopedia_path));
     const wikiDone = hasWikiDrive || hasWikiManifest;
 
@@ -1547,7 +1558,9 @@
       model3d = { state: "rejected", label: "❌ 退回待重製", cls: "reject", pkg: best3d };
     } else if (best3d) {
       const ts = parsePkgTypedState(best3d);
-      const route = best3d.drivePath?.includes("/colab/") ? "Colab" : best3d.drivePath?.includes("/ai_blender/") ? "AI+Blender" : "3D";
+      const isColab = best3d.drivePath?.includes("/colab/") || best3d.manifest?.pipeline === "colab" || /_03a_colab\b/i.test(best3d.id || "") || (best3d.driveFiles || []).some(f => /_03a_colab\b/i.test(f.path || ""));
+      const isBlender = best3d.drivePath?.includes("/ai_blender/") || best3d.manifest?.pipeline === "ai_blender" || /_03b_blender\b/i.test(best3d.id || "") || (best3d.driveFiles || []).some(f => /_03b_blender\b/i.test(f.path || ""));
+      const route = isColab ? "Colab" : isBlender ? "AI+Blender" : "3D";
       const missing3d = isMissingSuperseded(best3d, matches) ? [] : getEffectiveMissing(best3d);
       if (ts?.status === "RUNNING") {
         model3d = { state: "running", label: `⚙️ ${route} 生成中`, cls: "active", pkg: best3d, typedState: ts };
@@ -3888,6 +3901,14 @@
 
   function inferTaskType(taskId, manifestData) {
     if (manifestData?.task_type) return manifestData.task_type;
+    if (/_01b_vfx(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?$/i.test(taskId)) return "move-vfx";
+    if (/_(?:03a_colab|03b_blender)(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?$/i.test(taskId)) {
+      if (taskId.startsWith("chr") || manifestData?.source_pack?.startsWith("chr") || manifestData?.subject_id?.startsWith("chr")) return "character-model-rig";
+      return "creature-model-rig";
+    }
+    if (/_01_portrait(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?$/i.test(taskId)) {
+      return taskId.startsWith("chr") ? "character-concept" : "creature-concept";
+    }
     if (taskId.startsWith("chr")) return "character-concept";
     if (taskId.startsWith("cr")) return "creature-concept";
     if (taskId.startsWith("mdl") || taskId.startsWith("anim")) {

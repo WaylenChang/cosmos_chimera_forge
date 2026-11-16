@@ -489,3 +489,85 @@ test('migratePipelineDirectories classifies and moves legacy Drive items into ch
   assert.match(parents['cr-wiki'], /creatures.*wiki/);
 });
 
+test('3-level flat Drive sync loads migrated 3D manifests, manifest-less portraits, and subject-scoped wikis', async () => {
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2XioAAAAASUVORK5CYII=', 'base64');
+  const h = harness({
+    handle: (u) => {
+      if (u.searchParams.get('alt') === 'media') {
+        const id = decodeURIComponent(u.pathname.split('/').pop());
+        if (id === 'mf-3d') {
+          return new Response(JSON.stringify({
+            task_id: 'mdl-20261111-a111-1301',
+            task_type: 'creature-model-rig',
+            subject_id: 'starter_sun_line',
+            stage: 'adolescent',
+            pipeline: 'ai_blender',
+            files: [{ path: 'models/cr_starter_sun_line_adolescent_v3_structure.glb', kind: 'model', level: 'L1' }],
+            missing: []
+          }));
+        }
+        return new Response(png);
+      }
+      const q = u.searchParams.get('q') || '';
+      if (q) {
+        if (q.includes("'project-root' in parents") && q.includes("name = 'creatures'")) {
+          return Response.json({ files: [{ id: 'cat-creatures', name: 'creatures', mimeType: 'application/vnd.google-apps.folder' }] });
+        }
+        if (q.includes("'cat-creatures' in parents") && q.includes("name = 'starter_sun_line'")) {
+          return Response.json({ files: [{ id: 'sub-sun', name: 'starter_sun_line', mimeType: 'application/vnd.google-apps.folder' }] });
+        }
+        if (q.includes("'cat-creatures' in parents") && !q.includes('name =')) {
+          return Response.json({ files: [{ id: 'sub-sun', name: 'starter_sun_line', mimeType: 'application/vnd.google-apps.folder' }] });
+        }
+        if (q.includes("'sub-sun' in parents") && q.includes("name = 'starter_sun_line_adolescent_05_wiki.md'")) {
+          return Response.json({ files: [{ id: 'wiki-sun', name: 'starter_sun_line_adolescent_05_wiki.md', mimeType: 'text/markdown' }] });
+        }
+        if (q.includes("'sub-sun' in parents") && !q.includes('name =')) {
+          return Response.json({
+            files: [
+              { id: 'img-front', name: 'starter_sun_line_adolescent_01_portrait_front.png', mimeType: 'image/png', modifiedTime: '2026-11-16T00:00:00Z', size: '68' },
+              { id: 'glb-3d', name: 'starter_sun_line_adolescent_03b_blender.glb', mimeType: 'model/gltf-binary', modifiedTime: '2026-11-16T00:00:00Z', size: '128' },
+              { id: 'mf-3d', name: 'starter_sun_line_adolescent_03b_blender_manifest.json', mimeType: 'application/json', modifiedTime: '2026-11-16T00:00:00Z', size: '256' },
+              { id: 'wiki-sun', name: 'starter_sun_line_adolescent_05_wiki.md', mimeType: 'text/markdown', modifiedTime: '2026-11-16T00:00:00Z', size: '64' }
+            ]
+          });
+        }
+        return Response.json({ files: [] });
+      }
+    }
+  });
+  const packages = [];
+  h.context.URL = URL;
+  h.context.location.href = 'https://example.test/';
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), h.context);
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'model-review.js'), 'utf8'), h.context);
+  h.context.COSMI_FORGE.clearDrivePackages = () => { packages.length = 0; };
+  h.context.COSMI_FORGE.packages = () => packages;
+  h.context.COSMI_FORGE.loadAssetFiles = async (raw, { name }) => {
+    const mfKey = Object.keys(raw).find(k => k.endsWith('_manifest.json'));
+    const m = mfKey ? JSON.parse(new TextDecoder().decode(raw[mfKey])) : null;
+    const pkg = {
+      id: m?.task_id || name,
+      type: m?.task_type || 'unknown',
+      subjectId: m?.subject_id || '',
+      manifest: m,
+      stage: m?.stage || null,
+      status: 'provisional'
+    };
+    packages.push(pkg);
+    return pkg;
+  };
+  await h.login();
+  await h.context.COSMI_DRIVE.syncPackages({ force: true });
+  const pkgs = h.context.COSMI_FORGE.packages();
+  const modelPkg = pkgs.find(p => p.id === 'mdl-20261111-a111-1301');
+  const portraitPkg = pkgs.find(p => p.id === 'starter_sun_line_adolescent_01_portrait');
+  assert.ok(modelPkg, 'migrated 3D package must load despite old models/*.glb manifest path');
+  assert.equal(modelPkg.glbFile?.path, 'starter_sun_line_adolescent_03b_blender.glb');
+  assert.ok(portraitPkg, 'manifest-less portrait package must load');
+  assert.equal(portraitPkg.subjectId, 'starter_sun_line');
+  const wiki = await h.context.COSMI_DRIVE.ensureWiki({ task: { id: 'creature-concept' }, subjectId: 'starter_sun_line', opts: { stage: 'adolescent' } });
+  assert.equal(wiki.created, false);
+  assert.equal(wiki.id, 'wiki-sun');
+});
+

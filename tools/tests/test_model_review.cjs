@@ -266,3 +266,20 @@ test('high-complexity Colab character models replace simple legacy/ai_blender mo
   assert.deepEqual(entries.find(e => e.catalog.id === 'chr_amemori_sumiha').packages.map(p => p.id), ['mdl-20261114-1855-0000']);
   assert.deepEqual(entries.find(e => e.catalog.id === 'chr_roen').packages.map(p => p.id), ['mdl-20261114-3d04-0000']);
 });
+
+test('selectModelFile resolves flattened Level 3 Drive GLBs even when migrated manifest lists models/<old>.glb', () => {
+  const flatFiles = [
+    { path: 'chr_1286_03a_colab.glb' },
+    { path: 'chr_1286_03a_colab_anime.glb' },
+    { path: 'chr_1286_03a_colab_manifest.json' }
+  ];
+  const migratedManifest = {
+    files: [{ path: 'models/mdl-20261113-1286-0000.glb', kind: 'model', level: 'L1' }]
+  };
+  assert.equal(review.selectModelFile(flatFiles, migratedManifest).path, 'chr_1286_03a_colab.glb');
+  assert.equal(
+    review.selectModelFile(flatFiles, {}, { model: { path: 'models/mdl-20261113-1286-0000.glb' } }).path,
+    'chr_1286_03a_colab.glb'
+  );
+  assert.throws(() => review.selectModelFile([], migratedManifest), /不存在/);
+});

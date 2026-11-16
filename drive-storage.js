@@ -533,6 +533,7 @@
         checkSession();
         if (ids.has(pkg.id)) throw Error(pkg.id + " 在多個目錄重複");
         ids.add(pkg.id);
+        if (!pkg.subjectId && /^(?:characters|creatures|moves)$/.test(dir)) pkg.subjectId = entry.name;
         pkg.drivePath = dir + "/" + entry.name;
         pkg.driveFolderId = entry.id;
         pkg.driveFiles = files;
@@ -737,15 +738,19 @@
                   record(old.pkgId || entry.name, reviewIndex),
                 );
                 if (ids.has(old.pkgId || entry.name)) {
-                  const pkg = window.COSMI_FORGE.packages().find(
+                  const matched = window.COSMI_FORGE.packages().filter(
                     (p) => p.driveFolderId === entry.id,
                   );
-                  if (pkg) {
-                    pkg.driveFiles = files;
-                    pkg.status = r?.status || pkg.status;
-                    pkg.sourcePack = r?.source_pack || pkg.sourcePack;
-                    pkg.reviewRecord = r || pkg.reviewRecord;
-                    count++;
+                  if (matched.length) {
+                    for (const pkg of matched) {
+                      pkg.driveFiles = files;
+                      if (r) {
+                        pkg.status = r.status || pkg.status;
+                        pkg.sourcePack = r.source_pack || pkg.sourcePack;
+                        pkg.reviewRecord = r;
+                      }
+                    }
+                    count += matched.length;
                     continue;
                   }
                 }
@@ -1084,7 +1089,7 @@
     const pending = (async () => {
       if (syncing || busy)
         throw Error("Drive 正在處理其他資產，請稍後再建立圖鑑");
-      const destination = await folder(wiki.kind + "/wiki", true);
+      const destination = await folder(wiki.kind + "/" + wiki.subject, true);
       // Serialize same-path requests within this browser tab, and never
       // overwrite or fork a previously generated wiki.
       const found = await list(
