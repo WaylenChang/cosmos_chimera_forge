@@ -172,7 +172,8 @@
       currentAction: null, currentClipName: "", clips: [], isPlaying: true, playbackSpeed: 1.0,
       isLoop: true, showSkeleton: false, skeletonHelper: null, showWireframe: false,
       showGrid: true, gridHelper: null, loadedPkgId: null, loadSeq: 0, isLooping: false,
-      modelGroup: null, modelStats: null, animFilter: "all", animSearch: ""
+      modelGroup: null, modelStats: null, animFilter: "all", animSearch: "",
+      rememberedClips: {}
     }
   };
 
@@ -1328,8 +1329,85 @@
     selectedType: "creature", // "creature" | "character"
     mode: "detail", // "detail" | "cards"
     creature3dStage: {}, // line_id -> "juvenile" | "adolescent" | "adult" | "overload"
+    charImgView: {}, // char_id -> image view key
     _switchCreature3dStage: null
   };
+
+  const VIEW_MEMORY_KEY = "cosmimera.view-memory.v1";
+  let _restoringViewMemory = false;
+  function getClipMemoryKey(pkg) {
+    if (!pkg) return "";
+    if (pkg.subjectId) return `${pkg.subjectId}:${pkg.stage || ""}`;
+    return pkg.id || "";
+  }
+  function getRemembered3dClip(pkg) {
+    const clips = reviewState.three?.rememberedClips;
+    if (!clips) return "";
+    const key = getClipMemoryKey(pkg);
+    return (key && clips[key]) || (pkg?.id && clips[pkg.id]) || "";
+  }
+  function saveViewMemory() {
+    if (_restoringViewMemory) return;
+    try {
+      localStorage.setItem(VIEW_MEMORY_KEY, JSON.stringify({
+        activeTab: state.activeTab || "forge",
+        currentRound: state.currentRound,
+        filterCat: reviewState.filterCat,
+        filterQuery: reviewState.filterQuery,
+        activeDesignedKey: reviewState.activeDesignedKey,
+        activePkgId: reviewState.activePkgId,
+        activeStage: reviewState.activeStage,
+        activeImgIdx: reviewState.activeImgIdx,
+        viewMode: reviewState.viewMode,
+        selectedId: designedState.selectedId,
+        selectedType: designedState.selectedType,
+        creature3dStage: designedState.creature3dStage,
+        charImgView: designedState.charImgView,
+        rememberedClips: reviewState.three.rememberedClips
+      }));
+    } catch (e) {}
+  }
+  function loadViewMemory() {
+    try {
+      const vm = JSON.parse(localStorage.getItem(VIEW_MEMORY_KEY) || "null");
+      if (!vm || typeof vm !== "object") return;
+      _restoringViewMemory = true;
+      if (["forge", "review", "settings"].includes(vm.activeTab)) state.activeTab = vm.activeTab;
+      if (typeof vm.currentRound === "number") state.currentRound = vm.currentRound;
+      if (["all", "designed", "chr", "cr", "mdl", "fx", "pending"].includes(vm.filterCat)) {
+        reviewState.filterCat = vm.filterCat;
+      }
+      if (typeof vm.filterQuery === "string") reviewState.filterQuery = vm.filterQuery;
+      if (typeof vm.activeDesignedKey === "string" || vm.activeDesignedKey === null) {
+        reviewState.activeDesignedKey = vm.activeDesignedKey;
+      }
+      if (typeof vm.activePkgId === "string" || vm.activePkgId === null) {
+        reviewState.activePkgId = vm.activePkgId;
+      }
+      if (typeof vm.activeStage === "string") reviewState.activeStage = vm.activeStage;
+      if (typeof vm.activeImgIdx === "number" && vm.activeImgIdx >= 0) {
+        reviewState.activeImgIdx = vm.activeImgIdx;
+      }
+      if (["single", "compare", "3d"].includes(vm.viewMode)) reviewState.viewMode = vm.viewMode;
+      if (typeof vm.selectedId === "string" || vm.selectedId === null) {
+        designedState.selectedId = vm.selectedId;
+      }
+      if (vm.selectedType === "creature" || vm.selectedType === "character") {
+        designedState.selectedType = vm.selectedType;
+      }
+      if (vm.creature3dStage && typeof vm.creature3dStage === "object") {
+        designedState.creature3dStage = Object.assign({}, vm.creature3dStage);
+      }
+      if (vm.charImgView && typeof vm.charImgView === "object") {
+        designedState.charImgView = Object.assign({}, vm.charImgView);
+      }
+      if (vm.rememberedClips && typeof vm.rememberedClips === "object") {
+        reviewState.three.rememberedClips = Object.assign({}, vm.rememberedClips);
+      }
+    } catch (e) {} finally {
+      _restoringViewMemory = false;
+    }
+  }
 
   const PIPELINE_JOBS_KEY = "cosmimera.pipeline-jobs.v1";
   function loadLocalPipelineJobs() {
@@ -2040,10 +2118,14 @@
 
         el("div", { style: "display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:16px;align-items:start;" },
           // Col 1: 2D Concept Showcase
-          el("div", { style: "background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;" },
+          (() => {
+            const rememberedView = designedState.charImgView?.[c.id];
+            const activeImg = assetData.images.find(im => im.view === rememberedView && im.primaryUrl)
+              || assetData.images[0];
+            return el("div", { style: "background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;" },
             el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px" },
               el("span", { style: "font-weight:600;font-size:12.5px;color:var(--accent)" }, `🎨 2D 概念原畫 (${assetData.images.length} 視圖)`),
-              el("span", { id: "charViewLabel", class: "muted", style: "font-size:11.5px" }, assetData.images[0].label)
+              el("span", { id: "charViewLabel", class: "muted", style: "font-size:11.5px" }, activeImg.label)
             ),
 
             // Main Preview Image Frame
@@ -2053,33 +2135,34 @@
             },
               el("img", {
                 id: "charMainImg",
-                src: assetData.images[0].primaryUrl || undefined,
+                src: activeImg.primaryUrl || undefined,
                 alt: c.name_zh,
-                style: "max-width:100%;max-height:100%;object-fit:contain;" + (assetData.images[0].primaryUrl ? "" : "display:none;"),
+                style: "max-width:100%;max-height:100%;object-fit:contain;" + (activeImg.primaryUrl ? "" : "display:none;"),
                 onerror: function() {
-                  if (assetData.images[0].fallbackUrl && this.src !== assetData.images[0].fallbackUrl) {
-                    this.src = assetData.images[0].fallbackUrl;
+                  if (activeImg.fallbackUrl && this.src !== activeImg.fallbackUrl) {
+                    this.src = activeImg.fallbackUrl;
                   }
                 }
               }),
-              !assetData.images[0].primaryUrl ? el("span", { class: "muted" }, "Drive 尚無此角色立繪") : null,
+              !activeImg.primaryUrl ? el("span", { class: "muted" }, "Drive 尚無此角色立繪") : null,
               el("a", {
                 id: "charImgDownload",
-                href: assetData.images[0].primaryUrl || "#",
+                href: activeImg.primaryUrl || "#",
                 target: "_blank",
                 class: "btn mini ghost",
-                style: "position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);" + (assetData.images[0].primaryUrl ? "" : "display:none;"),
+                style: "position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);" + (activeImg.primaryUrl ? "" : "display:none;"),
                 title: "在新分頁檢視原尺寸大圖"
               }, "🔍 原圖")
             ),
 
             // Thumbnail Strip / View Switcher
             el("div", { style: "display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;" },
-              assetData.images.filter(im => im.primaryUrl).map((im, idx) => {
+              assetData.images.filter(im => im.primaryUrl).map(im => {
+                const isActiveThumb = im.view === activeImg.view;
                 const thumbBtn = el("button", {
                   type: "button",
-                  class: "segb" + (idx === 0 ? " on" : ""),
-                  style: "display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 6px;min-width:60px;border-radius:6px;border:1px solid " + (idx === 0 ? "var(--accent)" : "rgba(255,255,255,0.1)") + ";background:" + (idx === 0 ? "rgba(58,173,200,0.2)" : "rgba(0,0,0,0.2)") + ";cursor:pointer;",
+                  class: "segb" + (isActiveThumb ? " on" : ""),
+                  style: "display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 6px;min-width:60px;border-radius:6px;border:1px solid " + (isActiveThumb ? "var(--accent)" : "rgba(255,255,255,0.1)") + ";background:" + (isActiveThumb ? "rgba(58,173,200,0.2)" : "rgba(0,0,0,0.2)") + ";cursor:pointer;",
                   onclick: () => {
                     const allThumbs = thumbBtn.parentElement.children;
                     for (let i = 0; i < allThumbs.length; i++) {
@@ -2088,6 +2171,8 @@
                     }
                     thumbBtn.style.background = "rgba(58,173,200,0.2)";
                     thumbBtn.style.borderColor = "var(--accent)";
+                    designedState.charImgView[c.id] = im.view;
+                    saveViewMemory();
 
                     const mImg = $("#charMainImg");
                     const mLabel = $("#charViewLabel");
@@ -2115,7 +2200,8 @@
                 return thumbBtn;
               })
             )
-          ),
+          );
+          })(),
 
           // Col 2: 3D Model & Interactive Viewer
           (() => {
@@ -2406,6 +2492,7 @@
         if (!availableStages.includes(stKey)) return;
         active3dStage = stKey;
         designedState.creature3dStage[d.line_id] = stKey;
+        saveViewMemory();
         for (const [k, btn] of stageButtons.entries()) {
           if (k === stKey) btn.classList.add("on");
           else btn.classList.remove("on");
@@ -4686,7 +4773,7 @@
       header.append(el("b", {}, entry.label));
       body.append(el("div", {class:"designed-detail-card"}, "已採用 · 尚未建立完整設計資料"));
     }
-    if (entry.packages.length) {
+    if (entry.packages.length && !entry.catalog) {
       const card = el("div", {class:"designed-detail-card"}, el("h3", {}, "相關交付成果"));
       const orderedPkgs = sortPackagesByPriority(entry.packages).sort((a, b) => stageRank(a.stage) - stageRank(b.stage));
       for (const p of orderedPkgs) {
@@ -4804,6 +4891,7 @@
       railList.append(row);
     }
     if (!entries.length) railList.append(el("div",{class:"muted"},"無符合條件的項目"));
+    saveViewMemory();
     if (design) { renderReviewDesigned(design); return; }
     restoreStage3dView();
     const overlay = $("#reviewDesignedDetails");
@@ -5315,12 +5403,15 @@
       three.onDesignedSync?.(targetPkg, linkedPkg);
 
       const clips = getPackageClips(targetPkg, linkedPkg);
-      let defClip = "chr_idle";
+      const rememberedClip = getRemembered3dClip(targetPkg);
+      let defClip = rememberedClip && three.clips.some(c => c.name === rememberedClip)
+        ? rememberedClip
+        : "chr_idle";
       if (!three.clips.some(c => c.name === defClip)) {
         defClip = three.clips[0]?.name || (clips[0]?.clip || "");
       }
       if (defClip) {
-        play3dClip(defClip, targetPkg);
+        play3dClip(defClip, targetPkg, { persist: false });
       } else {
         $("#stage3dClipBadge").textContent = `🧊 ${targetPkg.id}（靜態模型，無動畫片段）`;
         const track = $("#stage3dEventsTrack");
@@ -5476,7 +5567,7 @@
     }
   }
 
-  function play3dClip(clipName, pkg) {
+  function play3dClip(clipName, pkg, { persist = true } = {}) {
     const three = reviewState.three;
     if (!three.mixer) return;
     if (!pkg) pkg = three.activePkg || getActivePkg();
@@ -5510,6 +5601,14 @@
     three.currentAction = newAction;
     three.currentClipName = clipName;
     three.isPlaying = true;
+    const activeTargetPkg = pkg || three.activePkg;
+    if (persist && clipName && activeTargetPkg) {
+      if (!three.rememberedClips) three.rememberedClips = {};
+      const memKey = getClipMemoryKey(activeTargetPkg);
+      if (memKey) three.rememberedClips[memKey] = clipName;
+      if (activeTargetPkg.id) three.rememberedClips[activeTargetPkg.id] = clipName;
+      saveViewMemory();
+    }
 
     const zh = getClipZh(clipName, pkg);
     const badge = $("#stage3dClipBadge");
@@ -5519,7 +5618,7 @@
     if (sel && sel.value !== clipName) sel.value = clipName;
 
     const playPauseBtn = $("#btn3dPlayPause");
-    if (playPauseBtn) playPauseBtn.textContent = "⏸ 暫停";
+    if (playPauseBtn) playPauseBtn.textContent = "⏸";
 
     const allClips = getPackageClips(pkg);
     const spec = allClips.find(c => c.clip === clipName || c.clip === clipName.replace(/^(chr_|cr_)/, ""));
@@ -5556,7 +5655,7 @@
     if (!three.currentAction) return;
     three.isPlaying = !three.isPlaying;
     const btn = $("#btn3dPlayPause");
-    if (btn) btn.textContent = three.isPlaying ? "⏸ 暫停" : "▶ 播放";
+    if (btn) btn.textContent = three.isPlaying ? "⏸" : "▶";
   }
 
   function step3dClip(dir) {
@@ -6215,6 +6314,7 @@
   async function setViewMode(mode) {
     if (mode === "designed") mode = "review";
     state.activeTab = mode;
+    saveViewMemory();
     if (mode === "review") {
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.add("active");
@@ -6290,6 +6390,7 @@
       const revs = JSON.parse(localStorage.getItem(REVIEW_KEY) || "{}");
       reviewState.reviews = revs;
       loadFavorites();
+      loadViewMemory();
       const d = JSON.parse(localStorage.getItem(LS_KEY) || "null");
       if (!d) return false;
       const sameMajor = (d.catalog || "").split(".")[0] === C.version.split(".")[0];
@@ -6444,6 +6545,8 @@
       const three = reviewState.three;
       if (!three.currentAction) return;
       three.isPlaying = false;
+      const btn = $("#btn3dPlayPause");
+      if (btn) btn.textContent = "▶";
       const duration = three.currentAction.getClip().duration || 1.0;
       const targetTime = (parseFloat(e.target.value) / 100) * duration;
       three.currentAction.time = targetTime;
@@ -6454,7 +6557,7 @@
     $("#stage3dScrubber")?.addEventListener("change", () => {
       reviewState.three.isPlaying = true;
       const btn = $("#btn3dPlayPause");
-      if (btn) btn.textContent = "⏸ 暫停";
+      if (btn) btn.textContent = "⏸";
     });
 
     document.querySelectorAll("#stage3dSpeedSeg .segb").forEach(btn => {
@@ -6673,7 +6776,15 @@
     const had = load();
     $("#notes").value = state.notes;
     $("#root").value = state.root || DEFAULT_ROOT;
+    document.querySelectorAll("#filterSeg .segb").forEach(b => {
+      b.classList.toggle("on", b.dataset.cat === reviewState.filterCat);
+    });
+    const fq = $("#filterQuery");
+    if (fq) fq.value = reviewState.filterQuery || "";
     if (had) renderAll(); else reseed(newSeed(), true);
+    if (state.activeTab && state.activeTab !== "forge") {
+      setViewMode(state.activeTab);
+    }
   }
   window.COSMI_FORGE = Object.freeze({
     loadAssetFiles, setViewMode,
@@ -6717,7 +6828,7 @@
         task_type: lastBuild.ctx.task.id, subject_id: lastBuild.ctx.subjectId, source_pack: lastBuild.ctx.opts?.source_pack || "",
         produced_by: "", files: [], missing: []}}),
     refresh: () => { renderAll(); if (state.activeTab === "review") renderReviewView(); },
-    setPortraitRound: round => { state.currentRound = round; renderOutput(); },
+    setPortraitRound: round => { state.currentRound = round; saveViewMemory(); renderOutput(); },
     activePackage: getActivePkg,
     packageBlob: pkg => createZipBlob(pkg.rawFiles),
     currentPrompt: () => {

@@ -105,7 +105,7 @@ function collectText(node) {
   return out;
 }
 
-function createHarness() {
+function createHarness(initialStorage = {}) {
   const nodes = {};
   const ids = [
     'toast', 'designedRailList', 'designedRailCount', 'designedStageHeader',
@@ -120,7 +120,7 @@ function createHarness() {
     'railList', 'panelBody', 'stId', 'stBadge', 'stRefTag', 'btnModeSingle',
     'btnModeCompare', 'btnMode3D', 'tabBtnAnims', 'zoomSeg', 'stage3dCanvas',
     'stage3dClipBadge', 'stage3dInfoBadge', 'stage3dClipSelect', 'stage3dTimeDisplay',
-    'stage3dScrubber', 'stage3dEventsTrack'
+    'stage3dScrubber', 'stage3dEventsTrack', 'btn3dPlayPause', 'notes', 'root', 'ver'
   ];
   for (const id of ids) nodes[id] = makeNode('div', id);
   nodes.stageViewport.append(nodes.reviewDesignedDetails, nodes.stageEmpty, nodes.stageSingleView, nodes.stageCompareView, nodes.stage3dView);
@@ -135,7 +135,7 @@ function createHarness() {
     setTimeout() { return 1; },
     clearTimeout() {},
     localStorage: {
-      getItem: k => store.has(k) ? store.get(k) : null,
+      getItem: k => store.has(k) ? store.get(k) : (k in initialStorage ? String(initialStorage[k]) : null),
       setItem: (k, v) => store.set(k, String(v))
     },
     document: {
@@ -146,7 +146,14 @@ function createHarness() {
       querySelectorAll: () => [],
       getElementById: id => nodes[id] || null
     },
-    addEventListener() {}
+    _winListeners: {},
+    addEventListener(type, fn) {
+      if (!this._winListeners[type]) this._winListeners[type] = [];
+      this._winListeners[type].push(fn);
+    },
+    dispatchEvent(ev) {
+      for (const fn of (this._winListeners[ev.type] || [])) fn(ev);
+    }
   };
   c.window = c;
   const ctx = vm.createContext(c);
@@ -178,8 +185,17 @@ test('embedded 3D viewer remains visible in reviewDesignedDetails and restores t
   assert.equal(nodes.stage3dView.classList.contains('stage3d-embedded'), true);
   assert.equal(nodes.stage3dView.style.display, 'block', 'embedded 3D viewer must not be hidden by renderReviewDesigned');
 
-  // Click the 3D package pill or button inside reviewDesignedDetails to switch to 3D stage view
-  const pkgBtn = nodes.designedDetailView.children[0]?.children?.find(ch => ch.tagName === 'BUTTON');
+  // Click the 3D package button inside reviewDesignedDetails (in progress tracker) to switch to 3D stage view
+  const findBtn = (node, pred) => {
+    if (!node) return null;
+    if (node.tagName === 'BUTTON' && pred(node)) return node;
+    for (const ch of (node.children || [])) {
+      const found = findBtn(ch, pred);
+      if (found) return found;
+    }
+    return null;
+  };
+  const pkgBtn = findBtn(nodes.designedDetailView, b => /檢視 3D|檢視交付包/.test(collectText(b)));
   assert.ok(pkgBtn, 'package button should exist in reviewDesignedDetails');
   pkgBtn.listeners.click[0]();
 
@@ -906,4 +922,146 @@ test('downstream 3D completion suppresses upstream missing badges everywhere exc
   assert.doesNotMatch(beforeTracker, /需補件|缺檔/, 'deliverables and stage status outside tracker must not show missing');
   assert.match(trackerText, /前置缺件提醒（已有後續成品，可免補）/, 'progress tracker must keep a simple reminder');
   assert.match(trackerText, /\.blend.*rig QA/, 'progress tracker reminder must list superseded items');
+});
+
+test('view memory persists active tab, creature form, 3D clip, and character 2D view across reload and keeps play button icon-only', async () => {
+  const attachThreeMock = (ctx, nds) => {
+    nds.stage3dView.append(nds.stage3dCanvas);
+    let rafId = 0;
+    ctx.requestAnimationFrame = fn => {
+      const id = ++rafId;
+      if (fn?.name !== 'animate3dLoop') queueMicrotask(() => fn(0));
+      return id;
+    };
+    const vec3 = (x = 0, y = 0, z = 0) => ({ x, y, z, set(nx, ny, nz) { this.x = nx; this.y = ny; this.z = nz; } });
+    ctx.THREE = {
+      Scene: class { add() {} remove() {} },
+      PerspectiveCamera: class { constructor() { this.position = vec3(); this.fov = 45; this.aspect = 1; } updateProjectionMatrix() {} },
+      WebGLRenderer: class { constructor() { this.domElement = nds.stage3dCanvas; } setSize() {} setPixelRatio() {} render() {} },
+      OrbitControls: class { constructor() { this.target = vec3(); } update() {} },
+      AmbientLight: class {},
+      HemisphereLight: class {},
+      DirectionalLight: class { constructor() { this.position = vec3(); } },
+      GridHelper: class { constructor() { this.position = vec3(); } },
+      Clock: class { getDelta() { return 0.016; } },
+      Box3: class { constructor() { this.min = vec3(0, 0, 0); } setFromObject() { return this; } isEmpty() { return false; } getSize() { return vec3(1, 1.5, 1); } getCenter() { return vec3(0, 0.75, 0); } },
+      Vector3: class { constructor(x = 0, y = 0, z = 0) { return vec3(x, y, z); } },
+      Group: class { constructor() { this.position = vec3(); this.children = []; } add(...xs) { this.children.push(...xs); } traverse() {} },
+      Mesh: class { constructor() { this.position = vec3(); this.rotation = vec3(); this.scale = vec3(1, 1, 1); } },
+      BoxGeometry: class {}, SphereGeometry: class {}, CylinderGeometry: class {}, ConeGeometry: class {},
+      MeshStandardMaterial: class {},
+      VectorKeyframeTrack: class {},
+      AnimationClip: class { constructor(name, duration) { this.name = name; this.duration = duration || 1; } },
+      SkeletonHelper: class {},
+      AnimationMixer: class {
+        stopAllAction() {}
+        uncacheRoot() {}
+        update() {}
+        clipAction(clip) {
+          return {
+            setLoop() {}, reset() {}, play() {}, setEffectiveTimeScale() {}, setEffectiveWeight() {},
+            getClip() { return clip; }, time: 0
+          };
+        }
+      },
+      LoopRepeat: 2201,
+      LoopOnce: 2200,
+      GLTFLoader: class {
+        parse(_buf, _path, onLoad) {
+          onLoad({
+            scene: { position: vec3(), traverse() {} },
+            animations: [
+              { name: 'cr_idle', duration: 1.0 },
+              { name: 'cr_attack_01', duration: 1.2 }
+            ]
+          });
+        }
+      }
+    };
+  };
+
+  const { c, nodes } = createHarness();
+  attachThreeMock(c, nodes);
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const creature = c.DESIGNED[0];
+
+  await f.loadAssetFiles({
+    'mdl-juv/manifest.json': encode({
+      task_id: 'mdl-juv',
+      task_type: 'creature-model-rig',
+      subject_id: creature.line_id,
+      stage: 'juvenile',
+      files: [{ path: 'models/juv.glb', kind: 'model', level: 'L1' }],
+      missing: []
+    }),
+    'mdl-juv/models/juv.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 1, 0, 0, 0])
+  }, { name: 'mdl-juv' }, { silent: true });
+
+  await f.setViewMode('review');
+  const row = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
+  assert.ok(row, 'creature row must exist');
+  row.listeners.click[0]();
+
+  const findBtn = (node, pred) => {
+    if (!node) return null;
+    if (node.tagName === 'BUTTON' && pred(node)) return node;
+    for (const ch of (node.children || [])) {
+      const found = findBtn(ch, pred);
+      if (found) return found;
+    }
+    return null;
+  };
+  const juvBtn = findBtn(nodes.designedDetailView, b => b['data-stage'] === 'juvenile');
+  assert.ok(juvBtn, 'juvenile stage button should exist');
+  juvBtn.listeners.click[0]();
+  await new Promise(r => setTimeout(r, 25));
+
+  const attackClipBtn = findBtn(nodes.designedDetailView, b => b.dataset?.clip === 'cr_attack_01');
+  assert.ok(attackClipBtn, 'attack clip button should exist');
+  attackClipBtn.listeners.click[0]();
+
+  assert.equal(nodes.btn3dPlayPause.textContent, '⏸', 'play/pause button must be icon-only without text');
+  const rawMem = c.localStorage.getItem('cosmimera.view-memory.v1');
+  const savedMem = JSON.parse(rawMem || '{}');
+  assert.equal(savedMem.activeTab, 'review');
+  assert.equal(savedMem.creature3dStage?.[creature.line_id], 'juvenile');
+  assert.equal(savedMem.rememberedClips?.[`${creature.line_id}:juvenile`], 'cr_attack_01');
+
+  // Simulate reload with persisted localStorage store
+  const h2 = createHarness({ 'cosmimera.view-memory.v1': rawMem });
+  const origQs = h2.c.document.querySelector;
+  h2.c.document.querySelector = sel => {
+    const found = origQs(sel);
+    if (found) return found;
+    if (sel.startsWith('#')) {
+      const id = sel.slice(1);
+      h2.nodes[id] = makeNode('div', id);
+      return h2.nodes[id];
+    }
+    return null;
+  };
+  attachThreeMock(h2.c, h2.nodes);
+  h2.c.COSMI_WIKI = { describe: () => ({ path: 'creatures/wiki/test.md' }) };
+  h2.c.COSMI_DRIVE = { packageDir: () => 'creatures/01_portraits' };
+  h2.c.window.dispatchEvent({ type: 'cosmi:authorized' });
+  await h2.c.COSMI_FORGE.loadAssetFiles({
+    'mdl-juv/manifest.json': encode({
+      task_id: 'mdl-juv',
+      task_type: 'creature-model-rig',
+      subject_id: creature.line_id,
+      stage: 'juvenile',
+      files: [{ path: 'models/juv.glb', kind: 'model', level: 'L1' }],
+      missing: []
+    }),
+    'mdl-juv/models/juv.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 1, 0, 0, 0])
+  }, { name: 'mdl-juv' }, { silent: true });
+  h2.c.COSMI_FORGE.refresh();
+  await new Promise(r => setTimeout(r, 25));
+
+  assert.equal(h2.nodes.reviewView.classList.contains('active'), true, 'reload should restore review tab');
+  const badgeEl = h2.c.document.getElementById('stage3dClipBadge');
+  assert.equal(badgeEl?.textContent.includes('cr_attack_01'), true, 'reload should restore remembered 3D clip, got: ' + badgeEl?.textContent);
+  const restoredJuvBtn = findBtn(h2.nodes.designedDetailView, b => b['data-stage'] === 'juvenile');
+  assert.equal(restoredJuvBtn?.classList.contains('on'), true, 'reload should restore juvenile form');
 });

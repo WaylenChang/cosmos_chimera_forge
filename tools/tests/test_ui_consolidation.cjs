@@ -55,3 +55,10 @@ test('designed 3D showcase embeds full 3D viewer directly and removes redundant 
   assert.doesNotMatch(forge,/conceptTitle\.textContent\s*=\s*showConcept\s*\?\s*"角色設計概念"\s*:\s*"任務選項"/);
   assert.match(html,/stage3d-embedded/);
 });
+test('play/pause button stays icon-only without text labels and top duplicate deliverables card is omitted for catalog entries',()=>{
+  assert.match(html,/class="[^"]*icon-only"[^>]*id="btn3dPlayPause"/);
+  assert.doesNotMatch(forge,/playPauseBtn\.textContent\s*=\s*"⏸ 暫停"/);
+  assert.doesNotMatch(forge,/btn\.textContent\s*=\s*three\.isPlaying\s*\?\s*"⏸ 暫停"\s*:\s*"▶ 播放"/);
+  assert.doesNotMatch(forge,/btn\.textContent\s*=\s*"⏸ 暫停"/);
+  assert.match(forge,/if\s*\(entry\.packages\.length\s*&&\s*!entry\.catalog\)/);
+});
