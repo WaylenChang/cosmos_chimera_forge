@@ -1796,7 +1796,7 @@
     return card;
   }
 
-  function restoreStage3dView() {
+  function preserveStage3dView() {
     const view3d = $("#stage3dView");
     const stage = $("#stageViewport");
     const compareView = $("#stageCompareView");
@@ -1805,13 +1805,22 @@
     }
     reviewState.three.mountRaf = 0;
     reviewState.three.mountSeq = (reviewState.three.mountSeq || 0) + 1;
-    if (!view3d || !stage) return;
-    view3d.classList.remove("stage3d-embedded");
+    if (!view3d || !stage) return null;
     if (view3d.parentElement !== stage) {
-      view3d.style.display = "none";
       if (compareView && compareView.parentElement === stage) compareView.after(view3d);
       else stage.append(view3d);
     }
+    return view3d;
+  }
+
+  function restoreStage3dView() {
+    const view3d = $("#stage3dView");
+    const stage = $("#stageViewport");
+    const wasEmbedded = Boolean(view3d && stage && view3d.parentElement !== stage);
+    preserveStage3dView();
+    if (!view3d) return;
+    view3d.classList.remove("stage3d-embedded");
+    if (wasEmbedded) view3d.style.display = "none";
   }
 
   function isStage3dActive() {
@@ -1921,6 +1930,7 @@
     if (designedState.selectedType === "character") {
       const c = DESIGNED_CHARACTERS.find(x => x.id === designedState.selectedId);
       if (!c) { restoreStage3dView(); return; }
+      preserveStage3dView();
       headerEl.replaceChildren();
       bodyEl.replaceChildren();
 
@@ -2201,6 +2211,7 @@
       // Creature Line
       const d = DESIGNED.find(x => x.line_id === designedState.selectedId);
       if (!d) { restoreStage3dView(); return; }
+      preserveStage3dView();
       headerEl.replaceChildren();
       bodyEl.replaceChildren();
 
@@ -4624,6 +4635,7 @@
     const header = $("#designedStageHeader"), body = $("#designedDetailView");
     if (header.parentNode !== overlay) overlay.append(header);
     if (body.parentNode !== overlay) overlay.append(body);
+    const preservedView3d = preserveStage3dView();
     header.replaceChildren();
     body.replaceChildren();
     if (entry.catalog) {
@@ -4631,6 +4643,10 @@
       designedState.selectedType = entry.catalog.kind;
       renderDesignedDetail();
     } else {
+      if (preservedView3d) {
+        preservedView3d.classList.remove("stage3d-embedded");
+        preservedView3d.style.display = "none";
+      }
       header.append(el("b", {}, entry.label));
       body.append(el("div", {class:"designed-detail-card"}, "已採用 · 尚未建立完整設計資料"));
     }

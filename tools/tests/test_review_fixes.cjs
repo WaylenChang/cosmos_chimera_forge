@@ -84,7 +84,13 @@ function makeNode(tag = 'div', id = '') {
         p.children.splice(idx + 1, 0, item);
       }
     },
-    replaceChildren(...items) { this.children = []; this.append(...items); },
+    replaceChildren(...items) {
+      for (const ch of this.children) {
+        if (ch && typeof ch === 'object' && ch._detach) ch._detach();
+      }
+      this.children = [];
+      this.append(...items);
+    },
     querySelectorAll() { return []; },
     scrollIntoView() {}
   };
@@ -579,6 +585,7 @@ test('switching forms, creatures, and characters reuses one 3D viewer without re
   const flushRaf = async () => {
     for (const fn of rafQueue.splice(0, rafQueue.length)) await fn();
   };
+  const flushMicrotasks = () => new Promise(r => process.nextTick(r));
 
   // 1. Select creature 1 (adult)
   nodes.railList.children.find(r => collectText(r).includes(creature1.line_id)).listeners.click[0]();
@@ -612,4 +619,146 @@ test('switching forms, creatures, and characters reuses one 3D viewer without re
   assert.deepEqual(parsedModels, [1, 2, 3, 4]);
   assert.equal(styleDisplayHistory.includes('none'), false, 'switching character must not hide stage3dView');
   assert.equal(rendererCount, 1, 'WebGLRenderer must only be created once');
+});
+
+test('Drive deferred GLBs load across creatures, characters, and refresh without detaching stage3dView', async () => {
+  const { c, nodes } = createHarness();
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const creature1 = c.DESIGNED[0];
+  const creature2 = c.DESIGNED[1];
+  const char1 = c.DESIGNED_CHARACTERS[0];
+
+  const isConnectedToViewport = node => {
+    let cur = node;
+    while (cur) {
+      if (cur === nodes.stageViewport) return true;
+      cur = cur.parentElement;
+    }
+    return false;
+  };
+  const origQuerySelector = c.document.querySelector;
+  c.document.querySelector = sel => {
+    const el = origQuerySelector(sel);
+    if (sel === '#stage3dView' || sel === '#stage3dCanvas') {
+      return el && isConnectedToViewport(el) ? el : null;
+    }
+    return el;
+  };
+
+  const vec3 = (x = 0, y = 0, z = 0) => ({ x, y, z, set(nx, ny, nz) { this.x = nx; this.y = ny; this.z = nz; } });
+  const parsedModels = [];
+  c.THREE = {
+    Scene: class { add() {} remove() {} },
+    PerspectiveCamera: class { constructor() { this.position = vec3(); this.fov = 45; this.aspect = 1; } updateProjectionMatrix() {} },
+    WebGLRenderer: class { constructor() { this.domElement = nodes.stage3dCanvas; } setSize() {} setPixelRatio() {} render() {} },
+    OrbitControls: class { constructor() { this.target = vec3(); } update() {} },
+    AmbientLight: class {},
+    HemisphereLight: class {},
+    DirectionalLight: class { constructor() { this.position = vec3(); } },
+    GridHelper: class { constructor() { this.position = vec3(); } },
+    Clock: class { getDelta() { return 0.016; } },
+    Box3: class { constructor() { this.min = vec3(0, 0, 0); } setFromObject() { return this; } isEmpty() { return false; } getSize() { return vec3(1, 1.5, 1); } getCenter() { return vec3(0, 0.75, 0); } },
+    Vector3: class { constructor(x = 0, y = 0, z = 0) { return vec3(x, y, z); } },
+    Group: class { constructor() { this.position = vec3(); this.children = []; } add(...xs) { this.children.push(...xs); } traverse() {} },
+    Mesh: class { constructor() { this.position = vec3(); this.rotation = vec3(); this.scale = vec3(1, 1, 1); } },
+    BoxGeometry: class {}, SphereGeometry: class {}, CylinderGeometry: class {}, ConeGeometry: class {},
+    MeshStandardMaterial: class {},
+    VectorKeyframeTrack: class {},
+    AnimationClip: class { constructor(name, duration) { this.name = name; this.duration = duration || 1; } },
+    SkeletonHelper: class {},
+    AnimationMixer: class {
+      stopAllAction() {}
+      uncacheRoot() {}
+      update() {}
+      clipAction(clip) {
+        return {
+          setLoop() {}, reset() {}, play() {}, setEffectiveTimeScale() {}, setEffectiveWeight() {},
+          getClip() { return clip; }, time: 0
+        };
+      }
+    },
+    LoopRepeat: 2201,
+    LoopOnce: 2200,
+    GLTFLoader: class {
+      parse(buf, _path, onLoad) {
+        parsedModels.push(new Uint8Array(buf)[4]);
+        onLoad({
+          scene: { position: vec3(), traverse() {} },
+          animations: [{ name: 'chr_idle', duration: 1.0 }]
+        });
+      }
+    }
+  };
+  nodes.stage3dView.append(nodes.stage3dCanvas);
+  c.COSMI_WIKI = { describe: () => ({ path: 'creatures/wiki/test.md' }) };
+  const glbBlobs = new Map([
+    ['drive-glb-c1', new Blob([new Uint8Array([0x67, 0x6c, 0x54, 0x46, 101, 0, 0, 0])], { type: 'model/gltf-binary' })],
+    ['drive-glb-c2', new Blob([new Uint8Array([0x67, 0x6c, 0x54, 0x46, 102, 0, 0, 0])], { type: 'model/gltf-binary' })],
+    ['drive-glb-chr', new Blob([new Uint8Array([0x67, 0x6c, 0x54, 0x46, 103, 0, 0, 0])], { type: 'model/gltf-binary' })]
+  ]);
+  const readIds = [];
+  c.COSMI_DRIVE = {
+    packageDir: () => 'creatures/02_3d',
+    readById: async id => {
+      readIds.push(id);
+      return glbBlobs.get(id);
+    }
+  };
+  for (const id of ['seed', 'rec', 'tasks', 'options', 'prompt', 'copy', 'download', 'header', 'chars', 'deliver', 'history', 'favorites', 'favBtn', 'concept', 'outStats', 'forge3dModeTabs', 'forgeStageTabs']) {
+    nodes[id] = c.document.createElement('div');
+    nodes[id].id = id;
+    if (id === 'concept') nodes[id].hidden = true;
+  }
+  const rafQueue = [];
+  c.requestAnimationFrame = fn => { rafQueue.push(fn); return rafQueue.length; };
+  c.cancelAnimationFrame = id => { if (rafQueue[id - 1]) rafQueue[id - 1] = () => {}; };
+  const flushRaf = async () => {
+    for (const fn of rafQueue.splice(0, rafQueue.length)) await fn();
+  };
+  const flushMicrotasks = () => new Promise(r => process.nextTick(r));
+
+  const addDrivePkg = async (id, type, subjectId, stage, glbId) => {
+    const pkg = await f.loadAssetFiles({
+      [`${id}/manifest.json`]: encode({ task_id: id, task_type: type, subject_id: subjectId, ...(stage ? { stage } : {}), files: [{ path: 'models/model.glb', kind: 'model', level: 'L1' }], missing: [] })
+    }, { name: id }, { silent: true });
+    pkg.driveFolderId = 'folder-' + id;
+    pkg.drivePath = 'creatures/02_3d/colab/' + id;
+    pkg.glbFile = { path: 'models/model.glb', id: glbId, modifiedTime: '2026-11-16T00:00:00Z', deferred: true };
+    return pkg;
+  };
+
+  await addDrivePkg('mdl-drv-c1', 'creature-model-rig', creature1.line_id, 'adult', 'drive-glb-c1');
+  await addDrivePkg('mdl-drv-c2', 'creature-model-rig', creature2.line_id, 'adult', 'drive-glb-c2');
+  await addDrivePkg('mdl-drv-chr', 'character-model-rig', char1.id, null, 'drive-glb-chr');
+
+  await f.setViewMode('review');
+
+  // 1. Creature 1
+  nodes.railList.children.find(r => collectText(r).includes(creature1.line_id)).listeners.click[0]();
+  await flushRaf();
+  await flushMicrotasks();
+  assert.equal(isConnectedToViewport(nodes.stage3dView), true);
+  assert.deepEqual(parsedModels, [101]);
+
+  // 2. Drive refresh while Creature 1 is active must keep stage3dView connected
+  f.refresh();
+  await flushRaf();
+  await flushMicrotasks();
+  assert.equal(isConnectedToViewport(nodes.stage3dView), true);
+
+  // 3. Creature 2
+  nodes.railList.children.find(r => collectText(r).includes(creature2.line_id)).listeners.click[0]();
+  await flushRaf();
+  await flushMicrotasks();
+  assert.equal(isConnectedToViewport(nodes.stage3dView), true);
+  assert.deepEqual(parsedModels, [101, 102]);
+
+  // 4. Character 1
+  nodes.railList.children.find(r => collectText(r).includes(char1.id)).listeners.click[0]();
+  await flushRaf();
+  await flushMicrotasks();
+  assert.equal(isConnectedToViewport(nodes.stage3dView), true);
+  assert.deepEqual(parsedModels, [101, 102, 103]);
+  assert.deepEqual(readIds, ['drive-glb-c1', 'drive-glb-c2', 'drive-glb-chr']);
 });
