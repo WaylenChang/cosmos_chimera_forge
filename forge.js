@@ -5187,6 +5187,7 @@
     let descriptor = null;
     try { descriptor = window.COSMI_MODEL_REVIEW?.descriptorFor?.(targetPkg) || null; } catch (e) {}
     three.activeDescriptor = descriptor;
+    three.sha256Mismatch = false;
     if (glbBuffer && descriptor?.model?.sha256 && crypto?.subtle) {
       const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", glbBuffer)), x => x.toString(16).padStart(2, "0")).join("");
       if (three.loadSeq !== loadSeq || three.loadedPkgId !== targetPkg.id || !isStage3dActive()) {
@@ -5194,11 +5195,7 @@
         return;
       }
       if (digest !== descriptor.model.sha256) {
-        three.loadingPkgId = null;
-        targetPkg.glbLoadError = true;
-        $("#stage3dClipBadge").textContent = "模型 SHA256 與驗收描述檔不符，請重新同步資產";
-        $("#stage3dInfoBadge").textContent = "";
-        return;
+        three.sha256Mismatch = true;
       }
     }
 
@@ -5431,6 +5428,7 @@
         `${stats.vertCount.toLocaleString()} 頂點`,
         `${clips.length} 組動作`
       ];
+      if (reviewState.three.sha256Mismatch) parts.push("⚠️ 模型 SHA256 與驗收描述檔不符（可能是更新版）");
       if (missingAnims.length) parts.push(`缺少：${missingAnims.join("、")}`);
       if (desc?.notes?.length) parts.push(desc.notes.join("；"));
       infoBadge.textContent = "| " + parts.join(" · ");

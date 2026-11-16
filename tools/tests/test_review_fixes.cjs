@@ -762,3 +762,100 @@ test('Drive deferred GLBs load across creatures, characters, and refresh without
   assert.deepEqual(parsedModels, [101, 102, 103]);
   assert.deepEqual(readIds, ['drive-glb-c1', 'drive-glb-c2', 'drive-glb-chr']);
 });
+
+test('SHA256 mismatch with review descriptor still displays 3D model and keeps warning prompt', async () => {
+  const { c, nodes } = createHarness();
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const parsedModels = [];
+  const vec3 = (x = 0, y = 0, z = 0) => ({
+    x, y, z,
+    set(nx, ny, nz) { this.x = nx; this.y = ny; this.z = nz; }
+  });
+  c.crypto = require('node:crypto').webcrypto;
+  c.THREE = {
+    Scene: class { add() {} remove() {} },
+    PerspectiveCamera: class { constructor() { this.position = vec3(); this.fov = 45; this.aspect = 1; } updateProjectionMatrix() {} },
+    WebGLRenderer: class {
+      constructor() { this.domElement = nodes.stage3dCanvas; this.shadowMap = {}; }
+      setSize() {} setPixelRatio() {} render() {}
+    },
+    OrbitControls: class { constructor() { this.target = vec3(); } update() {} },
+    Color: class {},
+    HemisphereLight: class { constructor() { this.position = vec3(); } },
+    DirectionalLight: class { constructor() { this.position = vec3(); this.shadow = { mapSize: {} }; } },
+    AmbientLight: class {},
+    GridHelper: class { constructor() { this.position = vec3(); this.material = {}; } },
+    Clock: class { getDelta() { return 0.016; } },
+    Box3: class {
+      constructor() { this.min = vec3(0, 0, 0); }
+      setFromObject() { return this; }
+      isEmpty() { return false; }
+      getSize() { return vec3(1, 1.6, 1); }
+      getCenter() { return vec3(0, 0.8, 0); }
+    },
+    Vector3: class { constructor(x = 0, y = 0, z = 0) { this.x = x; this.y = y; this.z = z; } },
+    SkeletonHelper: class {},
+    AnimationMixer: class {
+      stopAllAction() {}
+      uncacheRoot() {}
+      clipAction(clip) {
+        return {
+          _clip: clip, time: 0,
+          getClip() { return clip; },
+          setLoop() {}, reset() {}, setEffectiveTimeScale() {}, setEffectiveWeight() {}, play() {}
+        };
+      }
+      update() {}
+    },
+    LoopRepeat: 2201,
+    LoopOnce: 2200,
+    GLTFLoader: class {
+      parse(buf, _path, onLoad) {
+        parsedModels.push(new Uint8Array(buf)[4]);
+        onLoad({
+          scene: { position: vec3(), traverse() {} },
+          animations: [{ name: 'chr_idle', duration: 1.0 }]
+        });
+      }
+    }
+  };
+  nodes.stage3dView.append(nodes.stage3dCanvas);
+  c.COSMI_WIKI = { describe: () => ({ path: 'characters/wiki/test.md' }) };
+  c.COSMI_DRIVE = { packageDir: () => 'characters/01_portraits' };
+  c.COSMI_MODEL_REVIEW = {
+    ...c.COSMI_MODEL_REVIEW,
+    exactBuffer: b => (b instanceof ArrayBuffer ? b : b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength)),
+    descriptorFor: () => ({
+      spec: 'cosmimera-model-review/1',
+      model: { path: 'models/chr1.glb', sha256: '0'.repeat(64) },
+      animations: ['chr_idle']
+    })
+  };
+  for (const id of ['seed', 'rec', 'tasks', 'options', 'prompt', 'copy', 'download', 'header', 'chars', 'deliver', 'history', 'favorites', 'favBtn', 'concept', 'outStats', 'forge3dModeTabs', 'forgeStageTabs']) {
+    nodes[id] = c.document.createElement('div');
+    nodes[id].id = id;
+    if (id === 'concept') nodes[id].hidden = true;
+  }
+  const rafQueue = [];
+  c.requestAnimationFrame = fn => { rafQueue.push(fn); return rafQueue.length; };
+  c.cancelAnimationFrame = id => { if (rafQueue[id - 1]) rafQueue[id - 1] = () => {}; };
+
+  const char1 = c.DESIGNED_CHARACTERS[0];
+  await f.loadAssetFiles({
+    'mdl-sha-mismatch/manifest.json': encode({ task_id: 'mdl-sha-mismatch', task_type: 'character-model-rig', subject_id: char1.id, files: [{ path: 'models/chr1.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-sha-mismatch/models/chr1.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 9, 0, 0, 0])
+  }, { name: 'mdl-sha-mismatch' }, { silent: true });
+
+  await f.setViewMode('review');
+  const flushRaf = async () => {
+    for (const fn of rafQueue.splice(0, rafQueue.length)) await fn();
+  };
+  const flushMicrotasks = () => new Promise(r => setTimeout(r, 20));
+  nodes.railList.children.find(r => collectText(r).includes(char1.id)).listeners.click[0]();
+  await flushRaf();
+  await flushMicrotasks();
+
+  assert.deepEqual(parsedModels, [9], 'GLB must still be parsed and displayed on SHA256 mismatch');
+  assert.match(nodes.stage3dInfoBadge.textContent, /SHA256.*不符/);
+});
