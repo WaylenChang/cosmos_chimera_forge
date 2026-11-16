@@ -23,6 +23,11 @@ function makeNode(tag = 'div') {
       _set: new Set(),
       add(...cls) { cls.forEach(c => this._set.add(c)); },
       remove(...cls) { cls.forEach(c => this._set.delete(c)); },
+      toggle(c, force) {
+        if (force === undefined) this._set.has(c) ? this._set.delete(c) : this._set.add(c);
+        else if (force) this._set.add(c);
+        else this._set.delete(c);
+      },
       contains(c) { return this._set.has(c); }
     },
     setAttribute(k, v) { this[k] = v; },
@@ -37,6 +42,11 @@ function makeNode(tag = 'div') {
         if (Array.isArray(item)) this.append(...item);
         else if (typeof item === 'string' || typeof item === 'number') this.children.push({ textContent: String(item), children: [] });
         else this.children.push(item);
+      }
+    },
+    prepend(...items) {
+      for (const item of items.reverse()) {
+        if (item != null && item !== false) this.children.unshift(item);
       }
     },
     replaceChildren(...items) { this.children = []; this.append(...items); },
@@ -56,15 +66,18 @@ function collectText(node) {
 function createHarness() {
   const nodes = {};
   const ids = [
-    'toast', 'designedRailList', 'designedRailCount', 'designedStageHeader',
-    'designedDetailView', 'designedList', 'designedSearch', 'designedStatusFilter',
-    'designedView', 'forgeView', 'reviewView', 'settingsView',
-    'viewBtnForge', 'viewBtnDesigned', 'viewBtnReview', 'viewBtnSettings',
-    'forgeHeaderControls', 'designedCount'
+    'toast', 'designedStageHeader', 'designedDetailView',
+    'forgeView', 'reviewView', 'settingsView',
+    'viewBtnForge', 'viewBtnReview', 'viewBtnSettings',
+    'forgeHeaderControls', 'railList', 'reviewDesignedDetails',
+    'stageViewport', 'stageEmpty', 'stageSingleView', 'stageCompareView',
+    'stage3dView', 'stageTag', 'stageCarousel', 'viewSeg', 'panelBody',
+    'stageImg', 'cmp2dId', 'cmp3dId', 'cmp2dImg', 'cmp3dImg', 'viewSegGroup',
+    'btnToImg3d', 'btnToImg3dBatch', 'btnUpgradeActive', 'btnDeployGame',
+    'stId', 'stBadge', 'stRefTag', 'btnModeSingle', 'btnModeCompare',
+    'btnMode3D', 'tabBtnAnims', 'zoomSeg'
   ];
   for (const id of ids) nodes[id] = makeNode('div');
-  nodes.designedStatusFilter.value = 'all';
-  nodes.designedSearch.value = '';
 
   const store = new Map();
   const c = {
@@ -130,30 +143,18 @@ test('designed items display approved and provisional review deliverables and pr
   }, { name: 'chr-ok' }, { silent: true });
   okPkg.status = 'ok';
 
-  nodes.designedStatusFilter.value = 'all';
-  await f.setViewMode('designed');
-  // Select character tab/item via rail click or render
-  const railText = collectText(nodes.designedRailList);
-  assert.match(railText, /✅ 通過 1/);
-  assert.match(railText, /🟦 暫採 1/);
-
-  // Find the character button in designedRailList and click it
-  const charBtn = nodes.designedRailList.children.find(ch => ch.listeners?.click?.length && collectText(ch).includes(charId));
-  assert.ok(charBtn, 'character row should exist in designedRailList');
+  await f.setViewMode('review');
+  // Find the character row in railList and click it
+  const charBtn = nodes.railList.children.find(ch => ch.listeners?.click?.length && collectText(ch).includes(charId));
+  assert.ok(charBtn, 'character row should exist in railList');
   charBtn.listeners.click[0]();
 
   const detailText = collectText(nodes.designedDetailView);
   assert.match(detailText, /成果審查台：已通過與暫時採用/);
-  assert.match(detailText, /chr-ok/);
-  assert.match(detailText, /chr-prov/);
-  assert.doesNotMatch(detailText, /chr-rej/);
-
-  // Test status filter ("ok" should keep only items with approved packages)
-  nodes.designedStatusFilter.value = 'ok';
-  nodes.designedStatusFilter.listeners.change?.[0]?.({ target: nodes.designedStatusFilter });
-  // Trigger renderDesignedDesk via setViewMode if init wasn't run
-  await f.setViewMode('designed');
-  assert.match(collectText(nodes.designedRailList), new RegExp(charId));
+  const deliverablesText = detailText.slice(detailText.indexOf('成果審查台：已通過與暫時採用'));
+  assert.match(deliverablesText, /chr-ok/);
+  assert.match(deliverablesText, /chr-prov/);
+  assert.doesNotMatch(deliverablesText, /chr-rej/);
 });
 
 test('unprocessed parts of designed items track pipeline generation progress including typed_state and prompts/jobs', async () => {
@@ -181,7 +182,10 @@ test('unprocessed parts of designed items track pipeline generation progress inc
   }, { name: 'mdl-juv' }, { silent: true });
   runPkg.drivePath = '02_3d/colab/mdl-juv';
 
-  await f.setViewMode('designed');
+  await f.setViewMode('review');
+  const creatureBtn = nodes.railList.children.find(ch => ch.listeners?.click?.length && collectText(ch).includes(creature.line_id));
+  assert.ok(creatureBtn, 'creature row should exist in railList');
+  creatureBtn.listeners.click[0]();
   const detailText = collectText(nodes.designedDetailView);
   assert.match(detailText, /未處理項目與管線生成進度追蹤/);
   assert.match(detailText, /Colab 生成中/);

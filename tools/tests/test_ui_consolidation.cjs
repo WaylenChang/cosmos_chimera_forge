@@ -29,14 +29,18 @@ test('designed shortcut appears only for an active preset, not as a duplicate li
   assert.match(html,/id="reviewDesignedDetails"/);
   assert.match(forge,/reviewDeskEntries\(/);
 });
-test('designed filters are shared and full-list rendering is not repeated by renderAll', () => {
-  const list = forge.slice(forge.indexOf('  function renderDesignedList()'),forge.indexOf('  function fieldRow('));
-  assert.match(list,/getDesignedFilteredItems\(\)/);
-  assert.doesNotMatch(list,/const filteredLines = DESIGNED\.filter/);
-  assert.doesNotMatch(list,/const filteredChars = DESIGNED_CHARACTERS\.filter/);
-  const all = forge.slice(forge.indexOf('  function renderAll()'),forge.indexOf('  // ==================== 原生 ZIP',forge.indexOf('  function renderAll()')));
-  assert.equal((all.match(/renderDesignedDesk\(\)/g)||[]).length,1);
-  assert.doesNotMatch(all,/renderDesignedList\(\)/);
+test('legacy designedView is completely removed and review workbench has no redundant review-workbench buttons', () => {
+  assert.doesNotMatch(html, /id="designedView"/);
+  assert.doesNotMatch(html, /id="designedRail"/);
+  assert.doesNotMatch(html, /id="designedCardsView"/);
+  assert.doesNotMatch(forge, /function renderDesignedDesk\(/);
+  assert.doesNotMatch(forge, /function renderDesignedList\(/);
+  assert.doesNotMatch(forge, /function renderDesignedRail\(/);
+  assert.doesNotMatch(forge, /轉至成果審查台/);
+  assert.doesNotMatch(forge, /在審查台檢視/);
+  const all = forge.slice(forge.indexOf('  function renderAll()'), forge.indexOf('  // ==================== 原生 ZIP', forge.indexOf('  function renderAll()')));
+  assert.doesNotMatch(all, /renderDesignedDesk\(\)/);
+  assert.doesNotMatch(all, /renderDesignedList\(\)/);
 });
 test('no one-choice 3D mode switch or redundant manual portrait copy action',()=>{
   assert.match(forge,/!is3dType\(t\.id\) \|\| window\.COSMI_PIPELINE\?\.supports\(\{task:t\}\)/);

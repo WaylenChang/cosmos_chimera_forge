@@ -9,8 +9,7 @@ const responsive = css.slice(css.indexOf('/* ---- Responsive workspaces:'));
 const requiredIds = [
   'driveToolbar', 'drivePromptPath', 'pipelineControls', 'forgeView',
   'reviewView', 'rail', 'railList', 'stageHost', 'stageViewport', 'panel',
-  'panelTabs', 'panelBody', 'designedView', 'designedRail', 'designedRailList',
-  'designedStageHost', 'designedDetailView', 'designedCardsView',
+  'panelTabs', 'panelBody', 'reviewDesignedDetails', 'designedDetailView',
   'stage3dHud', 'stage3dTimeline', 'stage3dCanvas'
 ];
 
@@ -48,13 +47,10 @@ test('phone portrait, landscape, tablet portrait, and touch layouts are covered'
   }
   const phone = media.find(block => block.query.includes('max-width: 699px'));
   assert.match(phone.css, /#reviewView\.active\s*\{\s*display:\s*flex;\s*flex-direction:\s*column/);
-  assert.match(phone.css, /#designedView\.active\s*\{\s*display:\s*flex;\s*flex-direction:\s*column/);
   assert.match(phone.css, /#stageCompareView\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\)/);
   assert.match(phone.css, /#reviewView #railList[^}]*overflow-y:\s*auto/);
-  assert.match(phone.css, /#designedRailList[^}]*overflow-y:\s*auto/);
   const landscape = media.find(block => block.query.includes('orientation: landscape'));
   assert.match(landscape.css, /#reviewView\.active[^}]*display:\s*grid/);
-  assert.match(landscape.css, /#designedView\.active[^}]*display:\s*grid/);
 });
 
 test('tablet review has a full-width detail panel and no fixed-width sidebars', () => {
@@ -62,7 +58,6 @@ test('tablet review has a full-width detail panel and no fixed-width sidebars', 
   const tablet = media.find(block => block.query.includes('max-width: 1023px'));
   assert.match(tablet.css, /#reviewView aside#panel[^}]*grid-column:\s*1 \/ -1/);
   assert.match(tablet.css, /#reviewView #rail[^}]*width:\s*auto/);
-  assert.match(tablet.css, /#designedView #designedRail[^}]*width:\s*auto/);
 });
 
 test('responsive rules preserve readable dialogs, touch and viewport sizing', () => {

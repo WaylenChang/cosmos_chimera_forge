@@ -483,3 +483,133 @@ test('Drive refresh during active 3D review keeps stage3dView in stageViewport w
   f.refresh();
   assert.deepEqual(parsedModels.slice(-1), [22], 'updated Drive GLB must reload instead of keeping stale model');
 });
+
+test('switching forms, creatures, and characters reuses one 3D viewer without restarting WebGLRenderer', async () => {
+  const { c, nodes } = createHarness();
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const creature1 = c.DESIGNED[0];
+  const creature2 = c.DESIGNED[1];
+  const char1 = c.DESIGNED_CHARACTERS[0];
+
+  const vec3 = (x = 0, y = 0, z = 0) => ({ x, y, z, set(nx, ny, nz) { this.x = nx; this.y = ny; this.z = nz; } });
+  let rendererCount = 0;
+  const parsedModels = [];
+  const styleDisplayHistory = [];
+  const origStyle = nodes.stage3dView.style;
+  nodes.stage3dView.style = new Proxy(origStyle, {
+    set(target, prop, val) {
+      if (prop === 'display') styleDisplayHistory.push(val);
+      target[prop] = val;
+      return true;
+    }
+  });
+  c.THREE = {
+    Scene: class { add() {} remove() {} },
+    PerspectiveCamera: class { constructor() { this.position = vec3(); this.fov = 45; this.aspect = 1; } updateProjectionMatrix() {} },
+    WebGLRenderer: class { constructor() { rendererCount++; this.domElement = nodes.stage3dCanvas; } setSize() {} setPixelRatio() {} render() {} },
+    OrbitControls: class { constructor() { this.target = vec3(); } update() {} },
+    AmbientLight: class {},
+    HemisphereLight: class {},
+    DirectionalLight: class { constructor() { this.position = vec3(); } },
+    GridHelper: class { constructor() { this.position = vec3(); } },
+    Clock: class { getDelta() { return 0.016; } },
+    Box3: class { constructor() { this.min = vec3(0, 0, 0); } setFromObject() { return this; } isEmpty() { return false; } getSize() { return vec3(1, 1.5, 1); } getCenter() { return vec3(0, 0.75, 0); } },
+    Vector3: class { constructor(x = 0, y = 0, z = 0) { return vec3(x, y, z); } },
+    Group: class { constructor() { this.position = vec3(); this.children = []; } add(...xs) { this.children.push(...xs); } traverse() {} },
+    Mesh: class { constructor() { this.position = vec3(); this.rotation = vec3(); this.scale = vec3(1, 1, 1); } },
+    BoxGeometry: class {}, SphereGeometry: class {}, CylinderGeometry: class {}, ConeGeometry: class {},
+    MeshStandardMaterial: class {},
+    VectorKeyframeTrack: class {},
+    AnimationClip: class { constructor(name, duration) { this.name = name; this.duration = duration || 1; } },
+    SkeletonHelper: class {},
+    AnimationMixer: class {
+      stopAllAction() {}
+      uncacheRoot() {}
+      update() {}
+      clipAction(clip) {
+        return {
+          setLoop() {}, reset() {}, play() {}, setEffectiveTimeScale() {}, setEffectiveWeight() {},
+          getClip() { return clip; }, time: 0
+        };
+      }
+    },
+    LoopRepeat: 2201,
+    LoopOnce: 2200,
+    GLTFLoader: class {
+      parse(buf, _path, onLoad) {
+        parsedModels.push(new Uint8Array(buf)[4]);
+        onLoad({
+          scene: { position: vec3(), traverse() {} },
+          animations: [{ name: 'cr_idle', duration: 1.0 }]
+        });
+      }
+    }
+  };
+  nodes.stage3dView.append(nodes.stage3dCanvas);
+  c.COSMI_WIKI = { describe: () => ({ path: 'creatures/wiki/test.md' }) };
+  c.COSMI_DRIVE = { packageDir: () => 'creatures/01_portraits' };
+  for (const id of ['seed', 'rec', 'tasks', 'options', 'prompt', 'copy', 'download', 'header', 'chars', 'deliver', 'history', 'favorites', 'favBtn', 'concept', 'outStats', 'forge3dModeTabs', 'forgeStageTabs']) {
+    nodes[id] = c.document.createElement('div');
+    nodes[id].id = id;
+    if (id === 'concept') nodes[id].hidden = true;
+  }
+  const rafQueue = [];
+  c.requestAnimationFrame = fn => { rafQueue.push(fn); return rafQueue.length; };
+  c.cancelAnimationFrame = id => { if (rafQueue[id - 1]) rafQueue[id - 1] = () => {}; };
+
+  await f.loadAssetFiles({
+    'mdl-c1-adult/manifest.json': encode({ task_id: 'mdl-c1-adult', task_type: 'creature-model-rig', subject_id: creature1.line_id, stage: 'adult', files: [{ path: 'models/c1_adult.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-c1-adult/models/c1_adult.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 1, 0, 0, 0])
+  }, { name: 'mdl-c1-adult' }, { silent: true });
+  await f.loadAssetFiles({
+    'mdl-c1-juv/manifest.json': encode({ task_id: 'mdl-c1-juv', task_type: 'creature-model-rig', subject_id: creature1.line_id, stage: 'juvenile', files: [{ path: 'models/c1_juv.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-c1-juv/models/c1_juv.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 2, 0, 0, 0])
+  }, { name: 'mdl-c1-juv' }, { silent: true });
+  await f.loadAssetFiles({
+    'mdl-c2-adult/manifest.json': encode({ task_id: 'mdl-c2-adult', task_type: 'creature-model-rig', subject_id: creature2.line_id, stage: 'adult', files: [{ path: 'models/c2_adult.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-c2-adult/models/c2_adult.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 3, 0, 0, 0])
+  }, { name: 'mdl-c2-adult' }, { silent: true });
+  await f.loadAssetFiles({
+    'mdl-chr1/manifest.json': encode({ task_id: 'mdl-chr1', task_type: 'character-model-rig', subject_id: char1.id, files: [{ path: 'models/chr1.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-chr1/models/chr1.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 4, 0, 0, 0])
+  }, { name: 'mdl-chr1' }, { silent: true });
+
+  await f.setViewMode('review');
+  const flushRaf = async () => {
+    for (const fn of rafQueue.splice(0, rafQueue.length)) await fn();
+  };
+
+  // 1. Select creature 1 (adult)
+  nodes.railList.children.find(r => collectText(r).includes(creature1.line_id)).listeners.click[0]();
+  await flushRaf();
+  assert.deepEqual(parsedModels, [1]);
+  styleDisplayHistory.length = 0;
+
+  // 2. Switch form (juvenile) in-place without hiding viewer or restarting WebGLRenderer
+  const findByStage = (node, stage) => {
+    if (!node || typeof node !== 'object') return null;
+    if (node.dataset?.stage === stage || node['data-stage'] === stage) return node;
+    for (const ch of (node.children || [])) {
+      const hit = findByStage(ch, stage);
+      if (hit) return hit;
+    }
+    return null;
+  };
+  findByStage(nodes.designedDetailView, 'juvenile').listeners.click[0]();
+  assert.deepEqual(parsedModels, [1, 2]);
+  assert.equal(styleDisplayHistory.includes('none'), false, 'switching form must not hide stage3dView');
+
+  // 3. Switch creature 2 without hiding viewer or restarting WebGLRenderer
+  nodes.railList.children.find(r => collectText(r).includes(creature2.line_id)).listeners.click[0]();
+  await flushRaf();
+  assert.deepEqual(parsedModels, [1, 2, 3]);
+  assert.equal(styleDisplayHistory.includes('none'), false, 'switching creature must not hide stage3dView');
+
+  // 4. Switch character 1 without hiding viewer or restarting WebGLRenderer
+  nodes.railList.children.find(r => collectText(r).includes(char1.id)).listeners.click[0]();
+  await flushRaf();
+  assert.deepEqual(parsedModels, [1, 2, 3, 4]);
+  assert.equal(styleDisplayHistory.includes('none'), false, 'switching character must not hide stage3dView');
+  assert.equal(rendererCount, 1, 'WebGLRenderer must only be created once');
+});
