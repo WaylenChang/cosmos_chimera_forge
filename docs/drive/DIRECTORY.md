@@ -1,72 +1,83 @@
 # Cosmos Chimera Forge — Google Drive 目錄結構、名稱／ID 對照與管線索引
 
 - **專案根目錄**：`cosmos_chimera_forge/`（Drive Folder ID: `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`）
-- **最後維護日期**：2026-11-15
+- **最後維護日期**：2026-11-16
 
-## 1. Google Drive 目錄結構與 Folder ID
+## 1. Google Drive 目錄結構與命名規範
 
-### 1.1 分類管線目錄（`characters/`、`creatures/`、`moves/`）
+### 1.1 三層目錄結構（第一層分類 → 第二層 ID → 第三層扁平化檔案）
+
+- **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（招式／技能）
+- **第二層**：`<id>/`（主體 ID，例如 `chr_1286`、`cr_aqua_slime`、`earth_boulder_roll`）
+- **第三層**：所有檔案完全扁平化存放於 `<kind>/<id>/` 之下，不建立第四層子目錄。
+  - **命名結構**：`id_型態(宙獸才有型態)_管線與步驟_版本(可以沒有，多版本才需要)`
+  - 多檔產出（如立繪多視角圖、manifest、concept、VFX 分鏡）於基底命名後加上角色／副檔名，例如 `_front.png`、`_manifest.json`、`_concept.json`。
 
 ```text
 cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0]
 ├── characters/                                    [1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD]
-│   ├── 00_settings/                              [1uCAzOorzZJqOzpo1aUb8i7Dzcq1SR7cb]
-│   ├── 01_portraits/                             [1usiRK_rjxP2CBhgWpwpPkwmWgAzyUwni]
-│   ├── 02_3d/                                    [1Yu9ndz_6jy0_akEYAMh6r5oqMXjCSqBC]
-│   │   ├── colab/                                [1muzUS-m0KJvz18PQzHwKhDc5t4LWb7qZ]
-│   │   ├── ai_blender/                           [1k0W--TI0DUPRzIUPF9UttkOuvrhE8Tym]
-│   │   └── legacy/                               [1qFQNX6sw6kF2b6Dv3iIZA5D3DPiOdeGk]
-│   ├── 03_completed/                             [1McKIbN9l2Ka0oE7pVG0Ph7rV_X7E3gJY]
-│   │   ├── portraits/                            [1OJN4nv9_3DtXcnnoRndyEO9_ga8mWO30]
-│   │   └── models/                               [15syK63j1ZLYJ0PKP09pD97JX_Z4xtQvf]
-│   ├── wiki/                                     [1d8m0KbAOVNinotEK85h_AVF-chkVURpP]
-│   ├── prompts/jobs/                             [1qM_iP6-pRSP6bgcGULJa-8cpjf6PU7Sw]
-│   ├── reviews/                                  [10x4xig1t2Dp7EjNDTKxwFcI5Fl1AGBYG]
-│   └── backup/                                   [1PS9053w41gNIhLhduOXECISoYccRXUOo]
-├── creatures/                                    [1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C]
-│   ├── 00_settings/                              [1Wn0VSasKLGo_n2gBvRVO-4ItiSFrNjna]
-│   ├── 01_portraits/                             [1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE]
-│   ├── 02_3d/                                    [1W8Gokkr5ZbIVPYqjb9eLsbRQpxgr9-do]
-│   │   ├── colab/                                [1JHlUoO5wRGM3NURXEoZcYlYg6tz_KXbH]
-│   │   ├── ai_blender/                           [1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s]
-│   │   └── legacy/                               [1UtfyeCUHJQZ_MWthFDzlkKZjTL9fr_i3]
-│   ├── 03_completed/                             [181E4GIBMBx6FDpJeg1tFTHsXlb2shSx7]
-│   │   ├── portraits/                            [1cJVlRhu86TfmYvvxfeAaYCoKMpt3NPYb]
-│   │   └── models/                               [1SJRqzXzrryLY8AibZpcbdCQZwiKpJWsp]
-│   ├── wiki/                                     [1XYWg2Qvhv4Pr8dGAjmOn6iMVbteTBiWQ]
-│   │   └── _legacy/                              [1heUsQcXsjP3vBrJ9SD023zqKv_uyv9DQ]
-│   ├── prompts/jobs/                             [1KEXvJpJnDA2Icu4zfjLhoY5qg1E5HRiy]
-│   ├── reviews/                                  [1rQCwId-7tBG10Qm5w8ADx0oWkoOXcKdJ]
-│   └── backup/                                   [1eawR_YgbTHufPATI6LeEQlYl9w42p5BM]
-├── moves/                                        [1alulsIhFcb8m8UKXaA-9-orBCEr__P8B]
-│   ├── 00_settings/                              [1NEffTj77sxkNoJI1BeMA1HvcRTe5ihfM]
-│   ├── 01_vfx/                                   [1nspS2MHinS-z4kMRKy0BvmUqVYAeZMyj]
-│   ├── 03_completed/                             [1b8MXP0Nk8eVCkImpTLSzQ9UmGthYj17Q]
-│   ├── wiki/                                     [1ziI5BLlIovEk_a6TcwOB-S0x4NsAGhj6]
-│   ├── prompts/jobs/                             [1tBB6vVd4DG_XT5f4QEf1XTQbZOiadcAt]
-│   ├── reviews/                                  [1gW4XG7fsXI0fNcGXHMHOxNkupPeLJGOz]
-│   └── backup/                                   [11LG5ahUWuSd19Xg8ja2Prwc7WO37tQXj]
-├── 00_settings/                                 [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV] # 全域預設
-├── prompts/                                     [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz] # 舊版唯讀相容模板
-├── DIRECTORY.md                                 [1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7]
-├── AGENT_QUICKSTART.md                          [1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O]
-└── backup/                                      [1j1URF-pjZA_AJKj6MzG4vNVWrD2-ziqy] # 退役資料夾與歷史索引
+│   ├── <id>/                                      # 第二層：角色 ID（無型態）
+│   │   ├── <id>_00_appearance.md
+│   │   ├── <id>_00_parameters.json
+│   │   ├── <id>_01_portrait_front.png
+│   │   ├── <id>_01_portrait_turnaround.png
+│   │   ├── <id>_01_portrait_main.png
+│   │   ├── <id>_01_portrait_concept.json
+│   │   ├── <id>_01_portrait_manifest.json
+│   │   ├── <id>_02_review_portrait.json
+│   │   ├── <id>_03a_colab.glb
+│   │   ├── <id>_03a_colab.blend
+│   │   ├── <id>_03a_colab_manifest.json
+│   │   ├── <id>_03b_blender_v2.glb                # 多版本時才加 _v2
+│   │   ├── <id>_04_review_3d.json
+│   │   └── <id>_05_wiki.md
+│   ├── prompts/                                   # 分類專屬管線模板
+│   └── backup/                                    # 退件備份
+├── creatures/                                     [1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C]
+│   ├── <id>/                                      # 第二層：宙獸 ID（含四階型態）
+│   │   ├── <id>_juvenile_00_appearance.md
+│   │   ├── <id>_juvenile_00_parameters.json
+│   │   ├── <id>_juvenile_01_portrait_front.png
+│   │   ├── <id>_juvenile_01_portrait_turnaround.png
+│   │   ├── <id>_juvenile_01_portrait_manifest.json
+│   │   ├── <id>_juvenile_02_review_portrait.json
+│   │   ├── <id>_juvenile_03a_colab.glb
+│   │   ├── <id>_juvenile_03a_colab.blend
+│   │   ├── <id>_juvenile_03a_colab_manifest.json
+│   │   ├── <id>_juvenile_04_review_3d.json
+│   │   ├── <id>_juvenile_05_wiki.md
+│   │   └── <id>_adult_03b_blender_v2.glb          # 多版本時加 _v2
+│   ├── prompts/                                   # 分類專屬管線模板
+│   └── backup/                                    # 退件備份
+├── moves/                                         [1alulsIhFcb8m8UKXaA-9-orBCEr__P8B]
+│   ├── <id>/                                      # 第二層：技能／招式 ID（無型態）
+│   │   ├── <id>_01b_vfx_spec.json
+│   │   ├── <id>_01b_vfx_manifest.json
+│   │   ├── <id>_04_review_3d.json
+│   │   └── <id>_05_wiki.md
+│   ├── prompts/                                   # 分類專屬管線模板
+│   └── backup/                                    # 退件備份
+├── 00_settings/                                   [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV] # 全域預設
+├── prompts/                                       [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz] # 舊版唯讀相容模板
+├── DIRECTORY.md                                   [1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7]
+├── AGENT_QUICKSTART.md                            [1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O]
+└── backup/                                        [1j1URF-pjZA_AJKj6MzG4vNVWrD2-ziqy] # 退役資料夾與歷史索引
 ```
 
 ## 2. 管線流程各步驟參考 Prompt（分類專屬 `<kind>/prompts/`）
 
-新工作一律從 `characters/prompts/`、`creatures/prompts/` 或 `moves/prompts/` 讀取模板並寫入各自的 `jobs/`。根目錄 `prompts/` 僅供舊版讀取相容，不再作為新工作寫入路徑。2026-11-15 實際 Drive 讀取確認：角色與宙獸各 8 份階段模板；招式獨立 1 份 VFX 模板。
+新工作一律從 `characters/prompts/`、`creatures/prompts/` 或 `moves/prompts/` 讀取模板，輸出直接寫入 `<kind>/<id>/`（第三層扁平化檔案）。根目錄 `prompts/` 僅供舊版讀取相容，不再作為新工作寫入路徑。
 
-| 步驟 | 檔案名稱 | 對應流程節點 | 說明 |
+| 步驟代碼 | 模板檔案 | 對應流程節點 | 輸出命名範例（第三層 `<kind>/<id>/`） |
 | :--- | :--- | :--- | :--- |
-| 00 | `<kind>/prompts/00_appearance.prompt.md` | 外觀設定 | 依素材撰寫繁體中文原創外觀，不夾帶格式與遊戲數值 |
-| 01 | `<kind>/prompts/01_portrait.prompt.md` | 立繪生成 | 依外觀與 `parameters.json` 繪製（角色：正面／三視角／主立繪；宙獸：僅正面圖與三視圖，不需主立繪），輸出 `images/`、`concept.json`、`manifest.json` |
-| 01b | `moves/prompts/01b_move_vfx.prompt.md` | 招式特效 | 招式效果動畫／VFX 設計，輸出至 `moves/01_vfx/<asset_id>/` |
-| 02 | `<kind>/prompts/02_review_portrait.prompt.md` | 立繪審查 | 檢查圖檔完整性、結構、視角與配色一致性；只輸出建議，不代為核准 |
-| 03a | `<kind>/prompts/03a_colab.prompt.md` | Colab Image-to-3D | 已核准立繪 → Colab GPU 網格 → Blender 修整、綁骨與匯出 |
-| 03b | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 支援 Image-to-3D（需已核准立繪）與 Prompt-to-3D（純文字外觀，無需補立繪） |
-| 04 | `<kind>/prompts/04_review_3d.prompt.md` | 3D 最終驗收 | 核對 `.glb`、`.blend`、manifest、骨架動畫與（Image-to-3D）來源立繪綁定 |
-| 05 | `<kind>/prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 僅於目標 `<kind>/wiki/` 路徑不存在時建立原創角色／宙獸／招式圖鑑 |
+| `00_appearance` | `<kind>/prompts/00_appearance.prompt.md` | 外觀設定 | `<id>[_<stage>]_00_appearance[_<ver>].md`、`<id>[_<stage>]_00_parameters[_<ver>].json` |
+| `01_portrait` | `<kind>/prompts/01_portrait.prompt.md` | 立繪生成 | `<id>[_<stage>]_01_portrait[_<ver>]_front.png`、`_turnaround.png`、`_main.png`（僅角色）、`_concept.json`、`_manifest.json` |
+| `01b_vfx` | `moves/prompts/01b_move_vfx.prompt.md` | 招式特效 | `<id>_01b_vfx[_<ver>]_spec.json`、`_manifest.json` |
+| `02_review_portrait` | `<kind>/prompts/02_review_portrait.prompt.md` | 立繪審查 | `<id>[_<stage>]_02_review_portrait[_<ver>].json`（只輸出建議，不代為核准） |
+| `03a_colab` | `<kind>/prompts/03a_colab.prompt.md` | Colab Image-to-3D | `<id>[_<stage>]_03a_colab[_<ver>].glb`、`.blend`、`_manifest.json` |
+| `03b_blender` | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | `<id>[_<stage>]_03b_blender[_<ver>].glb`、`.blend`、`_manifest.json` |
+| `04_review_3d` | `<kind>/prompts/04_review_3d.prompt.md` | 3D 最終驗收 | `<id>[_<stage>]_04_review_3d[_<ver>].json` |
+| `05_wiki` | `<kind>/prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | `<id>[_<stage>]_05_wiki[_<ver>].md`（僅於目標檔案不存在時建立） |
 | — | `docs/pipeline/TRIGGERS.md` | 簡易觸發語句 | 各步驟觸發指令與管線分支說明 |
 
 ## 3. 角色（Characters）名稱與 ID 對照

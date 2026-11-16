@@ -105,14 +105,16 @@
     const sourceId = String((stage === "review_3d" ? active?.sourcePack || active?.manifest?.source_pack : ctx.opts?.source_pack) || "").trim();
     const source = sourceId || "未指定";
     const root = pipelineRootFor(ctx);
-    const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? root + "/01_portraits/" + sourceId : "未指定");
+    const subjectBase = (window.COSMI_DRIVE?.cleanSubjectId?.(root, ctx.subjectId || ctx.taskId) || ctx.subjectId || ctx.taskId);
+    const subjectFolder = root + "/" + subjectBase;
+    const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? root + "/" + (window.COSMI_DRIVE?.cleanSubjectId?.(root, sourceId) || sourceId) : "未指定");
     const imageHint = String(ctx.opts?.input_img || "").trim();
     const hasImage = stage === "blender" && graphMode === "prompt" ? false : Boolean(sourceId || imageHint || stage === "colab");
     const visual = stage === "appearance" || (stage === "blender" && !hasImage) ? appearance(ctx) : "";
     let modelInput = "";
     if (is3D) {
       if (hasImage) {
-        const absoluteHint = /^(?:https?:\/\/|(?:characters|creatures|moves)\/(?:01_portraits|03_completed\/portraits|01_vfx|backup)\/)/.test(imageHint);
+        const absoluteHint = /^(?:https?:\/\/|(?:characters|creatures|moves)\/)/.test(imageHint);
         const imgPath = imageHint ? (sourceId && !absoluteHint ? sourcePath + "/" + imageHint.replace(/^\/+/, "") : imageHint) : (sourceId ? sourcePath + "/" : "未指定");
         modelInput = "輸入圖片：" + imgPath + "\nsource_pack：" + source;
       } else {
@@ -123,14 +125,24 @@
       ? "宙獸圖鑑：另建 `bestiary.md` 並列入 manifest.files；命名本種，分述幼年（juvenile）、少年（adolescent）、成年（adult）、超載（overload）的外觀、生態田野觀察與演化過程。未建模的形態註明概念推演。"
       : "";
     const activePath = String(active?.drivePath || "");
-    const portraitPath = /^(?:characters|creatures)\/(?:01_portraits|03_completed\/portraits)\//.test(activePath) ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
-    const modelPath = /^(?:characters|creatures)\/(?:02_3d|03_completed\/models)\//.test(activePath) ? activePath : "請指定待審模型目錄";
+    const activeIsPortrait = active && !/model|rig|anim/.test(active.type || "");
+    const activeIsModel = active && /model|rig|anim/.test(active.type || "");
+    const portraitPath = (/^(?:characters|creatures)\/(?:01_portraits|03_completed\/portraits)\//.test(activePath) || (activeIsPortrait && /^(?:characters|creatures)\/[^/]+$/.test(activePath)))
+      ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
+    const modelPath = (/^(?:characters|creatures)\/(?:02_3d|03_completed\/models)\//.test(activePath) || (activeIsModel && /^(?:characters|creatures)\/[^/]+$/.test(activePath)))
+      ? activePath : "請指定待審模型目錄";
+    const paramStem = window.COSMI_DRIVE?.assetStem?.({
+      kind: root,
+      id: subjectBase,
+      stage: ctx.opts?.stage || ctx.concept?.stage,
+      step: "00_parameters",
+    }) || (subjectBase + (root === "creatures" ? "_" + (ctx.opts?.stage || ctx.concept?.stage || "adult") : "") + "_00_parameters");
     const values = {
       appearance: visual, model_input: modelInput, bestiary,
       asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source, source_path: sourcePath,
       input_path: stage === "review_portrait" ? portraitPath : modelPath,
-      output_path: (window.COSMI_DRIVE?.pipelineDirectory?.(root, stage === "colab" || stage === "blender" ? stage : root === "moves" ? "vfx" : "portrait") || (stage === "colab" ? root + "/02_3d/colab" : stage === "blender" ? root + "/02_3d/ai_blender" : root === "moves" ? "moves/01_vfx" : root + "/01_portraits")) + "/" + ctx.taskId,
-      parameters_path: root + "/00_settings/" + ctx.taskId + ".parameters.json"
+      output_path: window.COSMI_DRIVE?.pipelineDirectory?.(root, stage === "colab" || stage === "blender" ? stage : root === "moves" ? "vfx" : "portrait", subjectBase) || subjectFolder,
+      parameters_path: subjectFolder + "/" + paramStem + ".json"
     };
     const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定").replace(/\n{3,}/g, "\n\n").trim();
     if (stage === "appearance" && window.COSMI_WIKI && supports(ctx)) {

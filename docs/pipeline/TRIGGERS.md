@@ -8,7 +8,7 @@
 - 立繪：讀取 cosmos_chimera_forge/<kind>/prompts/01_portrait.prompt.md，使用指定資產的 appearance.md 和 parameters.json 執行。
 - 立繪審查：讀取 cosmos_chimera_forge/<kind>/prompts/02_review_portrait.prompt.md，檢查我指定的立繪目錄。
 - Colab：讀取 cosmos_chimera_forge/<kind>/prompts/03a_colab.prompt.md，處理我指定的已核准立繪目錄及 parameters.json。
-- AI Blender：讀取 cosmos_chimera_forge/<kind>/prompts/03b_blender.prompt.md；提供已核准圖片即為 Image-to-3D，未提供任何圖片時依外觀與 parameters.json 執行 Prompt-to-3D。圖鑑統一使用 `<kind>/wiki/` 的既有主體與階段檔案，缺少時才建立，不重複生成。此分支由立繪階段分岔，建模完成後無需補繪立繪，直接進入最終驗收。
+- AI Blender：讀取 cosmos_chimera_forge/<kind>/prompts/03b_blender.prompt.md；提供已核准圖片即為 Image-to-3D，未提供任何圖片時依外觀與 parameters.json 執行 Prompt-to-3D。圖鑑統一使用 `<kind>/<id>/<id>[_<stage>]_05_wiki.md` 的既有檔案，缺少時才建立，不重複生成。此分支由立繪階段分岔，建模完成後無需補繪立繪，直接進入最終驗收。
 - 最終審查：讀取 cosmos_chimera_forge/<kind>/prompts/04_review_3d.prompt.md，檢查模型與對應立繪（Image-to-3D）；Prompt-to-3D 無需補立繪。
 
 HTML 中選步驟，按「讀取本步驟 .md／複製執行」可產生已填入目前資產的版本。原始 .md 的 {{欄位}} 由 HTML 代入；直接交給 AI 時須提供實際路徑與設定。讀取本身不會自動啟動外部 AI 或 Colab。

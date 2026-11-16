@@ -19,18 +19,28 @@
   function describe(ctx) {
     const kind=kindFor(ctx?.task?.id), subject=cleanId(ctx?.subjectId||ctx?.taskId);
     const candidate=ctx?.opts?.stage||ctx?.concept?.stage||"";
-    // Creatures have four independently maintained forms; characters may be un-staged.
-    const stage=STAGES.includes(candidate)?candidate:(kind==="creatures"?"adult":"");
+    // Creatures have four independently maintained forms; characters and moves have no stage.
+    const stage=kind==="creatures"?(STAGES.includes(candidate)?candidate:"adult"):"";
     const base=stage&&subject.endsWith("_"+stage)?subject.slice(0,-stage.length-1):subject;
-    const path=kind+"/wiki/"+base+(stage?"_"+stage:"")+"_wiki.md";
-    return {kind,subject:base,stage,path,key:kind+"/"+base+(stage?"/"+stage:"")};
+    const stem=base+(stage?"_"+stage:"")+"_05_wiki";
+    const path=kind+"/"+base+"/"+stem+".md";
+    return {kind,subject:base,stage,stem,path,key:kind+"/"+base+(stage?"/"+stage:"")};
   }
-  // Historical Drive manifests may still contain paths from before the category-first move.
+  // Historical Drive manifests may still contain paths from before the subject-folder layout.
   // Normalize references only, never rename an asset file or mark its QA as complete.
   function normalizeWikiPath(path) {
-    return typeof path === "string"
-      ? path.replace(/^wiki\/(characters|creatures|moves)\//, "$1/wiki/")
-      : path;
+    if (typeof path !== "string") return path;
+    const m = /^(?:wiki\/(characters|creatures|moves)|(characters|creatures|moves)\/wiki)\/([^/]+)_wiki\.md$/.exec(path);
+    if (!m) return path;
+    const kind = m[1] || m[2], rawName = m[3];
+    if (kind === "creatures") {
+      const stageMatch = /^(.+)_(juvenile|adolescent|adult|overload)$/.exec(rawName);
+      if (stageMatch) {
+        const base = stageMatch[1], stage = stageMatch[2];
+        return kind + "/" + base + "/" + base + "_" + stage + "_05_wiki.md";
+      }
+    }
+    return kind + "/" + rawName + "/" + rawName + "_05_wiki.md";
   }
   function normalizeManifest(manifest) {
     if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) return manifest;

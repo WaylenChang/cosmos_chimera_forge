@@ -110,34 +110,124 @@
       return "creatures";
     return "creatures";
   }
-  // One canonical directory resolver for all category-specific pipeline outputs.
-  // Historical stage names are accepted as aliases, not as separate output trees.
-  function pipelineDirectory(kind, stage) {
+  const CREATURE_STAGES = Object.freeze(["juvenile", "adolescent", "adult", "overload"]);
+  const STEP_ALIASES = Object.freeze({
+    appearance: "00_appearance",
+    "00_appearance": "00_appearance",
+    parameters: "00_parameters",
+    "00_parameters": "00_parameters",
+    portrait: "01_portrait",
+    "01_portrait": "01_portrait",
+    portrait_3d: "01_portrait",
+    vfx: "01b_vfx",
+    move_vfx: "01b_vfx",
+    "01_vfx": "01b_vfx",
+    "01b_vfx": "01b_vfx",
+    "01b_move_vfx": "01b_vfx",
+    review_portrait: "02_review_portrait",
+    "02_review_portrait": "02_review_portrait",
+    colab: "03a_colab",
+    "03a_colab": "03a_colab",
+    colab_ai_blender: "03a_colab",
+    blender: "03b_blender",
+    "03b_blender": "03b_blender",
+    ai_blender: "03b_blender",
+    review_3d: "04_review_3d",
+    "04_review_3d": "04_review_3d",
+    wiki: "05_wiki",
+    encyclopedia: "05_wiki",
+    "05_wiki": "05_wiki",
+    "05_encyclopedia": "05_wiki",
+  });
+  const ASSET_STEPS = new Set(["01_portrait", "01b_vfx", "03a_colab", "03b_blender"]);
+  const RESERVED_CATEGORY_FOLDERS = new Set([
+    "prompts",
+    "00_settings",
+    "01_portraits",
+    "01_vfx",
+    "02_3d",
+    "03_completed",
+    "wiki",
+    "reviews",
+    "backup",
+  ]);
+  function stepCode(stage) {
+    const key = String(stage || "").trim();
+    if (key === "legacy") throw Error("舊版 3D 管線僅供唯讀遷移，不允許新輸出");
+    const code = STEP_ALIASES[key];
+    if (!code) throw Error("未知管線階段：" + String(stage));
+    return code;
+  }
+  function cleanSubjectId(kind, id) {
     const root = pipelineRoot(kind);
-    if (root === "moves") {
-      if (stage === "vfx" || stage === "move_vfx" || stage === "01_vfx") return "moves/01_vfx";
+    let s = String(id || "").trim();
+    if (!s) return "";
+    if (root === "creatures") {
+      const m = /^(.+)_(juvenile|adolescent|adult|overload)$/.exec(s);
+      if (m) s = m[1];
+    }
+    return s;
+  }
+  function subjectDir(kind, id) {
+    const root = pipelineRoot(kind);
+    const clean = cleanSubjectId(root, id);
+    return clean ? root + "/" + clean : root;
+  }
+  function assetStem({ kind, id, stage, step, version } = {}) {
+    const root = pipelineRoot(kind || id);
+    const clean = cleanSubjectId(root, id);
+    if (!clean) throw Error("缺少主體 ID");
+    const parts = [clean];
+    if (root === "creatures") {
+      const st = CREATURE_STAGES.includes(stage) ? stage : "adult";
+      parts.push(st);
+    }
+    parts.push(stepCode(step));
+    if (version !== undefined && version !== null && String(version).trim()) {
+      parts.push(String(version).trim());
+    }
+    return parts.join("_");
+  }
+  function parseAssetFilename(name, kind) {
+    const m = /^(.+?)(?:_(juvenile|adolescent|adult|overload))?_(00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(v\d+|\d{8}(?:[-_]\d{4})?))?(?:_([^.]+))?\.([^.]+)$/i.exec(
+      String(name || ""),
+    );
+    if (!m) return null;
+    const rawId = m[1];
+    const stage = kind === "creatures" ? m[2] || "" : "";
+    const id = !kind || kind === "creatures" ? rawId : m[2] ? rawId + "_" + m[2] : rawId;
+    const step = m[3];
+    const version = m[4] || "";
+    const role = m[5] || "";
+    const ext = m[6];
+    const stem = [id, stage, step, version].filter(Boolean).join("_");
+    return { id, stage, step, version, role, ext, stem };
+  }
+  // One canonical directory resolver for all category-specific pipeline outputs.
+  // Level 1: characters / creatures / moves; Level 2: <id>; Level 3: flat files.
+  function pipelineDirectory(kind, stage, id) {
+    const root = pipelineRoot(kind);
+    const code = stepCode(stage);
+    if (root === "moves" && code !== "01b_vfx" && code !== "00_appearance" && code !== "00_parameters" && code !== "04_review_3d" && code !== "05_wiki") {
       throw Error("招式僅支援 VFX 資產管線");
     }
-    if (stage === "colab" || stage === "03a_colab" || stage === "colab_ai_blender")
-      return root + "/02_3d/colab";
-    if (stage === "blender" || stage === "03b_blender" || stage === "ai_blender")
-      return root + "/02_3d/ai_blender";
-    if (stage === "legacy") throw Error("舊版 3D 管線僅供唯讀遷移，不允許新輸出");
-    if (stage === "portrait" || stage === "01_portrait" || stage === "portrait_3d")
-      return root + "/01_portraits";
-    throw Error("未知管線階段：" + String(stage));
+    return id ? subjectDir(root, id) : root;
   }
   function packageDir(type, subjectOrId, stage) {
     const root = pipelineRoot(subjectOrId ? { type, id: subjectOrId } : type);
-    if (root === "moves") return pipelineDirectory(root, "vfx");
-    if (/model|rig|anim/.test(type)) return pipelineDirectory(root, stage || "blender");
-    return pipelineDirectory(root, "portrait");
+    if (root === "moves") pipelineDirectory(root, "vfx");
+    else if (/model|rig|anim/.test(type)) pipelineDirectory(root, stage || "blender");
+    else pipelineDirectory(root, "portrait");
+    const rawId = String(subjectOrId || "").trim();
+    if (!rawId || /^(?:characters?|creatures?|moves?)$/i.test(rawId)) return root;
+    return subjectDir(root, rawId);
   }
   function recordPipelineWrite(path, result) {
     const clean = String(path || "").replace(/^\/+/, "");
+    const name = clean.split("/").pop();
     const item = {
       id: result?.id || "",
-      name: clean.split("/").pop(),
+      name,
       modifiedTime: new Date().toISOString(),
     };
     const upsert = (arr) => {
@@ -146,15 +236,29 @@
       next.push(item);
       return next;
     };
-    if (/^(?:(?:characters|creatures|moves)\/)?00_settings\//.test(clean))
+    const parsed = parseAssetFilename(name, pipelineRoot(clean));
+    if (
+      parsed?.step === "00_appearance" ||
+      parsed?.step === "00_parameters" ||
+      /^(?:(?:characters|creatures|moves)\/)?00_settings\//.test(clean)
+    )
       pipelineIndexState.settings = upsert(pipelineIndexState.settings);
-    else if (/^(?:(?:characters|creatures|moves)\/)?prompts\/jobs\//.test(clean))
+    else if (
+      /_(?:prompt|job)\.md$/i.test(name) ||
+      /^(?:(?:characters|creatures|moves)\/)?prompts\/jobs\//.test(clean)
+    )
       pipelineIndexState.jobs = upsert(pipelineIndexState.jobs);
-    else if (/^(?:characters\/wiki|wiki\/characters)\//.test(clean))
+    else if (
+      (clean.startsWith("characters/") && parsed?.step === "05_wiki") ||
+      /^(?:characters\/wiki|wiki\/characters)\//.test(clean)
+    )
       pipelineIndexState.wikiCharacters = upsert(
         pipelineIndexState.wikiCharacters,
       );
-    else if (/^(?:creatures\/wiki|wiki\/creatures)\//.test(clean))
+    else if (
+      (clean.startsWith("creatures/") && parsed?.step === "05_wiki") ||
+      /^(?:creatures\/wiki|wiki\/creatures)\//.test(clean)
+    )
       pipelineIndexState.wikiCreatures = upsert(
         pipelineIndexState.wikiCreatures,
       );
@@ -181,7 +285,8 @@
         drain();
       });
   }
-  const categoryDirs = [
+  const categoryRoots = ["characters", "creatures", "moves"];
+  const legacyCategoryDirs = [
     "characters/01_portraits",
     "characters/02_3d/colab",
     "characters/02_3d/ai_blender",
@@ -197,6 +302,7 @@
     "moves/01_vfx",
     "moves/03_completed",
   ];
+  const categoryDirs = legacyCategoryDirs; // Retained for legacy manifest migration only.
   const legacyDirs = [
     "01_portraits",
     "02_3d/colab",
@@ -205,7 +311,7 @@
     "03_completed/portraits",
     "03_completed/models",
   ];
-  const dirs = categoryDirs; // Legacy roots are migration sources only, never active asset scans.
+  const dirs = categoryRoots; // Active Drive scans use Level 1 category roots -> Level 2 <id> -> flat Level 3 files.
   function relative(path) {
     if (
       typeof path !== "string" ||
@@ -417,11 +523,11 @@
         if (generation !== sessionGeneration)
           throw Error("Google 工作階段已變更");
       };
-      const importPackage = async (dir, entry, files, raw, reviewRecord) => {
+      const importSinglePackage = async (dir, entry, files, raw, reviewRecord, pkgNameOverride = null) => {
         checkSession();
         const pkg = await window.COSMI_FORGE.loadAssetFiles(
           raw,
-          { name: entry.name },
+          { name: pkgNameOverride || entry.name },
           { silent: true },
         );
         checkSession();
@@ -446,10 +552,59 @@
           pkg.status = reviewRecord.status;
           pkg.sourcePack = reviewRecord.source_pack;
           pkg.reviewRecord = reviewRecord;
+          if (reviewRecord.status === "ok") pkg.completed = true;
         }
         if (/(?:^|\/)03_completed(?:\/|$)/.test(dir)) pkg.completed = true;
         window.COSMI_MODEL_REVIEW?.onPackagesChanged();
         return pkg;
+      };
+      const importPackage = async (dir, entry, files, raw, fallbackReviewRecord) => {
+        const kind = pipelineRoot(dir);
+        const grouped = new Map();
+        const inlineReviews = new Map();
+        for (const f of files) {
+          const parsed = parseAssetFilename(f.path, kind);
+          if (!parsed) continue;
+          if (parsed.step === "02_review_portrait" || parsed.step === "04_review_3d") {
+            const rawKey = entry.name + "/" + f.path;
+            if (raw[rawKey]) {
+              try {
+                const parsedReview = JSON.parse(new TextDecoder().decode(raw[rawKey]));
+                const targetStep = parsed.step === "02_review_portrait" ? "01_portrait" : null;
+                const keyPrefix = [parsed.id, parsed.stage].filter(Boolean).join("_");
+                if (parsedReview?.task_id) inlineReviews.set(parsedReview.task_id, parsedReview);
+                if (targetStep) {
+                  inlineReviews.set([keyPrefix, targetStep, parsed.version].filter(Boolean).join("_"), parsedReview);
+                } else {
+                  for (const s3d of ["03a_colab", "03b_blender", "01b_vfx"]) {
+                    inlineReviews.set([keyPrefix, s3d, parsed.version].filter(Boolean).join("_"), parsedReview);
+                  }
+                }
+              } catch (_) {}
+            }
+            continue;
+          }
+          if (!ASSET_STEPS.has(parsed.step)) continue;
+          if (!grouped.has(parsed.stem)) grouped.set(parsed.stem, []);
+          grouped.get(parsed.stem).push(f);
+        }
+        if (!grouped.size) {
+          const hasLegacyAsset = files.some((f) => /(?:^|\/)(?:manifest|concept)\.json$/i.test(f.path) || /\.glb$/i.test(f.path));
+          if (!hasLegacyAsset) return [];
+          return [await importSinglePackage(dir, entry, files, raw, fallbackReviewRecord)];
+        }
+        const imported = [];
+        for (const [stem, groupFiles] of grouped) {
+          const subRaw = {};
+          for (const gf of groupFiles) {
+            const k = entry.name + "/" + gf.path;
+            if (raw[k]) subRaw[stem + "/" + gf.path] = raw[k];
+          }
+          if (!Object.keys(subRaw).length) continue;
+          const rev = inlineReviews.get(stem) || fallbackReviewRecord || null;
+          imported.push(await importSinglePackage(dir, entry, groupFiles, subRaw, rev, stem));
+        }
+        return imported;
       };
       const status = (message) => {
         $("driveStatus").textContent = message;
@@ -500,7 +655,12 @@
           try {
             const entries = await list(await folder(dir));
             return entries
-              .filter((f) => f.mimeType === MIME && !f.name.startsWith("_"))
+              .filter(
+                (f) =>
+                  f.mimeType === MIME &&
+                  !f.name.startsWith("_") &&
+                  !RESERVED_CATEGORY_FOLDERS.has(f.name),
+              )
               .map((entry) => ({ dir, entry }));
           } catch (e) {
             if (!/不存在/.test(e.message)) errors.push(dir + ": " + e.message);
@@ -612,17 +772,17 @@
               if (!Object.keys(raw).length) continue;
               // Avoid rendering the whole review desk for every downloaded file/package.
               const r = await download(() => record(entry.name, reviewIndex));
-              const pkg = await importPackage(dir, entry, files, raw, r);
-              if (ns && generation === sessionGeneration)
+              const imported = await importPackage(dir, entry, files, raw, r);
+              if (ns && generation === sessionGeneration && imported.length)
                 await cache?.putPackage(ns, {
                   dir,
                   entry,
                   files,
                   raw,
                   reviewRecord: r,
-                  pkgId: pkg.id,
+                  pkgId: imported[0]?.id || entry.name,
                 });
-              count++;
+              count += imported.length;
               if (count % 5 === 0) window.COSMI_FORGE.refresh();
             } catch (e) {
               if (generation !== sessionGeneration) throw e;
@@ -695,6 +855,21 @@
     folders.clear();
     return r;
   }
+  function reviewPathFor(pkg) {
+    const isModel = modelType(pkg),
+      root = pipelineRoot(pkg),
+      revStep = isModel || root === "moves" ? "04_review_3d" : "02_review_portrait";
+    const parsed = parseAssetFilename(String(pkg.id || "") + ".json", root);
+    const id = parsed?.id || cleanSubjectId(root, pkg.subjectId || pkg.baseId || pkg.id);
+    const stage = parsed?.stage || pkg.stage || pkg.manifest?.stage || "";
+    const version = parsed?.version || pkg.manifest?.version || "";
+    const stem = assetStem({ kind: root, id, stage, step: revStep, version });
+    const dir =
+      pkg.drivePath && new RegExp("^" + root + "/[^/]+$").test(pkg.drivePath)
+        ? pkg.drivePath
+        : subjectDir(root, id);
+    return dir + "/" + stem + ".json";
+  }
   async function review(pkg, status, note = "") {
     if (!pkg?.driveFolderId) throw Error("請先將資產資料夾儲存至 Drive");
     if (syncing || busy) throw Error("Drive 處理中，請稍後重試");
@@ -716,6 +891,7 @@
       };
       if (status === "ok" && !isModel && !pkg.images?.length)
         throw Error("立繪必須具有可預覽影像");
+      let src = null;
       if (status === "reject") {
         const dir =
           root +
@@ -729,19 +905,32 @@
           pkg.id +
           "_" +
           Date.now();
-        ops.push({
-          pkg,
-          from: await folder(pkg.drivePath.split("/").slice(0, -1).join("/")),
-          to: await folder(dir, true),
-          path: dir + "/" + pkg.drivePath.split("/").pop(),
-        });
+        const isSubjectFlat = new RegExp("^" + root + "/[^/]+$").test(pkg.drivePath || "");
+        if (isSubjectFlat) {
+          const fromId = pkg.driveFolderId || (await folder(pkg.drivePath));
+          const fileIds = (pkg.driveFiles || []).filter((f) => f.id);
+          if (fileIds.length) {
+            const toId = await folder(dir, true);
+            for (const f of fileIds) {
+              ops.push({ fileId: f.id, from: fromId, to: toId, path: dir + "/" + f.path });
+            }
+          }
+          r.drive_path = dir;
+        } else {
+          ops.push({
+            pkg,
+            fileId: pkg.driveFolderId,
+            from: await folder(pkg.drivePath.split("/").slice(0, -1).join("/")),
+            to: await folder(dir, true),
+            path: dir + "/" + pkg.drivePath.split("/").pop(),
+          });
+        }
       } else if (status === "ok" && isModel) {
-        const src = window.COSMI_FORGE.packages().find(
-          (p) => p.id === sourceId,
-        );
+        src = window.COSMI_FORGE.packages().find((p) => p.id === sourceId) || null;
         const isImage3d =
           Boolean(sourceId) ||
           pkg.drivePath?.includes("/02_3d/colab/") ||
+          pkg.id?.includes("_03a_colab") ||
           pkg.manifest?.pipeline === "colab" ||
           pkg.manifest?.input_mode === "image" ||
           Boolean(pkg.manifest?.input_img);
@@ -768,37 +957,20 @@
           !src.images.some((im) => im.path.includes(pkg.stage))
         )
           throw Error("來源立繪與模型型態不符");
-        const toComplete = [[pkg, root + "/03_completed/models"]];
-        if (src) toComplete.push([src, pipelineRoot(src) + "/03_completed/portraits"]);
-        for (const [asset, dir] of toComplete) {
-          if (asset.completed) continue;
-          const name = asset.drivePath.split("/").pop(),
-            to = await folder(dir, true);
-          if ((await list(to, "name = '" + escapeQuery(name) + "'")).length)
-            throw Error("完成區已有同名資產，請使用新版本 ID");
-          ops.push({
-            pkg: asset,
-            from: await folder(
-              asset.drivePath.split("/").slice(0, -1).join("/"),
-            ),
-            to,
-            path: dir + "/" + name,
-          });
-        }
       }
       const done = [];
       try {
         for (const op of ops) {
-          await move(op.pkg.driveFolderId, op.from, op.to);
+          await move(op.fileId, op.from, op.to);
           done.push(op);
         }
-        r.drive_path = ops.find((o) => o.pkg === pkg)?.path || pkg.drivePath;
-        await jsonWrite(root + "/reviews/" + pkg.id + ".json", r);
+        r.drive_path = r.drive_path || ops.find((o) => o.pkg === pkg)?.path || pkg.drivePath;
+        await jsonWrite(reviewPathFor(pkg), r);
       } catch (e) {
         const failures = [];
         for (const op of done.reverse()) {
           try {
-            await move(op.pkg.driveFolderId, op.to, op.from);
+            await move(op.fileId, op.to, op.from);
           } catch (err) {
             failures.push(err.message);
           }
@@ -809,9 +981,11 @@
           );
         throw e;
       }
-      for (const op of ops) {
-        op.pkg.drivePath = op.path;
-        if (status === "ok") op.pkg.completed = true;
+      if (status === "reject") {
+        pkg.drivePath = r.drive_path;
+      } else if (status === "ok") {
+        pkg.completed = true;
+        if (src && !src.completed) src.completed = true;
       }
       pkg.status = status;
       pkg.reviewRecord = r;
@@ -821,13 +995,11 @@
       $("driveStatus").textContent =
         status === "reject"
           ? "已退回重建並移至 " + pkg.drivePath
-          : isModel && status === "ok"
-            ? "已通過並將立繪與 3D 移入完成區"
+          : status === "ok"
+            ? "已核准並保留於 " + pkg.drivePath
             : status === "provisional"
               ? "已標記暫時採用；資產留在原位"
-              : status === "pending"
-                ? "已標記待決定；資產留在原位"
-                : "已儲存審查；立繪留在原位";
+              : "已標記待決定；資產留在原位";
       return r;
     } finally {
       busy = false;
@@ -847,7 +1019,7 @@
         note,
         time: new Date().toISOString(),
       };
-      await jsonWrite(pipelineRoot(pkg) + "/reviews/" + pkg.id + ".json", r);
+      await jsonWrite(reviewPathFor(pkg), r);
       pkg.reviewRecord = r;
       window.COSMI_FORGE.persistReview?.(pkg, note);
       return r;
@@ -858,25 +1030,46 @@
   async function uploadAsset(pkg) {
     if (!pkg?.rawFiles) throw Error("請先載入資產資料夾");
     if (pkg.driveFolderId) return pkg.drivePath;
-    const dir = packageDir(
-        pkg.manifest?.task_type || pkg.type,
-        pkg.manifest?.subject_id || pkg.subjectId || pkg.id,
-        $("pipelineStage")?.value,
-      ),
-      path = dir + "/" + pkg.id;
-    if ((await find(path)).file)
-      throw Error("已有同名資產，請重新載入或使用新版本 ID");
+    const type = pkg.manifest?.task_type || pkg.type || "";
+    const subjectId = pkg.manifest?.subject_id || pkg.subjectId || pkg.id;
+    const root = pipelineRoot({ type, id: subjectId });
+    const stage = pkg.stage || pkg.manifest?.stage || (root === "creatures" ? "adult" : "");
+    const step =
+      root === "moves"
+        ? "01b_vfx"
+        : /model|rig|anim/.test(type)
+          ? stepCode($("pipelineStage")?.value === "colab" || pkg.manifest?.pipeline === "colab" ? "03a_colab" : "03b_blender")
+          : "01_portrait";
+    const version = pkg.manifest?.version || "";
+    const stem = assetStem({ kind: root, id: subjectId, stage, step, version });
+    const path = packageDir(type, subjectId, $("pipelineStage")?.value);
     const keys = Object.keys(pkg.rawFiles),
       rooted = keys.every((k) => k.startsWith(pkg.id + "/"));
+    const targetNames = [];
     for (const key of keys) {
       const rel = rooted ? key.slice(pkg.id.length + 1) : key;
       relative(rel);
       if (/\.zip$/i.test(rel)) throw Error("正式目錄不接受 ZIP");
+      let flatName;
+      if (parseAssetFilename(rel.split("/").pop(), root)) {
+        flatName = rel.split("/").pop();
+      } else if (/\.(glb|blend)$/i.test(rel)) {
+        const ext = rel.split(".").pop().toLowerCase();
+        flatName = stem + "." + ext;
+      } else {
+        const cleaned = rel
+          .replace(/^(?:images|models|previews|animations|rig|vfx|storyboard|layers|flipbook|source)\//i, "")
+          .replace(/\//g, "_");
+        flatName = stem + "_" + cleaned;
+      }
+      targetNames.push({ key, flatName });
     }
+    const existing = await find(path + "/" + stem + "_manifest.json");
+    if (existing.file)
+      throw Error("已有同名資產，請使用新版本（如 v2）或重新載入");
     const id = await folder(path, true);
-    for (const key of keys) {
-      const rel = rooted ? key.slice(pkg.id.length + 1) : key;
-      await write(path + "/" + rel, new Blob([pkg.rawFiles[key]]));
+    for (const { key, flatName } of targetNames) {
+      await write(path + "/" + flatName, new Blob([pkg.rawFiles[key]]));
     }
     pkg.drivePath = path;
     pkg.driveFolderId = id;
@@ -1400,6 +1593,33 @@
         return [];
       }
     };
+    const settings = [],
+      jobs = [],
+      wikiCharacters = [],
+      wikiCreatures = [];
+    for (const root of categoryRoots) {
+      let subjectFolders = [];
+      try {
+        const entries = await list(await folder(root));
+        subjectFolders = entries.filter(
+          (f) => f.mimeType === MIME && !f.name.startsWith("_") && !RESERVED_CATEGORY_FOLDERS.has(f.name),
+        );
+      } catch (_) {}
+      await Promise.all(
+        subjectFolders.map(async (sub) => {
+          const files = await safeList(root + "/" + sub.name);
+          for (const f of files) {
+            const parsed = parseAssetFilename(f.name, root);
+            if (parsed?.step === "00_appearance" || parsed?.step === "00_parameters") settings.push(f);
+            else if (/_(?:prompt|job)\.md$/i.test(f.name)) jobs.push(f);
+            else if (parsed?.step === "05_wiki") {
+              if (root === "characters") wikiCharacters.push(f);
+              else if (root === "creatures") wikiCreatures.push(f);
+            }
+          }
+        }),
+      );
+    }
     const [
       settingsChar,
       settingsCreature,
@@ -1407,8 +1627,8 @@
       jobsChar,
       jobsCreature,
       jobsMove,
-      wikiCharNew,
-      wikiCreatureNew,
+      wikiCharLegacy,
+      wikiCreatureLegacy,
     ] = await Promise.all([
       safeList("characters/00_settings"),
       safeList("creatures/00_settings"),
@@ -1420,10 +1640,10 @@
       safeList("creatures/wiki"),
     ]);
     pipelineIndexState = {
-      settings: [...settingsChar, ...settingsCreature, ...settingsMove],
-      jobs: [...jobsChar, ...jobsCreature, ...jobsMove],
-      wikiCharacters: wikiCharNew,
-      wikiCreatures: wikiCreatureNew,
+      settings: [...settings, ...settingsChar, ...settingsCreature, ...settingsMove],
+      jobs: [...jobs, ...jobsChar, ...jobsCreature, ...jobsMove],
+      wikiCharacters: [...wikiCharacters, ...wikiCharLegacy],
+      wikiCreatures: [...wikiCreatures, ...wikiCreatureLegacy],
       syncedAt: Date.now(),
     };
     window.COSMI_FORGE?.refresh?.();
@@ -1444,6 +1664,11 @@
     syncPipelineIndex,
     pipelineIndex: () => pipelineIndexState,
     pipelineRoot,
+    stepCode,
+    cleanSubjectId,
+    subjectDir,
+    assetStem,
+    parseAssetFilename,
     migratePipelineDirectories,
     migrateManifestWikiReferences,
     migratePrompt3dAssets,
@@ -1647,8 +1872,10 @@
       run(async () => {
         const d = window.COSMI_FORGE.settings(),
           p = window.COSMI_PIPELINE.parameters(),
-          root = pipelineRoot(d.delivery?.task_type || d.assetId);
-        await jsonWrite(root + "/00_settings/" + d.assetId + ".parameters.json", {
+          root = pipelineRoot(d.delivery?.task_type || d.assetId),
+          subject = d.subjectId || d.assetId,
+          stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
+        await jsonWrite(subjectDir(root, subject) + "/" + stem + ".json", {
           ...p,
           delivery: d.delivery,
         });
@@ -1659,16 +1886,23 @@
       run(async () => {
         const d = window.COSMI_FORGE.settings(),
           id = d.assetId,
-          root = pipelineRoot(d.delivery?.task_type || id);
+          subject = d.subjectId || id,
+          root = pipelineRoot(d.delivery?.task_type || id),
+          stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
         let p;
-        try {
-          p = await (
-            await read(root + "/00_settings/" + id + ".parameters.json")
-          ).text();
-        } catch (e) {
-          if (!/不存在/.test(e.message)) throw e;
-          p = await (await read("00_settings/" + id + ".parameters.json")).text();
+        for (const candidate of [
+          subjectDir(root, subject) + "/" + stem + ".json",
+          root + "/00_settings/" + id + ".parameters.json",
+          "00_settings/" + id + ".parameters.json",
+        ]) {
+          try {
+            p = await (await read(candidate)).text();
+            break;
+          } catch (e) {
+            if (!/不存在/.test(e.message)) throw e;
+          }
         }
+        if (p == null) throw Error("找不到格式參數檔：" + stem + ".json");
         JSON.parse(p);
         $("pipelineParameters").value = p;
         window.COSMI_PIPELINE.parameters();
@@ -1685,7 +1919,7 @@
           );
         if (!pkg?.driveFolderId || !modelType(pkg) || pkg.completed || !src)
           throw Error("請選取待審 3D 並填入已載入的立繪資產 ID");
-        await jsonWrite(pipelineRoot(pkg) + "/reviews/" + pkg.id + ".json", {
+        await jsonWrite(reviewPathFor(pkg), {
           task_id: pkg.id,
           status: pkg.status,
           source_pack: id,

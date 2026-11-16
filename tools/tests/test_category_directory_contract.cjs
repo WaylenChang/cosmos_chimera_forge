@@ -6,15 +6,15 @@ const vm = require("node:vm");
 const root = path.resolve(__dirname, "../..");
 const source = name => fs.readFileSync(path.join(root, name), "utf8");
 
-test("all category wikis resolve under their own asset root", () => {
+test("all category wikis resolve under their own subject root", () => {
   const context = { window: {} };
   vm.runInNewContext(source("wiki.js"), context, { filename: "wiki.js" });
   const describe = context.window.COSMI_WIKI.describe;
   for (const [task, subject, stage, expected] of [
-    ["character-concept", "chr_hero", "", "characters/wiki/chr_hero_wiki.md"],
-    ["creature-concept", "cr_fox", "juvenile", "creatures/wiki/cr_fox_juvenile_wiki.md"],
-    ["creature-model-rig", "cr_fox", "adult", "creatures/wiki/cr_fox_adult_wiki.md"],
-    ["move-vfx", "fx_burst", "", "moves/wiki/fx_burst_wiki.md"],
+    ["character-concept", "chr_hero", "", "characters/chr_hero/chr_hero_05_wiki.md"],
+    ["creature-concept", "cr_fox", "juvenile", "creatures/cr_fox/cr_fox_juvenile_05_wiki.md"],
+    ["creature-model-rig", "cr_fox", "adult", "creatures/cr_fox/cr_fox_adult_05_wiki.md"],
+    ["move-vfx", "fx_burst", "", "moves/fx_burst/fx_burst_05_wiki.md"],
   ]) {
     assert.equal(describe({ task: { id: task }, subjectId: subject, opts: { stage } }).path, expected);
   }
@@ -22,11 +22,9 @@ test("all category wikis resolve under their own asset root", () => {
 
 test("active Drive scans use category roots only; migration keeps legacy sources", () => {
   const drive = source("drive-storage.js");
-  assert.match(drive, /const dirs = categoryDirs;/);
+  assert.match(drive, /const dirs = categoryRoots;/);
   assert.match(drive, /const legacyDirs = \[/);
-  assert.match(drive, /"characters\/wiki"/);
-  assert.match(drive, /"creatures\/wiki"/);
-  assert.match(drive, /root \+ "\/reviews\/"/);
+  assert.match(drive, /const categoryRoots = \["characters", "creatures", "moves"\]/);
   assert.doesNotMatch(drive, /const dirs = \[\.\.\.categoryDirs, \.\.\.legacyDirs\]/);
 });
 
@@ -34,7 +32,7 @@ test("task-flow documentation never produces wiki/category paths", () => {
   const flow = source("task-flow.js");
   assert.doesNotMatch(flow, /wiki\/<characters\|creatures>/);
   assert.doesNotMatch(flow, /wiki\/moves\//);
-  assert.match(flow, /moves\/wiki\//);
+  assert.match(flow, /moves\/<id>\/<id>_05_wiki\.md/);
 });
 
 test("category-first pipeline directory resolver handles aliases and rejects invalid stages", () => {
@@ -44,15 +42,18 @@ test("category-first pipeline directory resolver handles aliases and rejects inv
   };
   vm.runInNewContext(source("drive-storage.js"), context, { filename: "drive-storage.js" });
   const drive = context.window.COSMI_DRIVE;
-  for (const [kind, stage, expected] of [
-    ["characters", "portrait", "characters/01_portraits"],
-    ["creatures", "03a_colab", "creatures/02_3d/colab"],
-    ["characters", "colab_ai_blender", "characters/02_3d/colab"],
-    ["creatures", "ai_blender", "creatures/02_3d/ai_blender"],
-    ["moves", "vfx", "moves/01_vfx"],
+  for (const [kind, stage, id, expected] of [
+    ["characters", "portrait", "chr_hero", "characters/chr_hero"],
+    ["creatures", "03a_colab", "cr_fox", "creatures/cr_fox"],
+    ["characters", "colab_ai_blender", "chr_hero", "characters/chr_hero"],
+    ["creatures", "ai_blender", "cr_fox_adult", "creatures/cr_fox"],
+    ["moves", "vfx", "fx_burst", "moves/fx_burst"],
   ]) {
-    assert.equal(drive.pipelineDirectory(kind, stage), expected);
+    assert.equal(drive.pipelineDirectory(kind, stage, id), expected);
   }
+  assert.equal(drive.assetStem({ kind: "characters", id: "chr_hero", step: "01_portrait" }), "chr_hero_01_portrait");
+  assert.equal(drive.assetStem({ kind: "creatures", id: "cr_fox", stage: "juvenile", step: "03a_colab", version: "v2" }), "cr_fox_juvenile_03a_colab_v2");
+  assert.equal(drive.assetStem({ kind: "moves", id: "fx_burst", stage: "adult", step: "01b_vfx" }), "fx_burst_01b_vfx");
   assert.throws(() => drive.pipelineDirectory("moves", "colab"), /VFX/);
   assert.throws(() => drive.pipelineDirectory("creatures", "unrecognized"), /未知管線/);
 });

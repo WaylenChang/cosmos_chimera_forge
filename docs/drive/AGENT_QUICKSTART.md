@@ -12,7 +12,7 @@
   - `docs/pipeline/TRIGGERS.md`：各步驟觸發語句與分支說明
   - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；招式使用 `moves/prompts/01b_move_vfx.prompt.md`
 
-> **分類優先的唯一正式路徑**：所有角色／宙獸／招式資產都在 `<kind>/` 之下，`<kind>` 僅能是 `characters`、`creatures`、`moves`。圖鑑位於 `<kind>/wiki/`，模型與立繪也只由對應分類讀取。舊根目錄及 `<kind>/02_3d/legacy/` 仍可能保留待核對資料；只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。完成來源、衝突、備份及驗收驗證前，不得宣稱已退役或刪除。
+> **三層目錄與扁平命名規範**：第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）；第三層為完全扁平化檔案，命名結構為 `id_型態(宙獸才有型態)_管線與步驟_版本(可以沒有，多版本才需要)`。舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
 
 ---
 
@@ -38,15 +38,16 @@
    - 若為宙獸但未指定 `stage`：
      - 若有指定明確 `asset_id`（如 `asset_cr_aqua_slime_juvenile`），從檔名／`manifest.json` 取得 `stage`。
      - 否則先向使用者確認要執行哪一個階段（`juvenile` / `adolescent` / `adult` / `overload`），不得自行猜測。
-3. **定位相關檔案與目錄**：
+3. **定位相關檔案與目錄（`<kind>/<id>/` 第三層扁平檔案）**：
    - **圖鑑**：
-     - 角色：`characters/wiki/<subject_id>_wiki.md`（若有分階段則 `<subject_id>_<stage>_wiki.md`）
-     - 宙獸：`creatures/wiki/<subject_id>_<stage>_wiki.md`
-     - 招式：`moves/wiki/<move_id>_wiki.md`
-   - **外觀與參數設定**：`<kind>/00_settings/<asset_id>.appearance.md`、`<kind>/00_settings/<asset_id>.parameters.json`（若無專屬參數檔，回退讀取共用的 `00_settings/default.parameters.json`）。
-   - **立繪包**：`<kind>/01_portraits/<portrait_asset_id>/`。
-   - **立繪審查紀錄**：`<kind>/reviews/<portrait_asset_id>.json`。
-   - **3D 模型包**：`<kind>/02_3d/<colab|ai_blender|legacy>/<model_asset_id>/`。
+     - 角色：`characters/<id>/<id>_05_wiki.md`
+     - 宙獸：`creatures/<id>/<id>_<stage>_05_wiki.md`
+     - 招式：`moves/<id>/<id>_05_wiki.md`
+   - **外觀與參數設定**：`<kind>/<id>/<id>[_<stage>]_00_appearance[_<ver>].md`、`<kind>/<id>/<id>[_<stage>]_00_parameters[_<ver>].json`（若無專屬參數檔，回退讀取共用的 `00_settings/default.parameters.json`）。
+   - **立繪檔**：`<kind>/<id>/<id>[_<stage>]_01_portrait[_<ver>]_<role>.<ext>`（如 `_front.png`、`_turnaround.png`、`_concept.json`、`_manifest.json`）。
+   - **立繪審查紀錄**：`<kind>/<id>/<id>[_<stage>]_02_review_portrait[_<ver>].json`。
+   - **3D 模型檔**：`<kind>/<id>/<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].<glb|blend>` 及 `_manifest.json`。
+   - **3D 審查紀錄**：`<kind>/<id>/<id>[_<stage>]_04_review_3d[_<ver>].json`。
 
 ---
 

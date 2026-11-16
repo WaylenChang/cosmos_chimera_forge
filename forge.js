@@ -1210,7 +1210,7 @@
     if (!images.length) images.push({ view: "missing", label: "尚無立繪", primaryUrl: "", fallbackUrl: "" });
     const modelFront = imageForView(mdlPack?.images, "front") || mdlPack?.images?.[0] || null;
     return {
-      conceptDir: pack?.drivePath || "characters/01_portraits/", modelDir: mdlPack?.drivePath || "characters/02_3d/",
+      conceptDir: pack?.drivePath || "characters/" + charId + "/", modelDir: mdlPack?.drivePath || "characters/" + charId + "/",
       images, modelFront: { primaryUrl: modelFront?.url || "", fallbackUrl: modelFront?.url || "" },
       glbUrl: mdlPack?.glbFile?.url || "", fbxUrl: "", pack, mdlPack
     };
@@ -1730,7 +1730,7 @@
           el("span", { class: "f-badge " + st.cls }, st.badge),
           el("span", { class: "f-badge" }, is3d ? "🧊 3D 模型" : "🎨 2D 立繪"),
           pkg.stage ? el("span", { class: "f-badge" }, STAGE_ZH[pkg.stage] || pkg.stage) : null,
-          pkg.completed ? el("span", { class: "f-badge ok" }, "📁 03_completed") : null
+          pkg.completed ? el("span", { class: "f-badge ok" }, "✅ 已核准") : null
         ),
         pkg.drivePath ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace" }, pkg.drivePath) : null,
         note ? el("div", { style: "font-size:11.5px;color:var(--warn);background:rgba(217,182,109,0.08);padding:4px 8px;border-radius:4px;border-left:2px solid var(--warn)" }, `審查意見：${note}`) : null,
@@ -3649,11 +3649,17 @@
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const encyclopediaKind = t.id === "move-vfx" ? "moves" : t.id.startsWith("character") ? "characters" : "creatures";
-    const wikiPath = window.COSMI_WIKI.describe(b.ctx).path;
+    const wikiDesc = window.COSMI_WIKI.describe(b.ctx);
+    const wikiPath = wikiDesc.path;
     const stageVal = document.getElementById("pipelineStage")?.value || "task";
-    const dir = stageVal === "encyclopedia"
-      ? encyclopediaKind + "/wiki" : window.COSMI_DRIVE.packageDir(t.id, b.ctx.subjectId || b.ctx.taskId, stageVal);
-    const jobPromptPath = encyclopediaKind + "/prompts/jobs/" + b.ctx.taskId + "." + stageVal + ".prompt.md";
+    const subjectFolder = window.COSMI_DRIVE.packageDir(t.id, b.ctx.subjectId || b.ctx.taskId, stageVal);
+    const jobStem = window.COSMI_DRIVE?.assetStem?.({
+      kind: encyclopediaKind,
+      id: wikiDesc.subject || b.ctx.subjectId || b.ctx.taskId,
+      stage: wikiDesc.stage,
+      step: stageVal,
+    }) || (b.ctx.taskId + "_" + stageVal);
+    const jobPromptPath = subjectFolder + "/" + jobStem + "_prompt.md";
     const portraitCopyOnly = window.COSMI_PIPELINE?.supports(b.ctx) && $("#pipelineStage")?.value === "portrait" && !window.COSMI_PIPELINE?.isPortraitAuto();
     const portraitAuto = window.COSMI_PIPELINE?.supports(b.ctx) && window.COSMI_PIPELINE?.isPortraitAuto();
     $("#download").hidden = Boolean(portraitCopyOnly);
@@ -3672,10 +3678,10 @@
         portraitCopyOnly
           ? el("li", {}, "手動模式：使用 📋 或 " + (b.rounds?.length === 2 ? "①／②" : "①／②／③") + " 複製，貼入生成平台；不需建立 .md 檔或上傳 Drive。")
           : portraitAuto
-          ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, encyclopediaKind + "/prompts/jobs/" + b.ctx.taskId + ".portrait.prompt.md"))
+          ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, subjectFolder + "/" + (window.COSMI_DRIVE?.assetStem?.({ kind: encyclopediaKind, id: wikiDesc.subject || b.ctx.subjectId || b.ctx.taskId, stage: wikiDesc.stage, step: "01_portrait" }) || b.ctx.taskId + "_01_portrait") + "_prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, jobPromptPath), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果包存放：", el("code", {}, stageVal === "encyclopedia" ? wikiPath : dir + "/" + b.ctx.taskId + "/"), "。圖鑑以 Markdown 獨立存放；3D 模型逐檔存入原資產目錄。"),
-        el("li", {}, encyclopediaKind === "moves" ? "特效參考：" : "立繪參考：", el("code", {}, encyclopediaKind === "moves" ? "moves/01_vfx/" : encyclopediaKind + "/01_portraits/"), " 或 ", el("code", {}, encyclopediaKind + "/backup/image_backup/"), encyclopediaKind === "moves" ? "" : "；3D 成果與參考：", encyclopediaKind === "moves" ? "" : el("code", {}, encyclopediaKind + "/02_3d/"), "。"),
+        el("li", {}, "成果檔案存放：", el("code", {}, stageVal === "encyclopedia" ? wikiPath : subjectFolder + "/"), "。第三層扁平化命名為 ", el("code", {}, "id[_型態]_管線與步驟[_版本]"), "。"),
+        el("li", {}, "參考來源：", el("code", {}, subjectFolder + "/"), "（同 ID 目錄內既有設定、圖鑑、立繪與模型；退件備份：", el("code", {}, encyclopediaKind + "/backup/"), "）。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
     );
@@ -3894,7 +3900,10 @@
   async function loadAssetFiles(files, file, {silent = false} = {}) {
     let manifestData = null, conceptData = null, rawPrompt = "", prefix = "";
     const manifestPath = window.COSMI_MODEL_REVIEW.selectRootManifest(Object.keys(files));
-    if (manifestPath) prefix = manifestPath.slice(0, -"manifest.json".length);
+    if (manifestPath) {
+      const slash = manifestPath.lastIndexOf("/");
+      prefix = slash >= 0 ? manifestPath.slice(0, slash + 1) : "";
+    }
     let animSpec = null, rigSpec = null, glbFile = null, animFiles = [], glbCandidates = [];
     for (const path in files) {
       if (path === manifestPath) {

@@ -9,14 +9,14 @@ function load(){
  vm.runInNewContext(fs.readFileSync(path.join(root,"wiki.js"),"utf8"),c);
  return c.window.COSMI_WIKI;
 }
-test("all subject types share a canonical _wiki.md suffix",()=>{
+test("all subject types share a canonical _05_wiki.md suffix",()=>{
  const w=load();
  const make=(id,subjectId,stage)=>({task:{id},subjectId,opts:{stage}});
- assert.equal(w.describe(make("creature-concept","cr_fox","juvenile")).path,"creatures/wiki/cr_fox_juvenile_wiki.md");
- assert.equal(w.describe(make("creature-model-rig","cr_fox","juvenile")).path,"creatures/wiki/cr_fox_juvenile_wiki.md");
- assert.equal(w.describe(make("character-concept","chr_fox")).path,"characters/wiki/chr_fox_wiki.md");
- assert.equal(w.describe(make("move-vfx","fx_burst")).path,"moves/wiki/fx_burst_wiki.md");
- assert.equal(w.describe(make("creature-concept","cr_fox_adult","adult")).path,"creatures/wiki/cr_fox_adult_wiki.md");
+ assert.equal(w.describe(make("creature-concept","cr_fox","juvenile")).path,"creatures/cr_fox/cr_fox_juvenile_05_wiki.md");
+ assert.equal(w.describe(make("creature-model-rig","cr_fox","juvenile")).path,"creatures/cr_fox/cr_fox_juvenile_05_wiki.md");
+ assert.equal(w.describe(make("character-concept","chr_fox")).path,"characters/chr_fox/chr_fox_05_wiki.md");
+ assert.equal(w.describe(make("move-vfx","fx_burst")).path,"moves/fx_burst/fx_burst_05_wiki.md");
+ assert.equal(w.describe(make("creature-concept","cr_fox_adult","adult")).path,"creatures/cr_fox/cr_fox_adult_05_wiki.md");
  for(const stage of w.STAGES)assert.equal(w.describe(make("creature-concept","cr_fox",stage)).stage,stage);
 });
 test("legacy extraction selects each stage independently and refuses missing stages",()=>{
@@ -101,12 +101,12 @@ test("old manifest wiki links are normalized without touching asset files or QA"
    qa_status:"REVIEW_REQUIRED"
  };
  const updated = w.normalizeManifest(original);
- assert.equal(updated.encyclopedia_path,"creatures/wiki/cr_fox_adult_wiki.md");
- assert.equal(updated.encyclopedia_paths.juvenile,"creatures/wiki/cr_fox_juvenile_wiki.md");
+ assert.equal(updated.encyclopedia_path,"creatures/cr_fox/cr_fox_adult_05_wiki.md");
+ assert.equal(updated.encyclopedia_paths.juvenile,"creatures/cr_fox/cr_fox_juvenile_05_wiki.md");
  assert.equal(original.encyclopedia_path,"wiki/creatures/cr_fox_adult_wiki.md");
  assert.deepEqual(updated.files,original.files);
  assert.equal(updated.qa_status,"REVIEW_REQUIRED");
- assert.equal(w.normalizeWikiPath("wiki/characters/chr_1286_wiki.md"),"characters/wiki/chr_1286_wiki.md");
- assert.equal(w.normalizeWikiPath("wiki/moves/fx_burst_wiki.md"),"moves/wiki/fx_burst_wiki.md");
- assert.equal(w.normalizeWikiPath("creatures/wiki/cr_fox_adult_wiki.md"),"creatures/wiki/cr_fox_adult_wiki.md");
+ assert.equal(w.normalizeWikiPath("wiki/characters/chr_1286_wiki.md"),"characters/chr_1286/chr_1286_05_wiki.md");
+ assert.equal(w.normalizeWikiPath("wiki/moves/fx_burst_wiki.md"),"moves/fx_burst/fx_burst_05_wiki.md");
+ assert.equal(w.normalizeWikiPath("creatures/wiki/cr_fox_adult_wiki.md"),"creatures/cr_fox/cr_fox_adult_05_wiki.md");
 });

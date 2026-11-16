@@ -156,7 +156,7 @@
   }
 
   function selectRootManifest(paths) {
-    return paths.filter(p => /(^|\/)manifest\.json$/.test(p))
+    return paths.filter(p => /(?:^|\/)(?:manifest|.+_(?:01_portrait|01b_vfx|03a_colab|03b_blender)(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?_manifest)\.json$/.test(p))
       .sort((a, b) => a.split("/").length - b.split("/").length || a.localeCompare(b))[0] || "";
   }
 
@@ -180,7 +180,7 @@
   }
 
   function descriptorFor(pkg) {
-    const key = Object.keys(pkg.rawFiles || {}).find(p => p === "review_viewer.json" || p === pkg.id + "/review_viewer.json");
+    const key = Object.keys(pkg.rawFiles || {}).find(p => p === "review_viewer.json" || p === pkg.id + "/review_viewer.json" || /(?:^|[/_])review_viewer\.json$/.test(p));
     if (!key) return null;
     const value = JSON.parse(new TextDecoder().decode(pkg.rawFiles[key]));
     if (value.spec !== "cosmimera-model-review/1") throw Error("不支援的 3D 驗收描述檔版本");

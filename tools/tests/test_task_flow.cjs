@@ -37,7 +37,7 @@ test('encyclopedia is integrated into appearance for character/creature and stan
   const flow=loadFlow();
   for(const kind of ['character','creature']) for(const route of ['image','text']) {
     assert.equal(flow.resolve(kind,route,'encyclopedia'),null);
-    assert.match(flow.resolve(kind,route,'appearance').output,/wiki\//);
+    assert.match(flow.resolve(kind,route,'appearance').output,/05_wiki\.md/);
   }
   assert.equal(flow.resolve('move','move','encyclopedia').stage,'encyclopedia');
   const rows=flow.diagram('creature');
