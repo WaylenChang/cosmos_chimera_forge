@@ -2021,9 +2021,10 @@
     return state.activeTab === "review" && reviewState.viewMode === "3d";
   }
 
-  function mountDesigned3dViewer(host, pkg, linkedPkg) {
+  function mountDesigned3dViewer(host, pkg, linkedPkg, onLoaded) {
     const view3d = $("#stage3dView");
     if (!view3d || !host) return;
+    reviewState.three.onDesignedSync = typeof onLoaded === "function" ? onLoaded : null;
     view3d.classList.add("stage3d-embedded");
     view3d.style.display = "block";
     host.append(view3d);
@@ -2268,7 +2269,15 @@
               class: "designed-3d-stage-host",
               style: "width:100%;margin-bottom:10px;"
             });
-            const clipBar = buildDesigned3dClipBar(target3dPkg, assetData.pack);
+            const clipBarHost = el("div", {});
+            const animCountVal = el("span", { style: "color:var(--ok)" }, "0 支完整動態");
+            const syncChar3dClips = () => {
+              const clips = getPackageClips(target3dPkg, assetData.pack);
+              animCountVal.textContent = `${clips.length} 支完整動態`;
+              const bar = buildDesigned3dClipBar(target3dPkg, assetData.pack);
+              clipBarHost.replaceChildren(...(bar ? [bar] : []));
+            };
+            syncChar3dClips();
             const col2 = el("div", { style: "background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;display:flex;flex-direction:column;" },
               el("div", { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:6px;flex-wrap:wrap" },
                 el("span", { style: "font-weight:600;font-size:12.5px;color:#a9d9df" }, "🧊 3D 成果視圖與模型"),
@@ -2278,7 +2287,7 @@
                 )
               ),
               stage3dHost,
-              clipBar,
+              clipBarHost,
               // 3D Asset Files Info
               el("div", { style: "display:flex;flex-direction:column;gap:6px;font-size:11.5px;" },
                 el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
@@ -2291,11 +2300,11 @@
                 ),
                 el("div", { style: "display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(0,0,0,0.2);border-radius:4px;" },
                   el("span", { class: "muted" }, "動作動畫 (Anim)"),
-                  el("span", { style: "color:var(--ok)" }, `${getPackageClips(target3dPkg, assetData.pack).length} 支完整動態`)
+                  animCountVal
                 )
               )
             );
-            col2._mount3d = () => mountDesigned3dViewer(stage3dHost, target3dPkg, assetData.pack);
+            col2._mount3d = () => mountDesigned3dViewer(stage3dHost, target3dPkg, assetData.pack, syncChar3dClips);
             return col2;
           })()
         )
@@ -2476,6 +2485,64 @@
       );
 
       const stageButtons = new Map();
+      const miniRelationNodes = new Map();
+      const activeStageDetailHost = el("div", { style: "margin-bottom:12px;" });
+      const buildActiveStageCard = st => {
+        if (!st) return null;
+        const isCurStage = isForging && state.opts[state.taskId]?.stage === st.stage;
+        const stMatches = getReviewMatches(d.line_id, st.stage);
+        const stProgress = computeSubjectPipelinePart(d.line_id, st.stage, "creature", st);
+        const stOrdered = sortPackagesByPriority(stMatches);
+        const stBadgesBox = el("div", { style: "display:flex;align-items:center;gap:4px;flex-wrap:wrap" },
+          stProgress.portrait.pkg ? el("span", { class: "f-badge " + (stProgress.portrait.cls === "active" ? "warn" : stProgress.portrait.cls), style: "font-size:10px" }, `參考圖 ${stProgress.portrait.label}`) : null,
+          el("span", { class: "f-badge " + (stProgress.model3d.cls === "active" ? "warn" : stProgress.model3d.cls), style: "font-size:10px" }, `3D ${stProgress.model3d.label}`)
+        );
+        const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;background:rgba(0,0,0,0.25);border-radius:4px;font-size:11px;margin-bottom:6px;flex-wrap:wrap" },
+          stBadgesBox,
+          stOrdered.length > 0
+            ? el("button", {
+                class: "btn mini", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
+                title: `跳轉審查 ${stOrdered[0].id}`,
+                onclick: () => jumpToReview(stOrdered[0].id, st.stage)
+              }, "🔍 跳轉")
+            : el("button", {
+                class: "btn mini ghost", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
+                onclick: () => jumpToReview(d.line_id, st.stage)
+              }, "🔍 搜尋")
+        );
+        return el("div", { class: "designed-detail-card" + (isCurStage ? " active" : ""), style: "margin-bottom:0" },
+          el("div", { style: "display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap" },
+            el("b", { style: "color:#fff;font-size:13px" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
+            el("div", { style: "display:flex;align-items:center;gap:6px" },
+              el("code", { style: "color:var(--accent);font-size:11px" }, st.creature_id),
+              el("span", { class: "f-badge" }, st.size_class || "—"),
+              el("span", { class: "muted", style: "font-size:11px" }, `${st.height_length || "—"} / ${st.weight || "—"}`)
+            )
+          ),
+          el("div", { class: "muted", style: "font-size:11.5px;line-height:1.45;margin-bottom:6px" }, st.look),
+          el("div", { style: "font-size:11.5px;color:var(--warn);margin-bottom:8px" }, `專屬招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`),
+          stReviewDiv,
+          el("div", { style: "display:flex;gap:4px;flex-wrap:wrap" },
+            el("button", {
+              class: "btn mini" + (isCurStage && state.taskId === "creature-concept" ? "" : " ghost"),
+              type: "button", style: "flex:1;font-size:11px",
+              title: "產出正面圖與三視圖供 Img-to-3D 使用",
+              onclick: () => useDesigned(d.line_id, "creature-concept", st.stage)
+            }, "🎨 參考圖鍛造"),
+            el("button", {
+              class: "btn mini" + (isCurStage && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
+              type: "button", style: "flex:1;font-size:11px",
+              onclick: () => useDesigned(d.line_id, "creature-model-rig", st.stage)
+            }, "🧊 3D 鍛造"),
+            el("button", {
+              class: "btn mini ghost", type: "button", style: "font-size:11px",
+              title: `收藏 ${st.name_zh} (${STAGE_ZH[st.stage]}) 的立繪 Prompt`,
+              onclick: () => addDesignedToFavorites(d.line_id, st.stage)
+            }, "⭐ 收藏")
+          )
+        );
+      };
+
       const applyCreature3dStage = (stKey, { scroll = false } = {}) => {
         if (!availableStages.includes(stKey)) return;
         active3dStage = stKey;
@@ -2483,6 +2550,10 @@
         for (const [k, btn] of stageButtons.entries()) {
           if (k === stKey) btn.classList.add("on");
           else btn.classList.remove("on");
+        }
+        for (const [k, node] of miniRelationNodes.entries()) {
+          node.style.borderColor = k === stKey ? "var(--accent)" : "rgba(255,255,255,0.08)";
+          node.style.background = k === stKey ? "rgba(58,173,200,0.14)" : "rgba(0,0,0,0.22)";
         }
         const stObj = stages.find(s => s.stage === stKey) || null;
         const bundle = getCreatureStage3dBundle(d.line_id, stKey);
@@ -2498,11 +2569,16 @@
         stageBadge.textContent = `${STAGE_ZH[stKey] || stKey}${stObj?.size_class ? ` (${stObj.size_class})` : ""}`;
         glbPathVal.textContent = bundle.mdlPack?.glbFile?.path || `${stObj?.creature_id || `${d.line_id}_${stKey}`}.glb`;
         rigVal.textContent = bundle.mdlPack?.animSpec?.rig || "宙獸骨架";
-        const clips = getPackageClips(target3dPkg, bundle.pack2d);
-        animCountVal.textContent = `${clips.length} 支完整動態`;
-        const clipBar = buildDesigned3dClipBar(target3dPkg, bundle.pack2d);
-        clipBarHost.replaceChildren(...(clipBar ? [clipBar] : []));
-        mountDesigned3dViewer(stage3dHost, target3dPkg, bundle.pack2d);
+        const syncCreature3dClips = () => {
+          const clips = getPackageClips(target3dPkg, bundle.pack2d);
+          animCountVal.textContent = `${clips.length} 支完整動態`;
+          const clipBar = buildDesigned3dClipBar(target3dPkg, bundle.pack2d);
+          clipBarHost.replaceChildren(...(clipBar ? [clipBar] : []));
+        };
+        syncCreature3dClips();
+        const detailCard = buildActiveStageCard(stObj);
+        activeStageDetailHost.replaceChildren(...(detailCard ? [detailCard] : []));
+        mountDesigned3dViewer(stage3dHost, target3dPkg, bundle.pack2d, syncCreature3dClips);
         if (scroll) creature3dCard.scrollIntoView?.({ behavior: "smooth", block: "center" });
       };
 
@@ -2521,7 +2597,7 @@
         if (lineId === d.line_id) applyCreature3dStage(stKey, { scroll: true });
       };
 
-      bodyEl.append(creature3dCard);
+      bodyEl.append(creature3dCard, activeStageDetailHost);
       applyCreature3dStage(active3dStage);
 
       // Section: Overview Banner (Lineup & Scale from cosmos_chimera)
@@ -2593,119 +2669,51 @@
       );
       bodyEl.append(specCard);
 
-      // Section 2: Four Stages
-      const stageCardSection = el("div", { class: "designed-detail-card" },
-        el("h3", { style: "margin:0 0 10px;font-size:13px;color:var(--text);display:flex;align-items:center;justify-content:space-between" },
-          el("span", {}, `🐾 四階型態演化檢驗 (${stages.length} 階)`),
-          el("span", { class: "muted", style: "font-size:11px" }, "點選各階按鈕可載入該階 3D 或 Img-to-3D 參考圖鍛造")
-        )
-      );
-
-      const stagesGrid = el("div", { class: "designed-stages-grid", style: "grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));" });
-
-      stages.forEach(st => {
-        const isCurStage = isForging && state.opts[state.taskId]?.stage === st.stage;
-        const stMatches = getReviewMatches(d.line_id, st.stage);
-
-        const stageCard = el("div", { class: "stage-mini-card" + (isCurStage ? " active" : "") });
-
-        const stHeader = el("div", { class: "stage-mini-header" },
-          el("b", { style: "color:#fff;font-size:13px" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
-          el("span", { class: "f-badge" }, st.size_class || "—")
-        );
-
-        // Stage 2D Concept Art Frame
-        const stAssets = getCreatureStageAssetUrls(d.line_id, st.stage);
-        const stImgBox = el("div", {
-          style: "width:100%;height:140px;background:#101319;border:1px solid rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;position:relative;margin:4px 0 8px;display:flex;align-items:center;justify-content:center;"
-        });
-        const stImg = el("img", {
-          src: stAssets.primaryUrl,
-          alt: `${st.name_zh} 參考圖`,
-          style: "max-width:100%;max-height:100%;object-fit:contain;",
-          onerror: function() {
-            if (stAssets.fallbackUrl && this.src !== stAssets.fallbackUrl) {
-              this.src = stAssets.fallbackUrl;
-            } else {
-              this.style.display = "none";
-              if (this.nextElementSibling) this.nextElementSibling.style.display = "flex";
-            }
-          }
-        });
-        const stPlaceholder = el("div", {
-          style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;color:var(--muted);font-size:11px;gap:4px;"
-        },
-          el("span", { style: "font-size:22px;opacity:0.5;" }, ELEM_ICONS[d.element] || "🐾"),
-          el("span", {}, "尚無 3D / 參考預覽")
-        );
-        stImgBox.append(stImg, stPlaceholder);
-
-        const stIdRow = el("div", { style: "display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;margin:2px 0 4px" },
-          el("code", { style: "color:var(--accent)" }, st.creature_id),
-          el("span", {}, `${st.height_length || "—"} / ${st.weight || "—"}`)
-        );
-
-        const stDesc = el("div", { class: "muted", style: "font-size:11.5px;line-height:1.4;margin-bottom:4px" }, st.look);
-        const stMove = el("div", { style: "font-size:11.5px;color:var(--warn);margin-bottom:6px" }, `專屬招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`);
-
-        const stProgress = computeSubjectPipelinePart(d.line_id, st.stage, "creature", st);
-        const stOrdered = sortPackagesByPriority(stMatches);
-        const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;background:rgba(0,0,0,0.25);border-radius:4px;font-size:11px;margin-bottom:6px;flex-wrap:wrap" });
-        const stBadgesBox = el("div", { style: "display:flex;align-items:center;gap:4px;flex-wrap:wrap" },
-          stProgress.portrait.pkg ? el("span", { class: "f-badge " + (stProgress.portrait.cls === "active" ? "warn" : stProgress.portrait.cls), style: "font-size:10px" }, `參考圖 ${stProgress.portrait.label}`) : null,
-          el("span", { class: "f-badge " + (stProgress.model3d.cls === "active" ? "warn" : stProgress.model3d.cls), style: "font-size:10px" }, `3D ${stProgress.model3d.label}`)
-        );
-        if (stOrdered.length > 0) {
-          const m = stOrdered[0];
-          stReviewDiv.append(
-            stBadgesBox,
-            el("button", {
-              class: "btn mini", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
-              title: `跳轉審查 ${m.id}`,
-              onclick: () => jumpToReview(m.id, st.stage)
-            }, "🔍 跳轉")
-          );
-        } else {
-          stReviewDiv.append(
-            stBadgesBox,
-            el("button", {
-              class: "btn mini ghost", type: "button", style: "height:20px;padding:0 6px;font-size:10.5px",
-              onclick: () => jumpToReview(d.line_id, st.stage)
-            }, "🔍 搜尋")
-          );
-        }
-
-        const stBtns = el("div", { style: "display:flex;gap:4px;flex-wrap:wrap" },
-          el("button", {
-            class: "btn mini" + (isCurStage && state.taskId === "creature-concept" ? "" : " ghost"),
-            type: "button", style: "flex:1;font-size:11px",
-            title: "產出正面圖與三視圖供 Img-to-3D 使用",
-            onclick: () => useDesigned(d.line_id, "creature-concept", st.stage)
-          }, "🎨 參考圖鍛造"),
-          el("button", {
-            class: "btn mini" + (isCurStage && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
-            type: "button", style: "flex:1;font-size:11px",
-            onclick: () => useDesigned(d.line_id, "creature-model-rig", st.stage)
-          }, "🧊 3D 鍛造"),
-          el("button", {
-            class: "btn mini ghost", type: "button", style: "font-size:11px",
-            title: `收藏 ${st.name_zh} (${STAGE_ZH[st.stage]}) 的立繪 Prompt`,
-            onclick: () => addDesignedToFavorites(d.line_id, st.stage)
-          }, "⭐ 收藏")
-        );
-
-        stageCard.append(stHeader, stImgBox, stIdRow, stDesc, stMove, stReviewDiv, stBtns);
-        stagesGrid.append(stageCard);
-      });
-
-      stageCardSection.append(stagesGrid);
-      bodyEl.append(stageCardSection);
-
       // Section 3: Approved & Provisional Review Deliverables
       bodyEl.append(renderDesignedReviewDeliverablesCard(d.line_id, "creature"));
 
       // Section 4: Pipeline Progress Tracker for Unprocessed Stages
       bodyEl.append(renderPipelineProgressCard(d.line_id, "creature"));
+
+      // Section 5 (Bottom): Compact 4-stage relationship with mini 3D/preview thumbnails
+      const relationSection = el("div", { class: "designed-detail-card" },
+        el("h3", { style: "margin:0 0 8px;font-size:13px;color:var(--text);display:flex;align-items:center;justify-content:space-between" },
+          el("span", {}, `🐾 四階型態演化關係 (${stages.length} 階)`),
+          el("span", { class: "muted", style: "font-size:11px" }, "點選迷你圖可切換上方檢視型態")
+        )
+      );
+      const relationRow = el("div", { style: "display:flex;align-items:center;gap:6px;flex-wrap:wrap;" });
+      stages.forEach((st, idx) => {
+        const isCur = st.stage === active3dStage;
+        const stAssets = getCreatureStageAssetUrls(d.line_id, st.stage);
+        const stBundle = getCreatureStage3dBundle(d.line_id, st.stage);
+        const thumbUrl = stBundle.mdlPack?.images?.[0]?.url || stAssets.primaryUrl || "";
+        const miniThumb = el("div", {
+          style: "width:52px;height:52px;border-radius:6px;background:#101319;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none;"
+        },
+          thumbUrl
+            ? el("img", { src: thumbUrl, alt: st.name_zh, style: "width:100%;height:100%;object-fit:contain;" })
+            : el("span", { style: "font-size:18px;opacity:0.75;" }, stBundle.mdlPack?.glbFile ? "🧊" : (ELEM_ICONS[d.element] || "🐾"))
+        );
+        const nodeBtn = el("button", {
+          type: "button",
+          style: `display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;border:1px solid ${isCur ? "var(--accent)" : "rgba(255,255,255,0.08)"};background:${isCur ? "rgba(58,173,200,0.14)" : "rgba(0,0,0,0.22)"};color:var(--text);cursor:pointer;text-align:left;`,
+          onclick: () => applyCreature3dStage(st.stage, { scroll: true })
+        },
+          miniThumb,
+          el("div", { style: "display:flex;flex-direction:column;gap:2px;min-width:72px;" },
+            el("span", { style: "font-size:11.5px;font-weight:600;color:#fff;" }, `${STAGE_ZH[st.stage] || st.stage} · ${st.name_zh}`),
+            el("span", { class: "muted", style: "font-size:10.5px;" }, `${st.size_class || "—"}${stBundle.mdlPack?.glbFile ? " · GLB" : ""}`)
+          )
+        );
+        miniRelationNodes.set(st.stage, nodeBtn);
+        relationRow.append(nodeBtn);
+        if (idx < stages.length - 1) {
+          relationRow.append(el("span", { class: "muted", style: "font-size:13px;padding:0 2px;" }, "→"));
+        }
+      });
+      relationSection.append(relationRow);
+      bodyEl.append(relationSection);
     }
   }
 
@@ -5594,8 +5602,8 @@
     const canvas = $("#stage3dCanvas");
     if (!canvas) return;
 
-    const width = canvas.parentElement.clientWidth || 800;
-    const height = canvas.parentElement.clientHeight || 600;
+    const width = canvas.parentElement?.clientWidth || 800;
+    const height = canvas.parentElement?.clientHeight || 600;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.05, 100);
@@ -5613,7 +5621,10 @@
     controls.maxDistance = 20;
     controls.minDistance = 0.2;
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1d222c, 0.7);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
+    scene.add(ambientLight);
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1d222c, 0.85);
     scene.add(hemiLight);
 
     const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.95);
@@ -5676,14 +5687,19 @@
     three.activePkg = targetPkg;
     three.activeLinkedPkg = linkedPkg || null;
 
-    if (three.loadedPkgId === targetPkg.id && three.modelGroup) {
+    const hasGlbSource = Boolean(targetPkg.glbFile || targetPkg.glbUrl);
+    if (three.loadedPkgId === targetPkg.id && three.modelGroup && three.loadedHasGlb === hasGlbSource) {
       resize3D();
+      populateStage3dControls(targetPkg);
+      three.onDesignedSync?.(targetPkg, linkedPkg);
+      if (three.renderer && three.scene && three.camera) three.renderer.render(three.scene, three.camera);
       return;
     }
 
     const loadSeq = (three.loadSeq = (three.loadSeq || 0) + 1);
     clearThreeModel(three);
     three.loadedPkgId = targetPkg.id;
+    three.loadedHasGlb = hasGlbSource;
 
     $("#stage3dClipBadge").textContent = "🎬 正在載入 3D 模型與動作...";
     $("#stage3dInfoBadge").textContent = "";
@@ -5754,8 +5770,10 @@
       const tanHalfH = tanHalfV * aspect;
       const distV = (height / 2) / (tanHalfV * 0.55) + maxHorizontal / 2;
       const distH = (maxHorizontal / 2) / (tanHalfH * 0.65) + maxHorizontal / 2;
-      const dist = Math.max(distV, distH, 1.8);
-      const camY = (size.y * 0.52) || 0.9;
+      const distRaw = Math.max(distV, distH, 1.8);
+      const dist = Number.isFinite(distRaw) ? distRaw : 3.2;
+      const camYRaw = (size.y * 0.52) || 0.9;
+      const camY = Number.isFinite(camYRaw) ? camYRaw : 0.9;
       three.defaultDist = dist;
       three.defaultTargetY = camY;
       three.camera.near = Math.max(0.01, Math.min(0.05, dist / 1000));
@@ -5775,6 +5793,7 @@
 
       let vertCount = 0, faceCount = 0;
       model.traverse(node => {
+        if (node.isSkinnedMesh) node.frustumCulled = false;
         if (node.isMesh && node.geometry) {
           vertCount += node.geometry.attributes.position ? node.geometry.attributes.position.count : 0;
           if (node.geometry.index) faceCount += node.geometry.index.count / 3;
@@ -5796,6 +5815,7 @@
       three.mixer = new THREE.AnimationMixer(model);
 
       populateStage3dControls(targetPkg);
+      three.onDesignedSync?.(targetPkg, linkedPkg);
 
       const clips = getPackageClips(targetPkg, linkedPkg);
       let defClip = "chr_idle";
@@ -5816,9 +5836,11 @@
         animate3dLoop();
       }
       resize3D();
+      if (three.renderer && three.scene && three.camera) three.renderer.render(three.scene, three.camera);
     };
 
-    if (glbBuffer || targetPkg.glbUrl) {
+    const glbUrl = targetPkg.glbUrl || targetPkg.glbFile?.url || "";
+    if (glbBuffer || glbUrl) {
       if (typeof THREE.GLTFLoader !== "undefined") {
         const loader = new THREE.GLTFLoader();
         if (glbBuffer) {
@@ -5831,7 +5853,7 @@
             } else buildProcedural3dRig(targetPkg, onModelLoaded);
           });
         } else {
-          loader.load(targetPkg.glbUrl, gltf => onModelLoaded(gltf.scene, gltf.animations), undefined, err => {
+          loader.load(glbUrl, gltf => onModelLoaded(gltf.scene, gltf.animations), undefined, err => {
             console.error("GLTF load url error:", err);
             if (targetPkg.driveFolderId) {
               targetPkg.glbLoadError = true;

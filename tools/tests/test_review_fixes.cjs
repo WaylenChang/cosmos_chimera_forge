@@ -284,4 +284,83 @@ test('reviewDesignedDetails embeds creature 3D viewer defaulting to adult and sw
   assert.equal(juvBtn.classList.contains('on'), true, 'juvenile stage should become active');
   assert.equal(adultBtn.classList.contains('on'), false);
   assert.match(collectText(nodes.designedDetailView), /models\/juv\.glb/);
+
+  // Only the active stage detail card should be displayed (not 4 full stage cards),
+  // and the bottom section should show the compact 4-stage relationship strip.
+  const detailText = collectText(nodes.designedDetailView);
+  assert.match(detailText, /四階型態演化關係/);
+  assert.doesNotMatch(detailText, /四階型態演化檢驗/);
+  const adultStageObj = creature.concept.locked.stages.find(s => s.stage === 'adult');
+  const juvStageObj = creature.concept.locked.stages.find(s => s.stage === 'juvenile');
+  assert.ok(detailText.includes(juvStageObj.look), 'active juvenile look should be visible');
+  assert.ok(!detailText.includes(adultStageObj.look), 'inactive adult look should not be shown');
+});
+
+test('GLB animations populate designed 3D clip bar and count after model loads', async () => {
+  const { c, nodes } = createHarness();
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const creature = c.DESIGNED[0];
+
+  // Provide a minimal Three.js + GLTFLoader mock
+  const vec3 = (x = 0, y = 0, z = 0) => ({ x, y, z, set(nx, ny, nz) { this.x = nx; this.y = ny; this.z = nz; } });
+  c.THREE = {
+    Scene: class { add() {} remove() {} },
+    PerspectiveCamera: class { constructor() { this.position = vec3(); this.fov = 45; this.aspect = 1; } updateProjectionMatrix() {} },
+    WebGLRenderer: class { constructor() { this.domElement = nodes.stage3dCanvas; } setSize() {} setPixelRatio() {} render() {} },
+    OrbitControls: class { constructor() { this.target = vec3(); } update() {} },
+    AmbientLight: class {},
+    HemisphereLight: class {},
+    DirectionalLight: class { constructor() { this.position = vec3(); } },
+    GridHelper: class { constructor() { this.position = vec3(); } },
+    Clock: class { getDelta() { return 0.016; } },
+    Box3: class { constructor() { this.min = vec3(0, 0, 0); } setFromObject() { return this; } isEmpty() { return false; } getSize() { return vec3(1, 1.5, 1); } getCenter() { return vec3(0, 0.75, 0); } },
+    Vector3: class { constructor(x = 0, y = 0, z = 0) { return vec3(x, y, z); } },
+    SkeletonHelper: class {},
+    AnimationMixer: class {
+      stopAllAction() {}
+      uncacheRoot() {}
+      update() {}
+      clipAction(clip) {
+        return {
+          setLoop() {}, reset() {}, play() {}, setEffectiveTimeScale() {}, setEffectiveWeight() {},
+          getClip() { return clip; }, time: 0
+        };
+      }
+    },
+    LoopRepeat: 2201,
+    LoopOnce: 2200,
+    GLTFLoader: class {
+      parse(_buf, _path, onLoad) {
+        onLoad({
+          scene: { position: vec3(), traverse() {} },
+          animations: [
+            { name: 'cr_idle', duration: 1.2 },
+            { name: 'cr_attack_01', duration: 0.8 }
+          ]
+        });
+      }
+    }
+  };
+  nodes.stage3dView.append(nodes.stage3dCanvas);
+  const rafQueue = [];
+  c.requestAnimationFrame = fn => { rafQueue.push(fn); return rafQueue.length; };
+
+  await f.loadAssetFiles({
+    'mdl-adult/manifest.json': encode({ task_id: 'mdl-adult', task_type: 'creature-model-rig', subject_id: creature.line_id, stage: 'adult', files: [{ path: 'models/adult.glb', kind: 'model', level: 'L1' }], missing: [] }),
+    'mdl-adult/models/adult.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 2, 0, 0, 0])
+  }, { name: 'mdl-adult' }, { silent: true });
+
+  await f.setViewMode('review');
+  const creatureRow = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
+  creatureRow.listeners.click[0]();
+
+  // Flush the mountDesigned3dViewer rAF callback without looping animate3dLoop infinitely
+  const pending = rafQueue.splice(0, rafQueue.length);
+  for (const fn of pending) await fn();
+
+  const detailText = collectText(nodes.designedDetailView);
+  assert.match(detailText, /GLB 已載入/);
+  assert.match(detailText, /2 支完整動態/);
+  assert.match(detailText, /cr_idle|待機/);
 });
