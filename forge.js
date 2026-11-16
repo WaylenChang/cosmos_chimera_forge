@@ -12,6 +12,36 @@
     return t === "creature-model-rig" || t === "character-model-rig" || t === "model-rig" || (typeof t === "string" && (t.startsWith("mdl") || t.startsWith("anim")));
   }
 
+  function isImg23dResourceName(name) {
+    const s = String(name || "").trim().toLowerCase();
+    return /(?:^|[/_\\-])(front|turnaround)\.(png|jpe?g|webp)$/i.test(s) ||
+      /^(正面圖|三視圖|front|turnaround)$/.test(s);
+  }
+
+  function isCreatureSubjectPkg(pkg) {
+    const t = String(pkg?.type || pkg?.manifest?.task_type || "").toLowerCase();
+    const id = String(pkg?.id || "").toLowerCase();
+    const sub = String(pkg?.subjectId || pkg?.manifest?.subject_id || "").toLowerCase();
+    return t.startsWith("creature") || id.startsWith("cr-") || id.startsWith("cr_") || id.startsWith("asset_cr_") || sub.startsWith("cr_");
+  }
+
+  function getEffectiveMissing(pkg) {
+    const raw = Array.isArray(pkg?.manifest?.missing) ? pkg.manifest.missing : [];
+    const isCr = isCreatureSubjectPkg(pkg);
+    const isPrompt3d = pkg?.manifest?.input_mode === "text" || pkg?.manifest?.pipeline === "ai_blender" || !pkg?.manifest?.source_pack;
+    return raw.filter(entry => {
+      const item = typeof entry === "string" ? entry : (entry?.item || entry?.path || "");
+      const norm = String(item).trim().toLowerCase();
+      if (!norm) return false;
+      // 正面圖和三視圖為 Img-to-3D 資源，非最終審查需求項目
+      if (isImg23dResourceName(norm)) return false;
+      // 已定案宙獸與 Prompt-to-3D 不需要立繪
+      if ((isCr || isPrompt3d) && (norm === "source portrait" || norm === "post-model portrait" || /立繪/.test(norm))) return false;
+      if (isCr && /(?:^|[/_\\-])main\.(png|jpe?g|webp)$/i.test(norm)) return false;
+      return true;
+    });
+  }
+
   function reviewStatusInfo(status) {
     switch (status) {
       case "ok":
@@ -764,12 +794,12 @@
 
     // 2. 產生 manifest.json
     const filesList = isCr ? [
-      { path: `images/cr_${ctx.subjectId}_${curStage}_front.png`, kind: "front", level: "L1" },
-      { path: `images/cr_${ctx.subjectId}_${curStage}_turnaround.png`, kind: "turnaround", level: "L1" }
+      { path: `images/cr_${ctx.subjectId}_${curStage}_front.png`, kind: "front", level: "L2" },
+      { path: `images/cr_${ctx.subjectId}_${curStage}_turnaround.png`, kind: "turnaround", level: "L2" }
     ] : [
       { path: `images/${ctx.subjectId}_main.png`, kind: "main", level: "L1" },
-      { path: `images/${ctx.subjectId}_front.png`, kind: "front", level: "L1" },
-      { path: `images/${ctx.subjectId}_turnaround.png`, kind: "turnaround", level: "L1" }
+      { path: `images/${ctx.subjectId}_front.png`, kind: "front", level: "L2" },
+      { path: `images/${ctx.subjectId}_turnaround.png`, kind: "turnaround", level: "L2" }
     ];
 
     const tsPart = ctx.timestamp || ctx.taskId.replace(/^[a-z]+-/, "").replace(/-(juvenile|adolescent|adult|overload)$/, "");
@@ -1373,21 +1403,25 @@
     const hasWikiManifest = matches.some(p => Boolean(p.manifest?.encyclopedia_path));
     const wikiDone = hasWikiDrive || hasWikiManifest;
 
-    // 3. 2D Portrait status
+    // 3. 2D Portrait status (已定案宙獸不需要立繪，2D 僅為選填 Img-to-3D 參考資源)
+    const isCreature = kind === "creature";
     const portraitJobs = findPipelineJobFiles(subjectId, stage, ["appearance", "portrait", "review_portrait"]);
     let portrait;
     if (best2d && isApprovedStatus(best2d.status)) {
-      portrait = { state: "ok", label: "✅ 已通過", cls: "ok", pkg: best2d };
+      portrait = { state: "ok", label: "✅ 已通過", cls: "ok", pkg: best2d, notRequired: isCreature };
     } else if (best2d && isProvisionalStatus(best2d.status)) {
-      portrait = { state: "provisional", label: "🟦 暫時採用", cls: "provisional", pkg: best2d };
+      portrait = { state: "provisional", label: "🟦 暫時採用", cls: "provisional", pkg: best2d, notRequired: isCreature };
     } else if (best2d && best2d.status === "reject") {
-      portrait = { state: "rejected", label: "❌ 退回待重製", cls: "reject", pkg: best2d };
+      portrait = { state: "rejected", label: "❌ 退回待重製", cls: "reject", pkg: best2d, notRequired: isCreature };
     } else if (best2d) {
-      portrait = { state: "reviewing", label: best2d.status === "missing" ? "⚠️ 缺檔待補" : "🟨 待審查", cls: "active", pkg: best2d };
+      const missing2d = getEffectiveMissing(best2d);
+      portrait = { state: "reviewing", label: (!isCreature && (best2d.status === "missing" || missing2d.length)) ? "⚠️ 缺檔待補" : "🟨 待審查", cls: "active", pkg: best2d, notRequired: isCreature };
     } else if (portraitJobs.length > 0) {
-      portrait = { state: "queued", label: "🔄 已送出 Prompt", cls: "active", jobFile: portraitJobs[0] };
+      portrait = { state: "queued", label: "🔄 已送出 Prompt", cls: "active", jobFile: portraitJobs[0], notRequired: isCreature };
     } else if (isForgingThis && !is3dType(state.taskId)) {
-      portrait = { state: "forging", label: "⚡ 鍛造台編輯中", cls: "active" };
+      portrait = { state: "forging", label: "⚡ 鍛造台編輯中", cls: "active", notRequired: isCreature };
+    } else if (isCreature) {
+      portrait = { state: "not_required", label: "不需要（僅供 Img-to-3D 參考）", cls: "ok", notRequired: true };
     } else {
       portrait = { state: "unprocessed", label: "⬜ 未處理", cls: "" };
     }
@@ -1404,6 +1438,7 @@
     } else if (best3d) {
       const ts = parsePkgTypedState(best3d);
       const route = best3d.drivePath?.includes("/colab/") ? "Colab" : best3d.drivePath?.includes("/ai_blender/") ? "AI+Blender" : "3D";
+      const missing3d = getEffectiveMissing(best3d);
       if (ts?.status === "RUNNING") {
         model3d = { state: "running", label: `⚙️ ${route} 生成中`, cls: "active", pkg: best3d, typedState: ts };
       } else if (ts?.status === "QUEUED") {
@@ -1412,8 +1447,8 @@
         model3d = { state: "qa_pending", label: `🧪 ${route} 自動 QA 待檢`, cls: "active", pkg: best3d, typedState: ts };
       } else if (ts?.status === "REVIEW_REQUIRED") {
         model3d = { state: "reviewing", label: `🟨 ${route} 待人工審查`, cls: "active", pkg: best3d, typedState: ts };
-      } else if (best3d.manifest?.missing?.length) {
-        model3d = { state: "missing", label: `⚠️ 缺檔 (${best3d.manifest.missing.length})`, cls: "active", pkg: best3d, typedState: ts };
+      } else if (missing3d.length) {
+        model3d = { state: "missing", label: `⚠️ 缺檔 (${missing3d.length})`, cls: "active", pkg: best3d, typedState: ts };
       } else {
         model3d = { state: "reviewing", label: `🟨 ${route} 待審查`, cls: "active", pkg: best3d, typedState: ts };
       }
@@ -1425,8 +1460,8 @@
       model3d = { state: "unprocessed", label: "⬜ 未處理", cls: "" };
     }
 
-    const completed = matches.some(p => p.completed) || (portrait.state === "ok" && model3d.state === "ok");
-    const isUnprocessed = !isAcceptedStatus(portrait.pkg?.status) || !isAcceptedStatus(model3d.pkg?.status);
+    const completed = matches.some(p => p.completed) || (isCreature ? model3d.state === "ok" : (portrait.state === "ok" && model3d.state === "ok"));
+    const isUnprocessed = isCreature ? !isAcceptedStatus(model3d.pkg?.status) : (!isAcceptedStatus(portrait.pkg?.status) || !isAcceptedStatus(model3d.pkg?.status));
 
     return {
       subjectId,
@@ -1459,7 +1494,7 @@
     }
     const unprocessedCount = parts.filter(pt => pt.isUnprocessed).length;
     const inProgressCount = parts.filter(pt =>
-      ["reviewing", "queued", "forging", "running", "queued_runner", "qa_pending", "missing"].includes(pt.portrait.state) ||
+      (!pt.portrait.notRequired && ["reviewing", "queued", "forging", "running", "queued_runner", "qa_pending", "missing"].includes(pt.portrait.state)) ||
       ["reviewing", "queued", "forging", "running", "queued_runner", "qa_pending", "missing"].includes(pt.model3d.state)
     ).length;
 
@@ -1542,7 +1577,10 @@
           el("span", { class: "f-badge " + reviewStatusInfo(pkg.status).cls }, reviewStatusInfo(pkg.status).badge),
           el("div", { class: "muted" }, pkg.drivePath || ""),
           el("div", { style: "color:var(--warn);font-size:12px" },
-            "需補件：" + (pkg.manifest?.missing?.length ? pkg.manifest.missing.join("、") : "請確認尚缺的設計資料與交付檔案"))
+            (() => {
+              const m = getEffectiveMissing(pkg);
+              return "需補件：" + (m.length ? m.map(x => typeof x === "string" ? x : x.item || x.path || JSON.stringify(x)).join("、") : "請確認尚缺的設計資料與交付檔案");
+            })())
         ),
         el("button", { class: "btn mini", type: "button", onclick: () => jumpToReview(pkg.id, pkg.stage) }, "檢視成果")
       ))
@@ -1800,8 +1838,11 @@
         ),
         pkg.drivePath ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace" }, pkg.drivePath) : null,
         note ? el("div", { style: "font-size:11.5px;color:var(--warn);background:rgba(217,182,109,0.08);padding:4px 8px;border-radius:4px;border-left:2px solid var(--warn)" }, `審查意見：${note}`) : null,
-        pkg.manifest?.missing?.length ? el("div", { style: "color:var(--warn);font-size:12px" },
-          `⚠️ 需補件：${pkg.manifest.missing.join("、")}（不影響目前審查狀態）`) : null,
+        (() => {
+          const effMissing = getEffectiveMissing(pkg);
+          return effMissing.length ? el("div", { style: "color:var(--warn);font-size:12px" },
+            `⚠️ 需補件：${effMissing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、")}（不影響目前審查狀態）`) : null;
+        })(),
         imgs.length > 1 ? el("div", { style: "display:flex;gap:4px;flex-wrap:wrap;margin-top:2px" },
           imgs.slice(0, 5).map(im => el("img", {
             src: im.url,
@@ -1835,10 +1876,11 @@
   function renderPipelineProgressCard(subjectId, kind) {
     const sum = getDesignedItemSummary(subjectId, kind);
     const parts = sum.parts;
-    const totalSteps = parts.length * 2; // 2D + 3D per part
-    const doneSteps = parts.reduce((acc, pt) => acc + (isApprovedStatus(pt.portrait.pkg?.status) ? 1 : 0) + (isApprovedStatus(pt.model3d.pkg?.status) ? 1 : 0), 0);
-    const provSteps = parts.reduce((acc, pt) => acc + (isProvisionalStatus(pt.portrait.pkg?.status) ? 1 : 0) + (isProvisionalStatus(pt.model3d.pkg?.status) ? 1 : 0), 0);
-    const activeSteps = parts.reduce((acc, pt) => acc + (!isAcceptedStatus(pt.portrait.pkg?.status) && pt.portrait.state !== "unprocessed" ? 1 : 0) + (!isAcceptedStatus(pt.model3d.pkg?.status) && pt.model3d.state !== "unprocessed" ? 1 : 0), 0);
+    const isCreature = kind === "creature";
+    const totalSteps = isCreature ? parts.length : parts.length * 2; // 宙獸僅需 3D；角色需 2D + 3D
+    const doneSteps = parts.reduce((acc, pt) => acc + (!isCreature && isApprovedStatus(pt.portrait.pkg?.status) ? 1 : 0) + (isApprovedStatus(pt.model3d.pkg?.status) ? 1 : 0), 0);
+    const provSteps = parts.reduce((acc, pt) => acc + (!isCreature && isProvisionalStatus(pt.portrait.pkg?.status) ? 1 : 0) + (isProvisionalStatus(pt.model3d.pkg?.status) ? 1 : 0), 0);
+    const activeSteps = parts.reduce((acc, pt) => acc + (!isCreature && !isAcceptedStatus(pt.portrait.pkg?.status) && pt.portrait.state !== "unprocessed" ? 1 : 0) + (!isAcceptedStatus(pt.model3d.pkg?.status) && pt.model3d.state !== "unprocessed" ? 1 : 0), 0);
 
     const visibleParts = designedState.pipelineShowAll ? parts : parts.filter(pt => pt.isUnprocessed);
     const idx = getDrivePipelineIndex();
@@ -1881,7 +1923,9 @@
 
     if (!visibleParts.length) {
       card.append(el("div", { class: "muted", style: "font-size:12px;padding:6px 0" },
-        "🎉 此項目的 2D 立繪與 3D 模型皆已通過或暫時採用（可點選「顯示全部階段」檢視完整管線步驟）。"
+        isCreature
+          ? "🎉 此項目的 3D 模型皆已通過或暫時採用（可點選「顯示全部階段」檢視完整管線步驟）。"
+          : "🎉 此項目的 2D 立繪與 3D 模型皆已通過或暫時採用（可點選「顯示全部階段」檢視完整管線步驟）。"
       ));
       return card;
     }
@@ -1889,12 +1933,13 @@
     visibleParts.forEach(pt => {
       const ts = pt.model3d.typedState;
       const stepSummary = ts?.steps ? Object.entries(ts.steps).map(([k, v]) => `${k}: ${v?.status || "?"}`).join(" · ") : "";
+      const effMissing3d = pt.model3d.pkg ? getEffectiveMissing(pt.model3d.pkg) : [];
       const detailHints = [
         pt.portrait.jobFile ? `2D Job: ${pt.portrait.jobFile.name}` : null,
         pt.model3d.jobFile ? `3D Job: ${pt.model3d.jobFile.name}` : null,
         pt.model3d.pkg?.drivePath ? `3D 目錄: ${pt.model3d.pkg.drivePath}` : null,
         stepSummary ? `Runner 步驟: ${stepSummary}` : null,
-        pt.model3d.pkg?.manifest?.missing?.length ? `缺檔: ${pt.model3d.pkg.manifest.missing.join(", ")}` : null
+        effMissing3d.length ? `缺檔: ${effMissing3d.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join(", ")}` : null
       ].filter(Boolean);
 
       const row = el("div", { class: "pipeline-row" },
@@ -1905,16 +1950,16 @@
           ),
           el("div", { style: "display:flex;gap:6px;flex-wrap:wrap" },
             pt.portrait.pkg
-              ? el("button", { class: "btn mini ghost", type: "button", onclick: () => jumpToReview(pt.portrait.pkg.id, pt.stage) }, "🔍 檢視 2D")
-              : el("button", {
+              ? el("button", { class: "btn mini ghost", type: "button", onclick: () => jumpToReview(pt.portrait.pkg.id, pt.stage) }, isCreature ? "🔍 檢視參考圖" : "🔍 檢視 2D")
+              : (!isCreature ? el("button", {
                 class: "btn mini ghost", type: "button",
-                onclick: () => kind === "character" ? useDesignedCharacter(subjectId, "character-concept") : useDesigned(subjectId, "creature-concept", pt.stage)
-              }, "🎨 鍛造立繪"),
+                onclick: () => useDesignedCharacter(subjectId, "character-concept")
+              }, "🎨 鍛造立繪") : null),
             pt.model3d.pkg
               ? el("button", { class: "btn mini ghost", type: "button", onclick: () => jumpToReview(pt.model3d.pkg.id, pt.stage) }, "🔍 檢視 3D")
               : el("button", {
                 class: "btn mini ghost", type: "button",
-                onclick: () => kind === "character" ? useDesignedCharacter(subjectId, "character-model-rig") : useDesigned(subjectId, "creature-model-rig", pt.stage)
+                onclick: () => isCreature ? useDesigned(subjectId, "creature-model-rig", pt.stage) : useDesignedCharacter(subjectId, "character-model-rig")
               }, "🧊 鍛造 3D")
           )
         ),
@@ -1922,12 +1967,13 @@
           el("span", { class: "pipeline-step " + (pt.settingsDone ? "ok" : "") }, pt.settingsDone ? "✅ ① 外觀／參數" : "⬜ ① 外觀／參數"),
           el("span", { class: "muted" }, "→"),
           el("span", { class: "pipeline-step " + (pt.wikiDone ? "ok" : "") }, pt.wikiDone ? "✅ ② 圖鑑" : "⬜ ② 圖鑑"),
+          !isCreature || pt.portrait.pkg || pt.portrait.jobFile ? el("span", { class: "muted" }, "→") : null,
+          !isCreature ? el("span", { class: "pipeline-step " + pt.portrait.cls }, `③ 2D 立繪：${pt.portrait.label}`)
+            : (pt.portrait.pkg || pt.portrait.jobFile ? el("span", { class: "pipeline-step " + pt.portrait.cls }, `③ 參考圖：${pt.portrait.label}`) : null),
           el("span", { class: "muted" }, "→"),
-          el("span", { class: "pipeline-step " + pt.portrait.cls }, `③ 2D 立繪：${pt.portrait.label}`),
+          el("span", { class: "pipeline-step " + pt.model3d.cls }, `${isCreature ? "③" : "④"} 3D 建模：${pt.model3d.label}`),
           el("span", { class: "muted" }, "→"),
-          el("span", { class: "pipeline-step " + pt.model3d.cls }, `④ 3D 建模：${pt.model3d.label}`),
-          el("span", { class: "muted" }, "→"),
-          el("span", { class: "pipeline-step " + (pt.completed ? "ok" : "") }, pt.completed ? "✅ ⑤ 完成區" : "⬜ ⑤ 最終驗收")
+          el("span", { class: "pipeline-step " + (pt.completed ? "ok" : "") }, pt.completed ? `✅ ${isCreature ? "④" : "⑤"} 完成區` : `⬜ ${isCreature ? "④" : "⑤"} 最終驗收`)
         ),
         detailHints.length ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace;line-height:1.4" }, detailHints.join(" | ")) : null
       );
@@ -1939,7 +1985,7 @@
 
   function restoreStage3dView() {
     const view3d = $("#stage3dView");
-    const stage = $("#stage");
+    const stage = $("#stageViewport");
     const compareView = $("#stageCompareView");
     if (!view3d || !stage) return;
     view3d.classList.remove("stage3d-embedded");
@@ -2436,7 +2482,7 @@
       const stageCardSection = el("div", { class: "designed-detail-card" },
         el("h3", { style: "margin:0 0 10px;font-size:13px;color:var(--text);display:flex;align-items:center;justify-content:space-between" },
           el("span", {}, `🐾 四階型態演化檢驗 (${stages.length} 階)`),
-          el("span", { class: "muted", style: "font-size:11px" }, "點選各階按鈕可單獨載入該階立繪或 3D 鍛造")
+          el("span", { class: "muted", style: "font-size:11px" }, "點選各階按鈕可載入該階 3D 或 Img-to-3D 參考圖鍛造")
         )
       );
 
@@ -2460,7 +2506,7 @@
         });
         const stImg = el("img", {
           src: stAssets.primaryUrl,
-          alt: `${st.name_zh} 立繪`,
+          alt: `${st.name_zh} 參考圖`,
           style: "max-width:100%;max-height:100%;object-fit:contain;",
           onerror: function() {
             if (stAssets.fallbackUrl && this.src !== stAssets.fallbackUrl) {
@@ -2475,7 +2521,7 @@
           style: "display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;color:var(--muted);font-size:11px;gap:4px;"
         },
           el("span", { style: "font-size:22px;opacity:0.5;" }, ELEM_ICONS[d.element] || "🐾"),
-          el("span", {}, "待鍛造立繪")
+          el("span", {}, "尚無 3D / 參考預覽")
         );
         stImgBox.append(stImg, stPlaceholder);
 
@@ -2491,7 +2537,7 @@
         const stOrdered = sortPackagesByPriority(stMatches);
         const stReviewDiv = el("div", { style: "display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;background:rgba(0,0,0,0.25);border-radius:4px;font-size:11px;margin-bottom:6px;flex-wrap:wrap" });
         const stBadgesBox = el("div", { style: "display:flex;align-items:center;gap:4px;flex-wrap:wrap" },
-          el("span", { class: "f-badge " + (stProgress.portrait.cls === "active" ? "warn" : stProgress.portrait.cls), style: "font-size:10px" }, `2D ${stProgress.portrait.label}`),
+          stProgress.portrait.pkg ? el("span", { class: "f-badge " + (stProgress.portrait.cls === "active" ? "warn" : stProgress.portrait.cls), style: "font-size:10px" }, `參考圖 ${stProgress.portrait.label}`) : null,
           el("span", { class: "f-badge " + (stProgress.model3d.cls === "active" ? "warn" : stProgress.model3d.cls), style: "font-size:10px" }, `3D ${stProgress.model3d.label}`)
         );
         if (stOrdered.length > 0) {
@@ -2518,8 +2564,9 @@
           el("button", {
             class: "btn mini" + (isCurStage && state.taskId === "creature-concept" ? "" : " ghost"),
             type: "button", style: "flex:1;font-size:11px",
+            title: "產出正面圖與三視圖供 Img-to-3D 使用",
             onclick: () => useDesigned(d.line_id, "creature-concept", st.stage)
-          }, "🎨 立繪鍛造"),
+          }, "🎨 參考圖鍛造"),
           el("button", {
             class: "btn mini" + (isCurStage && (state.taskId === "creature-model-rig" || state.taskId === "model-rig") ? "" : " ghost"),
             type: "button", style: "flex:1;font-size:11px",
@@ -4248,8 +4295,10 @@
       isZip: /\.zip$/i.test(file.name),
       aligned: !!alignedStaged,
       stagedTaskId: alignedStaged?.taskId || null,
-      status: manifestData?.missing?.length ? "missing" : "provisional"
+      status: "provisional"
     };
+    const effectiveMissing = typeof getEffectiveMissing === "function" ? getEffectiveMissing(pkg) : (manifestData?.missing || []);
+    pkg.status = effectiveMissing.length ? "missing" : "provisional";
     addPackage(pkg, {silent});
     return pkg;
   }
@@ -5040,7 +5089,7 @@
       const card = el("div", {class:"designed-detail-card"}, el("h3", {}, "相關交付成果"));
       const orderedPkgs = sortPackagesByPriority(entry.packages).sort((a, b) => stageRank(a.stage) - stageRank(b.stage));
       for (const p of orderedPkgs) {
-        const missing = p.manifest?.missing || [];
+        const missing = getEffectiveMissing(p);
         const note = missing.length ? " · ⚠️ 需補件：" +
           missing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、") : "";
         card.append(el("button", {class:"btn mini",type:"button",onclick:() => {
@@ -5053,8 +5102,12 @@
       }
       body.prepend(card);
     }
-    for (const id of ["stageEmpty","stageSingleView","stageCompareView","stage3dView","stageTag"]) {
+    for (const id of ["stageEmpty","stageSingleView","stageCompareView","stageTag"]) {
       const node = $("#" + id); if (node) node.style.display = "none";
+    }
+    const view3d = $("#stage3dView");
+    if (view3d && !view3d.classList.contains("stage3d-embedded")) {
+      view3d.style.display = "none";
     }
     $("#stageCarousel").replaceChildren();
     $("#viewSeg").replaceChildren();
@@ -5135,7 +5188,7 @@
       if (representative) badges.append(el("span",{class:"rl-stat "+representative.status},
         reviewStatusInfo(representative.status).badge));
       if (entry.packages.length > 1) badges.append(el("span",{class:"rl-stat"},entry.packages.length+" 個交付包"));
-      if (entry.packages.some(p => p.manifest?.missing?.length))
+      if (entry.packages.some(p => getEffectiveMissing(p).length))
         badges.append(el("span",{class:"rl-stat missing"},"⚠️ 需補件"));
       detail.append(badges);
       row.append(detail);
@@ -6391,20 +6444,22 @@
     } else if (activeTab === "files") {
       box.append(el("h4", {}, "交付檔案與完整性驗證"));
       const files = pkg.manifest?.files || [];
-      const missing = pkg.manifest?.missing || [];
+      const missing = getEffectiveMissing(pkg);
       const table = el("table", {},
         el("tr", {}, el("th", {}, "路徑"), el("th", {}, "層級"), el("th", {}, "狀態"))
       );
       files.forEach(f => {
+        const isImg23d = isImg23dResourceName(f.path) || f.kind === "front" || f.kind === "turnaround";
         table.append(el("tr", {},
           el("td", {}, el("code", {}, f.path)),
-          el("td", {}, f.level || "L1"),
+          el("td", {}, isImg23d ? "Img-to-3D 資源" : (f.level || "L1")),
           el("td", { style: "color:var(--ok)" }, "✅ 存在")
         ));
       });
       missing.forEach(m => {
+        const itemLabel = typeof m === "string" ? m : (m.item || m.path || JSON.stringify(m));
         table.append(el("tr", {},
-          el("td", {}, el("code", {}, m.item)),
+          el("td", {}, el("code", {}, itemLabel)),
           el("td", {}, m.level || "L2"),
           el("td", { style: "color:var(--warn)" }, "⚠️ 缺失（" + (m.reason || "平台限制") + "）")
         ));

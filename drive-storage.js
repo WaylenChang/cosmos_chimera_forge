@@ -1115,11 +1115,6 @@
               ".blend",
               "Only source GLB exists; editable Blender file not found",
             );
-          if (!manifest.source_pack)
-            addMissing(
-              "source portrait",
-              "Prompt-to-3D requires a reviewed post-model portrait",
-            );
           if (!children.some((f) => f.name === "rig"))
             addMissing("rig QA", "Rig was not verified from existing model");
           if (!children.some((f) => f.name === "animations"))
@@ -1151,7 +1146,7 @@
             missing,
             notes:
               manifest.notes ||
-              "Historical Prompt-to-3D source. Pending manual pose, rig, clip and portrait review.",
+              "Historical Prompt-to-3D source. Pending manual pose, rig and clip review.",
           };
           if (JSON.stringify(next) === JSON.stringify(manifest)) {
             report.skipped++;
