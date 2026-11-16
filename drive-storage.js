@@ -440,6 +440,8 @@
           files.find((f) => /\.glb$/i.test(f.path));
         if (glb && !pkg.glbFile)
           pkg.glbFile = { path: glb.path, id: glb.id, modifiedTime: glb.modifiedTime || "", deferred: true };
+        if (!reviewRecord && pkg.glbFile && pkg.status === "missing")
+          pkg.status = "provisional";
         if (reviewRecord) {
           pkg.status = reviewRecord.status;
           pkg.sourcePack = reviewRecord.source_pack;

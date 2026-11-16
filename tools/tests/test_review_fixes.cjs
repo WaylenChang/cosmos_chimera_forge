@@ -859,3 +859,51 @@ test('SHA256 mismatch with review descriptor still displays 3D model and keeps w
   assert.deepEqual(parsedModels, [9], 'GLB must still be parsed and displayed on SHA256 mismatch');
   assert.match(nodes.stage3dInfoBadge.textContent, /SHA256.*不符/);
 });
+
+test('downstream 3D completion suppresses upstream missing badges everywhere except progress tracker reminder', async () => {
+  const { c, nodes } = createHarness();
+  const f = c.COSMI_FORGE;
+  const encode = x => new TextEncoder().encode(JSON.stringify(x));
+  const creature = c.DESIGNED[0];
+
+  await f.loadAssetFiles({
+    'cr-2d-adult/manifest.json': encode({
+      task_id: 'cr-2d-adult',
+      task_type: 'creature-concept',
+      subject_id: creature.line_id,
+      stage: 'adult',
+      files: [],
+      missing: [{ item: 'concept sheet' }]
+    })
+  }, { name: 'cr-2d-adult' }, { silent: true });
+
+  const mdlPkg = await f.loadAssetFiles({
+    'mdl-3d-adult/manifest.json': encode({
+      task_id: 'mdl-3d-adult',
+      task_type: 'creature-model-rig',
+      subject_id: creature.line_id,
+      stage: 'adult',
+      files: [{ path: 'models/adult.glb', kind: 'model', level: 'L1' }],
+      missing: [{ item: '.blend' }, { item: 'rig QA' }]
+    }),
+    'mdl-3d-adult/models/adult.glb': new Uint8Array([0x67, 0x6c, 0x54, 0x46, 1, 0, 0, 0])
+  }, { name: 'mdl-3d-adult' }, { silent: true });
+  mdlPkg.status = 'pending';
+
+  await f.setViewMode('review');
+  const row = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
+  assert.ok(row, 'creature row must exist in railList');
+  const rowText = collectText(row);
+  assert.doesNotMatch(rowText, /需補件|缺檔/, 'railList must not show missing badge when 3D model exists');
+
+  row.listeners.click[0]();
+  const detailText = collectText(nodes.designedDetailView);
+  const trackerStart = detailText.indexOf('未處理項目與管線生成進度追蹤');
+  assert.ok(trackerStart >= 0, 'progress tracker must be rendered');
+  const beforeTracker = detailText.slice(0, trackerStart);
+  const trackerText = detailText.slice(trackerStart);
+
+  assert.doesNotMatch(beforeTracker, /需補件|缺檔/, 'deliverables and stage status outside tracker must not show missing');
+  assert.match(trackerText, /前置缺件提醒（已有後續成品，可免補）/, 'progress tracker must keep a simple reminder');
+  assert.match(trackerText, /\.blend.*rig QA/, 'progress tracker reminder must list superseded items');
+});

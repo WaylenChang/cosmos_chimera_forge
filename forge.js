@@ -42,6 +42,27 @@
     });
   }
 
+  function isPackageDownstreamDone(pkg) {
+    if (!pkg) return false;
+    if (isAcceptedStatus(pkg.status) || pkg.completed) return true;
+    return (is3dType(pkg.type) || Boolean(pkg.glbFile || pkg.glbUrl)) && Boolean(pkg.glbFile || pkg.glbUrl);
+  }
+
+  function isMissingSuperseded(pkg, peerPackages) {
+    if (!pkg) return false;
+    if (isPackageDownstreamDone(pkg)) return true;
+    const peers = Array.isArray(peerPackages) ? peerPackages : [];
+    const pkgStage = String(pkg.stage || "").toLowerCase();
+    return peers.some(other => {
+      if (!other || other === pkg) return false;
+      if (!isPackageDownstreamDone(other)) return false;
+      const otherIs3d = is3dType(other.type) || Boolean(other.glbFile || other.glbUrl);
+      if (!otherIs3d) return false;
+      if (!pkgStage || !other.stage) return true;
+      return String(other.stage).toLowerCase() === pkgStage;
+    });
+  }
+
   function reviewStatusInfo(status) {
     switch (status) {
       case "ok":
@@ -1425,7 +1446,8 @@
       portrait = { state: "rejected", label: "❌ 退回待重製", cls: "reject", pkg: best2d, notRequired: isCreature };
     } else if (best2d) {
       const missing2d = getEffectiveMissing(best2d);
-      portrait = { state: "reviewing", label: (!isCreature && (best2d.status === "missing" || missing2d.length)) ? "⚠️ 缺檔待補" : "🟨 待審查", cls: "active", pkg: best2d, notRequired: isCreature };
+      const portraitSuperseded = Boolean(best3d && isPackageDownstreamDone(best3d));
+      portrait = { state: "reviewing", label: (!isCreature && !portraitSuperseded && (best2d.status === "missing" || missing2d.length)) ? "⚠️ 缺檔待補" : "🟨 待審查", cls: "active", pkg: best2d, notRequired: isCreature || portraitSuperseded };
     } else if (portraitJobs.length > 0) {
       portrait = { state: "queued", label: "🔄 已送出 Prompt", cls: "active", jobFile: portraitJobs[0], notRequired: isCreature };
     } else if (isForgingThis && !is3dType(state.taskId)) {
@@ -1448,7 +1470,7 @@
     } else if (best3d) {
       const ts = parsePkgTypedState(best3d);
       const route = best3d.drivePath?.includes("/colab/") ? "Colab" : best3d.drivePath?.includes("/ai_blender/") ? "AI+Blender" : "3D";
-      const missing3d = getEffectiveMissing(best3d);
+      const missing3d = isMissingSuperseded(best3d, matches) ? [] : getEffectiveMissing(best3d);
       if (ts?.status === "RUNNING") {
         model3d = { state: "running", label: `⚙️ ${route} 生成中`, cls: "active", pkg: best3d, typedState: ts };
       } else if (ts?.status === "QUEUED") {
@@ -1552,11 +1574,12 @@
           el("b", {}, pkg.id),
           el("span", { class: "f-badge " + reviewStatusInfo(pkg.status).cls }, reviewStatusInfo(pkg.status).badge),
           el("div", { class: "muted" }, pkg.drivePath || ""),
-          el("div", { style: "color:var(--warn);font-size:12px" },
-            (() => {
-              const m = getEffectiveMissing(pkg);
-              return "需補件：" + (m.length ? m.map(x => typeof x === "string" ? x : x.item || x.path || JSON.stringify(x)).join("、") : "請確認尚缺的設計資料與交付檔案");
-            })())
+          (() => {
+            if (isMissingSuperseded(pkg, group.packages)) return null;
+            const m = getEffectiveMissing(pkg);
+            return el("div", { style: "color:var(--warn);font-size:12px" },
+              "需補件：" + (m.length ? m.map(x => typeof x === "string" ? x : x.item || x.path || JSON.stringify(x)).join("、") : "請確認尚缺的設計資料與交付檔案"));
+          })()
         ),
         el("button", { class: "btn mini", type: "button", onclick: () => jumpToReview(pkg.id, pkg.stage) }, "檢視成果")
       ))
@@ -1634,7 +1657,7 @@
         pkg.drivePath ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace" }, pkg.drivePath) : null,
         note ? el("div", { style: "font-size:11.5px;color:var(--warn);background:rgba(217,182,109,0.08);padding:4px 8px;border-radius:4px;border-left:2px solid var(--warn)" }, `審查意見：${note}`) : null,
         (() => {
-          const effMissing = getEffectiveMissing(pkg);
+          const effMissing = isMissingSuperseded(pkg, matches) ? [] : getEffectiveMissing(pkg);
           return effMissing.length ? el("div", { style: "color:var(--warn);font-size:12px" },
             `⚠️ 需補件：${effMissing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、")}（不影響目前審查狀態）`) : null;
         })(),
@@ -1740,13 +1763,26 @@
     visibleParts.forEach(pt => {
       const ts = pt.model3d.typedState;
       const stepSummary = ts?.steps ? Object.entries(ts.steps).map(([k, v]) => `${k}: ${v?.status || "?"}`).join(" · ") : "";
-      const effMissing3d = pt.model3d.pkg ? getEffectiveMissing(pt.model3d.pkg) : [];
+      const rawMissing2d = pt.portrait.pkg ? getEffectiveMissing(pt.portrait.pkg) : [];
+      const rawMissing3d = pt.model3d.pkg ? getEffectiveMissing(pt.model3d.pkg) : [];
+      const superseded2d = pt.portrait.pkg && isMissingSuperseded(pt.portrait.pkg, pt.matches);
+      const superseded3d = pt.model3d.pkg && isMissingSuperseded(pt.model3d.pkg, pt.matches);
+      const blockingMissing = [
+        ...(!superseded2d ? rawMissing2d : []),
+        ...(!superseded3d ? rawMissing3d : [])
+      ];
+      const supersededMissing = [
+        ...(superseded2d ? rawMissing2d : []),
+        ...(superseded3d ? rawMissing3d : [])
+      ];
+      const formatMissing = arr => arr.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join(", ");
       const detailHints = [
         pt.portrait.jobFile ? `2D Job: ${pt.portrait.jobFile.name}` : null,
         pt.model3d.jobFile ? `3D Job: ${pt.model3d.jobFile.name}` : null,
         pt.model3d.pkg?.drivePath ? `3D 目錄: ${pt.model3d.pkg.drivePath}` : null,
         stepSummary ? `Runner 步驟: ${stepSummary}` : null,
-        effMissing3d.length ? `缺檔: ${effMissing3d.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join(", ")}` : null
+        blockingMissing.length ? `缺檔: ${formatMissing(blockingMissing)}` : null,
+        supersededMissing.length ? `前置缺件提醒（已有後續成品，可免補）: ${formatMissing(supersededMissing)}` : null
       ].filter(Boolean);
 
       const row = el("div", { class: "pipeline-row" },
@@ -3859,7 +3895,7 @@
       status: "provisional"
     };
     const effectiveMissing = typeof getEffectiveMissing === "function" ? getEffectiveMissing(pkg) : (manifestData?.missing || []);
-    pkg.status = effectiveMissing.length ? "missing" : "provisional";
+    pkg.status = (effectiveMissing.length && !glbFile) ? "missing" : "provisional";
     addPackage(pkg, {silent});
     return pkg;
   }
@@ -4654,7 +4690,9 @@
       const card = el("div", {class:"designed-detail-card"}, el("h3", {}, "相關交付成果"));
       const orderedPkgs = sortPackagesByPriority(entry.packages).sort((a, b) => stageRank(a.stage) - stageRank(b.stage));
       for (const p of orderedPkgs) {
-        const missing = getEffectiveMissing(p);
+        const superseded = isMissingSuperseded(p, entry.packages);
+        const missing = superseded ? [] : getEffectiveMissing(p);
+        const displayStatus = (p.status === "missing" && superseded) ? "provisional" : p.status;
         const note = missing.length ? " · ⚠️ 需補件：" +
           missing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、") : "";
         card.append(el("button", {class:"btn mini",type:"button",onclick:() => {
@@ -4663,7 +4701,7 @@
           if (p.stage) reviewState.activeStage = p.stage;
           if (is3dType(p.type) || p.glbFile || p.animSpec) reviewState.viewMode = "3d";
           renderReviewView();
-        }}, p.id + " · " + reviewStatusInfo(p.status).zh + note));
+        }}, p.id + " · " + reviewStatusInfo(displayStatus).zh + note));
       }
       body.prepend(card);
     }
@@ -4753,10 +4791,13 @@
       }
       if (stages.children.length) detail.append(stages);
       const badges = el("div",{class:"rl-badges"});
-      if (representative) badges.append(el("span",{class:"rl-stat "+representative.status},
-        reviewStatusInfo(representative.status).badge));
+      const repStatus = (representative && representative.status === "missing" && isMissingSuperseded(representative, entry.packages))
+        ? "provisional"
+        : representative?.status;
+      if (representative) badges.append(el("span",{class:"rl-stat "+repStatus},
+        reviewStatusInfo(repStatus).badge));
       if (entry.packages.length > 1) badges.append(el("span",{class:"rl-stat"},entry.packages.length+" 個交付包"));
-      if (entry.packages.some(p => getEffectiveMissing(p).length))
+      if (entry.packages.some(p => !isMissingSuperseded(p, entry.packages) && getEffectiveMissing(p).length))
         badges.append(el("span",{class:"rl-stat missing"},"⚠️ 需補件"));
       detail.append(badges);
       row.append(detail);
@@ -6060,7 +6101,7 @@
     } else if (activeTab === "files") {
       box.append(el("h4", {}, "交付檔案與完整性驗證"));
       const files = pkg.manifest?.files || [];
-      const missing = getEffectiveMissing(pkg);
+      const missing = isMissingSuperseded(pkg, getReviewMatches(pkg.subjectId || pkg.baseId || pkg.id)) ? [] : getEffectiveMissing(pkg);
       const table = el("table", {},
         el("tr", {}, el("th", {}, "路徑"), el("th", {}, "層級"), el("th", {}, "狀態"))
       );
