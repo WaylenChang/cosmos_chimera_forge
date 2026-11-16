@@ -5839,42 +5839,52 @@
       if (three.renderer && three.scene && three.camera) three.renderer.render(three.scene, three.camera);
     };
 
+    if (glbBuffer && ArrayBuffer.isView(glbBuffer)) {
+      glbBuffer = window.COSMI_MODEL_REVIEW.exactBuffer(glbBuffer);
+    }
     const glbUrl = targetPkg.glbUrl || targetPkg.glbFile?.url || "";
+    const reportGlbLoadError = (prefixMsg, err) => {
+      const detail = err?.message || (typeof err === "string" ? err : "");
+      if (targetPkg.driveFolderId) {
+        targetPkg.glbLoadError = true;
+        $("#stage3dClipBadge").textContent = detail ? `${prefixMsg}：${detail}` : `${prefixMsg}；請修復後重新審查`;
+        $("#stage3dInfoBadge").textContent = "不顯示替代模型";
+      } else {
+        buildProcedural3dRig(targetPkg, onModelLoaded);
+      }
+    };
     if (glbBuffer || glbUrl) {
       if (typeof THREE.GLTFLoader !== "undefined") {
         const loader = new THREE.GLTFLoader();
+        if (typeof THREE.DRACOLoader !== "undefined") {
+          const dracoLoader = new THREE.DRACOLoader();
+          dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.4.1/");
+          loader.setDRACOLoader(dracoLoader);
+        }
+        const safeOnLoad = gltf => {
+          try {
+            onModelLoaded(gltf.scene, gltf.animations);
+          } catch (e) {
+            console.error("3D model viewer setup error:", e);
+            reportGlbLoadError("3D 視圖初始化失敗", e);
+          }
+        };
         if (glbBuffer) {
-          loader.parse(glbBuffer, "", gltf => onModelLoaded(gltf.scene, gltf.animations), err => {
+          loader.parse(glbBuffer, "", safeOnLoad, err => {
             console.error("GLTF buffer parse error:", err);
-            if (targetPkg.driveFolderId) {
-              targetPkg.glbLoadError = true;
-              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
-              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
-            } else buildProcedural3dRig(targetPkg, onModelLoaded);
+            reportGlbLoadError("GLB 無法載入", err);
           });
         } else {
-          loader.load(glbUrl, gltf => onModelLoaded(gltf.scene, gltf.animations), undefined, err => {
+          loader.load(glbUrl, safeOnLoad, undefined, err => {
             console.error("GLTF load url error:", err);
-            if (targetPkg.driveFolderId) {
-              targetPkg.glbLoadError = true;
-              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
-              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
-            } else buildProcedural3dRig(targetPkg, onModelLoaded);
+            reportGlbLoadError("GLB 無法載入", err);
           });
         }
       } else {
-        if (targetPkg.driveFolderId) {
-              targetPkg.glbLoadError = true;
-              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
-              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
-            } else buildProcedural3dRig(targetPkg, onModelLoaded);
+        reportGlbLoadError("GLTFLoader 未載入");
       }
     } else {
-      if (targetPkg.driveFolderId) {
-              targetPkg.glbLoadError = true;
-              $("#stage3dClipBadge").textContent = "GLB 無法載入；請修復後重新審查";
-              $("#stage3dInfoBadge").textContent = "不顯示替代模型";
-            } else buildProcedural3dRig(targetPkg, onModelLoaded);
+      reportGlbLoadError("GLB 無法載入");
     }
   }
 
