@@ -1,6 +1,6 @@
 # COSMIMERA AI Agent 快速執行指南（AGENT_QUICKSTART）
 
-本文件說明 AI Agent 如何在讀取後，僅透過使用者提供的 **角色／宙獸（或招式）名稱／ID** 與 **管線步驟**，自動定位 Google Drive 上的設定、圖鑑、立繪、模型與 Prompt 模板，並依規範開始執行工作。
+本文件說明 AI Agent 如何在讀取後，僅透過使用者提供的 **角色／宙獸（或主動技）名稱／ID** 與 **管線步驟**，自動定位 Google Drive 上的設定、圖鑑、立繪、模型與 Prompt 模板，並依規範開始執行工作。
 
 ---
 
@@ -10,7 +10,7 @@
 - **核心參考文件**：
   - `DIRECTORY.md`：完整目錄結構、PR #11 型態化 3D 與 Wiki 規範
   - `docs/pipeline/TRIGGERS.md`：各步驟觸發語句與分支說明
-  - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；招式使用 `moves/prompts/01b_move_vfx.prompt.md`
+  - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；主動技使用 `moves/prompts/01b_move_vfx.prompt.md`
 
 > **三層主目錄與過渡檔分層規範**：第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）；第三層僅保留成果審查台之主立繪（`_01_portrait[_<ver>]_main.png`）、GLB（`_<03a_colab|03b_blender>[_<ver>].glb`）、圖鑑（`_05_wiki[_<ver>].md`）與遊戲格式數據；其餘功能性、中間流程過渡檔案依管線步驟（有版本則再建 `<ver>/` 子目錄）存放於 `<kind>/<id>/<step>/[<ver>/]`，檔名結構 `id_型態(宙獸才有型態)_管線與步驟_版本` 維持不變。舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
 
@@ -29,7 +29,7 @@
 1. **判定類別（`kind`）**：
    - 角色（`characters`）：ID 以 `chr_` / `chr-` 開頭，或於 `characters/wiki/` 命中。
    - 宙獸（`creatures`）：ID 以 `cr_` / `cr-` / `starter_` / `line_` / `asset_cr_` 開頭，或於 `creatures/wiki/` 命中。
-   - 招式（`moves`）：ID 以 `fx_` / `vsl_` / `mv_` 開頭，或於 `moves/wiki/` 命中。
+   - 主動技（`moves`）：ID 以 `fx_` / `vsl_` / `mv_` 開頭，或於 `moves/wiki/` 命中。
 2. **解析 `subject_id`（與宙獸 `stage`）**：
    - 若使用者給中文／英文名稱：
      - 搜尋 `<kind>/wiki/` 檔名與內容（`name_zh`、`name_en`、`title_zh`、`subject_id`）。
@@ -42,7 +42,7 @@
    - **圖鑑（第三層）**：
      - 角色：`characters/<id>/<id>_05_wiki.md`
      - 宙獸：`creatures/<id>/<id>_<stage>_05_wiki.md`
-     - 招式：`moves/<id>/<id>_05_wiki.md`
+     - 主動技：`moves/<id>/<id>_05_wiki.md`
    - **主立繪（第三層）**：`<kind>/<id>/<id>[_<stage>]_01_portrait[_<ver>]_main.png`
    - **GLB 檔（第三層）**：`<kind>/<id>/<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].glb`
    - **外觀與參數設定**：`<kind>/<id>/00_settings/[<ver>/]<id>[_<stage>]_00_appearance[_<ver>].md`、`<id>[_<stage>]_00_parameters[_<ver>].json`（若無專屬參數檔，回退讀取共用的 `00_settings/default.parameters.json`）。
@@ -61,7 +61,7 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `00_appearance` | 外觀設定 | `00_appearance.prompt.md` | 無 | 概念／圖鑑素材 | `<kind>/00_settings/<asset_id>.appearance.md`（繁中純外觀，不含數值與製圖指令） |
 | `01_portrait` | 生成立繪、立繪 | `01_portrait.prompt.md` | 已有外觀與參數 | `appearance.md`、`parameters.json`（引用既有 wiki，不覆寫） | `<kind>/01_portraits/<asset_id>/`（`images/`：角色含正面／三視圖／主立繪；宙獸僅需正面圖與三視圖、不含主立繪、`concept.json`、`manifest.json`） |
-| `01b_move_vfx` | 招式特效 | `01b_move_vfx.prompt.md` | 若無招式圖鑑須先建 | 招式規格、`moves/wiki/<id>_wiki.md` | `moves/01_vfx/<asset_id>/`（`spec.json`、`storyboard/`、`layers/`、`flipbook/`、`manifest.json`） |
+| `01b_move_vfx` | 主動技特效 | `01b_move_vfx.prompt.md` | 若無主動技圖鑑須先建 | 主動技規格、`moves/wiki/<id>_wiki.md` | `moves/01_vfx/<asset_id>/`（`spec.json`、`storyboard/`、`layers/`、`flipbook/`、`manifest.json`） |
 | `02_review_portrait` | 立繪審查 | `02_review_portrait.prompt.md` | 已有待審立繪包 | `<kind>/01_portraits/<asset_id>/`、`appearance.md`、`parameters.json` | 輸出逐檔檢查報告與通過／退件建議（**不可自動核准或搬移資產**） |
 | `03a_colab` | Colab 3D、Colab | `03a_colab.prompt.md` | **Image-to-3D 須有已核准立繪**（`<kind>/reviews/<id>.json` `status == "ok"`） | 已核准立繪圖檔、`parameters.json` | `<kind>/02_3d/colab/<asset_id>/`（`models/<id>.glb`、`.blend`、`rig/`、`animations/`、`previews/`、`manifest.json`） |
 | `03b_blender` | AI Blender、Blender 3D | `03b_blender.prompt.md` | Image-to-3D 須立繪已核准；Prompt-to-3D 可無立繪 | 已核准立繪（Image-to-3D）或 `appearance.md`＋`wiki`（Prompt-to-3D） | `<kind>/02_3d/ai_blender/<asset_id>/`（同上結構；無圖則標記 `input_mode: "text"`，不可填假 `source_pack`） |

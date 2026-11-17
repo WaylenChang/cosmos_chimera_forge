@@ -78,7 +78,7 @@ test('ACTIONS entries have unique snake_case IDs, valid frame counts, and well-f
 test('every character and creature clip maps to a known UI category in forge.js', () => {
   const getClipCategory = extractGetClipCategory();
   const knownCategories = new Set([
-    '基礎移動', '戰鬥受擊', '指令召喚', '招式攻擊', '輔助場地', '道具背包', '生活採集', '互動撫摸'
+    '基礎移動', '戰鬥受擊', '指令召喚', '主動技攻擊', '輔助場地', '道具背包', '生活採集', '互動撫摸'
   ]);
   for (const c of C.ACTIONS.character) {
     const cat = getClipCategory(`chr_${c.id}`);

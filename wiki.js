@@ -4,7 +4,7 @@
   const ROOT = "category/wiki"; // The category is characters, creatures or moves.
   const STAGES = Object.freeze(["juvenile", "adolescent", "adult", "overload"]);
   const STAGE_ZH = Object.freeze({juvenile:"幼年", adolescent:"少年", adult:"成年", overload:"超載"});
-  const KIND = Object.freeze({characters:"角色", creatures:"宙獸", moves:"招式"});
+  const KIND = Object.freeze({characters:"角色", creatures:"宙獸", moves:"主動技"});
   function cleanId(value) {
     const id=String(value||"").trim();
     if (!/^[a-zA-Z0-9_-]+$/.test(id)) throw Error("圖鑑主體 ID 格式無效");

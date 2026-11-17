@@ -4,7 +4,7 @@
   const categories = Object.freeze([
     { id: "character", zh: "角色", icon: "👤", concept: "character-concept", model: "character-model-rig" },
     { id: "creature", zh: "宙獸", icon: "🐉", concept: "creature-concept", model: "creature-model-rig" },
-    { id: "move", zh: "招式", icon: "✨", concept: "move-vfx", model: null }
+    { id: "move", zh: "主動技", icon: "✨", concept: "move-vfx", model: null }
   ]);
   const flow = Object.freeze({
     image: [
@@ -21,8 +21,8 @@
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "檢查已完成的 3D 模型、材質、骨架、動作與 manifest；Prompt-to-3D 無需補立繪，缺 .glb／.blend 不得通過。", output: "最終審查紀錄" }
     ],
     move: [
-      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成招式圖鑑", detail: "先按招式的屬性、功能、外觀與動作需求生成獨立 Markdown 圖鑑，存於 moves/<id>/。", output: "moves/<id>/<id>_05_wiki.md" },
-      { id: "move_vfx", stage: "move_vfx", task: "concept", name: "招式與特效設計", detail: "獨立招式圖鑑條目：設定屬性、形狀與強度，生成規格、六格分鏡、分層拆解與序列圖。施放者僅用於示範。", output: "spec.json、storyboard、layers、flipbook" }
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成主動技圖鑑", detail: "先按主動技的屬性、功能、外觀與動作需求生成獨立 Markdown 圖鑑，存於 moves/<id>/。", output: "moves/<id>/<id>_05_wiki.md" },
+      { id: "move_vfx", stage: "move_vfx", task: "concept", name: "主動技與特效設計", detail: "獨立主動技圖鑑條目：設定屬性、形狀與強度，生成規格、六格分鏡、分層拆解與序列圖。施放者僅用於示範。", output: "spec.json、storyboard、layers、flipbook" }
     ]
   });
   function category(id) { return categories.find(c => c.id === id) || null; }

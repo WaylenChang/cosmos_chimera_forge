@@ -28,7 +28,7 @@
 
 ## Prompt-to-3D 歷史模型與獨立圖鑑（PR #11）
 
-Google Drive 已建立 `{characters,creatures,moves}/wiki/` 及 `creatures/wiki/_legacy/`。原有 15 份系列圖鑑已完成實際遷移，拆成 60 份 `creatures/wiki/<subject_id>_<stage>_wiki.md`（15 家族 × 4 型態，全部為真正的 Markdown，無重複檔名）。15 份原始系列文件保留原檔 ID，已移到 `creatures/wiki/_legacy/`；舊 `04_encyclopedia/creatures/` 已清空。已驗證各階段檔案與格式；文字遷移不代表模型或動畫已獲人工 QA 核准。角色與招式使用 `<subject_id>_wiki.md`。所有管線以主體與型態定位同一圖鑑，生成只在缺檔時建立待審 Markdown 草稿。
+Google Drive 已建立 `{characters,creatures,moves}/wiki/` 及 `creatures/wiki/_legacy/`。原有 15 份系列圖鑑已完成實際遷移，拆成 60 份 `creatures/wiki/<subject_id>_<stage>_wiki.md`（15 家族 × 4 型態，全部為真正的 Markdown，無重複檔名）。15 份原始系列文件保留原檔 ID，已移到 `creatures/wiki/_legacy/`；舊 `04_encyclopedia/creatures/` 已清空。已驗證各階段檔案與格式；文字遷移不代表模型或動畫已獲人工 QA 核准。角色與主動技使用 `<subject_id>_wiki.md`。所有管線以主體與型態定位同一圖鑑，生成只在缺檔時建立待審 Markdown 草稿。
 
 `creatures/02_3d/ai_blender/asset_cr_*_<stage>/models/` 是已生成的 **Prompt-to-3D** 原始 GLB/Blend。設定頁的「整理歷史 Prompt-to-3D 目錄」提供經使用者確認的原位整理：為現存模型建立待審 `manifest.json`、記錄圖鑑關聯和缺失項、備份舊索引。原模型不改、不搬，不將未驗證骨架或動作當成完成。登入 Google 並明確執行整理後才會對 Drive 寫入索引；GitHub CI 不會替使用者自動修改雲端資產。
 
@@ -87,7 +87,7 @@ python -m http.server 8687
 | `drive-config.js`  | OAuth Web Client ID、Drive 根目錄 ID 與根路徑                                                                | 更換 Google 登入或 Drive 專案                         |
 | `drive-storage.js` | Google 授權、遞迴目錄讀寫、審查與搬移                                                                        | 修改雲端存取                                          |
 | `Art/_incoming/`   | 本機下載／解壓暫存，正式資產位於 Drive                                                                       | 本機匯出與遊戲交付                                    |
-| `Data/`            | 宙獸、角色、招式、特性與原型圖鑑資料庫                                                                       | 兩邊專案同步保留的圖鑑資料                            |
+| `Data/`            | 宙獸、角色、主動技、被動技與原型圖鑑資料庫                                                                       | 兩邊專案同步保留的圖鑑資料                            |
 
 ## 版本規範（SemVer）
 

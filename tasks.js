@@ -641,16 +641,16 @@
     },
 
     {
-      id: "move-vfx", version: "1.1.1", zh: "招式效果動畫（特效）", prefix: "fx", platform: "chatgpt",
+      id: "move-vfx", version: "1.1.1", zh: "主動技效果動畫（特效）", prefix: "fx", platform: "chatgpt",
       needs: null, drop: "Art/_incoming",
       options: [
         { key: "use_creature", type: "select", label: "示範施放者", items: () => [{ v: "yes", zh: "以目前宙獸概念示範" }, { v: "no", zh: "不指定（通用示範）" }], def: "yes" },
-        // 有示範施放者時只允許它自己的屬性，否則示範畫面的招式配色會跟施放者對不上
+        // 有示範施放者時只允許它自己的屬性，否則示範畫面的主動技配色會跟施放者對不上
         { key: "element", type: "select", label: "屬性", items: (o, env) => C.ELEMENTS.filter(e => o.use_creature !== "yes" || (env.creature.elements || []).includes(e.v)).map(e => ({ v: e.v, zh: e.zh + " " + e.v })), def: "rand" },
         { key: "shape", type: "select", label: "形狀", items: () => C.VFX.shapes, def: "rand" },
         { key: "tier", type: "select", label: "強度", items: () => C.VFX.tiers, def: "rand" },
-        { key: "move_name", type: "text", label: "招式名稱（可留空讓 AI 命名）", def: "" },
-        { key: "move_id", type: "text", label: "招式圖鑑 id（snake_case，可留空讓 AI 命名）", def: "" },
+        { key: "move_name", type: "text", label: "主動技名稱（可留空讓 AI 命名）", def: "" },
+        { key: "move_id", type: "text", label: "主動技圖鑑 id（snake_case，可留空讓 AI 命名）", def: "" },
         { key: "common", type: "checks", label: "附帶通用特效", items: () => C.VFX.common, def: [], optional: true }
       ],
       build(ctx) {
@@ -659,15 +659,15 @@
         const base = "fx_" + o.element + "_" + o.shape + "_" + o.tier;
         const commons = C.VFX.common.filter(x => o.common.includes(x.v));
         const body = [
-          "## 招式",
+          "## 主動技",
           json({
             move_name: o.move_name || "（請命名，中英各一）", element: o.element + "（" + el.zh + "）", palette: el.palette,
             shape: shape.v + "（" + shape.zh + "）", tier: tier.v + "（" + tier.zh + "）",
             move_id: o.move_id || "（請取 snake_case 通用名稱，不含任何宙獸名）",
             demo_caster: o.use_creature === "yes" ? ctx.concept : "不指定，用中性體型示範"
           }),
-          // REQ: 使用者 2026-11-07 — 招式圖鑑獨立於宙獸圖鑑，多隻宙獸可共用同一招式。
-          "招式是**獨立圖鑑條目**，任何宙獸都可能學會：demo_caster 只用於分鏡示範，特效不得依賴它的特定身體部位或外觀。",
+          // REQ: 使用者 2026-11-07 — 主動技圖鑑獨立於宙獸圖鑑，多隻宙獸可共用同一主動技。
+          "主動技是**獨立圖鑑條目**，任何宙獸都可能學會：demo_caster 只用於分鏡示範，特效不得依賴它的特定身體部位或外觀。",
           "",
           "## 產出清單",
           "| 檔案 | 內容 | 層級 |",
@@ -716,7 +716,7 @@
           "| `images/vsl_" + v.v + "_icon.png` | 512² 圖示，簡潔剪影、深色底 | L1 |",
           "| `images/vsl_" + v.v + "_model_front.png`、`_model_side.png` | 建模參考，平光灰底 | L1 |",
           "| `images/vsl_" + v.v + "_capture_storyboard.png` | 收服分鏡 8 格：投擲 → 飛行 → 命中 → 展開 → 吸入 → 掙扎 1–3 次 → 成功 / 失敗 | L1 |",
-          "| `vfx/vsl_" + v.v + "_capture_spec.json` | 收服特效規格（同招式 spec 欄位） | L1 |"
+          "| `vfx/vsl_" + v.v + "_capture_spec.json` | 收服特效規格（同主動技 spec 欄位） | L1 |"
         ].join("\n"));
         const body = [
           "## 遊戲規則背景",

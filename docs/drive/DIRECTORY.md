@@ -7,7 +7,7 @@
 
 ### 1.1 三層主目錄結構與過渡性檔案分層
 
-- **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（招式／技能）
+- **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（主動技／技能）
 - **第二層**：`<id>/`（主體 ID，例如 `chr_1286`、`cr_aqua_slime`、`earth_boulder_roll`）
 - **第三層（`<kind>/<id>/`）**：僅保留成果審查台中管線流程已完成、等待審查或已審查的核心交付物：
   - **主立繪**：`<id>[_<stage>]_01_portrait[_<ver>]_main.png`
@@ -65,7 +65,7 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 │   ├── prompts/                                   # 分類專屬管線模板
 │   └── backup/                                    # 退件備份
 ├── moves/                                         [1alulsIhFcb8m8UKXaA-9-orBCEr__P8B]
-│   ├── <id>/                                      # 第二層：技能／招式 ID（無型態）
+│   ├── <id>/                                      # 第二層：技能／主動技 ID（無型態）
 │   │   ├── <id>_05_wiki.md                        # 第三層保留：圖鑑
 │   │   ├── 00_settings/
 │   │   ├── 01b_vfx/
@@ -90,7 +90,7 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 | :--- | :--- | :--- | :--- |
 | `00_appearance` / `00_parameters` | `<kind>/prompts/00_appearance.prompt.md` | 外觀設定 | `00_settings/[<ver>/]<id>[_<stage>]_00_appearance[_<ver>].md`、`_00_parameters[_<ver>].json` |
 | `01_portrait` | `<kind>/prompts/01_portrait.prompt.md` | 立繪生成 | 第三層保留 `<id>[_<stage>]_01_portrait[_<ver>]_main.png`；其餘（`_front.png`、`_turnaround.png`、`_concept.json`、`_manifest.json`）存於 `01_portrait/[<ver>/]` |
-| `01b_vfx` | `moves/prompts/01b_move_vfx.prompt.md` | 招式特效 | `01b_vfx/[<ver>/]<id>_01b_vfx[_<ver>]_spec.json`、`_manifest.json` |
+| `01b_vfx` | `moves/prompts/01b_move_vfx.prompt.md` | 主動技特效 | `01b_vfx/[<ver>/]<id>_01b_vfx[_<ver>]_spec.json`、`_manifest.json` |
 | `02_review_portrait` | `<kind>/prompts/02_review_portrait.prompt.md` | 立繪審查 | `02_review_portrait/[<ver>/]<id>[_<stage>]_02_review_portrait[_<ver>].json`（只輸出建議，不代為核准） |
 | `03a_colab` | `<kind>/prompts/03a_colab.prompt.md` | Colab Image-to-3D | 第三層保留 `<id>[_<stage>]_03a_colab[_<ver>].glb`；其餘（`.blend`、`_manifest.json`、預覽、動畫）存於 `03a_colab/[<ver>/]` |
 | `03b_blender` | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 第三層保留 `<id>[_<stage>]_03b_blender[_<ver>].glb`；其餘（`.blend`、`_manifest.json`、貼圖、渲染圖）存於 `03b_blender/[<ver>/]` |
@@ -155,9 +155,9 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 | `line_light_foilprism` | — | `light` | `light_foil_spark` → `light_orbit_beacon` → `light_radiant_cyclotron` | — |
 | `line_shadow_ironsteed` | — | `shadow` | `shadow_tundra_foal` → `shadow_reverb_charger` → `shadow_iron_cavalier` | — |
 
-## 5. 招式（Moves）名稱與 ID 對照
+## 5. 主動技（Moves）名稱與 ID 對照
 
-招式 VFX 資產存放於 `moves/01_vfx/<asset_id>/`，圖鑑存放於 `moves/wiki/<move_id>_wiki.md`。
+主動技 VFX 資產存放於 `moves/01_vfx/<asset_id>/`，圖鑑存放於 `moves/wiki/<move_id>_wiki.md`。
 
 | Move ID | 屬性 | 類型 | 形態 | 中文名稱 | 英文名稱 | 來源批次 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -375,5 +375,5 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 
 - **不依生物類型新增 Drive 頂層分類資料夾**：六大資產類別與解剖型態寫入各資產的 `profile.json` 與 `manifest.json`。
 - **3D 資產包標準子目錄**：`models/<asset_id>.glb`、`.blend`、`manifest.json`、`profile.json`、`typed_state.json`、`rig/rig_report.json`、`animations/animations_manifest.json`、`previews/qa_*.png`、`qa/typed_metrics.json`。
-- **Wiki 單一產檔規則**：角色 `characters/wiki/<subject_id>[_<stage>]_wiki.md`、宙獸 `creatures/wiki/<subject_id>_<stage>_wiki.md`、招式 `moves/wiki/<move_id>_wiki.md`；下游僅關聯路徑，禁止重複產生。
+- **Wiki 單一產檔規則**：角色 `characters/wiki/<subject_id>[_<stage>]_wiki.md`、宙獸 `creatures/wiki/<subject_id>_<stage>_wiki.md`、主動技 `moves/wiki/<move_id>_wiki.md`；下游僅關聯路徑，禁止重複產生。
 - **歷史資產分類與審查規則**：2026-11-15 已將舊頂層資產移入 `characters/`、`creatures/`、`moves/`，退役空目錄封存於共用 `backup/`，保留每個檔案及資料夾原 Drive ID；資產未經人工核准不得移入 `<kind>/03_completed/`。

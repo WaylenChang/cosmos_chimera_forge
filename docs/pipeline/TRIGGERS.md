@@ -1,9 +1,9 @@
 # 簡易觸發語句
 
-先指定 `<kind>`：角色 `characters`、宙獸 `creatures`、招式 `moves`。不得從根目錄 `prompts/` 寫入新檔；舊共用模板僅供過渡期唯讀相容。角色與宙獸使用各自的模板，招式使用 `moves/prompts/01b_move_vfx.prompt.md`。
+先指定 `<kind>`：角色 `characters`、宙獸 `creatures`、主動技 `moves`。不得從根目錄 `prompts/` 寫入新檔；舊共用模板僅供過渡期唯讀相容。角色與宙獸使用各自的模板，主動技使用 `moves/prompts/01b_move_vfx.prompt.md`。
 先選定資產與參數，再擇一交給可讀取 Drive 的 AI；外觀、參數及圖片以指定檔案為準。
 
-- 招式 VFX：讀取 cosmos_chimera_forge/moves/prompts/01b_move_vfx.prompt.md，使用指定招式資產設定與輸出路徑。
+- 主動技 VFX：讀取 cosmos_chimera_forge/moves/prompts/01b_move_vfx.prompt.md，使用指定主動技資產設定與輸出路徑。
 - 外觀：讀取 cosmos_chimera_forge/<kind>/prompts/00_appearance.prompt.md，依附上的素材執行。
 - 立繪：讀取 cosmos_chimera_forge/<kind>/prompts/01_portrait.prompt.md，使用指定資產的 appearance.md 和 parameters.json 執行。
 - 立繪審查：讀取 cosmos_chimera_forge/<kind>/prompts/02_review_portrait.prompt.md，檢查我指定的立繪目錄。

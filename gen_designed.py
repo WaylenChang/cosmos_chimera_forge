@@ -1120,7 +1120,7 @@ DRIVE_CREATURES = [
         "timeline": "古代生活想像（傳統鍛鐵火爐）", "region": "東亞·山村鐵匠坊",
         "archetype": "arch_kamado_spirit", "archetype_name": "火灶爐魂", "archetype_meaning": "誕生於永不熄滅的鐵匠火灶之中、兼具溫暖與爆裂火勢的精靈",
         "role": "遠距火力", "disposition": "活潑躁動、愛吃木炭", "habit": "tolerant",
-        "trait": ("trait_hearth_ember_feed", "添炭升溫", "在場上停留時間越久，體內爐火溫度越高，火屬性招式威力隨之攀升。"),
+        "trait": ("trait_hearth_ember_feed", "添炭升溫", "在場上停留時間越久，體內爐火溫度越高，火屬性主動技威力隨之攀升。"),
         "stages": [
             ("juvenile", "XS", "0.32 m", "0.6 kg", "2%", "一團裹著小鑄鐵火盆底座的橘紅火苗精靈，頭頂冒著兩撮跳動火星小角", "喜歡蹲在營火旁幫忙點火，高興時會噴出噼啪作響的小火花。", "A cheerful flame sprite nested in a tiny cast-iron brazier, popping happy sparks.", "fire_ember_puff", "炭火噗吐", "Ember Puff", "mid", "single", "鼓起臉頰朝前方吐出一串跳動火星。"),
             ("adolescent", "S", "0.95 m", "14 kg", "2%", "鑄鐵燈籠外框包覆火靈核心，雙臂化作可伸縮的火鉗與火舌披風", "開始學會控制燃燒溫度，能把散亂火星聚成高溫火球投擲。", "Enclosed in a wrought-iron lantern frame, focusing wild sparks into tight fireballs.", "fire_brazier_flare", "火灶爆燃", "Brazier Flare", "mid", "sweep", "打開鑄鐵爐門向扇形前方噴湧炙熱火浪。"),
@@ -1152,7 +1152,7 @@ DRIVE_CREATURES = [
         "timeline": "近代民間冬日傳說（北歐雪夜）", "region": "歐洲·北歐雪原",
         "archetype": "arch_winter_snowman", "archetype_name": "冬夜霜魄雪人", "archetype_meaning": "凝聚初雪與極夜霜魄誕生的雪人精靈，越冷越精神奕奕",
         "role": "範圍控場", "disposition": "樂天溫厚、怕熱怕曬", "habit": "tolerant",
-        "trait": ("trait_frost_snowpack", "積雪再生", "在寒冷環境或冰屬性招式影響下能不斷吸附雪花修補自身體積。"),
+        "trait": ("trait_frost_snowpack", "積雪再生", "在寒冷環境或冰屬性主動技影響下能不斷吸附雪花修補自身體積。"),
         "stages": [
             ("juvenile", "XS", "0.45 m", "6 kg", "10%", "兩顆雪球疊成的迷你雪人，圍著一條過長的紅毛線圍巾，鼻頭是一小顆冰晶", "冬天清晨最先醒來的小雪人，喜歡用圓滾滾的雪球丟夥伴玩。", "A two-sphere snowling wearing an oversized red scarf and a crystal nose.", "ice_snowball_toss", "雪球拋擊", "Snowball Toss", "mid", "single", "雙手搓出圓滾滾的實心雪球擲向目標。"),
             ("adolescent", "M", "1.30 m", "85 kg", "10%", "三層雪軀外覆上剔透冰晶肩甲，雙手能凝結實心冰錘與雪暴披風", "學會召喚局地飄雪替隊友降溫，揮動冰錘能擊飛靠近的威脅。", "Three-tiered snow body armored with crystal pauldrons and solid ice mallets.", "ice_frost_hammer", "霜晶雪錘", "Frost Hammer", "close", "sweep", "揮舞雙手凝結的巨大雪錘橫掃前方敵群。"),
@@ -1184,7 +1184,7 @@ DRIVE_CREATURES = [
         "timeline": "遠古神話（尼羅河日出信仰）", "region": "非洲·尼羅河谷",
         "archetype": "arch_khepri_scarab", "archetype_name": "凱布利推日聖甲蟲", "archetype_meaning": "雙足推動黎明太陽金輪升起、象徵新生與永恆光輝的聖甲蟲",
         "role": "輔助 / 光砲", "disposition": "莊嚴虔誠、向光而行", "habit": "tolerant",
-        "trait": ("trait_khepri_solar_orb", "推日蓄光", "每回合為前方日輪累積光能，釋放光屬性招式時附加額外淨化輝光。"),
+        "trait": ("trait_khepri_solar_orb", "推日蓄光", "每回合為前方日輪累積光能，釋放光屬性主動技時附加額外淨化輝光。"),
         "stages": [
             ("juvenile", "XS", "0.36 m", "2.5 kg", "4%", "青金石藍小甲蟲推動著一顆發光的微型金珠，背甲閃耀柔和晨曦光暈", "每天黎明準時出現，認真地把小小太陽珠推上沙丘頂端。", "A lapis-blue scarab pup diligently rolling a miniature glowing golden sun-pearl.", "light_dawn_spark", "晨曦微光", "Dawn Spark", "mid", "single", "從日輪珠彈出一道聚光晨曦射線。"),
             ("adolescent", "M", "1.10 m", "55 kg", "4%", "黃金胸甲展開四片半透明薄翼，頭頂雙角托起一顆不斷旋轉的熾熱日輪", "已能將太陽珠舉至高空照射戰場，替隊友驅散黑暗與迷霧。", "Gold-plated thorax with four translucent wings cradling a spinning solar orb.", "light_scarab_ray", "聖甲日光線", "Scarab Ray", "long", "line", "令頭頂日輪聚光射出筆直的金色淨化光束。"),
@@ -1336,7 +1336,7 @@ def build_drive_creature_item(spec: dict) -> dict:
                 "range_class": rng,
                 "shape": shp,
                 "movement": "forward" if shp == "line" else "none",
-                "naming_note": f"{spec['title_zh']} {stg} 專屬招式。",
+                "naming_note": f"{spec['title_zh']} {stg} 專屬主動技。",
                 "desc_zh": mv_desc,
                 "desc_en": f"{spec['name_en']} unleashes {mv_en}.",
                 "visual": mv_desc,

@@ -235,7 +235,7 @@
     const root = pipelineRoot(kind);
     const code = stepCode(stage);
     if (root === "moves" && code !== "01b_vfx" && code !== "00_appearance" && code !== "00_parameters" && code !== "04_review_3d" && code !== "05_wiki") {
-      throw Error("招式僅支援 VFX 資產管線");
+      throw Error("主動技僅支援 VFX 資產管線");
     }
     return id ? subjectDir(root, id) : root;
   }
@@ -1898,12 +1898,12 @@
     $("settingsMigratePipeline")?.addEventListener("click", () => {
       if (
         !window.confirm(
-          "按角色／宙獸／招式整理舊共用目錄，並修正既有 manifest.json 的 wiki 引用？保留所有檔案 ID，同名檔案不覆寫，僅更新已知舊路徑。",
+          "按角色／宙獸／主動技整理舊共用目錄，並修正既有 manifest.json 的 wiki 引用？保留所有檔案 ID，同名檔案不覆寫，僅更新已知舊路徑。",
         )
       )
         return;
       run(async () => {
-        $("driveStatus").textContent = "正在依角色／宙獸／招式分類 Drive 目錄…";
+        $("driveStatus").textContent = "正在依角色／宙獸／主動技分類 Drive 目錄…";
         const report = await migratePipelineDirectories();
         const links = await migrateManifestWikiReferences();
         $("driveStatus").textContent =
@@ -1916,7 +1916,7 @@
           " 項錯誤；另有 " + links.updated + " 份 manifest 圖鑑引用已校正";
         $("settingsMessage").textContent =
           [...report.errors, ...links.errors].slice(0, 6).join("；") ||
-          "已完成角色／宙獸／招式 Drive 目錄分類與 manifest 引用校正。";
+          "已完成角色／宙獸／主動技 Drive 目錄分類與 manifest 引用校正。";
         await syncPackages({ force: true });
         await syncPipelineIndex();
       });

@@ -231,7 +231,7 @@ window.COSMI_DESIGNED = {
           "trait": {
             "trait_id": "trait_light_heliostat_focus",
             "name_zh": "逐光聚焦",
-            "idea_zh": "使用光屬性招式後，鏡光暫時延伸招式範圍，此效果可疊加。"
+            "idea_zh": "使用光屬性主動技後，鏡光暫時延伸主動技範圍，此效果可疊加。"
           },
           "overload": "鏡環天鷺（sun_coronavault_skyheron · XL）：太陽鏡陣飛行器與天鷺完全共鳴；背部環形鏡陣激發為三層旋轉日冕光環，光羽噴射耀眼金炎，以太管道引導星雲光子流"
         }
@@ -1385,7 +1385,7 @@ window.COSMI_DESIGNED = {
           "trait": {
             "trait_id": "trait_water_torrent_flow",
             "name_zh": "水脈迴轉",
-            "idea_zh": "使用水屬性招式後四秒內，水屬性招式冷卻時間減少百分之二十。"
+            "idea_zh": "使用水屬性主動技後四秒內，水屬性主動技冷卻時間減少百分之二十。"
           },
           "overload": "潮帆巨鰻（water_oceanvoyage_leviathan · XL）：雙體巨舟風帆與遠古海鰻融為一體；背脊生長出如戰列旗艦般的重層光翼蟹爪帆，船體外甲陶紋亮起高純度水以太脈衝，周身環繞著狂暴的迴旋引力潮汐水環"
         }
@@ -1613,7 +1613,7 @@ window.COSMI_DESIGNED = {
           "trait": {
             "trait_id": "trait_fire_thermal_recharge",
             "name_zh": "受焰回充",
-            "idea_zh": "受到火屬性攻擊後五秒內，火屬性招式冷卻時間減少百分之二十五。"
+            "idea_zh": "受到火屬性攻擊後五秒內，火屬性主動技冷卻時間減少百分之二十五。"
           },
           "overload": "焰角羱羊（fire_sunpharaoh_lion · XL）：玫瑰砂岩沙漠羱羊超載化身為峽谷熔岩聖獸；一對巨型後彎環節角展開為三千度耀白電漿弧拱，背脊神殿火口與雙目方塊聖石崩解重組為懸浮玫瑰岩熔爐冠環，四足岩蹄踏出沸騰岩漿"
         }
@@ -4706,7 +4706,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "靈澤凝膠史萊姆 juvenile 專屬招式。",
+                "naming_note": "靈澤凝膠史萊姆 juvenile 專屬主動技。",
                 "desc_zh": "鼓起氣泡向前彈射微涼水球。",
                 "desc_en": "Aquagel Slime unleashes Bubble Pop.",
                 "visual": "鼓起氣泡向前彈射微涼水球。"
@@ -4734,7 +4734,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "靈澤凝膠史萊姆 adolescent 專屬招式。",
+                "naming_note": "靈澤凝膠史萊姆 adolescent 專屬主動技。",
                 "desc_zh": "甩出凝膠水帶向前抽擊並留下水漬。",
                 "desc_en": "Aquagel Slime unleashes Ripple Whip.",
                 "visual": "甩出凝膠水帶向前抽擊並留下水漬。"
@@ -4762,7 +4762,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "靈澤凝膠史萊姆 adult 專屬招式。",
+                "naming_note": "靈澤凝膠史萊姆 adult 專屬主動技。",
                 "desc_zh": "展開半透明水膜向四周湧出高壓淨水浪潮。",
                 "desc_en": "Aquagel Slime unleashes Hydro Surge.",
                 "visual": "展開半透明水膜向四周湧出高壓淨水浪潮。"
@@ -4790,7 +4790,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "靈澤凝膠史萊姆 overload 專屬招式。",
+                "naming_note": "靈澤凝膠史萊姆 overload 專屬主動技。",
                 "desc_zh": "引爆全部懸浮水球降下覆蓋全場的靈澤暴雨。",
                 "desc_en": "Aquagel Slime unleashes Abyssal Deluge.",
                 "visual": "引爆全部懸浮水球降下覆蓋全場的靈澤暴雨。"
@@ -4899,7 +4899,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "懷錶犀角金龜 juvenile 專屬招式。",
+                "naming_note": "懷錶犀角金龜 juvenile 專屬主動技。",
                 "desc_zh": "壓低黃銅短角順著發條節奏向前頂撞。",
                 "desc_en": "Chronobeetle unleashes Tick Butt.",
                 "visual": "壓低黃銅短角順著發條節奏向前頂撞。"
@@ -4927,7 +4927,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "懷錶犀角金龜 adolescent 專屬招式。",
+                "naming_note": "懷錶犀角金龜 adolescent 專屬主動技。",
                 "desc_zh": "展開雙叉卡尺角夾擊並高速旋轉齒輪斬落。",
                 "desc_en": "Chronobeetle unleashes Gear Cleave.",
                 "visual": "展開雙叉卡尺角夾擊並高速旋轉齒輪斬落。"
@@ -4955,7 +4955,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "懷錶犀角金龜 adult 專屬招式。",
+                "naming_note": "懷錶犀角金龜 adult 專屬主動技。",
                 "desc_zh": "鎖定整點節拍將雙角化作高壓撞角沿直線衝撞。",
                 "desc_en": "Chronobeetle unleashes Chronos Ram.",
                 "visual": "鎖定整點節拍將雙角化作高壓撞角沿直線衝撞。"
@@ -4983,7 +4983,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "懷錶犀角金龜 overload 專屬招式。",
+                "naming_note": "懷錶犀角金龜 overload 專屬主動技。",
                 "desc_zh": "展開三層天文鐘環敲響震碎戰場的金屬時鐘震波。",
                 "desc_en": "Chronobeetle unleashes Grand Horology.",
                 "visual": "展開三層天文鐘環敲響震碎戰場的金屬時鐘震波。"
@@ -5092,7 +5092,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "陶泥厚岩偶 juvenile 專屬招式。",
+                "naming_note": "陶泥厚岩偶 juvenile 專屬主動技。",
                 "desc_zh": "邁開短腿以厚實陶拳向前捶擊。",
                 "desc_en": "Terragolem unleashes Clay Bump.",
                 "visual": "邁開短腿以厚實陶拳向前捶擊。"
@@ -5120,7 +5120,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "陶泥厚岩偶 adolescent 專屬招式。",
+                "naming_note": "陶泥厚岩偶 adolescent 專屬主動技。",
                 "desc_zh": "高舉岩石雙臂重砸地面掀起環狀碎石波。",
                 "desc_en": "Terragolem unleashes Boulder Slam.",
                 "visual": "高舉岩石雙臂重砸地面掀起環狀碎石波。"
@@ -5148,7 +5148,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "陶泥厚岩偶 adult 專屬招式。",
+                "naming_note": "陶泥厚岩偶 adult 專屬主動技。",
                 "desc_zh": "踏碎地脈向前突進，雙拳如磨盤般合擊敵陣。",
                 "desc_en": "Terragolem unleashes Monolith Crush.",
                 "visual": "踏碎地脈向前突進，雙拳如磨盤般合擊敵陣。"
@@ -5176,7 +5176,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "陶泥厚岩偶 overload 專屬招式。",
+                "naming_note": "陶泥厚岩偶 overload 專屬主動技。",
                 "desc_zh": "喚起無數燒紅巨岩從天而降鎮壓全場。",
                 "desc_en": "Terragolem unleashes Kiln Cataclysm.",
                 "visual": "喚起無數燒紅巨岩從天而降鎮壓全場。"
@@ -5285,7 +5285,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "熾焰火灶靈 juvenile 專屬招式。",
+                "naming_note": "熾焰火灶靈 juvenile 專屬主動技。",
                 "desc_zh": "鼓起臉頰朝前方吐出一串跳動火星。",
                 "desc_en": "Hearthwisp unleashes Ember Puff.",
                 "visual": "鼓起臉頰朝前方吐出一串跳動火星。"
@@ -5313,7 +5313,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "熾焰火灶靈 adolescent 專屬招式。",
+                "naming_note": "熾焰火灶靈 adolescent 專屬主動技。",
                 "desc_zh": "打開鑄鐵爐門向扇形前方噴湧炙熱火浪。",
                 "desc_en": "Hearthwisp unleashes Brazier Flare.",
                 "visual": "打開鑄鐵爐門向扇形前方噴湧炙熱火浪。"
@@ -5341,7 +5341,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "熾焰火灶靈 adult 專屬招式。",
+                "naming_note": "熾焰火灶靈 adult 專屬主動技。",
                 "desc_zh": "將鍛爐烈焰壓縮為細長白熾火槍沿直線貫射。",
                 "desc_en": "Hearthwisp unleashes Furnace Lance.",
                 "visual": "將鍛爐烈焰壓縮為細長白熾火槍沿直線貫射。"
@@ -5369,7 +5369,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "熾焰火灶靈 overload 專屬招式。",
+                "naming_note": "熾焰火灶靈 overload 專屬主動技。",
                 "desc_zh": "釋放太陽鍛爐般的環形火海吞沒整片戰場。",
                 "desc_en": "Hearthwisp unleashes Supernova Hearth.",
                 "visual": "釋放太陽鍛爐般的環形火海吞沒整片戰場。"
@@ -5379,7 +5379,7 @@ window.COSMI_DESIGNED = {
           "trait": {
             "trait_id": "trait_hearth_ember_feed",
             "name_zh": "添炭升溫",
-            "idea_zh": "在場上停留時間越久，體內爐火溫度越高，火屬性招式威力隨之攀升。"
+            "idea_zh": "在場上停留時間越久，體內爐火溫度越高，火屬性主動技威力隨之攀升。"
           },
           "overload": "熾焰火灶靈（cr_fire_wisp_overload · XL）：化為三層懸浮鐵鑄天燈巨像，中央白金太陽爐火燃起沖天烈焰冠冕"
         }
@@ -5478,7 +5478,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "冰刀企鵝 juvenile 專屬招式。",
+                "naming_note": "冰刀企鵝 juvenile 專屬主動技。",
                 "desc_zh": "俯低身子踏著冰刀沿直線快速滑撞。",
                 "desc_en": "Frostblade unleashes Skate Dash.",
                 "visual": "俯低身子踏著冰刀沿直線快速滑撞。"
@@ -5506,7 +5506,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "冰刀企鵝 adolescent 專屬招式。",
+                "naming_note": "冰刀企鵝 adolescent 專屬主動技。",
                 "desc_zh": "貼近敵身高速旋轉並以雙翼冰刃交叉揮斬。",
                 "desc_en": "Frostblade unleashes Cross Slash.",
                 "visual": "貼近敵身高速旋轉並以雙翼冰刃交叉揮斬。"
@@ -5534,7 +5534,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "冰刀企鵝 adult 專屬招式。",
+                "naming_note": "冰刀企鵝 adult 專屬主動技。",
                 "desc_zh": "俯衝加速化作藍白極光箭矢貫穿敵陣。",
                 "desc_en": "Frostblade unleashes Glacial Lunge.",
                 "visual": "俯衝加速化作藍白極光箭矢貫穿敵陣。"
@@ -5562,7 +5562,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "冰刀企鵝 overload 專屬招式。",
+                "naming_note": "冰刀企鵝 overload 專屬主動技。",
                 "desc_zh": "以極速繞行戰場畫出巨大冰環並引爆全場冰刃風暴。",
                 "desc_en": "Frostblade unleashes Zero Tempest Rink.",
                 "visual": "以極速繞行戰場畫出巨大冰環並引爆全場冰刃風暴。"
@@ -5671,7 +5671,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "霜魄冰晶雪人 juvenile 專屬招式。",
+                "naming_note": "霜魄冰晶雪人 juvenile 專屬主動技。",
                 "desc_zh": "雙手搓出圓滾滾的實心雪球擲向目標。",
                 "desc_en": "Frostsoul unleashes Snowball Toss.",
                 "visual": "雙手搓出圓滾滾的實心雪球擲向目標。"
@@ -5699,7 +5699,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "霜魄冰晶雪人 adolescent 專屬招式。",
+                "naming_note": "霜魄冰晶雪人 adolescent 專屬主動技。",
                 "desc_zh": "揮舞雙手凝結的巨大雪錘橫掃前方敵群。",
                 "desc_en": "Frostsoul unleashes Frost Hammer.",
                 "visual": "揮舞雙手凝結的巨大雪錘橫掃前方敵群。"
@@ -5727,7 +5727,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "霜魄冰晶雪人 adult 專屬招式。",
+                "naming_note": "霜魄冰晶雪人 adult 專屬主動技。",
                 "desc_zh": "自胸口冰晶核心向全場釋放夾帶冰雹的狂暴雪幕。",
                 "desc_en": "Frostsoul unleashes Blizzard Veil.",
                 "visual": "自胸口冰晶核心向全場釋放夾帶冰雹的狂暴雪幕。"
@@ -5755,7 +5755,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "霜魄冰晶雪人 overload 專屬招式。",
+                "naming_note": "霜魄冰晶雪人 overload 專屬主動技。",
                 "desc_zh": "召喚覆蓋天際的極寒暴雪徹底冰封整片戰場。",
                 "desc_en": "Frostsoul unleashes Eternal Snowfall.",
                 "visual": "召喚覆蓋天際的極寒暴雪徹底冰封整片戰場。"
@@ -5765,7 +5765,7 @@ window.COSMI_DESIGNED = {
           "trait": {
             "trait_id": "trait_frost_snowpack",
             "name_zh": "積雪再生",
-            "idea_zh": "在寒冷環境或冰屬性招式影響下能不斷吸附雪花修補自身體積。"
+            "idea_zh": "在寒冷環境或冰屬性主動技影響下能不斷吸附雪花修補自身體積。"
           },
           "overload": "霜魄冰晶雪人（cr_ice_snowman_overload · XL）：身軀化作移動雪山城堡，六角冰晶核心化作巨大星芒光環懸浮於背後"
         }
@@ -5864,7 +5864,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "墨影碑帖 juvenile 專屬招式。",
+                "naming_note": "墨影碑帖 juvenile 專屬主動技。",
                 "desc_zh": "碑面筆劃閃動，彈出一道高速墨點射向敵人。",
                 "desc_en": "Inkstele unleashes Ink Blot.",
                 "visual": "碑面筆劃閃動，彈出一道高速墨點射向敵人。"
@@ -5892,7 +5892,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "墨影碑帖 adolescent 專屬招式。",
+                "naming_note": "墨影碑帖 adolescent 專屬主動技。",
                 "desc_zh": "揮動飛舞的狂草墨帶橫掃並遲滯前方敵人。",
                 "desc_en": "Inkstele unleashes Brush Bind.",
                 "visual": "揮動飛舞的狂草墨帶橫掃並遲滯前方敵人。"
@@ -5920,7 +5920,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "墨影碑帖 adult 專屬招式。",
+                "naming_note": "墨影碑帖 adult 專屬主動技。",
                 "desc_zh": "引動巨型水墨筆鋒沿直線劈出破空墨斬。",
                 "desc_en": "Inkstele unleashes Calligraphy Slash.",
                 "visual": "引動巨型水墨筆鋒沿直線劈出破空墨斬。"
@@ -5948,7 +5948,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "墨影碑帖 overload 專屬招式。",
+                "naming_note": "墨影碑帖 overload 專屬主動技。",
                 "desc_zh": "落下巨大硃砂天印，以吞天水墨洪流洗刷全場。",
                 "desc_en": "Inkstele unleashes Ink Cosmos.",
                 "visual": "落下巨大硃砂天印，以吞天水墨洪流洗刷全場。"
@@ -6057,7 +6057,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "阿頓曦光聖甲蟲 juvenile 專屬招式。",
+                "naming_note": "阿頓曦光聖甲蟲 juvenile 專屬主動技。",
                 "desc_zh": "從日輪珠彈出一道聚光晨曦射線。",
                 "desc_en": "Kheprisun unleashes Dawn Spark.",
                 "visual": "從日輪珠彈出一道聚光晨曦射線。"
@@ -6085,7 +6085,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "阿頓曦光聖甲蟲 adolescent 專屬招式。",
+                "naming_note": "阿頓曦光聖甲蟲 adolescent 專屬主動技。",
                 "desc_zh": "令頭頂日輪聚光射出筆直的金色淨化光束。",
                 "desc_en": "Kheprisun unleashes Scarab Ray.",
                 "visual": "令頭頂日輪聚光射出筆直的金色淨化光束。"
@@ -6113,7 +6113,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "阿頓曦光聖甲蟲 adult 專屬招式。",
+                "naming_note": "阿頓曦光聖甲蟲 adult 專屬主動技。",
                 "desc_zh": "將巨大熾熱日輪向前滾壓並散射金色光環。",
                 "desc_en": "Kheprisun unleashes Helios Roll.",
                 "visual": "將巨大熾熱日輪向前滾壓並散射金色光環。"
@@ -6141,7 +6141,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "阿頓曦光聖甲蟲 overload 專屬招式。",
+                "naming_note": "阿頓曦光聖甲蟲 overload 專屬主動技。",
                 "desc_zh": "將托舉的太陽日輪升至天頂並釋放照耀全場的淨化光瀑。",
                 "desc_en": "Kheprisun unleashes Aten Zenith.",
                 "visual": "將托舉的太陽日輪升至天頂並釋放照耀全場的淨化光瀑。"
@@ -6151,7 +6151,7 @@ window.COSMI_DESIGNED = {
           "trait": {
             "trait_id": "trait_khepri_solar_orb",
             "name_zh": "推日蓄光",
-            "idea_zh": "每回合為前方日輪累積光能，釋放光屬性招式時附加額外淨化輝光。"
+            "idea_zh": "每回合為前方日輪累積光能，釋放光屬性主動技時附加額外淨化輝光。"
           },
           "overload": "阿頓曦光聖甲蟲（cr_light_khepri_overload · XL）：全身化作懸浮黃金太陽神舟形聖甲蟲，雙翼展開為十二道日冕光翼，托舉微型恆星"
         }
@@ -6250,7 +6250,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "模組折疊集裝機兵 juvenile 專屬招式。",
+                "naming_note": "模組折疊集裝機兵 juvenile 專屬主動技。",
                 "desc_zh": "彈出液壓機械鉗向前精準夾擊。",
                 "desc_en": "Vaultmech unleashes Clamp Snap.",
                 "visual": "彈出液壓機械鉗向前精準夾擊。"
@@ -6278,7 +6278,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "模組折疊集裝機兵 adolescent 專屬招式。",
+                "naming_note": "模組折疊集裝機兵 adolescent 專屬主動技。",
                 "desc_zh": "啟動背後推進噴口配合液壓重拳直線突擊。",
                 "desc_en": "Vaultmech unleashes Piston Punch.",
                 "visual": "啟動背後推進噴口配合液壓重拳直線突擊。"
@@ -6306,7 +6306,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "模組折疊集裝機兵 adult 專屬招式。",
+                "naming_note": "模組折疊集裝機兵 adult 專屬主動技。",
                 "desc_zh": "打開肩部與胸口裝甲艙蓋向前方傾瀉金屬彈幕。",
                 "desc_en": "Vaultmech unleashes Vault Barrage.",
                 "visual": "打開肩部與胸口裝甲艙蓋向前方傾瀉金屬彈幕。"
@@ -6334,7 +6334,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "模組折疊集裝機兵 overload 專屬招式。",
+                "naming_note": "模組折疊集裝機兵 overload 專屬主動技。",
                 "desc_zh": "展開全機裝甲艙並發射覆蓋全場的磁軌穿甲齊射。",
                 "desc_en": "Vaultmech unleashes Fortress Protocol.",
                 "visual": "展開全機裝甲艙並發射覆蓋全場的磁軌穿甲齊射。"
@@ -6443,7 +6443,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "幽影虛空瞳 juvenile 專屬招式。",
+                "naming_note": "幽影虛空瞳 juvenile 專屬主動技。",
                 "desc_zh": "瞳孔縮緊，朝目標射出一道細小黑紫視線光束。",
                 "desc_en": "Voideye unleashes Gaze Ping.",
                 "visual": "瞳孔縮緊，朝目標射出一道細小黑紫視線光束。"
@@ -6471,7 +6471,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "幽影虛空瞳 adolescent 專屬招式。",
+                "naming_note": "幽影虛空瞳 adolescent 專屬主動技。",
                 "desc_zh": "旋轉銀環對焦後射出扭曲空間的紫黑光束。",
                 "desc_en": "Voideye unleashes Rift Beam.",
                 "visual": "旋轉銀環對焦後射出扭曲空間的紫黑光束。"
@@ -6499,7 +6499,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "幽影虛空瞳 adult 專屬招式。",
+                "naming_note": "幽影虛空瞳 adult 專屬主動技。",
                 "desc_zh": "瞳孔全開向扇形區域釋放吞噬光線的暗影視界波。",
                 "desc_en": "Voideye unleashes Abyss Stare.",
                 "visual": "瞳孔全開向扇形區域釋放吞噬光線的暗影視界波。"
@@ -6527,7 +6527,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "幽影虛空瞳 overload 專屬招式。",
+                "naming_note": "幽影虛空瞳 overload 專屬主動技。",
                 "desc_zh": "張開星界黑洞巨瞳，在戰場中央引發吞噬萬物的暗影引力波。",
                 "desc_en": "Voideye unleashes Event Horizon.",
                 "visual": "張開星界黑洞巨瞳，在戰場中央引發吞噬萬物的暗影引力波。"
@@ -6636,7 +6636,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "close",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "火鬃聖獅 juvenile 專屬招式。",
+                "naming_note": "火鬃聖獅 juvenile 專屬主動技。",
                 "desc_zh": "帶著橘紅火星向前躍起撲擊目標。",
                 "desc_en": "Solmane unleashes Cub Pounce.",
                 "visual": "帶著橘紅火星向前躍起撲擊目標。"
@@ -6664,7 +6664,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "火鬃聖獅 adolescent 專屬招式。",
+                "naming_note": "火鬃聖獅 adolescent 專屬主動技。",
                 "desc_zh": "壓低獅首讓火鬃化作火球沿直線高速猛撞。",
                 "desc_en": "Solmane unleashes Mane Charge.",
                 "visual": "壓低獅首讓火鬃化作火球沿直線高速猛撞。"
@@ -6692,7 +6692,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "火鬃聖獅 adult 專屬招式。",
+                "naming_note": "火鬃聖獅 adult 專屬主動技。",
                 "desc_zh": "仰天咆哮噴出扇形太陽日冕火浪橫掃前方。",
                 "desc_en": "Solmane unleashes Solar Roar.",
                 "visual": "仰天咆哮噴出扇形太陽日冕火浪橫掃前方。"
@@ -6720,7 +6720,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "火鬃聖獅 overload 專屬招式。",
+                "naming_note": "火鬃聖獅 overload 專屬主動技。",
                 "desc_zh": "躍至半空引爆三層日冕火環，降下熾金火雨焚盡全場。",
                 "desc_en": "Solmane unleashes Coronal Sovereign.",
                 "visual": "躍至半空引爆三層日冕火環，降下熾金火雨焚盡全場。"
@@ -6829,7 +6829,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "超導電容巡航無人機 juvenile 專屬招式。",
+                "naming_note": "超導電容巡航無人機 juvenile 專屬主動技。",
                 "desc_zh": "從機首感測器射出一發精準藍色電漿彈。",
                 "desc_en": "Voltcraft unleashes Spark Ping.",
                 "visual": "從機首感測器射出一發精準藍色電漿彈。"
@@ -6857,7 +6857,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "超導電容巡航無人機 adolescent 專屬招式。",
+                "naming_note": "超導電容巡航無人機 adolescent 專屬主動技。",
                 "desc_zh": "低空高速掠過並向下方扇形區域傾瀉電弧。",
                 "desc_en": "Voltcraft unleashes Arc Strafe.",
                 "visual": "低空高速掠過並向下方扇形區域傾瀉電弧。"
@@ -6885,7 +6885,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "超導電容巡航無人機 adult 專屬招式。",
+                "naming_note": "超導電容巡航無人機 adult 專屬主動技。",
                 "desc_zh": "將四具環形電容電力匯聚機首，射出極速穿甲雷射電漿。",
                 "desc_en": "Voltcraft unleashes Rail Snipe.",
                 "visual": "將四具環形電容電力匯聚機首，射出極速穿甲雷射電漿。"
@@ -6913,7 +6913,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "超導電容巡航無人機 overload 專屬招式。",
+                "naming_note": "超導電容巡航無人機 overload 專屬主動技。",
                 "desc_zh": "導引六枚浮游砲從天際降下覆蓋全場的交叉雷網。",
                 "desc_en": "Voltcraft unleashes Ionosphere Strike.",
                 "visual": "導引六枚浮游砲從天際降下覆蓋全場的交叉雷網。"
@@ -7022,7 +7022,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "葉冠鷲 juvenile 專屬招式。",
+                "naming_note": "葉冠鷲 juvenile 專屬主動技。",
                 "desc_zh": "抖落翼間幾片硬化嫩葉化作飛鏢射向目標。",
                 "desc_en": "Verdaquila unleashes Leaf Flutter.",
                 "visual": "抖落翼間幾片硬化嫩葉化作飛鏢射向目標。"
@@ -7050,7 +7050,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "葉冠鷲 adolescent 專屬招式。",
+                "naming_note": "葉冠鷲 adolescent 專屬主動技。",
                 "desc_zh": "收攏葉翼自空中高速俯衝沿直線掠斬。",
                 "desc_en": "Verdaquila unleashes Razor Dive.",
                 "visual": "收攏葉翼自空中高速俯衝沿直線掠斬。"
@@ -7078,7 +7078,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "葉冠鷲 adult 專屬招式。",
+                "naming_note": "葉冠鷲 adult 專屬主動技。",
                 "desc_zh": "高空振翅向下方扇形區域捲起無數銳利葉刃狂風。",
                 "desc_en": "Verdaquila unleashes Canopy Gale.",
                 "visual": "高空振翅向下方扇形區域捲起無數銳利葉刃狂風。"
@@ -7106,7 +7106,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "葉冠鷲 overload 專屬招式。",
+                "naming_note": "葉冠鷲 overload 專屬主動技。",
                 "desc_zh": "召喚遮天蔽日的翠綠葉劍風暴覆蓋整片戰場。",
                 "desc_en": "Verdaquila unleashes Worldtree Tempest.",
                 "visual": "召喚遮天蔽日的翠綠葉劍風暴覆蓋整片戰場。"
@@ -7215,7 +7215,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "氣旋羽雲雀 juvenile 專屬招式。",
+                "naming_note": "氣旋羽雲雀 juvenile 專屬主動技。",
                 "desc_zh": "清脆啼鳴並扇出一道輕快氣流彈擊退敵人。",
                 "desc_en": "Zephyrlark unleashes Chirp Gust.",
                 "visual": "清脆啼鳴並扇出一道輕快氣流彈擊退敵人。"
@@ -7243,7 +7243,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "氣旋羽雲雀 adolescent 專屬招式。",
+                "naming_note": "氣旋羽雲雀 adolescent 專屬主動技。",
                 "desc_zh": "包裹在旋轉氣流中沿弧線高速撞擊並拉升。",
                 "desc_en": "Zephyrlark unleashes Vortex Loop.",
                 "visual": "包裹在旋轉氣流中沿弧線高速撞擊並拉升。"
@@ -7271,7 +7271,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "氣旋羽雲雀 adult 專屬招式。",
+                "naming_note": "氣旋羽雲雀 adult 專屬主動技。",
                 "desc_zh": "高鳴一曲同時振翅釋放橫掃前方的聲波氣旋。",
                 "desc_en": "Zephyrlark unleashes Skyward Sonata.",
                 "visual": "高鳴一曲同時振翅釋放橫掃前方的聲波氣旋。"
@@ -7299,7 +7299,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "氣旋羽雲雀 overload 專屬招式。",
+                "naming_note": "氣旋羽雲雀 overload 專屬主動技。",
                 "desc_zh": "展開三道氣旋風環向全場捲起清澈猛烈的上升颶風。",
                 "desc_en": "Zephyrlark unleashes Stratosphere Chorus.",
                 "visual": "展開三道氣旋風環向全場捲起清澈猛烈的上升颶風。"
@@ -7408,7 +7408,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "single",
                 "movement": "none",
-                "naming_note": "機巧靈木偶 juvenile 專屬招式。",
+                "naming_note": "機巧靈木偶 juvenile 專屬主動技。",
                 "desc_zh": "指尖彈出翠綠靈絲輕巧抽擊敵方手腳。",
                 "desc_en": "Woodpuppet unleashes Thread Flick.",
                 "visual": "指尖彈出翠綠靈絲輕巧抽擊敵方手腳。"
@@ -7436,7 +7436,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "sweep",
                 "movement": "none",
-                "naming_note": "機巧靈木偶 adolescent 專屬招式。",
+                "naming_note": "機巧靈木偶 adolescent 專屬主動技。",
                 "desc_zh": "揮動十字線架灑出交錯翡翠絲線牽制前方。",
                 "desc_en": "Woodpuppet unleashes Marionette Snare.",
                 "visual": "揮動十字線架灑出交錯翡翠絲線牽制前方。"
@@ -7464,7 +7464,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "mid",
                 "shape": "line",
                 "movement": "forward",
-                "naming_note": "機巧靈木偶 adult 專屬招式。",
+                "naming_note": "機巧靈木偶 adult 專屬主動技。",
                 "desc_zh": "藉背後靈絲彈射加速，沿直線揮出木劍連斬。",
                 "desc_en": "Woodpuppet unleashes Puppet Finale.",
                 "visual": "藉背後靈絲彈射加速，沿直線揮出木劍連斬。"
@@ -7492,7 +7492,7 @@ window.COSMI_DESIGNED = {
                 "range_class": "long",
                 "shape": "area",
                 "movement": "none",
-                "naming_note": "機巧靈木偶 overload 專屬招式。",
+                "naming_note": "機巧靈木偶 overload 專屬主動技。",
                 "desc_zh": "拉動萬千翡翠光絲令全場木藤與機關同步絞殺敵陣。",
                 "desc_en": "Woodpuppet unleashes Grand Marionette.",
                 "visual": "拉動萬千翡翠光絲令全場木藤與機關同步絞殺敵陣。"

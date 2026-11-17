@@ -765,12 +765,12 @@
         },
         signature_move: lockedStage?.signature_move || {
           move_id: "signature_move",
-          name_zh: "專屬招式",
+          name_zh: "專屬主動技",
           name_en: "SignatureMove",
           element: (c.elements || ["fire"])[0],
           range_class: "melee",
           shape: "front",
-          visual: "招式演出視覺效果"
+          visual: "主動技演出視覺效果"
         },
         ...(curStage === "overload" ? { overload_visual: lockedStage?.look || "超載能量外溢特徵" } : {})
       };
@@ -1005,7 +1005,7 @@
     if (!kind) {
       box.replaceChildren();
       detail.hidden = false;
-      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"先選擇角色、宙獸或招式，查看完整管線流程。"));
+      detail.replaceChildren(el("p",{class:"task-flow-placeholder"},"先選擇角色、宙獸或主動技，查看完整管線流程。"));
       renderDesigned();
       return;
     }
@@ -1975,7 +1975,7 @@
   function buildDesigned3dClipBar(pkg, linkedPkg) {
     const clips = getPackageClips(pkg, linkedPkg);
     if (!clips.length) return null;
-    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "生活採集", "互動撫摸"];
+    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "主動技攻擊", "輔助場地", "道具背包", "生活採集", "互動撫摸"];
     let activeCat = "all";
     const wrap = el("div", { class: "designed-3d-clips" });
     const chipsRow = el("div", { class: "anim-filter-chips" });
@@ -2466,7 +2466,7 @@
             )
           ),
           el("div", { class: "muted", style: "font-size:11.5px;line-height:1.45;margin-bottom:6px" }, st.look),
-          el("div", { style: "font-size:11.5px;color:var(--warn);margin-bottom:8px" }, `專屬招式：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`),
+          el("div", { style: "font-size:11.5px;color:var(--warn);margin-bottom:8px" }, `專屬主動技：${st.signature_move?.name_zh || "—"} (${st.signature_move?.range_class || ""})`),
           stReviewDiv,
           el("div", { style: "display:flex;gap:4px;flex-wrap:wrap" },
             el("button", {
@@ -3330,8 +3330,8 @@
       L.stages.forEach(s => box.append(el("div", { class: "field" },
         el("label", {}, s.stage + " · " + s.size_class),
         el("div", {}, el("b", {}, s.name_zh + " " + s.name_en), " ", el("code", {}, s.creature_id),
-          el("div", { class: "muted" }, s.look), el("div", { class: "muted" }, "招式 " + s.signature_move.name_zh + "（" + s.signature_move.move_id + "）")))));
-      box.append(el("p", { class: "muted" }, "特性：" + L.trait.name_zh + "（" + L.trait.trait_id + "）· 原型：" + d.concept.archetype + "（" + d.concept.region + "）· 超載：" + L.overload));
+          el("div", { class: "muted" }, s.look), el("div", { class: "muted" }, "主動技 " + s.signature_move.name_zh + "（" + s.signature_move.move_id + "）")))));
+      box.append(el("p", { class: "muted" }, "被動技：" + L.trait.name_zh + "（" + L.trait.trait_id + "）· 原型：" + d.concept.archetype + "（" + d.concept.region + "）· 超載：" + L.overload));
       const bgInfo = C.determineAgcBgColor(d.concept, false);
       box.append(el("div", { class: "field", style: "border-top:1px dashed var(--line);margin-top:6px;padding-top:6px" },
         el("label", {}, "2D AGC 立繪背景"),
@@ -4690,16 +4690,16 @@
         changes.push("補齊生態圖鑑解說（dex_zh，約 80–180 字）");
       }
 
-      // 招式與特性圖鑑化獨立
+      // 主動技與被動技圖鑑化獨立
       if (updatedConcept.signature_move_idea && !updatedConcept.signature_move) {
         updatedConcept.signature_move = { name_zh: updatedConcept.signature_move_idea, move_id: "move_" + (updatedConcept.line_id || "creature") + "_sig" };
         delete updatedConcept.signature_move_idea;
-        changes.push("專屬招式獨立圖鑑化：signature_move { name_zh, move_id }");
+        changes.push("專屬主動技獨立圖鑑化：signature_move { name_zh, move_id }");
       }
       if (updatedConcept.trait_idea_zh && !updatedConcept.trait) {
         updatedConcept.trait = { name_zh: updatedConcept.trait_idea_zh, trait_id: "trait_" + (updatedConcept.line_id || "creature") + "_core" };
         delete updatedConcept.trait_idea_zh;
-        changes.push("專屬特性獨立圖鑑化：trait { name_zh, trait_id }");
+        changes.push("專屬被動技獨立圖鑑化：trait { name_zh, trait_id }");
       }
 
       const seed = pkg.manifest?.task_header?.match(/seed=([^\s\]]+)/)?.[1] || pkg.id.split("-")[2] || "7f3a";
@@ -5144,7 +5144,7 @@
     if (name.includes("idle") || name.includes("walk") || name.includes("run") || name.includes("sneak") || name.includes("dodge") || name.includes("roll") || name.includes("jump") || name.includes("move") || name.includes("swim") || name.includes("dive") || name.includes("fly") || name.includes("glide") || name.includes("mount")) return "基礎移動";
     if (name.includes("block") || name.includes("hit") || name.includes("knock") || name.includes("getup") || name.includes("faint") || name.includes("defeat") || name.includes("victory") || name.includes("guard_break") || name.includes("stagger") || name.includes("enrage")) return "戰鬥受擊";
     if (name.includes("command") || name.includes("summon") || name.includes("recall") || name.includes("capture") || name.includes("hatch")) return "指令召喚";
-    if (name.startsWith("atk") || name.includes("_atk_") || name.includes("slash") || name.includes("strike") || name.includes("cleave") || name.includes("burst")) return "招式攻擊";
+    if (name.startsWith("atk") || name.includes("_atk_") || name.includes("slash") || name.includes("strike") || name.includes("cleave") || name.includes("burst")) return "主動技攻擊";
     if (name.startsWith("sup") || name.includes("_sup_") || name.includes("buff") || name.includes("heal") || name.includes("roar") || name.includes("deploy") || name.includes("overload")) return "輔助場地";
     if (name.includes("item") || name.includes("backpack") || name.includes("throw") || name.includes("vessel") || name.includes("card") || name.includes("bead") || name.includes("cube")) return "道具背包";
     if (name.includes("gather") || name.includes("mine") || name.includes("fish") || name.includes("cook") || name.includes("craft") || name.includes("trap") || name.includes("revive") || name.includes("interact") || name.includes("pickup") || name.includes("handbook") || name.includes("field_utility")) return "生活採集";
@@ -5925,7 +5925,7 @@
       })
     );
 
-    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "生活採集", "互動撫摸"];
+    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "主動技攻擊", "輔助場地", "道具背包", "生活採集", "互動撫摸"];
     const chipsDiv = el("div", { class: "anim-filter-chips" });
     categories.forEach(cat => {
       const count = (cat === "all") ? totalClips : clips.filter(c => getClipCategory(c.clip) === cat).length;
@@ -6141,8 +6141,8 @@
               el("span", { class: "prompt-k" }, "體型配置"), el("span", { class: "prompt-v" }, c.size_profile || "S→M→L→XL"),
               el("span", { class: "prompt-k" }, "成體體格"), el("span", { class: "prompt-v" }, "長/高 " + (c.height_length || c.height_m || "2.10 m") + " · 重 " + (c.weight || c.weight_kg || "340 kg") + " · 體脂 " + (c.body_fat || c.body_fat_pct || "15.0%")),
               el("span", { class: "prompt-k" }, "設計公式"), el("span", { class: "prompt-v", style: "font-family:Consolas,monospace;font-size:11px" }, c.formula || "—"),
-              el("span", { class: "prompt-k" }, "專屬招式"), el("span", { class: "prompt-v" }, typeof c.signature_move === "object" ? `${c.signature_move.name_zh} (${c.signature_move.move_id})` : (c.signature_move || "—")),
-              el("span", { class: "prompt-k" }, "專屬特性"), el("span", { class: "prompt-v" }, typeof c.trait === "object" ? `${c.trait.name_zh} (${c.trait.trait_id})` : (c.trait || "—")),
+              el("span", { class: "prompt-k" }, "專屬主動技"), el("span", { class: "prompt-v" }, typeof c.signature_move === "object" ? `${c.signature_move.name_zh} (${c.signature_move.move_id})` : (c.signature_move || "—")),
+              el("span", { class: "prompt-k" }, "專屬被動技"), el("span", { class: "prompt-v" }, typeof c.trait === "object" ? `${c.trait.name_zh} (${c.trait.trait_id})` : (c.trait || "—")),
               ...(c.dex_zh ? [el("span", { class: "prompt-k" }, "生態圖鑑"), el("span", { class: "prompt-v" }, c.dex_zh)] : [])
             )
           )
@@ -6215,7 +6215,7 @@
               el("span", { class: "prompt-k" }, "面數預算 (Tris)"), el("span", { class: "prompt-v" }, "15,000 ~ 25,000 tris (符合預算)"),
               el("span", { class: "prompt-k" }, "貼圖尺寸"), el("span", { class: "prompt-v" }, "2048 × 2048 (Base Color + Mask)"),
               el("span", { class: "prompt-k" }, "插槽骨骼數"), el("span", { class: "prompt-v" }, "Socket_Mouth / Head / Front / Core_FX 齊全"),
-              el("span", { class: "prompt-k" }, "動畫 Action"), el("span", { class: "prompt-v" }, "基礎待機與移動＋長時間靜止週期動作 (idle_long)＋招式槽＋互動撫摸")
+              el("span", { class: "prompt-k" }, "動畫 Action"), el("span", { class: "prompt-v" }, "基礎待機與移動＋長時間靜止週期動作 (idle_long)＋主動技槽＋互動撫摸")
             )
           )
         );

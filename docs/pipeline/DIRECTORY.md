@@ -1,4 +1,4 @@
-# Drive 角色／宙獸／招式目錄規範
+# Drive 角色／宙獸／主動技目錄規範
 
 ```text
 cosmos_chimera_forge/
@@ -42,12 +42,12 @@ cosmos_chimera_forge/
       rejected_portraits/<revision>/<asset_id>/
       rejected_3d/<revision>/<asset_id>/
 
-  moves/                          # 招式管線獨立目錄
+  moves/                          # 主動技管線獨立目錄
     00_settings/
     01_vfx/<asset_id>/            # spec.json、storyboard、layers、flipbook
     03_completed/<asset_id>/
     wiki/<move_id>_wiki.md
-    prompts/                      # 招式專屬 01b_move_vfx.prompt.md
+    prompts/                      # 主動技專屬 01b_move_vfx.prompt.md
       jobs/
     reviews/<asset_id>.json
     backup/
@@ -106,7 +106,7 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 登入網頁後，設定頁提供 **「整理歷史 Prompt-to-3D 目錄」**，需明確點擊及確認後才會檢查實際 `.glb`／`.blend`，建立或更新 `manifest.json`，標記 `input_mode=text`、`pipeline=ai_blender`、`encyclopedia_path` 和待審項目。若原有 manifest，先保存到 `creatures/backup/manifest_snapshots/`；不改模型、不自動移至完成區。此自助整理需在網站完成 OAuth 登入後執行，並非由 GitHub CI 在 Drive 背景操作。
 
-角色／宙獸的 Image-to-3D 與 Prompt-to-3D 流程，以及招式特效流程，現在均有獨立的「生成圖鑑」節點。生成 Prompt 使用當前主體概念，輸出到對應的 `<kind>/wiki/`，不得讀取或覆寫別的資產。宙獸 Prompt-to-3D 的圖鑑可先於建模產生；建模時只引用該圖鑑，不再把 `bestiary.md` 當作模型目錄中必須重複保存的副本。
+角色／宙獸的 Image-to-3D 與 Prompt-to-3D 流程，以及主動技特效流程，現在均有獨立的「生成圖鑑」節點。生成 Prompt 使用當前主體概念，輸出到對應的 `<kind>/wiki/`，不得讀取或覆寫別的資產。宙獸 Prompt-to-3D 的圖鑑可先於建模產生；建模時只引用該圖鑑，不再把 `bestiary.md` 當作模型目錄中必須重複保存的副本。
 
 ## HTML 操作
 
@@ -121,11 +121,11 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 ## 任務清單重建（類別 → 路徑 → 節點）
 
-先選 **角色／宙獸／招式**，再依管線流程選擇工作節點。每個節點可點擊查看當前任務說明與交付項目，Prompt 輸出同步切換；原有任務 ID、Google Drive 路徑與歷史紀錄仍保留。
+先選 **角色／宙獸／主動技**，再依管線流程選擇工作節點。每個節點可點擊查看當前任務說明與交付項目，Prompt 輸出同步切換；原有任務 ID、Google Drive 路徑與歷史紀錄仍保留。
 
 - **角色／宙獸，Image-to-3D**：外觀設定 → 角色三輪立繪（宙獸僅需正面圖與三視圖，不需主立繪）→ 立繪審查 → **Colab＋AI＋Blender** 或 **AI＋Blender**（兩條獨立路線）→ 最終驗收。Colab 路線可在 GPU 建模後使用 AI 輔助 Blender 修整，不代表另啟一個獨立的 AI Blender 資產管線；兩條路線均需已核准的來源立繪，並保留各自 `pipeline` 與來源追蹤。
 - **角色／宙獸，Prompt-to-3D**：外觀設定 → **AI＋Blender 文字建模**（在立繪前分岔，無需補立繪）→ 最終驗收。所有管線共用獨立階段圖鑑，僅在缺少時建立草稿，不在建模時重複產生。
-- **招式**：獨立招式效果動畫／特效設計，不混入角色或宙獸 3D 管線。
+- **主動技**：獨立主動技效果動畫／特效設計，不混入角色或宙獸 3D 管線。
 
 切換類別與路徑時，前端保留既有概念資料及任務選項；選取文字建模會清除上一個圖片來源，以避免誤用 Image-to-3D。流程節點選擇保存於本機狀態，重新整理後可恢復。最終核准仍由審查台人工決定，不因切換流程自動通過。
 
@@ -133,7 +133,7 @@ Colab 使用 GPU 模型的細節尚待實機選定；本次建立介面、目錄
 
 - 角色：`characters/wiki/<subject_id>_wiki.md`，有明確型態時使用 `<subject_id>_<stage>_wiki.md`。
 - 宙獸：`creatures/wiki/<subject_id>_<juvenile|adolescent|adult|overload>_wiki.md`，每階段各一份。
-- 招式：`moves/wiki/<move_id>_wiki.md`。
+- 主動技：`moves/wiki/<move_id>_wiki.md`。
 - Prompt-to-Image、Image-to-3D（Colab/AI Blender）、Prompt-to-3D 使用相同 `wiki` 主鍵。獨立圖鑑步驟只在檔案不存在時建立 Markdown 草稿；下游僅關聯現有檔案，禁止重複產生。
 - 設定頁「拆分舊圖鑑」可重複執行：從舊 `wiki` 前身 `04_encyclopedia/creatures/` 的 15 個原始系列文件擷取四階描述，轉為新 Markdown；四階都有檔案才將原始文件移到 `creatures/wiki/_legacy/`。Google Docs 先透過 export 讀取，既有新檔不覆寫；型態段落無法辨識時列入錯誤而不猜造。
 - 使用獨立草稿時 `status: draft / review_required`，不假稱已完成畫作、模型或 QA。本次 15→60 雲端資料遷移已透過授權 Drive 操作完成並回讀驗證；網頁端的遷移按鈕保留作為可重試的缺檔修復流程，不會覆寫既有階段圖鑑。

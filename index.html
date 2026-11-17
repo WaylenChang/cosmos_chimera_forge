@@ -896,7 +896,7 @@
         </div>
         <p class="muted">需要重新載入 Drive 資產時，使用頁面上方的 ⟳ 同步按鈕。</p>
         <div class="settings-actions">
-          <button class="btn ghost mini" id="settingsMigratePipeline" type="button" data-tip="將舊共用目錄中的既有資產、圖鑑、設定與審查紀錄依角色／宙獸／招式分類移入 characters/、creatures/、moves/，保留原檔 ID">分類舊管線目錄</button>
+          <button class="btn ghost mini" id="settingsMigratePipeline" type="button" data-tip="將舊共用目錄中的既有資產、圖鑑、設定與審查紀錄依角色／宙獸／主動技分類移入 characters/、creatures/、moves/，保留原檔 ID">分類舊管線目錄</button>
           <button class="btn ghost mini" id="settingsMigrateWiki" type="button" data-tip="依型態拆分舊系列圖鑑為四份獨立 Markdown，原始文件保留在 creatures/wiki/_legacy，重複執行不覆寫">拆分舊圖鑑</button>
           <button class="btn ghost mini" id="settingsMigratePrompt3d" type="button" data-tip="只補齊已產生 GLB 的歷史 Prompt-to-3D 資產索引，既有 manifest 先備份；不動模型，不自動核准">整理歷史 Prompt-to-3D 目錄</button>
         </div>
@@ -914,8 +914,8 @@
         <h3>管線與來源設定</h3>
         <label hidden>目前步驟 <select id="pipelineStage">
           <option value="appearance">0 · 外觀設定與生成圖鑑（Gemini Flash／Codex）</option>
-          <option value="encyclopedia">圖鑑 · 招式 Markdown（獨立步驟）</option>
-          <option value="move_vfx">招式與特效設計</option>
+          <option value="encyclopedia">圖鑑 · 主動技 Markdown（獨立步驟）</option>
+          <option value="move_vfx">主動技與特效設計</option>
           <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
           <option value="review_portrait">2 · 立繪審查</option>
           <option value="colab">3-a · Colab GPU + Blender</option>
@@ -972,7 +972,7 @@
         <div id="options"></div>
         <div class="field opt" style="border-top:0;margin-top:6px">
           <label>補充 / 修改</label>
-          <textarea id="notes" placeholder="例：改成雙馬尾、配色偏暖；超載型態要有翅膀展開；招式拖尾加長。寫在這裡的內容優先於預設。"></textarea>
+          <textarea id="notes" placeholder="例：改成雙馬尾、配色偏暖；超載型態要有翅膀展開；主動技拖尾加長。寫在這裡的內容優先於預設。"></textarea>
         </div>
       </section>
     </div>

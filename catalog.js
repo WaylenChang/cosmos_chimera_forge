@@ -20,8 +20,8 @@ window.COSMI_CATALOG = {
   ELEMENT_COUNT: [ { n: 1, w: 40 }, { n: 2, w: 45 }, { n: 3, w: 15 } ],
 
   VESSELS: [
-    { v: "talisman_card", zh: "符籙卡片", sub: "招式", look: "可甩出的紙/金屬符卡，書寫發光符文，命中後展開成封印陣" },
-    { v: "glass_bead",    zh: "琉璃珠",   sub: "特性", look: "掌心大小的多色琉璃珠，內有流動星雲，拋擲後化為光泡包覆" },
+    { v: "talisman_card", zh: "符籙卡片", sub: "主動技", look: "可甩出的紙/金屬符卡，書寫發光符文，命中後展開成封印陣" },
+    { v: "glass_bead",    zh: "琉璃珠",   sub: "被動技", look: "掌心大小的多色琉璃珠，內有流動星雲，拋擲後化為光泡包覆" },
     { v: "magic_cube",    zh: "魔術方塊", sub: "超載", look: "可旋轉的多面方塊，各面刻屬性紋章，投擲後轉動解鎖成牢籠" },
     { v: "未知",          zh: "未知",     sub: "未知", look: "留待外包/模型階段自由發揮" }
   ],
@@ -596,7 +596,7 @@ window.COSMI_CATALOG = {
 
   SCENE_ACTIONS: [
     { v: "auto", zh: "🎲 智慧姿態（依角色性格/宙獸型態判定）" },
-    { v: "battle_burst", zh: "💥 招式爆發/戰鬥蓄力（威嚴爆發、屬性特效呼應）" },
+    { v: "battle_burst", zh: "💥 主動技爆發/戰鬥蓄力（威嚴爆發、屬性特效呼應）" },
     { v: "high_perch", zh: "🦅 登高俯瞰/傲立岩梢（從容威嚴、衣袍/羽翼迎風飄揚）" },
     { v: "dynamic_leap", zh: "⚡ 凌空騰躍/疾速衝刺（極致動感、流線風壓牽引）" },
     { v: "calm_commune", zh: "🍃 靜態共鳴/守護姿態（溫和沉穩、與環境元素交融）" }
