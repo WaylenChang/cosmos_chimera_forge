@@ -571,3 +571,129 @@ test('3-level flat Drive sync loads migrated 3D manifests, manifest-less portrai
   assert.equal(wiki.id, 'wiki-sun');
 });
 
+test('syncPackages prioritizes currently selected subject ahead of earlier folders and refreshes immediately', async () => {
+  const folderNames = ['item_a', 'item_b', 'item_c', 'item_d', 'item_selected'];
+  const importedOrder = [];
+  let refreshAtSelected = -1;
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
+  const h = harness({
+    handle: u => {
+      if (u.pathname.endsWith('/permissions')) return Response.json({ permissions: [{ id: 'perm-1' }] });
+      if (u.pathname.endsWith('/files/file-selected') && u.searchParams.get('alt') === 'media') return new Response(png);
+      if (u.searchParams.get('alt') === 'media') {
+        return new Promise(r => setTimeout(() => r(new Response(png)), 15));
+      }
+      const q = u.searchParams.get('q') || '';
+      if (!q) return undefined;
+      if (q.includes("'project-root' in parents") && q.includes("name = 'creatures'")) {
+        return Response.json({ files: [{ id: 'cat-creatures', name: 'creatures', mimeType: 'application/vnd.google-apps.folder' }] });
+      }
+      if (q.includes("'cat-creatures' in parents") && !q.includes('name =')) {
+        return Response.json({
+          files: folderNames.map(n => ({ id: 'dir-' + n, name: n, mimeType: 'application/vnd.google-apps.folder' }))
+        });
+      }
+      for (const n of folderNames) {
+        if (q.includes(`'dir-${n}' in parents`) && !q.includes('name =')) {
+          return Response.json({
+            files: [{ id: 'file-' + n.replace('item_', ''), name: `${n}_adult_01_portrait_front.png`, mimeType: 'image/png', modifiedTime: '2026-11-16T00:00:00Z', size: '68' }]
+          });
+        }
+      }
+      return Response.json({ files: [] });
+    }
+  });
+  const packages = [];
+  h.context.URL = URL;
+  h.context.location.href = 'https://example.test/';
+  h.context.COSMI_DRIVE_CACHE = {
+    preferences: () => ({ autoSync: false, cacheEnabled: false }),
+    namespace: () => 'test-ns',
+    putPackage: async () => {},
+    clear: async () => {},
+  };
+  h.context.COSMI_FORGE.priorityDriveTargets = () => ({ ids: ['creature:item_selected'] });
+  h.context.COSMI_FORGE.clearDrivePackages = () => { packages.length = 0; };
+  h.context.COSMI_FORGE.packages = () => packages;
+  h.context.COSMI_FORGE.refresh = () => {
+    if (packages.some(p => p.subjectId === 'item_selected') && refreshAtSelected === -1) {
+      refreshAtSelected = importedOrder.length;
+    }
+  };
+  h.context.COSMI_FORGE.loadAssetFiles = async (raw, { name }) => {
+    const subjectId = name.replace(/_adult_01_portrait$/, '');
+    importedOrder.push(subjectId);
+    const pkg = { id: name, type: 'creature-concept', subjectId, stage: 'adult', status: 'provisional' };
+    packages.push(pkg);
+    return pkg;
+  };
+  await h.login();
+  await h.context.COSMI_DRIVE.syncPackages({ force: true });
+  assert.equal(importedOrder[0], 'item_selected', 'selected item should finish importing first');
+  assert.equal(refreshAtSelected, 1, 'UI refresh should fire immediately after the selected item imports');
+});
+
+test('readById jumps ahead of queued syncPackages downloads in the shared priority queue', async () => {
+  const downloadStartOrder = [];
+  let releaseBatch;
+  const batchGate = new Promise(r => { releaseBatch = r; });
+  const folderNames = ['bg_1', 'bg_2', 'bg_3'];
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
+  const h = harness({
+    handle: u => {
+      if (u.pathname.endsWith('/permissions')) return Response.json({ permissions: [{ id: 'perm-1' }] });
+      if (u.searchParams.get('alt') === 'media') {
+        const fileId = u.pathname.split('/').pop();
+        downloadStartOrder.push(fileId);
+        if (downloadStartOrder.length <= 6) {
+          return batchGate.then(() => new Response(png));
+        }
+        return new Response(png);
+      }
+      const q = u.searchParams.get('q') || '';
+      if (!q) return undefined;
+      if (q.includes("'project-root' in parents") && q.includes("name = 'creatures'")) {
+        return Response.json({ files: [{ id: 'cat-creatures', name: 'creatures', mimeType: 'application/vnd.google-apps.folder' }] });
+      }
+      if (q.includes("'cat-creatures' in parents") && !q.includes('name =')) {
+        return Response.json({
+          files: folderNames.map(n => ({ id: 'dir-' + n, name: n, mimeType: 'application/vnd.google-apps.folder' }))
+        });
+      }
+      for (const n of folderNames) {
+        if (q.includes(`'dir-${n}' in parents`) && !q.includes('name =')) {
+          return Response.json({
+            files: [1, 2, 3].map(i => ({
+              id: `${n}-f${i}`,
+              name: `${n}_adult_01_portrait_v${i}.png`,
+              mimeType: 'image/png',
+              modifiedTime: '2026-11-16T00:00:00Z',
+              size: '68'
+            }))
+          });
+        }
+      }
+      return Response.json({ files: [] });
+    }
+  });
+  h.context.URL = URL;
+  h.context.location.href = 'https://example.test/';
+  h.context.COSMI_DRIVE_CACHE = {
+    preferences: () => ({ autoSync: false, cacheEnabled: false }),
+    namespace: () => 'test-ns',
+    putPackage: async () => {},
+    clear: async () => {},
+  };
+  h.context.COSMI_FORGE.loadAssetFiles = async (raw, { name }) => ({ id: name, type: 'creature-concept', status: 'provisional' });
+  await h.login();
+  const syncPromise = h.context.COSMI_DRIVE.syncPackages({ force: true });
+  while (downloadStartOrder.length < 6) {
+    await new Promise(r => setTimeout(r, 5));
+  }
+  const urgentPromise = h.context.COSMI_DRIVE.readById('urgent-glb');
+  releaseBatch();
+  await Promise.all([syncPromise, urgentPromise]);
+  assert.equal(downloadStartOrder[6], 'urgent-glb', 'readById must preempt queued background sync downloads');
+});
+
+

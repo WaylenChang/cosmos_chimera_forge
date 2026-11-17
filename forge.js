@@ -2017,6 +2017,7 @@
   }
 
   function renderDesignedDetail() {
+    window.COSMI_DRIVE?.prioritize?.();
     const headerEl = $("#designedStageHeader");
     const bodyEl = $("#designedDetailView");
     if (!headerEl || !bodyEl) return;
@@ -4406,6 +4407,36 @@
     pkg.dirHandle = dirHandle; return pkg;
   }
 
+  function getSelectedDriveTargets() {
+    const ids = new Set();
+    const folderIds = new Set();
+    const paths = new Set();
+    const addId = (value) => {
+      const s = String(value || "").trim().toLowerCase();
+      if (!s) return;
+      ids.add(s);
+      const stripped = s.replace(/^(?:creature|character|move):/, "");
+      if (stripped) ids.add(stripped);
+      const stageStripped = stripped.replace(/_(?:juvenile|adolescent|adult|overload)(?:_.*)?$/, "");
+      if (stageStripped && stageStripped !== stripped) ids.add(stageStripped);
+    };
+    const addPkg = (pkg) => {
+      if (!pkg) return;
+      addId(pkg.id);
+      addId(pkg.subjectId);
+      if (pkg.driveFolderId) folderIds.add(String(pkg.driveFolderId));
+      if (pkg.drivePath) paths.add(String(pkg.drivePath).toLowerCase());
+    };
+    addId(designedState.selectedId);
+    addId(reviewState.activeDesignedKey);
+    addId(reviewState.activePkgId);
+    addId(state.preset);
+    addId(state.presetChar);
+    if (reviewState.activePkgId) {
+      addPkg(reviewState.packages.find(p => p.id === reviewState.activePkgId));
+    }
+    return { ids: [...ids], folderIds: [...folderIds], paths: [...paths] };
+  }
   function getActivePkg() {
     return reviewState.packages.find(p => p.id === reviewState.activePkgId) || reviewState.packages[0] || null;
   }
@@ -4821,6 +4852,7 @@
   }
   // Single index for designed subjects and review packages.
   function renderReviewView() {
+    window.COSMI_DRIVE?.prioritize?.();
     const entries = reviewDeskEntries();
     const filtered = ["chr", "cr", "mdl", "fx", "pending"].includes(reviewState.filterCat);
     // The rail and the stage must use the same category. Drive models may arrive
@@ -6807,6 +6839,7 @@
     },
     versionInfo: () => ({tool:TOOL_VERSION,catalog:C.version,spec:SPEC,templates:Object.fromEntries(TASKS.map(t=>[t.id,t.version]))}),
     packages: () => reviewState.packages,
+    priorityDriveTargets: getSelectedDriveTargets,
     removePackage: id => { reviewState.packages = reviewState.packages.filter(p => p.id !== id); },
     clearDrivePackages: () => { reviewState.packages = reviewState.packages.filter(p => !p.driveFolderId); },
     persistReview: saveReview,

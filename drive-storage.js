@@ -266,24 +266,94 @@
   function limitConcurrent(max) {
     let running = 0;
     const waiting = [];
+    function resolvePriority(entry) {
+      return typeof entry.priority === "function"
+        ? Number(entry.priority()) || 0
+        : Number(entry.priority) || 0;
+    }
+    function takeNext() {
+      let bestIdx = 0;
+      let bestPriority = resolvePriority(waiting[0]);
+      for (let i = 1; i < waiting.length; i++) {
+        const p = resolvePriority(waiting[i]);
+        if (p > bestPriority) {
+          bestPriority = p;
+          bestIdx = i;
+        }
+      }
+      return waiting.splice(bestIdx, 1)[0];
+    }
     function drain() {
       while (running < max && waiting.length) {
-        const [task, resolve, reject] = waiting.shift();
+        const item = takeNext();
         running++;
         Promise.resolve()
-          .then(task)
-          .then(resolve, reject)
+          .then(item.task)
+          .then(item.resolve, item.reject)
           .finally(() => {
             running--;
             drain();
           });
       }
     }
-    return (task) =>
+    const enqueue = (task, priority = 0) =>
       new Promise((resolve, reject) => {
-        waiting.push([task, resolve, reject]);
+        waiting.push({ task, resolve, reject, priority });
         drain();
       });
+    enqueue.drain = drain;
+    return enqueue;
+  }
+  const driveDownload = limitConcurrent(6);
+  let explicitPriorityTargets = null;
+  function normalizePriorityTargets(targets) {
+    if (!targets || typeof targets !== "object") return null;
+    const ids = Array.isArray(targets.ids)
+      ? [
+          ...new Set(
+            targets.ids.flatMap((v) => {
+              const s = String(v || "").trim().toLowerCase();
+              if (!s) return [];
+              const stripped = s.replace(/^(?:creature|character|move):/, "");
+              return stripped && stripped !== s ? [s, stripped] : [s];
+            }),
+          ),
+        ]
+      : [];
+    const folderIds = Array.isArray(targets.folderIds)
+      ? targets.folderIds.map((v) => String(v || "").trim()).filter(Boolean)
+      : [];
+    const paths = Array.isArray(targets.paths)
+      ? targets.paths
+          .map((v) => String(v || "").trim().toLowerCase())
+          .filter(Boolean)
+      : [];
+    if (!ids.length && !folderIds.length && !paths.length) return null;
+    return { ids, folderIds, paths };
+  }
+  function getPriorityTargets() {
+    const fromForge = window.COSMI_FORGE?.priorityDriveTargets?.();
+    return normalizePriorityTargets(fromForge) || explicitPriorityTargets;
+  }
+  function isPriorityEntry(dir, entry, targets = getPriorityTargets()) {
+    if (!targets || !entry) return false;
+    if (targets.folderIds.includes(String(entry.id || ""))) return true;
+    const folderPath = (dir + "/" + entry.name).toLowerCase();
+    if (targets.paths.includes(folderPath)) return true;
+    const entryName = String(entry.name || "").toLowerCase();
+    if (!entryName) return false;
+    for (const id of targets.ids) {
+      if (id === entryName) return true;
+      if (id.startsWith(entryName + "_") || id.startsWith(entryName + "-"))
+        return true;
+    }
+    return false;
+  }
+  function prioritize(targets) {
+    if (targets !== undefined) {
+      explicitPriorityTargets = normalizePriorityTargets(targets);
+    }
+    driveDownload.drain();
   }
   const categoryRoots = ["characters", "creatures", "moves"];
   const legacyCategoryDirs = [
@@ -422,11 +492,18 @@
   async function read(path) {
     const { file } = await find(path);
     if (!file) throw Error(path + " 不存在");
-    return (await request(API + "/" + file.id + "?alt=media")).blob();
+    return driveDownload(
+      async () => (await request(API + "/" + file.id + "?alt=media")).blob(),
+      100,
+    );
   }
   async function readById(id) {
     if (!id) throw Error("缺少 Drive 檔案 ID");
-    return (await request(API + "/" + encodeURIComponent(id) + "?alt=media")).blob();
+    return driveDownload(
+      async () =>
+        (await request(API + "/" + encodeURIComponent(id) + "?alt=media")).blob(),
+      100,
+    );
   }
   async function write(path, blob) {
     const { file, parent, name } = await find(path, true),
@@ -509,8 +586,7 @@
       const options = cache?.preferences();
       const errors = [];
       let count = 0,
-        finished = 0,
-        next = 0;
+        finished = 0;
       const ids = new Set();
       const cachedRecords =
         !force && options?.cacheEnabled && ns
@@ -708,12 +784,26 @@
         }
         window.COSMI_FORGE.refresh();
       }
-      const download = limitConcurrent(6);
+      const pendingEntries = entries.slice();
+      const takeNextEntry = () => {
+        if (!pendingEntries.length) return null;
+        const targets = getPriorityTargets();
+        if (targets) {
+          const idx = pendingEntries.findIndex(({ dir, entry }) =>
+            isPriorityEntry(dir, entry, targets),
+          );
+          if (idx !== -1) return pendingEntries.splice(idx, 1)[0];
+        }
+        return pendingEntries.shift();
+      };
+      const download = (task, priority = 0) => driveDownload(task, priority);
       const workers = Array.from(
         { length: Math.min(3, entries.length) },
         async () => {
-          while (next < entries.length) {
-            const { dir, entry } = entries[next++];
+          for (let item = takeNextEntry(); item; item = takeNextEntry()) {
+            const { dir, entry } = item;
+            const entryPriority = () =>
+              isPriorityEntry(dir, entry) ? 10 : 0;
             try {
               checkSession();
               const files = await walk(entry.id),
@@ -734,8 +824,9 @@
                 !!old && fingerprint(old.files) === fingerprint(files);
               if (reuse) {
                 // Refresh the review record even for a cached asset, since it can change independently.
-                const r = await download(() =>
-                  record(old.pkgId || entry.name, reviewIndex),
+                const r = await download(
+                  () => record(old.pkgId || entry.name, reviewIndex),
+                  entryPriority,
                 );
                 if (ids.has(old.pkgId || entry.name)) {
                   const matched = window.COSMI_FORGE.packages().filter(
@@ -751,11 +842,14 @@
                       }
                     }
                     count += matched.length;
+                    if (isPriorityEntry(dir, entry))
+                      window.COSMI_FORGE.refresh();
                     continue;
                   }
                 }
                 await importPackage(dir, entry, files, old.raw, r);
                 count++;
+                if (isPriorityEntry(dir, entry)) window.COSMI_FORGE.refresh();
                 continue;
               }
               const needed = files.filter(
@@ -771,12 +865,15 @@
                         await request(API + "/" + f.id + "?alt=media")
                       ).arrayBuffer(),
                     );
-                  }),
+                  }, entryPriority),
                 ),
               );
               if (!Object.keys(raw).length) continue;
               // Avoid rendering the whole review desk for every downloaded file/package.
-              const r = await download(() => record(entry.name, reviewIndex));
+              const r = await download(
+                () => record(entry.name, reviewIndex),
+                entryPriority,
+              );
               const imported = await importPackage(dir, entry, files, raw, r);
               if (ns && generation === sessionGeneration && imported.length)
                 await cache?.putPackage(ns, {
@@ -788,7 +885,8 @@
                   pkgId: imported[0]?.id || entry.name,
                 });
               count += imported.length;
-              if (count % 5 === 0) window.COSMI_FORGE.refresh();
+              if (isPriorityEntry(dir, entry) || count % 5 === 0)
+                window.COSMI_FORGE.refresh();
             } catch (e) {
               if (generation !== sessionGeneration) throw e;
               errors.push(entry.name + ": " + e.message);
@@ -1666,6 +1764,7 @@
     saveNote,
     uploadAsset,
     syncPackages,
+    prioritize,
     syncPipelineIndex,
     pipelineIndex: () => pipelineIndexState,
     pipelineRoot,
