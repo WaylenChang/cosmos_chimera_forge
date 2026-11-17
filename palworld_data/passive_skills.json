@@ -1,0 +1,4283 @@
+[
+  {
+    "id": 1,
+    "name_zh": "惡魔之手",
+    "name_en": "Demon’s Hand",
+    "rank": "5",
+    "effects": [
+      "工作速度 +90% (ToSelf)",
+      "Sanity_Decrease +15% (ToSelf)",
+      "WorldTreeDecayImmunity +0% (ToSelfAndTrainer)",
+      "Weight 5"
+    ],
+    "description": "工作速度 +90 % SAN值下降速度加快 +15.0% 世界樹區域的樹木/礦石不會因接近而消失"
+  },
+  {
+    "id": 2,
+    "name_zh": "次元跳躍",
+    "name_en": "Dimensional Leap",
+    "rank": "5",
+    "effects": [
+      "MoveSpeed +50% (ToSelf)",
+      "FullStomatch_Decrease +15% (ToSelf)",
+      "WorldTreeDecayImmunity +0% (ToSelfAndTrainer)",
+      "Weight 5"
+    ],
+    "description": "移動速度提升 +50 % 飽足度下降速度加速 +15.0% 世界樹區域的樹木/礦石不會因接近而消失"
+  },
+  {
+    "id": 3,
+    "name_zh": "破壞神",
+    "name_en": "God of Destruction",
+    "rank": "5",
+    "effects": [
+      "攻擊 +40% (ToSelf)",
+      "防禦 +20% (ToSelf)",
+      "生命值上限 -50% (ToSelf)",
+      "WorldTreeDecayImmunity +0% (ToSelfAndTrainer)",
+      "Weight 5"
+    ],
+    "description": "攻擊 +40% 防禦 +20% 最大HP-50% 世界樹區域的樹木/礦石不會因接近而消失"
+  },
+  {
+    "id": 4,
+    "name_zh": "仙人",
+    "name_en": "Hermit Sage",
+    "rank": "5",
+    "effects": [
+      "Sanity_Decrease -50% (ToSelf)",
+      "工作速度 -20% (ToSelf)",
+      "WorldTreeDecayImmunity +0% (ToSelfAndTrainer)",
+      "Weight 5"
+    ],
+    "description": "減少SAN值下降速度 +50.0% 工作速度-20 % 世界樹區域的樹木/礦石不會因接近而消失"
+  },
+  {
+    "id": 5,
+    "name_zh": "守護聖盾",
+    "name_en": "Sanctified Meat Shield",
+    "rank": "5",
+    "effects": [
+      "防禦 +50% (ToSelf)",
+      "攻擊 -30% (ToSelf)",
+      "WorldTreeDecayImmunity +0% (ToSelfAndTrainer)",
+      "Weight 5"
+    ],
+    "description": "防禦 +50% 攻擊-30% 世界樹區域的樹木/礦石不會因接近而消失"
+  },
+  {
+    "id": 6,
+    "name_zh": "雙刃聖劍",
+    "name_en": "Twin-Edged Holy Blade",
+    "rank": "5",
+    "effects": [
+      "攻擊 +50% (ToSelf)",
+      "防禦 -30% (ToSelf)",
+      "WorldTreeDecayImmunity +0% (ToSelfAndTrainer)",
+      "Weight 5"
+    ],
+    "description": "攻擊 +50% 防禦-30% 世界樹區域的樹木/礦石不會因接近而消失"
+  },
+  {
+    "id": 7,
+    "name_zh": "神樹苗床",
+    "name_en": "World Tree's Bounty",
+    "rank": "5",
+    "effects": [
+      "FullStomatch_Decrease -50% (ToSelf)",
+      "生命值上限 -20% (ToSelf)",
+      "WorldTreeDecayImmunity +0% (ToSelfAndTrainer)",
+      "Weight 5"
+    ],
+    "description": "減少飽足度下降速度 +50.0% 生命值-20 % 世界樹區域的樹木/礦石不會因接近而消失"
+  },
+  {
+    "id": 8,
+    "name_zh": "寶寶保母",
+    "name_en": "Babysitter",
+    "rank": "4",
+    "effects": [
+      "PalEggHatchingSpeed +30% (ToBuildObject)",
+      "BreedSpeed_InBaseCamp +30% (ToBuildObject)",
+      "Weight 100"
+    ],
+    "description": "在據點內時，分派到配種牧場的帕魯的 產蛋速度+30%，孵化速度+30%"
+  },
+  {
+    "id": 9,
+    "name_zh": "鬼神",
+    "name_en": "Demon God",
+    "rank": "4",
+    "effects": [
+      "Weight 5 Pal"
+    ],
+    "description": "攻擊 +30% (ToSelf) 防禦 +5% (ToSelf)"
+  },
+  {
+    "id": 10,
+    "name_zh": "金剛之軀",
+    "name_en": "Diamond Body",
+    "rank": "4",
+    "effects": [
+      "防禦 +30% (ToSelf)",
+      "LeanBackInvalid_ForPassiveSkill +0% (ToSelf)",
+      "KnockbackInvalid_ForPassiveSkill +0% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "防禦力+30% 免疫硬直 免疫擊退"
+  },
+  {
+    "id": 11,
+    "name_zh": "永動機",
+    "name_en": "Eternal Engine",
+    "rank": "4",
+    "effects": [
+      "PalSP_Increase +75% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "最大耐力+75% ※此效果僅對可騎乘的帕魯有效。"
+  },
+  {
+    "id": 12,
+    "name_zh": "永炎",
+    "name_en": "Eternal Flame",
+    "rank": "4",
+    "effects": [
+      "ElementBoost_Fire +30% (ToSelf)",
+      "ElementBoost_Electricity +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升火屬性攻擊傷害30% 提升雷屬性攻擊傷害30%"
+  },
+  {
+    "id": 13,
+    "name_zh": "明鏡止水",
+    "name_en": "Heart of the Immovable King",
+    "rank": "4",
+    "effects": [
+      "Sanity_Decrease -20% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "減少SAN值下降速度 +20.0%"
+  },
+  {
+    "id": 14,
+    "name_zh": "重裝甲",
+    "name_en": "Heavily Armored",
+    "rank": "4",
+    "effects": [
+      "ExplosionResist +100% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "免疫爆破傷害"
+  },
+  {
+    "id": 15,
+    "name_zh": "特殊體質",
+    "name_en": "Idiosyncratic",
+    "rank": "4",
+    "effects": [
+      "AutoHPRegeneRate +50% (ToSelfAndTrainer)",
+      "ResistAdditionalEffect_Burn +100% (ToSelf)",
+      "ResistAdditionalEffect_Poison +100% (ToSelf)",
+      "防禦 +25% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "帕魯和玩家的生命值自然恢復量+50% 防禦力+25% 免疫中毒傷害 免疫灼熱傷害"
+  },
+  {
+    "id": 16,
+    "name_zh": "不死之身",
+    "name_en": "Immortality",
+    "rank": "4",
+    "effects": [
+      "LifeSteal +5% (ToSelf)",
+      "AutoHPRegeneRate +100% (ToSelf)",
+      "攻擊 +15% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "造成傷害時將恢復等同於傷害量5%的生命值 帕魯生命值自然恢復量+100% 攻擊力+15%"
+  },
+  {
+    "id": 17,
+    "name_zh": "侵略者",
+    "name_en": "Invader",
+    "rank": "4",
+    "effects": [
+      "ElementBoost_Dark +30% (ToSelf)",
+      "ElementBoost_Dragon +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升暗屬性攻擊傷害30% 提升龍屬性攻擊傷害30%"
+  },
+  {
+    "id": 18,
+    "name_zh": "破浪王者",
+    "name_en": "King of the Waves",
+    "rank": "4",
+    "effects": [
+      "SwimSpeed +50% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "水上移動速度提升50%"
+  },
+  {
+    "id": 19,
+    "name_zh": "慷慨就義",
+    "name_en": "Lavish Hospitality",
+    "rank": "4",
+    "effects": [
+      "SelfDeathAddItemDrop +100% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "該帕魯道具掉落量+100%"
+  },
+  {
+    "id": 20,
+    "name_zh": "傳說",
+    "name_en": "Legend",
+    "rank": "4",
+    "effects": [
+      "攻擊 +20% (ToSelf)",
+      "防禦 +20% (ToSelf)",
+      "MoveSpeed +20% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "攻擊+20% 防禦+20% 提升移動速度20%"
+  },
+  {
+    "id": 21,
+    "name_zh": "身輕如燕",
+    "name_en": "Lightfooted",
+    "rank": "4",
+    "effects": [
+      "RideJumpCount_Increase +1% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "騎乘期間連續跳躍次數 +1"
+  },
+  {
+    "id": 22,
+    "name_zh": "稀有",
+    "name_en": "Lucky",
+    "rank": "4",
+    "effects": [
+      "Weight 100 RarePal"
+    ],
+    "description": "攻擊 +15% (ToSelf) 防禦 +15% (ToSelf) 工作速度 +20% (ToSelf)"
+  },
+  {
+    "id": 23,
+    "name_zh": "湖之主",
+    "name_en": "Lunker",
+    "rank": "4",
+    "effects": [
+      "ElementBoost_Water +20% (ToSelf)",
+      "ElementBoost_Ice +20% (ToSelf)",
+      "防禦 +20% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升水屬性攻擊傷害20% 提升冰屬性攻擊傷害20% 防禦+20%"
+  },
+  {
+    "id": 24,
+    "name_zh": "極限絕食",
+    "name_en": "Mastery of Fasting",
+    "rank": "4",
+    "effects": [
+      "FullStomatch_Decrease -20% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "減少飽足度下降速度 +20.0%"
+  },
+  {
+    "id": 25,
+    "name_zh": "牧場之主",
+    "name_en": "Ranch Master",
+    "rank": "4",
+    "effects": [
+      "WorkSuitabilityAddRank_MonsterFarm +2% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "牧場的工作適應性 +2"
+  },
+  {
+    "id": 26,
+    "name_zh": "卓絕技藝",
+    "name_en": "Remarkable Craftsmanship",
+    "rank": "4",
+    "effects": [
+      "Weight 5 Pal"
+    ],
+    "description": "工作速度 +75% (ToSelf)"
+  },
+  {
+    "id": 27,
+    "name_zh": "救世主",
+    "name_en": "Savior",
+    "rank": "4",
+    "effects": [
+      "ElementBoost_Normal +30% (ToSelf)",
+      "ElementBoost_Leaf +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升無屬性攻擊傷害30% 提升草屬性攻擊傷害30%"
+  },
+  {
+    "id": 28,
+    "name_zh": "魔女",
+    "name_en": "Siren of the Void",
+    "rank": "4",
+    "effects": [
+      "ElementBoost_Dark +30% (ToSelf)",
+      "ElementBoost_Ice +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升暗屬性攻擊傷害30% 提升冰屬性攻擊傷害30%"
+  },
+  {
+    "id": 29,
+    "name_zh": "凌空微步",
+    "name_en": "Sky Strider",
+    "rank": "4",
+    "effects": [
+      "RideJumpCount_Increase +2% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "騎乘期間連續跳躍次數 +2"
+  },
+  {
+    "id": 30,
+    "name_zh": "神速",
+    "name_en": "Swift",
+    "rank": "4",
+    "effects": [
+      "MoveSpeed +30% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "提升移動速度30%"
+  },
+  {
+    "id": 31,
+    "name_zh": "吸血鬼",
+    "name_en": "Vampiric",
+    "rank": "4",
+    "effects": [
+      "Nocturnal +0% (ToSelf)",
+      "LifeSteal +5% (ToSelf)",
+      "Weight 5 Pal"
+    ],
+    "description": "造成傷害時將恢復等同於傷害量5%的生命值 即使到夜晚也不會睡覺，會一直工作。"
+  },
+  {
+    "id": 32,
+    "name_zh": "游泳健將",
+    "name_en": "Ace Swimmer",
+    "rank": "3",
+    "effects": [
+      "SwimSpeed +40% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "水上移動速度提升40%"
+  },
+  {
+    "id": 33,
+    "name_zh": "工匠精神",
+    "name_en": "Artisan",
+    "rank": "3",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "工作速度 +50% (ToSelf)"
+  },
+  {
+    "id": 34,
+    "name_zh": "頑強肉體",
+    "name_en": "Burly Body",
+    "rank": "3",
+    "effects": [
+      "防禦 +20% (ToSelf)",
+      "LeanBackInvalid_ForPassiveSkill +0% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "防禦力+20% 免疫硬直"
+  },
+  {
+    "id": 35,
+    "name_zh": "聖天",
+    "name_en": "Celestial Emperor",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Normal +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升無屬性攻擊傷害30%"
+  },
+  {
+    "id": 36,
+    "name_zh": "節食大師",
+    "name_en": "Diet Lover",
+    "rank": "3",
+    "effects": [
+      "FullStomatch_Decrease -15% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減少飽足度下降速度 +15.0%"
+  },
+  {
+    "id": 37,
+    "name_zh": "神龍",
+    "name_en": "Divine Dragon",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Dragon +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升龍屬性攻擊傷害30%"
+  },
+  {
+    "id": 38,
+    "name_zh": "岩帝",
+    "name_en": "Earth Emperor",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Earth +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升地屬性攻擊傷害30%"
+  },
+  {
+    "id": 39,
+    "name_zh": "牧場之子",
+    "name_en": "Farmhand",
+    "rank": "3",
+    "effects": [
+      "WorkSuitabilityAddRank_MonsterFarm +1% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "牧場的工作適應性 +1"
+  },
+  {
+    "id": 40,
+    "name_zh": "兇猛",
+    "name_en": "Ferocious",
+    "rank": "3",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 +20% (ToSelf)"
+  },
+  {
+    "id": 41,
+    "name_zh": "炎帝",
+    "name_en": "Flame Emperor",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Fire +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升火屬性攻擊傷害30%"
+  },
+  {
+    "id": 42,
+    "name_zh": "療癒教練",
+    "name_en": "Healing Coach",
+    "rank": "3",
+    "effects": [
+      "AutoHPRegeneRate +5% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "玩家的生命值自然恢復量+5%"
+  },
+  {
+    "id": 43,
+    "name_zh": "冰帝",
+    "name_en": "Ice Emperor",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Ice +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升冰屬性攻擊傷害30%"
+  },
+  {
+    "id": 44,
+    "name_zh": "無限精力",
+    "name_en": "Infinite Stamina",
+    "rank": "3",
+    "effects": [
+      "PalSP_Increase +50% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "最大耐力+50% ※此效果僅對可騎乘的帕魯有效。"
+  },
+  {
+    "id": 45,
+    "name_zh": "採伐領袖",
+    "name_en": "Logging Foreman",
+    "rank": "3",
+    "effects": [
+      "Logging +25% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升玩家的採伐效率25%"
+  },
+  {
+    "id": 46,
+    "name_zh": "雷帝",
+    "name_en": "Lord of Lightning",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Electricity +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升雷屬性攻擊傷害30%"
+  },
+  {
+    "id": 47,
+    "name_zh": "海皇",
+    "name_en": "Lord of the Sea",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Water +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升水屬性攻擊傷害30%"
+  },
+  {
+    "id": 48,
+    "name_zh": "冥王",
+    "name_en": "Lord of the Underworld",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Dark +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升暗屬性攻擊傷害30%"
+  },
+  {
+    "id": 49,
+    "name_zh": "礦山首領",
+    "name_en": "Mine Foreman",
+    "rank": "3",
+    "effects": [
+      "Mining +25% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升玩家的挖掘效率25%"
+  },
+  {
+    "id": 50,
+    "name_zh": "啦啦隊",
+    "name_en": "Motivational Leader",
+    "rank": "3",
+    "effects": [
+      "工作速度 +25% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升玩家的工作速度25%"
+  },
+  {
+    "id": 51,
+    "name_zh": "高貴",
+    "name_en": "Noble",
+    "rank": "3",
+    "effects": [
+      "ShopSellPrice_Money_Increase +5% (ToSelf)",
+      "ShopBuyPrice_Money_Increase -5% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "改善交易價格+5%"
+  },
+  {
+    "id": 52,
+    "name_zh": "博愛主義者",
+    "name_en": "Philanthropist",
+    "rank": "3",
+    "effects": [
+      "BreedSpeed +100% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "當分配到配種牧場時，產出蛋的速度將加快 100%。"
+  },
+  {
+    "id": 53,
+    "name_zh": "裝填大師",
+    "name_en": "Reload Master",
+    "rank": "3",
+    "effects": [
+      "ReloadSpeedUp +4% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "玩家的裝填速度提升+4%"
+  },
+  {
+    "id": 54,
+    "name_zh": "運動健將",
+    "name_en": "Runner",
+    "rank": "3",
+    "effects": [
+      "MoveSpeed +20% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升移動速度20%"
+  },
+  {
+    "id": 55,
+    "name_zh": "沉著冷靜",
+    "name_en": "Serenity",
+    "rank": "3",
+    "effects": [
+      "ActiveSkillCoolTime_Decrease +30% (ToSelf)",
+      "攻擊 +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "主動技能的冷卻時間縮短30% 攻擊+10%"
+  },
+  {
+    "id": 56,
+    "name_zh": "奉獻精神",
+    "name_en": "Service-Minded",
+    "rank": "3",
+    "effects": [
+      "SelfDeathAddItemDrop +50% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "該帕魯道具掉落量+50%"
+  },
+  {
+    "id": 57,
+    "name_zh": "精靈王",
+    "name_en": "Spirit Emperor",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Leaf +30% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升草屬性攻擊傷害30%"
+  },
+  {
+    "id": 58,
+    "name_zh": "鐵壁軍師",
+    "name_en": "Stronghold Strategist",
+    "rank": "3",
+    "effects": [
+      "防禦 +10% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升玩家的防禦10%"
+  },
+  {
+    "id": 59,
+    "name_zh": "突襲指揮官",
+    "name_en": "Vanguard",
+    "rank": "3",
+    "effects": [
+      "攻擊 +10% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升玩家的攻擊10%"
+  },
+  {
+    "id": 60,
+    "name_zh": "防過勞幫手",
+    "name_en": "Wellness Watcher",
+    "rank": "3",
+    "effects": [
+      "PlayerSP_DecreaseRate -5% (ToTrainer)",
+      "Weight 100 Pal"
+    ],
+    "description": "玩家的耐力消耗量減緩+ 5.0%"
+  },
+  {
+    "id": 61,
+    "name_zh": "工作狂",
+    "name_en": "Workaholic",
+    "rank": "3",
+    "effects": [
+      "Sanity_Decrease -15% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減少SAN值下降速度 +15.0%"
+  },
+  {
+    "id": 62,
+    "name_zh": "重量級",
+    "name_en": "Heavyweight",
+    "rank": "2",
+    "effects": [
+      "防禦 +20% (ToSelf)",
+      "KnockbackInvalid_ForPassiveSkill +0% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "防禦力+20% 免疫擊退"
+  },
+  {
+    "id": 63,
+    "name_zh": "腦筋",
+    "name_en": "Musclehead",
+    "rank": "2",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 +30% (ToSelf) 工作速度 -50% (ToSelf)"
+  },
+  {
+    "id": 64,
+    "name_zh": "一反常態",
+    "name_en": "Abnormal",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Normal +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕無屬性傷害10%"
+  },
+  {
+    "id": 65,
+    "name_zh": "強勢",
+    "name_en": "Aggressive",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 +10% (ToSelf) 防禦 -10% (ToSelf)"
+  },
+  {
+    "id": 66,
+    "name_zh": "龍之血脈",
+    "name_en": "Blood of the Dragon",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Dragon +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升龍屬性攻擊傷害10%"
+  },
+  {
+    "id": 67,
+    "name_zh": "除草效果",
+    "name_en": "Botanical Barrier",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Leaf +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕草屬性傷害10%"
+  },
+  {
+    "id": 68,
+    "name_zh": "勇敢",
+    "name_en": "Brave",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 +10% (ToSelf)"
+  },
+  {
+    "id": 69,
+    "name_zh": "電容",
+    "name_en": "Capacitor",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Electricity +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升雷屬性攻擊傷害10%"
+  },
+  {
+    "id": 70,
+    "name_zh": "陽光開朗",
+    "name_en": "Cheery",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Dark +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕暗屬性傷害10%"
+  },
+  {
+    "id": 71,
+    "name_zh": "冷血",
+    "name_en": "Coldblooded",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Ice +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升冰屬性攻擊傷害10%"
+  },
+  {
+    "id": 72,
+    "name_zh": "自戀狂",
+    "name_en": "Conceited",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "工作速度 +10% (ToSelf) 防禦 -10% (ToSelf)"
+  },
+  {
+    "id": 73,
+    "name_zh": "小鳥胃",
+    "name_en": "Dainty Eater",
+    "rank": "1",
+    "effects": [
+      "FullStomatch_Decrease -10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減少飽足度下降速度 +10.0%"
+  },
+  {
+    "id": 74,
+    "name_zh": "屠龍者",
+    "name_en": "Dragonkiller",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Dragon +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕龍屬性傷害10%"
+  },
+  {
+    "id": 75,
+    "name_zh": "抗震結構",
+    "name_en": "Earthquake Resistant",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Earth +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕地屬性傷害10%"
+  },
+  {
+    "id": 76,
+    "name_zh": "貴族",
+    "name_en": "Fine Furs",
+    "rank": "1",
+    "effects": [
+      "ShopSellPrice_Money_Increase +3% (ToSelf)",
+      "ShopBuyPrice_Money_Increase -3% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "改善交易價格+3%"
+  },
+  {
+    "id": 77,
+    "name_zh": "健康寶寶",
+    "name_en": "Fit as a Fiddle",
+    "rank": "1",
+    "effects": [
+      "PalSP_Increase +25% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "最大耐力+25% ※此效果僅對可騎乘的帕魯有效。"
+  },
+  {
+    "id": 78,
+    "name_zh": "草木馨香",
+    "name_en": "Fragrant Foliage",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Leaf +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升草屬性攻擊傷害10%"
+  },
+  {
+    "id": 79,
+    "name_zh": "堅硬皮膚",
+    "name_en": "Hard Skin",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "防禦 +10% (ToSelf)"
+  },
+  {
+    "id": 80,
+    "name_zh": "高溫體質",
+    "name_en": "Heated Body",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Ice +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕冰屬性傷害10%"
+  },
+  {
+    "id": 81,
+    "name_zh": "粗暴",
+    "name_en": "Hooligan",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 +15% (ToSelf) 工作速度 -10% (ToSelf)"
+  },
+  {
+    "id": 82,
+    "name_zh": "喜歡玩水",
+    "name_en": "Hydromaniac",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Water +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升水屬性攻擊傷害10%"
+  },
+  {
+    "id": 83,
+    "name_zh": "急性子",
+    "name_en": "Impatient",
+    "rank": "1",
+    "effects": [
+      "ActiveSkillCoolTime_Decrease +15% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "主動技能的冷卻時間縮短15%"
+  },
+  {
+    "id": 84,
+    "name_zh": "不眠",
+    "name_en": "Insomnia",
+    "rank": "1",
+    "effects": [
+      "Nocturnal +0% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "即使到夜晚也不會睡覺，會一直工作。"
+  },
+  {
+    "id": 85,
+    "name_zh": "絕緣體",
+    "name_en": "Insulated Body",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Electricity +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕雷屬性傷害10%"
+  },
+  {
+    "id": 86,
+    "name_zh": "受虐狂",
+    "name_en": "Masochist",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "防禦 +15% (ToSelf) 攻擊 -15% (ToSelf)"
+  },
+  {
+    "id": 87,
+    "name_zh": "俐落",
+    "name_en": "Nimble",
+    "rank": "1",
+    "effects": [
+      "MoveSpeed +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升移動速度10%"
+  },
+  {
+    "id": 88,
+    "name_zh": "未知生物細胞",
+    "name_en": "Otherworldly Cells",
+    "rank": "1",
+    "effects": [
+      "攻擊 +10% (ToSelf)",
+      "ElementResist_Fire +15% (ToSelf)",
+      "ElementBoost_Electricity +15% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "攻擊力+10% 火屬性傷害減免15% 雷屬性傷害減免15%"
+  },
+  {
+    "id": 89,
+    "name_zh": "正向思考",
+    "name_en": "Positive Thinker",
+    "rank": "1",
+    "effects": [
+      "Sanity_Decrease -10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減少SAN值下降速度 +10.0%"
+  },
+  {
+    "id": 90,
+    "name_zh": "大地之力",
+    "name_en": "Power of Gaia",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Earth +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升地屬性攻擊傷害10%"
+  },
+  {
+    "id": 91,
+    "name_zh": "喜歡玩火",
+    "name_en": "Pyromaniac",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Fire +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升火屬性攻擊傷害10%"
+  },
+  {
+    "id": 92,
+    "name_zh": "虐待狂",
+    "name_en": "Sadist",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 +15% (ToSelf) 防禦 -15% (ToSelf)"
+  },
+  {
+    "id": 93,
+    "name_zh": "認真",
+    "name_en": "Serious",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "工作速度 +20% (ToSelf)"
+  },
+  {
+    "id": 94,
+    "name_zh": "悠然泳姿",
+    "name_en": "Sleek Stroke",
+    "rank": "1",
+    "effects": [
+      "SwimSpeed +30% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "水上移動速度提升30%"
+  },
+  {
+    "id": 95,
+    "name_zh": "禪境",
+    "name_en": "Spirit of Zen",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Normal +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升無屬性攻擊傷害10%"
+  },
+  {
+    "id": 96,
+    "name_zh": "擁抱烈日",
+    "name_en": "Suntan Lover",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Fire +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕火屬性傷害10%"
+  },
+  {
+    "id": 97,
+    "name_zh": "夜幕",
+    "name_en": "Veil of Darkness",
+    "rank": "1",
+    "effects": [
+      "ElementBoost_Dark +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "提升暗屬性攻擊傷害10%"
+  },
+  {
+    "id": 98,
+    "name_zh": "防水性能",
+    "name_en": "Waterproof",
+    "rank": "1",
+    "effects": [
+      "ElementResist_Water +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "減輕水屬性傷害10%"
+  },
+  {
+    "id": 99,
+    "name_zh": "社畜",
+    "name_en": "Work Slave",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "工作速度 +30% (ToSelf) 攻擊 -30% (ToSelf)"
+  },
+  {
+    "id": 100,
+    "name_zh": "笨手笨腳",
+    "name_en": "Clumsy",
+    "rank": "-1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "工作速度 -10% (ToSelf)"
+  },
+  {
+    "id": 101,
+    "name_zh": "膽小",
+    "name_en": "Coward",
+    "rank": "-1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 -10% (ToSelf)"
+  },
+  {
+    "id": 102,
+    "name_zh": "弱不禁風",
+    "name_en": "Downtrodden",
+    "rank": "-1",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "防禦 -10% (ToSelf)"
+  },
+  {
+    "id": 103,
+    "name_zh": "慢性子",
+    "name_en": "Easygoing",
+    "rank": "-1",
+    "effects": [
+      "ActiveSkillCoolTime_Decrease -15% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "主動技能的冷卻時間延長-15%"
+  },
+  {
+    "id": 104,
+    "name_zh": "貪吃",
+    "name_en": "Glutton",
+    "rank": "-1",
+    "effects": [
+      "FullStomatch_Decrease +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "增加飽足度下降速度 +10.0%"
+  },
+  {
+    "id": 105,
+    "name_zh": "手下留情",
+    "name_en": "Mercy Hit",
+    "rank": "-1",
+    "effects": [
+      "NonKilling +0% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "和平主義者。 使攻擊目標的生命值不會小於1。"
+  },
+  {
+    "id": 106,
+    "name_zh": "夜貓子",
+    "name_en": "Night Owl",
+    "rank": "-1",
+    "effects": [
+      "NightOwl +0% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "因為總是熬夜，白天常常睡午覺。"
+  },
+  {
+    "id": 107,
+    "name_zh": "寒酸",
+    "name_en": "Shabby",
+    "rank": "-1",
+    "effects": [
+      "ShopSellPrice_Money_Increase -10% (ToSelf)",
+      "ShopBuyPrice_Money_Increase +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "交易價格惡化-10%"
+  },
+  {
+    "id": 108,
+    "name_zh": "家裡蹲",
+    "name_en": "Sickly",
+    "rank": "-1",
+    "effects": [
+      "PalSP_Increase -25% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "最大耐力-25% ※此效果僅對可騎乘的帕魯有效。"
+  },
+  {
+    "id": 109,
+    "name_zh": "情緒不穩",
+    "name_en": "Unstable",
+    "rank": "-1",
+    "effects": [
+      "Sanity_Decrease +10% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "增加SAN值下降速度 +10.0%"
+  },
+  {
+    "id": 110,
+    "name_zh": "無底之胃",
+    "name_en": "Bottomless Stomach",
+    "rank": "-2",
+    "effects": [
+      "FullStomatch_Decrease +15% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "增加飽足度下降速度 +15.0%"
+  },
+  {
+    "id": 111,
+    "name_zh": "毀滅欲望",
+    "name_en": "Destructive",
+    "rank": "-2",
+    "effects": [
+      "Sanity_Decrease +15% (ToSelf)",
+      "Weight 100 Pal"
+    ],
+    "description": "增加SAN值下降速度 +15.0%"
+  },
+  {
+    "id": 112,
+    "name_zh": "骨質疏鬆",
+    "name_en": "Brittle",
+    "rank": "-3",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "防禦 -20% (ToSelf)"
+  },
+  {
+    "id": 113,
+    "name_zh": "消極主義者",
+    "name_en": "Pacifist",
+    "rank": "-3",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "攻擊 -20% (ToSelf)"
+  },
+  {
+    "id": 114,
+    "name_zh": "偷懶成癮",
+    "name_en": "Slacker",
+    "rank": "-3",
+    "effects": [
+      "Weight 100 Pal"
+    ],
+    "description": "工作速度 -30% (ToSelf)"
+  },
+  {
+    "id": 115,
+    "name_zh": "提升攻擊(小) Lv4",
+    "name_en": "Attack Up (S) Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +12% (ToSelf)"
+  },
+  {
+    "id": 116,
+    "name_zh": "提升攻擊Lv4",
+    "name_en": "Attack Up Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +20% (ToSelf)"
+  },
+  {
+    "id": 117,
+    "name_zh": "血液燃料",
+    "name_en": "Blood Is Fuel",
+    "rank": "4",
+    "effects": [
+      "LifeSteal +1% (ToSelf)",
+      "Weight 5"
+    ],
+    "description": "造成傷害時將恢復等同於傷害量0%的生命值 即使到夜晚也不會睡覺，會一直工作。"
+  },
+  {
+    "id": 118,
+    "name_zh": "減輕暗屬性傷害Lv4",
+    "name_en": "Dark Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dark +35% (ToSelf)"
+  },
+  {
+    "id": 119,
+    "name_zh": "提升防禦Lv4",
+    "name_en": "Defense Up Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +25% (ToSelf)"
+  },
+  {
+    "id": 120,
+    "name_zh": "減輕龍屬性傷害Lv4",
+    "name_en": "Dragon Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dragon +35% (ToSelf)"
+  },
+  {
+    "id": 121,
+    "name_zh": "減輕雷屬性傷害Lv4",
+    "name_en": "Electric Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Electricity +35% (ToSelf)"
+  },
+  {
+    "id": 122,
+    "name_zh": "減輕火屬性傷害Lv4",
+    "name_en": "Fire Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Fire +35% (ToSelf)"
+  },
+  {
+    "id": 123,
+    "name_zh": "減輕草屬性傷害Lv4",
+    "name_en": "Grass Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Leaf +35% (ToSelf)"
+  },
+  {
+    "id": 124,
+    "name_zh": "減輕地屬性傷害Lv4",
+    "name_en": "Ground Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Earth +35% (ToSelf)"
+  },
+  {
+    "id": 125,
+    "name_zh": "提升生命值Lv4",
+    "name_en": "Health Up Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "生命值上限 +25% (ToSelf)"
+  },
+  {
+    "id": 126,
+    "name_zh": "減輕冰屬性傷害Lv4",
+    "name_en": "Ice Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Ice +35% (ToSelf)"
+  },
+  {
+    "id": 127,
+    "name_zh": "提升採伐量Lv5",
+    "name_en": "Logging Yield Up Lv. 5",
+    "rank": "4",
+    "effects": [
+      "CollectItemDrop_NaturalObject +200% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "木材掉落量極大量增加"
+  },
+  {
+    "id": 128,
+    "name_zh": "提升採礦量Lv5",
+    "name_en": "Mining Yield Up Lv. 5",
+    "rank": "4",
+    "effects": [
+      "CollectItemDrop_NaturalObject +200% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "石材/礦石掉落量極大量增加"
+  },
+  {
+    "id": 129,
+    "name_zh": "減輕無屬性傷害Lv4",
+    "name_en": "Neutral Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Normal +35% (ToSelf)"
+  },
+  {
+    "id": 130,
+    "name_zh": "帕魯攻擊力增加Lv4",
+    "name_en": "Pal Attack Up Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +16% (ToOtomo)"
+  },
+  {
+    "id": 131,
+    "name_zh": "增強帕魯暗屬性傷害 Lv4",
+    "name_en": "Pal Dark Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dark +20% (ToOtomo)"
+  },
+  {
+    "id": 132,
+    "name_zh": "帕魯防禦力增加Lv4",
+    "name_en": "Pal Defense Up Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +20% (ToOtomo)"
+  },
+  {
+    "id": 133,
+    "name_zh": "增強帕魯龍屬性傷害 Lv4",
+    "name_en": "Pal Dragon Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dragon +20% (ToOtomo)"
+  },
+  {
+    "id": 134,
+    "name_zh": "增強帕魯雷屬性傷害 Lv4",
+    "name_en": "Pal Electric Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Electricity +20% (ToOtomo)"
+  },
+  {
+    "id": 135,
+    "name_zh": "增強帕魯火屬性傷害 Lv4",
+    "name_en": "Pal Fire Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Fire +20% (ToOtomo)"
+  },
+  {
+    "id": 136,
+    "name_zh": "增強帕魯草屬性傷害 Lv4",
+    "name_en": "Pal Grass Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Leaf +20% (ToOtomo)"
+  },
+  {
+    "id": 137,
+    "name_zh": "增強帕魯地屬性傷害 Lv4",
+    "name_en": "Pal Ground Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Earth +20% (ToOtomo)"
+  },
+  {
+    "id": 138,
+    "name_zh": "增強帕魯冰屬性傷害 Lv4",
+    "name_en": "Pal Ice Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Ice +20% (ToOtomo)"
+  },
+  {
+    "id": 139,
+    "name_zh": "增強帕魯無屬性傷害 Lv4",
+    "name_en": "Pal Neutral Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Normal +20% (ToOtomo)"
+  },
+  {
+    "id": 140,
+    "name_zh": "增強帕魯水屬性傷害 Lv4",
+    "name_en": "Pal Water Damage Enhancement Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Water +20% (ToOtomo)"
+  },
+  {
+    "id": 141,
+    "name_zh": "高速作業Lv4",
+    "name_en": "Speedy Worker Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "工作速度 +25% (ToSelf)"
+  },
+  {
+    "id": 142,
+    "name_zh": "疾風怒濤",
+    "name_en": "Tempest Fury",
+    "rank": "4",
+    "effects": [
+      "ActiveSkillCoolTime_Decrease +0% (ToSelf)",
+      "攻擊 +0% (ToSelf)",
+      "Weight 0"
+    ],
+    "description": "主動技能的冷卻時間縮短0% 攻擊+0%"
+  },
+  {
+    "id": 143,
+    "name_zh": "減輕水屬性傷害Lv4",
+    "name_en": "Water Damage Reduction Lv. 4",
+    "rank": "4",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Water +35% (ToSelf)"
+  },
+  {
+    "id": 144,
+    "name_zh": "提升攻擊(小) Lv3",
+    "name_en": "Attack Up (S) Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +9% (ToSelf)"
+  },
+  {
+    "id": 145,
+    "name_zh": "提升攻擊Lv3",
+    "name_en": "Attack Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +15% (ToSelf)"
+  },
+  {
+    "id": 146,
+    "name_zh": "永炎同心會-靈魂領袖",
+    "name_en": "Brothers of the Eternal Pyre Soul Leader",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +20% (ToSelf) MoveSpeed +10% (ToSelf)"
+  },
+  {
+    "id": 147,
+    "name_zh": "耐寒Lv3",
+    "name_en": "Cold Resistance Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Cold +3% (ToSelf)"
+  },
+  {
+    "id": 148,
+    "name_zh": "減輕暗屬性傷害Lv3",
+    "name_en": "Dark Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dark +30% (ToSelf)"
+  },
+  {
+    "id": 149,
+    "name_zh": "提升防禦Lv3",
+    "name_en": "Defense Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +20% (ToSelf)"
+  },
+  {
+    "id": 150,
+    "name_zh": "減輕龍屬性傷害Lv3",
+    "name_en": "Dragon Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dragon +30% (ToSelf)"
+  },
+  {
+    "id": 151,
+    "name_zh": "減輕地屬性傷害Lv3",
+    "name_en": "Earth Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Earth +30% (ToSelf)"
+  },
+  {
+    "id": 152,
+    "name_zh": "減輕雷屬性傷害Lv3",
+    "name_en": "Electric Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Electricity +30% (ToSelf)"
+  },
+  {
+    "id": 153,
+    "name_zh": "減輕火屬性傷害Lv3",
+    "name_en": "Fire Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Fire +30% (ToSelf)"
+  },
+  {
+    "id": 154,
+    "name_zh": "帕魯保護團體-創立者",
+    "name_en": "Free Pal Alliance Founder",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +20% (ToSelf) MoveSpeed +10% (ToSelf)"
+  },
+  {
+    "id": 155,
+    "name_zh": "減輕草屬性傷害Lv3",
+    "name_en": "Grass Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Leaf +30% (ToSelf)"
+  },
+  {
+    "id": 156,
+    "name_zh": "提升生命值Lv3",
+    "name_en": "Health Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "生命值上限 +20% (ToSelf)"
+  },
+  {
+    "id": 157,
+    "name_zh": "耐暑Lv3",
+    "name_en": "Heat Resistance Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Heat +3% (ToSelf)"
+  },
+  {
+    "id": 158,
+    "name_zh": "耐暑Lv3 / 耐寒Lv3",
+    "name_en": "Heat Resistance Lv. 3 / Cold Resistance Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Cold +3% (ToSelf) TemperatureResist_Heat +3% (ToSelf)"
+  },
+  {
+    "id": 159,
+    "name_zh": "減輕冰屬性傷害Lv3",
+    "name_en": "Ice Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Ice +30% (ToSelf)"
+  },
+  {
+    "id": 160,
+    "name_zh": "天墜之民 首領",
+    "name_en": "Jarl of Feybreak",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +20% (ToSelf) MoveSpeed +10% (ToSelf)"
+  },
+  {
+    "id": 161,
+    "name_zh": "月花眾的首領",
+    "name_en": "Leader of the Moonflowers",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +20% (ToSelf) MoveSpeed +10% (ToSelf)"
+  },
+  {
+    "id": 162,
+    "name_zh": "提升採伐量Lv3",
+    "name_en": "Logging Yield Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "CollectItemDrop_NaturalObject +120% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "木材掉落量顯著增加"
+  },
+  {
+    "id": 163,
+    "name_zh": "提升採伐量Lv4",
+    "name_en": "Logging Yield Up Lv. 4",
+    "rank": "3",
+    "effects": [
+      "CollectItemDrop_NaturalObject +160% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "木材掉落量大量增加"
+  },
+  {
+    "id": 164,
+    "name_zh": "挖掘/採伐量增加",
+    "name_en": "Logging/Mining Yield Up",
+    "rank": "3",
+    "effects": [
+      "CollectItemDrop_NaturalObject +160% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "木材/石材/礦石掉落量大量增加"
+  },
+  {
+    "id": 165,
+    "name_zh": "提升負重上限Lv3",
+    "name_en": "Max Carrying Capacity Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "負重上限 +200 (ToTrainer)"
+  },
+  {
+    "id": 166,
+    "name_zh": "提升採礦量Lv3",
+    "name_en": "Mining Yield Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "CollectItemDrop_NaturalObject +120% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "石材/礦石掉落量顯著增加"
+  },
+  {
+    "id": 167,
+    "name_zh": "提升採礦量Lv4",
+    "name_en": "Mining Yield Up Lv. 4",
+    "rank": "3",
+    "effects": [
+      "CollectItemDrop_NaturalObject +160% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "石材/礦石掉落量大量增加"
+  },
+  {
+    "id": 168,
+    "name_zh": "減輕無屬性傷害Lv3",
+    "name_en": "Neutral Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Normal +30% (ToSelf)"
+  },
+  {
+    "id": 169,
+    "name_zh": "帕魯基因研究部隊-隊長",
+    "name_en": "PAL Genetic Research Unit Commander",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +20% (ToSelf) MoveSpeed +10% (ToSelf)"
+  },
+  {
+    "id": 170,
+    "name_zh": "帕洛斯群島自衛隊幹部",
+    "name_en": "PIDF Commander",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +20% (ToSelf) MoveSpeed +10% (ToSelf)"
+  },
+  {
+    "id": 171,
+    "name_zh": "帕魯攻擊力增加Lv3",
+    "name_en": "Pal Attack Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +12% (ToOtomo)"
+  },
+  {
+    "id": 172,
+    "name_zh": "增強帕魯暗屬性傷害 Lv3",
+    "name_en": "Pal Dark Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dark +18% (ToOtomo)"
+  },
+  {
+    "id": 173,
+    "name_zh": "帕魯防禦力增加Lv3",
+    "name_en": "Pal Defense Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +15% (ToOtomo)"
+  },
+  {
+    "id": 174,
+    "name_zh": "增強帕魯龍屬性傷害 Lv3",
+    "name_en": "Pal Dragon Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dragon +18% (ToOtomo)"
+  },
+  {
+    "id": 175,
+    "name_zh": "帕魯經驗獲取增加Lv3",
+    "name_en": "Pal EXP Up Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "PalExp_Increase +50% (ToSelf)"
+  },
+  {
+    "id": 176,
+    "name_zh": "增強帕魯雷屬性傷害 Lv3",
+    "name_en": "Pal Electric Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Electricity +18% (ToOtomo)"
+  },
+  {
+    "id": 177,
+    "name_zh": "增強帕魯火屬性傷害 Lv3",
+    "name_en": "Pal Fire Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Fire +18% (ToOtomo)"
+  },
+  {
+    "id": 178,
+    "name_zh": "增強帕魯草屬性傷害 Lv3",
+    "name_en": "Pal Grass Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Leaf +18% (ToOtomo)"
+  },
+  {
+    "id": 179,
+    "name_zh": "增強帕魯地屬性傷害 Lv3",
+    "name_en": "Pal Ground Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Earth +18% (ToOtomo)"
+  },
+  {
+    "id": 180,
+    "name_zh": "增強帕魯冰屬性傷害 Lv3",
+    "name_en": "Pal Ice Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Ice +18% (ToOtomo)"
+  },
+  {
+    "id": 181,
+    "name_zh": "增強帕魯無屬性傷害 Lv3",
+    "name_en": "Pal Neutral Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Normal +18% (ToOtomo)"
+  },
+  {
+    "id": 182,
+    "name_zh": "增強帕魯水屬性傷害 Lv3",
+    "name_en": "Pal Water Damage Enhancement Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Water +18% (ToOtomo)"
+  },
+  {
+    "id": 183,
+    "name_zh": "雷恩盜獵團的幹部",
+    "name_en": "Rayne Syndicate Boss",
+    "rank": "3",
+    "effects": [
+      "攻擊 +20% (ToSelf)",
+      "MoveSpeed +10% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "攻擊+20% 提升移動速度10%"
+  },
+  {
+    "id": 184,
+    "name_zh": "高速作業Lv3",
+    "name_en": "Speedy Worker Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "工作速度 +20% (ToSelf)"
+  },
+  {
+    "id": 185,
+    "name_zh": "減輕水屬性傷害Lv3",
+    "name_en": "Water Damage Reduction Lv. 3",
+    "rank": "3",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Water +30% (ToSelf)"
+  },
+  {
+    "id": 186,
+    "name_zh": "大獵物",
+    "name_en": "Whopper",
+    "rank": "3",
+    "effects": [
+      "ElementBoost_Water +5% (ToSelf)",
+      "ElementBoost_Ice +5% (ToSelf)",
+      "防禦 +5% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "提升水屬性攻擊傷害5% 提升冰屬性攻擊傷害5% 防禦+5%"
+  },
+  {
+    "id": 187,
+    "name_zh": "提升攻擊(小) Lv2",
+    "name_en": "Attack Up (S) Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +6% (ToSelf)"
+  },
+  {
+    "id": 188,
+    "name_zh": "提升攻擊Lv2",
+    "name_en": "Attack Up Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +10% (ToSelf)"
+  },
+  {
+    "id": 189,
+    "name_zh": "耐寒Lv2",
+    "name_en": "Cold Resistance Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Cold +2% (ToSelf)"
+  },
+  {
+    "id": 190,
+    "name_zh": "減輕暗屬性傷害Lv2",
+    "name_en": "Dark Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dark +25% (ToSelf)"
+  },
+  {
+    "id": 191,
+    "name_zh": "提升防禦Lv2",
+    "name_en": "Defense Up Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +15% (ToSelf)"
+  },
+  {
+    "id": 192,
+    "name_zh": "減輕龍屬性傷害Lv2",
+    "name_en": "Dragon Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dragon +25% (ToSelf)"
+  },
+  {
+    "id": 193,
+    "name_zh": "減輕地屬性傷害Lv2",
+    "name_en": "Earth Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Earth +25% (ToSelf)"
+  },
+  {
+    "id": 194,
+    "name_zh": "減輕雷屬性傷害Lv2",
+    "name_en": "Electric Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Electricity +25% (ToSelf)"
+  },
+  {
+    "id": 195,
+    "name_zh": "減輕火屬性傷害Lv2",
+    "name_en": "Fire Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Fire +25% (ToSelf)"
+  },
+  {
+    "id": 196,
+    "name_zh": "減輕草屬性傷害Lv2",
+    "name_en": "Grass Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Leaf +25% (ToSelf)"
+  },
+  {
+    "id": 197,
+    "name_zh": "提升生命值Lv2",
+    "name_en": "Health Up Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "生命值上限 +15% (ToSelf)"
+  },
+  {
+    "id": 198,
+    "name_zh": "耐暑Lv2",
+    "name_en": "Heat Resistance Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Heat +2% (ToSelf)"
+  },
+  {
+    "id": 199,
+    "name_zh": "耐暑Lv2 / 耐寒Lv2",
+    "name_en": "Heat Resistance Lv. 2 / Cold Resistance Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Cold +2% (ToSelf) TemperatureResist_Heat +2% (ToSelf)"
+  },
+  {
+    "id": 200,
+    "name_zh": "減輕冰屬性傷害Lv2",
+    "name_en": "Ice Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Ice +25% (ToSelf)"
+  },
+  {
+    "id": 201,
+    "name_zh": "減輕無屬性傷害Lv2",
+    "name_en": "Neutral Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Normal +25% (ToSelf)"
+  },
+  {
+    "id": 202,
+    "name_zh": "帕魯攻擊力增加Lv2",
+    "name_en": "Pal Attack Up Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +8% (ToOtomo)"
+  },
+  {
+    "id": 203,
+    "name_zh": "增強帕魯暗屬性傷害 Lv2",
+    "name_en": "Pal Dark Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dark +12% (ToOtomo)"
+  },
+  {
+    "id": 204,
+    "name_zh": "帕魯防禦力增加Lv2",
+    "name_en": "Pal Defense Up Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +10% (ToOtomo)"
+  },
+  {
+    "id": 205,
+    "name_zh": "增強帕魯龍屬性傷害 Lv2",
+    "name_en": "Pal Dragon Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dragon +12% (ToOtomo)"
+  },
+  {
+    "id": 206,
+    "name_zh": "帕魯經驗獲取增加Lv2",
+    "name_en": "Pal EXP Up Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "PalExp_Increase +40% (ToSelf)"
+  },
+  {
+    "id": 207,
+    "name_zh": "增強帕魯雷屬性傷害 Lv2",
+    "name_en": "Pal Electric Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Electricity +12% (ToOtomo)"
+  },
+  {
+    "id": 208,
+    "name_zh": "增強帕魯火屬性傷害 Lv2",
+    "name_en": "Pal Fire Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Fire +12% (ToOtomo)"
+  },
+  {
+    "id": 209,
+    "name_zh": "增強帕魯草屬性傷害 Lv2",
+    "name_en": "Pal Grass Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Leaf +12% (ToOtomo)"
+  },
+  {
+    "id": 210,
+    "name_zh": "增強帕魯地屬性傷害 Lv2",
+    "name_en": "Pal Ground Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Earth +12% (ToOtomo)"
+  },
+  {
+    "id": 211,
+    "name_zh": "增強帕魯冰屬性傷害 Lv2",
+    "name_en": "Pal Ice Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Ice +12% (ToOtomo)"
+  },
+  {
+    "id": 212,
+    "name_zh": "增強帕魯無屬性傷害 Lv2",
+    "name_en": "Pal Neutral Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Normal +12% (ToOtomo)"
+  },
+  {
+    "id": 213,
+    "name_zh": "增強帕魯水屬性傷害 Lv2",
+    "name_en": "Pal Water Damage Enhancement Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Water +12% (ToOtomo)"
+  },
+  {
+    "id": 214,
+    "name_zh": "高速作業Lv2",
+    "name_en": "Speedy Worker Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "工作速度 +15% (ToSelf)"
+  },
+  {
+    "id": 215,
+    "name_zh": "減輕水屬性傷害Lv2",
+    "name_en": "Water Damage Reduction Lv. 2",
+    "rank": "2",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Water +25% (ToSelf)"
+  },
+  {
+    "id": 216,
+    "name_zh": "空中衝刺+1",
+    "name_en": "Aerial Dash +1",
+    "rank": "1",
+    "effects": [
+      "AirDash +1% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "空中衝刺+1"
+  },
+  {
+    "id": 217,
+    "name_zh": "空中衝刺+2",
+    "name_en": "Aerial Dash +2",
+    "rank": "1",
+    "effects": [
+      "AirDash +2% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "空中衝刺+2"
+  },
+  {
+    "id": 218,
+    "name_zh": "空中衝刺+3",
+    "name_en": "Aerial Dash +3",
+    "rank": "1",
+    "effects": [
+      "AirDash +3% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "空中衝刺+3"
+  },
+  {
+    "id": 219,
+    "name_zh": "空中衝刺+4",
+    "name_en": "Aerial Dash +4",
+    "rank": "1",
+    "effects": [
+      "AirDash +4% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "空中衝刺+4"
+  },
+  {
+    "id": 220,
+    "name_zh": "提升攻擊(小) Lv1",
+    "name_en": "Attack Up (S) Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +3% (ToSelf)"
+  },
+  {
+    "id": 221,
+    "name_zh": "提升攻擊Lv1",
+    "name_en": "Attack Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +5% (ToSelf)"
+  },
+  {
+    "id": 222,
+    "name_zh": "捕獲力強化+1",
+    "name_en": "Capture Strength +1",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CaptureLevel +1% (ToSelf)"
+  },
+  {
+    "id": 223,
+    "name_zh": "捕獲力強化+2",
+    "name_en": "Capture Strength +2",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CaptureLevel +2% (ToSelf)"
+  },
+  {
+    "id": 224,
+    "name_zh": "捕獲力強化+3",
+    "name_en": "Capture Strength +3",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CaptureLevel +3% (ToSelf)"
+  },
+  {
+    "id": 225,
+    "name_zh": "捕獲力強化+4",
+    "name_en": "Capture Strength +4",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CaptureLevel +4% (ToSelf)"
+  },
+  {
+    "id": 226,
+    "name_zh": "捕獲力強化+5",
+    "name_en": "Capture Strength +5",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CaptureLevel +5% (ToSelf)"
+  },
+  {
+    "id": 227,
+    "name_zh": "捕獲力強化+6",
+    "name_en": "Capture Strength +6",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CaptureLevel +6% (ToSelf)"
+  },
+  {
+    "id": 228,
+    "name_zh": "耐寒Lv1",
+    "name_en": "Cold Resistance Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Cold +1% (ToSelf)"
+  },
+  {
+    "id": 229,
+    "name_zh": "增強暗屬性傷害 大",
+    "name_en": "Dark Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +3% (ToOtomo)"
+  },
+  {
+    "id": 230,
+    "name_zh": "增強暗屬性傷害 中",
+    "name_en": "Dark Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +2% (ToOtomo)"
+  },
+  {
+    "id": 231,
+    "name_zh": "增強暗屬性傷害 中",
+    "name_en": "Dark Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +2% (ToOtomo)"
+  },
+  {
+    "id": 232,
+    "name_zh": "增強暗屬性傷害 中",
+    "name_en": "Dark Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +2% (ToOtomo)"
+  },
+  {
+    "id": 233,
+    "name_zh": "增強暗屬性傷害 中",
+    "name_en": "Dark Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +2% (ToOtomo)"
+  },
+  {
+    "id": 234,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 235,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 236,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 237,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 238,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 239,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 240,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 241,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 242,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 243,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 244,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 245,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 246,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 247,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 248,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 249,
+    "name_zh": "增強暗屬性傷害 小",
+    "name_en": "Dark Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dark +1% (ToOtomo)"
+  },
+  {
+    "id": 250,
+    "name_zh": "減輕暗屬性傷害Lv1",
+    "name_en": "Dark Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dark +15% (ToSelf)"
+  },
+  {
+    "id": 251,
+    "name_zh": "提升防禦Lv1",
+    "name_en": "Defense Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +10% (ToSelf)"
+  },
+  {
+    "id": 252,
+    "name_zh": "增強龍屬性傷害 大",
+    "name_en": "Dragon Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +3% (ToOtomo)"
+  },
+  {
+    "id": 253,
+    "name_zh": "增強龍屬性傷害 大",
+    "name_en": "Dragon Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +3% (ToOtomo)"
+  },
+  {
+    "id": 254,
+    "name_zh": "增強龍屬性傷害 大",
+    "name_en": "Dragon Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +3% (ToOtomo)"
+  },
+  {
+    "id": 255,
+    "name_zh": "增強龍屬性傷害 中",
+    "name_en": "Dragon Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +2% (ToOtomo)"
+  },
+  {
+    "id": 256,
+    "name_zh": "增強龍屬性傷害 中",
+    "name_en": "Dragon Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +2% (ToOtomo)"
+  },
+  {
+    "id": 257,
+    "name_zh": "增強龍屬性傷害 中",
+    "name_en": "Dragon Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +2% (ToOtomo)"
+  },
+  {
+    "id": 258,
+    "name_zh": "增強龍屬性傷害 中",
+    "name_en": "Dragon Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +2% (ToOtomo)"
+  },
+  {
+    "id": 259,
+    "name_zh": "增強龍屬性傷害 小",
+    "name_en": "Dragon Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +1% (ToOtomo)"
+  },
+  {
+    "id": 260,
+    "name_zh": "增強龍屬性傷害 小",
+    "name_en": "Dragon Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +1% (ToOtomo)"
+  },
+  {
+    "id": 261,
+    "name_zh": "增強龍屬性傷害 小",
+    "name_en": "Dragon Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +1% (ToOtomo)"
+  },
+  {
+    "id": 262,
+    "name_zh": "增強龍屬性傷害 小",
+    "name_en": "Dragon Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Dragon +1% (ToOtomo)"
+  },
+  {
+    "id": 263,
+    "name_zh": "減輕龍屬性傷害Lv1",
+    "name_en": "Dragon Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Dragon +15% (ToSelf)"
+  },
+  {
+    "id": 264,
+    "name_zh": "減輕地屬性傷害Lv1",
+    "name_en": "Earth Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Earth +15% (ToSelf)"
+  },
+  {
+    "id": 265,
+    "name_zh": "增強雷屬性傷害 大",
+    "name_en": "Electric Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +3% (ToOtomo)"
+  },
+  {
+    "id": 266,
+    "name_zh": "增強雷屬性傷害 中",
+    "name_en": "Electric Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +2% (ToOtomo)"
+  },
+  {
+    "id": 267,
+    "name_zh": "增強雷屬性傷害 中",
+    "name_en": "Electric Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +2% (ToOtomo)"
+  },
+  {
+    "id": 268,
+    "name_zh": "增強雷屬性傷害 中",
+    "name_en": "Electric Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +2% (ToOtomo)"
+  },
+  {
+    "id": 269,
+    "name_zh": "增強雷屬性傷害 中",
+    "name_en": "Electric Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +2% (ToOtomo)"
+  },
+  {
+    "id": 270,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 271,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 272,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 273,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 274,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 275,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 276,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 277,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 278,
+    "name_zh": "增強雷屬性傷害 小",
+    "name_en": "Electric Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Electricity +1% (ToOtomo)"
+  },
+  {
+    "id": 279,
+    "name_zh": "減輕雷屬性傷害Lv1",
+    "name_en": "Electric Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Electricity +15% (ToSelf)"
+  },
+  {
+    "id": 280,
+    "name_zh": "爆炸傷害無效",
+    "name_en": "Explosion Immunity",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "Defuser_ExplosiveSpore +1% (ToSelf) Defuser_ExplosiveSpore +1% (ToOtomo) ExplosionResist +100% (ToSelf) ExplosionResist +100% (ToOtomo)"
+  },
+  {
+    "id": 281,
+    "name_zh": "閃避無敵時間增加",
+    "name_en": "Extended Dodge Invincibility",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "AvoidDurationUp_EquipSkill +20% (ToSelf)"
+  },
+  {
+    "id": 282,
+    "name_zh": "增強火屬性傷害 大",
+    "name_en": "Fire Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +3% (ToOtomo)"
+  },
+  {
+    "id": 283,
+    "name_zh": "增強火屬性傷害 大",
+    "name_en": "Fire Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +3% (ToOtomo)"
+  },
+  {
+    "id": 284,
+    "name_zh": "增強火屬性傷害 大",
+    "name_en": "Fire Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +3% (ToOtomo)"
+  },
+  {
+    "id": 285,
+    "name_zh": "增強火屬性傷害 大",
+    "name_en": "Fire Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +3% (ToOtomo)"
+  },
+  {
+    "id": 286,
+    "name_zh": "增強火屬性傷害 中",
+    "name_en": "Fire Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +2% (ToOtomo)"
+  },
+  {
+    "id": 287,
+    "name_zh": "增強火屬性傷害 中",
+    "name_en": "Fire Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +2% (ToOtomo)"
+  },
+  {
+    "id": 288,
+    "name_zh": "增強火屬性傷害 中",
+    "name_en": "Fire Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +2% (ToOtomo)"
+  },
+  {
+    "id": 289,
+    "name_zh": "增強火屬性傷害 中",
+    "name_en": "Fire Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +2% (ToOtomo)"
+  },
+  {
+    "id": 290,
+    "name_zh": "增強火屬性傷害 小",
+    "name_en": "Fire Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +1% (ToOtomo)"
+  },
+  {
+    "id": 291,
+    "name_zh": "增強火屬性傷害 小",
+    "name_en": "Fire Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +1% (ToOtomo)"
+  },
+  {
+    "id": 292,
+    "name_zh": "增強火屬性傷害 小",
+    "name_en": "Fire Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +1% (ToOtomo)"
+  },
+  {
+    "id": 293,
+    "name_zh": "增強火屬性傷害 小",
+    "name_en": "Fire Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +1% (ToOtomo)"
+  },
+  {
+    "id": 294,
+    "name_zh": "增強火屬性傷害 小",
+    "name_en": "Fire Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +1% (ToOtomo)"
+  },
+  {
+    "id": 295,
+    "name_zh": "增強火屬性傷害 小",
+    "name_en": "Fire Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Fire +1% (ToOtomo)"
+  },
+  {
+    "id": 296,
+    "name_zh": "減輕火屬性傷害Lv1",
+    "name_en": "Fire Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Fire +15% (ToSelf)"
+  },
+  {
+    "id": 297,
+    "name_zh": "增強草屬性傷害 大",
+    "name_en": "Grass Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +3% (ToOtomo)"
+  },
+  {
+    "id": 298,
+    "name_zh": "增強草屬性傷害 大",
+    "name_en": "Grass Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +3% (ToOtomo)"
+  },
+  {
+    "id": 299,
+    "name_zh": "增強草屬性傷害 中",
+    "name_en": "Grass Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +2% (ToOtomo)"
+  },
+  {
+    "id": 300,
+    "name_zh": "增強草屬性傷害 中",
+    "name_en": "Grass Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +2% (ToOtomo)"
+  },
+  {
+    "id": 301,
+    "name_zh": "增強草屬性傷害 中",
+    "name_en": "Grass Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +2% (ToOtomo)"
+  },
+  {
+    "id": 302,
+    "name_zh": "增強草屬性傷害 中",
+    "name_en": "Grass Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +2% (ToOtomo)"
+  },
+  {
+    "id": 303,
+    "name_zh": "增強草屬性傷害 中",
+    "name_en": "Grass Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +2% (ToOtomo)"
+  },
+  {
+    "id": 304,
+    "name_zh": "增強草屬性傷害 中",
+    "name_en": "Grass Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +2% (ToOtomo)"
+  },
+  {
+    "id": 305,
+    "name_zh": "增強草屬性傷害 中",
+    "name_en": "Grass Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +2% (ToOtomo)"
+  },
+  {
+    "id": 306,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 307,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 308,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 309,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 310,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 311,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 312,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 313,
+    "name_zh": "增強草屬性傷害 小",
+    "name_en": "Grass Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Leaf +1% (ToOtomo)"
+  },
+  {
+    "id": 314,
+    "name_zh": "減輕草屬性傷害Lv1",
+    "name_en": "Grass Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Leaf +15% (ToSelf)"
+  },
+  {
+    "id": 315,
+    "name_zh": "增強地屬性傷害 大",
+    "name_en": "Ground Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +3% (ToOtomo)"
+  },
+  {
+    "id": 316,
+    "name_zh": "增強地屬性傷害 中",
+    "name_en": "Ground Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +2% (ToOtomo)"
+  },
+  {
+    "id": 317,
+    "name_zh": "增強地屬性傷害 中",
+    "name_en": "Ground Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +2% (ToOtomo)"
+  },
+  {
+    "id": 318,
+    "name_zh": "增強地屬性傷害 中",
+    "name_en": "Ground Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +2% (ToOtomo)"
+  },
+  {
+    "id": 319,
+    "name_zh": "增強地屬性傷害 中",
+    "name_en": "Ground Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +2% (ToOtomo)"
+  },
+  {
+    "id": 320,
+    "name_zh": "增強地屬性傷害 中",
+    "name_en": "Ground Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +2% (ToOtomo)"
+  },
+  {
+    "id": 321,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 322,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 323,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 324,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 325,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 326,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 327,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 328,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 329,
+    "name_zh": "增強地屬性傷害 小",
+    "name_en": "Ground Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Earth +1% (ToOtomo)"
+  },
+  {
+    "id": 330,
+    "name_zh": "提升生命值Lv1",
+    "name_en": "Health Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "生命值上限 +10% (ToSelf)"
+  },
+  {
+    "id": 331,
+    "name_zh": "耐暑Lv1",
+    "name_en": "Heat Resistance Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Heat +1% (ToSelf)"
+  },
+  {
+    "id": 332,
+    "name_zh": "耐暑Lv1 / 耐寒Lv1",
+    "name_en": "Heat Resistance Lv. 1 / Cold Resistance Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "TemperatureResist_Cold +1% (ToSelf) TemperatureResist_Heat +1% (ToSelf)"
+  },
+  {
+    "id": 333,
+    "name_zh": "增強冰屬性傷害 大",
+    "name_en": "Ice Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +3% (ToOtomo)"
+  },
+  {
+    "id": 334,
+    "name_zh": "增強冰屬性傷害 大",
+    "name_en": "Ice Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +3% (ToOtomo)"
+  },
+  {
+    "id": 335,
+    "name_zh": "增強冰屬性傷害 大",
+    "name_en": "Ice Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +3% (ToOtomo)"
+  },
+  {
+    "id": 336,
+    "name_zh": "增強冰屬性傷害 大",
+    "name_en": "Ice Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +3% (ToOtomo)"
+  },
+  {
+    "id": 337,
+    "name_zh": "增強冰屬性傷害 大",
+    "name_en": "Ice Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +3% (ToOtomo)"
+  },
+  {
+    "id": 338,
+    "name_zh": "增強冰屬性傷害 中",
+    "name_en": "Ice Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +2% (ToOtomo)"
+  },
+  {
+    "id": 339,
+    "name_zh": "增強冰屬性傷害 中",
+    "name_en": "Ice Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +2% (ToOtomo)"
+  },
+  {
+    "id": 340,
+    "name_zh": "增強冰屬性傷害 中",
+    "name_en": "Ice Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +2% (ToOtomo)"
+  },
+  {
+    "id": 341,
+    "name_zh": "增強冰屬性傷害 中",
+    "name_en": "Ice Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +2% (ToOtomo)"
+  },
+  {
+    "id": 342,
+    "name_zh": "增強冰屬性傷害 小",
+    "name_en": "Ice Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +1% (ToOtomo)"
+  },
+  {
+    "id": 343,
+    "name_zh": "增強冰屬性傷害 小",
+    "name_en": "Ice Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +1% (ToOtomo)"
+  },
+  {
+    "id": 344,
+    "name_zh": "增強冰屬性傷害 小",
+    "name_en": "Ice Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +1% (ToOtomo)"
+  },
+  {
+    "id": 345,
+    "name_zh": "增強冰屬性傷害 小",
+    "name_en": "Ice Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +1% (ToOtomo)"
+  },
+  {
+    "id": 346,
+    "name_zh": "增強冰屬性傷害 小",
+    "name_en": "Ice Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Ice +1% (ToOtomo)"
+  },
+  {
+    "id": 347,
+    "name_zh": "減輕冰屬性傷害Lv1",
+    "name_en": "Ice Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Ice +15% (ToSelf)"
+  },
+  {
+    "id": 348,
+    "name_zh": "連續跳躍次數+1",
+    "name_en": "Jump Count Increase +1",
+    "rank": "1",
+    "effects": [
+      "JumpCount_Increase +1% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "連續跳躍次數+1"
+  },
+  {
+    "id": 349,
+    "name_zh": "連續跳躍次數+2",
+    "name_en": "Jump Count Increase +2",
+    "rank": "1",
+    "effects": [
+      "JumpCount_Increase +2% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "連續跳躍次數+2"
+  },
+  {
+    "id": 350,
+    "name_zh": "連續跳躍次數+3",
+    "name_en": "Jump Count Increase +3",
+    "rank": "1",
+    "effects": [
+      "JumpCount_Increase +3% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "連續跳躍次數+3"
+  },
+  {
+    "id": 351,
+    "name_zh": "跳躍力強化",
+    "name_en": "Jump Power Boost",
+    "rank": "1",
+    "effects": [
+      "JumpPower_Increase +25% (ToSelf)",
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "跳躍力強化"
+  },
+  {
+    "id": 352,
+    "name_zh": "提升採伐量Lv1",
+    "name_en": "Logging Yield Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "CollectItemDrop_NaturalObject +50% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "木材掉落量稍微增加"
+  },
+  {
+    "id": 353,
+    "name_zh": "提升採伐量Lv2",
+    "name_en": "Logging Yield Up Lv. 2",
+    "rank": "1",
+    "effects": [
+      "CollectItemDrop_NaturalObject +80% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "木材掉落量增加"
+  },
+  {
+    "id": 354,
+    "name_zh": "提升負重上限Lv1",
+    "name_en": "Max Carrying Capacity Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "負重上限 +50 (ToTrainer)"
+  },
+  {
+    "id": 355,
+    "name_zh": "提升負重上限Lv2",
+    "name_en": "Max Carrying Capacity Lv. 2",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "負重上限 +150 (ToTrainer)"
+  },
+  {
+    "id": 356,
+    "name_zh": "提升採礦量Lv1",
+    "name_en": "Mining Yield Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "CollectItemDrop_NaturalObject +50% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "石材/礦石掉落量稍微增加"
+  },
+  {
+    "id": 357,
+    "name_zh": "提升採礦量Lv2",
+    "name_en": "Mining Yield Up Lv. 2",
+    "rank": "1",
+    "effects": [
+      "CollectItemDrop_NaturalObject +80% (ToSelf)",
+      "Weight 100"
+    ],
+    "description": "石材/礦石掉落量增加"
+  },
+  {
+    "id": 358,
+    "name_zh": "增強無屬性傷害 大",
+    "name_en": "Neutral Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +3% (ToOtomo)"
+  },
+  {
+    "id": 359,
+    "name_zh": "增強無屬性傷害 大",
+    "name_en": "Neutral Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +3% (ToOtomo)"
+  },
+  {
+    "id": 360,
+    "name_zh": "增強無屬性傷害 中",
+    "name_en": "Neutral Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +2% (ToOtomo)"
+  },
+  {
+    "id": 361,
+    "name_zh": "增強無屬性傷害 中",
+    "name_en": "Neutral Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +2% (ToOtomo)"
+  },
+  {
+    "id": 362,
+    "name_zh": "增強無屬性傷害 中",
+    "name_en": "Neutral Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +2% (ToOtomo)"
+  },
+  {
+    "id": 363,
+    "name_zh": "增強無屬性傷害 小",
+    "name_en": "Neutral Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +1% (ToOtomo)"
+  },
+  {
+    "id": 364,
+    "name_zh": "增強無屬性傷害 小",
+    "name_en": "Neutral Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +1% (ToOtomo)"
+  },
+  {
+    "id": 365,
+    "name_zh": "增強無屬性傷害 小",
+    "name_en": "Neutral Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +1% (ToOtomo)"
+  },
+  {
+    "id": 366,
+    "name_zh": "增強無屬性傷害 小",
+    "name_en": "Neutral Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +1% (ToOtomo)"
+  },
+  {
+    "id": 367,
+    "name_zh": "增強無屬性傷害 小",
+    "name_en": "Neutral Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +1% (ToOtomo)"
+  },
+  {
+    "id": 368,
+    "name_zh": "增強無屬性傷害 小",
+    "name_en": "Neutral Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Normal +1% (ToOtomo)"
+  },
+  {
+    "id": 369,
+    "name_zh": "減輕無屬性傷害Lv1",
+    "name_en": "Neutral Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Normal +15% (ToSelf)"
+  },
+  {
+    "id": 370,
+    "name_zh": "帕魯攻擊力增加Lv1",
+    "name_en": "Pal Attack Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "攻擊 +4% (ToOtomo)"
+  },
+  {
+    "id": 371,
+    "name_zh": "增強帕魯暗屬性傷害 Lv1",
+    "name_en": "Pal Dark Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dark +6% (ToOtomo)"
+  },
+  {
+    "id": 372,
+    "name_zh": "帕魯防禦力增加Lv1",
+    "name_en": "Pal Defense Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "防禦 +5% (ToOtomo)"
+  },
+  {
+    "id": 373,
+    "name_zh": "增強帕魯龍屬性傷害 Lv1",
+    "name_en": "Pal Dragon Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Dragon +6% (ToOtomo)"
+  },
+  {
+    "id": 374,
+    "name_zh": "帕魯經驗獲取增加Lv1",
+    "name_en": "Pal EXP Up Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "PalExp_Increase +30% (ToSelf)"
+  },
+  {
+    "id": 375,
+    "name_zh": "增強帕魯雷屬性傷害 Lv1",
+    "name_en": "Pal Electric Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Electricity +6% (ToOtomo)"
+  },
+  {
+    "id": 376,
+    "name_zh": "增強帕魯火屬性傷害 Lv1",
+    "name_en": "Pal Fire Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Fire +6% (ToOtomo)"
+  },
+  {
+    "id": 377,
+    "name_zh": "增強帕魯草屬性傷害 Lv1",
+    "name_en": "Pal Grass Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Leaf +6% (ToOtomo)"
+  },
+  {
+    "id": 378,
+    "name_zh": "增強帕魯地屬性傷害 Lv1",
+    "name_en": "Pal Ground Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Earth +6% (ToOtomo)"
+  },
+  {
+    "id": 379,
+    "name_zh": "增強帕魯冰屬性傷害 Lv1",
+    "name_en": "Pal Ice Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Ice +6% (ToOtomo)"
+  },
+  {
+    "id": 380,
+    "name_zh": "增強帕魯無屬性傷害 Lv1",
+    "name_en": "Pal Neutral Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Normal +6% (ToOtomo)"
+  },
+  {
+    "id": 381,
+    "name_zh": "增強帕魯水屬性傷害 Lv1",
+    "name_en": "Pal Water Damage Enhancement Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementBoost_Water +6% (ToOtomo)"
+  },
+  {
+    "id": 382,
+    "name_zh": "小小心意",
+    "name_en": "Sharing is Caring",
+    "rank": "1",
+    "effects": [
+      "SelfDeathAddItemDrop +15% (ToSelf)",
+      "Weight 0"
+    ],
+    "description": "該帕魯道具掉落量+15%"
+  },
+  {
+    "id": 383,
+    "name_zh": "高速作業Lv1",
+    "name_en": "Speedy Worker Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "工作速度 +10% (ToSelf)"
+  },
+  {
+    "id": 384,
+    "name_zh": "投擲曲線+1",
+    "name_en": "Sphere Curve +1",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CurveType +7% (ToSelf)"
+  },
+  {
+    "id": 385,
+    "name_zh": "追蹤模組",
+    "name_en": "Sphere Homing",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CurveType +19% (ToSelf)"
+  },
+  {
+    "id": 386,
+    "name_zh": "投擲距離+1",
+    "name_en": "Sphere Range +1",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CurveType +1% (ToSelf)"
+  },
+  {
+    "id": 387,
+    "name_zh": "投擲距離+2",
+    "name_en": "Sphere Range +2",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CurveType +2% (ToSelf)"
+  },
+  {
+    "id": 388,
+    "name_zh": "滑球模組",
+    "name_en": "Sphere Slider",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CurveType +8% (ToSelf)"
+  },
+  {
+    "id": 389,
+    "name_zh": "帕魯球重量+1",
+    "name_en": "Sphere Weight +1",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "CurveType +16% (ToSelf)"
+  },
+  {
+    "id": 390,
+    "name_zh": "腐霧傷害無效",
+    "name_en": "Toxic Gas Immunity",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "InvalidToxicGas +0% (ToSelf) InvalidToxicGas +0% (ToOtomo)"
+  },
+  {
+    "id": 391,
+    "name_zh": "增強水屬性傷害 大",
+    "name_en": "Water Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +3% (ToOtomo)"
+  },
+  {
+    "id": 392,
+    "name_zh": "增強水屬性傷害 大",
+    "name_en": "Water Damage Enhancement (Large)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +3% (ToOtomo)"
+  },
+  {
+    "id": 393,
+    "name_zh": "增強水屬性傷害 中",
+    "name_en": "Water Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +2% (ToOtomo)"
+  },
+  {
+    "id": 394,
+    "name_zh": "增強水屬性傷害 中",
+    "name_en": "Water Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +2% (ToOtomo)"
+  },
+  {
+    "id": 395,
+    "name_zh": "增強水屬性傷害 中",
+    "name_en": "Water Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +2% (ToOtomo)"
+  },
+  {
+    "id": 396,
+    "name_zh": "增強水屬性傷害 中",
+    "name_en": "Water Damage Enhancement (Medium)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +2% (ToOtomo)"
+  },
+  {
+    "id": 397,
+    "name_zh": "增強水屬性傷害 小",
+    "name_en": "Water Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +1% (ToOtomo)"
+  },
+  {
+    "id": 398,
+    "name_zh": "增強水屬性傷害 小",
+    "name_en": "Water Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +1% (ToOtomo)"
+  },
+  {
+    "id": 399,
+    "name_zh": "增強水屬性傷害 小",
+    "name_en": "Water Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +1% (ToOtomo)"
+  },
+  {
+    "id": 400,
+    "name_zh": "增強水屬性傷害 小",
+    "name_en": "Water Damage Enhancement (Small)",
+    "rank": "1",
+    "effects": [
+      "Weight 100 Armor Accessory"
+    ],
+    "description": "ElementBoost_Water +1% (ToOtomo)"
+  },
+  {
+    "id": 401,
+    "name_zh": "減輕水屬性傷害Lv1",
+    "name_en": "Water Damage Reduction Lv. 1",
+    "rank": "1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ElementResist_Water +15% (ToSelf)"
+  },
+  {
+    "id": 402,
+    "name_zh": "神聖守護",
+    "name_en": "Hallowed Guard",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "ForYakushimaDefenceRate +30% (ToSelf)"
+  },
+  {
+    "id": 403,
+    "name_zh": "神聖之力 近戰",
+    "name_en": "Hallowed Power: Close Range",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "DamageUpIfEquipped_YakushimaMeleeWeapon +20% (ToSelf)"
+  },
+  {
+    "id": 404,
+    "name_zh": "神聖之力 魔法",
+    "name_en": "Hallowed Power: Magic",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "DamageUpIfEquipped_YakushimaMagicWeapon +20% (ToSelf)"
+  },
+  {
+    "id": 405,
+    "name_zh": "神聖之力 遠程",
+    "name_en": "Hallowed Power: Ranged",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "DamageUpIfEquipped_YakushimaRangedWeapon +20% (ToSelf)"
+  },
+  {
+    "id": 406,
+    "name_zh": "神聖之力 召喚",
+    "name_en": "Hallowed Power: Summon",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "DamageUpIfEquipped_YakushimaSummonWeapon +20% (ToSelf)"
+  },
+  {
+    "id": 407,
+    "name_zh": "提升負重上限Lv1",
+    "name_en": "Max Carrying Capacity Lv. 1",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "負重上限 +50 (ToSelf)"
+  },
+  {
+    "id": 408,
+    "name_zh": "提升負重上限Lv2",
+    "name_en": "Max Carrying Capacity Lv. 2",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "負重上限 +100 (ToSelf)"
+  },
+  {
+    "id": 409,
+    "name_zh": "提升負重上限Lv3",
+    "name_en": "Max Carrying Capacity Lv. 3",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "負重上限 +200 (ToSelf)"
+  },
+  {
+    "id": 410,
+    "name_zh": "提升負重上限Lv4",
+    "name_en": "Max Carrying Capacity Lv. 4",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "負重上限 +300 (ToSelf)"
+  },
+  {
+    "id": 411,
+    "name_zh": "zh-Hant Text",
+    "name_en": "Mentally unstable",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "工作速度 -10% (ToSelf) 防禦 -10% (ToSelf)"
+  },
+  {
+    "id": 412,
+    "name_zh": "隊伍帕魯信賴度的上升量增加",
+    "name_en": "Party Pal Trust Boost",
+    "rank": "-1",
+    "effects": [
+      "Weight 100"
+    ],
+    "description": "FriendshipPoint_Increase +50% (ToOtomo)"
+  }
+]

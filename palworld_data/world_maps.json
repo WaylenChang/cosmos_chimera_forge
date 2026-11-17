@@ -1,0 +1,1320 @@
+[
+  {
+    "id": "palpagos_islands",
+    "name_zh": "帕洛斯群島",
+    "name_en": "Palpagos Islands",
+    "tile_dir": "image/map8/",
+    "config": {
+      "minMapTextureBlockSize": {
+        "X": 8192,
+        "Y": 8192
+      },
+      "landScapeRealPositionMin": {
+        "X": -1099400,
+        "Y": -724400,
+        "Z": 1
+      },
+      "landScapeRealPositionMax": {
+        "X": 349400,
+        "Y": 724400,
+        "Z": 1
+      }
+    },
+    "icon_lookup": {
+      "Alpha Pal": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_enemy_strong.webp",
+        "label": "頭目帕魯",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Kinship Peach": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Consume_AffectionFruit_01.webp",
+        "label": "羈絆寶桃",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Enemy Camp": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_EnemyCamp.webp",
+        "label": "敵方據點",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Heat Source": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_00.webp",
+        "label": "熱源",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fishing Spot": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Fishing/T_Fishing_FishPondIcon.webp",
+        "label": "釣魚點",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Rare Fishing Spot": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Fishing/T_Fishing_PowerGauge_Mark_1.webp",
+        "label": "Rare Fishing Spot",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fishing Magnet": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Salvage_TreasureBoxKey01.webp",
+        "label": "打撈用磁鐵",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Powerful Fishing Magnet": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Salvage_TreasureBoxKey02.webp",
+        "label": "強力打撈用磁鐵",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Treasure Map": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_TreasureMap_01.webp",
+        "label": "藏寶圖",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Rampaging": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/T_icon_compass_06_2.webp",
+        "label": "狂暴化的",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Anti-Air Turret": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/BuildObject/PNG/T_icon_buildObject_efenseBulletLauncher_Missile.webp",
+        "label": "對空砲",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Bounty": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Bounty.webp",
+        "label": "通緝犯",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Feybreak Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Water_01.webp",
+        "label": "天墜帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sunreach Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Water_01.webp",
+        "label": "天陽鄉帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "World Tree Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_WorldTree_01.webp",
+        "label": "世界樹帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Nightstar Sand": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_NightStone.webp",
+        "label": "夜星砂",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Chromite": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Chromium.webp",
+        "label": "鉻鐵礦",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Hexolite Quartz": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_RainbowCrystal.webp",
+        "label": "六稜晶礦",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Awakening": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/T_icon_enemy_awakening.webp",
+        "label": "覺醒",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Teleport": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Teleport.webp",
+        "label": "Teleport",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fast Travel": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_FTtower.webp",
+        "label": "快速傳送",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Watchtower": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_FTUnlockMap.webp",
+        "label": "瞭望塔",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Tower": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_tower.webp",
+        "label": "高塔",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Dungeon": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_dungeon.webp",
+        "label": "隨機地下城",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fruit Tree": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Consume_SkillCard_Neutral.webp",
+        "label": "果樹",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Wandering Merchant": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SalesPerson_icon_normal.webp",
+        "label": "流浪商人",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Medal Merchant": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Male_DarkTrader02_icon_normal.webp",
+        "label": "獎章商人",
+        "href": "Medal_Marchant",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pal Merchant": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PalDealer_icon_normal.webp",
+        "label": "帕魯商人",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Black Marketeer": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Male_DarkTrader01_icon_normal.webp",
+        "label": "黑市商人",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Lifmunk Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic.webp",
+        "class": "map-shadow-black-icon",
+        "label": "翠葉鼠雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Lamball Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_01.webp",
+        "class": "map-shadow-black-icon",
+        "label": "棉悠悠雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pengullet Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_02.webp",
+        "class": "map-shadow-black-icon",
+        "label": "企丸丸雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Munchill Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_03.webp",
+        "class": "map-shadow-black-icon",
+        "label": "肚肚鱷雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Rooby Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_04.webp",
+        "class": "map-shadow-black-icon",
+        "label": "燎火鹿雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Herbil Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_05.webp",
+        "class": "map-shadow-black-icon",
+        "label": "達鼠泥雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Tanzee Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_06.webp",
+        "class": "map-shadow-black-icon",
+        "label": "新葉猿雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Depresso Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_07.webp",
+        "class": "map-shadow-black-icon",
+        "label": "瞅什魔雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Cattiva Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_08.webp",
+        "class": "map-shadow-black-icon",
+        "label": "搗蛋貓雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Lunaris Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_09.webp",
+        "class": "map-shadow-black-icon",
+        "label": "秘斯媞雅雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Relaxaurus Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_10.webp",
+        "class": "map-shadow-black-icon",
+        "label": "佩克龍雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Yakumo Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_11.webp",
+        "class": "map-shadow-black-icon",
+        "label": "八雲犬雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Mimog Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_12.webp",
+        "class": "map-shadow-black-icon",
+        "label": "旺財雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Crude Oil": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_CrudeOil.webp",
+        "label": "原油",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Junk": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Search_Junk.webp",
+        "label": "垃圾堆",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pure Quartz": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Quartz.webp",
+        "label": "純水晶",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pure Quartz Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Quartz_Cluster4.webp",
+        "label": "純水晶 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sulfur": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Sulfur.webp",
+        "label": "硫磺",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sulfur Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Sulfur_Cluster4.webp",
+        "label": "硫磺 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ore": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_CopperOre.webp",
+        "label": "金屬礦石",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ore Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_CopperOre_Cluster4.webp",
+        "label": "金屬礦石 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Lava": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Lava_Ancient.webp",
+        "label": "古代熔岩塊",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Bone": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_BeastBone_Ancient.webp",
+        "label": "古代獸骨",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Bark": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Wood_Ancient.webp",
+        "label": "古代樹皮",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Paloxite": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_WorldTreeOre.webp",
+        "label": "帕魯樹晶礦",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Soralite": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_SkyIslandOre.webp",
+        "label": "烈陽金屬",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Coal": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Coal.webp",
+        "label": "石炭",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Coal Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Coal_Cluster4.webp",
+        "label": "石炭 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Bullet": {
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Ammo_InkBullet.webp",
+        "label": "Decal Ink",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Journals": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/memo.webp",
+        "label": "手記",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Cave Entrance": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/exit-door.svg",
+        "label": "洞穴入口",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Home": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_07.webp",
+        "label": "建家點",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Chest Element": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Search_Treasure.webp",
+        "label": "Chest Element",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Chest": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_12.webp",
+        "label": "Chest",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Oilrig Chest": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_12.webp",
+        "label": "Oilrig Chest",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Oilrig Chest Goal": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Search_Treasure.webp",
+        "label": "Oilrig Chest Goal",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Grass Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Leaf_01.webp",
+        "label": "草原帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Volcano Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Fire_01.webp",
+        "label": "火山帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Frozen Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Ice_01.webp",
+        "label": "雪原帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Desert Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Earth_01.webp",
+        "label": "沙漠帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sakura Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Dragon_01.webp",
+        "label": "櫻花帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Oilrig NPC": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CommonHuman_icon_normal.webp",
+        "label": "Oilrig NPC",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "NPC": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CommonHuman_icon_normal.webp",
+        "label": "NPC",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Beautiful Flower": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Food_Poppy.webp",
+        "label": "美麗花朵",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Respawn": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/T_worldmap_icon_fasttravel.webp",
+        "label": "復活",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Region": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_00.webp",
+        "label": "區域名稱",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Incident": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_prt_enemy_notice_01.webp",
+        "label": "野外事件",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Supply": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_16.webp",
+        "label": "補給物",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Arrogant Pal Critic": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_11.webp",
+        "label": "自大的帕魯鑑賞家",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Raid Boss Altar": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/BuildObject/PNG/T_icon_buildObject_Altar.webp",
+        "label": "Raid Boss Altar",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Memo Planner": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Main_Menu/T_icon_unknown.webp",
+        "label": "Memo Planner",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Ruin": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/white-tower-fall.svg",
+        "class": "map-shadow-black-icon",
+        "label": "古代遺跡",
+        "icon_width": 24,
+        "icon_height": 24
+      },
+      "Teafant Spring": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_WorldTreeHolyWater.webp",
+        "class": "map-shadow-black-icon",
+        "label": "Teafant Spring",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Skyland Warp Altar": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Teleport.webp",
+        "label": "Skyland Warp Altar",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Unknown": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Main_Menu/T_icon_unknown.webp",
+        "label": "未知",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "City": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Main_Menu/T_icon_unknown.webp",
+        "label": "City",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Torch": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_construction_tab_05.webp",
+        "label": "Torch",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Test": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_construction_tab_05.webp",
+        "label": "Test",
+        "icon_width": 30,
+        "icon_height": 30
+      }
+    },
+    "local_path": "images/world_maps/palpagos_islands.png",
+    "markers_count": 13814,
+    "regions_count": 80
+  },
+  {
+    "id": "the_world_tree",
+    "name_zh": "世界樹",
+    "name_en": "The World Tree",
+    "tile_dir": "image/treemap8/",
+    "config": {
+      "minMapTextureBlockSize": {
+        "X": 8192,
+        "Y": 8192
+      },
+      "landScapeRealPositionMin": {
+        "X": 347351.5,
+        "Y": -818197,
+        "Z": 0
+      },
+      "landScapeRealPositionMax": {
+        "X": 689148.5,
+        "Y": -476400,
+        "Z": 0
+      }
+    },
+    "icon_lookup": {
+      "Alpha Pal": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_enemy_strong.webp",
+        "label": "頭目帕魯",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Kinship Peach": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Consume_AffectionFruit_01.webp",
+        "label": "羈絆寶桃",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Enemy Camp": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_EnemyCamp.webp",
+        "label": "敵方據點",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Heat Source": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_00.webp",
+        "label": "熱源",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fishing Spot": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Fishing/T_Fishing_FishPondIcon.webp",
+        "label": "釣魚點",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Rare Fishing Spot": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Fishing/T_Fishing_PowerGauge_Mark_1.webp",
+        "label": "Rare Fishing Spot",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fishing Magnet": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Salvage_TreasureBoxKey01.webp",
+        "label": "打撈用磁鐵",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Powerful Fishing Magnet": {
+        "category": "釣魚",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Salvage_TreasureBoxKey02.webp",
+        "label": "強力打撈用磁鐵",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Treasure Map": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_TreasureMap_01.webp",
+        "label": "藏寶圖",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Rampaging": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/T_icon_compass_06_2.webp",
+        "label": "狂暴化的",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Anti-Air Turret": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/BuildObject/PNG/T_icon_buildObject_efenseBulletLauncher_Missile.webp",
+        "label": "對空砲",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Bounty": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Bounty.webp",
+        "label": "通緝犯",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Feybreak Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Water_01.webp",
+        "label": "天墜帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sunreach Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Water_01.webp",
+        "label": "天陽鄉帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "World Tree Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_WorldTree_01.webp",
+        "label": "世界樹帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Nightstar Sand": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_NightStone.webp",
+        "label": "夜星砂",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Chromite": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Chromium.webp",
+        "label": "鉻鐵礦",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Hexolite Quartz": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_RainbowCrystal.webp",
+        "label": "六稜晶礦",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Awakening": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/T_icon_enemy_awakening.webp",
+        "label": "覺醒",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Teleport": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Teleport.webp",
+        "label": "Teleport",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fast Travel": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_FTtower.webp",
+        "label": "快速傳送",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Watchtower": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_FTUnlockMap.webp",
+        "label": "瞭望塔",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Tower": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_tower.webp",
+        "label": "高塔",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Dungeon": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_dungeon.webp",
+        "label": "隨機地下城",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Fruit Tree": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Consume_SkillCard_Neutral.webp",
+        "label": "果樹",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Wandering Merchant": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SalesPerson_icon_normal.webp",
+        "label": "流浪商人",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Medal Merchant": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Male_DarkTrader02_icon_normal.webp",
+        "label": "獎章商人",
+        "href": "Medal_Marchant",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pal Merchant": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PalDealer_icon_normal.webp",
+        "label": "帕魯商人",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Black Marketeer": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Male_DarkTrader01_icon_normal.webp",
+        "label": "黑市商人",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Lifmunk Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic.webp",
+        "class": "map-shadow-black-icon",
+        "label": "翠葉鼠雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Lamball Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_01.webp",
+        "class": "map-shadow-black-icon",
+        "label": "棉悠悠雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pengullet Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_02.webp",
+        "class": "map-shadow-black-icon",
+        "label": "企丸丸雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Munchill Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_03.webp",
+        "class": "map-shadow-black-icon",
+        "label": "肚肚鱷雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Rooby Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_04.webp",
+        "class": "map-shadow-black-icon",
+        "label": "燎火鹿雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Herbil Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_05.webp",
+        "class": "map-shadow-black-icon",
+        "label": "達鼠泥雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Tanzee Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_06.webp",
+        "class": "map-shadow-black-icon",
+        "label": "新葉猿雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Depresso Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_07.webp",
+        "class": "map-shadow-black-icon",
+        "label": "瞅什魔雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Cattiva Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_08.webp",
+        "class": "map-shadow-black-icon",
+        "label": "搗蛋貓雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Lunaris Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_09.webp",
+        "class": "map-shadow-black-icon",
+        "label": "秘斯媞雅雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Relaxaurus Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_10.webp",
+        "class": "map-shadow-black-icon",
+        "label": "佩克龍雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Yakumo Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_11.webp",
+        "class": "map-shadow-black-icon",
+        "label": "八雲犬雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Mimog Effigy": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Relic_12.webp",
+        "class": "map-shadow-black-icon",
+        "label": "旺財雕像",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Crude Oil": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_CrudeOil.webp",
+        "label": "原油",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Junk": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Search_Junk.webp",
+        "label": "垃圾堆",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pure Quartz": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Quartz.webp",
+        "label": "純水晶",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Pure Quartz Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Quartz_Cluster4.webp",
+        "label": "純水晶 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sulfur": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Sulfur.webp",
+        "label": "硫磺",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sulfur Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Sulfur_Cluster4.webp",
+        "label": "硫磺 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ore": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_CopperOre.webp",
+        "label": "金屬礦石",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ore Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_CopperOre_Cluster4.webp",
+        "label": "金屬礦石 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Lava": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Lava_Ancient.webp",
+        "label": "古代熔岩塊",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Bone": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_BeastBone_Ancient.webp",
+        "label": "古代獸骨",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Bark": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Wood_Ancient.webp",
+        "label": "古代樹皮",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Paloxite": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_WorldTreeOre.webp",
+        "label": "帕魯樹晶礦",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Soralite": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_SkyIslandOre.webp",
+        "label": "烈陽金屬",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Coal": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Coal.webp",
+        "label": "石炭",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Coal Cluster": {
+        "category": "礦脈",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_Coal_Cluster4.webp",
+        "label": "石炭 叢集",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Bullet": {
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Ammo_InkBullet.webp",
+        "label": "Decal Ink",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Journals": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/memo.webp",
+        "label": "手記",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Cave Entrance": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/exit-door.svg",
+        "label": "洞穴入口",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Home": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_07.webp",
+        "label": "建家點",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Chest Element": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Search_Treasure.webp",
+        "label": "Chest Element",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Chest": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_12.webp",
+        "label": "Chest",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Oilrig Chest": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_12.webp",
+        "label": "Oilrig Chest",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Oilrig Chest Goal": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Search_Treasure.webp",
+        "label": "Oilrig Chest Goal",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Grass Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Leaf_01.webp",
+        "label": "草原帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Volcano Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Fire_01.webp",
+        "label": "火山帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Frozen Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Ice_01.webp",
+        "label": "雪原帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Desert Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Earth_01.webp",
+        "label": "沙漠帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Sakura Egg": {
+        "category": "帕魯蛋",
+        "group": "Eggs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg_Dragon_01.webp",
+        "label": "櫻花帕魯蛋",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Oilrig NPC": {
+        "category": "Oilrig",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CommonHuman_icon_normal.webp",
+        "label": "Oilrig NPC",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "NPC": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CommonHuman_icon_normal.webp",
+        "label": "NPC",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Beautiful Flower": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Food_Poppy.webp",
+        "label": "美麗花朵",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Respawn": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/ui/T_worldmap_icon_fasttravel.webp",
+        "label": "復活",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Region": {
+        "category": "地點",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_00.webp",
+        "label": "區域名稱",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Incident": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_prt_enemy_notice_01.webp",
+        "label": "野外事件",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Supply": {
+        "category": "資源",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_16.webp",
+        "label": "補給物",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Arrogant Pal Critic": {
+        "category": "NPCs",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_11.webp",
+        "label": "自大的帕魯鑑賞家",
+        "icon_width": 40,
+        "icon_height": 40
+      },
+      "Raid Boss Altar": {
+        "category": "敵人",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/BuildObject/PNG/T_icon_buildObject_Altar.webp",
+        "label": "Raid Boss Altar",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Memo Planner": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Main_Menu/T_icon_unknown.webp",
+        "label": "Memo Planner",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Ancient Ruin": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/white-tower-fall.svg",
+        "class": "map-shadow-black-icon",
+        "label": "古代遺跡",
+        "icon_width": 24,
+        "icon_height": 24
+      },
+      "Teafant Spring": {
+        "category": "可收集",
+        "fixed_icon": "https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_WorldTreeHolyWater.webp",
+        "class": "map-shadow-black-icon",
+        "label": "Teafant Spring",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Skyland Warp Altar": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_compass_Teleport.webp",
+        "label": "Skyland Warp Altar",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Unknown": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Main_Menu/T_icon_unknown.webp",
+        "label": "未知",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "City": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/Main_Menu/T_icon_unknown.webp",
+        "label": "City",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Torch": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_construction_tab_05.webp",
+        "label": "Torch",
+        "icon_width": 30,
+        "icon_height": 30
+      },
+      "Test": {
+        "category": "其他",
+        "fixed_icon": "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_construction_tab_05.webp",
+        "label": "Test",
+        "icon_width": 30,
+        "icon_height": 30
+      }
+    },
+    "local_path": "images/world_maps/the_world_tree.png",
+    "markers_count": 379,
+    "regions_count": 0
+  }
+]

@@ -1,0 +1,733 @@
+{
+  "palpagos_islands": {
+    "name_zh": "帕洛斯群島",
+    "name_en": "Palpagos Islands",
+    "regions": [
+      {
+        "item": "Lv.55 盜獵團的油田",
+        "type": "Region",
+        "id": "REGION_Oilrig_1",
+        "ipos": {
+          "X": 579,
+          "Y": -423
+        }
+      },
+      {
+        "item": "破敗教會",
+        "type": "Region",
+        "id": "REGION_Grass_1_Church",
+        "ipos": {
+          "X": 65,
+          "Y": -412
+        }
+      },
+      {
+        "item": "小型聚落",
+        "type": "Region",
+        "id": "REGION_Grass_1_Village",
+        "ipos": {
+          "X": 75,
+          "Y": -480
+        }
+      },
+      {
+        "item": "邊遠漁村",
+        "type": "Region",
+        "id": "REGION_Volcano_1_Village",
+        "ipos": {
+          "X": -474,
+          "Y": -750
+        }
+      },
+      {
+        "item": "沙漠之鎮",
+        "type": "Region",
+        "id": "REGION_Desert_1_Village",
+        "ipos": {
+          "X": 349,
+          "Y": 353
+        }
+      },
+      {
+        "item": "Lv.30 盜獵團的勘探油田",
+        "type": "Region",
+        "id": "REGION_Oilrig_2",
+        "ipos": {
+          "X": 169,
+          "Y": -297
+        }
+      },
+      {
+        "item": "古老的祭祀場",
+        "type": "Region",
+        "id": "REGION_Forest_Ruin",
+        "ipos": {
+          "X": -17,
+          "Y": -265
+        }
+      },
+      {
+        "item": "Lv.30-40 黑曜火山",
+        "type": "Region",
+        "id": "REGION_Volcano_1",
+        "ipos": {
+          "X": -587,
+          "Y": -484
+        }
+      },
+      {
+        "item": "霜凍雪山",
+        "type": "Region",
+        "id": "REGION_Frost_small",
+        "ipos": {
+          "X": 199,
+          "Y": 57
+        }
+      },
+      {
+        "item": "Lv.60 盜獵團的大型油田",
+        "type": "Region",
+        "id": "REGION_Oilrig_3",
+        "ipos": {
+          "X": -1722,
+          "Y": -1462
+        }
+      },
+      {
+        "item": "Lv.10-25 日暮沙地",
+        "type": "Region",
+        "id": "REGION_Desert_Small",
+        "ipos": {
+          "X": -124,
+          "Y": -100
+        }
+      },
+      {
+        "item": "Lv.20-30 新綠清流",
+        "type": "Region",
+        "id": "REGION_Forest_2",
+        "ipos": {
+          "X": 208,
+          "Y": -13
+        }
+      },
+      {
+        "item": "深藍樹海",
+        "type": "Region",
+        "id": "REGION_Skyisland05",
+        "ipos": {
+          "X": -325,
+          "Y": -1332
+        }
+      },
+      {
+        "item": "碧落裂隙",
+        "type": "Region",
+        "id": "REGION_Skyisland01",
+        "ipos": {
+          "X": -446,
+          "Y": -1326
+        }
+      },
+      {
+        "item": "龍痕山嶺",
+        "type": "Region",
+        "id": "REGION_Skyisland03",
+        "ipos": {
+          "X": -551,
+          "Y": -1304
+        }
+      },
+      {
+        "item": "睡蓮峽谷",
+        "type": "Region",
+        "id": "REGION_Skyisland02",
+        "ipos": {
+          "X": -554,
+          "Y": -1504
+        }
+      },
+      {
+        "item": "競技場",
+        "type": "Region",
+        "id": "REGION_Arena",
+        "ipos": {
+          "X": 633,
+          "Y": 18
+        }
+      },
+      {
+        "item": "Lv.50-60 燃灰之地",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT01",
+        "ipos": {
+          "X": -805,
+          "Y": -954
+        }
+      },
+      {
+        "item": "乾枯海岸",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT09",
+        "ipos": {
+          "X": -709,
+          "Y": -1103
+        }
+      },
+      {
+        "item": "餘燼溶岩台",
+        "type": "Region",
+        "id": "REGION_Darkisland11",
+        "ipos": {
+          "X": -790,
+          "Y": -1235
+        }
+      },
+      {
+        "item": "黃土平原",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT03",
+        "ipos": {
+          "X": -902,
+          "Y": -1416
+        }
+      },
+      {
+        "item": "結晶大樹",
+        "type": "Region",
+        "id": "REGION_Darkisland05",
+        "ipos": {
+          "X": -982,
+          "Y": -1165
+        }
+      },
+      {
+        "item": "灼熱高台",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT07",
+        "ipos": {
+          "X": -1041,
+          "Y": -1139
+        }
+      },
+      {
+        "item": "鏽灰高原",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT08",
+        "ipos": {
+          "X": -1300,
+          "Y": -1198
+        }
+      },
+      {
+        "item": "冰封珊瑚丘",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT10",
+        "ipos": {
+          "X": -1243,
+          "Y": -1531
+        }
+      },
+      {
+        "item": "天墜的遇難船",
+        "type": "Region",
+        "id": "REGION_Darkisland03",
+        "ipos": {
+          "X": -1417,
+          "Y": -1450
+        }
+      },
+      {
+        "item": "俯瞰高塔的環形門",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT05",
+        "ipos": {
+          "X": -1115,
+          "Y": -1355
+        }
+      },
+      {
+        "item": "石柱洞窟",
+        "type": "Region",
+        "id": "REGION_Darkisland08",
+        "ipos": {
+          "X": -908,
+          "Y": -1093
+        }
+      },
+      {
+        "item": "通往環形門的密道",
+        "type": "Region",
+        "id": "REGION_Darkisland_FT04",
+        "ipos": {
+          "X": -1079,
+          "Y": -1283
+        }
+      },
+      {
+        "item": "-",
+        "type": "Region",
+        "id": "REGION_Array",
+        "ipos": {
+          "X": -1209,
+          "Y": -1354
+        }
+      },
+      {
+        "item": "黃金色的丘陵",
+        "type": "Region",
+        "id": "REGION_Grass_3",
+        "ipos": {
+          "X": 36,
+          "Y": -476
+        }
+      },
+      {
+        "item": "紅葉岩場",
+        "type": "Region",
+        "id": "REGION_Grass_4",
+        "ipos": {
+          "X": 98,
+          "Y": -318
+        }
+      },
+      {
+        "item": "要塞遺跡",
+        "type": "Region",
+        "id": "REGION_Grass_5",
+        "ipos": {
+          "X": 194,
+          "Y": -353
+        }
+      },
+      {
+        "item": "飛魚海岸",
+        "type": "Region",
+        "id": "REGION_Grass_6",
+        "ipos": {
+          "X": 154,
+          "Y": -541
+        }
+      },
+      {
+        "item": "鯊小子的地盤",
+        "type": "Region",
+        "id": "REGION_Grass_7",
+        "ipos": {
+          "X": 153,
+          "Y": -173
+        }
+      },
+      {
+        "item": "Lv.10-20 戰火爪痕",
+        "type": "Region",
+        "id": "REGION_Grass_8",
+        "ipos": {
+          "X": 381,
+          "Y": -18
+        }
+      },
+      {
+        "item": "Lv.30-40 靈峰山腳",
+        "type": "Region",
+        "id": "REGION_Frost_2",
+        "ipos": {
+          "X": -96,
+          "Y": 197
+        }
+      },
+      {
+        "item": "廢棄遺跡",
+        "type": "Region",
+        "id": "REGION_Frost_3",
+        "ipos": {
+          "X": -152,
+          "Y": 295
+        }
+      },
+      {
+        "item": "被毀滅的要塞都市",
+        "type": "Region",
+        "id": "REGION_Volcano_3",
+        "ipos": {
+          "X": -601,
+          "Y": -214
+        }
+      },
+      {
+        "item": "乾燥沙灘",
+        "type": "Region",
+        "id": "REGION_Volcano_4",
+        "ipos": {
+          "X": -606,
+          "Y": -667
+        }
+      },
+      {
+        "item": "潮風群島的教會",
+        "type": "Region",
+        "id": "REGION_PvP_1_Church",
+        "ipos": {
+          "X": -62,
+          "Y": -534
+        }
+      },
+      {
+        "item": "Lv.40-55 櫻花島：南部砂原",
+        "type": "Region",
+        "id": "REGION_WhiteSand",
+        "ipos": {
+          "X": -721,
+          "Y": 115
+        }
+      },
+      {
+        "item": "寂靜之島的教會遺跡",
+        "type": "Region",
+        "id": "REGION_PvP_2_Church",
+        "ipos": {
+          "X": -456,
+          "Y": -13
+        }
+      },
+      {
+        "item": "濕地之島的教會遺跡",
+        "type": "Region",
+        "id": "REGION_PvP_3_Church",
+        "ipos": {
+          "X": 399,
+          "Y": -272
+        }
+      },
+      {
+        "item": "Lv.1-10 向陽孤島",
+        "type": "Region",
+        "id": "REGION_SmallIsland01",
+        "ipos": {
+          "X": 403,
+          "Y": -464
+        }
+      },
+      {
+        "item": "Lv.40-50 綠洲孤島",
+        "type": "Region",
+        "id": "REGION_SmallIsland02",
+        "ipos": {
+          "X": 900,
+          "Y": 202
+        }
+      },
+      {
+        "item": "Lv.50-60 冰封孤島",
+        "type": "Region",
+        "id": "REGION_SmallIsland03",
+        "ipos": {
+          "X": 143,
+          "Y": 655
+        }
+      },
+      {
+        "item": "Lv.10-20 極凍孤島",
+        "type": "Region",
+        "id": "REGION_SmallIsland04",
+        "ipos": {
+          "X": -72,
+          "Y": -973
+        }
+      },
+      {
+        "item": "Lv.30-40 亡靈孤島",
+        "type": "Region",
+        "id": "REGION_SmallIsland05",
+        "ipos": {
+          "X": -908,
+          "Y": -198
+        }
+      },
+      {
+        "item": "Lv.10-20 塵封寶藏孤島",
+        "type": "Region",
+        "id": "REGION_SmallIsland06",
+        "ipos": {
+          "X": 623,
+          "Y": -169
+        }
+      },
+      {
+        "item": "Lv.30-45 常夏孤島",
+        "type": "Region",
+        "id": "REGION_SmallIsland07",
+        "ipos": {
+          "X": -424,
+          "Y": -811
+        }
+      },
+      {
+        "item": "炎脈孤島",
+        "type": "Region",
+        "id": "REGION_New_SmallIsland02",
+        "ipos": {
+          "X": 793,
+          "Y": 455
+        }
+      },
+      {
+        "item": "環形遺跡孤島",
+        "type": "Region",
+        "id": "REGION_New_SmallIsland01",
+        "ipos": {
+          "X": 907,
+          "Y": -98
+        }
+      },
+      {
+        "item": "風蝕孤島",
+        "type": "Region",
+        "id": "REGION_New_SmallIsland03",
+        "ipos": {
+          "X": 429,
+          "Y": -717
+        }
+      },
+      {
+        "item": "雙角孤島",
+        "type": "Region",
+        "id": "REGION_New_SmallIsland04",
+        "ipos": {
+          "X": -1170,
+          "Y": -1939
+        }
+      },
+      {
+        "item": "冰環遺跡孤島",
+        "type": "Region",
+        "id": "REGION_New_SmallIsland05",
+        "ipos": {
+          "X": -1695,
+          "Y": -949
+        }
+      },
+      {
+        "item": "砂岩門孤島",
+        "type": "Region",
+        "id": "REGION_New_SmallIsland06",
+        "ipos": {
+          "X": -1273,
+          "Y": -615
+        }
+      },
+      {
+        "item": "太陽紋孤島",
+        "type": "Region",
+        "id": "REGION_New_SmallIsland07",
+        "ipos": {
+          "X": -894,
+          "Y": 122
+        }
+      },
+      {
+        "item": "世界樹下",
+        "type": "Region",
+        "id": "REGION_FootOfWorldTree",
+        "ipos": {
+          "X": -812,
+          "Y": 673
+        }
+      },
+      {
+        "item": "Lv.15-25 弦月湖畔",
+        "type": "Region",
+        "id": "REGION_Forest_1",
+        "ipos": {
+          "X": -6,
+          "Y": -208
+        }
+      },
+      {
+        "item": "Lv.10-20 翠竹溪谷",
+        "type": "Region",
+        "id": "REGION_Grass_2",
+        "ipos": {
+          "X": -229,
+          "Y": -312
+        }
+      },
+      {
+        "item": "Lv.1-15 風起之島",
+        "type": "Region",
+        "id": "REGION_Grass_1",
+        "ipos": {
+          "X": 114,
+          "Y": -487
+        }
+      },
+      {
+        "item": "Lv.1-10 寂靜之島",
+        "type": "Region",
+        "id": "REGION_PvP_2",
+        "ipos": {
+          "X": -487,
+          "Y": -17
+        }
+      },
+      {
+        "item": "Lv.1-10 濕地之島",
+        "type": "Region",
+        "id": "REGION_PvP_5",
+        "ipos": {
+          "X": 349,
+          "Y": -306
+        }
+      },
+      {
+        "item": "Lv.1-10 東部的荒蕪島嶼",
+        "type": "Region",
+        "id": "REGION_PvP_4",
+        "ipos": {
+          "X": 481,
+          "Y": -159
+        }
+      },
+      {
+        "item": "Lv.1-10 潮風群島",
+        "type": "Region",
+        "id": "REGION_PvP_1",
+        "ipos": {
+          "X": -188,
+          "Y": -638
+        }
+      },
+      {
+        "item": "Lv.40-45 第二禁獵區",
+        "type": "Region",
+        "id": "REGION_Preserve2",
+        "ipos": {
+          "X": -676,
+          "Y": -111
+        }
+      },
+      {
+        "item": "Lv.40-45 第三禁獵區",
+        "type": "Region",
+        "id": "REGION_Preserve3",
+        "ipos": {
+          "X": 663,
+          "Y": 634
+        }
+      },
+      {
+        "item": "Lv.40-50 荒漠沙丘",
+        "type": "Region",
+        "id": "REGION_Desert_1",
+        "ipos": {
+          "X": 471,
+          "Y": 377
+        }
+      },
+      {
+        "item": "Lv.35-50 白銀靈峰",
+        "type": "Region",
+        "id": "REGION_Frost_1",
+        "ipos": {
+          "X": -186,
+          "Y": 396
+        }
+      },
+      {
+        "item": "雲泥濕地",
+        "type": "Region",
+        "id": "REGION_Skyisland04",
+        "ipos": {
+          "X": -446,
+          "Y": -1368
+        }
+      },
+      {
+        "item": "天空仙境",
+        "type": "Region",
+        "id": "REGION_Skyisland07",
+        "ipos": {
+          "X": -358,
+          "Y": -1511
+        }
+      },
+      {
+        "item": "結晶群島",
+        "type": "Region",
+        "id": "REGION_Skyisland06",
+        "ipos": {
+          "X": -474,
+          "Y": -1506
+        }
+      },
+      {
+        "item": "竹林深處",
+        "type": "Region",
+        "id": "REGION_Grass_9",
+        "ipos": {
+          "X": -319,
+          "Y": -115
+        }
+      },
+      {
+        "item": "火山山腳",
+        "type": "Region",
+        "id": "REGION_Volcano_2",
+        "ipos": {
+          "X": -364,
+          "Y": -377
+        }
+      },
+      {
+        "item": "櫻花島：蘑菇濕地",
+        "type": "Region",
+        "id": "REGION_Mushroom",
+        "ipos": {
+          "X": -416,
+          "Y": 163
+        }
+      },
+      {
+        "item": "Lv.50-55 舞櫻神社",
+        "type": "Region",
+        "id": "REGION_Sakura",
+        "ipos": {
+          "X": -636,
+          "Y": 253
+        }
+      },
+      {
+        "item": "櫻花島：北部礦場",
+        "type": "Region",
+        "id": "REGION_RockSand",
+        "ipos": {
+          "X": -571,
+          "Y": 332
+        }
+      },
+      {
+        "item": "Lv.1-10 潺鳴之島",
+        "type": "Region",
+        "id": "REGION_PvP_3",
+        "ipos": {
+          "X": -303,
+          "Y": 12
+        }
+      },
+      {
+        "item": "Lv.20-25 第一禁獵區",
+        "type": "Region",
+        "id": "REGION_Preserve1",
+        "ipos": {
+          "X": -344,
+          "Y": 270
+        }
+      }
+    ]
+  },
+  "the_world_tree": {
+    "name_zh": "世界樹",
+    "name_en": "The World Tree",
+    "regions": []
+  }
+}

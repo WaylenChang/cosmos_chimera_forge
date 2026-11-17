@@ -1,0 +1,4142 @@
+[
+  {
+    "pal_id": "SheepBall",
+    "pal_slug": "Lamball",
+    "pal_name_zh": "棉悠悠",
+    "pal_name_en": "Lamball",
+    "name_zh": "茸茸盾牌",
+    "name_en": "Fluffy Shield",
+    "description": "發動後，牠會化身為裝備在玩家身上的盾牌。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。"
+  },
+  {
+    "pal_id": "PinkCat",
+    "pal_slug": "Cattiva",
+    "pal_name_zh": "搗蛋貓",
+    "pal_name_en": "Cattiva",
+    "name_zh": "跟貓借手手",
+    "name_en": "Cat Helper",
+    "description": "若牠在隊伍中， 搗蛋貓 就會幫忙搬運行李，玩家的負重上限將提高 (100~200) 。（不可疊加）"
+  },
+  {
+    "pal_id": "ChickenPal",
+    "pal_slug": "Chikipi",
+    "pal_name_zh": "皮皮雞",
+    "pal_name_en": "Chikipi",
+    "name_zh": "產蛋",
+    "name_en": "Egg Layer",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會產下 蛋 。"
+  },
+  {
+    "pal_id": "Carbunclo",
+    "pal_slug": "Lifmunk",
+    "pal_name_zh": "翠葉鼠",
+    "pal_name_en": "Lifmunk",
+    "name_zh": "翠葉鼠出擊",
+    "name_en": "Lifmunk Recoil",
+    "description": "發動後牠會坐在玩家的頭上，配合玩家的攻擊用衝鋒槍進行追擊。 科技 11"
+  },
+  {
+    "pal_id": "BluePlatypus",
+    "pal_slug": "Fuack",
+    "pal_name_zh": "衝浪鴨",
+    "pal_name_en": "Fuack",
+    "name_zh": "乘風破浪",
+    "name_en": "Surfing Slam",
+    "description": "發動後， 衝浪鴨 會乘著浪頭衝向敵人。"
+  },
+  {
+    "pal_id": "BluePlatypus_Fire",
+    "pal_slug": "Fuack_Ignis",
+    "pal_name_zh": "熱浪鴨",
+    "pal_name_en": "Fuack Ignis",
+    "name_zh": "熱浪滾滾",
+    "name_en": "Fire Tackle",
+    "description": "發動後， 熱浪鴨 會乘著焰浪衝向敵人。"
+  },
+  {
+    "pal_id": "CuteFox",
+    "pal_slug": "Vixy",
+    "pal_name_zh": "玉藻狐",
+    "pal_name_en": "Vixy",
+    "name_zh": "挖掘指導",
+    "name_en": "Dig Here!",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會從地裡挖出道具。"
+  },
+  {
+    "pal_id": "FlyingManta",
+    "pal_slug": "Celaray",
+    "pal_name_zh": "魯米兒",
+    "pal_name_en": "Celaray",
+    "name_zh": "微風滑翔",
+    "name_en": "Zephyr Glider",
+    "description": "若牠在隊伍中，會改變滑翔傘的效能，並使玩家 免受墜落傷害 。\r\n滑翔期間能夠長時間快速移動。"
+  },
+  {
+    "pal_id": "FlyingManta_Thunder",
+    "pal_slug": "Celaray_Lux",
+    "pal_name_zh": "雷米兒",
+    "pal_name_en": "Celaray Lux",
+    "name_zh": "電風滑翔",
+    "name_en": "Jolt Glider",
+    "description": "若牠在隊伍中，會改變滑翔傘的效能，並使玩家 免受墜落傷害 。\r\n滑翔期間能夠長時間快速移動。"
+  },
+  {
+    "pal_id": "WoolFox",
+    "pal_slug": "Cremis",
+    "pal_name_zh": "米露菲",
+    "pal_name_en": "Cremis",
+    "name_zh": "蓬鬆毛毛",
+    "name_en": "Fluffy Wool",
+    "description": "若牠在隊伍中， 無屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。"
+  },
+  {
+    "pal_id": "KendoFrog",
+    "pal_slug": "Croajiro",
+    "pal_name_zh": "武道蛙",
+    "pal_name_en": "Croajiro",
+    "name_zh": "蓄勢跳躍",
+    "name_en": "Leap Stance",
+    "description": "發動後， 武道蛙 會靠忠誠心和膨脹的腹部積蓄力量。玩家踩上去後能高高跳起。\r\n在落地前，玩家的攻擊力提升 (50~86)% 。"
+  },
+  {
+    "pal_id": "KendoFrog_Dark",
+    "pal_slug": "Croajiro_Noct",
+    "pal_name_zh": "極道蛙",
+    "pal_name_en": "Croajiro Noct",
+    "name_zh": "蓄勢暗躍",
+    "name_en": "Shadow Stance",
+    "description": "發動後， 極道蛙 會靠忠誠心和膨脹的腹部積蓄力量。玩家踩上去後能高高跳起。\r\n若牠在隊伍中，玩家和帕魯以 暗屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "LeafMomonga",
+    "pal_slug": "Herbil",
+    "pal_name_zh": "達鼠泥",
+    "pal_name_en": "Herbil",
+    "name_zh": "復甦鼠鼠",
+    "name_en": "Herbil Pulse",
+    "description": "若牠在隊伍中， 達鼠泥 會在玩家陷入瀕死狀態時，透過治癒能力讓玩家以生命值上限 (30~60)% 的狀態 復活 。"
+  },
+  {
+    "pal_id": "Ganesha",
+    "pal_slug": "Teafant",
+    "pal_name_zh": "壺小象",
+    "pal_name_en": "Teafant",
+    "name_zh": "療傷之浴",
+    "name_en": "Soothing Shower",
+    "description": "若牠在隊伍中，玩家的生命值低於30%時，將恢復 (20~40)% 的生命值。（不可疊加）\r\n※發動後需120秒冷卻才可再次觸發"
+  },
+  {
+    "pal_id": "PlantSlime",
+    "pal_slug": "Gumoss",
+    "pal_name_zh": "葉泥泥",
+    "pal_name_en": "Gumoss",
+    "name_zh": "樵夫啦啦隊",
+    "name_en": "Logging Assistance",
+    "description": "若牠在隊伍中，玩家伐木時造成的傷害將提升 (30~50)% ， 所有木材種類 的重量都將減輕 (40~60)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "SamuraiDog",
+    "pal_slug": "Pupperai",
+    "pal_name_zh": "宗銘丸",
+    "pal_name_en": "Pupperai",
+    "name_zh": "幹勁支援",
+    "name_en": "Best Boy",
+    "description": "若牠在隊伍中，玩家 使用近戰武器時的傷害 提升 (10~35)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CloverFairy",
+    "pal_slug": "Clovee",
+    "pal_name_zh": "幸葉茸",
+    "pal_name_en": "Clovee",
+    "name_zh": "幸運三葉草",
+    "name_en": "Happy Clover",
+    "description": "若牠在據點裡，其他據點帕魯的 採集 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "Hedgehog",
+    "pal_slug": "Jolthog",
+    "pal_name_zh": "電棘鼠",
+    "pal_name_en": "Jolthog",
+    "name_zh": "電擊炸彈",
+    "name_en": "Jolt Bomb",
+    "description": "發動後就能將 電棘鼠 裝備在手上，若將牠投向敵人且命中目標，便會引發 雷屬性 爆炸。"
+  },
+  {
+    "pal_id": "Hedgehog_Ice",
+    "pal_slug": "Jolthog_Cryst",
+    "pal_name_zh": "冰刺鼠",
+    "pal_name_en": "Jolthog Cryst",
+    "name_zh": "急凍炸彈",
+    "name_en": "Cold Bomb",
+    "description": "發動後就能將 冰刺鼠 裝備在手上，若將牠投向敵人且命中目標，便會引發 冰屬性 爆炸。"
+  },
+  {
+    "pal_id": "NegativeKoala",
+    "pal_slug": "Depresso",
+    "pal_name_zh": "瞅什魔",
+    "pal_name_en": "Depresso",
+    "name_zh": "攝取咖啡因",
+    "name_en": "Caffeine Inoculation",
+    "description": "發動後， 瞅什魔 會大量飲用能量飲料， 瞅什魔 的移動速度和工作速度會因此提升 (100~900)% 。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 毒腺 。"
+  },
+  {
+    "pal_id": "Penguin",
+    "pal_slug": "Pengullet",
+    "pal_name_zh": "企丸丸",
+    "pal_name_en": "Pengullet",
+    "name_zh": "企丸丸發射",
+    "name_en": "Pengullet Launcher",
+    "description": "發動後玩家將裝備 火箭發射器 ，並可將 企丸丸 當作砲彈射出。\r\n命中目標後 企丸丸 會爆炸，並陷入瀕死狀態。 科技 17"
+  },
+  {
+    "pal_id": "Penguin_Electric",
+    "pal_slug": "Pengullet_Lux",
+    "pal_name_zh": "閃丸丸",
+    "pal_name_en": "Pengullet Lux",
+    "name_zh": "閃丸丸發射",
+    "name_en": "Pengullet Lux Launcher",
+    "description": "發動後玩家將裝備 火箭發射器 ，並可將 閃丸丸 當作砲彈射出。\r\n命中目標後 閃丸丸 會爆炸，並陷入瀕死狀態。 科技 18"
+  },
+  {
+    "pal_id": "CaptainPenguin",
+    "pal_slug": "Penking",
+    "pal_name_zh": "企丸王",
+    "pal_name_en": "Penking",
+    "name_zh": "勇敢的海之戰士",
+    "name_en": "Brave Sailor",
+    "description": "若牠在隊伍中，擊倒 火屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CaptainPenguin_Black",
+    "pal_slug": "Penking_Lux",
+    "pal_name_zh": "閃丸王",
+    "pal_name_en": "Penking Lux",
+    "name_zh": "不屈的雷擊船長",
+    "name_en": "Unyielding Storm Commander",
+    "description": "若牠在隊伍中，玩家和帕魯以 水屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "WizardOwl",
+    "pal_slug": "Hoocrates",
+    "pal_name_zh": "啼卡爾",
+    "pal_name_en": "Hoocrates",
+    "name_zh": "暗影睿智",
+    "name_en": "Dark Knowledge",
+    "description": "若牠在隊伍中， 暗屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Alpaca",
+    "pal_slug": "Melpaca",
+    "pal_name_zh": "美露帕",
+    "pal_name_en": "Melpaca",
+    "name_zh": "蓬蓬羊毛",
+    "name_en": "Pacapaca Wool",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 君王美露帕 的防禦力和移動速度將會提升。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。 科技 7"
+  },
+  {
+    "pal_id": "KingAlpaca",
+    "pal_slug": "Kingpaca",
+    "pal_name_zh": "君王美露帕",
+    "pal_name_en": "Kingpaca",
+    "name_zh": "大力國王",
+    "name_en": "King of Muscles",
+    "description": "可騎在牠的背上移動。\r\n此帕魯的防禦力和移動速度會隨著隊伍中 美露帕 的數量提升，每隻增加 (5~14)% 。 科技 23"
+  },
+  {
+    "pal_id": "KingAlpaca_Ice",
+    "pal_slug": "Kingpaca_Cryst",
+    "pal_name_zh": "冰帝美露帕",
+    "pal_name_en": "Kingpaca Cryst",
+    "name_zh": "冷酷國王",
+    "name_en": "Coldhearted King",
+    "description": "可騎在牠的背上移動。\r\n此帕魯的防禦力和移動速度會隨著隊伍中 美露帕 的數量提升，每隻增加 (5~14)% 。 科技 46"
+  },
+  {
+    "pal_id": "DreamDemon",
+    "pal_slug": "Daedream",
+    "pal_name_zh": "寐魔",
+    "pal_name_en": "Daedream",
+    "name_zh": "逐夢者",
+    "name_en": "Dream Chaser",
+    "description": "若牠在隊伍中，就會出現於玩家身邊。\r\n牠會用 暗屬性 的魔彈追擊敵對的個體。\r\n且該追擊不會使獵物斃命。"
+  },
+  {
+    "pal_id": "Monkey",
+    "pal_slug": "Tanzee",
+    "pal_name_zh": "新葉猿",
+    "pal_name_en": "Tanzee",
+    "name_zh": "猴急步槍",
+    "name_en": "Cheery Rifle",
+    "description": "發動後， 新葉猿 會在一定時間內用突擊步槍猛烈掃射附近的敵人。 科技 12"
+  },
+  {
+    "pal_id": "Monkey_Fire",
+    "pal_slug": "Tanzee_Ignis",
+    "pal_name_zh": "秋葉猿",
+    "pal_name_en": "Tanzee Ignis",
+    "name_zh": "槍火奇猿",
+    "name_en": "Chipper Chimp Gunfire",
+    "description": "發動後， 秋葉猿 會在一定時間內以 火屬性 突擊步槍猛烈掃射附近的敵人。 科技 13"
+  },
+  {
+    "pal_id": "NightFox",
+    "pal_slug": "Nox",
+    "pal_name_zh": "露娜蒂",
+    "pal_name_en": "Nox",
+    "name_zh": "冷嬌",
+    "name_en": "Kuudere",
+    "description": "發動後，牠會偵測附近的 帕魯雕像 。"
+  },
+  {
+    "pal_id": "LavaGirl",
+    "pal_slug": "Flambelle",
+    "pal_name_zh": "融焰娘",
+    "pal_name_en": "Flambelle",
+    "name_zh": "熔岩之淚",
+    "name_en": "Magma Tears",
+    "description": "若牠在隊伍中，非戰鬥時每秒令玩家與隊伍帕魯的生命值恢復 (0.1~0.5)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 噴火器官 。"
+  },
+  {
+    "pal_id": "FlameBambi",
+    "pal_slug": "Rooby",
+    "pal_name_zh": "燎火鹿",
+    "pal_name_en": "Rooby",
+    "name_zh": "微小火種",
+    "name_en": "Tiny Spark",
+    "description": "若牠在隊伍中， 火屬性 帕魯的防禦力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 噴火器官 。"
+  },
+  {
+    "pal_id": "Bastet",
+    "pal_slug": "Mau",
+    "pal_name_zh": "喵絲特",
+    "pal_name_en": "Mau",
+    "name_zh": "招財貓",
+    "name_en": "Gold Digger",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會從地裡挖出 金幣 。"
+  },
+  {
+    "pal_id": "Bastet_Ice",
+    "pal_slug": "Mau_Cryst",
+    "pal_name_zh": "冰絲特",
+    "pal_name_en": "Mau Cryst",
+    "name_zh": "晴天冰靂",
+    "name_en": "Icy Whispers",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 結冰器官 。"
+  },
+  {
+    "pal_id": "Boar",
+    "pal_slug": "Rushoar",
+    "pal_name_zh": "草莽豬",
+    "pal_name_en": "Rushoar",
+    "name_zh": "堅硬頭殼",
+    "name_en": "Hard Head",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間破壞岩石的效率將提升 (500~2000)% 。 科技 6"
+  },
+  {
+    "pal_id": "Kitsunebi",
+    "pal_slug": "Foxparks",
+    "pal_name_zh": "火絨狐",
+    "pal_name_en": "Foxparks",
+    "name_zh": "抱抱火焰",
+    "name_en": "Huggy Fire",
+    "description": "發動後，牠會化身為裝備在玩家身上的火焰噴射器。 科技 6"
+  },
+  {
+    "pal_id": "Kitsunebi_Ice",
+    "pal_slug": "Foxparks_Cryst",
+    "pal_name_zh": "雪絨狐",
+    "pal_name_en": "Foxparks Cryst",
+    "name_zh": "抱抱寒冰",
+    "name_en": "Huggy Frost",
+    "description": "發動後，牠會化身為裝備在玩家身上的冷凍噴射器。 科技 24"
+  },
+  {
+    "pal_id": "NegativeOctopus",
+    "pal_slug": "Killamari",
+    "pal_name_zh": "勾魂魷",
+    "pal_name_en": "Killamari",
+    "name_zh": "炸魷魚",
+    "name_en": "Fried Squid",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠長時間漂浮在空中。"
+  },
+  {
+    "pal_id": "NegativeOctopus_Neutral",
+    "pal_slug": "Killamari_Primo",
+    "pal_name_zh": "蝕魂魷",
+    "pal_name_en": "Killamari Primo",
+    "name_zh": "炸魷魚",
+    "name_en": "Fried Killamari",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠長時間漂浮在空中。"
+  },
+  {
+    "pal_id": "CuteMole",
+    "pal_slug": "Fuddler",
+    "pal_name_zh": "遁地鼠",
+    "pal_name_en": "Fuddler",
+    "name_zh": "礦工啦啦隊",
+    "name_en": "Mining Assistance",
+    "description": "若牠在隊伍中，玩家採礦時造成的傷害將提升 (30~60)% ， 石頭 的重量將減輕 (80~100)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Deer",
+    "pal_slug": "Eikthyrdeer",
+    "pal_name_zh": "紫霞鹿",
+    "pal_name_en": "Eikthyrdeer",
+    "name_zh": "森林守護者",
+    "name_en": "Guardian of the Forest",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 ，破壞樹木的效率也會提升 (220~500)% 。 科技 12"
+  },
+  {
+    "pal_id": "Deer_Ground",
+    "pal_slug": "Eikthyrdeer_Terra",
+    "pal_name_zh": "祇岳鹿",
+    "pal_name_en": "Eikthyrdeer Terra",
+    "name_zh": "金之森守護者",
+    "name_en": "Guardian of the Golden Forest",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在據點裡，其他據點帕魯的 採伐 工作適應性等級 +1 。（不可疊加） 科技 21"
+  },
+  {
+    "pal_id": "Garm",
+    "pal_slug": "Direhowl",
+    "pal_name_zh": "獵狼",
+    "pal_name_en": "Direhowl",
+    "name_zh": "獵狼騎手",
+    "name_en": "Direhowl Rider",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間的移動速度會稍微變快。 科技 9"
+  },
+  {
+    "pal_id": "BerryGoat",
+    "pal_slug": "Caprity",
+    "pal_name_zh": "灌木羊",
+    "pal_name_en": "Caprity",
+    "name_zh": "摘取莓果",
+    "name_en": "Berry Picker",
+    "description": "將牠分派到 家畜牧場 ，就有機會從背上掉落 紅色莓果 。\r\n若牠在隊伍中，每5分鐘會讓目前飽足度最低的帕魯恢復 (100~200) 點飽足度。（不可疊加）"
+  },
+  {
+    "pal_id": "BerryGoat_Dark",
+    "pal_slug": "Caprity_Noct",
+    "pal_name_zh": "鬱木羊",
+    "pal_name_en": "Caprity Noct",
+    "name_zh": "採摘毒腺",
+    "name_en": "Venom Picker",
+    "description": "將牠分派到 家畜牧場 ，有機會從背上掉落 毒腺 。\r\n若牠在隊伍中，每5分鐘會讓目前飽足度最低的帕魯恢復 (100~200) 點飽足度。（不可疊加）"
+  },
+  {
+    "pal_id": "MopBaby",
+    "pal_slug": "Swee",
+    "pal_name_zh": "毛撣兒",
+    "pal_name_en": "Swee",
+    "name_zh": "毛茸茸茸茸",
+    "name_en": "Fluffy",
+    "description": "若牠在隊伍中， 毛老爹 的防禦力和攻擊力將會提升。"
+  },
+  {
+    "pal_id": "MopKing",
+    "pal_slug": "Sweepa",
+    "pal_name_zh": "毛老爹",
+    "pal_name_en": "Sweepa",
+    "name_zh": "毛茸茸之王",
+    "name_en": "King of Fluff",
+    "description": "可騎在牠的背上移動。\r\n此帕魯的防禦力和攻擊力會隨著隊伍中 毛撣兒 的數量提升，每隻增加 (12~24)% 。 科技 20"
+  },
+  {
+    "pal_id": "TentacleTurtle",
+    "pal_slug": "Turtacle",
+    "pal_name_zh": "盔盔仔",
+    "pal_name_en": "Turtacle",
+    "name_zh": "尖刺刺運輸",
+    "name_en": "Spikey Carrier",
+    "description": "若牠在隊伍中， 金屬礦石 的重量會減輕 (80~100)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "TentacleTurtle_Ground",
+    "pal_slug": "Turtacle_Terra",
+    "pal_name_zh": "金盔仔",
+    "pal_name_en": "Turtacle Terra",
+    "name_zh": "亮閃閃運輸",
+    "name_en": "Shiny Hauler",
+    "description": "若牠在隊伍中， 硫磺 和 石炭 的重量將減輕 (80~100)% ，且玩家和帕魯以 地屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "WindChimes",
+    "pal_slug": "Hangyu",
+    "pal_name_zh": "吊縛靈",
+    "pal_name_en": "Hangyu",
+    "name_zh": "空中鞦韆",
+    "name_en": "Flying Trapeze",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠緩緩上升。"
+  },
+  {
+    "pal_id": "WindChimes_Ice",
+    "pal_slug": "Hangyu_Cryst",
+    "pal_name_zh": "冰縛靈",
+    "pal_name_en": "Hangyu Cryst",
+    "name_zh": "寒空鞦韆",
+    "name_en": "Winter Trapeze",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠緩緩上升。"
+  },
+  {
+    "pal_id": "SweetsSheep",
+    "pal_slug": "Woolipop",
+    "pal_name_zh": "棉花糖",
+    "pal_name_en": "Woolipop",
+    "name_zh": "糖果甜心",
+    "name_en": "Candy Pop",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 棉花糖 。\r\n若牠在據點裡，據點帕魯的飽足度的減少幅度將會 (-10~-20)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "SweetsSheep_Ground",
+    "pal_slug": "Woolipop_Terra",
+    "pal_name_zh": "可可棉花糖",
+    "pal_name_en": "Woolipop Terra",
+    "name_zh": "苦澀甜心",
+    "name_en": "Bitter Pop",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 焦糖棉花糖 。\r\n若牠在據點裡，據點帕魯的飽足度的減少幅度將會 (-15~-25)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CowPal",
+    "pal_slug": "Mozzarina",
+    "pal_name_zh": "波霸牛",
+    "pal_name_en": "Mozzarina",
+    "name_zh": "產奶",
+    "name_en": "Milk Maker",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會產出 牛奶 。"
+  },
+  {
+    "pal_id": "BlueDragon",
+    "pal_slug": "Azurobe",
+    "pal_name_zh": "碧海龍",
+    "pal_name_en": "Azurobe",
+    "name_zh": "水翔之舞",
+    "name_en": "Waterwing Dance",
+    "description": "可騎在牠的背上在水上移動。\r\n騎乘期間玩家的攻擊會轉變為 水屬性 ，且攻擊力提升 (5~20)% 。 科技 24"
+  },
+  {
+    "pal_id": "BlueDragon_Ice",
+    "pal_slug": "Azurobe_Cryst",
+    "pal_name_zh": "碧月龍",
+    "pal_name_en": "Azurobe Cryst",
+    "name_zh": "冰翔之舞",
+    "name_en": "Icewing Dance",
+    "description": "可騎在牠的背上在水上移動。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，且攻擊力提升 (5~20)% 。 科技 27"
+  },
+  {
+    "pal_id": "ElecCat",
+    "pal_slug": "Sparkit",
+    "pal_name_zh": "伏特喵",
+    "pal_name_en": "Sparkit",
+    "name_zh": "靜電",
+    "name_en": "Static Electricity",
+    "description": "若牠在隊伍中， 雷屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 發電器官 。"
+  },
+  {
+    "pal_id": "Kelpie",
+    "pal_slug": "Kelpsea",
+    "pal_name_zh": "水靈兒",
+    "pal_name_en": "Kelpsea",
+    "name_zh": "灑水",
+    "name_en": "Aqua Spout",
+    "description": "若牠在隊伍中， 水屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 水棲帕魯的黏液 。"
+  },
+  {
+    "pal_id": "Kelpie_Fire",
+    "pal_slug": "Kelpsea_Ignis",
+    "pal_name_zh": "火靈兒",
+    "pal_name_en": "Kelpsea Ignis",
+    "name_zh": "熔岩潑灑",
+    "name_en": "Lava Spout",
+    "description": "若牠在隊伍中， 火屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 噴火器官 。"
+  },
+  {
+    "pal_id": "PinkRabbit",
+    "pal_slug": "Ribbuny",
+    "pal_name_zh": "姬小兔",
+    "pal_name_en": "Ribbuny",
+    "name_zh": "微笑公主兔",
+    "name_en": "Happy-Go-Lucky Bunny",
+    "description": "若牠在隊伍中， 無屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n若牠在據點裡，其他據點帕魯的 手工作業 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "PinkRabbit_Grass",
+    "pal_slug": "Ribbuny_Botan",
+    "pal_name_zh": "艾小兔",
+    "pal_name_en": "Ribbuny Botan",
+    "name_zh": "暴力青草兔",
+    "name_en": "Ground 'n' Pound",
+    "description": "若牠在隊伍中，玩家和帕魯以 草屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加） 艾小兔 在武器製作台或武器工廠等處工作時，工作效率將會提升 (200~400)% 。"
+  },
+  {
+    "pal_id": "JellyfishFairy",
+    "pal_slug": "Jelliette",
+    "pal_name_zh": "海月仙",
+    "pal_name_en": "Jelliette",
+    "name_zh": "海月仙祝福",
+    "name_en": "Jelliette Drop",
+    "description": "若牠在隊伍中，釣魚時獲得的道具增加 (55~95)% 。（不可疊加）\r\n此外，當 海月仙 和 海月靈 同時在據點裡時， 海月仙 澆水的工作速度提升 (50~120)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "JellyfishGhost",
+    "pal_slug": "Jellroy",
+    "pal_name_zh": "海月靈",
+    "pal_name_en": "Jellroy",
+    "name_zh": "海月靈祝福",
+    "name_en": "Jellroy Drop",
+    "description": "若牠在隊伍中，打撈時獲得的道具增加 (55~95)% 。（不可疊加）\r\n此外，當 海月仙 和 海月靈 同時在據點裡時， 海月靈 澆水的工作速度提升 (50~120)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "ClioneTwins",
+    "pal_slug": "Amione",
+    "pal_name_zh": "莉歐·莉涅",
+    "pal_name_en": "Amione",
+    "name_zh": "魔力雙子",
+    "name_en": "Magical Twin Powers",
+    "description": "若牠在據點裡，其他據點帕魯的 澆水 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "OctopusGirl",
+    "pal_slug": "Gloopie",
+    "pal_name_zh": "墨沫姬",
+    "pal_name_en": "Gloopie",
+    "name_zh": "纏人小公主",
+    "name_en": "Sticky Princess",
+    "description": "若牠在隊伍中，在釣魚小遊戲中的判定條和魚的圖示未重合期間，捕獲計量槽的下降量減少 (12~35)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "OctopusGirl_Neutral",
+    "pal_slug": "Gloopie_Primo",
+    "pal_name_zh": "夢沫姬",
+    "pal_name_en": "Gloopie Primo",
+    "name_zh": "咬咬姬",
+    "name_en": "Cephalo-Princess",
+    "description": "若牠在隊伍中， 水屬性 帕魯的防禦力提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Eagle",
+    "pal_slug": "Galeclaw",
+    "pal_name_zh": "天擒鳥",
+    "pal_name_en": "Galeclaw",
+    "name_zh": "天擒鳥滑翔",
+    "name_en": "Galeclaw Glider",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n能夠高速滑翔，且在滑翔期間能用右手使用槍械射擊。"
+  },
+  {
+    "pal_id": "GhostBlackCat",
+    "pal_slug": "Wispaw",
+    "pal_name_zh": "念影喵",
+    "pal_name_en": "Wispaw",
+    "name_zh": "附體靈貓",
+    "name_en": "Death-Cheating Feline",
+    "description": "若牠在隊伍中，觸發 背面獎勵 時的捕獲機率增加。（不可疊加）"
+  },
+  {
+    "pal_id": "HawkBird",
+    "pal_slug": "Nitewing",
+    "pal_name_zh": "疾風隼",
+    "pal_name_en": "Nitewing",
+    "name_zh": "旅伴",
+    "name_en": "Travel Companion",
+    "description": "可騎在牠的背上在空中飛行。 科技 15"
+  },
+  {
+    "pal_id": "CatBat",
+    "pal_slug": "Tombat",
+    "pal_name_zh": "貓蝠怪",
+    "pal_name_en": "Tombat",
+    "name_zh": "貓妖感應",
+    "name_en": "Ultrasonic Sensor",
+    "description": "發動後能夠發出超音波，探測附近 地下城、寶箱以及廢品的位置 。"
+  },
+  {
+    "pal_id": "ColorfulBird",
+    "pal_slug": "Tocotoco",
+    "pal_name_zh": "炸蛋鳥",
+    "pal_name_en": "Tocotoco",
+    "name_zh": "炸蛋發射器",
+    "name_en": "Eggbomb Launcher",
+    "description": "發動後牠會化身為裝備在玩家身上的發射器，製造出會爆炸的蛋。 科技 18"
+  },
+  {
+    "pal_id": "Kirin",
+    "pal_slug": "Univolt",
+    "pal_name_zh": "雷角馬",
+    "pal_name_en": "Univolt",
+    "name_zh": "疾風迅雷",
+    "name_en": "Swift Deity",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯以 雷屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加） 科技 14"
+  },
+  {
+    "pal_id": "Kirin_Ice",
+    "pal_slug": "Univolt_Cryst",
+    "pal_name_zh": "凌角馬",
+    "pal_name_en": "Univolt Cryst",
+    "name_zh": "冰華亂舞",
+    "name_en": "Frigid Deity",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，且攻擊力提升 (5~20)% 。 科技 64"
+  },
+  {
+    "pal_id": "SharkKid",
+    "pal_slug": "Gobfin",
+    "pal_name_zh": "鯊小子",
+    "pal_name_en": "Gobfin",
+    "name_zh": "易怒鯊鯊",
+    "name_en": "Angry Shark",
+    "description": "發動後會以 水槍 攻擊鎖定的目標。\r\n此帕魯使用的 水槍 的威力將提升至 (1.1~2.5)倍 。\r\n若牠在隊伍中，玩家的攻擊力提升 (10~20)% 。"
+  },
+  {
+    "pal_id": "SharkKid_Fire",
+    "pal_slug": "Gobfin_Ignis",
+    "pal_name_zh": "紅小鯊",
+    "pal_name_en": "Gobfin Ignis",
+    "name_zh": "易怒鯊鯊",
+    "name_en": "Angry Shark",
+    "description": "發動後會以 烈焰濺射 攻擊鎖定的目標。\r\n此帕魯使用的 烈焰濺射 的威力將提升至 (1.1~2.5)倍 。\r\n若牠在隊伍中，玩家的攻擊力提升 (10~20)% 。"
+  },
+  {
+    "pal_id": "Werewolf",
+    "pal_slug": "Loupmoon",
+    "pal_name_zh": "月鐮魔",
+    "pal_name_en": "Loupmoon",
+    "name_zh": "黑暗中的閃亮利爪",
+    "name_en": "Dark Gleam Strike",
+    "description": "發動後會以 飛躍爪擊 攻擊鎖定的目標敵人。\r\n此帕魯使用的 飛躍爪擊 的威力將提升至 (1.1~2.5)倍 。\r\n若牠在隊伍中，玩家的 近戰武器攻擊速度 提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Werewolf_Ice",
+    "pal_slug": "Loupmoon_Cryst",
+    "pal_name_zh": "霜鐮魔",
+    "pal_name_en": "Loupmoon Cryst",
+    "name_zh": "冰結利爪",
+    "name_en": "Frozen Gleam Strike",
+    "description": "發動後會以 吹雪爪擊 攻擊鎖定的目標敵人。\r\n此帕魯使用的 吹雪爪擊 的威力將提升至 (1.1~2.5)倍 。\r\n若牠在隊伍中，玩家的 近戰武器攻擊速度 提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "DarkCrow",
+    "pal_slug": "Cawgnito",
+    "pal_name_zh": "黑鴉隱士",
+    "pal_name_en": "Cawgnito",
+    "name_zh": "夜襲怪鳥",
+    "name_en": "Eerie Nightstreaker",
+    "description": "發動後可以使用 夜視 ，即使在黑暗中也能看得一清二楚。\r\n再次發動即可解除該效果。\r\n將牠分派到 家畜牧場 ，牠就有機會從地裡挖出 骨頭 。"
+  },
+  {
+    "pal_id": "FlameBuffalo",
+    "pal_slug": "Arsox",
+    "pal_name_zh": "熾焰牛",
+    "pal_name_en": "Arsox",
+    "name_zh": "溫暖之軀",
+    "name_en": "Warm Body",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家的 耐寒能力+2 。（不可疊加） 科技 15"
+  },
+  {
+    "pal_id": "FluffyBird",
+    "pal_slug": "Muffly",
+    "pal_name_zh": "雪綿啾",
+    "pal_name_en": "Muffly",
+    "name_zh": "軟萌圓圓鳥",
+    "name_en": "Fluffy Flutterer",
+    "description": "若牠在隊伍中，提升對陷入 凍結 狀態帕魯的捕獲機率。（不可疊加）"
+  },
+  {
+    "pal_id": "LittleBriarRose",
+    "pal_slug": "Bristla",
+    "pal_name_zh": "荊棘魔仙",
+    "pal_name_en": "Bristla",
+    "name_zh": "公主的視線",
+    "name_en": "Princess Gaze",
+    "description": "若牠在隊伍中， 草屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CuteButterfly",
+    "pal_slug": "Cinnamoth",
+    "pal_name_zh": "幻悅蝶",
+    "pal_name_en": "Cinnamoth",
+    "name_zh": "神秘鱗粉",
+    "name_en": "Mysterious Scales",
+    "description": "發動後會以 毒霧 攻擊鎖定的目標敵人。\r\n若牠在據點裡，其他據點帕魯的 牧場 的工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "ElecPomeranian",
+    "pal_slug": "Puffolt",
+    "pal_name_zh": "電汪汪",
+    "pal_name_en": "Puffolt",
+    "name_zh": "電光強化",
+    "name_en": "Crackle Booster",
+    "description": "若牠在據點裡，其他據點帕魯的 發電 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "FairyDragon",
+    "pal_slug": "Elphidran",
+    "pal_name_zh": "精靈龍",
+    "pal_name_en": "Elphidran",
+    "name_zh": "善良的聖潔之龍",
+    "name_en": "Amicable Holy Dragon",
+    "description": "可騎在牠的背上在空中飛行。\r\n飛行期間移動速度將會變快。\r\n若牠在隊伍中，擊倒 暗屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 20"
+  },
+  {
+    "pal_id": "FairyDragon_Water",
+    "pal_slug": "Elphidran_Aqua",
+    "pal_name_zh": "水靈龍",
+    "pal_name_en": "Elphidran Aqua",
+    "name_zh": "善良的流水之龍",
+    "name_en": "Amicable Water Dragon",
+    "description": "可騎在牠的背上在空中飛行。\r\n飛行期間移動速度將會變快。\r\n若牠在隊伍中，玩家和帕魯受到的 火屬性 傷害減輕 (15~30)% ，並且不會陷入 點燃 狀態。（不可疊加） 科技 32"
+  },
+  {
+    "pal_id": "BirdDragon",
+    "pal_slug": "Vanwyrm",
+    "pal_name_zh": "烽歌龍",
+    "pal_name_en": "Vanwyrm",
+    "name_zh": "大空襲擊者",
+    "name_en": "Aerial Marauder",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中，玩家攻擊敵方弱點部位造成的傷害將提升 (20~40)% 。（不可疊加） 科技 21"
+  },
+  {
+    "pal_id": "BirdDragon_Ice",
+    "pal_slug": "Vanwyrm_Cryst",
+    "pal_name_zh": "霜歌龍",
+    "pal_name_en": "Vanwyrm Cryst",
+    "name_zh": "大空襲擊者",
+    "name_en": "Aerial Marauder",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中，玩家攻擊敵方弱點部位造成的傷害將提升 (30~50)% 。（不可疊加） 科技 22"
+  },
+  {
+    "pal_id": "CatVampire",
+    "pal_slug": "Felbat",
+    "pal_name_zh": "夜幕魔蝠",
+    "pal_name_en": "Felbat",
+    "name_zh": "竊取生命",
+    "name_en": "Life Steal",
+    "description": "與牠並肩作戰時，會為玩家與 夜幕魔蝠 賦予生命竊取效果，攻擊造成傷害時將 恢復 等同於傷害量 (5~9)% 的 生命值 。"
+  },
+  {
+    "pal_id": "VioletFairy",
+    "pal_slug": "Vaelet",
+    "pal_name_zh": "薇莉塔",
+    "pal_name_en": "Vaelet",
+    "name_zh": "大地淨化",
+    "name_en": "Purification of Gaia",
+    "description": "若牠在隊伍中，擊倒 地屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 各式各樣的種子 。"
+  },
+  {
+    "pal_id": "SoldierBee",
+    "pal_slug": "Beegarde",
+    "pal_name_zh": "騎士蜂",
+    "pal_name_en": "Beegarde",
+    "name_zh": "工蜂",
+    "name_en": "Worker Bee",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 蜂蜜 。\r\n若牠在隊伍中， 女皇蜂 的攻擊力將會提升。"
+  },
+  {
+    "pal_id": "QueenBee",
+    "pal_slug": "Elizabee",
+    "pal_name_zh": "女皇蜂",
+    "pal_name_en": "Elizabee",
+    "name_zh": "女王蜂的統率",
+    "name_en": "Queen Bee Command",
+    "description": "此帕魯的攻擊力會隨著隊伍中 騎士蜂 的數量提升，每隻增加 (12~24)% 。"
+  },
+  {
+    "pal_id": "PinkLizard",
+    "pal_slug": "Lovander",
+    "pal_name_zh": "博愛蜥",
+    "pal_name_en": "Lovander",
+    "name_zh": "愛心吸取",
+    "name_en": "Heart Drain",
+    "description": "與牠並肩作戰時，會為玩家與 博愛蜥 賦予生命竊取效果，攻擊造成傷害時將 恢復 等同於傷害量 (5~9)% 的 生命值 。"
+  },
+  {
+    "pal_id": "NaughtyCat",
+    "pal_slug": "Grintale",
+    "pal_name_zh": "笑魘貓",
+    "pal_name_en": "Grintale",
+    "name_zh": "貓眼逼人",
+    "name_en": "Glaring Cat's Eye",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，撿到 帕魯蛋 時將有 (50~75)% 的機率再撿到1顆。（不可疊加） 科技 19"
+  },
+  {
+    "pal_id": "PurpleSpider",
+    "pal_slug": "Tarantriss",
+    "pal_name_zh": "桃蛛娘",
+    "pal_name_en": "Tarantriss",
+    "name_zh": "桃色之網",
+    "name_en": "Tarantriss’ Web",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 ，\r\n並向射擊地點發射蜘蛛絲，牽引身體快速移動。 科技 20"
+  },
+  {
+    "pal_id": "IceSeal",
+    "pal_slug": "Polapup",
+    "pal_name_zh": "香草豹冰",
+    "pal_name_en": "Polapup",
+    "name_zh": "滑雪行家",
+    "name_en": "Rider of the Snowy Mountain",
+    "description": "可騎在牠的背上移動。 在雪地上 時，移動速度提高 (80~160)% 。\r\n並且可以在斜坡處快速向下滑行。 科技 26"
+  },
+  {
+    "pal_id": "IceSeal_Ground",
+    "pal_slug": "Polapup_Terra",
+    "pal_name_zh": "巧克力豹冰",
+    "pal_name_en": "Polapup Terra",
+    "name_zh": "雪山速滑",
+    "name_en": "Snowy Mountain Slider",
+    "description": "可騎在牠的背上移動。 在雪地上 時，移動速度提高 (80~160)% 。\r\n並且可以在斜坡處快速向下滑行。\r\n滑行時初始速度較慢，但最高速度更快。 科技 55"
+  },
+  {
+    "pal_id": "LizardMan",
+    "pal_slug": "Leezpunk",
+    "pal_name_zh": "龐克蜥",
+    "pal_name_en": "Leezpunk",
+    "name_zh": "透明化",
+    "name_en": "Too Cool to be Seen",
+    "description": "發動後 (10~20) 秒內， 龐克蜥 與玩家將變 透明 ，並從敵人的視野中消失。"
+  },
+  {
+    "pal_id": "LizardMan_Fire",
+    "pal_slug": "Leezpunk_Ignis",
+    "pal_name_zh": "熱血蜥",
+    "pal_name_en": "Leezpunk Ignis",
+    "name_zh": "透明化",
+    "name_en": "Too Cool to be Seen",
+    "description": "發動後 (10~20) 秒內， 熱血蜥 與玩家將變 透明 ，並從敵人的視野中消失。"
+  },
+  {
+    "pal_id": "Gorilla",
+    "pal_slug": "Gorirat",
+    "pal_name_zh": "鐵拳猿",
+    "pal_name_en": "Gorirat",
+    "name_zh": "火力全開大猩猩模式",
+    "name_en": "Full-Power Gorilla Mode",
+    "description": "發動後會解放野性之力，並在一定時間內 鐵拳猿 的攻擊力將提升 (75~300)% 。"
+  },
+  {
+    "pal_id": "Gorilla_Ground",
+    "pal_slug": "Gorirat_Terra",
+    "pal_name_zh": "石掌猿",
+    "pal_name_en": "Gorirat Terra",
+    "name_zh": "火力全開鐵臂大猩猩",
+    "name_en": "Full-Power Gorilla Pound",
+    "description": "若牠在隊伍中，玩家的攀爬速度提升 (50~100)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Serpent",
+    "pal_slug": "Surfent",
+    "pal_name_zh": "滑水蛇",
+    "pal_name_en": "Surfent",
+    "name_zh": "滑滑水蛇",
+    "name_en": "Swift Swimmer",
+    "description": "可騎在牠的背上在水上移動。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 皮革 。 科技 16"
+  },
+  {
+    "pal_id": "Serpent_Ground",
+    "pal_slug": "Surfent_Terra",
+    "pal_name_zh": "流沙蛇",
+    "pal_name_en": "Surfent Terra",
+    "name_zh": "滑滑沙蛇",
+    "name_en": "Sand Swimmer",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，會為玩家的攻擊附加 (2~6) 點 泥濘 異常狀態值。（不可疊加） 科技 25"
+  },
+  {
+    "pal_id": "RobinHood",
+    "pal_slug": "Robinquill",
+    "pal_name_zh": "羽箭射手",
+    "pal_name_en": "Robinquill",
+    "name_zh": "射箭達人",
+    "name_en": "Grounded Archer",
+    "description": "若牠在隊伍中，玩家 使用弓箭時的傷害 提升 (10~35)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "RobinHood_Ground",
+    "pal_slug": "Robinquill_Terra",
+    "pal_name_zh": "山岳射手",
+    "pal_name_en": "Robinquill Terra",
+    "name_zh": "拉弓達人",
+    "name_en": "Master Archer",
+    "description": "若牠在隊伍中，玩家 使用弓箭時的蓄力速度 提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "FlowerRabbit",
+    "pal_slug": "Flopie",
+    "pal_name_zh": "波娜兔",
+    "pal_name_en": "Flopie",
+    "name_zh": "兔兔助手",
+    "name_en": "Helper Bunny",
+    "description": "若牠在隊伍中，就會出現在玩家身邊。\r\n牠會自動前去拾取附近的道具。"
+  },
+  {
+    "pal_id": "FoxMage",
+    "pal_slug": "Wixen",
+    "pal_name_zh": "焰巫狐",
+    "pal_name_en": "Wixen",
+    "name_zh": "狐神大人",
+    "name_en": "Lord Fox",
+    "description": "發動後， 焰巫狐 會將力量分給玩家，讓玩家的攻擊轉變為 火屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "FoxMage_Dark",
+    "pal_slug": "Wixen_Noct",
+    "pal_name_zh": "幽巫狐",
+    "pal_name_en": "Wixen Noct",
+    "name_zh": "巫神大人",
+    "name_en": "Black Fox Lord",
+    "description": "發動後， 幽巫狐 會將力量分給玩家，讓玩家的攻擊轉變為 暗屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "CatMage",
+    "pal_slug": "Katress",
+    "pal_name_zh": "闇巫貓",
+    "pal_name_en": "Katress",
+    "name_zh": "怪奇黑魔法",
+    "name_en": "Mystical Black Magic",
+    "description": "若牠在隊伍中，擊倒 無屬性 帕魯時的道具掉落量增加 (40~80)% 。\r\n此外，當玩家投擲帕魯球時，有 (10~50)% 的機率不會消耗帕魯球。（不可疊加）"
+  },
+  {
+    "pal_id": "CatMage_Fire",
+    "pal_slug": "Katress_Ignis",
+    "pal_name_zh": "熾巫貓",
+    "pal_name_en": "Katress Ignis",
+    "name_zh": "熱情黑魔法",
+    "name_en": "Blazing Black Magic",
+    "description": "若牠在據點裡，其他據點帕魯的 生火 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "HadesBird",
+    "pal_slug": "Helzephyr",
+    "pal_name_zh": "雷冥鳥",
+    "pal_name_en": "Helzephyr",
+    "name_zh": "冥府之翼",
+    "name_en": "Wings of Death",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 暗屬性 ，且攻擊力提升 (5~20)% 。 科技 25"
+  },
+  {
+    "pal_id": "HadesBird_Electric",
+    "pal_slug": "Helzephyr_Lux",
+    "pal_name_zh": "雷鳴鳥",
+    "pal_name_en": "Helzephyr Lux",
+    "name_zh": "雷鳴之翼",
+    "name_en": "Wings of Thunder",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。 科技 47"
+  },
+  {
+    "pal_id": "GrassMinotaur",
+    "pal_slug": "Elgrove",
+    "pal_name_zh": "密林陶洛斯",
+    "pal_name_en": "Elgrove",
+    "name_zh": "大自然之威",
+    "name_en": "Mother Nature's Menace",
+    "description": "發動後， 密林陶洛斯 會將力量分給玩家，讓玩家的攻擊轉變為 草屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "GrassMinotaur_Ice",
+    "pal_slug": "Elgrove_Cryst",
+    "pal_name_zh": "冰峰陶洛斯",
+    "pal_name_en": "Elgrove Cryst",
+    "name_zh": "永凍土之威",
+    "name_en": "Father Winter's Threat",
+    "description": "若牠在隊伍中，當玩家攻擊 浸濕 狀態的敵人時，一擊就會讓敵人陷入 凍結 狀態。"
+  },
+  {
+    "pal_id": "Mutant",
+    "pal_slug": "Lunaris",
+    "pal_name_zh": "秘斯媞雅",
+    "pal_name_en": "Lunaris",
+    "name_zh": "反重力",
+    "name_en": "Antigravity",
+    "description": "若牠在隊伍中，投擲出去的帕魯球將會 自動追蹤 帕魯，且玩家的負重上限提高 (300~600) 。（不可疊加）"
+  },
+  {
+    "pal_id": "FengyunDeeper",
+    "pal_slug": "Fenglope",
+    "pal_name_zh": "雲海鹿",
+    "pal_name_en": "Fenglope",
+    "name_zh": "風雲",
+    "name_en": "Wind and Clouds",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。 科技 26"
+  },
+  {
+    "pal_id": "FengyunDeeper_Electric",
+    "pal_slug": "Fenglope_Lux",
+    "pal_name_zh": "雷隱鹿",
+    "pal_name_en": "Fenglope Lux",
+    "name_zh": "雷雲",
+    "name_en": "Stormcloud",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在隊伍中，擊倒 水屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 57"
+  },
+  {
+    "pal_id": "FlowerDinosaur",
+    "pal_slug": "Dinossom",
+    "pal_name_zh": "花冠龍",
+    "pal_name_en": "Dinossom",
+    "name_zh": "馥郁花香之龍",
+    "name_en": "Fragrant Dragon",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 龍屬性 帕魯的防禦力會提升 (15~30)% 。（不可疊加） 科技 24"
+  },
+  {
+    "pal_id": "FlowerDinosaur_Electric",
+    "pal_slug": "Dinossom_Lux",
+    "pal_name_zh": "雷冠龍",
+    "pal_name_en": "Dinossom Lux",
+    "name_zh": "落雷綻放之龍",
+    "name_en": "Thunder Dragon",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 雷屬性 帕魯的防禦力會提升 (15~30)% 。（不可疊加） 科技 34"
+  },
+  {
+    "pal_id": "Ronin",
+    "pal_slug": "Bushi",
+    "pal_name_zh": "浪刃武士",
+    "pal_name_en": "Bushi",
+    "name_zh": "紫電一閃",
+    "name_en": "Brandish Blade",
+    "description": "發動後會以 居合斬 攻擊鎖定的目標敵人。\r\n此帕魯使用的 居合斬 的威力將提升至 (1.1~2.5)倍 。"
+  },
+  {
+    "pal_id": "Ronin_Dark",
+    "pal_slug": "Bushi_Noct",
+    "pal_name_zh": "鬼刃武士",
+    "pal_name_en": "Bushi Noct",
+    "name_zh": "秘技·紫電一閃",
+    "name_en": "Void Blade",
+    "description": "發動後會以 居合斬 攻擊鎖定的目標敵人。\r\n此帕魯使用的 居合斬 的威力將提升至 (1.1~2.5)倍 。\r\n若牠在隊伍中，玩家的 近戰武器攻擊傷害 在非戰鬥時提升 (30~65)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "IceCrocodile",
+    "pal_slug": "Munchill",
+    "pal_name_zh": "肚肚鱷",
+    "pal_name_en": "Munchill",
+    "name_zh": "雪盆大口",
+    "name_en": "Icy Maw",
+    "description": "若牠在隊伍中， 食材 和 料理 的重量會減輕 (30~60)% 。並在 冰屬性 帕魯原有的防腐效果基礎上，讓腐敗速度進一步 (-30~-80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GrassMammoth",
+    "pal_slug": "Mammorest",
+    "pal_name_zh": "森猛獁",
+    "pal_name_en": "Mammorest",
+    "name_zh": "蓋亞粉碎者",
+    "name_en": "Gaia Crusher",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間破壞樹木的效率會提高 (220~500)% ，破壞礦石的效率會提高 (500~2000)% 。 科技 28"
+  },
+  {
+    "pal_id": "GrassMammoth_Ice",
+    "pal_slug": "Mammorest_Cryst",
+    "pal_name_zh": "雪猛獁",
+    "pal_name_en": "Mammorest Cryst",
+    "name_zh": "冰霜粉碎者",
+    "name_en": "Ice Crusher",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間破壞樹木的效率會提高 (220~500)% ，破壞礦石的效率會提高 (500~2000)% 。 科技 41"
+  },
+  {
+    "pal_id": "StuffedShark",
+    "pal_slug": "Finsider",
+    "pal_name_zh": "布偶鯊",
+    "pal_name_en": "Finsider",
+    "name_zh": "水流扳機",
+    "name_en": "Water Gun",
+    "description": "發動後， 布偶鯊 會將力量分給玩家，讓玩家的攻擊轉變為 水屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "StuffedShark_Fire",
+    "pal_slug": "Finsider_Ignis",
+    "pal_name_zh": "粉粉布偶鯊",
+    "pal_name_en": "Finsider Ignis",
+    "name_zh": "炎炎收納間",
+    "name_en": "Ember Chamber",
+    "description": "若牠在隊伍中， 粉粉布偶鯊 會幫忙分擔負重，背包內武器的重量減輕 (60~100)% ，且玩家和帕魯以 火屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "FlowerDoll",
+    "pal_slug": "Petallia",
+    "pal_name_zh": "花麗娜",
+    "pal_name_en": "Petallia",
+    "name_zh": "花精靈的祝福",
+    "name_en": "Blessing of the Flower Spirit",
+    "description": "發動後，牠會用花朵的治癒之力恢復玩家 (75~85)% 的生命值。\r\n若牠在據點裡，其他據點帕魯的 播種 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "FlowerDoll_Fire",
+    "pal_slug": "Petallia_Ignis",
+    "pal_name_zh": "櫻麗娜",
+    "pal_name_en": "Petallia Ignis",
+    "name_zh": "花精靈的熱情",
+    "name_en": "Passion of the Flower Spirit",
+    "description": "發動後，牠會用花朵的治癒之力恢復玩家 (80~90)% 的生命值。\r\n若牠在隊伍中，玩家和帕魯受到的 草屬性 傷害減輕 (15~30)% ，並且不會陷入 纏繞 狀態。（不可疊加）"
+  },
+  {
+    "pal_id": "PandaGirl",
+    "pal_slug": "Leafan",
+    "pal_name_zh": "莉芳",
+    "pal_name_en": "Leafan",
+    "name_zh": "克己修練",
+    "name_en": "Selfless Discipline",
+    "description": "莉芳 的攻擊力和防禦力，會隨著隊伍中其他 草屬性 帕魯的數量提升，每隻增加 (2~6)% 。"
+  },
+  {
+    "pal_id": "Baphomet",
+    "pal_slug": "Incineram",
+    "pal_name_zh": "炎魔羊",
+    "pal_name_en": "Incineram",
+    "name_zh": "焰爪獵人",
+    "name_en": "Flameclaw Hunter",
+    "description": "發動後會以 獄火爪 攻擊鎖定的目標敵人。\r\n此帕魯使用的 獄火爪 的威力將提升至 (1.1~2.5)倍 。"
+  },
+  {
+    "pal_id": "Baphomet_Dark",
+    "pal_slug": "Incineram_Noct",
+    "pal_name_zh": "闇魔羊",
+    "pal_name_en": "Incineram Noct",
+    "name_zh": "黑爪獵人",
+    "name_en": "Darkclaw Hunter",
+    "description": "發動後會以 惡夢爪 攻擊鎖定的目標敵人。\r\n此帕魯使用的 惡夢爪 的威力將提升至 (1.1~2.5)倍 。"
+  },
+  {
+    "pal_id": "RaijinDaughter",
+    "pal_slug": "Dazzi",
+    "pal_name_zh": "雷鳴童子",
+    "pal_name_en": "Dazzi",
+    "name_zh": "雷電姑娘",
+    "name_en": "Lady of Lightning",
+    "description": "若牠在隊伍中，就會出現於玩家身邊。\r\n牠會用 雷屬性 的落雷追擊敵對的個體。\r\n且該追擊不會使獵物斃命。"
+  },
+  {
+    "pal_id": "RaijinDaughter_Water",
+    "pal_slug": "Dazzi_Noct",
+    "pal_name_zh": "天陰童子",
+    "pal_name_en": "Dazzi Noct",
+    "name_zh": "烏雲姑娘",
+    "name_en": "Lady of Dark Lightning",
+    "description": "若牠在隊伍中，就會出現於玩家身邊。\r\n牠會用 暗屬性 的落雷追擊敵對的個體。\r\n且該追擊不會使獵物斃命。"
+  },
+  {
+    "pal_id": "FireKirin",
+    "pal_slug": "Pyrin",
+    "pal_name_zh": "火麒麟",
+    "pal_name_en": "Pyrin",
+    "name_zh": "赤兔馬",
+    "name_en": "Red Hare",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 火屬性 ，且攻擊力提升 (5~20)% 。 科技 29"
+  },
+  {
+    "pal_id": "FireKirin_Dark",
+    "pal_slug": "Pyrin_Noct",
+    "pal_name_zh": "邪麒麟",
+    "pal_name_en": "Pyrin Noct",
+    "name_zh": "黑兔馬",
+    "name_en": "Black Hare",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 暗屬性 ，且攻擊力提升 (5~20)% 。 科技 34"
+  },
+  {
+    "pal_id": "LazyDragon",
+    "pal_slug": "Relaxaurus",
+    "pal_name_zh": "佩克龍",
+    "pal_name_en": "Relaxaurus",
+    "name_zh": "餓餓飛彈",
+    "name_en": "Hungry Missile",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間牠還能用飛彈發射器連續攻擊。 科技 45"
+  },
+  {
+    "pal_id": "LazyDragon_Electric",
+    "pal_slug": "Relaxaurus_Lux",
+    "pal_name_zh": "派克龍",
+    "pal_name_en": "Relaxaurus Lux",
+    "name_zh": "飛彈盛宴",
+    "name_en": "Missile Party",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間牠還能用飛彈發射器連續攻擊。 科技 48"
+  },
+  {
+    "pal_id": "IceFox",
+    "pal_slug": "Foxcicle",
+    "pal_name_zh": "吹雪狐",
+    "pal_name_en": "Foxcicle",
+    "name_zh": "極光的指引",
+    "name_en": "Aurora Guide",
+    "description": "若牠在隊伍中， 冰屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 結冰器官 。"
+  },
+  {
+    "pal_id": "ThunderBird",
+    "pal_slug": "Beakon",
+    "pal_name_zh": "迅雷鳥",
+    "pal_name_en": "Beakon",
+    "name_zh": "天雷",
+    "name_en": "Thunderous",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。 迅雷鳥 的移動速度，會隨著隊伍中其他 雷屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 29"
+  },
+  {
+    "pal_id": "ThunderBird_Ice",
+    "pal_slug": "Beakon_Cryst",
+    "pal_name_zh": "疾霜鳥",
+    "pal_name_en": "Beakon Cryst",
+    "name_zh": "天霰",
+    "name_en": "Coldsnap",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，且攻擊力提升 (5~20)% 。 疾霜鳥 的移動速度，會隨著隊伍中其他 冰屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 71"
+  },
+  {
+    "pal_id": "GhostAnglerfish",
+    "pal_slug": "Ghangler",
+    "pal_name_zh": "冥燈魚",
+    "pal_name_en": "Ghangler",
+    "name_zh": "暗夜引路人",
+    "name_en": "Master of Darkness",
+    "description": "可騎在牠的背上在水上移動。 冥燈魚 的移動速度，會隨著隊伍中其他 暗屬性 或 水屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 31"
+  },
+  {
+    "pal_id": "GhostAnglerfish_Fire",
+    "pal_slug": "Ghangler_Ignis",
+    "pal_name_zh": "炙燈魚",
+    "pal_name_en": "Ghangler Ignis",
+    "name_zh": "深海名廚",
+    "name_en": "Abyssal Celebrity Chef",
+    "description": "可騎在牠的背上在水上移動。 炙燈魚 的移動速度，會隨著隊伍中其他 火屬性 或 水屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 42"
+  },
+  {
+    "pal_id": "ThunderDog",
+    "pal_slug": "Rayhound",
+    "pal_name_zh": "霹靂犬",
+    "pal_name_en": "Rayhound",
+    "name_zh": "雷靂躍行",
+    "name_en": "Lightning Shepherd",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。 霹靂犬 的移動速度，會隨著隊伍中其他 雷屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 30"
+  },
+  {
+    "pal_id": "ThunderDog_Ice",
+    "pal_slug": "Rayhound_Cryst",
+    "pal_name_zh": "凜光犬",
+    "pal_name_en": "Rayhound Cryst",
+    "name_zh": "霜躍疾行",
+    "name_en": "Snow Shepherd",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在隊伍中， 冰屬性 帕魯的防禦力會提升 (15~30)% 。（不可疊加） 科技 32"
+  },
+  {
+    "pal_id": "DarkScorpion",
+    "pal_slug": "Menasting",
+    "pal_name_zh": "冥鎧蠍",
+    "pal_name_en": "Menasting",
+    "name_zh": "鋼鐵之蠍",
+    "name_en": "Steel Scorpion",
+    "description": "若牠在隊伍中，玩家的防禦力將提升 (5~10)% ，且擊倒 雷屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "DarkScorpion_Ground",
+    "pal_slug": "Menasting_Terra",
+    "pal_name_zh": "金鎧蠍",
+    "pal_name_en": "Menasting Terra",
+    "name_zh": "黃金之蠍",
+    "name_en": "Golden Scorpion",
+    "description": "若牠在隊伍中，玩家的防禦力將提升 (5~10)% ，且擊倒 雷屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CactusDoll",
+    "pal_slug": "Needoll",
+    "pal_name_zh": "球抱苞",
+    "pal_name_en": "Needoll",
+    "name_zh": "請你抱抱我",
+    "name_en": "Hug Me Please",
+    "description": "若牠在隊伍中，玩家和帕魯對 纏繞 狀態的敵人造成的傷害將提升 (50~65)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CactusDoll_Dark",
+    "pal_slug": "Needoll_Noct",
+    "pal_name_zh": "妖抱苞",
+    "pal_name_en": "Needoll Noct",
+    "name_zh": "緊緊抱住你",
+    "name_en": "Hug You So Much",
+    "description": "若牠在隊伍中，會為玩家的攻擊附加 (2~6) 點 纏繞 異常狀態值。（不可疊加）"
+  },
+  {
+    "pal_id": "IceDeer",
+    "pal_slug": "Reindrix",
+    "pal_name_zh": "嚴冬鹿",
+    "pal_name_en": "Reindrix",
+    "name_zh": "冰涼之軀",
+    "name_en": "Cool Body",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家的 耐暑能力+2 。（不可疊加） 科技 31"
+  },
+  {
+    "pal_id": "GrassPanda",
+    "pal_slug": "Mossanda",
+    "pal_name_zh": "葉胖達",
+    "pal_name_en": "Mossanda",
+    "name_zh": "不良熊貓",
+    "name_en": "Grenadier Panda",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間牠還能用榴彈發射器連續攻擊。 科技 32"
+  },
+  {
+    "pal_id": "GrassPanda_Electric",
+    "pal_slug": "Mossanda_Lux",
+    "pal_name_zh": "雷胖達",
+    "pal_name_en": "Mossanda Lux",
+    "name_zh": "不良熊貓",
+    "name_en": "Grenadier Panda",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間牠還能用榴彈發射器連續攻擊。 科技 34"
+  },
+  {
+    "pal_id": "WeaselDragon",
+    "pal_slug": "Chillet",
+    "pal_name_zh": "疾旋鼬",
+    "pal_name_en": "Chillet",
+    "name_zh": "扭扭鼬鼬",
+    "name_en": "Wriggling Weasel",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 龍屬性 ，且攻擊力提升 (5~20)% 。 科技 11"
+  },
+  {
+    "pal_id": "WeaselDragon_Fire",
+    "pal_slug": "Chillet_Ignis",
+    "pal_name_zh": "桃旋鼬",
+    "pal_name_en": "Chillet Ignis",
+    "name_zh": "燒鼬鼬",
+    "name_en": "Sparkling Weasel",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 火屬性 ，且攻擊力提升 (5~20)% 。 科技 40"
+  },
+  {
+    "pal_id": "RedArmorBird",
+    "pal_slug": "Ragnahawk",
+    "pal_name_zh": "燧火鳥",
+    "pal_name_en": "Ragnahawk",
+    "name_zh": "火焰之翼",
+    "name_en": "Flame Wing",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 火屬性 ，且攻擊力提升 (5~20)% 。 科技 33"
+  },
+  {
+    "pal_id": "VolcanoDragon",
+    "pal_slug": "Moldron",
+    "pal_name_zh": "流焰龍",
+    "pal_name_en": "Moldron",
+    "name_zh": "熔岩霸主",
+    "name_en": "Magma Overload",
+    "description": "可騎在牠的背上移動。 流焰龍 的攻擊力，會隨著隊伍中其他 火屬性 或 地屬性 帕魯的數量提升，每隻增加 (4~8)% 。 科技 36"
+  },
+  {
+    "pal_id": "VolcanoDragon_Ice",
+    "pal_slug": "Moldron_Cryst",
+    "pal_name_zh": "川霜龍",
+    "pal_name_en": "Moldron Cryst",
+    "name_zh": "寒冰霸主",
+    "name_en": "Ice Overload",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯以 冰屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加） 科技 70"
+  },
+  {
+    "pal_id": "TropicalOstrich",
+    "pal_slug": "Palumba",
+    "pal_name_zh": "咕咕桑葩",
+    "pal_name_en": "Palumba",
+    "name_zh": "森巴舞步",
+    "name_en": "Samba Step",
+    "description": "可騎在牠的背上移動。 在草地上 時，移動速度提高 (155~240)% 。 科技 35"
+  },
+  {
+    "pal_id": "DrillGame",
+    "pal_slug": "Digtoise",
+    "pal_name_zh": "碎岩龜",
+    "pal_name_en": "Digtoise",
+    "name_zh": "鑽頭粉碎者",
+    "name_en": "Drill Crusher",
+    "description": "發動後會進入 甲殼迴旋 狀態。\r\n牠會一邊旋轉一邊跟隨玩家，且破壞礦石的效率將提升 (800~2000)% 。"
+  },
+  {
+    "pal_id": "SakuraSaurus",
+    "pal_slug": "Broncherry",
+    "pal_name_zh": "連理龍",
+    "pal_name_en": "Broncherry",
+    "name_zh": "戀香初綻",
+    "name_en": "Love's First Blossom",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，撿到的帕魯蛋將有 (35~45)% 的機率變成頭目帕魯蛋。（不可疊加） 科技 33"
+  },
+  {
+    "pal_id": "SakuraSaurus_Water",
+    "pal_slug": "Broncherry_Aqua",
+    "pal_name_zh": "海誓龍",
+    "pal_name_en": "Broncherry Aqua",
+    "name_zh": "純心盛綻",
+    "name_en": "Purity's Full Bloom",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，撿到的帕魯蛋將有 (45~55)% 的機率變成頭目帕魯蛋。（不可疊加） 科技 44"
+  },
+  {
+    "pal_id": "LazyCatfish",
+    "pal_slug": "Dumud",
+    "pal_name_zh": "趴趴鯰",
+    "pal_name_en": "Dumud",
+    "name_zh": "改善土質",
+    "name_en": "Soil Improver",
+    "description": "若牠在隊伍中， 地屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 優質帕魯油 。"
+  },
+  {
+    "pal_id": "LazyCatfish_Gold",
+    "pal_slug": "Dumud_Gild",
+    "pal_name_zh": "梆梆鯰",
+    "pal_name_en": "Dumud Gild",
+    "name_zh": "黃金豐收",
+    "name_en": "Golden Harvest",
+    "description": "若牠在隊伍中，被打倒的敵人掉落的 金幣 提升 (100~200)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就會掉落 優質帕魯油 或有小機率掉落 金幣 。"
+  },
+  {
+    "pal_id": "Plesiosaur",
+    "pal_slug": "Braloha",
+    "pal_name_zh": "梁葉龍",
+    "pal_name_en": "Braloha",
+    "name_zh": "暖洋洋晴日",
+    "name_en": "Balmy Weather",
+    "description": "可騎在牠的背上移動。\r\n若牠在據點裡，分派到 配種牧場 的帕魯產蛋速度加快 (20~50)% 。（不可疊加） 科技 36"
+  },
+  {
+    "pal_id": "AmaterasuWolf",
+    "pal_slug": "Kitsun",
+    "pal_name_zh": "蒼焰狼",
+    "pal_name_en": "Kitsun",
+    "name_zh": "日輪之狼",
+    "name_en": "Wolf of the Sun",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯受到的 冰屬性 傷害減輕 (15~30)% ，並且不會陷入 凍結 狀態。（不可疊加） 科技 57"
+  },
+  {
+    "pal_id": "AmaterasuWolf_Dark",
+    "pal_slug": "Kitsun_Noct",
+    "pal_name_zh": "幽焰狼",
+    "pal_name_en": "Kitsun Noct",
+    "name_zh": "曇天之狼",
+    "name_en": "Gloomhowl",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯受到的 暗屬性 傷害減輕 (15~30)% ，並且不會陷入 黑暗 狀態。（不可疊加） 科技 59"
+  },
+  {
+    "pal_id": "Manticore",
+    "pal_slug": "Blazehowl",
+    "pal_name_zh": "獄焰王",
+    "pal_name_en": "Blazehowl",
+    "name_zh": "獄炎獅子",
+    "name_en": "Hellflame Lion",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，擊倒 草屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 33"
+  },
+  {
+    "pal_id": "Manticore_Dark",
+    "pal_slug": "Blazehowl_Noct",
+    "pal_name_zh": "獄閻王",
+    "pal_name_en": "Blazehowl Noct",
+    "name_zh": "黑炎獅子",
+    "name_en": "Darkflame Lion",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，擊倒 無屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 35"
+  },
+  {
+    "pal_id": "HerculesBeetle",
+    "pal_slug": "Warsect",
+    "pal_name_zh": "鎧格力斯",
+    "pal_name_en": "Warsect",
+    "name_zh": "攻守一體的黑甲",
+    "name_en": "Cast-Iron Shell",
+    "description": "若牠在隊伍中，當玩家的近戰攻擊在 (5~9)秒 內命中5次時，牠會在玩家周圍 產生護盾 。（不可疊加）"
+  },
+  {
+    "pal_id": "HerculesBeetle_Ground",
+    "pal_slug": "Warsect_Terra",
+    "pal_name_zh": "格魯力斯",
+    "pal_name_en": "Warsect Terra",
+    "name_zh": "攻守一體的金甲",
+    "name_en": "Fullmetal Shell",
+    "description": "若牠在隊伍中，當玩家的近戰攻擊在 (5~9)秒 內命中5次時，牠會在玩家周圍 產生護盾 。（不可疊加）"
+  },
+  {
+    "pal_id": "SnowPeafowl",
+    "pal_slug": "Frostplume",
+    "pal_name_zh": "白真雪雀",
+    "pal_name_en": "Frostplume",
+    "name_zh": "孔雀迅捷",
+    "name_en": "Peacock Pounce",
+    "description": "若牠在隊伍中，受到 白真雪雀 釋放的冷氣影響，玩家會更專注，武器 重新裝彈的速度 提升 (20~50)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "DarkFlameFox",
+    "pal_slug": "Majex",
+    "pal_name_zh": "紫狐嬌",
+    "pal_name_en": "Majex",
+    "name_zh": "暗狐秘咒",
+    "name_en": "Phantasmal Arcana",
+    "description": "若牠在隊伍中，玩家的攻擊擊中 點燃 狀態的敵人時，會 使敵人週邊燃燒 ，觸碰到火焰的敵人將持續受到相當於玩家攻擊力 (15~30)% 的傷害。（不可疊加）"
+  },
+  {
+    "pal_id": "WhiteMoth",
+    "pal_slug": "Sibelyx",
+    "pal_name_zh": "綢笠蛾",
+    "pal_name_en": "Sibelyx",
+    "name_zh": "神秘纏絲者",
+    "name_en": "Silk Shroud",
+    "description": "發動後會以 鑽石星辰 攻擊鎖定的目標敵人。\r\n此帕魯使用的 鑽石星辰 的威力將提升至 (1.1~2.5)倍 。\r\n將牠分派到 家畜牧場 ，牠就有機會製造出 優質布 。"
+  },
+  {
+    "pal_id": "WhiteMoth_Neutral",
+    "pal_slug": "Sibelyx_Primo",
+    "pal_name_zh": "絹笠蛾",
+    "pal_name_en": "Sibelyx Primo",
+    "name_zh": "神秘纏金絲者",
+    "name_en": "Gilded Shroud",
+    "description": "若牠在隊伍中， 無屬性 帕魯的防禦力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會製作 優質布 。"
+  },
+  {
+    "pal_id": "GhostBeast",
+    "pal_slug": "Maraith",
+    "pal_name_zh": "噬魂獸",
+    "pal_name_en": "Maraith",
+    "name_zh": "冥界使者",
+    "name_en": "Messenger of Death",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，每次打倒敵人時，所有隊伍帕魯的主動技能冷卻時間縮短 (30~60)% 。（不可疊加） 科技 37"
+  },
+  {
+    "pal_id": "MushroomDragon",
+    "pal_slug": "Shroomer",
+    "pal_name_zh": "菇咚",
+    "pal_name_en": "Shroomer",
+    "name_zh": "飄飄然孢子",
+    "name_en": "Rampant Spores",
+    "description": "可騎在牠的背上移動。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 蘑菇 或 洞穴蘑菇 。 科技 39"
+  },
+  {
+    "pal_id": "MushroomDragon_Dark",
+    "pal_slug": "Shroomer_Noct",
+    "pal_name_zh": "菇波",
+    "pal_name_en": "Shroomer Noct",
+    "name_zh": "幽幽然孢子",
+    "name_en": "Roiling Spores",
+    "description": "可騎在牠的背上移動。\r\n若牠在據點裡， 菇波 的神奇孢子將會使據點內帕魯的SAN值下降速度減緩 (10~15)% 。 科技 39"
+  },
+  {
+    "pal_id": "IceWitch",
+    "pal_slug": "Icelyn",
+    "pal_name_zh": "冰姬靈",
+    "pal_name_en": "Icelyn",
+    "name_zh": "魔女的冷氣",
+    "name_en": "Witch's Icy Veil",
+    "description": "發動後， 冰姬靈 會將力量分給玩家，讓玩家的攻擊轉變為 冰屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "MummyPal",
+    "pal_slug": "Gildra",
+    "pal_name_zh": "縛乃伊",
+    "pal_name_en": "Gildra",
+    "name_zh": "黃泉歸來",
+    "name_en": "Resurrection",
+    "description": "與玩家並肩作戰時，若 縛乃伊 陷入瀕死狀態， 縛乃伊 會消耗全部的飽足度並 復活 。"
+  },
+  {
+    "pal_id": "Umihebi",
+    "pal_slug": "Jormuntide",
+    "pal_name_zh": "覆海龍",
+    "pal_name_en": "Jormuntide",
+    "name_zh": "呼喚風暴的深海龍",
+    "name_en": "Stormbringer Sea Dragon",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，玩家和帕魯對 浸濕 狀態的敵人造成的傷害將提升 (50~65)% 。（不可疊加） 科技 40"
+  },
+  {
+    "pal_id": "Umihebi_Fire",
+    "pal_slug": "Jormuntide_Ignis",
+    "pal_name_zh": "騰炎龍",
+    "pal_name_en": "Jormuntide Ignis",
+    "name_zh": "呼喚風暴的熔岩龍",
+    "name_en": "Stormbringer Lava Dragon",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，能讓 熔岩傷害無效化 ，且玩家和帕魯對 點燃 狀態的敵人造成的傷害將提升 (50~65)% 。（不可疊加） 科技 59"
+  },
+  {
+    "pal_id": "Suzaku",
+    "pal_slug": "Suzaku",
+    "pal_name_zh": "朱雀",
+    "pal_name_en": "Suzaku",
+    "name_zh": "炎之翼",
+    "name_en": "Wings of Flame",
+    "description": "可騎在牠的背上在空中飛行。 朱雀 的移動速度，會隨著隊伍中其他 火屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 43"
+  },
+  {
+    "pal_id": "Suzaku_Water",
+    "pal_slug": "Suzaku_Aqua",
+    "pal_name_zh": "清雀",
+    "pal_name_en": "Suzaku Aqua",
+    "name_zh": "水之翼",
+    "name_en": "Wings of Water",
+    "description": "可騎在牠的背上在空中飛行。 清雀 的移動速度，會隨著隊伍中其他 水屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 44"
+  },
+  {
+    "pal_id": "FeatherOstrich",
+    "pal_slug": "Dazemu",
+    "pal_name_zh": "戰冠雀",
+    "pal_name_en": "Dazemu",
+    "name_zh": "飛砂腿",
+    "name_en": "Sand Sprint",
+    "description": "可騎在牠的背上移動。 在砂地上 時，移動速度提高 (50~100)% 。 科技 28"
+  },
+  {
+    "pal_id": "SkyDragon",
+    "pal_slug": "Quivern",
+    "pal_name_zh": "天羽龍",
+    "pal_name_en": "Quivern",
+    "name_zh": "天空龍的慈愛",
+    "name_en": "Sky Dragon Affection",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中， 龍屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加） 科技 38"
+  },
+  {
+    "pal_id": "SkyDragon_Grass",
+    "pal_slug": "Quivern_Botan",
+    "pal_name_zh": "翠羽龍",
+    "pal_name_en": "Quivern Botan",
+    "name_zh": "翠龍的慈愛",
+    "name_en": "Grass Dragon Affection",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 草屬性 ，且攻擊力提升 (5~20)% 。 科技 45"
+  },
+  {
+    "pal_id": "LeafPrincess",
+    "pal_slug": "Lullu",
+    "pal_name_zh": "春彩娘",
+    "pal_name_en": "Lullu",
+    "name_zh": "繁花告春",
+    "name_en": "Floral Boost",
+    "description": "若牠在據點裡， 春彩娘 會為農園注入元氣，使作物的生長加速 (50~70)% 。"
+  },
+  {
+    "pal_id": "SmallArmadillo",
+    "pal_slug": "Kikit",
+    "pal_name_zh": "球犰",
+    "pal_name_en": "Kikit",
+    "name_zh": "滾滾沙灘球",
+    "name_en": "Sandball Soccer",
+    "description": "若牠在隊伍中， 地屬性 帕魯的防禦力提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GuardianDog",
+    "pal_slug": "Yakumo",
+    "pal_name_zh": "八雲犬",
+    "pal_name_en": "Yakumo",
+    "name_zh": "物以類聚",
+    "name_en": "Birds of a Feather",
+    "description": "可騎在牠的背上移動。\r\n與牠並肩作戰時，遇到和牠有著相同被動技能的帕魯的機率將提升 (15~30)% 。\r\n※部分被動技能除外 科技 41"
+  },
+  {
+    "pal_id": "SwordCutlassfish",
+    "pal_slug": "Skutlass",
+    "pal_name_zh": "鞘刀魚",
+    "pal_name_en": "Skutlass",
+    "name_zh": "斬骨斷肉",
+    "name_en": "Fish Fillet",
+    "description": "發動後， 鞘刀魚 會化身為玩家的刀（攻擊： (2600~3900) ）。\r\n若不及時解除， 鞘刀魚 將陷入瀕死狀態。\r\n發動居合斬後同樣會陷入瀕死狀態。"
+  },
+  {
+    "pal_id": "SwordCutlassfish_Fire",
+    "pal_slug": "Skutlass_Ignis",
+    "pal_name_zh": "煉刃魚",
+    "pal_name_en": "Skutlass Ignis",
+    "name_zh": "煉骨斷肉",
+    "name_en": "Seared Fish Fillet",
+    "description": "發動後， 煉刃魚 會化身為玩家的刀（攻擊： (2900~4200) ）。\r\n若不及時解除， 煉刃魚 將陷入瀕死狀態。\r\n發動居合斬後同樣會陷入瀕死狀態。"
+  },
+  {
+    "pal_id": "VolcanicMonster",
+    "pal_slug": "Reptyro",
+    "pal_name_zh": "熔岩獸",
+    "pal_name_en": "Reptyro",
+    "name_zh": "貪食礦石之獸",
+    "name_en": "Ore-Loving Beast",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 所有礦石種類 的重量會減輕 (30~60)% 。（不可疊加） 科技 42"
+  },
+  {
+    "pal_id": "VolcanicMonster_Ice",
+    "pal_slug": "Reptyro_Cryst",
+    "pal_name_zh": "寒霜獸",
+    "pal_name_en": "Reptyro Cryst",
+    "name_zh": "貪食冰霜之獸",
+    "name_en": "Ice-Loving Beast",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 所有礦石種類 的重量會減輕 (35~65)% 。（不可疊加） 科技 43"
+  },
+  {
+    "pal_id": "NightBlueHorse",
+    "pal_slug": "Starryon",
+    "pal_name_zh": "夜冥駒",
+    "pal_name_en": "Starryon",
+    "name_zh": "夜舞者",
+    "name_en": "Night Dancer",
+    "description": "可騎在牠的背上移動。騎乘期間跳躍能力提升。\r\n夜晚期間，此帕魯的移動速度提升 (50~100)% 。（不可疊加） 科技 57"
+  },
+  {
+    "pal_id": "NightBlueHorse_Neutral",
+    "pal_slug": "Starryon_Primo",
+    "pal_name_zh": "日耀駒",
+    "pal_name_en": "Starryon Primo",
+    "name_zh": "光舞者",
+    "name_en": "Light Dancer",
+    "description": "可騎在牠的背上移動，騎乘期間跳躍能力提升。 日耀駒 的移動速度，會隨著隊伍中其他 無屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 77"
+  },
+  {
+    "pal_id": "RockBeast",
+    "pal_slug": "Pierdon",
+    "pal_name_zh": "磐峰獸",
+    "pal_name_en": "Pierdon",
+    "name_zh": "能量石",
+    "name_en": "Power Stone",
+    "description": "若牠在隊伍中，玩家和帕魯對 泥濘 狀態的敵人造成的傷害將提升 (50~65)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "RockBeast_Ice",
+    "pal_slug": "Pierdon_Cryst",
+    "pal_name_zh": "寒峰獸",
+    "pal_name_en": "Pierdon Cryst",
+    "name_zh": "能量水晶",
+    "name_en": "Power Crystal",
+    "description": "若牠在隊伍中，玩家和帕魯受到的 龍屬性 傷害減輕 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "WhiteTiger",
+    "pal_slug": "Cryolinx",
+    "pal_name_zh": "冰棘獸",
+    "pal_name_en": "Cryolinx",
+    "name_zh": "獵龍者",
+    "name_en": "Dragon Hunter",
+    "description": "若牠在隊伍中，擊倒 龍屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "WhiteTiger_Ground",
+    "pal_slug": "Cryolinx_Terra",
+    "pal_name_zh": "金棘獸",
+    "pal_name_en": "Cryolinx Terra",
+    "name_zh": "爆碎鐵腕",
+    "name_en": "Explosive Strength",
+    "description": "若牠在隊伍中，攻擊擊中 弱點部位 時，下次擊中弱點部位的攻擊威力提升 (30~60)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "SmallYeti",
+    "pal_slug": "Snugloo",
+    "pal_name_zh": "雪墩墩",
+    "pal_name_en": "Snugloo",
+    "name_zh": "不見之眼",
+    "name_en": "Invisible Eye",
+    "description": "若牠在隊伍中，會使玩家不容易被敵人發現。（不可疊加）"
+  },
+  {
+    "pal_id": "Yeti",
+    "pal_slug": "Wumpo",
+    "pal_name_zh": "白絨雪怪",
+    "pal_name_en": "Wumpo",
+    "name_zh": "雪山巨人",
+    "name_en": "Guardian of the Snowy Mountain",
+    "description": "可騎在牠的背上移動。\r\n若牠在據點裡，其他據點帕魯的 搬運 工作適應性等級 +1 。（不可疊加） 科技 45"
+  },
+  {
+    "pal_id": "Yeti_Grass",
+    "pal_slug": "Wumpo_Botan",
+    "pal_name_zh": "綠苔絨怪",
+    "pal_name_en": "Wumpo Botan",
+    "name_zh": "南方巨人",
+    "name_en": "Guardian of the South",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯受到的 地屬性 傷害減輕 (15~30)% ，並且不會陷入 泥濘 狀態。（不可疊加） 科技 51"
+  },
+  {
+    "pal_id": "CandleGhost",
+    "pal_slug": "Sootseer",
+    "pal_name_zh": "恐炬靈",
+    "pal_name_en": "Sootseer",
+    "name_zh": "古墓燭影",
+    "name_en": "Grave Robber",
+    "description": "若牠在隊伍中，玩家和帕魯受到的 無屬性 傷害減輕 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會從地裡挖出 骨頭 。"
+  },
+  {
+    "pal_id": "VenusFlytrap",
+    "pal_slug": "Carnibora",
+    "pal_name_zh": "顎莉絲",
+    "pal_name_en": "Carnibora",
+    "name_zh": "巨舌纏繞",
+    "name_en": "Entangling Tongue",
+    "description": "若牠在隊伍中，玩家進行翻滾或滑步動作時， 顎莉絲 會捲起旋風攻擊接觸到的敵人（ 草屬性 / 威力: (40~80) ）。（不可疊加）"
+  },
+  {
+    "pal_id": "KingBahamut",
+    "pal_slug": "Blazamut",
+    "pal_name_zh": "焰煌",
+    "pal_name_en": "Blazamut",
+    "name_zh": "熔岩凱撒",
+    "name_en": "Magma Kaiser",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，打倒敵人時，一起並肩作戰的帕魯的攻擊力與防禦力會提升 (5~10)% 。\r\n此效果最多可累積5層，持續20秒。（不可疊加） 科技 46"
+  },
+  {
+    "pal_id": "KingBahamut_Dragon",
+    "pal_slug": "Blazamut_Ryu",
+    "pal_name_zh": "歿殃",
+    "pal_name_en": "Blazamut Ryu",
+    "name_zh": "巨龍凱撒",
+    "name_en": "Dragon Kaiser",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯以 龍屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加） 科技 55"
+  },
+  {
+    "pal_id": "GrassGolem",
+    "pal_slug": "Dualith",
+    "pal_name_zh": "雙心岩傀",
+    "pal_name_en": "Dualith",
+    "name_zh": "自然光砲",
+    "name_en": "Forest Laser",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間，可以從 雙心岩傀 的右手處會發射 草屬性 的強力雷射。 科技 48"
+  },
+  {
+    "pal_id": "GrassGolem_Dark",
+    "pal_slug": "Dualith_Noct",
+    "pal_name_zh": "咒心岩傀",
+    "pal_name_en": "Dualith Noct",
+    "name_zh": "枯萎光砲",
+    "name_en": "Corruption Laser",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間，可以從 咒心岩傀 的右手處會發射 暗屬性 的強力雷射。 科技 69"
+  },
+  {
+    "pal_id": "Anubis",
+    "pal_slug": "Anubis",
+    "pal_name_zh": "阿努比斯",
+    "pal_name_en": "Anubis",
+    "name_zh": "沙漠守護神",
+    "name_en": "Guardian of the Desert",
+    "description": "發動後， 阿努比斯 會將力量分給玩家，讓玩家的攻擊轉變為 地屬性 ，且攻擊力提升 (30~50)% 。\r\n戰鬥時偶爾會以高速滑步迴避攻擊。"
+  },
+  {
+    "pal_id": "Sekhmet",
+    "pal_slug": "Sekhmet",
+    "pal_name_zh": "塞赫麥特",
+    "pal_name_en": "Sekhmet",
+    "name_zh": "沙漠女帝",
+    "name_en": "Desert Empress",
+    "description": "若牠在據點裡，據點中的 阿努比斯 的工作速度提升 (20~40)% 。（不可疊加） 塞赫麥特 在工作台或作業工廠等處工作時，工作效率將會提升 (30~60)% 。"
+  },
+  {
+    "pal_id": "ScorpionMan",
+    "pal_slug": "Prixter",
+    "pal_name_zh": "蠱刺妖",
+    "pal_name_en": "Prixter",
+    "name_zh": "無毒毒蠍",
+    "name_en": "Phantom Venom",
+    "description": "若牠在隊伍中，玩家和帕魯對 中毒 狀態的敵人造成的傷害將提升 (50~65)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "ScorpionMan_Electric",
+    "pal_slug": "Prixter_Lux",
+    "pal_name_zh": "電針妖",
+    "pal_name_en": "Prixter Lux",
+    "name_zh": "低頻脈衝蠍",
+    "name_en": "Scorpion Longwave",
+    "description": "發動後， 電針妖 會將力量分給玩家，讓玩家的攻擊轉變為 雷屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "CubeTurtle",
+    "pal_slug": "Tetroise",
+    "pal_name_zh": "重岩龜",
+    "pal_name_en": "Tetroise",
+    "name_zh": "負石古代龜",
+    "name_en": "Masonry Archelon",
+    "description": "可騎在牠的背上移動。\r\n若牠在據點裡，其他據點帕魯的 挖掘 工作適應性等級 +1 。（不可疊加） 科技 48"
+  },
+  {
+    "pal_id": "CubeTurtle_Neutral",
+    "pal_slug": "Tetroise_Primo",
+    "pal_name_zh": "淨岩龜",
+    "pal_name_en": "Tetroise Primo",
+    "name_zh": "逐石古代龜",
+    "name_en": "Stone-Chaser Archelon",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 武器 和 防具 的耐久度損耗減緩 (80~100)% 。（不可疊加） 科技 75"
+  },
+  {
+    "pal_id": "BadCatgirl",
+    "pal_slug": "Nyafia",
+    "pal_name_zh": "妮瞅莎",
+    "pal_name_en": "Nyafia",
+    "name_zh": "貓咪霰陣",
+    "name_en": "Shot-Nyan Mode",
+    "description": "發動後， 妮瞅莎 會在一段時間內用散彈槍攻擊附近的敵人。\r\n若牠在隊伍中，玩家的散彈槍攻擊傷害提升 (10~35)% 。（不可疊加） 科技 52"
+  },
+  {
+    "pal_id": "MimicDog",
+    "pal_slug": "Mimog",
+    "pal_name_zh": "旺財",
+    "pal_name_en": "Mimog",
+    "name_zh": "撬鎖",
+    "name_en": "Master of Unlocking",
+    "description": "與牠並肩作戰時，能藉助 旺財 的力量，在不使用鑰匙的情況下打開各種等級的寶箱。\r\n但無法打開需要特定工作適應性的寶箱。"
+  },
+  {
+    "pal_id": "DarkAlien",
+    "pal_slug": "Xenovader",
+    "pal_name_zh": "傑諾貝達",
+    "pal_name_en": "Xenovader",
+    "name_zh": "未知侵略者",
+    "name_en": "Unknown Invader",
+    "description": "若牠在隊伍中，全自動武器的彈匣中最後一發子彈的傷害提升 (100~160)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "WhiteAlienDragon",
+    "pal_slug": "Xenogard",
+    "pal_name_zh": "傑諾路達",
+    "pal_name_en": "Xenogard",
+    "name_zh": "未知入侵者",
+    "name_en": "Unknown Intruder",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家 使用能量武器時的傷害 提升 (10~35)% 。（不可疊加） 科技 41"
+  },
+  {
+    "pal_id": "BlueberryFairy",
+    "pal_slug": "Prunelia",
+    "pal_name_zh": "梅莉姆",
+    "pal_name_en": "Prunelia",
+    "name_zh": "豐收祈願",
+    "name_en": "Prayer for Abundant Harvest",
+    "description": "若牠在據點裡， 梅莉姆 會進行祈禱， 讓作物的收穫量提升 (18~35)% 。"
+  },
+  {
+    "pal_id": "GhostRabbit",
+    "pal_slug": "Nitemary",
+    "pal_name_zh": "魅愛莉",
+    "pal_name_en": "Nitemary",
+    "name_zh": "奪魂幽靈兔",
+    "name_en": "Soul Collector",
+    "description": "若牠在隊伍中，擊倒帕魯時的帕魯之魂掉落量增加 +(100~200)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GhostRabbit_Grass",
+    "pal_slug": "Nitemary_Botan",
+    "pal_name_zh": "碧艾莉",
+    "pal_name_en": "Nitemary Botan",
+    "name_zh": "縛魂幽靈兔",
+    "name_en": "Soul Binder",
+    "description": "若牠在隊伍中， 草屬性 帕魯的防禦力提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "BlackPuppy",
+    "pal_slug": "Smokie",
+    "pal_name_zh": "墨丸",
+    "pal_name_en": "Smokie",
+    "name_zh": "忠犬墨丸",
+    "name_en": "Dig, Smokie! Dig!",
+    "description": "發動後能夠以敏銳的嗅覺，來探測附近 鉻鐵礦 的位置。\r\n與牠並肩作戰時， 鉻鐵礦 的掉落量也會提升 (100~200)% 。 科技 58"
+  },
+  {
+    "pal_id": "BlackPuppy_Ice",
+    "pal_slug": "Smokie_Cryst",
+    "pal_name_zh": "冬丸",
+    "pal_name_en": "Smokie Cryst",
+    "name_zh": "忠犬冬丸",
+    "name_en": "Cryo Instincts",
+    "description": "若牠在據點裡，其他據點帕魯的 冷卻 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "MysteryMask",
+    "pal_slug": "Omascul",
+    "pal_name_zh": "面懼",
+    "pal_name_en": "Omascul",
+    "name_zh": "假面舞會",
+    "name_en": "Masquerade Dance",
+    "description": "若牠在隊伍中，隊伍帕魯 所獲得的經驗值 會提升 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "IceNarwhal",
+    "pal_slug": "Whalaska",
+    "pal_name_zh": "涼晶鯨",
+    "pal_name_en": "Whalaska",
+    "name_zh": "涼冰冰鯨魚號",
+    "name_en": "Chilled Whale Cruiser",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，釣魚的捕獲計量槽在小遊戲開始時的初始位置升高 (5~14)% ，並且在判定條與魚的圖示重合期間，捕獲計量槽的上升量增加 (5~14)% 。（不可疊加） 科技 42"
+  },
+  {
+    "pal_id": "IceNarwhal_Fire",
+    "pal_slug": "Whalaska_Ignis",
+    "pal_name_zh": "桃晶鯨",
+    "pal_name_en": "Whalaska Ignis",
+    "name_zh": "暖烘烘鯨魚號",
+    "name_en": "Cozy Whale Cruiser",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，釣魚的捕獲計量槽在小遊戲開始時的初始位置升高 (7~17)% ，並且在判定條與魚的圖示重合期間，捕獲計量槽的上升量增加 (7~17)% 。（不可疊加） 科技 71"
+  },
+  {
+    "pal_id": "GrassRabbitMan",
+    "pal_slug": "Verdash",
+    "pal_name_zh": "踏春兔",
+    "pal_name_en": "Verdash",
+    "name_zh": "草原特技之星",
+    "name_en": "Grassland Gymnast",
+    "description": "若牠在隊伍中，可以額外進行 +1次 跳躍和 +1次 空中衝刺。（不可疊加）"
+  },
+  {
+    "pal_id": "GrimGirl",
+    "pal_slug": "Splatterina",
+    "pal_name_zh": "幽戀娜",
+    "pal_name_en": "Splatterina",
+    "name_zh": "狂愛之刃",
+    "name_en": "Blade of Uncontrolled Passion",
+    "description": "若牠在隊伍中， 使用 切肉刀 進行解體時，所獲得的掉落道具增加 (100~200)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GoldenHorse",
+    "pal_slug": "Gildane",
+    "pal_name_zh": "金馳獸",
+    "pal_name_en": "Gildane",
+    "name_zh": "沙塵加護",
+    "name_en": "Sandstorm's Blessing",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 地屬性 ，且攻擊力提升 (5~20)% 。 科技 54"
+  },
+  {
+    "pal_id": "SifuDog",
+    "pal_slug": "Dogen",
+    "pal_name_zh": "汪宗師",
+    "pal_name_en": "Dogen",
+    "name_zh": "歸去來兮",
+    "name_en": "Homeward Prayer",
+    "description": "發動後可以移動至最近的據點。\r\n無法在地下城裡使用。"
+  },
+  {
+    "pal_id": "SumoDog",
+    "pal_slug": "Bulldosu",
+    "pal_name_zh": "力士獒",
+    "pal_name_en": "Bulldosu",
+    "name_zh": "橫綱風範",
+    "name_en": "Yokozuna's Presence",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯受到的 雷屬性 傷害減輕 (15~30)% ，且不會陷入 感電 狀態。（不可疊加） 科技 53"
+  },
+  {
+    "pal_id": "WhiteDeer",
+    "pal_slug": "Celesdir",
+    "pal_name_zh": "淨世鹿",
+    "pal_name_en": "Celesdir",
+    "name_zh": "淨化的祝福",
+    "name_en": "Blessing of Purification",
+    "description": "可騎在牠的背上移動。 淨世鹿 的攻擊力和移動速度，會隨著隊伍中其他 無屬性 帕魯的數量提升，每隻增加 (2~6)% 。\r\n若牠在隊伍中，非戰鬥時每秒玩家與隊伍帕魯的生命值恢復 (0.15~0.75)% 。（不可疊加） 科技 54"
+  },
+  {
+    "pal_id": "WhiteDeer_Dark",
+    "pal_slug": "Celesdir_Noct",
+    "pal_name_zh": "織夜鹿",
+    "pal_name_en": "Celesdir Noct",
+    "name_zh": "混沌的祝福",
+    "name_en": "Blessing of Chaos",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，一起並肩作戰的帕魯的生命值會逐漸減少，但攻擊力將提升 (40~80)% 。（不可疊加） 科技 78"
+  },
+  {
+    "pal_id": "BlackMetalDragon",
+    "pal_slug": "Astegon",
+    "pal_name_zh": "魔淵龍",
+    "pal_name_en": "Astegon",
+    "name_zh": "黑鎧之龍",
+    "name_en": "Black Ankylosaur",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間對礦石造成的傷害將提升 (1100~3300)% ，且 金屬礦石 的掉落量提升 (150~300)% 。 科技 39"
+  },
+  {
+    "pal_id": "WingGolem",
+    "pal_slug": "Knocklem",
+    "pal_name_zh": "泰鋒",
+    "pal_name_en": "Knocklem",
+    "name_zh": "鋼鐵衛士模式",
+    "name_en": "Steel Guardian Mode",
+    "description": "發動後會以鋼鐵般的意志，在一定時間內提高 泰鋒 的攻擊力 (50~200)% ，防禦力 (50~200)% 。"
+  },
+  {
+    "pal_id": "WingGolem_Fire",
+    "pal_slug": "Knocklem_Ignis",
+    "pal_name_zh": "丹烽",
+    "pal_name_en": "Knocklem Ignis",
+    "name_zh": "鐵血衛士模式",
+    "name_en": "Iron Guardian Mode",
+    "description": "發動後會以鋼鐵般的意志，在一定時間內提高 丹烽 的攻擊力 (60~210)% ，防禦力 (60~210)% 。"
+  },
+  {
+    "pal_id": "WhiteShieldDragon",
+    "pal_slug": "Silvegis",
+    "pal_name_zh": "艾基魯迦",
+    "pal_name_en": "Silvegis",
+    "name_zh": "埃癸斯之盾",
+    "name_en": "Aegis Shield",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家的護盾開始修復的等待時間縮短 (30~60)% ，且護盾受到的傷害減少 (65~80)% 。（不可疊加） 科技 60"
+  },
+  {
+    "pal_id": "BlueThunderHorse",
+    "pal_slug": "Azurmane",
+    "pal_name_zh": "馭雷馬",
+    "pal_name_en": "Azurmane",
+    "name_zh": "電離衝刺",
+    "name_en": "Plasma Dash",
+    "description": "可騎在牠的背上移動。\r\n此外，可 在空中進行衝刺 以高速移動。 科技 58"
+  },
+  {
+    "pal_id": "LongCat",
+    "pal_slug": "Valentail",
+    "pal_name_zh": "喵璐璐",
+    "pal_name_en": "Valentail",
+    "name_zh": "伸展喵咪",
+    "name_en": "Big Stretch",
+    "description": "若牠在隊伍中，玩家承受的重力減弱，跳躍或墜落時會漂浮落地。（不可疊加）"
+  },
+  {
+    "pal_id": "ElecSnail",
+    "pal_slug": "Snock",
+    "pal_name_zh": "電渦蝸",
+    "pal_name_en": "Snock",
+    "name_zh": "電電電池",
+    "name_en": "Charging Shell",
+    "description": "若牠在隊伍中，會為玩家的攻擊附加 (2~6) 點 感電 異常狀態值。（不可疊加）"
+  },
+  {
+    "pal_id": "ElecSnail_Ground",
+    "pal_slug": "Snock_Terra",
+    "pal_name_zh": "金渦蝸",
+    "pal_name_en": "Snock Terra",
+    "name_zh": "咚咚甲殼",
+    "name_en": "Grounding Shell",
+    "description": "若牠在隊伍中，玩家和帕魯受到的 水屬性 傷害減輕 (15~30)% ，並且不會陷入 浸濕 狀態。（不可疊加）"
+  },
+  {
+    "pal_id": "DandelionGirl",
+    "pal_slug": "Souffline",
+    "pal_name_zh": "蒲蒲飛芽",
+    "pal_name_en": "Souffline",
+    "name_zh": "絨毛妖精",
+    "name_en": "Fuzzy Fairy",
+    "description": "若牠在隊伍中，提升對陷入 纏繞 狀態帕魯的捕獲機率。（不可疊加）"
+  },
+  {
+    "pal_id": "BrownRabbit",
+    "pal_slug": "Lapiron",
+    "pal_name_zh": "詹兔曼",
+    "pal_name_en": "Lapiron",
+    "name_zh": "大地是好朋友",
+    "name_en": "Friend of Earth",
+    "description": "若牠在隊伍中，玩家在衝刺期間的防禦力提升 (50~65)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "HoodGhost",
+    "pal_slug": "Hoodle",
+    "pal_name_zh": "兜兜靈",
+    "pal_name_en": "Hoodle",
+    "name_zh": "潛於虛無之物",
+    "name_en": "Void-Dweller",
+    "description": "若牠在隊伍中，玩家對非戰鬥狀態的敵人造成的傷害提升 (50~100)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "ElecLizard",
+    "pal_slug": "Slowatt",
+    "pal_name_zh": "電懶懶",
+    "pal_name_en": "Slowatt",
+    "name_zh": "懶懶電鍵",
+    "name_en": "Chillswitch",
+    "description": "若牠在隊伍中，玩家的攻擊擊中 感電 狀態的敵人時，會 令敵人放電 ，對周圍的敵人造成相當於玩家攻擊力 (40~60)% 的傷害。（不可疊加）"
+  },
+  {
+    "pal_id": "OniGhostGirl",
+    "pal_slug": "Bakemi",
+    "pal_name_zh": "嚇絲妮",
+    "pal_name_en": "Bakemi",
+    "name_zh": "播撒歡笑的亡者",
+    "name_en": "Grinning Death",
+    "description": "若牠在隊伍中，攻擊陷入 中毒 狀態的敵人時，會使該敵人的攻擊力降低 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "KingSunfish",
+    "pal_slug": "Solmora",
+    "pal_name_zh": "曼波王",
+    "pal_name_en": "Solmora",
+    "name_zh": "領袖翻車魚",
+    "name_en": "Charming Fish",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，會更容易釣上 高潛力帕魯 。（不可疊加） 科技 65"
+  },
+  {
+    "pal_id": "KingSunfish_Thunder",
+    "pal_slug": "Solmora_Lux",
+    "pal_name_zh": "曼波皇",
+    "pal_name_en": "Solmora Lux",
+    "name_zh": "電光翻車魚",
+    "name_en": "Shocking Fish",
+    "description": "可騎在牠的背上在水上移動。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。\r\n此外，若牠在隊伍中，會更容易釣上 高潛力帕魯 。（不可疊加） 科技 66"
+  },
+  {
+    "pal_id": "SleeveRabbit",
+    "pal_slug": "Lapure",
+    "pal_name_zh": "兔繡袖",
+    "pal_name_en": "Lapure",
+    "name_zh": "長袖啦啦隊員",
+    "name_en": "Long-Sleeved Hurray",
+    "description": "若牠在隊伍中，其他隊伍帕魯的 夥伴技能冷卻時間 縮短 (10~50)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GhostDragon",
+    "pal_slug": "Eidrolon",
+    "pal_name_zh": "靈曦龍",
+    "pal_name_en": "Eidrolon",
+    "name_zh": "自由翼龍",
+    "name_en": "Liberated Pterosaur",
+    "description": "可騎在牠的背上在空中飛行。 靈曦龍 的攻擊力和移動速度，會隨著隊伍中其他 龍屬性 或 暗屬性 帕魯的數量提升，每隻增加 (2~6)% 。 科技 68"
+  },
+  {
+    "pal_id": "GhostDragon_Fire",
+    "pal_slug": "Eidrolon_Ignis",
+    "pal_name_zh": "獄熙龍",
+    "pal_name_en": "Eidrolon Ignis",
+    "name_zh": "憤怒翼龍",
+    "name_en": "Resentful Pterosaur",
+    "description": "可騎在牠的背上在空中飛行。 獄熙龍 的攻擊力和移動速度，會隨著隊伍中其他 龍屬性 或 火屬性 帕魯的數量提升，每隻增加 (2~6)% 。 科技 76"
+  },
+  {
+    "pal_id": "ThunderFluffyBird",
+    "pal_slug": "Dynamoff",
+    "pal_name_zh": "雷雲鷲",
+    "pal_name_en": "Dynamoff",
+    "name_zh": "電動按摩式孵蛋",
+    "name_en": "Electro-Massage Incubation",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在據點裡，帕魯蛋的孵化速度加快 (20~40)% 。（不可疊加） 科技 66"
+  },
+  {
+    "pal_id": "RedFlowerBird",
+    "pal_slug": "Tropicaw",
+    "pal_name_zh": "大紅呱",
+    "pal_name_en": "Tropicaw",
+    "name_zh": "花之舞",
+    "name_en": "Flower Dance",
+    "description": "若牠在隊伍中，玩家進行翻滾或滑步動作時，無敵時間延長 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "FoxExorcist",
+    "pal_slug": "Flaracle",
+    "pal_name_zh": "昭炎狐",
+    "pal_name_en": "Flaracle",
+    "name_zh": "未來之炎",
+    "name_en": "Burning Future",
+    "description": "若牠在隊伍中，玩家的攻擊擊中 點燃 狀態的敵人時，會 使敵人爆炸 ，額外造成相當於玩家攻擊力 (40~60)% 的傷害。（不可疊加）"
+  },
+  {
+    "pal_id": "LotusDragon",
+    "pal_slug": "Ophydia",
+    "pal_name_zh": "沁蓮龍",
+    "pal_name_en": "Ophydia",
+    "name_zh": "清燦迷霧",
+    "name_en": "Glorious Mist",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，會為玩家的攻擊附加 (2~6) 點 浸濕 異常狀態值。（不可疊加） 科技 72"
+  },
+  {
+    "pal_id": "ClownRabbit",
+    "pal_slug": "Dupin",
+    "pal_name_zh": "拉比耶爾",
+    "pal_name_en": "Dupin",
+    "name_zh": "拉比拉比魔術秀",
+    "name_en": "Trick-Loving Fluffle",
+    "description": "若牠在隊伍中，當玩家的生命值低於50%時， 拉比耶爾 會在玩家週邊掀起爆炸衝擊波（ 火屬性 / 威力: (100~200) / 點燃 積蓄值: 777 ）。\r\n此外，玩家的生命值低於50%期間，玩家的攻擊力提升 (30~50)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "ThiefBird",
+    "pal_slug": "Roujay",
+    "pal_name_zh": "盜影鴉",
+    "pal_name_en": "Roujay",
+    "name_zh": "潛影怪鳥",
+    "name_en": "Dark-Nester",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中，玩家和帕魯對 黑暗 狀態的敵人造成的傷害將提升 (50~65)% 。（不可疊加） 科技 72"
+  },
+  {
+    "pal_id": "SnakeGirl",
+    "pal_slug": "Venusa",
+    "pal_name_zh": "梅杜娜",
+    "pal_name_en": "Venusa",
+    "name_zh": "靈蛇之智",
+    "name_en": "Snake's Sagacity",
+    "description": "若牠在隊伍中，會為玩家的攻擊附加 (2~6) 點 黑暗 異常狀態值。（不可疊加）"
+  },
+  {
+    "pal_id": "MushroomLady",
+    "pal_slug": "Mycora",
+    "pal_name_zh": "紅菇娘",
+    "pal_name_en": "Mycora",
+    "name_zh": "魅惑孢子",
+    "name_en": "Charming Spore",
+    "description": "若牠在據點裡，其他據點帕魯的 製藥 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "LanternButler",
+    "pal_slug": "Loomen",
+    "pal_name_zh": "妖燄燈",
+    "pal_name_en": "Loomen",
+    "name_zh": "提燈附魔",
+    "name_en": "Lantern Enchantment",
+    "description": "若牠在隊伍中，玩家 射箭命中目標時會爆炸 ，額外造成相當於玩家攻擊力 (15~30)% 的傷害。（不可疊加）"
+  },
+  {
+    "pal_id": "MoonChild",
+    "pal_slug": "Wistella",
+    "pal_name_zh": "綴夜星",
+    "pal_name_en": "Wistella",
+    "name_zh": "隱藏的暗能量",
+    "name_en": "Hidden Dark Energy",
+    "description": "若牠在隊伍中， 暗屬性 帕魯的防禦力提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "MonochromeQueen",
+    "pal_slug": "Solenne",
+    "pal_name_zh": "墨羅娜",
+    "pal_name_en": "Solenne",
+    "name_zh": "孤染公主",
+    "name_en": "Untainted Maiden",
+    "description": "若牠在隊伍中，且所有隊伍帕魯的種類都不同時，玩家的攻擊力會提升 (30~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "KabukiMan",
+    "pal_slug": "Renjishi",
+    "pal_name_zh": "燎火舞伶",
+    "pal_name_en": "Renjishi",
+    "name_zh": "大顯身手",
+    "name_en": "Stage Combat",
+    "description": "若牠在隊伍中，會為玩家的攻擊附加 (2~6) 點 點燃 異常狀態值。（不可疊加）"
+  },
+  {
+    "pal_id": "DomeArmorDragon",
+    "pal_slug": "Aegidron",
+    "pal_name_zh": "磐甲龍",
+    "pal_name_en": "Aegidron",
+    "name_zh": "不破要塞龍",
+    "name_en": "Indestructible Fortress",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家和帕魯受到的 爆炸攻擊 傷害減輕 (60~80)% ，並且不會陷入 眩暈 狀態。（不可疊加） 科技 79"
+  },
+  {
+    "pal_id": "ElecPanda",
+    "pal_slug": "Grizzbolt",
+    "pal_name_zh": "暴電熊",
+    "pal_name_en": "Grizzbolt",
+    "name_zh": "黃色重型戰車",
+    "name_en": "Yellow Tank",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間牠還能用機關槍連續攻擊。 科技 40"
+  },
+  {
+    "pal_id": "LilyQueen",
+    "pal_slug": "Lyleen",
+    "pal_name_zh": "百合女王",
+    "pal_name_en": "Lyleen",
+    "name_zh": "豐饒女神",
+    "name_en": "Harvest Goddess",
+    "description": "發動後便能透過女王的治癒能力，為玩家和隊伍內的帕魯恢復 (80~90)% 的生命值。"
+  },
+  {
+    "pal_id": "LilyQueen_Dark",
+    "pal_slug": "Lyleen_Noct",
+    "pal_name_zh": "黑月女王",
+    "pal_name_en": "Lyleen Noct",
+    "name_zh": "幽光女神",
+    "name_en": "Goddess of the Tranquil Light",
+    "description": "發動後便能透過女王的治癒能力，為玩家和隊伍內的帕魯恢復 (85~95)% 的生命值。"
+  },
+  {
+    "pal_id": "ThunderDragonMan",
+    "pal_slug": "Orserk",
+    "pal_name_zh": "波魯傑克斯",
+    "pal_name_en": "Orserk",
+    "name_zh": "兇猛的迅雷龍",
+    "name_en": "Ferocious Thunder Dragon",
+    "description": "若牠在隊伍中，子彈擊中敵人時，一起並肩作戰的帕魯的攻擊力與防禦力會提升 (1~5)% 。\r\n此效果最多可累積30層，持續5秒。（不可疊加）"
+  },
+  {
+    "pal_id": "Horus",
+    "pal_slug": "Faleris",
+    "pal_name_zh": "荷魯斯",
+    "pal_name_en": "Faleris",
+    "name_zh": "灼熱捕食者",
+    "name_en": "Scorching Predator",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中，擊倒 冰屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 60"
+  },
+  {
+    "pal_id": "Horus_Water",
+    "pal_slug": "Faleris_Aqua",
+    "pal_name_zh": "伊西斯",
+    "pal_name_en": "Faleris Aqua",
+    "name_zh": "潮汐捕食者",
+    "name_en": "Tidal Predator",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中，擊倒 火屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 60"
+  },
+  {
+    "pal_id": "BlackGriffon",
+    "pal_slug": "Shadowbeak",
+    "pal_name_zh": "異構格里芬",
+    "pal_name_en": "Shadowbeak",
+    "name_zh": "基因改造",
+    "name_en": "Modified DNA",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間的 暗屬性 攻擊將提升 (15~30)% 。\r\n且飛行期間移動速度將會變快。 科技 47"
+  },
+  {
+    "pal_id": "MoonQueen",
+    "pal_slug": "Selyne",
+    "pal_name_zh": "輝月伊",
+    "pal_name_en": "Selyne",
+    "name_zh": "晦暗輝光",
+    "name_en": "Celestial Darkness",
+    "description": "可坐在牠背後的月亮在空中飛行。\r\n騎乘期間的 無屬性 和 暗屬性 攻擊將提升 (15~30)% 。 科技 53"
+  },
+  {
+    "pal_id": "SnowTigerBeastman",
+    "pal_slug": "Bastigor",
+    "pal_name_zh": "霜牙王",
+    "pal_name_en": "Bastigor",
+    "name_zh": "暴雪衝擊",
+    "name_en": "Blizzard Crash",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間牠還能揮下 冰屬性 的大錘進行攻擊。 科技 73"
+  },
+  {
+    "pal_id": "BlueSkyDragon",
+    "pal_slug": "Shaolong",
+    "pal_name_zh": "霄龍",
+    "pal_name_en": "Shaolong",
+    "name_zh": "蒼天統治者",
+    "name_en": "Azure Sovereign",
+    "description": "可騎在牠的背上在空中飛行。 霄龍 的攻擊力，會隨著隊伍中其他 龍屬性 帕魯的數量提升，每隻增加 (4~8)% 。 科技 77"
+  },
+  {
+    "pal_id": "Mothman",
+    "pal_slug": "Silvance",
+    "pal_name_zh": "暮塵蛾",
+    "pal_name_en": "Silvance",
+    "name_zh": "孢子守衛",
+    "name_en": "Spore Stalwart",
+    "description": "若牠在隊伍中，玩家的攻擊擊中 纏繞 狀態的敵人時，會 使敵人爆炸 ，額外造成相當於玩家攻擊力 (40~60)% 的傷害。（不可疊加）\r\n另外，能讓玩家與帕魯 不受世界樹的爆炸孢子影響 。"
+  },
+  {
+    "pal_id": "FlowerPrince",
+    "pal_slug": "Dandilord",
+    "pal_name_zh": "夜蔓爵",
+    "pal_name_en": "Dandilord",
+    "name_zh": "迷霧守衛",
+    "name_en": "Mist Stalwart",
+    "description": "發動後，為玩家的攻擊附加 (2~6) 點 中毒 異常狀態值。（不可疊加）\r\n若牠在隊伍中，玩家和帕魯不會陷入 中毒 狀態，並且 不受世界樹區域的毒氣影響 。"
+  },
+  {
+    "pal_id": "NightLady",
+    "pal_slug": "Bellanoir",
+    "pal_name_zh": "貝菈諾娃",
+    "pal_name_en": "Bellanoir",
+    "name_zh": "夢魘之瞳",
+    "name_en": "Nightmare Iris",
+    "description": "發動後會以 噩夢射線 攻擊鎖定的目標敵人。\r\n此帕魯使用的 噩夢射線 的威力將提升至 (1.1~2.5)倍 。"
+  },
+  {
+    "pal_id": "NightLady_Dark",
+    "pal_slug": "Bellanoir_Libero",
+    "pal_name_zh": "貝菈露潔",
+    "pal_name_en": "Bellanoir Libero",
+    "name_zh": "噩夢凝視",
+    "name_en": "Nightmare Stare",
+    "description": "發動後會以 噩夢綻放 攻擊鎖定的目標敵人。\r\n此帕魯使用的 噩夢綻放 的威力將提升至 (1.1~2.5)倍 。"
+  },
+  {
+    "pal_id": "DarkMechaDragon",
+    "pal_slug": "Xenolord",
+    "pal_name_zh": "傑諾多蘭",
+    "pal_name_en": "Xenolord",
+    "name_zh": "隕星之翼",
+    "name_en": "Meteor Wings",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中， 持有武器的帕魯的夥伴技能 傷害將提升 (20~50)% 。（不可疊加） 科技 66"
+  },
+  {
+    "pal_id": "LegendDeer",
+    "pal_slug": "Hartalis",
+    "pal_name_zh": "默世鹿",
+    "pal_name_en": "Hartalis",
+    "name_zh": "庇佑聖盾",
+    "name_en": "Sacred Barrier",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可生成護盾，抵禦一切攻擊。\r\n此外，騎乘期間可進行 3段跳躍 。 科技 70"
+  },
+  {
+    "pal_id": "SaintCentaur",
+    "pal_slug": "Paladius",
+    "pal_name_zh": "聖光騎士",
+    "pal_name_en": "Paladius",
+    "name_zh": "天翔聖騎士",
+    "name_en": "Holy Knight of the Firmament",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 3段跳躍 ，發動 閃槍衝鋒 後，會召喚出1隻隊伍中的 混沌騎士 ，一起進行攻擊。 科技 61"
+  },
+  {
+    "pal_id": "BlackCentaur",
+    "pal_slug": "Necromus",
+    "pal_name_zh": "混沌騎士",
+    "pal_name_en": "Necromus",
+    "name_zh": "深淵黑騎士",
+    "name_en": "Dark Knight of the Abyss",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 ，發動 雙槍一閃 後，會召喚出1隻隊伍中的 聖光騎士 ，一起進行攻擊。 科技 61"
+  },
+  {
+    "pal_id": "IceHorse",
+    "pal_slug": "Frostallion",
+    "pal_name_zh": "喚冬獸",
+    "pal_name_en": "Frostallion",
+    "name_zh": "冰天馬",
+    "name_en": "Icy Steed",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，攻擊力提升 (10~40)% ，且攻擊會附加 (2~6) 點 凍結 異常狀態值。 科技 62"
+  },
+  {
+    "pal_id": "IceHorse_Dark",
+    "pal_slug": "Frostallion_Noct",
+    "pal_name_zh": "喚夜獸",
+    "pal_name_en": "Frostallion Noct",
+    "name_zh": "黑天馬",
+    "name_en": "Black Steed",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 暗屬性 ，攻擊力提升 (10~40)% ，且攻擊會附加 (2~6) 點 黑暗 異常狀態值。 科技 62"
+  },
+  {
+    "pal_id": "PoseidonOrca",
+    "pal_slug": "Neptilius",
+    "pal_name_zh": "海皇鯨",
+    "pal_name_en": "Neptilius",
+    "name_zh": "大海的霸主",
+    "name_en": "Sentinel of the Great Sea",
+    "description": "與牠並肩作戰時，牠會配合玩家的攻擊用 水屬性 的長槍進行追擊。\r\n可騎在牠的背上在水上移動。\r\n騎乘期間可在水面高高躍起。 科技 64"
+  },
+  {
+    "pal_id": "JetDragon",
+    "pal_slug": "Jetragon",
+    "pal_name_zh": "空渦龍",
+    "pal_name_en": "Jetragon",
+    "name_zh": "地毯式轟炸",
+    "name_en": "Aerial Missile",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間牠還能用飛彈發射器連續攻擊。 科技 70"
+  },
+  {
+    "pal_id": "KingWhale",
+    "pal_slug": "Panthalus",
+    "pal_name_zh": "奧滄鯨",
+    "pal_name_en": "Panthalus",
+    "name_zh": "殘響守護者",
+    "name_en": "Resonant Guardian",
+    "description": "可騎在牠的背上在空中飛行。\r\n在據點最多只能召喚1隻。\r\n若牠在據點裡，會在據點上空持續盤旋，遠程砲轟入侵據點的敵人。"
+  },
+  {
+    "pal_id": "WorldTreeDragon",
+    "pal_slug": "Astralym",
+    "pal_name_zh": "枯星龍",
+    "pal_name_en": "Astralym",
+    "name_zh": "-",
+    "name_en": "-",
+    "description": "這個帕魯擅長的事情仍在調查中。"
+  },
+  {
+    "pal_id": "YakushimaMonster001",
+    "pal_slug": "Green_Slime",
+    "pal_name_zh": "綠史萊姆",
+    "pal_name_en": "Green Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Blue",
+    "pal_slug": "Blue_Slime",
+    "pal_name_zh": "藍史萊姆",
+    "pal_name_en": "Blue Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Red",
+    "pal_slug": "Red_Slime",
+    "pal_name_zh": "紅史萊姆",
+    "pal_name_en": "Red Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Purple",
+    "pal_slug": "Purple_Slime",
+    "pal_name_zh": "紫史萊姆",
+    "pal_name_en": "Purple Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Pink",
+    "pal_slug": "Illuminant_Slime",
+    "pal_name_zh": "夜明史萊姆",
+    "pal_name_en": "Illuminant Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Rainbow",
+    "pal_slug": "Rainbow_Slime",
+    "pal_name_zh": "彩虹史萊姆",
+    "pal_name_en": "Rainbow Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster002",
+    "pal_slug": "Enchanted_Sword",
+    "pal_name_zh": "附魔劍",
+    "pal_name_en": "Enchanted Sword",
+    "name_zh": "附魔",
+    "name_en": "Enchant",
+    "description": "若牠在隊伍中，擊倒 暗屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "YakushimaMonster003",
+    "pal_slug": "Cave_Bat",
+    "pal_name_zh": "洞穴蝙蝠",
+    "pal_name_en": "Cave Bat",
+    "name_zh": "支援蝙蝠",
+    "name_en": "Bat Backup",
+    "description": "若牠在隊伍中，就會出現在玩家身邊。\r\n牠會自動前去拾取附近的道具。"
+  },
+  {
+    "pal_id": "YakushimaMonster003_Purple",
+    "pal_slug": "Illuminant_Bat",
+    "pal_name_zh": "夜明蝙蝠",
+    "pal_name_en": "Illuminant Bat",
+    "name_zh": "支援蝙蝠",
+    "name_en": "Bat Backup",
+    "description": "若牠在隊伍中，就會出現在玩家身邊。\r\n牠會自動前去拾取附近的道具。"
+  },
+  {
+    "pal_id": "YakushimaBoss001",
+    "pal_slug": "Eye_of_Cthulhu",
+    "pal_name_zh": "克蘇魯之眼",
+    "pal_name_en": "Eye of Cthulhu",
+    "name_zh": "進擊的克蘇魯之眼",
+    "name_en": "Mad Eye Lunge",
+    "description": "發動後， 克蘇魯之眼 會向前方突進並攻擊鎖定的敵人。"
+  },
+  {
+    "pal_id": "YakushimaBoss001_Small",
+    "pal_slug": "Demon_Eye",
+    "pal_name_zh": "惡魔眼",
+    "pal_name_en": "Demon Eye",
+    "name_zh": "惡魔的視野",
+    "name_en": "Demonic Sight",
+    "description": "若牠在隊伍中， 暗屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "SheepBall",
+    "pal_slug": "Lamball",
+    "pal_name_zh": "棉悠悠",
+    "pal_name_en": "Lamball",
+    "name_zh": "茸茸盾牌",
+    "name_en": "Fluffy Shield",
+    "description": "發動後，牠會化身為裝備在玩家身上的盾牌。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。"
+  },
+  {
+    "pal_id": "WhiteShieldDragon",
+    "pal_slug": "Silvegis",
+    "pal_name_zh": "艾基魯迦",
+    "pal_name_en": "Silvegis",
+    "name_zh": "埃癸斯之盾",
+    "name_en": "Aegis Shield",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家的護盾開始修復的等待時間縮短 (30~60)% ，且護盾受到的傷害減少 (65~80)% 。（不可疊加） 科技 60"
+  },
+  {
+    "pal_id": "PinkCat",
+    "pal_slug": "Cattiva",
+    "pal_name_zh": "搗蛋貓",
+    "pal_name_en": "Cattiva",
+    "name_zh": "跟貓借手手",
+    "name_en": "Cat Helper",
+    "description": "若牠在隊伍中， 搗蛋貓 就會幫忙搬運行李，玩家的負重上限將提高 (100~200) 。（不可疊加）"
+  },
+  {
+    "pal_id": "PlantSlime",
+    "pal_slug": "Gumoss",
+    "pal_name_zh": "葉泥泥",
+    "pal_name_en": "Gumoss",
+    "name_zh": "樵夫啦啦隊",
+    "name_en": "Logging Assistance",
+    "description": "若牠在隊伍中，玩家伐木時造成的傷害將提升 (30~50)% ， 所有木材種類 的重量都將減輕 (40~60)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CuteMole",
+    "pal_slug": "Fuddler",
+    "pal_name_zh": "遁地鼠",
+    "pal_name_en": "Fuddler",
+    "name_zh": "礦工啦啦隊",
+    "name_en": "Mining Assistance",
+    "description": "若牠在隊伍中，玩家採礦時造成的傷害將提升 (30~60)% ， 石頭 的重量將減輕 (80~100)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "TentacleTurtle",
+    "pal_slug": "Turtacle",
+    "pal_name_zh": "盔盔仔",
+    "pal_name_en": "Turtacle",
+    "name_zh": "尖刺刺運輸",
+    "name_en": "Spikey Carrier",
+    "description": "若牠在隊伍中， 金屬礦石 的重量會減輕 (80~100)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "TentacleTurtle_Ground",
+    "pal_slug": "Turtacle_Terra",
+    "pal_name_zh": "金盔仔",
+    "pal_name_en": "Turtacle Terra",
+    "name_zh": "亮閃閃運輸",
+    "name_en": "Shiny Hauler",
+    "description": "若牠在隊伍中， 硫磺 和 石炭 的重量將減輕 (80~100)% ，且玩家和帕魯以 地屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Mutant",
+    "pal_slug": "Lunaris",
+    "pal_name_zh": "秘斯媞雅",
+    "pal_name_en": "Lunaris",
+    "name_zh": "反重力",
+    "name_en": "Antigravity",
+    "description": "若牠在隊伍中，投擲出去的帕魯球將會 自動追蹤 帕魯，且玩家的負重上限提高 (300~600) 。（不可疊加）"
+  },
+  {
+    "pal_id": "IceCrocodile",
+    "pal_slug": "Munchill",
+    "pal_name_zh": "肚肚鱷",
+    "pal_name_en": "Munchill",
+    "name_zh": "雪盆大口",
+    "name_en": "Icy Maw",
+    "description": "若牠在隊伍中， 食材 和 料理 的重量會減輕 (30~60)% 。並在 冰屬性 帕魯原有的防腐效果基礎上，讓腐敗速度進一步 (-30~-80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "StuffedShark_Fire",
+    "pal_slug": "Finsider_Ignis",
+    "pal_name_zh": "粉粉布偶鯊",
+    "pal_name_en": "Finsider Ignis",
+    "name_zh": "炎炎收納間",
+    "name_en": "Ember Chamber",
+    "description": "若牠在隊伍中， 粉粉布偶鯊 會幫忙分擔負重，背包內武器的重量減輕 (60~100)% ，且玩家和帕魯以 火屬性 攻擊克制的屬性時傷害提升 (25~40)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "VolcanicMonster",
+    "pal_slug": "Reptyro",
+    "pal_name_zh": "熔岩獸",
+    "pal_name_en": "Reptyro",
+    "name_zh": "貪食礦石之獸",
+    "name_en": "Ore-Loving Beast",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 所有礦石種類 的重量會減輕 (30~60)% 。（不可疊加） 科技 42"
+  },
+  {
+    "pal_id": "VolcanicMonster_Ice",
+    "pal_slug": "Reptyro_Cryst",
+    "pal_name_zh": "寒霜獸",
+    "pal_name_en": "Reptyro Cryst",
+    "name_zh": "貪食冰霜之獸",
+    "name_en": "Ice-Loving Beast",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 所有礦石種類 的重量會減輕 (35~65)% 。（不可疊加） 科技 43"
+  },
+  {
+    "pal_id": "FlyingManta",
+    "pal_slug": "Celaray",
+    "pal_name_zh": "魯米兒",
+    "pal_name_en": "Celaray",
+    "name_zh": "微風滑翔",
+    "name_en": "Zephyr Glider",
+    "description": "若牠在隊伍中，會改變滑翔傘的效能，並使玩家 免受墜落傷害 。\r\n滑翔期間能夠長時間快速移動。"
+  },
+  {
+    "pal_id": "FlyingManta_Thunder",
+    "pal_slug": "Celaray_Lux",
+    "pal_name_zh": "雷米兒",
+    "pal_name_en": "Celaray Lux",
+    "name_zh": "電風滑翔",
+    "name_en": "Jolt Glider",
+    "description": "若牠在隊伍中，會改變滑翔傘的效能，並使玩家 免受墜落傷害 。\r\n滑翔期間能夠長時間快速移動。"
+  },
+  {
+    "pal_id": "NegativeOctopus",
+    "pal_slug": "Killamari",
+    "pal_name_zh": "勾魂魷",
+    "pal_name_en": "Killamari",
+    "name_zh": "炸魷魚",
+    "name_en": "Fried Squid",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠長時間漂浮在空中。"
+  },
+  {
+    "pal_id": "NegativeOctopus_Neutral",
+    "pal_slug": "Killamari_Primo",
+    "pal_name_zh": "蝕魂魷",
+    "pal_name_en": "Killamari Primo",
+    "name_zh": "炸魷魚",
+    "name_en": "Fried Killamari",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠長時間漂浮在空中。"
+  },
+  {
+    "pal_id": "WindChimes",
+    "pal_slug": "Hangyu",
+    "pal_name_zh": "吊縛靈",
+    "pal_name_en": "Hangyu",
+    "name_zh": "空中鞦韆",
+    "name_en": "Flying Trapeze",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠緩緩上升。"
+  },
+  {
+    "pal_id": "WindChimes_Ice",
+    "pal_slug": "Hangyu_Cryst",
+    "pal_name_zh": "冰縛靈",
+    "pal_name_en": "Hangyu Cryst",
+    "name_zh": "寒空鞦韆",
+    "name_en": "Winter Trapeze",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n滑翔期間能夠緩緩上升。"
+  },
+  {
+    "pal_id": "Eagle",
+    "pal_slug": "Galeclaw",
+    "pal_name_zh": "天擒鳥",
+    "pal_name_en": "Galeclaw",
+    "name_zh": "天擒鳥滑翔",
+    "name_en": "Galeclaw Glider",
+    "description": "若牠在隊伍中，會改變滑翔傘的性能。\r\n能夠高速滑翔，且在滑翔期間能用右手使用槍械射擊。"
+  },
+  {
+    "pal_id": "LeafMomonga",
+    "pal_slug": "Herbil",
+    "pal_name_zh": "達鼠泥",
+    "pal_name_en": "Herbil",
+    "name_zh": "復甦鼠鼠",
+    "name_en": "Herbil Pulse",
+    "description": "若牠在隊伍中， 達鼠泥 會在玩家陷入瀕死狀態時，透過治癒能力讓玩家以生命值上限 (30~60)% 的狀態 復活 。"
+  },
+  {
+    "pal_id": "Ganesha",
+    "pal_slug": "Teafant",
+    "pal_name_zh": "壺小象",
+    "pal_name_en": "Teafant",
+    "name_zh": "療傷之浴",
+    "name_en": "Soothing Shower",
+    "description": "若牠在隊伍中，玩家的生命值低於30%時，將恢復 (20~40)% 的生命值。（不可疊加）\r\n※發動後需120秒冷卻才可再次觸發"
+  },
+  {
+    "pal_id": "LavaGirl",
+    "pal_slug": "Flambelle",
+    "pal_name_zh": "融焰娘",
+    "pal_name_en": "Flambelle",
+    "name_zh": "熔岩之淚",
+    "name_en": "Magma Tears",
+    "description": "若牠在隊伍中，非戰鬥時每秒令玩家與隊伍帕魯的生命值恢復 (0.1~0.5)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 噴火器官 。"
+  },
+  {
+    "pal_id": "FlowerDoll",
+    "pal_slug": "Petallia",
+    "pal_name_zh": "花麗娜",
+    "pal_name_en": "Petallia",
+    "name_zh": "花精靈的祝福",
+    "name_en": "Blessing of the Flower Spirit",
+    "description": "發動後，牠會用花朵的治癒之力恢復玩家 (75~85)% 的生命值。\r\n若牠在據點裡，其他據點帕魯的 播種 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "FlowerDoll_Fire",
+    "pal_slug": "Petallia_Ignis",
+    "pal_name_zh": "櫻麗娜",
+    "pal_name_en": "Petallia Ignis",
+    "name_zh": "花精靈的熱情",
+    "name_en": "Passion of the Flower Spirit",
+    "description": "發動後，牠會用花朵的治癒之力恢復玩家 (80~90)% 的生命值。\r\n若牠在隊伍中，玩家和帕魯受到的 草屬性 傷害減輕 (15~30)% ，並且不會陷入 纏繞 狀態。（不可疊加）"
+  },
+  {
+    "pal_id": "WhiteDeer",
+    "pal_slug": "Celesdir",
+    "pal_name_zh": "淨世鹿",
+    "pal_name_en": "Celesdir",
+    "name_zh": "淨化的祝福",
+    "name_en": "Blessing of Purification",
+    "description": "可騎在牠的背上移動。 淨世鹿 的攻擊力和移動速度，會隨著隊伍中其他 無屬性 帕魯的數量提升，每隻增加 (2~6)% 。\r\n若牠在隊伍中，非戰鬥時每秒玩家與隊伍帕魯的生命值恢復 (0.15~0.75)% 。（不可疊加） 科技 54"
+  },
+  {
+    "pal_id": "ClownRabbit",
+    "pal_slug": "Dupin",
+    "pal_name_zh": "拉比耶爾",
+    "pal_name_en": "Dupin",
+    "name_zh": "拉比拉比魔術秀",
+    "name_en": "Trick-Loving Fluffle",
+    "description": "若牠在隊伍中，當玩家的生命值低於50%時， 拉比耶爾 會在玩家週邊掀起爆炸衝擊波（ 火屬性 / 威力: (100~200) / 點燃 積蓄值: 777 ）。\r\n此外，玩家的生命值低於50%期間，玩家的攻擊力提升 (30~50)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "LilyQueen",
+    "pal_slug": "Lyleen",
+    "pal_name_zh": "百合女王",
+    "pal_name_en": "Lyleen",
+    "name_zh": "豐饒女神",
+    "name_en": "Harvest Goddess",
+    "description": "發動後便能透過女王的治癒能力，為玩家和隊伍內的帕魯恢復 (80~90)% 的生命值。"
+  },
+  {
+    "pal_id": "LilyQueen_Dark",
+    "pal_slug": "Lyleen_Noct",
+    "pal_name_zh": "黑月女王",
+    "pal_name_en": "Lyleen Noct",
+    "name_zh": "幽光女神",
+    "name_en": "Goddess of the Tranquil Light",
+    "description": "發動後便能透過女王的治癒能力，為玩家和隊伍內的帕魯恢復 (85~95)% 的生命值。"
+  },
+  {
+    "pal_id": "NegativeKoala",
+    "pal_slug": "Depresso",
+    "pal_name_zh": "瞅什魔",
+    "pal_name_en": "Depresso",
+    "name_zh": "攝取咖啡因",
+    "name_en": "Caffeine Inoculation",
+    "description": "發動後， 瞅什魔 會大量飲用能量飲料， 瞅什魔 的移動速度和工作速度會因此提升 (100~900)% 。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 毒腺 。"
+  },
+  {
+    "pal_id": "Alpaca",
+    "pal_slug": "Melpaca",
+    "pal_name_zh": "美露帕",
+    "pal_name_en": "Melpaca",
+    "name_zh": "蓬蓬羊毛",
+    "name_en": "Pacapaca Wool",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 君王美露帕 的防禦力和移動速度將會提升。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。 科技 7"
+  },
+  {
+    "pal_id": "KingAlpaca",
+    "pal_slug": "Kingpaca",
+    "pal_name_zh": "君王美露帕",
+    "pal_name_en": "Kingpaca",
+    "name_zh": "大力國王",
+    "name_en": "King of Muscles",
+    "description": "可騎在牠的背上移動。\r\n此帕魯的防禦力和移動速度會隨著隊伍中 美露帕 的數量提升，每隻增加 (5~14)% 。 科技 23"
+  },
+  {
+    "pal_id": "KingAlpaca_Ice",
+    "pal_slug": "Kingpaca_Cryst",
+    "pal_name_zh": "冰帝美露帕",
+    "pal_name_en": "Kingpaca Cryst",
+    "name_zh": "冷酷國王",
+    "name_en": "Coldhearted King",
+    "description": "可騎在牠的背上移動。\r\n此帕魯的防禦力和移動速度會隨著隊伍中 美露帕 的數量提升，每隻增加 (5~14)% 。 科技 46"
+  },
+  {
+    "pal_id": "Deer",
+    "pal_slug": "Eikthyrdeer",
+    "pal_name_zh": "紫霞鹿",
+    "pal_name_en": "Eikthyrdeer",
+    "name_zh": "森林守護者",
+    "name_en": "Guardian of the Forest",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 ，破壞樹木的效率也會提升 (220~500)% 。 科技 12"
+  },
+  {
+    "pal_id": "Deer_Ground",
+    "pal_slug": "Eikthyrdeer_Terra",
+    "pal_name_zh": "祇岳鹿",
+    "pal_name_en": "Eikthyrdeer Terra",
+    "name_zh": "金之森守護者",
+    "name_en": "Guardian of the Golden Forest",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在據點裡，其他據點帕魯的 採伐 工作適應性等級 +1 。（不可疊加） 科技 21"
+  },
+  {
+    "pal_id": "FairyDragon",
+    "pal_slug": "Elphidran",
+    "pal_name_zh": "精靈龍",
+    "pal_name_en": "Elphidran",
+    "name_zh": "善良的聖潔之龍",
+    "name_en": "Amicable Holy Dragon",
+    "description": "可騎在牠的背上在空中飛行。\r\n飛行期間移動速度將會變快。\r\n若牠在隊伍中，擊倒 暗屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 20"
+  },
+  {
+    "pal_id": "FairyDragon_Water",
+    "pal_slug": "Elphidran_Aqua",
+    "pal_name_zh": "水靈龍",
+    "pal_name_en": "Elphidran Aqua",
+    "name_zh": "善良的流水之龍",
+    "name_en": "Amicable Water Dragon",
+    "description": "可騎在牠的背上在空中飛行。\r\n飛行期間移動速度將會變快。\r\n若牠在隊伍中，玩家和帕魯受到的 火屬性 傷害減輕 (15~30)% ，並且不會陷入 點燃 狀態。（不可疊加） 科技 32"
+  },
+  {
+    "pal_id": "PurpleSpider",
+    "pal_slug": "Tarantriss",
+    "pal_name_zh": "桃蛛娘",
+    "pal_name_en": "Tarantriss",
+    "name_zh": "桃色之網",
+    "name_en": "Tarantriss’ Web",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 ，\r\n並向射擊地點發射蜘蛛絲，牽引身體快速移動。 科技 20"
+  },
+  {
+    "pal_id": "IceSeal",
+    "pal_slug": "Polapup",
+    "pal_name_zh": "香草豹冰",
+    "pal_name_en": "Polapup",
+    "name_zh": "滑雪行家",
+    "name_en": "Rider of the Snowy Mountain",
+    "description": "可騎在牠的背上移動。 在雪地上 時，移動速度提高 (80~160)% 。\r\n並且可以在斜坡處快速向下滑行。 科技 26"
+  },
+  {
+    "pal_id": "IceSeal_Ground",
+    "pal_slug": "Polapup_Terra",
+    "pal_name_zh": "巧克力豹冰",
+    "pal_name_en": "Polapup Terra",
+    "name_zh": "雪山速滑",
+    "name_en": "Snowy Mountain Slider",
+    "description": "可騎在牠的背上移動。 在雪地上 時，移動速度提高 (80~160)% 。\r\n並且可以在斜坡處快速向下滑行。\r\n滑行時初始速度較慢，但最高速度更快。 科技 55"
+  },
+  {
+    "pal_id": "FengyunDeeper",
+    "pal_slug": "Fenglope",
+    "pal_name_zh": "雲海鹿",
+    "pal_name_en": "Fenglope",
+    "name_zh": "風雲",
+    "name_en": "Wind and Clouds",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。 科技 26"
+  },
+  {
+    "pal_id": "FengyunDeeper_Electric",
+    "pal_slug": "Fenglope_Lux",
+    "pal_name_zh": "雷隱鹿",
+    "pal_name_en": "Fenglope Lux",
+    "name_zh": "雷雲",
+    "name_en": "Stormcloud",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在隊伍中，擊倒 水屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 57"
+  },
+  {
+    "pal_id": "ThunderBird",
+    "pal_slug": "Beakon",
+    "pal_name_zh": "迅雷鳥",
+    "pal_name_en": "Beakon",
+    "name_zh": "天雷",
+    "name_en": "Thunderous",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。 迅雷鳥 的移動速度，會隨著隊伍中其他 雷屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 29"
+  },
+  {
+    "pal_id": "ThunderBird_Ice",
+    "pal_slug": "Beakon_Cryst",
+    "pal_name_zh": "疾霜鳥",
+    "pal_name_en": "Beakon Cryst",
+    "name_zh": "天霰",
+    "name_en": "Coldsnap",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，且攻擊力提升 (5~20)% 。 疾霜鳥 的移動速度，會隨著隊伍中其他 冰屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 71"
+  },
+  {
+    "pal_id": "GhostAnglerfish",
+    "pal_slug": "Ghangler",
+    "pal_name_zh": "冥燈魚",
+    "pal_name_en": "Ghangler",
+    "name_zh": "暗夜引路人",
+    "name_en": "Master of Darkness",
+    "description": "可騎在牠的背上在水上移動。 冥燈魚 的移動速度，會隨著隊伍中其他 暗屬性 或 水屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 31"
+  },
+  {
+    "pal_id": "GhostAnglerfish_Fire",
+    "pal_slug": "Ghangler_Ignis",
+    "pal_name_zh": "炙燈魚",
+    "pal_name_en": "Ghangler Ignis",
+    "name_zh": "深海名廚",
+    "name_en": "Abyssal Celebrity Chef",
+    "description": "可騎在牠的背上在水上移動。 炙燈魚 的移動速度，會隨著隊伍中其他 火屬性 或 水屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 42"
+  },
+  {
+    "pal_id": "ThunderDog",
+    "pal_slug": "Rayhound",
+    "pal_name_zh": "霹靂犬",
+    "pal_name_en": "Rayhound",
+    "name_zh": "雷靂躍行",
+    "name_en": "Lightning Shepherd",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。 霹靂犬 的移動速度，會隨著隊伍中其他 雷屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 30"
+  },
+  {
+    "pal_id": "ThunderDog_Ice",
+    "pal_slug": "Rayhound_Cryst",
+    "pal_name_zh": "凜光犬",
+    "pal_name_en": "Rayhound Cryst",
+    "name_zh": "霜躍疾行",
+    "name_en": "Snow Shepherd",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在隊伍中， 冰屬性 帕魯的防禦力會提升 (15~30)% 。（不可疊加） 科技 32"
+  },
+  {
+    "pal_id": "TropicalOstrich",
+    "pal_slug": "Palumba",
+    "pal_name_zh": "咕咕桑葩",
+    "pal_name_en": "Palumba",
+    "name_zh": "森巴舞步",
+    "name_en": "Samba Step",
+    "description": "可騎在牠的背上移動。 在草地上 時，移動速度提高 (155~240)% 。 科技 35"
+  },
+  {
+    "pal_id": "Suzaku",
+    "pal_slug": "Suzaku",
+    "pal_name_zh": "朱雀",
+    "pal_name_en": "Suzaku",
+    "name_zh": "炎之翼",
+    "name_en": "Wings of Flame",
+    "description": "可騎在牠的背上在空中飛行。 朱雀 的移動速度，會隨著隊伍中其他 火屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 43"
+  },
+  {
+    "pal_id": "Suzaku_Water",
+    "pal_slug": "Suzaku_Aqua",
+    "pal_name_zh": "清雀",
+    "pal_name_en": "Suzaku Aqua",
+    "name_zh": "水之翼",
+    "name_en": "Wings of Water",
+    "description": "可騎在牠的背上在空中飛行。 清雀 的移動速度，會隨著隊伍中其他 水屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 44"
+  },
+  {
+    "pal_id": "FeatherOstrich",
+    "pal_slug": "Dazemu",
+    "pal_name_zh": "戰冠雀",
+    "pal_name_en": "Dazemu",
+    "name_zh": "飛砂腿",
+    "name_en": "Sand Sprint",
+    "description": "可騎在牠的背上移動。 在砂地上 時，移動速度提高 (50~100)% 。 科技 28"
+  },
+  {
+    "pal_id": "NightBlueHorse_Neutral",
+    "pal_slug": "Starryon_Primo",
+    "pal_name_zh": "日耀駒",
+    "pal_name_en": "Starryon Primo",
+    "name_zh": "光舞者",
+    "name_en": "Light Dancer",
+    "description": "可騎在牠的背上移動，騎乘期間跳躍能力提升。 日耀駒 的移動速度，會隨著隊伍中其他 無屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 77"
+  },
+  {
+    "pal_id": "GrassRabbitMan",
+    "pal_slug": "Verdash",
+    "pal_name_zh": "踏春兔",
+    "pal_name_en": "Verdash",
+    "name_zh": "草原特技之星",
+    "name_en": "Grassland Gymnast",
+    "description": "若牠在隊伍中，可以額外進行 +1次 跳躍和 +1次 空中衝刺。（不可疊加）"
+  },
+  {
+    "pal_id": "WhiteDeer",
+    "pal_slug": "Celesdir",
+    "pal_name_zh": "淨世鹿",
+    "pal_name_en": "Celesdir",
+    "name_zh": "淨化的祝福",
+    "name_en": "Blessing of Purification",
+    "description": "可騎在牠的背上移動。 淨世鹿 的攻擊力和移動速度，會隨著隊伍中其他 無屬性 帕魯的數量提升，每隻增加 (2~6)% 。\r\n若牠在隊伍中，非戰鬥時每秒玩家與隊伍帕魯的生命值恢復 (0.15~0.75)% 。（不可疊加） 科技 54"
+  },
+  {
+    "pal_id": "LongCat",
+    "pal_slug": "Valentail",
+    "pal_name_zh": "喵璐璐",
+    "pal_name_en": "Valentail",
+    "name_zh": "伸展喵咪",
+    "name_en": "Big Stretch",
+    "description": "若牠在隊伍中，玩家承受的重力減弱，跳躍或墜落時會漂浮落地。（不可疊加）"
+  },
+  {
+    "pal_id": "GhostDragon",
+    "pal_slug": "Eidrolon",
+    "pal_name_zh": "靈曦龍",
+    "pal_name_en": "Eidrolon",
+    "name_zh": "自由翼龍",
+    "name_en": "Liberated Pterosaur",
+    "description": "可騎在牠的背上在空中飛行。 靈曦龍 的攻擊力和移動速度，會隨著隊伍中其他 龍屬性 或 暗屬性 帕魯的數量提升，每隻增加 (2~6)% 。 科技 68"
+  },
+  {
+    "pal_id": "GhostDragon_Fire",
+    "pal_slug": "Eidrolon_Ignis",
+    "pal_name_zh": "獄熙龍",
+    "pal_name_en": "Eidrolon Ignis",
+    "name_zh": "憤怒翼龍",
+    "name_en": "Resentful Pterosaur",
+    "description": "可騎在牠的背上在空中飛行。 獄熙龍 的攻擊力和移動速度，會隨著隊伍中其他 龍屬性 或 火屬性 帕魯的數量提升，每隻增加 (2~6)% 。 科技 76"
+  },
+  {
+    "pal_id": "BlackGriffon",
+    "pal_slug": "Shadowbeak",
+    "pal_name_zh": "異構格里芬",
+    "pal_name_en": "Shadowbeak",
+    "name_zh": "基因改造",
+    "name_en": "Modified DNA",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間的 暗屬性 攻擊將提升 (15~30)% 。\r\n且飛行期間移動速度將會變快。 科技 47"
+  },
+  {
+    "pal_id": "LegendDeer",
+    "pal_slug": "Hartalis",
+    "pal_name_zh": "默世鹿",
+    "pal_name_en": "Hartalis",
+    "name_zh": "庇佑聖盾",
+    "name_en": "Sacred Barrier",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可生成護盾，抵禦一切攻擊。\r\n此外，騎乘期間可進行 3段跳躍 。 科技 70"
+  },
+  {
+    "pal_id": "SaintCentaur",
+    "pal_slug": "Paladius",
+    "pal_name_zh": "聖光騎士",
+    "pal_name_en": "Paladius",
+    "name_zh": "天翔聖騎士",
+    "name_en": "Holy Knight of the Firmament",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 3段跳躍 ，發動 閃槍衝鋒 後，會召喚出1隻隊伍中的 混沌騎士 ，一起進行攻擊。 科技 61"
+  },
+  {
+    "pal_id": "BlackCentaur",
+    "pal_slug": "Necromus",
+    "pal_name_zh": "混沌騎士",
+    "pal_name_en": "Necromus",
+    "name_zh": "深淵黑騎士",
+    "name_en": "Dark Knight of the Abyss",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 ，發動 雙槍一閃 後，會召喚出1隻隊伍中的 聖光騎士 ，一起進行攻擊。 科技 61"
+  },
+  {
+    "pal_id": "YakushimaMonster001",
+    "pal_slug": "Green_Slime",
+    "pal_name_zh": "綠史萊姆",
+    "pal_name_en": "Green Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Blue",
+    "pal_slug": "Blue_Slime",
+    "pal_name_zh": "藍史萊姆",
+    "pal_name_en": "Blue Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Red",
+    "pal_slug": "Red_Slime",
+    "pal_name_zh": "紅史萊姆",
+    "pal_name_en": "Red Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Purple",
+    "pal_slug": "Purple_Slime",
+    "pal_name_zh": "紫史萊姆",
+    "pal_name_en": "Purple Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Pink",
+    "pal_slug": "Illuminant_Slime",
+    "pal_name_zh": "夜明史萊姆",
+    "pal_name_en": "Illuminant Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "YakushimaMonster001_Rainbow",
+    "pal_slug": "Rainbow_Slime",
+    "pal_name_zh": "彩虹史萊姆",
+    "pal_name_en": "Rainbow Slime",
+    "name_zh": "史萊姆之軀",
+    "name_en": "Slime Body",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可高高躍起。"
+  },
+  {
+    "pal_id": "BlueDragon",
+    "pal_slug": "Azurobe",
+    "pal_name_zh": "碧海龍",
+    "pal_name_en": "Azurobe",
+    "name_zh": "水翔之舞",
+    "name_en": "Waterwing Dance",
+    "description": "可騎在牠的背上在水上移動。\r\n騎乘期間玩家的攻擊會轉變為 水屬性 ，且攻擊力提升 (5~20)% 。 科技 24"
+  },
+  {
+    "pal_id": "BlueDragon_Ice",
+    "pal_slug": "Azurobe_Cryst",
+    "pal_name_zh": "碧月龍",
+    "pal_name_en": "Azurobe Cryst",
+    "name_zh": "冰翔之舞",
+    "name_en": "Icewing Dance",
+    "description": "可騎在牠的背上在水上移動。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，且攻擊力提升 (5~20)% 。 科技 27"
+  },
+  {
+    "pal_id": "Kirin_Ice",
+    "pal_slug": "Univolt_Cryst",
+    "pal_name_zh": "凌角馬",
+    "pal_name_en": "Univolt Cryst",
+    "name_zh": "冰華亂舞",
+    "name_en": "Frigid Deity",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，且攻擊力提升 (5~20)% 。 科技 64"
+  },
+  {
+    "pal_id": "FoxMage",
+    "pal_slug": "Wixen",
+    "pal_name_zh": "焰巫狐",
+    "pal_name_en": "Wixen",
+    "name_zh": "狐神大人",
+    "name_en": "Lord Fox",
+    "description": "發動後， 焰巫狐 會將力量分給玩家，讓玩家的攻擊轉變為 火屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "FoxMage_Dark",
+    "pal_slug": "Wixen_Noct",
+    "pal_name_zh": "幽巫狐",
+    "pal_name_en": "Wixen Noct",
+    "name_zh": "巫神大人",
+    "name_en": "Black Fox Lord",
+    "description": "發動後， 幽巫狐 會將力量分給玩家，讓玩家的攻擊轉變為 暗屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "HadesBird",
+    "pal_slug": "Helzephyr",
+    "pal_name_zh": "雷冥鳥",
+    "pal_name_en": "Helzephyr",
+    "name_zh": "冥府之翼",
+    "name_en": "Wings of Death",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 暗屬性 ，且攻擊力提升 (5~20)% 。 科技 25"
+  },
+  {
+    "pal_id": "HadesBird_Electric",
+    "pal_slug": "Helzephyr_Lux",
+    "pal_name_zh": "雷鳴鳥",
+    "pal_name_en": "Helzephyr Lux",
+    "name_zh": "雷鳴之翼",
+    "name_en": "Wings of Thunder",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。 科技 47"
+  },
+  {
+    "pal_id": "GrassMinotaur",
+    "pal_slug": "Elgrove",
+    "pal_name_zh": "密林陶洛斯",
+    "pal_name_en": "Elgrove",
+    "name_zh": "大自然之威",
+    "name_en": "Mother Nature's Menace",
+    "description": "發動後， 密林陶洛斯 會將力量分給玩家，讓玩家的攻擊轉變為 草屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "StuffedShark",
+    "pal_slug": "Finsider",
+    "pal_name_zh": "布偶鯊",
+    "pal_name_en": "Finsider",
+    "name_zh": "水流扳機",
+    "name_en": "Water Gun",
+    "description": "發動後， 布偶鯊 會將力量分給玩家，讓玩家的攻擊轉變為 水屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "FireKirin",
+    "pal_slug": "Pyrin",
+    "pal_name_zh": "火麒麟",
+    "pal_name_en": "Pyrin",
+    "name_zh": "赤兔馬",
+    "name_en": "Red Hare",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 火屬性 ，且攻擊力提升 (5~20)% 。 科技 29"
+  },
+  {
+    "pal_id": "FireKirin_Dark",
+    "pal_slug": "Pyrin_Noct",
+    "pal_name_zh": "邪麒麟",
+    "pal_name_en": "Pyrin Noct",
+    "name_zh": "黑兔馬",
+    "name_en": "Black Hare",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 暗屬性 ，且攻擊力提升 (5~20)% 。 科技 34"
+  },
+  {
+    "pal_id": "ThunderBird",
+    "pal_slug": "Beakon",
+    "pal_name_zh": "迅雷鳥",
+    "pal_name_en": "Beakon",
+    "name_zh": "天雷",
+    "name_en": "Thunderous",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。 迅雷鳥 的移動速度，會隨著隊伍中其他 雷屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 29"
+  },
+  {
+    "pal_id": "ThunderBird_Ice",
+    "pal_slug": "Beakon_Cryst",
+    "pal_name_zh": "疾霜鳥",
+    "pal_name_en": "Beakon Cryst",
+    "name_zh": "天霰",
+    "name_en": "Coldsnap",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 冰屬性 ，且攻擊力提升 (5~20)% 。 疾霜鳥 的移動速度，會隨著隊伍中其他 冰屬性 帕魯的數量提升，每隻增加 (5~25)% 。 科技 71"
+  },
+  {
+    "pal_id": "WeaselDragon",
+    "pal_slug": "Chillet",
+    "pal_name_zh": "疾旋鼬",
+    "pal_name_en": "Chillet",
+    "name_zh": "扭扭鼬鼬",
+    "name_en": "Wriggling Weasel",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 龍屬性 ，且攻擊力提升 (5~20)% 。 科技 11"
+  },
+  {
+    "pal_id": "WeaselDragon_Fire",
+    "pal_slug": "Chillet_Ignis",
+    "pal_name_zh": "桃旋鼬",
+    "pal_name_en": "Chillet Ignis",
+    "name_zh": "燒鼬鼬",
+    "name_en": "Sparkling Weasel",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 火屬性 ，且攻擊力提升 (5~20)% 。 科技 40"
+  },
+  {
+    "pal_id": "RedArmorBird",
+    "pal_slug": "Ragnahawk",
+    "pal_name_zh": "燧火鳥",
+    "pal_name_en": "Ragnahawk",
+    "name_zh": "火焰之翼",
+    "name_en": "Flame Wing",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 火屬性 ，且攻擊力提升 (5~20)% 。 科技 33"
+  },
+  {
+    "pal_id": "IceWitch",
+    "pal_slug": "Icelyn",
+    "pal_name_zh": "冰姬靈",
+    "pal_name_en": "Icelyn",
+    "name_zh": "魔女的冷氣",
+    "name_en": "Witch's Icy Veil",
+    "description": "發動後， 冰姬靈 會將力量分給玩家，讓玩家的攻擊轉變為 冰屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "SkyDragon_Grass",
+    "pal_slug": "Quivern_Botan",
+    "pal_name_zh": "翠羽龍",
+    "pal_name_en": "Quivern Botan",
+    "name_zh": "翠龍的慈愛",
+    "name_en": "Grass Dragon Affection",
+    "description": "可騎在牠的背上在空中飛行。\r\n騎乘期間玩家的攻擊會轉變為 草屬性 ，且攻擊力提升 (5~20)% 。 科技 45"
+  },
+  {
+    "pal_id": "Anubis",
+    "pal_slug": "Anubis",
+    "pal_name_zh": "阿努比斯",
+    "pal_name_en": "Anubis",
+    "name_zh": "沙漠守護神",
+    "name_en": "Guardian of the Desert",
+    "description": "發動後， 阿努比斯 會將力量分給玩家，讓玩家的攻擊轉變為 地屬性 ，且攻擊力提升 (30~50)% 。\r\n戰鬥時偶爾會以高速滑步迴避攻擊。"
+  },
+  {
+    "pal_id": "ScorpionMan_Electric",
+    "pal_slug": "Prixter_Lux",
+    "pal_name_zh": "電針妖",
+    "pal_name_en": "Prixter Lux",
+    "name_zh": "低頻脈衝蠍",
+    "name_en": "Scorpion Longwave",
+    "description": "發動後， 電針妖 會將力量分給玩家，讓玩家的攻擊轉變為 雷屬性 ，且攻擊力提升 (30~50)% 。"
+  },
+  {
+    "pal_id": "GoldenHorse",
+    "pal_slug": "Gildane",
+    "pal_name_zh": "金馳獸",
+    "pal_name_en": "Gildane",
+    "name_zh": "沙塵加護",
+    "name_en": "Sandstorm's Blessing",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間玩家的攻擊會轉變為 地屬性 ，且攻擊力提升 (5~20)% 。 科技 54"
+  },
+  {
+    "pal_id": "KingSunfish_Thunder",
+    "pal_slug": "Solmora_Lux",
+    "pal_name_zh": "曼波皇",
+    "pal_name_en": "Solmora Lux",
+    "name_zh": "電光翻車魚",
+    "name_en": "Shocking Fish",
+    "description": "可騎在牠的背上在水上移動。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。\r\n此外，若牠在隊伍中，會更容易釣上 高潛力帕魯 。（不可疊加） 科技 66"
+  },
+  {
+    "pal_id": "FlameBuffalo",
+    "pal_slug": "Arsox",
+    "pal_name_zh": "熾焰牛",
+    "pal_name_en": "Arsox",
+    "name_zh": "溫暖之軀",
+    "name_en": "Warm Body",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家的 耐寒能力+2 。（不可疊加） 科技 15"
+  },
+  {
+    "pal_id": "IceDeer",
+    "pal_slug": "Reindrix",
+    "pal_name_zh": "嚴冬鹿",
+    "pal_name_en": "Reindrix",
+    "name_zh": "冰涼之軀",
+    "name_en": "Cool Body",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，玩家的 耐暑能力+2 。（不可疊加） 科技 31"
+  },
+  {
+    "pal_id": "RobinHood",
+    "pal_slug": "Robinquill",
+    "pal_name_zh": "羽箭射手",
+    "pal_name_en": "Robinquill",
+    "name_zh": "射箭達人",
+    "name_en": "Grounded Archer",
+    "description": "若牠在隊伍中，玩家 使用弓箭時的傷害 提升 (10~35)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "RobinHood_Ground",
+    "pal_slug": "Robinquill_Terra",
+    "pal_name_zh": "山岳射手",
+    "pal_name_en": "Robinquill Terra",
+    "name_zh": "拉弓達人",
+    "name_en": "Master Archer",
+    "description": "若牠在隊伍中，玩家 使用弓箭時的蓄力速度 提升 (15~30)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "SheepBall",
+    "pal_slug": "Lamball",
+    "pal_name_zh": "棉悠悠",
+    "pal_name_en": "Lamball",
+    "name_zh": "茸茸盾牌",
+    "name_en": "Fluffy Shield",
+    "description": "發動後，牠會化身為裝備在玩家身上的盾牌。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。"
+  },
+  {
+    "pal_id": "WoolFox",
+    "pal_slug": "Cremis",
+    "pal_name_zh": "米露菲",
+    "pal_name_en": "Cremis",
+    "name_zh": "蓬鬆毛毛",
+    "name_en": "Fluffy Wool",
+    "description": "若牠在隊伍中， 無屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。"
+  },
+  {
+    "pal_id": "NegativeKoala",
+    "pal_slug": "Depresso",
+    "pal_name_zh": "瞅什魔",
+    "pal_name_en": "Depresso",
+    "name_zh": "攝取咖啡因",
+    "name_en": "Caffeine Inoculation",
+    "description": "發動後， 瞅什魔 會大量飲用能量飲料， 瞅什魔 的移動速度和工作速度會因此提升 (100~900)% 。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 毒腺 。"
+  },
+  {
+    "pal_id": "CaptainPenguin",
+    "pal_slug": "Penking",
+    "pal_name_zh": "企丸王",
+    "pal_name_en": "Penking",
+    "name_zh": "勇敢的海之戰士",
+    "name_en": "Brave Sailor",
+    "description": "若牠在隊伍中，擊倒 火屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Alpaca",
+    "pal_slug": "Melpaca",
+    "pal_name_zh": "美露帕",
+    "pal_name_en": "Melpaca",
+    "name_zh": "蓬蓬羊毛",
+    "name_en": "Pacapaca Wool",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中， 君王美露帕 的防禦力和移動速度將會提升。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 羊毛 。 科技 7"
+  },
+  {
+    "pal_id": "LavaGirl",
+    "pal_slug": "Flambelle",
+    "pal_name_zh": "融焰娘",
+    "pal_name_en": "Flambelle",
+    "name_zh": "熔岩之淚",
+    "name_en": "Magma Tears",
+    "description": "若牠在隊伍中，非戰鬥時每秒令玩家與隊伍帕魯的生命值恢復 (0.1~0.5)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 噴火器官 。"
+  },
+  {
+    "pal_id": "FlameBambi",
+    "pal_slug": "Rooby",
+    "pal_name_zh": "燎火鹿",
+    "pal_name_en": "Rooby",
+    "name_zh": "微小火種",
+    "name_en": "Tiny Spark",
+    "description": "若牠在隊伍中， 火屬性 帕魯的防禦力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 噴火器官 。"
+  },
+  {
+    "pal_id": "Bastet_Ice",
+    "pal_slug": "Mau_Cryst",
+    "pal_name_zh": "冰絲特",
+    "pal_name_en": "Mau Cryst",
+    "name_zh": "晴天冰靂",
+    "name_en": "Icy Whispers",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 結冰器官 。"
+  },
+  {
+    "pal_id": "BerryGoat",
+    "pal_slug": "Caprity",
+    "pal_name_zh": "灌木羊",
+    "pal_name_en": "Caprity",
+    "name_zh": "摘取莓果",
+    "name_en": "Berry Picker",
+    "description": "將牠分派到 家畜牧場 ，就有機會從背上掉落 紅色莓果 。\r\n若牠在隊伍中，每5分鐘會讓目前飽足度最低的帕魯恢復 (100~200) 點飽足度。（不可疊加）"
+  },
+  {
+    "pal_id": "BerryGoat_Dark",
+    "pal_slug": "Caprity_Noct",
+    "pal_name_zh": "鬱木羊",
+    "pal_name_en": "Caprity Noct",
+    "name_zh": "採摘毒腺",
+    "name_en": "Venom Picker",
+    "description": "將牠分派到 家畜牧場 ，有機會從背上掉落 毒腺 。\r\n若牠在隊伍中，每5分鐘會讓目前飽足度最低的帕魯恢復 (100~200) 點飽足度。（不可疊加）"
+  },
+  {
+    "pal_id": "SweetsSheep",
+    "pal_slug": "Woolipop",
+    "pal_name_zh": "棉花糖",
+    "pal_name_en": "Woolipop",
+    "name_zh": "糖果甜心",
+    "name_en": "Candy Pop",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 棉花糖 。\r\n若牠在據點裡，據點帕魯的飽足度的減少幅度將會 (-10~-20)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "SweetsSheep_Ground",
+    "pal_slug": "Woolipop_Terra",
+    "pal_name_zh": "可可棉花糖",
+    "pal_name_en": "Woolipop Terra",
+    "name_zh": "苦澀甜心",
+    "name_en": "Bitter Pop",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 焦糖棉花糖 。\r\n若牠在據點裡，據點帕魯的飽足度的減少幅度將會 (-15~-25)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CowPal",
+    "pal_slug": "Mozzarina",
+    "pal_name_zh": "波霸牛",
+    "pal_name_en": "Mozzarina",
+    "name_zh": "產奶",
+    "name_en": "Milk Maker",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會產出 牛奶 。"
+  },
+  {
+    "pal_id": "ElecCat",
+    "pal_slug": "Sparkit",
+    "pal_name_zh": "伏特喵",
+    "pal_name_en": "Sparkit",
+    "name_zh": "靜電",
+    "name_en": "Static Electricity",
+    "description": "若牠在隊伍中， 雷屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 發電器官 。"
+  },
+  {
+    "pal_id": "Kelpie",
+    "pal_slug": "Kelpsea",
+    "pal_name_zh": "水靈兒",
+    "pal_name_en": "Kelpsea",
+    "name_zh": "灑水",
+    "name_en": "Aqua Spout",
+    "description": "若牠在隊伍中， 水屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 水棲帕魯的黏液 。"
+  },
+  {
+    "pal_id": "Kelpie_Fire",
+    "pal_slug": "Kelpsea_Ignis",
+    "pal_name_zh": "火靈兒",
+    "pal_name_en": "Kelpsea Ignis",
+    "name_zh": "熔岩潑灑",
+    "name_en": "Lava Spout",
+    "description": "若牠在隊伍中， 火屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 噴火器官 。"
+  },
+  {
+    "pal_id": "JellyfishFairy",
+    "pal_slug": "Jelliette",
+    "pal_name_zh": "海月仙",
+    "pal_name_en": "Jelliette",
+    "name_zh": "海月仙祝福",
+    "name_en": "Jelliette Drop",
+    "description": "若牠在隊伍中，釣魚時獲得的道具增加 (55~95)% 。（不可疊加）\r\n此外，當 海月仙 和 海月靈 同時在據點裡時， 海月仙 澆水的工作速度提升 (50~120)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "JellyfishGhost",
+    "pal_slug": "Jellroy",
+    "pal_name_zh": "海月靈",
+    "pal_name_en": "Jellroy",
+    "name_zh": "海月靈祝福",
+    "name_en": "Jellroy Drop",
+    "description": "若牠在隊伍中，打撈時獲得的道具增加 (55~95)% 。（不可疊加）\r\n此外，當 海月仙 和 海月靈 同時在據點裡時， 海月靈 澆水的工作速度提升 (50~120)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "FairyDragon",
+    "pal_slug": "Elphidran",
+    "pal_name_zh": "精靈龍",
+    "pal_name_en": "Elphidran",
+    "name_zh": "善良的聖潔之龍",
+    "name_en": "Amicable Holy Dragon",
+    "description": "可騎在牠的背上在空中飛行。\r\n飛行期間移動速度將會變快。\r\n若牠在隊伍中，擊倒 暗屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 20"
+  },
+  {
+    "pal_id": "VioletFairy",
+    "pal_slug": "Vaelet",
+    "pal_name_zh": "薇莉塔",
+    "pal_name_en": "Vaelet",
+    "name_zh": "大地淨化",
+    "name_en": "Purification of Gaia",
+    "description": "若牠在隊伍中，擊倒 地屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 各式各樣的種子 。"
+  },
+  {
+    "pal_id": "SoldierBee",
+    "pal_slug": "Beegarde",
+    "pal_name_zh": "騎士蜂",
+    "pal_name_en": "Beegarde",
+    "name_zh": "工蜂",
+    "name_en": "Worker Bee",
+    "description": "將牠分派到 家畜牧場 ，牠就有機會掉落 蜂蜜 。\r\n若牠在隊伍中， 女皇蜂 的攻擊力將會提升。"
+  },
+  {
+    "pal_id": "Serpent",
+    "pal_slug": "Surfent",
+    "pal_name_zh": "滑水蛇",
+    "pal_name_en": "Surfent",
+    "name_zh": "滑滑水蛇",
+    "name_en": "Swift Swimmer",
+    "description": "可騎在牠的背上在水上移動。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 皮革 。 科技 16"
+  },
+  {
+    "pal_id": "CatMage",
+    "pal_slug": "Katress",
+    "pal_name_zh": "闇巫貓",
+    "pal_name_en": "Katress",
+    "name_zh": "怪奇黑魔法",
+    "name_en": "Mystical Black Magic",
+    "description": "若牠在隊伍中，擊倒 無屬性 帕魯時的道具掉落量增加 (40~80)% 。\r\n此外，當玩家投擲帕魯球時，有 (10~50)% 的機率不會消耗帕魯球。（不可疊加）"
+  },
+  {
+    "pal_id": "FengyunDeeper_Electric",
+    "pal_slug": "Fenglope_Lux",
+    "pal_name_zh": "雷隱鹿",
+    "pal_name_en": "Fenglope Lux",
+    "name_zh": "雷雲",
+    "name_en": "Stormcloud",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在隊伍中，擊倒 水屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 57"
+  },
+  {
+    "pal_id": "IceFox",
+    "pal_slug": "Foxcicle",
+    "pal_name_zh": "吹雪狐",
+    "pal_name_en": "Foxcicle",
+    "name_zh": "極光的指引",
+    "name_en": "Aurora Guide",
+    "description": "若牠在隊伍中， 冰屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 結冰器官 。"
+  },
+  {
+    "pal_id": "DarkScorpion",
+    "pal_slug": "Menasting",
+    "pal_name_zh": "冥鎧蠍",
+    "pal_name_en": "Menasting",
+    "name_zh": "鋼鐵之蠍",
+    "name_en": "Steel Scorpion",
+    "description": "若牠在隊伍中，玩家的防禦力將提升 (5~10)% ，且擊倒 雷屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "DarkScorpion_Ground",
+    "pal_slug": "Menasting_Terra",
+    "pal_name_zh": "金鎧蠍",
+    "pal_name_en": "Menasting Terra",
+    "name_zh": "黃金之蠍",
+    "name_en": "Golden Scorpion",
+    "description": "若牠在隊伍中，玩家的防禦力將提升 (5~10)% ，且擊倒 雷屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "LazyCatfish",
+    "pal_slug": "Dumud",
+    "pal_name_zh": "趴趴鯰",
+    "pal_name_en": "Dumud",
+    "name_zh": "改善土質",
+    "name_en": "Soil Improver",
+    "description": "若牠在隊伍中， 地屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 優質帕魯油 。"
+  },
+  {
+    "pal_id": "LazyCatfish_Gold",
+    "pal_slug": "Dumud_Gild",
+    "pal_name_zh": "梆梆鯰",
+    "pal_name_en": "Dumud Gild",
+    "name_zh": "黃金豐收",
+    "name_en": "Golden Harvest",
+    "description": "若牠在隊伍中，被打倒的敵人掉落的 金幣 提升 (100~200)% 。（不可疊加）\r\n將牠分派到 家畜牧場 ，牠就會掉落 優質帕魯油 或有小機率掉落 金幣 。"
+  },
+  {
+    "pal_id": "Manticore",
+    "pal_slug": "Blazehowl",
+    "pal_name_zh": "獄焰王",
+    "pal_name_en": "Blazehowl",
+    "name_zh": "獄炎獅子",
+    "name_en": "Hellflame Lion",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，擊倒 草屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 33"
+  },
+  {
+    "pal_id": "Manticore_Dark",
+    "pal_slug": "Blazehowl_Noct",
+    "pal_name_zh": "獄閻王",
+    "pal_name_en": "Blazehowl Noct",
+    "name_zh": "黑炎獅子",
+    "name_en": "Darkflame Lion",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，擊倒 無屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 35"
+  },
+  {
+    "pal_id": "MushroomDragon",
+    "pal_slug": "Shroomer",
+    "pal_name_zh": "菇咚",
+    "pal_name_en": "Shroomer",
+    "name_zh": "飄飄然孢子",
+    "name_en": "Rampant Spores",
+    "description": "可騎在牠的背上移動。\r\n將牠分派到 家畜牧場 ，牠就有機會掉落 蘑菇 或 洞穴蘑菇 。 科技 39"
+  },
+  {
+    "pal_id": "WhiteTiger",
+    "pal_slug": "Cryolinx",
+    "pal_name_zh": "冰棘獸",
+    "pal_name_en": "Cryolinx",
+    "name_zh": "獵龍者",
+    "name_en": "Dragon Hunter",
+    "description": "若牠在隊伍中，擊倒 龍屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GhostRabbit",
+    "pal_slug": "Nitemary",
+    "pal_name_zh": "魅愛莉",
+    "pal_name_en": "Nitemary",
+    "name_zh": "奪魂幽靈兔",
+    "name_en": "Soul Collector",
+    "description": "若牠在隊伍中，擊倒帕魯時的帕魯之魂掉落量增加 +(100~200)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GrimGirl",
+    "pal_slug": "Splatterina",
+    "pal_name_zh": "幽戀娜",
+    "pal_name_en": "Splatterina",
+    "name_zh": "狂愛之刃",
+    "name_en": "Blade of Uncontrolled Passion",
+    "description": "若牠在隊伍中， 使用 切肉刀 進行解體時，所獲得的掉落道具增加 (100~200)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "Horus",
+    "pal_slug": "Faleris",
+    "pal_name_zh": "荷魯斯",
+    "pal_name_en": "Faleris",
+    "name_zh": "灼熱捕食者",
+    "name_en": "Scorching Predator",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中，擊倒 冰屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 60"
+  },
+  {
+    "pal_id": "Horus_Water",
+    "pal_slug": "Faleris_Aqua",
+    "pal_name_zh": "伊西斯",
+    "pal_name_en": "Faleris Aqua",
+    "name_zh": "潮汐捕食者",
+    "name_en": "Tidal Predator",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在隊伍中，擊倒 火屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加） 科技 60"
+  },
+  {
+    "pal_id": "YakushimaMonster002",
+    "pal_slug": "Enchanted_Sword",
+    "pal_name_zh": "附魔劍",
+    "pal_name_en": "Enchanted Sword",
+    "name_zh": "附魔",
+    "name_en": "Enchant",
+    "description": "若牠在隊伍中，擊倒 暗屬性 帕魯時的道具掉落量增加 (40~80)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "CloverFairy",
+    "pal_slug": "Clovee",
+    "pal_name_zh": "幸葉茸",
+    "pal_name_en": "Clovee",
+    "name_zh": "幸運三葉草",
+    "name_en": "Happy Clover",
+    "description": "若牠在據點裡，其他據點帕魯的 採集 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "Deer_Ground",
+    "pal_slug": "Eikthyrdeer_Terra",
+    "pal_name_zh": "祇岳鹿",
+    "pal_name_en": "Eikthyrdeer Terra",
+    "name_zh": "金之森守護者",
+    "name_en": "Guardian of the Golden Forest",
+    "description": "可騎在牠的背上移動。\r\n騎乘期間可以進行 2段跳躍 。\r\n若牠在據點裡，其他據點帕魯的 採伐 工作適應性等級 +1 。（不可疊加） 科技 21"
+  },
+  {
+    "pal_id": "PinkRabbit",
+    "pal_slug": "Ribbuny",
+    "pal_name_zh": "姬小兔",
+    "pal_name_en": "Ribbuny",
+    "name_zh": "微笑公主兔",
+    "name_en": "Happy-Go-Lucky Bunny",
+    "description": "若牠在隊伍中， 無屬性 帕魯的攻擊力會提升 (15~30)% 。（不可疊加）\r\n若牠在據點裡，其他據點帕魯的 手工作業 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "ClioneTwins",
+    "pal_slug": "Amione",
+    "pal_name_zh": "莉歐·莉涅",
+    "pal_name_en": "Amione",
+    "name_zh": "魔力雙子",
+    "name_en": "Magical Twin Powers",
+    "description": "若牠在據點裡，其他據點帕魯的 澆水 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "CuteButterfly",
+    "pal_slug": "Cinnamoth",
+    "pal_name_zh": "幻悅蝶",
+    "pal_name_en": "Cinnamoth",
+    "name_zh": "神秘鱗粉",
+    "name_en": "Mysterious Scales",
+    "description": "發動後會以 毒霧 攻擊鎖定的目標敵人。\r\n若牠在據點裡，其他據點帕魯的 牧場 的工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "ElecPomeranian",
+    "pal_slug": "Puffolt",
+    "pal_name_zh": "電汪汪",
+    "pal_name_en": "Puffolt",
+    "name_zh": "電光強化",
+    "name_en": "Crackle Booster",
+    "description": "若牠在據點裡，其他據點帕魯的 發電 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "CatMage_Fire",
+    "pal_slug": "Katress_Ignis",
+    "pal_name_zh": "熾巫貓",
+    "pal_name_en": "Katress Ignis",
+    "name_zh": "熱情黑魔法",
+    "name_en": "Blazing Black Magic",
+    "description": "若牠在據點裡，其他據點帕魯的 生火 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "FlowerDoll",
+    "pal_slug": "Petallia",
+    "pal_name_zh": "花麗娜",
+    "pal_name_en": "Petallia",
+    "name_zh": "花精靈的祝福",
+    "name_en": "Blessing of the Flower Spirit",
+    "description": "發動後，牠會用花朵的治癒之力恢復玩家 (75~85)% 的生命值。\r\n若牠在據點裡，其他據點帕魯的 播種 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "Yeti",
+    "pal_slug": "Wumpo",
+    "pal_name_zh": "白絨雪怪",
+    "pal_name_en": "Wumpo",
+    "name_zh": "雪山巨人",
+    "name_en": "Guardian of the Snowy Mountain",
+    "description": "可騎在牠的背上移動。\r\n若牠在據點裡，其他據點帕魯的 搬運 工作適應性等級 +1 。（不可疊加） 科技 45"
+  },
+  {
+    "pal_id": "CubeTurtle",
+    "pal_slug": "Tetroise",
+    "pal_name_zh": "重岩龜",
+    "pal_name_en": "Tetroise",
+    "name_zh": "負石古代龜",
+    "name_en": "Masonry Archelon",
+    "description": "可騎在牠的背上移動。\r\n若牠在據點裡，其他據點帕魯的 挖掘 工作適應性等級 +1 。（不可疊加） 科技 48"
+  },
+  {
+    "pal_id": "MimicDog",
+    "pal_slug": "Mimog",
+    "pal_name_zh": "旺財",
+    "pal_name_en": "Mimog",
+    "name_zh": "撬鎖",
+    "name_en": "Master of Unlocking",
+    "description": "與牠並肩作戰時，能藉助 旺財 的力量，在不使用鑰匙的情況下打開各種等級的寶箱。\r\n但無法打開需要特定工作適應性的寶箱。"
+  },
+  {
+    "pal_id": "BlackPuppy_Ice",
+    "pal_slug": "Smokie_Cryst",
+    "pal_name_zh": "冬丸",
+    "pal_name_en": "Smokie Cryst",
+    "name_zh": "忠犬冬丸",
+    "name_en": "Cryo Instincts",
+    "description": "若牠在據點裡，其他據點帕魯的 冷卻 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "MushroomLady",
+    "pal_slug": "Mycora",
+    "pal_name_zh": "紅菇娘",
+    "pal_name_en": "Mycora",
+    "name_zh": "魅惑孢子",
+    "name_en": "Charming Spore",
+    "description": "若牠在據點裡，其他據點帕魯的 製藥 工作適應性等級 +1 。（不可疊加）"
+  },
+  {
+    "pal_id": "JellyfishFairy",
+    "pal_slug": "Jelliette",
+    "pal_name_zh": "海月仙",
+    "pal_name_en": "Jelliette",
+    "name_zh": "海月仙祝福",
+    "name_en": "Jelliette Drop",
+    "description": "若牠在隊伍中，釣魚時獲得的道具增加 (55~95)% 。（不可疊加）\r\n此外，當 海月仙 和 海月靈 同時在據點裡時， 海月仙 澆水的工作速度提升 (50~120)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "OctopusGirl",
+    "pal_slug": "Gloopie",
+    "pal_name_zh": "墨沫姬",
+    "pal_name_en": "Gloopie",
+    "name_zh": "纏人小公主",
+    "name_en": "Sticky Princess",
+    "description": "若牠在隊伍中，在釣魚小遊戲中的判定條和魚的圖示未重合期間，捕獲計量槽的下降量減少 (12~35)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "IceNarwhal",
+    "pal_slug": "Whalaska",
+    "pal_name_zh": "涼晶鯨",
+    "pal_name_en": "Whalaska",
+    "name_zh": "涼冰冰鯨魚號",
+    "name_en": "Chilled Whale Cruiser",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，釣魚的捕獲計量槽在小遊戲開始時的初始位置升高 (5~14)% ，並且在判定條與魚的圖示重合期間，捕獲計量槽的上升量增加 (5~14)% 。（不可疊加） 科技 42"
+  },
+  {
+    "pal_id": "IceNarwhal_Fire",
+    "pal_slug": "Whalaska_Ignis",
+    "pal_name_zh": "桃晶鯨",
+    "pal_name_en": "Whalaska Ignis",
+    "name_zh": "暖烘烘鯨魚號",
+    "name_en": "Cozy Whale Cruiser",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，釣魚的捕獲計量槽在小遊戲開始時的初始位置升高 (7~17)% ，並且在判定條與魚的圖示重合期間，捕獲計量槽的上升量增加 (7~17)% 。（不可疊加） 科技 71"
+  },
+  {
+    "pal_id": "KingSunfish",
+    "pal_slug": "Solmora",
+    "pal_name_zh": "曼波王",
+    "pal_name_en": "Solmora",
+    "name_zh": "領袖翻車魚",
+    "name_en": "Charming Fish",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，會更容易釣上 高潛力帕魯 。（不可疊加） 科技 65"
+  },
+  {
+    "pal_id": "KingSunfish_Thunder",
+    "pal_slug": "Solmora_Lux",
+    "pal_name_zh": "曼波皇",
+    "pal_name_en": "Solmora Lux",
+    "name_zh": "電光翻車魚",
+    "name_en": "Shocking Fish",
+    "description": "可騎在牠的背上在水上移動。\r\n騎乘期間玩家的攻擊會轉變為 雷屬性 ，且攻擊力提升 (5~20)% 。\r\n此外，若牠在隊伍中，會更容易釣上 高潛力帕魯 。（不可疊加） 科技 66"
+  },
+  {
+    "pal_id": "OctopusGirl",
+    "pal_slug": "Gloopie",
+    "pal_name_zh": "墨沫姬",
+    "pal_name_en": "Gloopie",
+    "name_zh": "纏人小公主",
+    "name_en": "Sticky Princess",
+    "description": "若牠在隊伍中，在釣魚小遊戲中的判定條和魚的圖示未重合期間，捕獲計量槽的下降量減少 (12~35)% 。（不可疊加）"
+  },
+  {
+    "pal_id": "GhostBlackCat",
+    "pal_slug": "Wispaw",
+    "pal_name_zh": "念影喵",
+    "pal_name_en": "Wispaw",
+    "name_zh": "附體靈貓",
+    "name_en": "Death-Cheating Feline",
+    "description": "若牠在隊伍中，觸發 背面獎勵 時的捕獲機率增加。（不可疊加）"
+  },
+  {
+    "pal_id": "FluffyBird",
+    "pal_slug": "Muffly",
+    "pal_name_zh": "雪綿啾",
+    "pal_name_en": "Muffly",
+    "name_zh": "軟萌圓圓鳥",
+    "name_en": "Fluffy Flutterer",
+    "description": "若牠在隊伍中，提升對陷入 凍結 狀態帕魯的捕獲機率。（不可疊加）"
+  },
+  {
+    "pal_id": "IceNarwhal",
+    "pal_slug": "Whalaska",
+    "pal_name_zh": "涼晶鯨",
+    "pal_name_en": "Whalaska",
+    "name_zh": "涼冰冰鯨魚號",
+    "name_en": "Chilled Whale Cruiser",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，釣魚的捕獲計量槽在小遊戲開始時的初始位置升高 (5~14)% ，並且在判定條與魚的圖示重合期間，捕獲計量槽的上升量增加 (5~14)% 。（不可疊加） 科技 42"
+  },
+  {
+    "pal_id": "IceNarwhal_Fire",
+    "pal_slug": "Whalaska_Ignis",
+    "pal_name_zh": "桃晶鯨",
+    "pal_name_en": "Whalaska Ignis",
+    "name_zh": "暖烘烘鯨魚號",
+    "name_en": "Cozy Whale Cruiser",
+    "description": "可騎在牠的背上在水上移動。\r\n若牠在隊伍中，釣魚的捕獲計量槽在小遊戲開始時的初始位置升高 (7~17)% ，並且在判定條與魚的圖示重合期間，捕獲計量槽的上升量增加 (7~17)% 。（不可疊加） 科技 71"
+  },
+  {
+    "pal_id": "DandelionGirl",
+    "pal_slug": "Souffline",
+    "pal_name_zh": "蒲蒲飛芽",
+    "pal_name_en": "Souffline",
+    "name_zh": "絨毛妖精",
+    "name_en": "Fuzzy Fairy",
+    "description": "若牠在隊伍中，提升對陷入 纏繞 狀態帕魯的捕獲機率。（不可疊加）"
+  },
+  {
+    "pal_id": "NaughtyCat",
+    "pal_slug": "Grintale",
+    "pal_name_zh": "笑魘貓",
+    "pal_name_en": "Grintale",
+    "name_zh": "貓眼逼人",
+    "name_en": "Glaring Cat's Eye",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，撿到 帕魯蛋 時將有 (50~75)% 的機率再撿到1顆。（不可疊加） 科技 19"
+  },
+  {
+    "pal_id": "SakuraSaurus",
+    "pal_slug": "Broncherry",
+    "pal_name_zh": "連理龍",
+    "pal_name_en": "Broncherry",
+    "name_zh": "戀香初綻",
+    "name_en": "Love's First Blossom",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，撿到的帕魯蛋將有 (35~45)% 的機率變成頭目帕魯蛋。（不可疊加） 科技 33"
+  },
+  {
+    "pal_id": "SakuraSaurus_Water",
+    "pal_slug": "Broncherry_Aqua",
+    "pal_name_zh": "海誓龍",
+    "pal_name_en": "Broncherry Aqua",
+    "name_zh": "純心盛綻",
+    "name_en": "Purity's Full Bloom",
+    "description": "可騎在牠的背上移動。\r\n若牠在隊伍中，撿到的帕魯蛋將有 (45~55)% 的機率變成頭目帕魯蛋。（不可疊加） 科技 44"
+  },
+  {
+    "pal_id": "Plesiosaur",
+    "pal_slug": "Braloha",
+    "pal_name_zh": "梁葉龍",
+    "pal_name_en": "Braloha",
+    "name_zh": "暖洋洋晴日",
+    "name_en": "Balmy Weather",
+    "description": "可騎在牠的背上移動。\r\n若牠在據點裡，分派到 配種牧場 的帕魯產蛋速度加快 (20~50)% 。（不可疊加） 科技 36"
+  },
+  {
+    "pal_id": "ThunderFluffyBird",
+    "pal_slug": "Dynamoff",
+    "pal_name_zh": "雷雲鷲",
+    "pal_name_en": "Dynamoff",
+    "name_zh": "電動按摩式孵蛋",
+    "name_en": "Electro-Massage Incubation",
+    "description": "可騎在牠的背上在空中飛行。\r\n若牠在據點裡，帕魯蛋的孵化速度加快 (20~40)% 。（不可疊加） 科技 66"
+  }
+]
