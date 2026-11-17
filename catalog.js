@@ -979,15 +979,51 @@ window.COSMI_CATALOG = {
     "神秘莫測", "貪吃嗜睡", "狡詐靈動", "嗜好閃耀之物", "暴烈瘋狂", "護巢護崽", "好奇心過剩", "未知"
   ],
 
-  // 宙獸野生領域性情（規則層級，對應 balance.json#ai.territory_mm 領域半徑）
-  TEMPERAMENTS: [
-    { v: "timid", zh: "膽怯/溫馴", radius_m: 0, desc: "0m 領域：被動防衛，只在被攻擊或被集火時反擊" },
-    { v: "cautious", zh: "警惕/謹慎", radius_m: 4, desc: "4m 領域：近身自衛警戒，侵入極近距離時反擊" },
-    { v: "normal", zh: "沉穩/常規", radius_m: 8, desc: "8m 領域：標準野生感應與常規巡邏領域" },
-    { v: "territorial", zh: "領地/敏銳", radius_m: 14, desc: "14m 領域：中遠距地盤意識強，主動迎擊" },
-    { v: "fierce", zh: "凶悍/侵略", radius_m: 20, desc: "20m 領域：遠距主動鎖定衝鋒，掠食性極強" },
-    { v: "apex", zh: "霸主/狂暴", radius_m: 28, desc: "28m 領域：超遠域霸主威壓，近視距極限追獵" }
+  // 宙獸個體習性（規則層級，對應 balance.json#ai.territory_mm 領域半徑）。習性不是物種欄位：
+  // 野生個體生成時由抽到的生態棲位再抽出（主專案 docs/design/creature-ecology.md#習性）。
+  HABITS: [
+    { v: "avoidant", zh: "迴避", radius_m: 0, desc: "0m 領域：不主動開戰，只在被挑釁或被打中時還手" },
+    { v: "vigilant", zh: "警戒", radius_m: 4, desc: "4m 領域：近身才自衛" },
+    { v: "tolerant", zh: "耐受", radius_m: 8, desc: "8m 領域：標準感應距離" },
+    { v: "territorial", zh: "護域", radius_m: 14, desc: "14m 領域：中遠距驅逐入侵者" },
+    { v: "aggressive", zh: "攻擊", radius_m: 20, desc: "20m 領域：遠距主動衝鋒" },
+    { v: "dominant", zh: "優勢", radius_m: 28, desc: "28m 領域：超廣域壓制追擊" }
   ],
+
+  // 舊版「性格」ID → 習性 ID：只用於讀取改名前存下的概念（localStorage / Drive），新資料一律寫 habit / niches。
+  LEGACY_TEMPERAMENT_TO_HABIT: {
+    timid: "avoidant", cautious: "vigilant", normal: "tolerant", territorial: "territorial", fierce: "aggressive", apex: "dominant"
+  },
+
+  // 生態棲位目錄（鏡像主專案 Data/_incoming/p3-31-ecology-draft-01/niches/niches.json；改動以主專案為準）。
+  // radius_m：來回／環狀／區域隨機為活動半徑，無限制隨機為出生區排他半徑；同棲位不同種的活動區不可重疊。
+  NICHES: [
+    { v: "niche_ground_grazer", zh: "地表食草", resource: "草本嫩葉；開闊地短距採食", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 14, habits: ["avoidant", "vigilant", "tolerant"], habitats: ["river_valley", "fjord", "plateau", "archipelago", "eternal_day", "grassland", "tundra", "cirque", "moraine"] },
+    { v: "niche_edge_browser", zh: "林緣食葉", resource: "灌木與低枝葉；林緣往返採食", mode: "shuttle", mode_zh: "來回週期", radius_m: 18, habits: ["avoidant", "vigilant", "tolerant", "territorial"], habitats: ["forest", "river_valley", "swamp"] },
+    { v: "niche_fruit_disperser", zh: "食果傳種", resource: "成熟果實；串訪離散果源", mode: "loop", mode_zh: "環狀週期", radius_m: 24, habits: ["avoidant", "vigilant", "tolerant", "territorial"], habitats: ["forest", "river_valley"] },
+    { v: "niche_nectar_visitor", zh: "訪花食蜜", resource: "花蜜與花粉；串訪花叢，不預設飛行", mode: "loop", mode_zh: "環狀週期", radius_m: 16, habits: ["avoidant", "vigilant", "tolerant"], habitats: ["forest", "river_valley", "plateau", "archipelago", "eternal_day", "grassland"] },
+    { v: "niche_ground_granivore", zh: "地表食籽", resource: "種子與穀粒；地表斑塊覓食", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 9, habits: ["avoidant", "vigilant", "tolerant"], habitats: ["forest", "plateau", "eternal_day", "grassland", "desert", "tundra"] },
+    { v: "niche_understory_insectivore", zh: "林下食蟲", resource: "林下昆蟲與小型無脊椎動物；頻繁換位", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 12, habits: ["avoidant", "vigilant", "tolerant"], habitats: ["forest", "river_valley", "swamp"] },
+    { v: "niche_detritivore", zh: "腐屑食者", resource: "枯葉與腐朽有機物；潮濕地表慢速採食", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 7, habits: ["avoidant", "vigilant", "tolerant"], habitats: ["forest", "fjord", "archipelago", "cave", "swamp", "karst"] },
+    { v: "niche_carrion_scavenger", zh: "食腐", resource: "動物殘骸；廣域機會搜尋", mode: "unbounded_random", mode_zh: "無限制隨機", radius_m: 20, habits: ["vigilant", "tolerant", "territorial"], habitats: ["forest", "river_valley", "volcano", "rift_valley", "ice_field", "fjord", "plateau", "archipelago", "canyon", "cave", "eternal_day", "eternal_night", "grassland", "desert", "swamp", "mountain", "tundra", "glacier", "cirque", "moraine", "karst", "basalt_terrace", "granite_domes", "slate_cliffs"] },
+    { v: "niche_ambush_predator", zh: "伏擊掠食", resource: "掩蔽處的小型獵物；長停留、短距換位", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 10, habits: ["vigilant", "tolerant", "territorial", "aggressive"], habitats: ["forest", "rift_valley", "canyon", "cave", "swamp", "karst", "slate_cliffs"] },
+    { v: "niche_patrol_hunter", zh: "巡獵掠食", resource: "沿固定獵徑搜尋獵物；反覆巡行", mode: "loop", mode_zh: "環狀週期", radius_m: 32, habits: ["vigilant", "tolerant", "territorial", "aggressive"], habitats: ["forest", "ice_field", "fjord", "plateau", "canyon", "eternal_night", "grassland", "desert", "mountain", "tundra", "glacier", "moraine"] },
+    { v: "niche_apex_predator", zh: "頂級掠食", resource: "食物網高營養級獵物；廣域搜尋，並非必定狂暴", mode: "unbounded_random", mode_zh: "無限制隨機", radius_m: 30, habits: ["tolerant", "territorial", "aggressive", "dominant"], habitats: ["forest", "rift_valley", "ice_field", "plateau", "canyon", "eternal_night", "grassland", "desert", "mountain", "tundra", "glacier"] },
+    { v: "niche_opportunistic_omnivore", zh: "機會型雜食", resource: "果實、小型動物與零散有機物；探索分散資源", mode: "unbounded_random", mode_zh: "無限制隨機", radius_m: 15, habits: ["avoidant", "vigilant", "tolerant", "territorial"], habitats: ["forest", "river_valley", "volcano", "rift_valley", "ice_field", "fjord", "plateau", "archipelago", "canyon", "cave", "eternal_day", "eternal_night", "grassland", "desert", "swamp", "mountain", "tundra", "glacier", "cirque", "moraine", "karst", "basalt_terrace", "granite_domes", "slate_cliffs"] },
+    { v: "niche_mineral_feeder", zh: "食礦", resource: "露出岩礦；礦點與棲所間往返，幻想食性", mode: "shuttle", mode_zh: "來回週期", radius_m: 15, habits: ["vigilant", "tolerant", "territorial", "aggressive"], habitats: ["volcano", "rift_valley", "canyon", "cave", "desert", "mountain", "glacier", "cirque", "moraine", "karst", "basalt_terrace", "granite_domes", "slate_cliffs"] },
+    { v: "niche_ambient_energy_feeder", zh: "環境能量採食", resource: "火山熱源、晶體等穩定能量點；幻想食性", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 11, habits: ["avoidant", "vigilant", "tolerant", "territorial"], habitats: ["volcano", "rift_valley", "ice_field", "plateau", "cave", "eternal_day", "eternal_night", "mountain", "glacier", "basalt_terrace"] }
+  ],
+
+  habitZh(v) {
+    const id = this.LEGACY_TEMPERAMENT_TO_HABIT[v] || v;
+    const h = this.HABITS.find(x => x.v === id);
+    return h ? `${h.zh}（${h.radius_m}m 領域）` : (v || "未定");
+  },
+
+  nicheZh(v) {
+    const n = this.NICHES.find(x => x.v === v);
+    return n ? `${n.zh}（${n.mode_zh} ${n.radius_m}m）` : (v || "未定");
+  },
 
   CHARACTER: {
     // 角色人種：純粹外貌生理表型特徵，與文化地區互相獨立
@@ -1506,8 +1542,8 @@ window.COSMI_CATALOG = {
       "輔助治療/生命共鳴", "團隊增益/光環守護", "場地佈署/陣地構築", "空中游擊/截擊", "高速突襲/破陣先鋒",
       "干擾削弱/詛咒削弱", "自爆/致命反傷護衛", "指揮/僕從群體召喚", "未知"
     ],
-    get temperaments() { return window.COSMI_CATALOG.TEMPERAMENTS; },
-    get temperament() { return window.COSMI_CATALOG.TEMPERAMENTS.map(t => ({ v: t.v, zh: `${t.zh}（${t.radius_m}m 領域）` })); },
+    get habits() { return window.COSMI_CATALOG.HABITS; },
+    get niches() { return window.COSMI_CATALOG.NICHES.map(n => ({ v: n.v, zh: window.COSMI_CATALOG.nicheZh(n.v) })); },
     get disposition() { return window.COSMI_CATALOG.PERSONALITIES; },
     social_structure: [
       "孤獨獨行（領地獨居，僅繁殖期短暫接觸）",

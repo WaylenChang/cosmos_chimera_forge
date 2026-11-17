@@ -376,7 +376,8 @@
         return pool.map(a => ({ v: a.name, w: a.w, zh: a.name + "（" + a.region + "·" + a.type + (a.sensitivity === "review" ? "・需審" : "") + "）" })).concat(getCustom("creature.archetype").map(v => ({ v, w: 1, zh: v })));
       }, count: [{ n: 1, w: 1 }] },
       { key: "role", label: "戰鬥定位", options: () => uniform(CR.role.concat(getCustom("creature.role"))), count: [{ n: 1, w: 1 }] },
-      { key: "temperament", label: "領域性情（開戰半徑）", options: () => uniform(C.TEMPERAMENTS.map(t => ({ v: t.v, zh: `${t.zh}（${t.radius_m}m 領域）` })).concat(getCustom("creature.temperament"))), count: [{ n: 1, w: 1 }] },
+      // 習性是個體抽樣、不是物種欄位：物種只提供候選棲位（主專案 creature-ecology.md），習性由棲位決定。
+      { key: "niches", label: "候選生態棲位", options: () => uniform(C.NICHES.map(n => ({ v: n.v, zh: C.nicheZh(n.v) })).concat(getCustom("creature.niches"))), count: [{ n: 2, w: 2 }, { n: 3, w: 1 }], max: 3 },
       { key: "disposition", label: "神態性格（外貌側寫）", options: () => uniform(C.PERSONALITIES.concat(getCustom("creature.disposition"))), count: [{ n: 1, w: 1 }] },
       { key: "social_structure", label: "社會型態", options: () => uniform(CR.social_structure.concat(getCustom("creature.social_structure"))), count: [{ n: 1, w: 1 }] },
       { key: "reproduction", label: "生育方式", options: () => uniform(CR.reproduction.concat(getCustom("creature.reproduction"))), count: [{ n: 1, w: 1 }] },
@@ -573,7 +574,7 @@
       motifs: a.motifs || "",
       meaning: a.meaning || "",
       sensitivity: a.sensitivity || "ok", role: c.role?.[0] || "未知",
-      temperament: c.temperament?.[0] || "normal",
+      niches: c.niches || [],
       disposition: c.disposition?.[0] || "沉穩",
       social_structure: c.social_structure?.[0] || "未知",
       reproduction: c.reproduction?.[0] || "未知",
@@ -755,7 +756,7 @@
         timeline: c.timeline || "架空",
         archetype: c.archetype || "自由原型",
         role: c.role || "戰鬥",
-        temperament: lockedStage?.temperament || c.temperament || (curStage === "juvenile" ? "timid" : curStage === "adolescent" ? "normal" : curStage === "overload" ? "apex" : "fierce"),
+        niches: lockedStage?.niches || c.niches || [],
         disposition: c.disposition || "沉穩專注",
         evolution_flow: c.evolution_flow || {
           stage1_to_2: c.evo_stage1_to_2 || "stance_reconfig",
@@ -4066,7 +4067,7 @@
       timeline: "青銅神話/古典英雄時代", region: "東亞",
       size_profile: "S→M→L→XL",
       archetype: "桃太郎", archetype_type: "傳說", motifs: "桃紋飾、雙角重鎧、腰間黍糰印記",
-      sensitivity: "ok", role: "前排肉盾/坦克", temperament: "好鬥凶悍",
+      sensitivity: "ok", role: "前排肉盾/坦克", niches: ["niche_patrol_hunter", "niche_carrion_scavenger"],
       signature_move: { name_zh: "崩天熾烈斬", move_id: "move_earth_heavy_cleave" },
       trait: { name_zh: "熔鋼重裝壁", trait_id: "trait_metal_impenetrable_shell" },
       formula: "fire+metal × 精靈族·高等精靈+武器·符文巨盾 × 桃太郎（青銅神話/古典英雄時代）"
@@ -6123,11 +6124,13 @@
               el("span", { class: "prompt-k" }, "文化時間線"), el("span", { class: "prompt-v" }, c.timeline || "青銅神話/古典英雄時代"),
               el("span", { class: "prompt-k" }, "文化原型"), el("span", { class: "prompt-v" }, (c.archetype?.name || c.archetype || "自由原型") + " (" + (c.region || "東亞") + ") · " + (c.motifs || "符號意象")),
               el("span", { class: "prompt-k" }, "AGC 立繪背景色"), el("span", { class: "prompt-v" }, (() => { const bg = C.determineAgcBgColor(c, false); return [el("span", { style: `display:inline-block;width:12px;height:12px;background:${bg.hex};border-radius:2px;vertical-align:middle;margin-right:5px;border:1px solid #555` }), `${bg.hex} (${bg.toneLabel}, R=G=B=${bg.rgb[0]})`]; })()),
-              el("span", { class: "prompt-k" }, "戰鬥 / 性情領域"), el("span", { class: "prompt-v" }, (() => {
-                const tempObj = (C.TEMPERAMENTS || []).find(t => t.v === c.temperament) || { zh: c.temperament || "常規", radius_m: 8 };
-                const tempLabel = `${tempObj.zh}（${tempObj.radius_m}m 領域）`;
+              el("span", { class: "prompt-k" }, "戰鬥 / 生態棲位"), el("span", { class: "prompt-v" }, (() => {
+                // Concepts saved before the rename carry a species temperament; show it as the legacy habit it maps to.
+                const eco = (c.niches && c.niches.length)
+                  ? c.niches.map(n => C.nicheZh(n.niche || n)).join("、")
+                  : (c.temperament ? "舊版習性：" + C.habitZh(c.temperament) : "未定棲位");
                 const disp = c.disposition ? ` · ${c.disposition}` : "";
-                return (c.role || "前排肉盾") + " · " + tempLabel + disp;
+                return (c.role || "前排肉盾") + " · " + eco + disp;
               })())
             )
           ),

@@ -43,7 +43,7 @@ window.COSMI_DESIGNED = {
         "motifs": "聚光太陽鏡陣、汲雲氣球管道、苔絨花園",
         "sensitivity": "ok",
         "role": "後排輸出、控距：遠距直線光束",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "沉穩專注、喜歡曬太陽",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -82,7 +82,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Mirravault",
               "naming_note": "四階段統一命名；鏡冠初生，如芽迎日。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_nectar_visitor",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ground_granivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 2
+                }
+              ],
               "height_length": "0.45 m",
               "weight": "1.8 kg",
               "body_fat": "15%",
@@ -110,7 +123,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Mirravault",
               "naming_note": "四階段統一命名；承接鏡冠，羽翼展成鏡陣。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 2
+                }
+              ],
               "height_length": "1.25 m",
               "weight": "28 kg",
               "body_fat": "13%",
@@ -138,7 +164,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Mirravault",
               "naming_note": "四階段統一命名；環形鏡陣托起天空之姿。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.2 m",
               "weight": "95 kg",
               "body_fat": "12%",
@@ -162,7 +201,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "sun_coronavault_skyheron",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "神聖威嚴、君臨長空",
               "name_zh": "鏡環天鷺",
               "name_en": "Mirravault",
@@ -239,7 +278,7 @@ window.COSMI_DESIGNED = {
         "motifs": "孤行極地巨灰狼、冰原極夜星光、震地長尾",
         "sensitivity": "ok",
         "role": "繞背突進：沿直線突進並降低命中敵人的影抗性，隨後貼身作戰。",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "孤僻警覺、只親近主人",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -278,7 +317,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Nivervast",
               "naming_note": "四階段統一命名；夜色留下幼狼的足痕。",
               "size_class": "S",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_understory_insectivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.55 m",
               "weight": "4.2 kg",
               "body_fat": "20%",
@@ -306,7 +358,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Nivervast",
               "naming_note": "四階段統一命名；夜痕成長為伏行孤狼。",
               "size_class": "M",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 2
+                }
+              ],
               "height_length": "1.4 m",
               "weight": "52 kg",
               "body_fat": "19%",
@@ -334,7 +395,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Nivervast",
               "naming_note": "四階段統一命名；霜原巨狼延續夜痕意象。",
               "size_class": "L",
-              "temperament": "fierce",
+              "niches": [
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.5 m",
               "weight": "420 kg",
               "body_fat": "18%",
@@ -358,7 +432,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "moon_eclipsvast_wolf",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "狂暴冷酷、蝕滅萬物",
               "name_zh": "夜痕霜狼",
               "name_en": "Nivervast",
@@ -435,7 +509,7 @@ window.COSMI_DESIGNED = {
         "motifs": "黃金雙翼駿馬、彎月額角、疾風長鬃、無垠綠草原",
         "sensitivity": "ok",
         "role": "中距衝鋒：沿直線向前突進，以雷屬性攻擊命中路徑上的敵人。",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "熱血莽撞、愛衝在最前面",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -474,7 +548,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltrazent",
               "naming_note": "四階段統一命名；星斑與帶電小蹄相映。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 5
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.58 m",
               "weight": "4.8 kg",
               "body_fat": "16%",
@@ -502,7 +585,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltrazent",
               "naming_note": "四階段統一命名；星蹄長成逐風的駿馬。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_edge_browser",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.4 m",
               "weight": "62 kg",
               "body_fat": "15%",
@@ -530,7 +626,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltrazent",
               "naming_note": "四階段統一命名；星蹄展翼，奔馳如天驥。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.5 m",
               "weight": "540 kg",
               "body_fat": "14%",
@@ -554,7 +663,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "star_tempest_celestial",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "萬鈞奔雷、威壓寰宇",
               "name_zh": "星蹄天驥",
               "name_en": "Voltrazent",
@@ -628,7 +737,7 @@ window.COSMI_DESIGNED = {
         "motifs": "報時機械巨象、沉水浮碗漏壺、盤龍平衡桿",
         "sensitivity": "ok",
         "role": "前排坦克：遠距直線突進破陣，常駐金抗換取移速",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "沉穩厚重、分秒不差",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -667,7 +776,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Clepsarche",
               "naming_note": "四階段統一命名；漏刻浮碗藏在初生齒輪間。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_detritivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.48 m",
               "weight": "14 kg",
               "body_fat": "10%",
@@ -695,7 +817,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Clepsarche",
               "naming_note": "四階段統一命名；漏輪披甲，守住夥伴前方。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.30 m",
               "weight": "95 kg",
               "body_fat": "9%",
@@ -723,7 +854,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Clepsarche",
               "naming_note": "四階段統一命名；漏輪化作巨象腹中的計時機關。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.40 m",
               "weight": "650 kg",
               "body_fat": "8%",
@@ -747,7 +891,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "metal_chronos_colossus",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "萬古恆準、破山裂陣",
               "name_zh": "漏輪巨象",
               "name_en": "Clepsarche",
@@ -821,7 +965,7 @@ window.COSMI_DESIGNED = {
         "motifs": "流線捲紋羽冠、雙重虹彩長尾、黃銅雕花底座",
         "sensitivity": "ok",
         "role": "中排輸出：高精神，中距指定點範圍爆發，上場時自我治療",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "高貴敏銳、警覺守望",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -860,7 +1004,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Vireloria",
               "naming_note": "四階段統一命名；初萌蕨葉捲成小小蔓冠。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_ground_granivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_fruit_disperser",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.42 m",
               "weight": "2.2 kg",
               "body_fat": "14%",
@@ -888,7 +1045,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Vireloria",
               "naming_note": "四階段統一命名；蔓冠舒展，扇形孔雀尾羽流轉。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_fruit_disperser",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_understory_insectivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.15 m",
               "weight": "18 kg",
               "body_fat": "12%",
@@ -916,7 +1086,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Vireloria",
               "naming_note": "四階段統一命名；蔓冠孔雀扇尾映出雙重虹彩。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_fruit_disperser",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_edge_browser",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.10 m",
               "weight": "65 kg",
               "body_fat": "11%",
@@ -940,7 +1123,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "wood_canopy_sovereign",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "神聖祥和、庇蔭萬木",
               "name_zh": "蔓冠虹禽",
               "name_en": "Vireloria",
@@ -1014,7 +1197,7 @@ window.COSMI_DESIGNED = {
         "motifs": "蟹爪風帆多體舟、海蝕洞巨鰻、季風海浪",
         "sensitivity": "ok",
         "role": "遠距砲台：高力量，遠距指定點範圍爆發，連續施放水招縮短 CD",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "隨波逐流、暗藏殺機",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -1053,7 +1236,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Brinamar",
               "naming_note": "四階段統一命名；小鰻背上的水膜初展如帆。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_detritivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_understory_insectivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.55 m",
               "weight": "3.5 kg",
               "body_fat": "18%",
@@ -1081,7 +1277,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Brinamar",
               "naming_note": "四階段統一命名；潮帆長出雙浮筒，破浪如舟。",
               "size_class": "M",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_detritivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.35 m",
               "weight": "32 kg",
               "body_fat": "16%",
@@ -1109,7 +1318,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Brinamar",
               "naming_note": "四階段統一命名；潮帆巨鰻如雙體大舟乘浪。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.45 m",
               "weight": "120 kg",
               "body_fat": "15%",
@@ -1133,7 +1355,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "water_oceanvoyage_leviathan",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "翻江倒海、吞吐狂瀾",
               "name_zh": "潮帆巨鰻",
               "name_en": "Brinamar",
@@ -1207,7 +1429,7 @@ window.COSMI_DESIGNED = {
         "motifs": "玫瑰紅砂岩神殿、雙目方塊聖石、沙漠羱羊彎角",
         "sensitivity": "ok",
         "role": "重砲手：高力量，遠距指定點範圍爆發，受火屬性攻擊後縮短火招 CD",
-        "temperament": "apex",
+        "habit": "dominant",
         "disposition": "兇悍霸烈、主動進攻",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -1246,7 +1468,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Pyribex",
               "naming_note": "四階段統一命名；玫瑰砂岩幼羊額頂初萌彎角。",
               "size_class": "S",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 2
+                }
+              ],
               "height_length": "0.50 m",
               "weight": "6.5 kg",
               "body_fat": "17%",
@@ -1274,7 +1505,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Pyribex",
               "naming_note": "四階段統一命名；雙彎角與岩壁火口導流電漿。",
               "size_class": "M",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.30 m",
               "weight": "68 kg",
               "body_fat": "15%",
@@ -1302,7 +1546,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Pyribex",
               "naming_note": "四階段統一命名；玫瑰岩神殿火口與雙彎巨角共鳴。",
               "size_class": "L",
-              "temperament": "apex",
+              "niches": [
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.30 m",
               "weight": "310 kg",
               "body_fat": "13%",
@@ -1326,7 +1583,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "fire_sunpharaoh_lion",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "焚天滅世、神威君臨",
               "name_zh": "焰角羱羊",
               "name_en": "Pyribex",
@@ -1400,7 +1657,7 @@ window.COSMI_DESIGNED = {
         "motifs": "金粉覆身、高山聖湖綠寶石、聖湖蘆葦金筏紋飾",
         "sensitivity": "ok",
         "role": "前排：遠距直線突進，受擊後提高土專精",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "沉默威儀、堅不可摧",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -1439,7 +1696,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Gildumara",
               "naming_note": "四階段統一命名；四足小犰狳覆著細碎金粉陶甲。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_detritivore",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.48 m",
               "weight": "12 kg",
               "body_fat": "12%",
@@ -1467,7 +1737,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Gildumara",
               "naming_note": "四階段統一命名；層疊金甲與聖湖蘆葦紋盾展開。",
               "size_class": "M",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.25 m",
               "weight": "95 kg",
               "body_fat": "10%",
@@ -1495,7 +1774,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Gildumara",
               "naming_note": "四階段統一命名；巨型雕紋金甲與聖湖翠晶背丘。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.25 m",
               "weight": "480 kg",
               "body_fat": "9%",
@@ -1519,7 +1811,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "earth_eldorado_colossus",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "不動如山、威鎮八荒",
               "name_zh": "金甲犰狳",
               "name_en": "Gildumara",
@@ -1593,7 +1885,7 @@ window.COSMI_DESIGNED = {
         "motifs": "鳥首分叉巨鹿角、金箔毛氈鞍飾、永凍冰塚",
         "sensitivity": "ok",
         "role": "遠距砲台：高敏捷，遠距指定點範圍爆發，上場時暫時提高冰抗",
-        "temperament": "fierce",
+        "habit": "aggressive",
         "disposition": "傲骨凌霜、極地伏擊",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -1632,7 +1924,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Rimbragard",
               "naming_note": "四階段統一命名；冰晶小角從雪白絨毛間探出。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ground_granivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.52 m",
               "weight": "5.0 kg",
               "body_fat": "18%",
@@ -1660,7 +1965,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Rimbragard",
               "naming_note": "四階段統一命名；霜角分岔，為獵獸引導寒氣。",
               "size_class": "M",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.35 m",
               "weight": "58 kg",
               "body_fat": "16%",
@@ -1688,7 +2006,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Rimbragard",
               "naming_note": "四階段統一命名；霜角巨獸披上永凍甲翼。",
               "size_class": "L",
-              "temperament": "fierce",
+              "niches": [
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.40 m",
               "weight": "380 kg",
               "body_fat": "14%",
@@ -1712,7 +2043,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "ice_permafrost_griffin",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "凌寒肅殺、極北主宰",
               "name_zh": "霜角巨獸",
               "name_en": "Rimbragard",
@@ -1786,7 +2117,7 @@ window.COSMI_DESIGNED = {
         "motifs": "雕花竹笛、奇納布河渡船、幾何刺繡披肩",
         "sensitivity": "ok",
         "role": "游擊砲台：最高敏捷，遠距指定點範圍爆發，換手上場時加速",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "自由不羈、隨風起舞",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -1825,7 +2156,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Reevilora",
               "naming_note": "四階段統一命名；竹笛小舟隨風發出清音。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_nectar_visitor",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.46 m",
               "weight": "2.8 kg",
               "body_fat": "15%",
@@ -1853,7 +2197,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Reevilora",
               "naming_note": "四階段統一命名；笛風展翼，循著氣流巡航。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_nectar_visitor",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.20 m",
               "weight": "22 kg",
               "body_fat": "12%",
@@ -1881,7 +2238,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Reevilora",
               "naming_note": "四階段統一命名；笛風托起繡帆，巡行長空。",
               "size_class": "L",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.20 m",
               "weight": "85 kg",
               "body_fat": "10%",
@@ -1905,7 +2275,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "wind_zephyr_archcruiser",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "乘風破浪、縹緲天籟",
               "name_zh": "笛風天舟",
               "name_en": "Reevilora",
@@ -1981,7 +2351,7 @@ window.COSMI_DESIGNED = {
         "motifs": "蓄鬚人首角冠、五足石雕公牛、雙重雄鷹巨翼、亞述王城拱門",
         "sensitivity": "ok",
         "role": "後排砲擊、控距：遠距定點範圍墜擊（高血量時縮短金招 CD）",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "威嚴守禦、不動如山",
         "size_profile": "S→M→XL→XL",
         "stage_dims": {
@@ -2020,7 +2390,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Lamassugate",
               "naming_note": "四階段統一命名；青銅門環化作幼牛雙角。",
               "size_class": "S",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.60 m",
               "weight": "28 kg",
               "body_fat": "11%",
@@ -2048,7 +2431,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Lamassugate",
               "naming_note": "四階段統一命名；翼刃展開，門扉裝甲成形。",
               "size_class": "M",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.55 m",
               "weight": "210 kg",
               "body_fat": "9%",
@@ -2076,7 +2472,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Lamassugate",
               "naming_note": "四階段統一命名；五足神牛鎮守城門。",
               "size_class": "XL",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.80 m",
               "weight": "920 kg",
               "body_fat": "8%",
@@ -2100,7 +2509,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "metal_citadel_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "萬鈞鎮嶽、不動城塞",
               "name_zh": "城門鐵牛",
               "name_en": "Lamassugate",
@@ -2176,7 +2585,7 @@ window.COSMI_DESIGNED = {
         "motifs": "七頭那伽冠冕、檳榔花枝、海底漩渦龍宮、絲綢披肩",
         "sensitivity": "ok",
         "role": "後排輸出、續戰：遠距範圍巨木墜落轟擊（施放木招回復自身生命）",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "謹慎優雅、守護水源",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -2215,7 +2624,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Neaklotus",
               "naming_note": "四階段統一命名；檳榔花苞纏繞幼蛇頭冠。",
               "size_class": "XS",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_understory_insectivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_detritivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.52 m",
               "weight": "2.6 kg",
               "body_fat": "14%",
@@ -2243,7 +2665,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Neaklotus",
               "naming_note": "四階段統一命名；花環藤蔓沿鱗脊攀附。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_understory_insectivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.70 m",
               "weight": "42 kg",
               "body_fat": "13%",
@@ -2271,7 +2706,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Neaklotus",
               "naming_note": "四階段統一命名；七首蓮冠化作古樹龍威。",
               "size_class": "L",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "3.40 m",
               "weight": "185 kg",
               "body_fat": "12%",
@@ -2295,7 +2743,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "wood_crownvine_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "神聖威儀、森羅萬象",
               "name_zh": "蓮蔓龍蛇",
               "name_en": "Neaklotus",
@@ -2370,7 +2818,7 @@ window.COSMI_DESIGNED = {
         "motifs": "傷痕白抹香鯨、斷裂魚叉、怒海大漩渦、捕鯨木桅",
         "sensitivity": "ok",
         "role": "長距突進：遠距巨浪直線衝鋒（生命首次跌破門檻時回復 12%）",
-        "temperament": "fierce",
+        "habit": "aggressive",
         "disposition": "桀驁狂放、領潮破浪",
         "size_profile": "S→L→XL→XL",
         "stage_dims": {
@@ -2409,7 +2857,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Mobymael",
               "naming_note": "四階段統一命名；象牙白幼鯨額頭浮現鹽晶紋。",
               "size_class": "S",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_detritivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 2
+                }
+              ],
               "height_length": "0.85 m",
               "weight": "35 kg",
               "body_fat": "24%",
@@ -2437,7 +2894,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Mobymael",
               "naming_note": "四階段統一命名；背鰭纏繞斷裂捕鯨繩索與鹽霜。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.60 m",
               "weight": "480 kg",
               "body_fat": "23%",
@@ -2465,7 +2935,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Mobymael",
               "naming_note": "四階段統一命名；白鯨破浪，漩渦翻湧。",
               "size_class": "XL",
-              "temperament": "fierce",
+              "niches": [
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "5.80 m",
               "weight": "2400 kg",
               "body_fat": "22%",
@@ -2489,7 +2972,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "water_whalemaelstrom_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "狂暴深海、無可阻擋",
               "name_zh": "白鯨巨渦",
               "name_en": "Mobymael",
@@ -2564,7 +3047,7 @@ window.COSMI_DESIGNED = {
         "motifs": "烈火誕生紅光、巨型猴麵包樹、深潭巨鱷、高地立石",
         "sensitivity": "ok",
         "role": "後排砲擊、控距：遠距定點火山爆發（施放火招短暫提高閃避率）",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "沉穩熾烈、護火守土",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -2603,7 +3086,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Baobabhearth",
               "naming_note": "四階段統一命名；樹皮甲片下藏著跳動炭火。",
               "size_class": "S",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 2
+                }
+              ],
               "height_length": "0.50 m",
               "weight": "8 kg",
               "body_fat": "14%",
@@ -2631,7 +3123,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Baobabhearth",
               "naming_note": "四階段統一命名；背脊木瘤化作熔岩爐口。",
               "size_class": "M",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 2
+                }
+              ],
               "height_length": "1.45 m",
               "weight": "98 kg",
               "body_fat": "12%",
@@ -2659,7 +3160,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Baobabhearth",
               "naming_note": "四階段統一命名；巨木化灶，火山口生於背脊。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.60 m",
               "weight": "420 kg",
               "body_fat": "11%",
@@ -2683,7 +3197,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "fire_baobabhearth_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "熾烈護土、聖火長明",
               "name_zh": "猴麵包火蜥",
               "name_en": "Baobabhearth",
@@ -2758,7 +3272,7 @@ window.COSMI_DESIGNED = {
         "motifs": "獅身象鼻長牙、神廟石雕廊柱、騰躍利爪、蓮座浮雕",
         "sensitivity": "ok",
         "role": "後排貫穿、控距：遠距直線地脈岩槍（施放土招提高移動速度）",
-        "temperament": "fierce",
+        "habit": "aggressive",
         "disposition": "剛猛威武、撼動地脈",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -2797,7 +3311,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Yalipillar",
               "naming_note": "四階段統一命名；浮雕蓮座托起幼獸四蹄。",
               "size_class": "S",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_edge_browser",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.52 m",
               "weight": "14 kg",
               "body_fat": "12%",
@@ -2825,7 +3352,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Yalipillar",
               "naming_note": "四階段統一命名；神殿石柱與獠牙合而為一。",
               "size_class": "M",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_edge_browser",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.35 m",
               "weight": "140 kg",
               "body_fat": "11%",
@@ -2853,7 +3393,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Yalipillar",
               "naming_note": "四階段統一命名；百柱神獸，地動山搖。",
               "size_class": "L",
-              "temperament": "fierce",
+              "niches": [
+                {
+                  "niche": "niche_edge_browser",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.50 m",
               "weight": "580 kg",
               "body_fat": "10%",
@@ -2877,7 +3430,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "earth_pillarbeast_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "威震八方、地動山搖",
               "name_zh": "石柱獠牙獸",
               "name_en": "Yalipillar",
@@ -2952,7 +3505,7 @@ window.COSMI_DESIGNED = {
         "motifs": "圓底抗冰木帆船、深海採水瓶、浮冰觀測儀、極地雙板雪橇",
         "sensitivity": "ok",
         "role": "長距突進：雪崩直線衝鋒（施放冰招暫時提高冰專精）",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "堅毅無畏、破冰前行",
         "size_profile": "XS→M→XL→XL",
         "stage_dims": {
@@ -2991,7 +3544,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Framdrift",
               "naming_note": "四階段統一命名；木製雪橇滑板與冰標浮筒結合。",
               "size_class": "XS",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.45 m",
               "weight": "6 kg",
               "body_fat": "16%",
@@ -3019,7 +3585,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Framdrift",
               "naming_note": "四階段統一命名；圓弧木船殼包覆耐壓冰甲。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.60 m",
               "weight": "180 kg",
               "body_fat": "15%",
@@ -3047,7 +3626,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Framdrift",
               "naming_note": "四階段統一命名；前進行艦，無懼冰封。",
               "size_class": "XL",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "3.20 m",
               "weight": "890 kg",
               "body_fat": "14%",
@@ -3071,7 +3663,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "ice_driftvessel_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "極地領航、破冰不息",
               "name_zh": "極地破冰獸",
               "name_en": "Framdrift",
@@ -3146,7 +3738,7 @@ window.COSMI_DESIGNED = {
         "motifs": "穿霧巨翼信天翁、翠綠高聳冰山、冰封古帆船、木柄十字弩",
         "sensitivity": "ok",
         "role": "後排控場、高機動：遠距扇形颶風橫掃（高血量時提高閃避率）",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "孤高警覺、乘霧遠翔",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -3185,7 +3777,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Mistalbatross",
               "naming_note": "四階段統一命名；幼雛頸間掛著羅盤風標。",
               "size_class": "S",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_ground_granivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 2
+                }
+              ],
               "height_length": "0.44 m",
               "weight": "2.4 kg",
               "body_fat": "13%",
@@ -3213,7 +3814,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Mistalbatross",
               "naming_note": "四階段統一命名；長翼展開，如十字弓弦拉滿。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 2
+                }
+              ],
               "height_length": "1.25 m",
               "weight": "21 kg",
               "body_fat": "11%",
@@ -3241,7 +3851,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Mistalbatross",
               "naming_note": "四階段統一命名；跨洋巨翼，御風不墜。",
               "size_class": "L",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.40 m",
               "weight": "72 kg",
               "body_fat": "9%",
@@ -3265,7 +3888,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "wind_mistwing_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "御風千里、海天莫測",
               "name_zh": "霧翼信天翁",
               "name_en": "Mistalbatross",
@@ -3341,7 +3964,7 @@ window.COSMI_DESIGNED = {
         "motifs": "戈壁紅沙丘、放電赤紅巨蟲、梭梭木荒原、灼熱沙暴",
         "sensitivity": "ok",
         "role": "後排貫穿、控距：遠距直線高壓電漿炮擊（施放雷招短暫延長攻擊距離）",
-        "temperament": "fierce",
+        "habit": "aggressive",
         "disposition": "詭譎迅猛、蓄電狙擊",
         "size_profile": "XS→M→XL→XL",
         "stage_dims": {
@@ -3380,7 +4003,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Khorkhoivolt",
               "naming_note": "四階段統一命名；沙漠赤蟲體節閃爍靜電微光。",
               "size_class": "XS",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_detritivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_understory_insectivore",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.48 m",
               "weight": "3.2 kg",
               "body_fat": "12%",
@@ -3408,7 +4044,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Khorkhoivolt",
               "naming_note": "四階段統一命名；口器化作雙極電弧線圈。",
               "size_class": "M",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_understory_insectivore",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.80 m",
               "weight": "110 kg",
               "body_fat": "11%",
@@ -3436,7 +4085,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Khorkhoivolt",
               "naming_note": "四階段統一命名；戈壁赤煞，電磁貫日。",
               "size_class": "XL",
-              "temperament": "fierce",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "4.20 m",
               "weight": "640 kg",
               "body_fat": "10%",
@@ -3460,7 +4122,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "thunder_redburrower_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "狂雷奔湧、荒漠霸主",
               "name_zh": "戈壁赤電蟲",
               "name_en": "Khorkhoivolt",
@@ -3536,7 +4198,7 @@ window.COSMI_DESIGNED = {
         "motifs": "金箔散射光束、原子行星軌跡、放射線閃爍屏、電磁線圈",
         "sensitivity": "ok",
         "role": "後排輸出、續戰：遠距扇形折射光束齊射（施放光招回復 6% 生命）",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "敏銳純淨、折射萬象",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -3575,7 +4237,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Foilprism",
               "naming_note": "四階段統一命名；微光金箔折疊成精巧多面體。",
               "size_class": "XS",
-              "temperament": "timid",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.35 m",
               "weight": "0.9 kg",
               "body_fat": "5%",
@@ -3603,7 +4274,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Foilprism",
               "naming_note": "四階段統一命名；雙重金箔環帶繞核高速旋轉。",
               "size_class": "M",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_nectar_visitor",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.05 m",
               "weight": "12 kg",
               "body_fat": "5%",
@@ -3631,7 +4315,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Foilprism",
               "naming_note": "四階段統一命名；千層金箔散射極光扇陣。",
               "size_class": "L",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.95 m",
               "weight": "48 kg",
               "body_fat": "5%",
@@ -3655,7 +4348,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "light_foilprism_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "純淨耀眼、萬光歸一",
               "name_zh": "金箔光環獸",
               "name_en": "Foilprism",
@@ -3730,7 +4423,7 @@ window.COSMI_DESIGNED = {
         "motifs": "玄鐵重鎧黑駒、繁枝世界巨樹、口簧琴音波、極寒凍土",
         "sensitivity": "ok",
         "role": "長距突進：遠距幽影直線衝鋒（施放影招短暫提高移動速度）",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "冷峻忠誠、無聲突襲",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -3769,7 +4462,16 @@ window.COSMI_DESIGNED = {
               "name_en": "Bootursteed",
               "naming_note": "四階段統一命名；黑鐵蹄印在雪地化作幽影。",
               "size_class": "S",
-              "temperament": "cautious",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 4
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "0.58 m",
               "weight": "16 kg",
               "body_fat": "15%",
@@ -3797,7 +4499,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Bootursteed",
               "naming_note": "四階段統一命名；雙重影甲疊映，踏步無聲。",
               "size_class": "M",
-              "temperament": "normal",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
               "height_length": "1.45 m",
               "weight": "135 kg",
               "body_fat": "13%",
@@ -3825,7 +4540,20 @@ window.COSMI_DESIGNED = {
               "name_en": "Bootursteed",
               "naming_note": "四階段統一命名；幽冥鐵騎，永夜不屈。",
               "size_class": "L",
-              "temperament": "territorial",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 1
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
               "height_length": "2.45 m",
               "weight": "490 kg",
               "body_fat": "12%",
@@ -3849,7 +4577,7 @@ window.COSMI_DESIGNED = {
             {
               "stage": "overload",
               "creature_id": "shadow_ironsteed_overload",
-              "temperament": "apex",
+              "habit": "dominant",
               "disposition": "永夜鐵騎、孤高無雙",
               "name_zh": "玄鐵幽駒",
               "name_en": "Bootursteed",
@@ -3924,7 +4652,7 @@ window.COSMI_DESIGNED = {
         "motifs": "半透明凝膠軟體、深潭水紋核心、浮動氣泡護膜",
         "sensitivity": "ok",
         "role": "控場 / 緩衝",
-        "temperament": "cautious",
+        "habit": "vigilant",
         "disposition": "溫順好奇、喜歡貼近水邊",
         "size_profile": "XS→S→M→XL",
         "stage_dims": {
@@ -3963,7 +4691,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "XS",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "0.35 m",
               "weight": "1.2 kg",
               "body_fat": "5%",
@@ -3991,7 +4719,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "S",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "0.85 m",
               "weight": "18 kg",
               "body_fat": "5%",
@@ -4019,7 +4747,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "M",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "1.65 m",
               "weight": "95 kg",
               "body_fat": "5%",
@@ -4047,7 +4775,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.2 m",
               "weight": "1450 kg",
               "body_fat": "4%",
@@ -4117,7 +4845,7 @@ window.COSMI_DESIGNED = {
         "motifs": "重裝犀角甲蟲、精密懷錶錶盤、黃銅齒輪翼鞘",
         "sensitivity": "ok",
         "role": "前排重裝 / 反擊",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "守時執著、分秒必爭",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -4156,7 +4884,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "XS",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "0.38 m",
               "weight": "4.5 kg",
               "body_fat": "6%",
@@ -4184,7 +4912,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "M",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "1.15 m",
               "weight": "68 kg",
               "body_fat": "6%",
@@ -4212,7 +4940,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "L",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "2.10 m",
               "weight": "340 kg",
               "body_fat": "5%",
@@ -4240,7 +4968,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.8 m",
               "weight": "3200 kg",
               "body_fat": "4%",
@@ -4310,7 +5038,7 @@ window.COSMI_DESIGNED = {
         "motifs": "素燒陶土偶、厚實花崗岩塊、嵌石古文符印",
         "sensitivity": "ok",
         "role": "重裝坦衛",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "鈍重忠厚、一步一印",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -4349,7 +5077,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "S",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "0.50 m",
               "weight": "22 kg",
               "body_fat": "4%",
@@ -4377,7 +5105,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "M",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "1.35 m",
               "weight": "195 kg",
               "body_fat": "4%",
@@ -4405,7 +5133,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "L",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "2.40 m",
               "weight": "780 kg",
               "body_fat": "3%",
@@ -4433,7 +5161,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "5.5 m",
               "weight": "6200 kg",
               "body_fat": "2%",
@@ -4503,7 +5231,7 @@ window.COSMI_DESIGNED = {
         "motifs": "浮動火焰精靈、鑄鐵火灶燈籠、赤紅炭火核",
         "sensitivity": "ok",
         "role": "遠距火力",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "活潑躁動、愛吃木炭",
         "size_profile": "XS→S→M→XL",
         "stage_dims": {
@@ -4542,7 +5270,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "XS",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.32 m",
               "weight": "0.6 kg",
               "body_fat": "2%",
@@ -4570,7 +5298,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "S",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.95 m",
               "weight": "14 kg",
               "body_fat": "2%",
@@ -4598,7 +5326,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "M",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "1.75 m",
               "weight": "88 kg",
               "body_fat": "2%",
@@ -4626,7 +5354,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.3 m",
               "weight": "920 kg",
               "body_fat": "1%",
@@ -4696,7 +5424,7 @@ window.COSMI_DESIGNED = {
         "motifs": "極地企鵝、雙足競速冰刀、半透明冰晶翼刃",
         "sensitivity": "ok",
         "role": "高速突擊",
-        "temperament": "fierce",
+        "habit": "aggressive",
         "disposition": "好勝敏捷、講究身法",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -4735,7 +5463,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "XS",
-              "temperament": "fierce",
+              "habit": "aggressive",
               "height_length": "0.42 m",
               "weight": "3.8 kg",
               "body_fat": "14%",
@@ -4763,7 +5491,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "M",
-              "temperament": "fierce",
+              "habit": "aggressive",
               "height_length": "1.15 m",
               "weight": "38 kg",
               "body_fat": "12%",
@@ -4791,7 +5519,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "L",
-              "temperament": "fierce",
+              "habit": "aggressive",
               "height_length": "1.85 m",
               "weight": "92 kg",
               "body_fat": "10%",
@@ -4819,7 +5547,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.0 m",
               "weight": "780 kg",
               "body_fat": "8%",
@@ -4889,7 +5617,7 @@ window.COSMI_DESIGNED = {
         "motifs": "雪球疊層身軀、六角冰晶核心、編織紅圍巾",
         "sensitivity": "ok",
         "role": "範圍控場",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "樂天溫厚、怕熱怕曬",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -4928,7 +5656,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "XS",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.45 m",
               "weight": "6 kg",
               "body_fat": "10%",
@@ -4956,7 +5684,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "M",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "1.30 m",
               "weight": "85 kg",
               "body_fat": "10%",
@@ -4984,7 +5712,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "L",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "2.30 m",
               "weight": "460 kg",
               "body_fat": "9%",
@@ -5012,7 +5740,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "5.4 m",
               "weight": "4800 kg",
               "body_fat": "8%",
@@ -5082,7 +5810,7 @@ window.COSMI_DESIGNED = {
         "motifs": "浮空石碑帖、流動松煙墨跡、硃砂印章核",
         "sensitivity": "ok",
         "role": "法術干擾",
-        "temperament": "cautious",
+        "habit": "vigilant",
         "disposition": "沉靜孤高、惜墨如金",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -5121,7 +5849,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "XS",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "0.40 m",
               "weight": "5 kg",
               "body_fat": "0%",
@@ -5149,7 +5877,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "M",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "1.35 m",
               "weight": "72 kg",
               "body_fat": "0%",
@@ -5177,7 +5905,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "L",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "2.45 m",
               "weight": "310 kg",
               "body_fat": "0%",
@@ -5205,7 +5933,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "5.2 m",
               "weight": "2600 kg",
               "body_fat": "0%",
@@ -5275,7 +6003,7 @@ window.COSMI_DESIGNED = {
         "motifs": "黃金聖甲蟲、太陽日輪球體、青金石鑲嵌甲",
         "sensitivity": "ok",
         "role": "輔助 / 光砲",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "莊嚴虔誠、向光而行",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -5314,7 +6042,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "XS",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.36 m",
               "weight": "2.5 kg",
               "body_fat": "4%",
@@ -5342,7 +6070,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "M",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "1.10 m",
               "weight": "55 kg",
               "body_fat": "4%",
@@ -5370,7 +6098,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "L",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "2.05 m",
               "weight": "240 kg",
               "body_fat": "3%",
@@ -5398,7 +6126,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.8 m",
               "weight": "2100 kg",
               "body_fat": "2%",
@@ -5468,7 +6196,7 @@ window.COSMI_DESIGNED = {
         "motifs": "摺疊集裝箱體、液壓連桿機械臂、裝甲防爆門盾",
         "sensitivity": "ok",
         "role": "變形重裝",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "嚴謹機械、執行指令",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -5507,7 +6235,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "XS",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "0.45 m",
               "weight": "18 kg",
               "body_fat": "0%",
@@ -5535,7 +6263,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "M",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "1.45 m",
               "weight": "260 kg",
               "body_fat": "0%",
@@ -5563,7 +6291,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "L",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "2.40 m",
               "weight": "980 kg",
               "body_fat": "0%",
@@ -5591,7 +6319,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "5.0 m",
               "weight": "8400 kg",
               "body_fat": "0%",
@@ -5661,7 +6389,7 @@ window.COSMI_DESIGNED = {
         "motifs": "浮空單眼魔核、黑霧觸鬚斗篷、破碎星環瞳孔",
         "sensitivity": "ok",
         "role": "遠距干擾",
-        "temperament": "cautious",
+        "habit": "vigilant",
         "disposition": "沉默凝視、神出鬼沒",
         "size_profile": "XS→S→M→XL",
         "stage_dims": {
@@ -5700,7 +6428,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "XS",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "0.35 m",
               "weight": "1.0 kg",
               "body_fat": "0%",
@@ -5728,7 +6456,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "S",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "0.95 m",
               "weight": "15 kg",
               "body_fat": "0%",
@@ -5756,7 +6484,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "M",
-              "temperament": "cautious",
+              "habit": "vigilant",
               "height_length": "1.80 m",
               "weight": "65 kg",
               "body_fat": "0%",
@@ -5784,7 +6512,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.6 m",
               "weight": "1100 kg",
               "body_fat": "0%",
@@ -5854,7 +6582,7 @@ window.COSMI_DESIGNED = {
         "motifs": "草原雄獅、燃燒太陽鬃毛、黃金護肩爪甲",
         "sensitivity": "ok",
         "role": "近戰強攻",
-        "temperament": "fierce",
+        "habit": "aggressive",
         "disposition": "光明磊落、王者氣度",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
@@ -5893,7 +6621,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "S",
-              "temperament": "fierce",
+              "habit": "aggressive",
               "height_length": "0.52 m",
               "weight": "12 kg",
               "body_fat": "12%",
@@ -5921,7 +6649,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "M",
-              "temperament": "fierce",
+              "habit": "aggressive",
               "height_length": "1.30 m",
               "weight": "95 kg",
               "body_fat": "11%",
@@ -5949,7 +6677,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "L",
-              "temperament": "fierce",
+              "habit": "aggressive",
               "height_length": "2.25 m",
               "weight": "280 kg",
               "body_fat": "10%",
@@ -5977,7 +6705,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "5.0 m",
               "weight": "2900 kg",
               "body_fat": "8%",
@@ -6047,7 +6775,7 @@ window.COSMI_DESIGNED = {
         "motifs": "多旋翼巡航無人機、超導電容環陣、高壓電漿尾翼",
         "sensitivity": "ok",
         "role": "高機動狙擊",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "冷靜精準、持續盤旋",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -6086,7 +6814,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "XS",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.38 m",
               "weight": "2.2 kg",
               "body_fat": "0%",
@@ -6114,7 +6842,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "M",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "1.15 m",
               "weight": "42 kg",
               "body_fat": "0%",
@@ -6142,7 +6870,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "L",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "2.10 m",
               "weight": "180 kg",
               "body_fat": "0%",
@@ -6170,7 +6898,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.8 m",
               "weight": "1650 kg",
               "body_fat": "0%",
@@ -6240,7 +6968,7 @@ window.COSMI_DESIGNED = {
         "motifs": "高空金雕/鷲、層疊蕨葉羽翼、橡木枝角冠冕",
         "sensitivity": "ok",
         "role": "空中突襲",
-        "temperament": "territorial",
+        "habit": "territorial",
         "disposition": "銳利警覺、守護林冠",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -6279,7 +7007,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "XS",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "0.40 m",
               "weight": "1.8 kg",
               "body_fat": "11%",
@@ -6307,7 +7035,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "M",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "1.20 m",
               "weight": "26 kg",
               "body_fat": "10%",
@@ -6335,7 +7063,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "L",
-              "temperament": "territorial",
+              "habit": "territorial",
               "height_length": "2.15 m",
               "weight": "78 kg",
               "body_fat": "9%",
@@ -6363,7 +7091,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "5.2 m",
               "weight": "980 kg",
               "body_fat": "7%",
@@ -6433,7 +7161,7 @@ window.COSMI_DESIGNED = {
         "motifs": "高速鳴禽雲雀、雙層雲絮尾羽、流線氣旋風環",
         "sensitivity": "ok",
         "role": "輔助 / 高速遊擊",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "開朗愛唱、隨風翱翔",
         "size_profile": "XS→S→M→XL",
         "stage_dims": {
@@ -6472,7 +7200,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "XS",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.28 m",
               "weight": "0.7 kg",
               "body_fat": "10%",
@@ -6500,7 +7228,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "S",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.85 m",
               "weight": "11 kg",
               "body_fat": "9%",
@@ -6528,7 +7256,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "M",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "1.65 m",
               "weight": "45 kg",
               "body_fat": "8%",
@@ -6556,7 +7284,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.2 m",
               "weight": "680 kg",
               "body_fat": "6%",
@@ -6626,7 +7354,7 @@ window.COSMI_DESIGNED = {
         "motifs": "球體關節木偶、懸絲木十字架、發芽原木機關",
         "sensitivity": "ok",
         "role": "技巧 / 控場",
-        "temperament": "normal",
+        "habit": "tolerant",
         "disposition": "戲劇化、優雅敬禮",
         "size_profile": "XS→M→L→XL",
         "stage_dims": {
@@ -6665,7 +7393,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "XS",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "0.42 m",
               "weight": "3.0 kg",
               "body_fat": "0%",
@@ -6693,7 +7421,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "M",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "1.25 m",
               "weight": "34 kg",
               "body_fat": "0%",
@@ -6721,7 +7449,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "L",
-              "temperament": "normal",
+              "habit": "tolerant",
               "height_length": "2.00 m",
               "weight": "110 kg",
               "body_fat": "0%",
@@ -6749,7 +7477,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "XL",
-              "temperament": "apex",
+              "habit": "dominant",
               "height_length": "4.6 m",
               "weight": "1200 kg",
               "body_fat": "0%",
