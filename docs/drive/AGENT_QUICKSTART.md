@@ -12,7 +12,7 @@
   - `docs/pipeline/TRIGGERS.md`：各步驟觸發語句與分支說明
   - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；招式使用 `moves/prompts/01b_move_vfx.prompt.md`
 
-> **三層目錄與扁平命名規範**：第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）；第三層為完全扁平化檔案，命名結構為 `id_型態(宙獸才有型態)_管線與步驟_版本(可以沒有，多版本才需要)`。舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
+> **三層主目錄與過渡檔分層規範**：第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）；第三層僅保留成果審查台之主立繪（`_01_portrait[_<ver>]_main.png`）、GLB（`_<03a_colab|03b_blender>[_<ver>].glb`）、圖鑑（`_05_wiki[_<ver>].md`）與遊戲格式數據；其餘功能性、中間流程過渡檔案依管線步驟（有版本則再建 `<ver>/` 子目錄）存放於 `<kind>/<id>/<step>/[<ver>/]`，檔名結構 `id_型態(宙獸才有型態)_管線與步驟_版本` 維持不變。舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
 
 ---
 
@@ -38,16 +38,18 @@
    - 若為宙獸但未指定 `stage`：
      - 若有指定明確 `asset_id`（如 `asset_cr_aqua_slime_juvenile`），從檔名／`manifest.json` 取得 `stage`。
      - 否則先向使用者確認要執行哪一個階段（`juvenile` / `adolescent` / `adult` / `overload`），不得自行猜測。
-3. **定位相關檔案與目錄（`<kind>/<id>/` 第三層扁平檔案）**：
-   - **圖鑑**：
+3. **定位相關檔案與目錄（`<kind>/<id>/` 第三層與步驟子目錄）**：
+   - **圖鑑（第三層）**：
      - 角色：`characters/<id>/<id>_05_wiki.md`
      - 宙獸：`creatures/<id>/<id>_<stage>_05_wiki.md`
      - 招式：`moves/<id>/<id>_05_wiki.md`
-   - **外觀與參數設定**：`<kind>/<id>/<id>[_<stage>]_00_appearance[_<ver>].md`、`<kind>/<id>/<id>[_<stage>]_00_parameters[_<ver>].json`（若無專屬參數檔，回退讀取共用的 `00_settings/default.parameters.json`）。
-   - **立繪檔**：`<kind>/<id>/<id>[_<stage>]_01_portrait[_<ver>]_<role>.<ext>`（如 `_front.png`、`_turnaround.png`、`_concept.json`、`_manifest.json`）。
-   - **立繪審查紀錄**：`<kind>/<id>/<id>[_<stage>]_02_review_portrait[_<ver>].json`。
-   - **3D 模型檔**：`<kind>/<id>/<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].<glb|blend>` 及 `_manifest.json`。
-   - **3D 審查紀錄**：`<kind>/<id>/<id>[_<stage>]_04_review_3d[_<ver>].json`。
+   - **主立繪（第三層）**：`<kind>/<id>/<id>[_<stage>]_01_portrait[_<ver>]_main.png`
+   - **GLB 檔（第三層）**：`<kind>/<id>/<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].glb`
+   - **外觀與參數設定**：`<kind>/<id>/00_settings/[<ver>/]<id>[_<stage>]_00_appearance[_<ver>].md`、`<id>[_<stage>]_00_parameters[_<ver>].json`（若無專屬參數檔，回退讀取共用的 `00_settings/default.parameters.json`）。
+   - **立繪過渡檔**：`<kind>/<id>/01_portrait/[<ver>/]<id>[_<stage>]_01_portrait[_<ver>]_<role>.<ext>`（如 `_front.png`、`_turnaround.png`、`_concept.json`、`_manifest.json`）。
+   - **立繪審查紀錄**：`<kind>/<id>/02_review_portrait/[<ver>/]<id>[_<stage>]_02_review_portrait[_<ver>].json`。
+   - **3D 中間檔**：`<kind>/<id>/<03a_colab|03b_blender>/[<ver>/]<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].blend` 及 `_manifest.json`、預覽、貼圖等。
+   - **3D 審查紀錄**：`<kind>/<id>/04_review_3d/[<ver>/]<id>[_<stage>]_04_review_3d[_<ver>].json`。
 
 ---
 

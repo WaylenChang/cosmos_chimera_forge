@@ -189,8 +189,9 @@
     return parts.join("_");
   }
   function parseAssetFilename(name, kind) {
+    const base = String(name || "").split("/").pop();
     const m = /^(.+?)(?:_(juvenile|adolescent|adult|overload))?_(00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(v\d+|\d{8}(?:[-_]\d{4})?))?(?:_([^.]+))?\.([^.]+)$/i.exec(
-      String(name || ""),
+      base,
     );
     if (!m) return null;
     const rawId = m[1];
@@ -202,6 +203,31 @@
     const ext = m[6];
     const stem = [id, stage, step, version].filter(Boolean).join("_");
     return { id, stage, step, version, role, ext, stem };
+  }
+  function isLevel3Deliverable(parsed) {
+    if (!parsed) return false;
+    if (parsed.step === "05_wiki") return true;
+    if (parsed.step === "01_portrait" && /^main$/i.test(parsed.role)) return true;
+    if (
+      (parsed.step === "03a_colab" || parsed.step === "03b_blender") &&
+      !parsed.role &&
+      /^glb$/i.test(parsed.ext)
+    )
+      return true;
+    return false;
+  }
+  function stepSubdir(step) {
+    if (step === "00_appearance" || step === "00_parameters") return "00_settings";
+    return step;
+  }
+  function assetSubpath(filename, kind) {
+    const base = String(filename || "").split("/").pop();
+    const parsed = parseAssetFilename(base, kind);
+    if (!parsed || isLevel3Deliverable(parsed)) return base;
+    const parts = [stepSubdir(parsed.step)];
+    if (parsed.version) parts.push(parsed.version);
+    parts.push(base);
+    return parts.join("/");
   }
   // One canonical directory resolver for all category-specific pipeline outputs.
   // Level 1: characters / creatures / moves; Level 2: <id>; Level 3: flat files.
@@ -557,7 +583,7 @@
       if (/\.zip$/i.test(f.name)) continue;
       if (f.mimeType === MIME)
         subfolders.push(walk(f.id, prefix + f.name + "/", depth + 1));
-      else result.push({ ...f, path: prefix + f.name });
+      else result.push({ ...f, path: prefix + f.name, parentId: id });
     }
     for (const children of await Promise.all(subfolders))
       result.push(...children);
@@ -675,7 +701,8 @@
           const subRaw = {};
           for (const gf of groupFiles) {
             const k = entry.name + "/" + gf.path;
-            if (raw[k]) subRaw[stem + "/" + gf.path] = raw[k];
+            const leaf = gf.name || gf.path.split("/").pop();
+            if (raw[k]) subRaw[stem + "/" + leaf] = raw[k];
           }
           if (!Object.keys(subRaw).length) continue;
           const rev = inlineReviews.get(stem) || fallbackReviewRecord || null;
@@ -971,7 +998,7 @@
       pkg.drivePath && new RegExp("^" + root + "/[^/]+$").test(pkg.drivePath)
         ? pkg.drivePath
         : subjectDir(root, id);
-    return dir + "/" + stem + ".json";
+    return dir + "/" + assetSubpath(stem + ".json", root);
   }
   async function review(pkg, status, note = "") {
     if (!pkg?.driveFolderId) throw Error("請先將資產資料夾儲存至 Drive");
@@ -1015,7 +1042,7 @@
           if (fileIds.length) {
             const toId = await folder(dir, true);
             for (const f of fileIds) {
-              ops.push({ fileId: f.id, from: fromId, to: toId, path: dir + "/" + f.path });
+              ops.push({ fileId: f.id, from: f.parentId || fromId, to: toId, path: dir + "/" + (f.name || f.path.split("/").pop()) });
             }
           }
           r.drive_path = dir;
@@ -1167,12 +1194,14 @@
       }
       targetNames.push({ key, flatName });
     }
-    const existing = await find(path + "/" + stem + "_manifest.json");
-    if (existing.file)
+    const manifestSubpath = assetSubpath(stem + "_manifest.json", root);
+    const existing = await find(path + "/" + manifestSubpath);
+    const existingFlat = existing.file ? existing : await find(path + "/" + stem + "_manifest.json");
+    if (existingFlat.file)
       throw Error("已有同名資產，請使用新版本（如 v2）或重新載入");
     const id = await folder(path, true);
     for (const { key, flatName } of targetNames) {
-      await write(path + "/" + flatName, new Blob([pkg.rawFiles[key]]));
+      await write(path + "/" + assetSubpath(flatName, root), new Blob([pkg.rawFiles[key]]));
     }
     pkg.drivePath = path;
     pkg.driveFolderId = id;
@@ -1710,7 +1739,12 @@
       } catch (_) {}
       await Promise.all(
         subjectFolders.map(async (sub) => {
-          const files = await safeList(root + "/" + sub.name);
+          let files = [];
+          try {
+            files = await walk(sub.id);
+          } catch (_) {
+            files = await safeList(root + "/" + sub.name);
+          }
           for (const f of files) {
             const parsed = parseAssetFilename(f.name, root);
             if (parsed?.step === "00_appearance" || parsed?.step === "00_parameters") settings.push(f);
@@ -1773,6 +1807,8 @@
     subjectDir,
     assetStem,
     parseAssetFilename,
+    isLevel3Deliverable,
+    assetSubpath,
     migratePipelineDirectories,
     migrateManifestWikiReferences,
     migratePrompt3dAssets,
@@ -1979,7 +2015,7 @@
           root = pipelineRoot(d.delivery?.task_type || d.assetId),
           subject = d.subjectId || d.assetId,
           stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
-        await jsonWrite(subjectDir(root, subject) + "/" + stem + ".json", {
+        await jsonWrite(subjectDir(root, subject) + "/" + assetSubpath(stem + ".json", root), {
           ...p,
           delivery: d.delivery,
         });
@@ -1995,6 +2031,7 @@
           stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
         let p;
         for (const candidate of [
+          subjectDir(root, subject) + "/" + assetSubpath(stem + ".json", root),
           subjectDir(root, subject) + "/" + stem + ".json",
           root + "/00_settings/" + id + ".parameters.json",
           "00_settings/" + id + ".parameters.json",

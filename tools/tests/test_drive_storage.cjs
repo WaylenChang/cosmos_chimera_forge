@@ -509,6 +509,7 @@ test('3-level flat Drive sync loads migrated 3D manifests, manifest-less portrai
         return new Response(png);
       }
       const q = u.searchParams.get('q') || '';
+      if (!q) return undefined;
       if (q) {
         if (q.includes("'project-root' in parents") && q.includes("name = 'creatures'")) {
           return Response.json({ files: [{ id: 'cat-creatures', name: 'creatures', mimeType: 'application/vnd.google-apps.folder' }] });
@@ -585,6 +586,7 @@ test('syncPackages prioritizes currently selected subject ahead of earlier folde
       }
       const q = u.searchParams.get('q') || '';
       if (!q) return undefined;
+      if (!q) return undefined;
       if (q.includes("'project-root' in parents") && q.includes("name = 'creatures'")) {
         return Response.json({ files: [{ id: 'cat-creatures', name: 'creatures', mimeType: 'application/vnd.google-apps.folder' }] });
       }
@@ -652,6 +654,7 @@ test('readById jumps ahead of queued syncPackages downloads in the shared priori
       }
       const q = u.searchParams.get('q') || '';
       if (!q) return undefined;
+      if (!q) return undefined;
       if (q.includes("'project-root' in parents") && q.includes("name = 'creatures'")) {
         return Response.json({ files: [{ id: 'cat-creatures', name: 'creatures', mimeType: 'application/vnd.google-apps.folder' }] });
       }
@@ -694,6 +697,109 @@ test('readById jumps ahead of queued syncPackages downloads in the shared priori
   releaseBatch();
   await Promise.all([syncPromise, urgentPromise]);
   assert.equal(downloadStartOrder[6], 'urgent-glb', 'readById must preempt queued background sync downloads');
+});
+
+test('assetSubpath keeps main portrait, GLB, and wiki at Level 3 and routes intermediate files to step/version subdirs', () => {
+  const h = harness();
+  const { assetSubpath, isLevel3Deliverable, parseAssetFilename } = h.context.COSMI_DRIVE;
+  assert.equal(assetSubpath('chr_1286_01_portrait_main.png', 'characters'), 'chr_1286_01_portrait_main.png');
+  assert.equal(assetSubpath('chr_1286_03a_colab.glb', 'characters'), 'chr_1286_03a_colab.glb');
+  assert.equal(assetSubpath('cr_aqua_slime_adult_03b_blender_v2.glb', 'creatures'), 'cr_aqua_slime_adult_03b_blender_v2.glb');
+  assert.equal(assetSubpath('cr_aqua_slime_adult_05_wiki.md', 'creatures'), 'cr_aqua_slime_adult_05_wiki.md');
+
+  assert.equal(assetSubpath('chr_1286_00_appearance.md', 'characters'), '00_settings/chr_1286_00_appearance.md');
+  assert.equal(assetSubpath('chr_1286_00_parameters_v2.json', 'characters'), '00_settings/v2/chr_1286_00_parameters_v2.json');
+  assert.equal(assetSubpath('chr_1286_01_portrait_front.png', 'characters'), '01_portrait/chr_1286_01_portrait_front.png');
+  assert.equal(assetSubpath('chr_1286_02_review_portrait.json', 'characters'), '02_review_portrait/chr_1286_02_review_portrait.json');
+  assert.equal(assetSubpath('chr_1286_03a_colab.blend', 'characters'), '03a_colab/chr_1286_03a_colab.blend');
+  assert.equal(assetSubpath('cr_aqua_slime_adult_03b_blender_v2_manifest.json', 'creatures'), '03b_blender/v2/cr_aqua_slime_adult_03b_blender_v2_manifest.json');
+  assert.equal(assetSubpath('cr_aqua_slime_adult_04_review_3d.json', 'creatures'), '04_review_3d/cr_aqua_slime_adult_04_review_3d.json');
+
+  assert.equal(isLevel3Deliverable(parseAssetFilename('01_portrait/chr_1286_01_portrait_main.png', 'characters')), true);
+  assert.equal(isLevel3Deliverable(parseAssetFilename('03a_colab/chr_1286_03a_colab_manifest.json', 'characters')), false);
+});
+
+test('syncPackages and syncPipelineIndex read files from step/version subdirectories and review writes into step subdir', async () => {
+  const writes = [];
+  const manifest = JSON.stringify({ task_id: 'cr_test_adult_03b_blender_v2', subject_id: 'cr_test', stage: 'adult', version: 'v2', pipeline: 'ai_blender', input_mode: 'text' });
+  const reviewJson = JSON.stringify({ task_id: 'cr_test_adult_03b_blender_v2', status: 'ok', note: 'good' });
+  const h = harness({
+    handle: (u, o) => {
+      if (u.pathname.endsWith('/permissions')) return Response.json({ permissions: [{ id: 'perm-1' }] });
+      if (u.searchParams.get('alt') === 'media') {
+        const fid = u.pathname.split('/').pop();
+        if (fid === 'f-manifest') return new Response(manifest);
+        if (fid === 'f-review') return new Response(reviewJson);
+        if (fid === 'f-param') return new Response('{"style":"anime"}');
+        if (fid === 'f-wiki') return new Response('# Wiki');
+        return new Response('ok');
+      }
+      if (u.pathname.startsWith('/upload/')) {
+        writes.push({ path: u.pathname, body: String(o?.body || '') });
+        return Response.json({ id: 'written-1', name: 'written.json' });
+      }
+      if (o?.method === 'POST' && u.pathname.endsWith('/files')) {
+        return Response.json({ id: 'new-folder-id', name: 'created' });
+      }
+      const q = u.searchParams.get('q') || '';
+      if (!q) return undefined;
+      if (q.includes("'project-root' in parents") && q.includes("name = 'creatures'")) {
+        return Response.json({ files: [{ id: 'cat-creatures', name: 'creatures', mimeType: 'application/vnd.google-apps.folder' }] });
+      }
+      if (q.includes("'cat-creatures' in parents") && !q.includes('name =')) {
+        return Response.json({ files: [{ id: 'dir-cr-test', name: 'cr_test', mimeType: 'application/vnd.google-apps.folder' }] });
+      }
+      if (q.includes("'dir-cr-test' in parents") && !q.includes('name =')) {
+        return Response.json({
+          files: [
+            { id: 'f-glb', name: 'cr_test_adult_03b_blender_v2.glb', mimeType: 'model/gltf-binary' },
+            { id: 'f-wiki', name: 'cr_test_adult_05_wiki.md', mimeType: 'text/markdown' },
+            { id: 'sub-settings', name: '00_settings', mimeType: 'application/vnd.google-apps.folder' },
+            { id: 'sub-blender', name: '03b_blender', mimeType: 'application/vnd.google-apps.folder' },
+            { id: 'sub-rev3d', name: '04_review_3d', mimeType: 'application/vnd.google-apps.folder' },
+          ]
+        });
+      }
+      if (q.includes("'sub-settings' in parents")) {
+        return Response.json({ files: [{ id: 'f-param', name: 'cr_test_adult_00_parameters.json', mimeType: 'application/json' }] });
+      }
+      if (q.includes("'sub-blender' in parents")) {
+        return Response.json({ files: [{ id: 'sub-blender-v2', name: 'v2', mimeType: 'application/vnd.google-apps.folder' }] });
+      }
+      if (q.includes("'sub-blender-v2' in parents")) {
+        return Response.json({
+          files: [
+            { id: 'f-manifest', name: 'cr_test_adult_03b_blender_v2_manifest.json', mimeType: 'application/json' },
+            { id: 'f-blend', name: 'cr_test_adult_03b_blender_v2.blend', mimeType: 'application/octet-stream' },
+          ]
+        });
+      }
+      if (q.includes("'sub-rev3d' in parents")) {
+        return Response.json({ files: [{ id: 'sub-rev3d-v2', name: 'v2', mimeType: 'application/vnd.google-apps.folder' }] });
+      }
+      if (q.includes("'sub-rev3d-v2' in parents")) {
+        return Response.json({ files: [{ id: 'f-review', name: 'cr_test_adult_04_review_3d_v2.json', mimeType: 'application/json' }] });
+      }
+      return Response.json({ files: [] });
+    }
+  });
+  h.context.COSMI_FORGE.loadAssetFiles = async (raw, { name }) => {
+    const manifestKey = Object.keys(raw).find(k => k.endsWith('_manifest.json'));
+    return {
+      id: name,
+      subjectId: 'cr_test',
+      stage: 'adult',
+      type: 'model',
+      manifest: manifestKey ? JSON.parse(Buffer.from(raw[manifestKey]).toString('utf8')) : {},
+      status: 'pending',
+    };
+  };
+  await h.login();
+  await h.context.COSMI_DRIVE.syncPackages({ force: true });
+  await h.context.COSMI_DRIVE.syncPipelineIndex();
+  const idx = h.context.COSMI_DRIVE.pipelineIndex();
+  assert.equal(idx.settings.some(f => f.name === 'cr_test_adult_00_parameters.json'), true);
+  assert.equal(idx.wikiCreatures.some(f => f.name === 'cr_test_adult_05_wiki.md'), true);
 });
 
 
