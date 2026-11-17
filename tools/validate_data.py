@@ -15,6 +15,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from encyclopedia_checks import check_encyclopedia
+
 try:
     from jsonschema import Draft202012Validator
     from referencing import Registry, Resource
@@ -28,6 +30,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 # batch can be validated with the exact same command before it is moved in.
 INT32_MAX = 2**31 - 1
 KINDS = {
+    "encyclopedia": "encyclopedia",
     "creatures": "creature",
     "moves": "move",
     "traits": "trait",
@@ -36,7 +39,7 @@ KINDS = {
     "characters": "character",
     "niches": "niche",
 }
-ID_KINDS = ("creatures", "moves", "traits", "planet-types", "characters", "niches")
+ID_KINDS = ("creatures", "moves", "traits", "planet-types", "characters", "niches", "encyclopedia")
 # Mirrors LandformSynth.KindIds (Assets/_Project/Features/WorldGen/Runtime/Model/LandformSynth.cs): every spawn point's
 # habitat is one of these (creature-ecology.md#生成順序), so a form's niche habitats must cover all of them.
 LANDFORM_KINDS = (
@@ -194,6 +197,7 @@ def validate(root: Path, schema_dir: Path, retired_ids_path: Path | None = None)
                         records[folder].append(Record(folder, rel, i, item))
 
     _check_cross_refs(records, findings, retired_ids_path)
+    check_encyclopedia(records["encyclopedia"], findings, Finding)
     _check_niches(records, findings)
     findings.sort(key=lambda f: (f.file, f.pointer, f.code))
     return findings
