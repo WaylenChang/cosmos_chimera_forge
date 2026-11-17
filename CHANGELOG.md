@@ -1,3 +1,9 @@
+## 2026-11-17 · catalog@2.9.0 · data@1.2.0 · 同步現行遊戲資料並新增道具／裝備／場景物件任務模板
+
+- 從 `cosmos_chimera` 同步 `Data/schemas/`（含 `craft-*.schema.json`、`egg.schema.json`、`env-materials.schema.json`、`food.schema.json`、`ingredient.schema.json`）、`Data/balance.json` 與最新批次（`life-crafting-draft-01`、`p3-12-env-materials-draft-01`、`p3-31-ecology-draft-01`、`p4-05-eggs-draft-01`、`p5-03-creatures-draft-03`、`d0-s1-six-stats`），並重產 `designed.js`（35 條宙獸線、3 位角色）。
+- `catalog.js` 新增 `CRAFT_OBJECTS`（D0-U2／D0-U3：單雙手武器、盾牌、上下身防具、飾品、採集工具、陷阱、製作器皿、料理食材與三階材質）與 `WORLD_OBJECTS`（P3-11～P3-29：聚落建築與橋樑、城牆工廠隧道、奇觀地標、植被作物、地質礦脈晶洞、小物件與載具及六種星球生態）。
+- `tasks.js` 新增 `craft-item-design`（製作／裝備／道具設計）與 `world-object-design`（場景／世界物件設計）兩個任務模板，`forge.js` 補上對應 `subjectId` 命名規則。
+
 ## 2026-11-17 · catalog@2.8.0 · 依 cosmos_chimera 遊戲架構擴充角色與宙獸 GLB 動作清單
 
 - 依 `cosmos_chimera` 現行設計（直接操作主控宙獸、格擋／彈反／破防／失衡／BOSS 狂暴、招式突進 `dash` 與遠程目標點爆破 `burst@target`、騎乘／游泳／潛水／飛行滑翔、生活採集／採礦／釣魚／營火料理與復甦／製作鍛造／陷阱／手冊與超載指令）擴充 `catalog.js` `ACTIONS`。

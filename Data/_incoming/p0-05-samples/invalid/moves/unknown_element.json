@@ -1,10 +1,13 @@
 [
   {
     "id": "sample_poison_strike",
+    "star": 1,
+    "polarity": "yin",
     "element": "poison",
     "kind": "damage",
     "power": 30,
     "cooldown_ms": 1000,
+    "windup_ms": 450,
     "accuracy": 100,
     "range_class": "melee",
     "shape": "line",

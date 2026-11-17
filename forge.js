@@ -665,7 +665,7 @@
     const is3dTask = is3dType(t.id);
     const chosenPkg = (is3dTask && o.source_pack) ? reviewState.packages.find(p => p.id === o.source_pack) : null;
     let concept = chosenPkg?.concept || (subj === "character" ? characterConcept() : subj === "creature" ? creatureConcept() : null);
-    let subjId = chosenPkg?.subjectId || (subj ? subjectId(subj) : is3dTask ? "batch" : t.id === "capture-vessel" ? "vessels" : t.id === "culture-research" ? "region_" + o.region : "fx_" + o.element + "_" + o.shape);
+    let subjId = chosenPkg?.subjectId || (subj ? subjectId(subj) : is3dTask ? "batch" : t.id === "capture-vessel" ? "vessels" : t.id === "culture-research" ? "region_" + o.region : t.id === "craft-item-design" ? "itm_" + o.slot : t.id === "world-object-design" ? "wld_" + o.category : "fx_" + o.element + "_" + o.shape);
 
     if (["character-concept", "creature-concept", "character-model-rig", "creature-model-rig", "model-rig"].includes(t.id)) {
       const key = [subjId, t.id, o.stage || "", state.seed, o.source_pack || ""].join(":");

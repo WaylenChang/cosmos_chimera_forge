@@ -1,10 +1,13 @@
 [
   {
     "id": "sample_float_strike",
+    "star": 1,
+    "polarity": "yin",
     "element": "fire",
     "kind": "damage",
     "power": 12.5,
     "cooldown_ms": 1000,
+    "windup_ms": 450,
     "accuracy": 100,
     "range_class": "melee",
     "shape": "line",

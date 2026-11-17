@@ -1,10 +1,13 @@
 [
   {
     "id": "SampleMoveStrike",
+    "star": 1,
+    "polarity": "yang",
     "element": "fire",
     "kind": "damage",
     "power": 30,
     "cooldown_ms": 1000,
+    "windup_ms": 450,
     "accuracy": 100,
     "range_class": "melee",
     "shape": "line",

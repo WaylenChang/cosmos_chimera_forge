@@ -32,14 +32,10 @@
     "mastery": {
       "light": 15
     },
-    "stats": {
-      "con": 25,
-      "str": 30,
-      "spi": 30,
-      "agi": 15
-    },
+    "stats": {"hp": 70, "speed": 42, "yin_atk": 84, "yang_atk": 50, "yin_def": 77, "yang_def": 77},
     "signature_move": "light_mirror_glint",
     "trait": "trait_light_heliostat_focus",
+    "field_utility": "scout_potential",
     "concept": {
       "base": "太陽鳥雛鳥 × 頭頂一面圓形聚光小鏡",
       "stage_look": "圓滾雛鳥，鏡面冠羽會追著太陽轉",
@@ -87,14 +83,10 @@
     "mastery": {
       "light": 25
     },
-    "stats": {
-      "con": 45,
-      "str": 60,
-      "spi": 60,
-      "agi": 35
-    },
+    "stats": {"hp": 80, "speed": 62, "yin_atk": 107, "yang_atk": 64, "yin_def": 94, "yang_def": 93},
     "signature_move": "light_heliostat_beam",
     "trait": "trait_light_heliostat_focus",
+    "field_utility": "fly",
     "concept": {
       "base": "鷺鳥 × 翅羽化為可調角度的鏡片陣列",
       "stage_look": "單腳佇立、雙翼展開成扇形鏡陣聚光",
@@ -134,14 +126,10 @@
       "light": 40,
       "fire": 15
     },
-    "stats": {
-      "con": 90,
-      "str": 120,
-      "spi": 120,
-      "agi": 70
-    },
+    "stats": {"hp": 96, "speed": 75, "yin_atk": 77, "yang_atk": 128, "yin_def": 112, "yang_def": 112},
     "signature_move": "light_solar_array_lance",
     "trait": "trait_light_heliostat_focus",
+    "field_utility": "immune_temple",
     "concept": {
       "base": "鷺鳥 × 太陽鏡陣飛行器（生物＋器械）",
       "stage_look": "背負環形鏡陣與汲雲氣球管的天空鷺，鏡陣合焦射出光束",
@@ -189,14 +177,10 @@
     "mastery": {
       "shadow": 15
     },
-    "stats": {
-      "con": 20,
-      "str": 25,
-      "spi": 20,
-      "agi": 35
-    },
+    "stats": {"hp": 59, "speed": 104, "yin_atk": 45, "yang_atk": 74, "yin_def": 59, "yang_def": 59},
     "signature_move": "shadow_nightpaw_swipe",
     "trait": "trait_shadow_longnight_stalker",
+    "field_utility": "party_stealth",
     "concept": {
       "base": "灰狼幼崽 × 尾尖一點星光",
       "stage_look": "尾尖閃著星光的小狼投下比本體更大的影子，繞到背後揮爪拍擊。",
@@ -244,14 +228,10 @@
     "mastery": {
       "shadow": 25
     },
-    "stats": {
-      "con": 40,
-      "str": 45,
-      "spi": 45,
-      "agi": 70
-    },
+    "stats": {"hp": 75, "speed": 131, "yin_atk": 84, "yang_atk": 50, "yin_def": 80, "yang_def": 80},
     "signature_move": "shadow_longnight_lunge",
     "trait": "trait_shadow_longnight_stalker",
+    "field_utility": "steal_item",
     "concept": {
       "base": "孤狼 × 極夜冰原的星光斑紋",
       "stage_look": "墨藍孤狼身上的星斑隨呼吸明滅，向前疾衝時拖出影子殘像。",
@@ -291,14 +271,10 @@
       "shadow": 40,
       "ice": 15
     },
-    "stats": {
-      "con": 75,
-      "str": 90,
-      "spi": 85,
-      "agi": 150
-    },
+    "stats": {"hp": 85, "speed": 170, "yin_atk": 102, "yang_atk": 61, "yin_def": 91, "yang_def": 91},
     "signature_move": "shadow_lone_hunter_ambush",
     "trait": "trait_shadow_longnight_stalker",
+    "field_utility": "immune_labyrinth",
     "concept": {
       "base": "極夜巨狼 × 震地長尾",
       "stage_look": "身形如雪丘的巨灰狼拖著震地長尾，繞背後貼地向前疾衝。",
@@ -346,14 +322,10 @@
     "mastery": {
       "thunder": 15
     },
-    "stats": {
-      "con": 30,
-      "str": 30,
-      "spi": 20,
-      "agi": 20
-    },
+    "stats": {"hp": 81, "speed": 54, "yin_atk": 81, "yang_atk": 49, "yin_def": 68, "yang_def": 67},
     "signature_move": "thunder_starblaze_charge",
     "trait": "trait_thunder_storm_gallop",
+    "field_utility": "quick_escape",
     "concept": {
       "base": "小馬駒 × 額頭星形白斑會放電",
       "stage_look": "蹄下冒火花、跌跌撞撞往前衝的小馬",
@@ -403,14 +375,10 @@
       "thunder": 25,
       "wind": 10
     },
-    "stats": {
-      "con": 60,
-      "str": 55,
-      "spi": 40,
-      "agi": 45
-    },
+    "stats": {"hp": 103, "speed": 77, "yin_atk": 94, "yang_atk": 56, "yin_def": 85, "yang_def": 85},
     "signature_move": "thunder_galloping_discharge",
     "trait": "trait_thunder_storm_gallop",
+    "field_utility": "mount",
     "concept": {
       "base": "駿馬 × 疾風長鬃化為電弧",
       "stage_look": "長鬃是持續跳動的電弧，肩胛冒出未展開的金色翼芽",
@@ -451,14 +419,10 @@
       "thunder": 40,
       "wind": 20
     },
-    "stats": {
-      "con": 120,
-      "str": 110,
-      "spi": 80,
-      "agi": 90
-    },
+    "stats": {"hp": 123, "speed": 92, "yin_atk": 113, "yang_atk": 68, "yin_def": 102, "yang_def": 102},
     "signature_move": "thunder_skyhoof_stampede",
     "trait": "trait_thunder_storm_gallop",
+    "field_utility": "immune_tower",
     "concept": {
       "base": "金翼天馬 × 彎月額角與雷雲",
       "stage_look": "黃金雙翼展開時翼緣串著星點電光，額上彎月角導引落雷，衝鋒時拖出雷鳴長軌",

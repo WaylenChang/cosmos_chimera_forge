@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.8.0",
+  version: "2.9.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -1846,6 +1846,45 @@ window.COSMI_CATALOG = {
       { v: "summon", zh: "召喚光陣" }, { v: "recall", zh: "收回光流" }, { v: "overload_aura", zh: "超載氣場" },
       { v: "miss_afterimage", zh: "MISS 殘影" }, { v: "hit_spark", zh: "屬性命中火花" }, { v: "pet_hearts", zh: "撫摸回饋" },
       { v: "capture_talisman_card", zh: "符籙卡片收服" }, { v: "capture_glass_bead", zh: "琉璃珠收服" }, { v: "capture_magic_cube", zh: "魔術方塊收服" }
+    ]
+  },
+
+  CRAFT_OBJECTS: {
+    slots: [
+      { v: "weapon_1h",   zh: "單手武器（D0-U3）", look: "單手劍、短斧、法杖或手弩，須與副手盾牌或雙持相容，明確標示握柄點" },
+      { v: "weapon_2h",   zh: "雙手武器（D0-U3）", look: "雙手大劍、長槍、戰鎚或長弓，須標示主手與副手雙握點" },
+      { v: "shield",      zh: "盾牌（D0-U3）",     look: "圓盾、塔盾或能量護盾發生器，副手格擋減傷專用" },
+      { v: "upper_armor", zh: "上身防具（D0-U3）", look: "胸甲、旅人外衣或生態防護服，支援角色與宙獸穿戴" },
+      { v: "lower_armor", zh: "下身防具（D0-U3）", look: "護腿、戰靴或機動裙甲，不阻礙翻滾與攀爬動作" },
+      { v: "accessory",   zh: "飾品（D0-U3）",     look: "護符、晶石指環、徽章或掛墜，提供屬性與暴擊/命中加成" },
+      { v: "gather_tool", zh: "採集工具（D0-U2）", look: "礦鎬、伐木斧、釣竿、採集鐮刀，工具不消耗耐久且具明顯機能頭" },
+      { v: "trap",        zh: "陷阱（D0-U2）",     look: "絲繭陷阱、羽絨陷阱等野外佈署型捕捉/採集裝置，含展開與觸發態" },
+      { v: "craft_vessel",zh: "製作器皿（D0-U2）", look: "基礎/精良/大師器皿（符籙/琉璃珠/方塊之進階工藝版），收服成功才消耗" },
+      { v: "food_item",   zh: "原料與料理（D0-U2）", look: "礦石、纖維、食材與營火料理（含復甦料理），清晰可辨的可食或素材剪影" }
+    ],
+    tiers: [
+      { v: "tier1_raw",   zh: "一階（粗製／原礦／草編）" },
+      { v: "tier2_alloy", zh: "二階（精煉／合金／獸皮）" },
+      { v: "tier3_ether", zh: "三階（星界／靈絲／晶能）" }
+    ]
+  },
+
+  WORLD_OBJECTS: {
+    categories: [
+      { v: "settlement_arch", zh: "聚落建築與橋樑（P3-11）", look: "依八大時代與主副風格混合，含新舊毀損差異、門燈亮窗與可破壞外牆" },
+      { v: "infra_structure", zh: "城牆／工廠／隧道（P3-14～16）", look: "防禦城牆與閘門、以太/晶能工廠、貫穿山體之隧道口" },
+      { v: "wonder_landmark", zh: "奇觀地標（P3-29）", look: "高塔、神廟、空島、太空電梯與太空站、迷宮、坑道、地城門，遠距高辨識輪廓" },
+      { v: "flora_understory",zh: "植被與作物（P3-20／21／25）", look: "喬木、灌木、箭竹叢、芒草（隱蔽用）、仙人掌、蘆葦、作物田，含風擺與四季變色" },
+      { v: "geology_mineral", zh: "地質與礦脈晶洞（P3-24／27）", look: "喀斯特石林、玄武岩柱、花崗岩圓丘、板岩、金屬礦脈、寶石晶洞、石筍、冰柱" },
+      { v: "props_and_vehicles",zh: "小物件與載具（PropMeshes／P3-17）", look: "寶箱、地上掉落素材/寶石/光點、競技場封印晶簇、營火、NPC 載具" }
+    ],
+    planet_styles: [
+      { v: "verdant",      zh: "翠綠星（生機／森林／草原）" },
+      { v: "lava",         zh: "熔岩星（火山／黑曜石／地熱）" },
+      { v: "ice_crystal",  zh: "冰晶星（冰川／霜晶／極地）" },
+      { v: "storm",        zh: "風暴星（雷雲／風蝕／高壓電弧）" },
+      { v: "mineral",      zh: "晶礦星（晶簇／峽谷／礦脈）" },
+      { v: "twilight",     zh: "晨昏星（紫葉／潮汐／永晝永夜交界）" }
     ]
   }
 };

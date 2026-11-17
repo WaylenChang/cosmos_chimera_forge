@@ -6,7 +6,7 @@ window.COSMI_DESIGNED = {
       "line_id": "starter_sun_line",
       "code_zh": "日",
       "element": "light",
-      "title_zh": "鏡環天鷺",
+      "title_zh": "鏡芽雀 → 鏡羽鷺 → 鏡環天鷺",
       "source": "Data/_incoming/p2-08-starters-draft-01",
       "concept": {
         "line_id": "starter_sun_line",
@@ -78,9 +78,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "sun_mirror_chick",
-              "name_zh": "鏡環天鷺",
-              "name_en": "Mirravault",
-              "naming_note": "四階段統一命名；鏡冠初生，如芽迎日。",
+              "name_zh": "鏡芽雀",
+              "name_en": "Mirrill",
+              "naming_note": "鏡冠初生，如芽迎日。",
               "size_class": "S",
               "niches": [
                 {
@@ -119,9 +119,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "sun_heliostat_heron",
-              "name_zh": "鏡環天鷺",
-              "name_en": "Mirravault",
-              "naming_note": "四階段統一命名；承接鏡冠，羽翼展成鏡陣。",
+              "name_zh": "鏡羽鷺",
+              "name_en": "Mirravel",
+              "naming_note": "承接鏡冠，羽翼展成鏡陣。",
               "size_class": "M",
               "niches": [
                 {
@@ -162,7 +162,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "sun_array_skyheron",
               "name_zh": "鏡環天鷺",
               "name_en": "Mirravault",
-              "naming_note": "四階段統一命名；環形鏡陣托起天空之姿。",
+              "naming_note": "環形鏡陣托起天空之姿。",
               "size_class": "L",
               "niches": [
                 {
@@ -241,7 +241,7 @@ window.COSMI_DESIGNED = {
       "line_id": "starter_moon_line",
       "code_zh": "月",
       "element": "shadow",
-      "title_zh": "夜痕霜狼",
+      "title_zh": "夜痕仔 → 夜痕狼 → 夜痕霜狼",
       "source": "Data/_incoming/p2-08-starters-draft-01",
       "concept": {
         "line_id": "starter_moon_line",
@@ -313,9 +313,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "moon_night_pup",
-              "name_zh": "夜痕霜狼",
-              "name_en": "Nivervast",
-              "naming_note": "四階段統一命名；夜色留下幼狼的足痕。",
+              "name_zh": "夜痕仔",
+              "name_en": "Nivetch",
+              "naming_note": "夜色留下幼狼的足痕。",
               "size_class": "S",
               "niches": [
                 {
@@ -354,9 +354,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "moon_shade_wolf",
-              "name_zh": "夜痕霜狼",
-              "name_en": "Nivervast",
-              "naming_note": "四階段統一命名；夜痕成長為伏行孤狼。",
+              "name_zh": "夜痕狼",
+              "name_en": "Niverren",
+              "naming_note": "夜痕成長為伏行孤狼。",
               "size_class": "M",
               "niches": [
                 {
@@ -393,7 +393,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "moon_longnight_wolf",
               "name_zh": "夜痕霜狼",
               "name_en": "Nivervast",
-              "naming_note": "四階段統一命名；霜原巨狼延續夜痕意象。",
+              "naming_note": "霜原巨狼延續夜痕意象。",
               "size_class": "L",
               "niches": [
                 {
@@ -472,7 +472,7 @@ window.COSMI_DESIGNED = {
       "line_id": "starter_star_line",
       "code_zh": "星",
       "element": "thunder",
-      "title_zh": "星蹄天驥",
+      "title_zh": "星蹄駒 → 星蹄騏 → 星蹄天驥",
       "source": "Data/_incoming/p2-08-starters-draft-01",
       "concept": {
         "line_id": "starter_star_line",
@@ -544,9 +544,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "star_blaze_foal",
-              "name_zh": "星蹄天驥",
-              "name_en": "Voltrazent",
-              "naming_note": "四階段統一命名；星斑與帶電小蹄相映。",
+              "name_zh": "星蹄駒",
+              "name_en": "Voltfoal",
+              "naming_note": "星斑與帶電小蹄相映。",
               "size_class": "S",
               "niches": [
                 {
@@ -581,9 +581,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "star_storm_colt",
-              "name_zh": "星蹄天驥",
-              "name_en": "Voltrazent",
-              "naming_note": "四階段統一命名；星蹄長成逐風的駿馬。",
+              "name_zh": "星蹄騏",
+              "name_en": "Voltrmane",
+              "naming_note": "星蹄長成逐風的駿馬。",
               "size_class": "M",
               "niches": [
                 {
@@ -624,7 +624,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "star_skyhoof_steed",
               "name_zh": "星蹄天驥",
               "name_en": "Voltrazent",
-              "naming_note": "四階段統一命名；星蹄展翼，奔馳如天驥。",
+              "naming_note": "星蹄展翼，奔馳如天驥。",
               "size_class": "L",
               "niches": [
                 {
@@ -703,7 +703,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_metal_gearclock",
       "code_zh": "金",
       "element": "metal",
-      "title_zh": "漏輪巨象",
+      "title_zh": "漏輪雛 → 漏輪衛 → 漏輪巨象",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_metal_gearclock",
@@ -772,9 +772,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "metal_clock_chick",
-              "name_zh": "漏輪巨象",
-              "name_en": "Clepsarche",
-              "naming_note": "四階段統一命名；漏刻浮碗藏在初生齒輪間。",
+              "name_zh": "漏輪雛",
+              "name_en": "Clepspro",
+              "naming_note": "漏刻浮碗藏在初生齒輪間。",
               "size_class": "S",
               "niches": [
                 {
@@ -813,9 +813,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "metal_gear_strider",
-              "name_zh": "漏輪巨象",
-              "name_en": "Clepsarche",
-              "naming_note": "四階段統一命名；漏輪披甲，守住夥伴前方。",
+              "name_zh": "漏輪衛",
+              "name_en": "Clepsward",
+              "naming_note": "漏輪披甲，守住夥伴前方。",
               "size_class": "M",
               "niches": [
                 {
@@ -852,7 +852,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "metal_chronos_engine",
               "name_zh": "漏輪巨象",
               "name_en": "Clepsarche",
-              "naming_note": "四階段統一命名；漏輪化作巨象腹中的計時機關。",
+              "naming_note": "漏輪化作巨象腹中的計時機關。",
               "size_class": "L",
               "niches": [
                 {
@@ -931,7 +931,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_wood_vinecrest",
       "code_zh": "木",
       "element": "wood",
-      "title_zh": "蔓冠虹禽",
+      "title_zh": "蔓冠雛 → 蔓冠翎 → 蔓冠虹禽",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_wood_vinecrest",
@@ -1000,9 +1000,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "wood_fern_chick",
-              "name_zh": "蔓冠虹禽",
-              "name_en": "Vireloria",
-              "naming_note": "四階段統一命名；初萌蕨葉捲成小小蔓冠。",
+              "name_zh": "蔓冠雛",
+              "name_en": "Virellet",
+              "naming_note": "初萌蕨葉捲成小小蔓冠。",
               "size_class": "S",
               "niches": [
                 {
@@ -1022,8 +1022,8 @@ window.COSMI_DESIGNED = {
               "weight": "2.2 kg",
               "body_fat": "14%",
               "look": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠；蓬鬆翠綠幼鳥，頭頂生出初萌的捲曲蕨葉冠羽，雙足踏著金木雕花底座",
-              "dex_zh": "蓬鬆的翠綠幼鳥站在雕花黃銅輪座上，頭頂蕨葉捲成柔軟的冠羽。牠平時依偎在夥伴身邊，遇險便裹著荊棘短距直衝。",
-              "dex_en": "Curled fern leaves crown this fluffy green chick as it perches on a carved brass ring. It stays close to its companions, darting forward a short distance through danger wrapped in briars.",
+              "dex_zh": "蓬鬆的翠綠幼鳥站在雕花底座上，頭頂蕨葉捲成柔軟的冠羽。牠平時依偎在夥伴身邊，遇險便裹著荊棘短距直衝。",
+              "dex_en": "Curled fern leaves crown this fluffy green chick as it perches on a carved base. It stays close to its companions, darting forward a short distance through danger wrapped in briars.",
               "signature_move": {
                 "move_id": "wood_briar_dash",
                 "name_zh": "棘芽突",
@@ -1041,9 +1041,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "wood_plume_peafowl",
-              "name_zh": "蔓冠虹禽",
-              "name_en": "Vireloria",
-              "naming_note": "四階段統一命名；蔓冠舒展，扇形孔雀尾羽流轉。",
+              "name_zh": "蔓冠翎",
+              "name_en": "Virelume",
+              "naming_note": "蔓冠舒展，捲紋隨羽翼流動。",
               "size_class": "M",
               "niches": [
                 {
@@ -1063,8 +1063,8 @@ window.COSMI_DESIGNED = {
               "weight": "18 kg",
               "body_fat": "12%",
               "look": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠；羽翼舒展的熱帶孔雀型錦鳥，背負流線捲紋蔓藤，雙爪覆蓋金屬木質硬鱗",
-              "dex_zh": "華麗的孔雀扇尾半開，捲紋藤蔓沿著背脊生長，雙爪覆著雕花黃銅鱗。牠留在隊伍中段，讓根槍沿直線刺向遠敵。",
-              "dex_en": "An ornate fan tail opens behind it as curled vines trail down its back and carved brass scales cover its claws. From the middle of the group, it sends a root spear in a straight line toward distant threats.",
+              "dex_zh": "舒展的彩翼下，捲紋藤蔓沿著背脊生長，雙爪覆著堅硬的木質金屬鱗。牠留在隊伍中段，讓根槍沿直線刺向遠敵。",
+              "dex_en": "Curled vines trail down its back beneath colorful wings, and hard scales cover its claws. From the middle of the group, it sends a root spear in a straight line toward distant threats.",
               "signature_move": {
                 "move_id": "wood_root_spear",
                 "name_zh": "根紋槍",
@@ -1084,7 +1084,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "wood_canopy_regent",
               "name_zh": "蔓冠虹禽",
               "name_en": "Vireloria",
-              "naming_note": "四階段統一命名；蔓冠孔雀扇尾映出雙重虹彩。",
+              "naming_note": "蔓冠長尾映出雙重虹彩。",
               "size_class": "L",
               "niches": [
                 {
@@ -1104,8 +1104,8 @@ window.COSMI_DESIGNED = {
               "weight": "65 kg",
               "body_fat": "11%",
               "look": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠；盤踞巨木頂端的七彩神禽，雙重虹彩長尾如垂藤流光，周身綻放翠玉繁花",
-              "dex_zh": "矗立於黃銅雕花輪座之上，盛開的蕨葉孔雀扇尾映出雙重虹彩，口銜光魚與翠玉花朵隨步態搖曳。牠遙望中距離的敵人，令枝葉在目標周圍壓落。",
-              "dex_en": "Standing on a carved brass pedestal, this regal peafowl fans a massive fern-vine tail of double rainbows while blossoms sway around it. It watches the middle distance and brings a canopy crashing down around its chosen target.",
+              "dex_zh": "七彩羽翼覆住巨木頂端，兩道虹彩長尾如垂藤般輕晃，翠玉色花朵在身旁盛開。牠遙望中距離的敵人，令枝葉在目標周圍壓落。",
+              "dex_en": "Perched atop a great tree, it trails twin iridescent tails like hanging vines amid jade-green blossoms. It watches the middle distance and brings a canopy crashing down around its chosen target.",
               "signature_move": {
                 "move_id": "wood_canopy_crush",
                 "name_zh": "翠冠墜",
@@ -1163,7 +1163,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_water_tidecraft",
       "code_zh": "水",
       "element": "water",
-      "title_zh": "潮帆巨鰻",
+      "title_zh": "潮帆鰻 → 潮帆舟鰻 → 潮帆巨鰻",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_water_tidecraft",
@@ -1232,9 +1232,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "water_wave_elver",
-              "name_zh": "潮帆巨鰻",
-              "name_en": "Brinamar",
-              "naming_note": "四階段統一命名；小鰻背上的水膜初展如帆。",
+              "name_zh": "潮帆鰻",
+              "name_en": "Brinelle",
+              "naming_note": "小鰻背上的水膜初展如帆。",
               "size_class": "S",
               "niches": [
                 {
@@ -1273,9 +1273,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "water_skiff_eel",
-              "name_zh": "潮帆巨鰻",
-              "name_en": "Brinamar",
-              "naming_note": "四階段統一命名；潮帆長出雙浮筒，破浪如舟。",
+              "name_zh": "潮帆舟鰻",
+              "name_en": "Brinavela",
+              "naming_note": "潮帆長出雙浮筒，破浪如舟。",
               "size_class": "M",
               "niches": [
                 {
@@ -1316,7 +1316,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "water_catamaran_serpent",
               "name_zh": "潮帆巨鰻",
               "name_en": "Brinamar",
-              "naming_note": "四階段統一命名；潮帆巨鰻如雙體大舟乘浪。",
+              "naming_note": "潮帆巨鰻如雙體大舟乘浪。",
               "size_class": "L",
               "niches": [
                 {
@@ -1395,7 +1395,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_fire_blazelion",
       "code_zh": "火",
       "element": "fire",
-      "title_zh": "焰角羱羊",
+      "title_zh": "燼鬃仔 → 燼鬃獅 → 燼鬃焰獅 → 焰角羱羊",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_fire_blazelion",
@@ -1416,17 +1416,17 @@ window.COSMI_DESIGNED = {
           "高溫電漿雙彎角"
         ],
         "appearance_palette": [
-          "玫瑰砂岩紅",
+          "赭石紅",
           "熾金黃",
           "玄武岩暗灰"
         ],
         "timeline": "遠古神話（納巴泰峽谷神殿）",
-        "region": "西亞/中東",
+        "region": "非洲",
         "archetype": "arch_dushara_petra",
         "archetype_name": "杜沙拉·佩特拉玫瑰岩殿",
         "archetype_type": "P5-02 考據庫·神話戰神",
         "meaning": "背負玫瑰砂岩神殿火口與雙目方塊聖石、以電漿彎角引動岩漿噴湧的沙漠羱羊",
-        "motifs": "玫瑰紅砂岩神殿、雙目方塊聖石、沙漠羱羊彎角",
+        "motifs": "三首四臂雄獅像、盤蛇綻放蓮花、陡頂砂岩金字塔",
         "sensitivity": "ok",
         "role": "重砲手：高力量，遠距指定點範圍爆發，受火屬性攻擊後縮短火招 CD",
         "habit": "dominant",
@@ -1464,9 +1464,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "fire_ember_cub",
-              "name_zh": "焰角羱羊",
-              "name_en": "Pyribex",
-              "naming_note": "四階段統一命名；玫瑰砂岩幼羊額頂初萌彎角。",
+              "name_zh": "燼鬃仔",
+              "name_en": "Cindrel",
+              "naming_note": "餘燼絨毛圍著幼獅頸邊。",
               "size_class": "S",
               "niches": [
                 {
@@ -1481,9 +1481,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.50 m",
               "weight": "6.5 kg",
               "body_fat": "17%",
-              "look": "沙漠羱羊 × 玫瑰紅砂岩熔爐甲胄；踏著熾熱岩蹄的小羱羊，肩背覆有玫瑰紅砂岩鱗甲，額頂一對短彎角冒出跳動火星",
-              "dex_zh": "赤紅砂岩鱗甲護著小羱羊的肩背，額頂一對短彎角冒出跳動火星。牠喜歡搶在夥伴前頭，甩出火焰橫掃靠近的對手。",
-              "dex_en": "Rose-sandstone plates guard this young ibex's shoulders while sparks dance from its budding curved horns. It races ahead of its companions and lashes fire across enemies that come close.",
+              "look": "烈焰雄獅 × 砂岩熔核甲胄；滾燙赤褐小獅，頸圈生有一圈暗紅餘燼絨毛，爪尖踏出微小火星",
+              "dex_zh": "赤褐色的小獅頸邊圍著暗紅絨毛，每走一步都從爪尖迸出火星。牠喜歡搶在夥伴前頭，甩出火焰橫掃靠近的對手。",
+              "dex_en": "Dark red fluff circles this tawny cub's neck, and sparks spring from its paws with every step. It races ahead of its companions and lashes fire across enemies that come close.",
               "signature_move": {
                 "move_id": "fire_ember_lash",
                 "name_zh": "燼尾掃",
@@ -1501,9 +1501,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "fire_mane_stalker",
-              "name_zh": "焰角羱羊",
-              "name_en": "Pyribex",
-              "naming_note": "四階段統一命名；雙彎角與岩壁火口導流電漿。",
+              "name_zh": "燼鬃獅",
+              "name_en": "Cindrava",
+              "naming_note": "燼鬃翻騰，額紋透出熔光。",
               "size_class": "M",
               "niches": [
                 {
@@ -1522,9 +1522,9 @@ window.COSMI_DESIGNED = {
               "height_length": "1.30 m",
               "weight": "68 kg",
               "body_fat": "15%",
-              "look": "沙漠羱羊 × 玫瑰紅砂岩熔爐甲胄；矯健的四足沙漠羱羊，後彎的環節角間流轉赤金電漿，背甲刻有峽谷岩龕散熱火口",
-              "dex_zh": "矯健的沙漠羱羊踏著熾熱岩蹄，後彎的環節角間流轉赤金電漿，背甲如峽谷岩龕般聚熱。牠盯住前方的對手，裹著烈焰沿直線猛然衝去。",
-              "dex_en": "Golden plasma arcs between the sweeping ringed horns of this agile desert ibex, whose back carries canyon-carved heat vents. It fixes its gaze ahead and charges straight through the flames.",
+              "look": "烈焰雄獅 × 砂岩熔核甲胄；肌肉結實的烈焰荒原獅，鬃毛如翻騰火浪，額前凝結三道熔岩裂紋",
+              "dex_zh": "結實的荒原獅低伏身軀，火浪般的長鬃映亮額前三道熔岩裂紋。牠盯住前方的對手，裹著烈焰沿直線猛然衝去。",
+              "dex_en": "Three molten cracks glow across the brow of this powerful plains lion, whose mane rolls like a wave of fire. It fixes its gaze ahead and charges straight through the flames.",
               "signature_move": {
                 "move_id": "fire_blaze_charge",
                 "name_zh": "焰鬃突",
@@ -1542,9 +1542,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adult",
               "creature_id": "fire_pyre_monarch",
-              "name_zh": "焰角羱羊",
-              "name_en": "Pyribex",
-              "naming_note": "四階段統一命名；玫瑰岩神殿火口與雙彎巨角共鳴。",
+              "name_zh": "燼鬃焰獅",
+              "name_en": "Cindraval",
+              "naming_note": "燼鬃盛開成三面獅的火冠。",
               "size_class": "L",
               "niches": [
                 {
@@ -1563,9 +1563,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.30 m",
               "weight": "310 kg",
               "body_fat": "13%",
-              "look": "沙漠羱羊 × 玫瑰紅砂岩熔爐甲胄；威嚴的玫瑰砂岩巨羱羊，背負神殿火口與雙目方塊聖石，一對巨型後彎電漿角引動岩漿噴湧",
-              "dex_zh": "威嚴的玫瑰砂岩巨羱羊背負神殿火口與雙目方塊聖石，一對巨型後彎電漿角引動岩漿噴湧。牠與敵人保持距離，朝遠處目標引爆一團擴散的烈焰。",
-              "dex_en": "A towering rose-sandstone ibex bearing a temple brazier and twin curved plasma horns that channel molten heat. It keeps its distance and detonates a spreading blaze around a distant target.",
+              "look": "烈焰雄獅 × 砂岩熔核甲胄；威儀萬丈的三面烈火霸獅，鬃毛化為熊熊金紅蓮華火冠，每聲咆哮皆引動砂岩爆震",
+              "dex_zh": "三面的雄獅昂首咆哮，金紅鬃毛如盛放蓮花，震響在砂岩間迴盪。牠與敵人保持距離，朝遠處目標引爆一團擴散的烈焰。",
+              "dex_en": "A golden-red crown of fire opens around this lion's three faces, and its roar echoes through sandstone. It keeps its distance and detonates a spreading blaze around a distant target.",
               "signature_move": {
                 "move_id": "fire_inferno_cataclysm",
                 "name_zh": "熾墜界",
@@ -1623,7 +1623,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_earth_gildedgolem",
       "code_zh": "土",
       "element": "earth",
-      "title_zh": "金甲犰狳",
+      "title_zh": "金塵偶 → 金塵衛 → 金塵岩偶 → 金甲犰狳",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_earth_gildedgolem",
@@ -1654,7 +1654,7 @@ window.COSMI_DESIGNED = {
         "archetype_name": "黃金國穆伊斯卡祭典",
         "archetype_type": "P5-02 考據庫·原住民祭典",
         "meaning": "身披九節鎏金陶甲與聖湖蘆葦紋金盾、背負翡翠稜柱的崇高四足金甲犰狳",
-        "motifs": "金粉覆身、高山聖湖綠寶石、聖湖蘆葦金筏紋飾",
+        "motifs": "金粉覆身、高山聖湖綠寶石、黃金祭偶",
         "sensitivity": "ok",
         "role": "前排：遠距直線突進，受擊後提高土專精",
         "habit": "territorial",
@@ -1692,9 +1692,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "earth_pebble_pawn",
-              "name_zh": "金甲犰狳",
-              "name_en": "Gildumara",
-              "naming_note": "四階段統一命名；四足小犰狳覆著細碎金粉陶甲。",
+              "name_zh": "金塵偶",
+              "name_en": "Gilduma",
+              "naming_note": "金粉輕覆圓圓的小石偶。",
               "size_class": "S",
               "niches": [
                 {
@@ -1713,9 +1713,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.48 m",
               "weight": "12 kg",
               "body_fat": "12%",
-              "look": "四足重裝犰狳 × 聖湖金箔雕甲（四足獸）；圓潤低矮的四足小犰狳，背負帶狀鎏金陶甲，甲縫間鑲著微光翡翠碎晶",
-              "dex_zh": "圓滾滾的四足小犰狳背負帶狀鎏金陶甲，甲縫間鑲著微光翡翠碎晶。牠貼地穩步跟在隊伍前方，朝中距離敵人直射小石子。",
-              "dex_en": "Banded gilded clay plates cover this stout four-legged armadillo, with tiny emerald shards glowing between its armor segments. It trots near the front of the group, shooting pebbles straight toward threats at medium range.",
+              "look": "黃金礦脈人形 × 儀典岩鎧石偶（人形）；圓潤敦實的小石偶，周身覆蓋薄金微粒，胸膛嵌有一顆微光綠寶石晶核",
+              "dex_zh": "圓潤的小石偶沾滿細細金粉，胸前的綠寶石晶核泛著微光。牠慢吞吞地跟在隊伍前方，朝中距離敵人直射小石子。",
+              "dex_en": "Fine gold dust coats this round little stone figure, and a green crystal glimmers in its chest. It waddles near the front of the group, shooting pebbles straight toward threats at medium range.",
               "signature_move": {
                 "move_id": "earth_pebble_shot",
                 "name_zh": "礫紋彈",
@@ -1733,9 +1733,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "earth_gilded_warden",
-              "name_zh": "金甲犰狳",
-              "name_en": "Gildumara",
-              "naming_note": "四階段統一命名；層疊金甲與聖湖蘆葦紋盾展開。",
+              "name_zh": "金塵衛",
+              "name_en": "Gildumant",
+              "naming_note": "金塵石偶戴上守陣面甲。",
               "size_class": "M",
               "niches": [
                 {
@@ -1750,9 +1750,9 @@ window.COSMI_DESIGNED = {
               "height_length": "1.25 m",
               "weight": "95 kg",
               "body_fat": "10%",
-              "look": "四足重裝犰狳 × 聖湖金箔雕甲（四足獸）；九節鎏金鱗甲包覆四足軀幹，背脊立起編織蘆葦紋飾的金盾與翡翠稜柱",
-              "dex_zh": "厚實的九節鎏金鱗甲包覆四足軀幹，背脊立起編織蘆葦紋飾的金盾與翡翠稜柱。牠站在隊伍前方，猛擊地面使震波向身邊擴散。",
-              "dex_en": "Nine heavy bands of gilded armor shield its quadruped frame, topped with reed-woven gold crests and emerald prisms. It stands near the front and strikes the ground, sending tremors outward around itself.",
+              "look": "黃金礦脈人形 × 儀典岩鎧石偶（人形）；佩帶幾何金面甲的岩土行者，肩背覆蓋層疊板狀黏土與生長金晶",
+              "dex_zh": "幾何金面甲遮住岩土行者的面容，層疊板狀黏土和金晶護著肩背。牠站在隊伍前方，猛擊地面使震波向身邊擴散。",
+              "dex_en": "A geometric gold mask covers its face, while layers of clay and growing crystals protect its shoulders. It stands near the front and strikes the ground, sending tremors outward around itself.",
               "signature_move": {
                 "move_id": "earth_seismic_slam",
                 "name_zh": "地脈震",
@@ -1770,9 +1770,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adult",
               "creature_id": "earth_auric_sovereign",
-              "name_zh": "金甲犰狳",
+              "name_zh": "金塵岩偶",
               "name_en": "Gildumara",
-              "naming_note": "四階段統一命名；巨型雕紋金甲與聖湖翠晶背丘。",
+              "naming_note": "金塵凝成巨偶身上的晶脈。",
               "size_class": "L",
               "niches": [
                 {
@@ -1791,9 +1791,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.25 m",
               "weight": "480 kg",
               "body_fat": "9%",
-              "look": "四足重裝犰狳 × 聖湖金箔雕甲（四足獸）；如移動祭壇般的巨型四足金甲犰狳，層疊雕紋金甲與翡翠晶脈構成穹頂背殼",
-              "dex_zh": "如移動祭壇般的巨型四足金甲犰狳，層疊雕紋金甲與翡翠晶脈構成堅不可摧的穹頂背殼。牠屹立隊伍前方，必要時沿長長直線向敵陣衝去。",
-              "dex_en": "Resembling a moving temple, this colossal four-legged armadillo bears a domed carapace of carved gold plates and emerald veins. It stands before its companions and charges along a long straight path when pressed.",
+              "look": "黃金礦脈人形 × 儀典岩鎧石偶（人形）；巍然屹立的重岩金祭聖偶，雙臂如立柱，通體鎏金結晶與翡翠石脈共鳴",
+              "dex_zh": "巨大的岩偶雙臂如柱，鎏金結晶與翡翠石脈在厚重身軀上交錯。牠屹立隊伍前方，必要時沿長長直線向敵陣衝去。",
+              "dex_en": "Golden crystals and green stone veins cross the massive body of this rock figure, whose arms resemble pillars. It stands before its companions and charges along a long straight path when pressed.",
               "signature_move": {
                 "move_id": "earth_rampart_rush",
                 "name_zh": "岩壘馳",
@@ -1851,7 +1851,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_ice_frostbeast",
       "code_zh": "冰",
       "element": "ice",
-      "title_zh": "霜角巨獸",
+      "title_zh": "霜角雛 → 霜角獵獸 → 霜角巨獸",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_ice_frostbeast",
@@ -1920,9 +1920,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "ice_frost_fledgling",
-              "name_zh": "霜角巨獸",
-              "name_en": "Rimbragard",
-              "naming_note": "四階段統一命名；冰晶小角從雪白絨毛間探出。",
+              "name_zh": "霜角雛",
+              "name_en": "Rimbril",
+              "naming_note": "冰晶小角從雪白絨毛間探出。",
               "size_class": "S",
               "niches": [
                 {
@@ -1961,9 +1961,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "ice_rime_strider",
-              "name_zh": "霜角巨獸",
-              "name_en": "Rimbragard",
-              "naming_note": "四階段統一命名；霜角分岔，為獵獸引導寒氣。",
+              "name_zh": "霜角獵獸",
+              "name_en": "Rimbraven",
+              "naming_note": "霜角分岔，為獵獸引導寒氣。",
               "size_class": "M",
               "niches": [
                 {
@@ -2004,7 +2004,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "ice_tundra_dreadnought",
               "name_zh": "霜角巨獸",
               "name_en": "Rimbragard",
-              "naming_note": "四階段統一命名；霜角巨獸披上永凍甲翼。",
+              "naming_note": "霜角巨獸披上永凍甲翼。",
               "size_class": "L",
               "niches": [
                 {
@@ -2083,7 +2083,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_wind_fluteglider",
       "code_zh": "風",
       "element": "wind",
-      "title_zh": "笛風天舟",
+      "title_zh": "笛風舟 → 笛風巡舟 → 笛風天舟",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_wind_fluteglider",
@@ -2152,9 +2152,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "wind_reed_skiff",
-              "name_zh": "笛風天舟",
-              "name_en": "Reevilora",
-              "naming_note": "四階段統一命名；竹笛小舟隨風發出清音。",
+              "name_zh": "笛風舟",
+              "name_en": "Reevilo",
+              "naming_note": "竹笛小舟隨風發出清音。",
               "size_class": "S",
               "niches": [
                 {
@@ -2193,9 +2193,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "wind_flute_cruiser",
-              "name_zh": "笛風天舟",
-              "name_en": "Reevilora",
-              "naming_note": "四階段統一命名；笛風展翼，循著氣流巡航。",
+              "name_zh": "笛風巡舟",
+              "name_en": "Reevilane",
+              "naming_note": "笛風展翼，循著氣流巡航。",
               "size_class": "M",
               "niches": [
                 {
@@ -2236,7 +2236,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "wind_monsoon_galeon",
               "name_zh": "笛風天舟",
               "name_en": "Reevilora",
-              "naming_note": "四階段統一命名；笛風托起繡帆，巡行長空。",
+              "naming_note": "笛風托起繡帆，巡行長空。",
               "size_class": "L",
               "niches": [
                 {
@@ -7514,7 +7514,7 @@ window.COSMI_DESIGNED = {
       "id": "chr_amemori_sumiha",
       "name_zh": "雨森澄羽",
       "name_en": "Amemori Sumiha",
-      "role": "大廳 NPC：孵蛋師",
+      "role": "玩家角色預設外觀",
       "ethnicity": "東亞體系",
       "region": "日本",
       "timeline": "晶石賽博/霓虹魔導義體紀元",

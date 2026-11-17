@@ -13,6 +13,49 @@
       "description": "The ten elements (creatures.md#十大屬性).",
       "enum": ["metal", "wood", "water", "fire", "earth", "ice", "wind", "thunder", "light", "shadow"]
     },
+    "fieldUtility": {
+      "description": "Single out-of-combat life/field utility move or trait per creature form.",
+      "enum": [
+        "none",
+        "immune_laboratory",
+        "immune_rainforest",
+        "immune_deep_sea",
+        "immune_volcano",
+        "immune_cave",
+        "immune_ice_cap",
+        "immune_tower",
+        "immune_space",
+        "immune_labyrinth",
+        "immune_temple",
+        "open_obstacle",
+        "dive",
+        "fly",
+        "levitate",
+        "catch_rate_up",
+        "steal_item",
+        "prevent_escape",
+        "quick_escape",
+        "drop_rate_up",
+        "scout_potential",
+        "mount",
+        "return_village",
+        "party_stealth",
+        "egg_hatch_boost",
+        "magnet_pickup_double",
+        "weather_control",
+        "fishing",
+        "forage_berries",
+        "cook_fire",
+        "produce_milk",
+        "campfire_revive",
+        "hunt_ground",
+        "hunt_sky",
+        "set_trap",
+        "cast_net",
+        "harvest_crops",
+        "culinary_prep"
+      ]
+    },
     "percent": { "type": "integer", "minimum": 0, "maximum": 100 },
     "nonNegativeInt": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
     "positiveInt": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
@@ -62,13 +105,17 @@
         { "if": { "properties": { "type": { "const": "on_hp_cross_below" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["percent", "duration_ms"], "properties": { "percent": { "$ref": "#/$defs/rulePercent" }, "duration_ms": { "$ref": "#/$defs/durationMs" } } } } } }
       ]
     },
+    "star": {
+      "description": "Skill star / rarity (creatures.md#技能星級): 1 一般, 2 稀有, 3 獨有 (one evolution line only).",
+      "type": "integer", "minimum": 1, "maximum": 3
+    },
     "effect": {
       "description": "Closed effect vocabulary shared by trait effects and move effects (P2-01). Adding a type = this enum + GameData EffectType + a P2-09 handler.",
       "type": "object",
       "required": ["type"],
       "additionalProperties": false,
       "properties": {
-        "type": { "enum": ["mastery_mod", "resist_mod", "cd_mod_percent", "evasion_mod_percent", "move_speed_mod_percent", "range_mod_percent", "heal_percent_max_hp"] },
+        "type": { "enum": ["mastery_mod", "resist_mod", "cd_mod_percent", "evasion_mod_percent", "move_speed_mod_percent", "range_mod_percent", "heal_percent_max_hp", "accuracy_mod", "crit_rate_mod", "crit_damage_mod", "stagger_capacity_mod_percent", "block_reduction_mod"] },
         "params": { "type": "object" },
         "max_stacks": {
           "description": "P2-09: how many times this effect can stack on one target from the same move/trait id. 1 (default) = re-application only refreshes the duration. Not allowed on instant heals.",
@@ -83,7 +130,12 @@
         { "if": { "properties": { "type": { "const": "evasion_mod_percent" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } },
         { "if": { "properties": { "type": { "const": "move_speed_mod_percent" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } },
         { "if": { "properties": { "type": { "const": "range_mod_percent" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } },
-        { "if": { "properties": { "type": { "const": "heal_percent_max_hp" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["percent"], "properties": { "percent": { "$ref": "#/$defs/rulePercent" } } } } } }
+        { "if": { "properties": { "type": { "const": "heal_percent_max_hp" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["percent"], "properties": { "percent": { "$ref": "#/$defs/rulePercent" } } } } } },
+        { "if": { "properties": { "type": { "const": "accuracy_mod" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } },
+        { "if": { "properties": { "type": { "const": "crit_rate_mod" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } },
+        { "if": { "properties": { "type": { "const": "crit_damage_mod" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } },
+        { "if": { "properties": { "type": { "const": "stagger_capacity_mod_percent" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } },
+        { "if": { "properties": { "type": { "const": "block_reduction_mod" } } }, "then": { "required": ["params"], "properties": { "params": { "type": "object", "additionalProperties": false, "required": ["delta"], "properties": { "delta": { "$ref": "#/$defs/ruleDelta" } } } } } }
       ]
     }
   }

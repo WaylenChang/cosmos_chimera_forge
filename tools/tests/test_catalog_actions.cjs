@@ -36,7 +36,7 @@ function extractGetClipCategory() {
 }
 
 test('ACTIONS preserves all legacy clip IDs and expands character & creature sets', () => {
-  assert.equal(C.version, '2.8.0');
+  assert.equal(C.version, '2.9.0');
   const chrIds = C.ACTIONS.character.map(a => a.id);
   const crIds = C.ACTIONS.creature.map(a => a.id);
 

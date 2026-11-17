@@ -1,10 +1,13 @@
 [
   {
     "id": "sample_ember_field",
+    "star": 1,
+    "polarity": "yang",
     "element": "fire",
     "kind": "damage",
     "power": 10,
     "cooldown_ms": 8000,
+    "windup_ms": 700,
     "accuracy": 100,
     "range_class": "mid",
     "shape": "field",

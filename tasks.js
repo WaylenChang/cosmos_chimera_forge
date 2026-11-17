@@ -784,6 +784,81 @@
         ].join("\n");
         return common(ctx, body) + "\n\n" + deliverySection(ctx, "├── archetypes.json\n└── report.md");
       }
+    },
+
+    {
+      id: "craft-item-design", version: "1.0.0", zh: "製作／裝備／道具設計", prefix: "itm", platform: "chatgpt",
+      needs: null, drop: "Art/_incoming",
+      options: [
+        { key: "slot", type: "select", label: "物件槽位", items: () => C.CRAFT_OBJECTS.slots.map(s => ({ v: s.v, zh: s.zh })), def: "weapon_1h" },
+        { key: "tier", type: "select", label: "材質階級", items: () => C.CRAFT_OBJECTS.tiers.map(t => ({ v: t.v, zh: t.zh })), def: "tier1_raw" },
+        { key: "element", type: "select", label: "屬性／風格", items: () => C.ELEMENTS.map(e => ({ v: e.v, zh: e.zh + "（" + e.palette + "）" })), def: "rand" }
+      ],
+      build(ctx) {
+        const o = ctx.opts;
+        const slot = C.CRAFT_OBJECTS.slots.find(s => s.v === o.slot) || C.CRAFT_OBJECTS.slots[0];
+        const tier = C.CRAFT_OBJECTS.tiers.find(t => t.v === o.tier) || C.CRAFT_OBJECTS.tiers[0];
+        const elInfo = C.ELEMENTS.find(e => e.v === o.element) || C.ELEMENTS[0];
+        const body = [
+          "## 設計目標（D0-U2／D0-U3 現行遊戲規格）",
+          "- **物件類別**：" + slot.zh + " — " + slot.look,
+          "- **材質階級**：" + tier.zh,
+          "- **主色與屬性氛圍**：" + elInfo.zh + "（" + elInfo.palette + "）",
+          "",
+          "## 產出清單",
+          "| 檔案 | 內容 | 層級 |",
+          "|---|---|---|",
+          "| `concept.json` | id（snake_case）、中英日名稱、槽位/持握方式（1H/2H/副手/穿戴）、材質配色 hex、六能力值/生活技能設計意圖 | L1 |",
+          "| `images/itm_" + o.slot + "_icon.png` | 512² 道具圖示，剪影清晰、深色平光底 | L1 |",
+          "| `images/itm_" + o.slot + "_sheet.png` | 正面、側面、背面與握持/穿戴比例參考圖（標示握柄點或掛載點） | L1 |",
+          "| `models/itm_" + o.slot + ".glb` | 遊戲用低面數模型（≤ 2k tris，卡通著色材質，原點對齊握柄/穿戴根點） | L2 |",
+          "",
+          "## 規格",
+          list([
+            "武器與工具須明確標註 `grip_primary`（與雙手武器 `grip_secondary`），支援角色與多足/雙足宙獸持握。",
+            "上下身防具與飾品須保留關節活動空間，不遮擋臉部與核心剪影。",
+            "製作器皿須延續符籙卡片／琉璃珠／魔術方塊之對應外觀語言並體現階級工藝差異。"
+          ])
+        ].join("\n");
+        return common(ctx, body) + "\n\n" + deliverySection(ctx, "├── concept.json\n├── images/\n└── models/      # L2");
+      }
+    },
+
+    {
+      id: "world-object-design", version: "1.0.0", zh: "場景／世界物件設計", prefix: "wld", platform: "chatgpt",
+      needs: null, drop: "Art/_incoming",
+      options: [
+        { key: "category", type: "select", label: "物件分類", items: () => C.WORLD_OBJECTS.categories.map(c => ({ v: c.v, zh: c.zh })), def: "wonder_landmark" },
+        { key: "planet", type: "select", label: "星球生態", items: () => C.WORLD_OBJECTS.planet_styles.map(p => ({ v: p.v, zh: p.zh })), def: "verdant" },
+        { key: "timeline", type: "select", label: "時代風格", items: () => C.TIMELINES.map(t => ({ v: t.v, zh: t.zh })), def: "rand" }
+      ],
+      build(ctx) {
+        const o = ctx.opts;
+        const cat = C.WORLD_OBJECTS.categories.find(c => c.v === o.category) || C.WORLD_OBJECTS.categories[0];
+        const pl = C.WORLD_OBJECTS.planet_styles.find(p => p.v === o.planet) || C.WORLD_OBJECTS.planet_styles[0];
+        const body = [
+          "## 設計目標（P3-11～P3-29 現行世界規格）",
+          "- **場景物件分類**：" + cat.zh + " — " + cat.look,
+          "- **所屬星球生態**：" + pl.zh,
+          "- **建築／文化時代參考**：" + o.timeline,
+          "",
+          "## 產出清單",
+          "| 檔案 | 內容 | 層級 |",
+          "|---|---|---|",
+          "| `concept.json` | id（snake_case）、中英名稱、尺寸（m）、可否破壞與掉落材質、夜間發光區（門燈/晶體/光帶）、四季變化說明 | L1 |",
+          "| `images/wld_" + o.category + "_day.png` | 白天平光三視／透視設定圖（含角色 1.7 m 比例尺） | L1 |",
+          "| `images/wld_" + o.category + "_night_or_damaged.png` | 夜間自發光態或受擊毀損／收成態對照圖 | L1 |",
+          "| `models/wld_" + o.category + ".glb` | 實機模型（物件/植被 ≤ 3k tris、奇觀地標 ≤ 12k tris，底部延伸基座以貼合球面斜坡） | L2 |",
+          "",
+          "## 規格",
+          list([
+            "須符合球面星球遠景辨識與近景卡通著色（ToonScenery）風格，遠處輪廓剪影不可糊成一團。",
+            "可破壞物件（樹、岩、礦脈、建築、封印晶簇）須確保核心資源點在未破壞前一眼可辨。",
+            "建築與地標底部預留斜坡基座（foundation skirt），避免於球面地形邊緣懸空。"
+          ])
+        ].join("\n");
+        return common(ctx, body) + "\n\n" + deliverySection(ctx, "├── concept.json\n├── images/\n└── models/      # L2");
+      }
     }
   ];
 
