@@ -62,3 +62,20 @@ test('play/pause button stays icon-only without text labels and top duplicate de
   assert.doesNotMatch(forge,/btn\.textContent\s*=\s*"⏸ 暫停"/);
   assert.match(forge,/if\s*\(entry\.packages\.length\s*&&\s*!entry\.catalog\)/);
 });
+test('3D HUD has Drive folder and file link icon buttons, btnToImg3d stays icon-only, and dead buttons are removed', () => {
+  assert.match(html, /class="[^"]*icon-only"[^>]*id="btn3dOpenDriveFolder"/);
+  assert.match(html, /class="[^"]*icon-only"[^>]*id="btn3dCopyFileLink"/);
+  assert.match(forge, /function get3dModelDriveLinks\(/);
+  assert.match(forge, /function sync3dDriveButtons\(/);
+  assert.match(forge, /https:\/\/drive\.google\.com\/drive\/folders\//);
+  assert.match(forge, /https:\/\/drive\.google\.com\/file\/d\//);
+
+  assert.match(html, /class="[^"]*icon-only"[^>]*id="btnToImg3d"/);
+  assert.doesNotMatch(forge, /btnToImg3d\.textContent\s*=\s*curIm/);
+  assert.match(forge, /btnToImg3d\.textContent\s*=\s*"🎯"/);
+
+  for (const deadId of ['btnExportAlignedZip', 'btnCopyPs', 'btnUpgradeActive', 'btnDlUpgZip', 'btnToImg3dBatch']) {
+    assert.doesNotMatch(html, new RegExp(`id="${deadId}"`));
+    assert.doesNotMatch(forge, new RegExp(`#${deadId}`));
+  }
+});

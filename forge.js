@@ -231,20 +231,6 @@
     toast("已將" + (isChr ? "角色" : "宙獸") + "立繪包「" + pkg.id + "」帶入指定 3D 任務");
   }
 
-  function sendToImgTo3DBatch(pkg) {
-    const isChr = pkg ? (pkg.type === "character-concept" || pkg.type === "character-model-rig" || pkg.id.startsWith("chr")) : false;
-    const targetTaskId = isChr ? "character-model-rig" : "creature-model-rig";
-    state.taskId = targetTaskId;
-    flowSelection = {category:isChr ? "character" : "creature",route:"image",step:"image_blender"};
-    state.flowChoice = flowSelection;
-    const t = TASKS.find(x => x.id === targetTaskId) || TASKS[0];
-    const o = taskOpts(t);
-    o.scope = "batch";
-    setViewMode("forge");
-    renderAll();
-    toast("已切換至「" + t.zh + "（批量處理模式）」");
-  }
-
   // REQ: 使用者 2026-11-07 — 已設計的宙獸（P2-08 御三家、P5-03 七元素等）與角色直接產出立繪 / img-to-3D prompt。
   const DESIGNED = (window.COSMI_DESIGNED && window.COSMI_DESIGNED.items) || [];
   const DESIGNED_CHARACTERS = (window.COSMI_DESIGNED && window.COSMI_DESIGNED.characters) || [];
@@ -5105,15 +5091,14 @@
     // 快捷產出 3D Prompt 按鈕狀態更新
     const isConceptPkg = pkg.type === "creature-concept" || pkg.type === "character-concept" || pkg.id.startsWith("cr-") || pkg.id.startsWith("chr-");
     const btnToImg3d = $("#btnToImg3d");
-    const btnToImg3dBatch = $("#btnToImg3dBatch");
     if (btnToImg3d) {
-      btnToImg3d.style.display = isConceptPkg ? "inline-block" : "none";
+      btnToImg3d.style.display = isConceptPkg ? "inline-flex" : "none";
       const curIm = pkg.images[reviewState.activeImgIdx];
-      btnToImg3d.textContent = curIm ? "🎯 指定 3D Prompt (當前圖)" : "🎯 指定 3D Prompt";
-      btnToImg3d.title = curIm ? "以目前預覽圖「" + curIm.path + "」帶入指定 3D 任務" : "將此立繪包帶入指定 3D 任務";
-    }
-    if (btnToImg3dBatch) {
-      btnToImg3dBatch.style.display = isConceptPkg ? "inline-block" : "none";
+      const tip = curIm ? "以目前預覽圖「" + curIm.path + "」帶入指定 3D 任務" : "將此立繪包帶入指定 3D 任務";
+      btnToImg3d.textContent = "🎯";
+      btnToImg3d.setAttribute("aria-label", tip);
+      btnToImg3d.setAttribute("data-tip", tip);
+      btnToImg3d.title = tip;
     }
 
     // 渲染右欄分頁資訊
@@ -5278,6 +5263,32 @@
     three.clips = [];
   }
 
+  function get3dModelDriveLinks(pkg) {
+    if (!pkg) return { folderUrl: "", fileUrl: "" };
+    const folderId = pkg.driveFolderId || "";
+    const glbPath = pkg.glbFile?.path || "";
+    const fileId = pkg.glbFile?.id || (glbPath && Array.isArray(pkg.driveFiles) ? pkg.driveFiles.find(f => f.path === glbPath)?.id : "") || "";
+    return {
+      folderUrl: folderId ? "https://drive.google.com/drive/folders/" + encodeURIComponent(folderId) : "",
+      fileUrl: fileId ? "https://drive.google.com/file/d/" + encodeURIComponent(fileId) + "/view" : ""
+    };
+  }
+
+  function sync3dDriveButtons(pkg) {
+    const { folderUrl, fileUrl } = get3dModelDriveLinks(pkg);
+    const btnFolder = $("#btn3dOpenDriveFolder");
+    const btnFile = $("#btn3dCopyFileLink");
+    if (btnFolder) {
+      btnFolder.hidden = !folderUrl;
+      const tip = pkg?.drivePath ? "開啟 Google Drive 目錄：" + pkg.drivePath : "開啟對應 Google Drive 目錄";
+      btnFolder.setAttribute("aria-label", tip);
+      btnFolder.setAttribute("data-tip", tip);
+    }
+    if (btnFile) {
+      btnFile.hidden = !fileUrl;
+    }
+  }
+
   async function loadModelForPackage(pkg, linkedPkg) {
     if (!pkg) return;
     initThreeViewer();
@@ -5287,6 +5298,7 @@
     const targetPkg = (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) ? pkg : (linkedPkg?.glbFile || linkedPkg?.animSpec) ? linkedPkg : pkg;
     three.activePkg = targetPkg;
     three.activeLinkedPkg = linkedPkg || null;
+    sync3dDriveButtons(targetPkg);
 
     const hasGlbSource = Boolean(targetPkg.glbFile || targetPkg.glbUrl);
     const glbKey = targetPkg.glbUrl || (targetPkg.glbFile ? `${targetPkg.glbFile.id || targetPkg.glbFile.path || ""}:${targetPkg.glbFile.modifiedTime || ""}` : "");
@@ -6595,6 +6607,16 @@
     });
 
     // 3D HUD 工具按鈕事件
+    $("#btn3dOpenDriveFolder")?.addEventListener("click", () => {
+      const { folderUrl } = get3dModelDriveLinks(reviewState.three.activePkg);
+      if (!folderUrl) { toast("此 3D 模型尚無對應 Google Drive 目錄"); return; }
+      window.open(folderUrl, "_blank", "noopener,noreferrer");
+    });
+    $("#btn3dCopyFileLink")?.addEventListener("click", () => {
+      const { fileUrl } = get3dModelDriveLinks(reviewState.three.activePkg);
+      if (!fileUrl) { toast("此 3D 模型尚無對應 Google Drive 檔案連結"); return; }
+      copyText(fileUrl, "已複製 3D 模型 Google Drive 檔案連結");
+    });
     $("#btn3dBones")?.addEventListener("click", toggle3dBones);
     $("#btn3dWireframe")?.addEventListener("click", toggle3dWireframe);
     $("#btn3dGrid")?.addEventListener("click", toggle3dGrid);
@@ -6685,15 +6707,10 @@
       if (!pkg) { toast("請先選取任務包"); return; }
       deployPackageToGame(pkg);
     });
-    $("#btnExportAlignedZip")?.addEventListener("click", () => exportAssetDirectory(getActivePkg()));
     $("#btnToImg3d")?.addEventListener("click", () => {
       const pkg = getActivePkg();
       if (!pkg) return;
       sendToImgTo3D(pkg, pkg.images?.[reviewState.activeImgIdx]?.path);
-    });
-    $("#btnToImg3dBatch")?.addEventListener("click", () => {
-      const pkg = getActivePkg();
-      sendToImgTo3DBatch(pkg);
     });
     $("#btnBackup")?.addEventListener("click", () => {
       const pkg = getActivePkg();
@@ -6713,21 +6730,6 @@
       url.searchParams.set("review", pkg.id);
       copyText(url.toString(), "已複製驗收連結；開啟後須登入有資產權限的 Google 帳號。");
     });
-    $("#btnCopyPs").addEventListener("click", () => {
-      const pkg = getActivePkg();
-      if (!pkg) return;
-      const root = state.root || DEFAULT_ROOT;
-      const cmd = `Expand-Archive -Path "$HOME\\Downloads\\${pkg.id}.zip" -DestinationPath "${root}\\Art\\_incoming\\" -Force`;
-      copyText(cmd, "已複製 PowerShell 解壓指令");
-    });
-
-    // 審查台當前包一鍵升級格式
-    $("#btnUpgradeActive").addEventListener("click", () => {
-      const pkg = getActivePkg();
-      if (!pkg) return;
-      const upg = upgradePackageFormat(pkg);
-      if (upg) showUpgradeModal(upg);
-    });
 
     // 升級 Modal 內部下載與複製事件
     $("#btnCopyUpgPrompt").addEventListener("click", () => {
@@ -6744,30 +6746,6 @@
     $("#btnDlUpgManifest").addEventListener("click", () => {
       if (!lastUpgradeResult) return;
       download("manifest.json", JSON.stringify(lastUpgradeResult.newManifest, null, 2), "application/json");
-    });
-    $("#btnDlUpgZip").addEventListener("click", () => {
-      if (!lastUpgradeResult) return;
-      const pkg = lastUpgradeResult.pkg;
-      const zipFiles = {};
-      const tid = lastUpgradeResult.targetTaskId;
-      zipFiles[tid + "/manifest.json"] = JSON.stringify(lastUpgradeResult.newManifest, null, 2);
-      zipFiles[tid + "/concept.json"] = JSON.stringify(lastUpgradeResult.newConcept, null, 2);
-      zipFiles[tid + "/" + tid + ".prompt.md"] = lastUpgradeResult.newPromptText;
-
-      // 若有原圖一併封裝
-      if (pkg.rawFiles) {
-        for (const path in pkg.rawFiles) {
-          if (!path.endsWith("manifest.json") && !path.endsWith("concept.json") && !path.endsWith(".prompt.md")) {
-            const rel = path.includes("/") ? path.slice(path.indexOf("/") + 1) : path;
-            zipFiles[tid + "/" + rel] = pkg.rawFiles[path];
-          }
-        }
-      }
-      const blob = createZipBlob(zipFiles);
-      const a = el("a", { href: URL.createObjectURL(blob), download: tid + ".upgraded.zip" });
-      document.body.append(a); a.click();
-      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-      toast("已下載升級後的 Zip 包");
     });
     $("#btnLoadInForge").addEventListener("click", () => {
       if (!lastUpgradeResult) return;

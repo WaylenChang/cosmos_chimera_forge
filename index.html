@@ -1123,6 +1123,8 @@
             <span class="stage3d-hud-title" id="stage3dClipBadge">🎬 動作: chr_idle (待機)</span>
             <span class="stage3d-hud-info" id="stage3dInfoBadge"></span>
             <div style="flex:1"></div>
+            <button class="btn ghost mini icon-only" id="btn3dOpenDriveFolder" type="button" aria-label="開啟對應 Google Drive 目錄" data-tip="開啟對應 Google Drive 目錄" hidden>📁</button>
+            <button class="btn ghost mini icon-only" id="btn3dCopyFileLink" type="button" aria-label="複製 3D 模型 Google Drive 檔案連結" data-tip="複製 3D 模型 Google Drive 檔案連結" hidden>🔗</button>
             <button class="btn ghost mini icon-only" id="btn3dBones" type="button" aria-label="切換骨骼架構顯示 (快捷鍵: B)" data-tip="切換骨骼架構顯示 (快捷鍵: B)">🦴</button>
             <button class="btn ghost mini icon-only" id="btn3dWireframe" type="button" aria-label="切換拓撲布線顯示 (快捷鍵: W)" data-tip="切換拓撲布線顯示 (快捷鍵: W)">▦</button>
             <button class="btn ghost mini icon-only" id="btn3dGrid" type="button" aria-label="切換地面網格顯示" data-tip="切換地面網格顯示">▥</button>
@@ -1179,14 +1181,10 @@
         </div>
         <button class="btn icon-only" id="btnUnpack" type="button" aria-label="逐檔寫入選定的本機目錄" data-tip="逐檔寫入選定的本機目錄">⤓</button>
         <button class="btn ghost icon-only" id="btnDeployGame" type="button" aria-label="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案" data-tip="審查核可，一鍵交付部署至 cosmos_chimera 遊戲專案">🚀</button>
-        <button class="btn ghost icon-only" id="btnExportAlignedZip" type="button" aria-label="將資產逐檔匯出至選定目錄" data-tip="將資產逐檔匯出至選定目錄">📦</button>
         <button class="btn ghost icon-only" id="btnToImg3d" type="button" aria-label="以此立繪包產出指定 img-to-3D Prompt" data-tip="以此立繪包產出指定 img-to-3D Prompt">🎯</button>
-        <button class="btn ghost icon-only" id="btnToImg3dBatch" hidden type="button" aria-label="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）" data-tip="產出批量 img-to-3D Prompt（處理 01_portraits 內吻合條件的資產目錄）">▦</button>
-        <button class="btn ghost icon-only" id="btnUpgradeActive" hidden type="button" aria-label="一鍵升級為最新版 Prompt 與規格" data-tip="一鍵升級為最新版 Prompt 與規格">🔄</button>
         <button class="btn ghost mini icon-only" id="btnBackup" type="button" aria-label="移至備份區（自動加入時間戳）" data-tip="移至備份區（自動加入時間戳）">📦</button>
         <button class="btn ghost mini icon-only" id="btnCopyPath" type="button" aria-label="📋 複製路徑" data-tip="📋 複製路徑">📋</button>
         <button class="btn ghost mini icon-only" id="btnCopyReviewLink" type="button" aria-label="🔗 複製驗收連結" data-tip="🔗 複製驗收連結">🔗</button>
-        <button class="btn ghost mini icon-only" id="btnCopyPs" hidden type="button" aria-label="💻 PowerShell" data-tip="💻 PowerShell">💻</button>
       </div>
     </div>
 
@@ -1240,7 +1238,6 @@
           <button class="btn ghost mini" id="btnDlUpgPrompt" type="button">prompt.md</button>
           <button class="btn ghost mini" id="btnDlUpgConcept" type="button">concept.json</button>
           <button class="btn ghost mini" id="btnDlUpgManifest" type="button">manifest.json</button>
-          <button class="btn ghost mini" id="btnDlUpgZip" hidden type="button">升級後 Zip 包</button>
           <button class="btn ghost mini" id="btnLoadInForge" type="button">帶入 Prompt 鍛造台編輯</button>
         </div>
       </div>
