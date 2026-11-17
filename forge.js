@@ -1975,7 +1975,7 @@
   function buildDesigned3dClipBar(pkg, linkedPkg) {
     const clips = getPackageClips(pkg, linkedPkg);
     if (!clips.length) return null;
-    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "互動撫摸"];
+    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "生活採集", "互動撫摸"];
     let activeCat = "all";
     const wrap = el("div", { class: "designed-3d-clips" });
     const chipsRow = el("div", { class: "anim-filter-chips" });
@@ -5141,13 +5141,14 @@
   // ==================== 3D 模型與骨骼動作檢視引擎 (Three.js) ====================
   function getClipCategory(clipName) {
     const name = (clipName || "").toLowerCase();
-    if (name.includes("idle") || name.includes("walk") || name.includes("run") || name.includes("sneak") || name.includes("dodge") || name.includes("roll") || name.includes("jump") || name.includes("move")) return "基礎移動";
-    if (name.includes("block") || name.includes("hit") || name.includes("knock") || name.includes("getup") || name.includes("faint") || name.includes("defeat") || name.includes("victory")) return "戰鬥受擊";
-    if (name.includes("command") || name.includes("summon") || name.includes("recall")) return "指令召喚";
-    if (name.startsWith("atk") || name.includes("slash") || name.includes("strike") || name.includes("cleave") || name.includes("burst")) return "招式攻擊";
-    if (name.startsWith("sup") || name.includes("buff") || name.includes("heal") || name.includes("roar") || name.includes("deploy")) return "輔助場地";
+    if (name.includes("idle") || name.includes("walk") || name.includes("run") || name.includes("sneak") || name.includes("dodge") || name.includes("roll") || name.includes("jump") || name.includes("move") || name.includes("swim") || name.includes("dive") || name.includes("fly") || name.includes("glide") || name.includes("mount")) return "基礎移動";
+    if (name.includes("block") || name.includes("hit") || name.includes("knock") || name.includes("getup") || name.includes("faint") || name.includes("defeat") || name.includes("victory") || name.includes("guard_break") || name.includes("stagger") || name.includes("enrage")) return "戰鬥受擊";
+    if (name.includes("command") || name.includes("summon") || name.includes("recall") || name.includes("capture") || name.includes("hatch")) return "指令召喚";
+    if (name.startsWith("atk") || name.includes("_atk_") || name.includes("slash") || name.includes("strike") || name.includes("cleave") || name.includes("burst")) return "招式攻擊";
+    if (name.startsWith("sup") || name.includes("_sup_") || name.includes("buff") || name.includes("heal") || name.includes("roar") || name.includes("deploy") || name.includes("overload")) return "輔助場地";
     if (name.includes("item") || name.includes("backpack") || name.includes("throw") || name.includes("vessel") || name.includes("card") || name.includes("bead") || name.includes("cube")) return "道具背包";
-    if (name.includes("talk") || name.includes("pet") || name.includes("gesture") || name.includes("petted")) return "互動撫摸";
+    if (name.includes("gather") || name.includes("mine") || name.includes("fish") || name.includes("cook") || name.includes("craft") || name.includes("trap") || name.includes("revive") || name.includes("interact") || name.includes("pickup") || name.includes("handbook") || name.includes("field_utility")) return "生活採集";
+    if (name.includes("talk") || name.includes("pet") || name.includes("gesture") || name.includes("petted") || name.includes("eat") || name.includes("feed") || name.includes("sleep") || name.includes("rest") || name.includes("alert")) return "互動撫摸";
     return "其他動作";
   }
 
@@ -5924,7 +5925,7 @@
       })
     );
 
-    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "互動撫摸"];
+    const categories = ["all", "基礎移動", "戰鬥受擊", "指令召喚", "招式攻擊", "輔助場地", "道具背包", "生活採集", "互動撫摸"];
     const chipsDiv = el("div", { class: "anim-filter-chips" });
     categories.forEach(cat => {
       const count = (cat === "all") ? totalClips : clips.filter(c => getClipCategory(c.clip) === cat).length;
