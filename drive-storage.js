@@ -507,16 +507,36 @@
     }
     return parent;
   }
-  async function find(path, create = false) {
+  const fileModifiedMs = (file) => {
+    const ms = Date.parse(file?.modifiedTime || "");
+    return Number.isFinite(ms) ? ms : -Infinity;
+  };
+  function pickLatestFile(files) {
+    if (!files?.length) return undefined;
+    let best = files[0],
+      bestMs = fileModifiedMs(best);
+    for (let i = 1; i < files.length; i++) {
+      const candidateMs = fileModifiedMs(files[i]);
+      if (candidateMs > bestMs) {
+        best = files[i];
+        bestMs = candidateMs;
+      }
+    }
+    return best;
+  }
+  async function find(path, create = false, { pickLatest = false } = {}) {
     const parts = relative(path),
       name = parts.pop(),
       parent = await folder(parts.join("/"), create),
       m = await list(parent, "name = '" + escapeQuery(name) + "'");
-    if (m.length > 1) throw Error(path + " 名稱重複，請先在 Drive 整理");
+    if (m.length > 1) {
+      if (!pickLatest) throw Error(path + " 名稱重複，請先在 Drive 整理");
+      return { file: pickLatestFile(m), parent, name };
+    }
     return { file: m[0], parent, name };
   }
   async function read(path) {
-    const { file } = await find(path);
+    const { file } = await find(path, false, { pickLatest: true });
     if (!file) throw Error(path + " 不存在");
     return driveDownload(
       async () => (await request(API + "/" + file.id + "?alt=media")).blob(),
@@ -574,17 +594,22 @@
     );
   async function walk(id, prefix = "", depth = 0) {
     if (depth > 12) throw Error("資產目錄超過 12 層");
-    const result = [],
-      names = new Set(),
+    const folderNames = new Set(),
+      filesByName = new Map(),
       subfolders = [];
     for (const f of await list(id)) {
-      if (names.has(f.name)) throw Error(prefix + f.name + " 名稱重複");
-      names.add(f.name);
-      if (/\.zip$/i.test(f.name)) continue;
-      if (f.mimeType === MIME)
+      if (f.mimeType === MIME) {
+        if (folderNames.has(f.name)) throw Error(prefix + f.name + " 名稱重複");
+        folderNames.add(f.name);
         subfolders.push(walk(f.id, prefix + f.name + "/", depth + 1));
-      else result.push({ ...f, path: prefix + f.name, parentId: id });
+      } else {
+        if (/\.zip$/i.test(f.name)) continue;
+        const prev = filesByName.get(f.name);
+        if (!prev || fileModifiedMs(f) > fileModifiedMs(prev))
+          filesByName.set(f.name, { ...f, path: prefix + f.name, parentId: id });
+      }
     }
+    const result = [...filesByName.values()];
     for (const children of await Promise.all(subfolders))
       result.push(...children);
     return result;
@@ -594,7 +619,7 @@
     if (!file && !reviewIndex) {
       const root = pipelineRoot(hint || id);
       file =
-        (await find(root + "/reviews/" + id + ".json")).file;
+        (await find(root + "/reviews/" + id + ".json", false, { pickLatest: true })).file;
     }
     return file
       ? JSON.parse(
@@ -745,7 +770,10 @@
           try {
             const reviewFiles = await list(await folder(revDir));
             for (const f of reviewFiles) {
-              if (f.name.endsWith(".json")) merged.set(f.name, f);
+              if (!f.name.endsWith(".json")) continue;
+              const prev = merged.get(f.name);
+              if (!prev || fileModifiedMs(f) > fileModifiedMs(prev))
+                merged.set(f.name, f);
             }
           } catch (e) {
             if (!/不存在/.test(e.message))
@@ -1398,8 +1426,10 @@
               kind: "model",
               level: "L1",
             }));
-          const manifestFile = children.find(
-            (f) => f.name === "manifest.json" && f.mimeType !== MIME,
+          const manifestFile = pickLatestFile(
+            children.filter(
+              (f) => f.name === "manifest.json" && f.mimeType !== MIME,
+            ),
           );
           let manifest = {};
           if (manifestFile) {
@@ -1720,7 +1750,13 @@
     const safeList = async (dirPath) => {
       try {
         const entries = await list(await folder(dirPath));
-        return entries.filter((f) => f.mimeType !== MIME);
+        const byName = new Map();
+        for (const f of entries) {
+          if (f.mimeType === MIME) continue;
+          const prev = byName.get(f.name);
+          if (!prev || fileModifiedMs(f) > fileModifiedMs(prev)) byName.set(f.name, f);
+        }
+        return [...byName.values()];
       } catch (_) {
         return [];
       }

@@ -802,4 +802,70 @@ test('syncPackages and syncPipelineIndex read files from step/version subdirecto
   assert.equal(idx.wikiCreatures.some(f => f.name === 'cr_test_adult_05_wiki.md'), true);
 });
 
+test('read picks the file with the most recent modifiedTime when duplicate names exist', async () => {
+  const h = harness({
+    handle: (u) => {
+      const q = u.searchParams.get('q') || '';
+      if (q.includes("name = 'dup.prompt.md'")) {
+        return Response.json({
+          files: [
+            { id: 'older-id', name: 'dup.prompt.md', modifiedTime: '2026-11-10T08:00:00.000Z' },
+            { id: 'newest-id', name: 'dup.prompt.md', modifiedTime: '2026-11-17T12:30:00.000Z' },
+            { id: 'middle-id', name: 'dup.prompt.md', modifiedTime: '2026-11-12T09:15:00.000Z' },
+          ],
+        });
+      }
+      if (u.pathname.endsWith('/older-id')) return new Response('older');
+      if (u.pathname.endsWith('/newest-id')) return new Response('newest');
+      if (u.pathname.endsWith('/middle-id')) return new Response('middle');
+    },
+  });
+  await h.login();
+  const content = await (await h.context.COSMI_DRIVE.read('prompts/dup.prompt.md')).text();
+  assert.equal(content, 'newest');
+});
+
+test('syncPackages picks the latest modifiedTime when duplicate filenames exist in a folder', async () => {
+  const h = harness({
+    handle: (u) => {
+      const q = u.searchParams.get('q') || '';
+      if (q.includes("'creatures-id' in parents") && !q.includes('mimeType')) {
+        return Response.json({
+          files: [{ id: 'sub-dup', name: 'cr_dup', mimeType: 'application/vnd.google-apps.folder' }],
+        });
+      }
+      if (q.includes("'sub-dup' in parents")) {
+        return Response.json({
+          files: [
+            { id: 'mf-old', name: 'cr_dup_adult_01_portrait_manifest.json', mimeType: 'application/json', modifiedTime: '2026-11-10T00:00:00.000Z' },
+            { id: 'mf-new', name: 'cr_dup_adult_01_portrait_manifest.json', mimeType: 'application/json', modifiedTime: '2026-11-17T10:00:00.000Z' },
+          ],
+        });
+      }
+      if (u.pathname.endsWith('/mf-old')) return Response.json({ id: 'old-pkg' });
+      if (u.pathname.endsWith('/mf-new')) return Response.json({ id: 'new-pkg' });
+    },
+  });
+  const loaded = [];
+  h.context.COSMI_FORGE.loadAssetFiles = async (raw, { name }) => {
+    const manifestKey = Object.keys(raw).find((k) => k.endsWith('_manifest.json'));
+    const pkg = {
+      id: name,
+      subjectId: 'cr_dup',
+      stage: 'adult',
+      type: 'portrait',
+      manifest: JSON.parse(Buffer.from(raw[manifestKey]).toString('utf8')),
+      status: 'pending',
+    };
+    loaded.push(pkg);
+    return pkg;
+  };
+  await h.login();
+  loaded.length = 0;
+  await h.context.COSMI_DRIVE.syncPackages({ force: true });
+  assert.equal(loaded.length, 1);
+  assert.equal(loaded[0].manifest.id, 'new-pkg');
+});
+
+
 
