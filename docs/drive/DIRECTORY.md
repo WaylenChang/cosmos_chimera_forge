@@ -8,13 +8,15 @@
 ### 1.1 三層主目錄結構與過渡性檔案分層
 
 - **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（主動技／技能）
-- **第二層**：`<id>/`（主體 ID，例如 `chr_1286`、`cr_aqua_slime`、`earth_boulder_roll`）
-- **第三層（`<kind>/<id>/`）**：僅保留成果審查台中管線流程已完成、等待審查或已審查的核心交付物：
-  - **主立繪**：`<id>[_<stage>]_01_portrait[_<ver>]_main.png`
-  - **GLB 檔**：`<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].glb`
+- **未開工設計 Prompt 區（`<kind>/designed_prompts/`）**：尚未開始管線生成的主體，其設計 Prompt（`<design_id>.prompt.md`）暫存於 `<kind>/designed_prompts/`；**一旦該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<id>/` 目錄**。若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md` 檔尾（標註版本與步驟），不覆寫原文亦不另建散裝檔案。
+- **第二層**：`<id>/`（主體 ID，例如 `chr_1286`、`cr_aqua_slime`、`starter_moon_line`、`earth_boulder_roll`）
+- **第三層（`<kind>/<id>/`）**：**只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（即成果審查台等待審查或已通過的核心交付物），**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<id>/<step>/[<ver>/]`**：
+  - **設計 Prompt**：`<design_id>.prompt.md`（管線開工後自 `designed_prompts/` 移入，版本／步驟調整時追加於此檔）
+  - **主立繪**：`<id>[_<stage>]_01_portrait[_<ver>]_main.png`（僅保留當前審核中或已通過之最新版本）
+  - **GLB 檔**：`<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].glb`（僅保留當前審核中或已通過之最新版本；舊版移入 `<step>/v1/`、`v2/`…）
   - **圖鑑**：`<id>[_<stage>]_05_wiki[_<ver>].md`
   - **遊戲格式數據**：對應遊戲格式數據檔（若有）
-- **功能性／中間流程過渡性檔案子目錄（`<kind>/<id>/<step>/[<ver>/]`）**：其餘功能性與中間過渡檔案依管線步驟（有調整版本時再建 `<ver>/` 子目錄）存放，**檔名結構維持不變**：
+- **功能性／中間流程過渡性檔案子目錄（`<kind>/<id>/<step>/[<ver>/]`）**：其餘功能性、中間過渡檔案、已結束步驟產物及舊有版本，依管線步驟（有調整版本或歷史重複產出時再建 `<ver>/` 子目錄）存放，**檔名結構維持不變**：
   - **命名結構**：`id_型態(宙獸才有型態)_管線與步驟_版本(可以沒有，多版本才需要)`
   - 多檔產出（如立繪多視角圖、manifest、concept、VFX 分鏡）於基底命名後加上角色／副檔名，例如 `_front.png`、`_manifest.json`、`_concept.json`。
 
@@ -22,9 +24,10 @@
 cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0]
 ├── characters/                                    [1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD]
 │   ├── <id>/                                      # 第二層：角色 ID（無型態）
-│   │   ├── <id>_01_portrait_main.png              # 第三層保留：主立繪
-│   │   ├── <id>_03a_colab.glb                     # 第三層保留：GLB
-│   │   ├── <id>_03b_blender_v2.glb                # 第三層保留：GLB（多版本）
+│   │   ├── <design_id>.prompt.md                  # 第三層保留：設計 Prompt（開工後自 designed_prompts/ 移入，調整時追加）
+│   │   ├── <id>_01_portrait_main.png              # 第三層保留：主立繪（僅當前審核中或已通過之最新）
+│   │   ├── <id>_03a_colab.glb                     # 第三層保留：GLB（僅當前審核中或已通過之最新）
+│   │   ├── <id>_03b_blender_v2.glb                # 第三層保留：GLB（多版本最新）
 │   │   ├── <id>_05_wiki.md                        # 第三層保留：圖鑑
 │   │   ├── 00_settings/                           # 外觀與參數（有版本則進 v2/）
 │   │   │   ├── <id>_00_appearance.md
@@ -39,15 +42,18 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 │   │   │   └── <id>_01_portrait_manifest.json
 │   │   ├── 02_review_portrait/                    # 立繪審查紀錄
 │   │   │   └── <id>_02_review_portrait.json
-│   │   ├── 03a_colab/                             # Colab 中間檔（.blend、manifest、預覽等）
+│   │   ├── 03a_colab/                             # Colab 中間檔與舊版 GLB（依版本進 v1/、v2/…）
 │   │   │   ├── <id>_03a_colab.blend
-│   │   │   └── <id>_03a_colab_manifest.json
+│   │   │   ├── <id>_03a_colab_manifest.json
+│   │   │   └── v1/
+│   │   │       └── <id>_03a_colab.glb
 │   │   ├── 03b_blender/                           # AI Blender 中間檔（依版本進 v2/）
 │   │   │   └── v2/
 │   │   │       ├── <id>_03b_blender_v2.blend
 │   │   │       └── <id>_03b_blender_v2_manifest.json
 │   │   └── 04_review_3d/                          # 3D 審查紀錄
 │   │       └── <id>_04_review_3d.json
+│   ├── designed_prompts/                          # 未開工設計 Prompt（開工後移入對應 <id>/）
 │   ├── prompts/                                   # 分類專屬管線模板
 │   └── backup/                                    # 退件備份
 ├── creatures/                                     [1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C]

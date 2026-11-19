@@ -13,7 +13,11 @@
   - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；主動技使用 `moves/prompts/01b_move_vfx.prompt.md`
   - `<kind>/prompts/skeleton_actions.md`：角色（50 動作）、宙獸（57 動作與 `Socket_Weapon_R`/`L` 虛擬大手規範）、招式（施放動作與掛點對照）
 
-> **三層主目錄與過渡檔分層規範**：第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）；第三層僅保留成果審查台之主立繪（`_01_portrait[_<ver>]_main.png`）、GLB（`_<03a_colab|03b_blender>[_<ver>].glb`）、圖鑑（`_05_wiki[_<ver>].md`）與遊戲格式數據；其餘功能性、中間流程過渡檔案依管線步驟（有版本則再建 `<ver>/` 子目錄）存放於 `<kind>/<id>/<step>/[<ver>/]`，檔名結構 `id_型態(宙獸才有型態)_管線與步驟_版本` 維持不變。舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
+> **三層主目錄與過渡檔分層規範**：
+> 1. 第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）。
+> 2. **Designed Prompts 移轉與追加規則**：未開工主體的設計 Prompt 置於 `<kind>/designed_prompts/<design_id>.prompt.md`。**只要該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<id>/`**；若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md`（標註版本／步驟與調整摘要），不得覆寫原文。
+> 3. **第三層精簡規則**：`<kind>/<id>/` **只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（主立繪 `_01_portrait[_<ver>]_main.png`、最新 GLB `_<03a_colab|03b_blender>[_<ver>].glb`、圖鑑 `_05_wiki[_<ver>].md` 與遊戲格式數據）；**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<id>/<step>/[<ver>/]`**（如 `03a_colab/v1/`、`v2/`），檔名結構 `id_型態(宙獸才有型態)_管線與步驟_版本` 維持不變。
+> 4. 舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
 
 ---
 
@@ -40,6 +44,7 @@
      - 若有指定明確 `asset_id`（如 `asset_cr_aqua_slime_juvenile`），從檔名／`manifest.json` 取得 `stage`。
      - 否則先向使用者確認要執行哪一個階段（`juvenile` / `adolescent` / `adult` / `overload`），不得自行猜測。
 3. **定位相關檔案與目錄（`<kind>/<id>/` 第三層與步驟子目錄）**：
+   - **設計 Prompt（第三層／開工移入）**：優先讀取 `<kind>/<id>/*.prompt.md`；若仍在 `<kind>/designed_prompts/<design_id>.prompt.md` 且本次將開始管線生成，先建立／定位 `<kind>/<id>/` 並將該 `.prompt.md` 移入。版本或步驟有調整時，將更改內容追加於該 `.prompt.md` 檔尾。
    - **圖鑑（第三層）**：
      - 角色：`characters/<id>/<id>_05_wiki.md`
      - 宙獸：`creatures/<id>/<id>_<stage>_05_wiki.md`
@@ -81,6 +86,7 @@
    - 保留 `source/<asset_id>.glb` 原始輸出不被覆蓋。
 4. **交付格式**：所有資產一律逐檔交付至對應展開目錄，**禁止交付 ZIP 壓縮檔**。
 5. **不跨資產混用**：只讀取當前 `subject_id`（與指定 `stage`）的資料，不得借用其他角色或進化階段的圖鑑或外觀。
+6. **Prompt 移轉追加與第三層精簡**：管線開始即把 `designed_prompts/` 對應 `.prompt.md` 移入 `<kind>/<id>/`；版本或步驟調整時將更改內容追加於該 `.prompt.md`；`<kind>/<id>/` 只保留 `*.prompt.md` 與當前審核階段或已通過的檔案，已結束步驟或舊有版本一律移至 `<kind>/<id>/<step>/[<ver>/]`。
 
 ---
 
