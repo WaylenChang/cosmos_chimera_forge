@@ -11,7 +11,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from anime3d_backend_adapter import validate_glb
+from anime3d_backend_adapter import BackendError, validate_glb
 
 BACKENDS = ("pixal3d", "trellis2", "hunyuan3d21")
 CRITERIA = {
@@ -70,7 +70,7 @@ def compare(root: Path, asset_id: str, backends: list[str]) -> dict:
                 "visual_scores": None,
                 "rig_compatible": None,
             }
-        except (OSError, ValueError, RuntimeError) as exc:
+        except (OSError, ValueError, RuntimeError, BackendError) as exc:
             result["candidates"][backend] = {
                 "status": "INVALID", "reason": str(exc),
             }
@@ -91,6 +91,8 @@ def main() -> int:
         approved_root = (args.root.resolve() / "02_3d" / "colab" / safe_id(args.asset_id)).resolve()
         if not target.is_relative_to(approved_root):
             parser.error("--report must be inside the comparison asset directory")
+        if target.name != "comparison.json":
+            parser.error("--report filename must be comparison.json")
         if target.is_symlink():
             parser.error("--report must not be a symlink")
         target.parent.mkdir(parents=True, exist_ok=True)
