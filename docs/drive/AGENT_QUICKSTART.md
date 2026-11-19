@@ -11,6 +11,7 @@
   - `DIRECTORY.md`：完整目錄結構、PR #11 型態化 3D 與 Wiki 規範
   - `docs/pipeline/TRIGGERS.md`：各步驟觸發語句與分支說明
   - `<kind>/prompts/*.prompt.md`：角色／宙獸分類專屬模板；主動技使用 `moves/prompts/01b_move_vfx.prompt.md`
+  - `<kind>/prompts/skeleton_actions.md`：角色（50 動作）、宙獸（57 動作與 `Socket_Weapon_R`/`L` 虛擬大手規範）、招式（施放動作與掛點對照）
 
 > **三層主目錄與過渡檔分層規範**：第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）；第三層僅保留成果審查台之主立繪（`_01_portrait[_<ver>]_main.png`）、GLB（`_<03a_colab|03b_blender>[_<ver>].glb`）、圖鑑（`_05_wiki[_<ver>].md`）與遊戲格式數據；其餘功能性、中間流程過渡檔案依管線步驟（有版本則再建 `<ver>/` 子目錄）存放於 `<kind>/<id>/<step>/[<ver>/]`，檔名結構 `id_型態(宙獸才有型態)_管線與步驟_版本` 維持不變。舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
 

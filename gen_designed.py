@@ -475,6 +475,217 @@ LINES = {
             "adult": {"height_length": "2.45 m", "weight": "490 kg", "body_fat": "12%"},
             "overload": {"height_length": "5.5 m", "weight": "3900 kg", "body_fat": "10%"}
         }
+    },
+    # P5-10 十大進階地形試煉 BOSS（單一成年型態）
+    "line_metal_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "金",
+        "element": "metal",
+        "elements": ["metal（金）", "earth（土，副專精）"],
+        "element_palettes": ["黃銅金、玄鐵黑", "海圖羊皮米白、鈷藍"],
+        "base_parents": ["器械·天文/測量儀器", "科幻機械·機甲/外骨骼"],
+        "bases": ["黃銅星盤儀器", "三十二向羅盤花準星環", "雙桅重砲台機偶"],
+        "timeline": "大航海與古典製圖時代（16 世紀鄂圖曼星象製圖）",
+        "disposition": "精密冷靜、絕對校準",
+        "habit": "territorial",
+        "archetype": "arch_piri_reis",
+        "archetype_name": "皮里·雷斯星盤海圖",
+        "archetype_type": "P5-02 考據庫·歷史製圖與航海",
+        "archetype_meaning": "以三十二向羅盤花與黃銅星盤校準全場座標的機房試煉守護機兵",
+        "adult_dims": {"height_length": "3.2 m", "weight": "1450 kg", "body_fat": "0%"},
+        "stage_dims": {
+            "adult": {"height_length": "3.2 m", "weight": "1450 kg", "body_fat": "0%"}
+        }
+    },
+    "line_wood_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "木",
+        "element": "wood",
+        "elements": ["wood（木）", "water（水，副專精）"],
+        "element_palettes": ["翡翠綠、青苔灰", "古銅金、碧波藍"],
+        "base_parents": ["生物·爬蟲類", "植物·蕨類/藤蔓", "建築·古塔"],
+        "bases": ["巨型翠玉靈龜", "湖心古石塔背甲", "翡翠木劍弩機"],
+        "timeline": "古代東南亞水上神話",
+        "disposition": "沉穩莊嚴、鎮守聖域",
+        "habit": "territorial",
+        "archetype": "arch_kim_quy_hoan_kiem",
+        "archetype_name": "還劍湖金龜傳奇",
+        "archetype_type": "P5-02 考據庫·神話傳說",
+        "archetype_meaning": "背負古石塔與翡翠水波紋木劍、鎮守雨林深處試煉場的巨型靈龜",
+        "adult_dims": {"height_length": "3.4 m", "weight": "1680 kg", "body_fat": "14%"},
+        "stage_dims": {
+            "adult": {"height_length": "3.4 m", "weight": "1680 kg", "body_fat": "14%"}
+        }
+    },
+    "line_water_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "水",
+        "element": "water",
+        "elements": ["water（水）"],
+        "element_palettes": ["銀白、深海湛藍", "珊瑚粉、珍珠光"],
+        "base_parents": ["生物·魚類/海鰻", "自然·珊瑚/礁岩"],
+        "bases": ["深海銀鱗巨鰻", "三孔珍珠珊瑚冠", "半透明水流背鰭"],
+        "timeline": "大洋洲遠古口傳神話",
+        "disposition": "幽冷敏銳、隨流伏襲",
+        "habit": "aggressive",
+        "archetype": "arch_sina_and_eel",
+        "archetype_name": "西娜與椰樹銀鰻",
+        "archetype_type": "P5-02 考據庫·神話傳說",
+        "archetype_meaning": "盤踞深海暗礁、頭冠嵌有三孔珊瑚殼的銀白深淵巨鰻",
+        "adult_dims": {"height_length": "4.8 m", "weight": "820 kg", "body_fat": "10%"},
+        "stage_dims": {
+            "adult": {"height_length": "4.8 m", "weight": "820 kg", "body_fat": "10%"}
+        }
+    },
+    "line_fire_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "火",
+        "element": "fire",
+        "elements": ["fire（火）", "earth（土，副專精）"],
+        "element_palettes": ["黑曜岩黑、熔岩赤紅", "熾金、古銅棕"],
+        "base_parents": ["生物·爬蟲類", "載具·戰車輪輻"],
+        "bases": ["火山黑曜石巨蚺", "燃燒火油雙輪戰車輪", "熔岩裂縫鱗甲"],
+        "timeline": "遠古安納托利亞神話",
+        "disposition": "熾烈狂暴、正面突破",
+        "habit": "aggressive",
+        "archetype": "arch_illuyanka",
+        "archetype_name": "伊盧揚卡風暴巨蛇",
+        "archetype_type": "P5-02 考據庫·神話象徵",
+        "archetype_meaning": "肩懸雙輪戰車火輪、盤踞火山岩窟的赤銅巨蚺",
+        "adult_dims": {"height_length": "4.5 m", "weight": "1120 kg", "body_fat": "8%"},
+        "stage_dims": {
+            "adult": {"height_length": "4.5 m", "weight": "1120 kg", "body_fat": "8%"}
+        }
+    },
+    "line_earth_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "土",
+        "element": "earth",
+        "elements": ["earth（土）"],
+        "element_palettes": ["紅褐花崗岩、赭紅", "金砂、蒼青"],
+        "base_parents": ["自然·岩石/礦脈", "生物·哺乳類", "建築·石窟山門"],
+        "bases": ["紅褐花崗岩雄獅", "山門獅爪石柱前足", "彩繪壁畫陶片鬃毛"],
+        "timeline": "古代南亞岩壁宮殿文明",
+        "disposition": "威嚴沉重、寸步不讓",
+        "habit": "territorial",
+        "archetype": "arch_kashyapa_sigiriya",
+        "archetype_name": "迦葉波與獅子岩",
+        "archetype_type": "P5-02 考據庫·建築與文化遺產",
+        "archetype_meaning": "如絕壁山門巨獅般鎮守地底礦坑試煉場的花崗岩巨獸",
+        "adult_dims": {"height_length": "3.1 m", "weight": "1850 kg", "body_fat": "4%"},
+        "stage_dims": {
+            "adult": {"height_length": "3.1 m", "weight": "1850 kg", "body_fat": "4%"}
+        }
+    },
+    "line_ice_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "冰",
+        "element": "ice",
+        "elements": ["ice（冰）"],
+        "element_palettes": ["冰川藍白、雪白", "朽木棕、黃銅金"],
+        "base_parents": ["生物·海洋哺乳類", "載具·木造帆船", "器械·天文/測量儀器"],
+        "bases": ["極地巨鯨", "冰封三桅帆船龍骨脊", "黃銅六分儀冰晶角"],
+        "timeline": "近代極地探險時代（20 世紀初南極遠征）",
+        "disposition": "堅忍沉靜、破冰前行",
+        "habit": "territorial",
+        "archetype": "arch_ernest_shackleton",
+        "archetype_name": "歐內斯特·沙克爾頓冰海遠征",
+        "archetype_type": "P5-02 考據庫·極地探險史",
+        "archetype_meaning": "背負三桅帆船冰脊與黃銅六分儀角、橫渡永久凍土的極地巨鯨",
+        "adult_dims": {"height_length": "4.6 m", "weight": "2400 kg", "body_fat": "22%"},
+        "stage_dims": {
+            "adult": {"height_length": "4.6 m", "weight": "2400 kg", "body_fat": "22%"}
+        }
+    },
+    "line_thunder_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "雷",
+        "element": "thunder",
+        "elements": ["thunder（雷）", "metal（金，副專精）"],
+        "element_palettes": ["灰花崗岩、電光紫", "金幣黃、湛藍電弧"],
+        "base_parents": ["建築·方尖碑", "生物·哺乳類"],
+        "bases": ["花崗岩假窗方尖碑脊塔", "雷電獅獸身軀", "新月圓盤金環"],
+        "timeline": "古代東非阿克蘇姆王國",
+        "disposition": "高傲迅捷、引雷為刃",
+        "habit": "aggressive",
+        "archetype": "arch_ezana_aksum",
+        "archetype_name": "埃扎納王與方尖碑",
+        "archetype_type": "P5-02 考據庫·古代王國與碑銘",
+        "archetype_meaning": "背負多層假窗方尖碑導引高塔落雷、以新月金盤聚能突刺的電光巨獸",
+        "adult_dims": {"height_length": "2.4 m", "weight": "520 kg", "body_fat": "10%"},
+        "stage_dims": {
+            "adult": {"height_length": "2.4 m", "weight": "520 kg", "body_fat": "10%"}
+        }
+    },
+    "line_wind_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "風",
+        "element": "wind",
+        "elements": ["wind（風）"],
+        "element_palettes": ["深航藍、銀鋁白", "雲灰、星輝青"],
+        "base_parents": ["生物·鳥類", "載具·跨洋飛行器"],
+        "bases": ["平流層巨翼信天翁", "三引擎渦輪推進器", "南十字星羅盤尾跡"],
+        "timeline": "近代跨洋航空開拓時代（1928 南十字星號）",
+        "disposition": "自由凌厲、御風巡航",
+        "habit": "aggressive",
+        "archetype": "arch_kingsford_smith",
+        "archetype_name": "查爾斯·金斯福德·史密斯跨洋航線",
+        "archetype_type": "P5-02 考據庫·航空開拓史",
+        "archetype_meaning": "搭載三具渦輪氣流引擎、沿南十字星航跡衝破平流層的太空試煉巨禽",
+        "adult_dims": {"height_length": "3.6 m", "weight": "480 kg", "body_fat": "9%"},
+        "stage_dims": {
+            "adult": {"height_length": "3.6 m", "weight": "480 kg", "body_fat": "9%"}
+        }
+    },
+    "line_shadow_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "影",
+        "element": "shadow",
+        "elements": ["shadow（影）"],
+        "element_palettes": ["墨夜黑、幽紫", "貝殼白、鬼火青"],
+        "base_parents": ["生物·軟體動物/章魚", "器物·幻燈/珊瑚面具"],
+        "bases": ["墨霧八腕巨蛸靈體", "珊瑚雕紋貝殼面具", "千盞幽藍引魂幻燈"],
+        "timeline": "古代印度洋群島口傳傳說",
+        "disposition": "詭譎深邃、以幻惑敵",
+        "habit": "dominant",
+        "archetype": "arch_rannamaari",
+        "archetype_name": "蘭納瑪里海魔",
+        "archetype_type": "P5-02 考據庫·民間傳說",
+        "archetype_meaning": "在迷宮深處懸掛千盞幽藍幻燈、喚出重力奇點吞噬侵入者的墨影巨蛸",
+        "adult_dims": {"height_length": "3.8 m", "weight": "340 kg", "body_fat": "5%"},
+        "stage_dims": {
+            "adult": {"height_length": "3.8 m", "weight": "340 kg", "body_fat": "5%"}
+        }
+    },
+    "line_light_trial_boss": {
+        "batch": "Data/_incoming/p5-10-trial-bosses-draft-01",
+        "single_stage": True,
+        "code_zh": "光",
+        "element": "light",
+        "elements": ["light（光）", "fire（火，副專精）"],
+        "element_palettes": ["滑石象牙白、聖金", "暖琥珀、青銅綠"],
+        "base_parents": ["生物·哺乳類", "器物·方印/祭祀香爐"],
+        "bases": ["滑石玉雕單角神牛", "菩提葉金紋護甲", "鏤空聖光香爐角冠"],
+        "timeline": "遠古印度河谷文明（哈拉帕印章意象）",
+        "disposition": "聖潔威嚴、審判迷障",
+        "habit": "dominant",
+        "archetype": "arch_harappan_unicorn",
+        "archetype_name": "哈拉帕獨角聖獸",
+        "archetype_type": "P5-02 考據庫·遠古印章文明",
+        "archetype_meaning": "額前單角托舉鏤空光爐、以方印聖光貫穿神廟試煉場的古代聖牛",
+        "adult_dims": {"height_length": "2.4 m", "weight": "610 kg", "body_fat": "11%"},
+        "stage_dims": {
+            "adult": {"height_length": "2.4 m", "weight": "610 kg", "body_fat": "11%"}
+        }
     }
 }
 
@@ -1321,6 +1532,7 @@ def build_drive_creature_item(spec: dict) -> dict:
             "name_en": spec["name_en"],
             "naming_note": f"四階段統一命名；{spec['archetype_name']}。",
             "size_class": sz,
+            "grip_mode": "two_handed" if shp == "line" and rng == "melee" else "one_hand_shield",
             "habit": "dominant" if stg == "overload" else spec["habit"],
             "height_length": hl,
             "weight": wt,
@@ -1391,9 +1603,36 @@ def load_all_kind(repo: Path, kind: str) -> dict[str, dict]:
     return out
 
 
+def load_grips(repo: Path) -> dict[str, str]:
+    out: dict[str, str] = {}
+    p = repo / "Data/_incoming/life-crafting-draft-01/craft-grips/craft-grips.json"
+    if p.exists():
+        for item in json.loads(p.read_text(encoding="utf-8")):
+            grips = item.get("grips") or []
+            if grips:
+                out[item["species"]] = grips[0]
+    return out
+
+
+def infer_grip_mode(species_id: str, ai_style: str, grips_by_species: dict[str, str], fallback_move: dict | None = None) -> str:
+    if species_id in grips_by_species:
+        return grips_by_species[species_id]
+    if ai_style == "charge":
+        return "two_handed"
+    if ai_style == "flank":
+        return "dual_wield"
+    if ai_style in ("keep_distance", "hold"):
+        return "one_hand_shield"
+    if fallback_move:
+        if fallback_move.get("movement") == "dash" or fallback_move.get("shape") == "line" and fallback_move.get("range_class") == "melee":
+            return "two_handed"
+    return "one_hand_shield"
+
+
 def main() -> int:
     moves_all = load_all_kind(REPO, "moves")
     traits_all = load_all_kind(REPO, "traits")
+    grips_by_species = load_grips(REPO)
     items = []
 
     for line_id, extra in LINES.items():
@@ -1403,8 +1642,9 @@ def main() -> int:
         copy_by_id = {x["id"]: x for k in ("creatures", "moves", "traits") for x in copy.get(k, [])}
         stages = sorted((c for c in creatures.values() if c["line_id"] == line_id),
                         key=lambda c: ["juvenile", "adolescent", "adult"].index(c["stage"]))
-        if len(stages) != 3:
-            print(f"error: {line_id} has {len(stages)} stages in {batch}", file=sys.stderr)
+        expected_stages = 1 if extra.get("single_stage") else 3
+        if len(stages) != expected_stages:
+            print(f"error: {line_id} has {len(stages)} stages in {batch} (expected {expected_stages})", file=sys.stderr)
             return 1
         adult = stages[-1]
         concept = adult["concept"]
@@ -1426,6 +1666,8 @@ def main() -> int:
                 "name_en": cp.get("name_en", ""),
                 "naming_note": cp.get("naming_note", ""),
                 "size_class": c["size_class"],
+                "ai_style": c.get("ai_style", ""),
+                "grip_mode": infer_grip_mode(c["id"], c.get("ai_style", ""), grips_by_species, mv),
                 "niches": c.get("niches", []),
                 "height_length": s_dims["height_length"],
                 "weight": s_dims["weight"],
@@ -1448,7 +1690,9 @@ def main() -> int:
                 },
             })
         if line_id in OVERLOADS:
-            locked_stages.append(OVERLOADS[line_id])
+            ov_entry = dict(OVERLOADS[line_id])
+            ov_entry.setdefault("grip_mode", locked_stages[-1]["grip_mode"])
+            locked_stages.append(ov_entry)
         tcp = copy_by_id.get(trait_id, {})
         ov = OVERLOADS.get(line_id, {})
         items.append({
@@ -1481,7 +1725,11 @@ def main() -> int:
                 **extra["adult_dims"],
                 "formula": " + ".join(extra["elements"]) + " × " + " + ".join(extra["bases"]) + " × " + extra.get("archetype_name", concept["archetype"]),
                 "locked": {
-                    "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
+                    "status": (
+                        "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）"
+                        if extra.get("single_stage")
+                        else "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）"
+                    ),
                     "stages": locked_stages,
                     "trait": {"trait_id": trait_id, "name_zh": tcp.get("name_zh", ""), "idea_zh": tcp.get("desc_zh", "")},
                     "overload": ov.get("name_zh", "") + "（" + ov.get("creature_id", "") + " · XL）：" + ov.get("look", "超載爆發型態") if ov else "暫無超載型態",

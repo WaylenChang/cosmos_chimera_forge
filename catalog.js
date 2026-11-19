@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.9.0",
+  version: "2.10.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -1025,6 +1025,65 @@ window.COSMI_CATALOG = {
     return n ? `${n.zh}（${n.mode_zh} ${n.radius_m}m）` : (v || "未定");
   },
 
+  // 訓練家職能（對應野生宙獸習性 HABITS，決定主動挑戰距離與反應強度）
+  TRAINER_FUNCTIONS: [
+    { v: "observant", zh: "考據／專注", radius_m: 0, desc: "0m 主動範圍：專注考據、採集或調律，不主動攔路開戰，僅接受主動對話挑戰" },
+    { v: "escort", zh: "護衛／戒備", radius_m: 4, desc: "4m 主動範圍：看守據點或護送行囊，近身才主動迎戰" },
+    { v: "sparring", zh: "歷練／切磋", radius_m: 8, desc: "8m 主動範圍：標準感應距離，發現玩家即上前切磋" },
+    { v: "warden", zh: "巡守／管轄", radius_m: 14, desc: "14m 主動範圍：中遠距巡查並主動盤查對戰" },
+    { v: "pursuit", zh: "追獵／懸賞", radius_m: 20, desc: "20m 主動範圍：遠距主動衝鋒挑戰" },
+    { v: "champion", zh: "征討／霸主", radius_m: 28, desc: "28m 主動範圍：超廣域壓制追擊" }
+  ],
+
+  // 訓練家職務目錄（對應野生宙獸生態棲位 NICHES；僅活動於聚落外之道路與野外）
+  TRAINER_DUTIES: [
+    { v: "duty_road_courier", zh: "古道驛傳", resource: "區域主道與驛站間往返遞送補給", mode: "shuttle", mode_zh: "來回週期", radius_m: 22, functions: ["observant", "escort", "sparring"], habitats: ["forest", "river_valley", "plateau", "grassland", "desert", "canyon", "eternal_day", "tundra"] },
+    { v: "duty_circuit_patrol", zh: "山林巡守", resource: "沿林道與丘陵線反覆巡邏警戒", mode: "loop", mode_zh: "環狀週期", radius_m: 26, functions: ["escort", "sparring", "warden"], habitats: ["forest", "river_valley", "plateau", "archipelago", "mountain", "moraine", "granite_domes"] },
+    { v: "duty_waterside_angling", zh: "水域垂釣", resource: "河岸、湖畔與峽灣水域定點垂釣", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 12, functions: ["observant", "escort", "sparring"], habitats: ["river_valley", "ice_field", "fjord", "archipelago", "swamp", "tundra", "glacier", "cirque", "moraine"] },
+    { v: "duty_prospect_mining", zh: "礦脈勘探", resource: "露頭礦脈與營地間往返採樣", mode: "shuttle", mode_zh: "來回週期", radius_m: 16, functions: ["observant", "escort", "warden"], habitats: ["volcano", "rift_valley", "plateau", "canyon", "cave", "desert", "mountain", "cirque", "karst", "basalt_terrace", "granite_domes", "slate_cliffs"] },
+    { v: "duty_botanical_foraging", zh: "植群採集", resource: "林緣花果與草藥點環狀串訪採集", mode: "loop", mode_zh: "環狀週期", radius_m: 18, functions: ["observant", "sparring"], habitats: ["forest", "river_valley", "plateau", "archipelago", "eternal_day", "grassland", "swamp", "karst"] },
+    { v: "duty_ruin_excavation", zh: "遺蹟考據", resource: "古蹟與裂谷石碑區短距測繪", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 11, functions: ["observant", "escort", "warden"], habitats: ["rift_valley", "canyon", "cave", "eternal_day", "eternal_night", "desert", "karst", "basalt_terrace", "slate_cliffs"] },
+    { v: "duty_martial_training", zh: "荒野苦修", resource: "險峻地貌就地對練與磨礪技藝", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 14, functions: ["sparring", "warden", "pursuit"], habitats: ["volcano", "rift_valley", "plateau", "canyon", "desert", "mountain", "basalt_terrace", "granite_domes", "slate_cliffs"] },
+    { v: "duty_shrine_pilgrimage", zh: "聖地巡禮", resource: "繞行神廟、祭壇與靈脈進行巡禮", mode: "loop", mode_zh: "環狀週期", radius_m: 24, functions: ["observant", "sparring", "warden"], habitats: ["forest", "river_valley", "ice_field", "fjord", "plateau", "eternal_day", "eternal_night", "grassland", "mountain", "cirque"] },
+    { v: "duty_roving_minstrel", zh: "雲遊傳唱", resource: "沿城鄉外圍古道漫遊採風", mode: "unbounded_random", mode_zh: "無限制隨機", radius_m: 20, functions: ["observant", "sparring"], habitats: ["forest", "river_valley", "volcano", "rift_valley", "ice_field", "fjord", "plateau", "archipelago", "canyon", "cave", "eternal_day", "eternal_night", "grassland", "desert", "swamp", "mountain", "tundra", "glacier", "cirque", "moraine", "karst", "basalt_terrace", "granite_domes", "slate_cliffs"] },
+    { v: "duty_night_watch", zh: "暗夜潛行", resource: "永夜與陰影地帶伏行守望", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 15, functions: ["escort", "warden", "pursuit"], habitats: ["forest", "rift_valley", "ice_field", "canyon", "cave", "eternal_night", "swamp", "tundra", "glacier", "karst", "slate_cliffs"] },
+    { v: "duty_bounty_hunting", zh: "懸賞追獵", resource: "跨區域廣域追蹤懸賞目標", mode: "unbounded_random", mode_zh: "無限制隨機", radius_m: 28, functions: ["warden", "pursuit", "champion"], habitats: ["forest", "river_valley", "volcano", "rift_valley", "ice_field", "fjord", "plateau", "archipelago", "canyon", "cave", "eternal_day", "eternal_night", "grassland", "desert", "swamp", "mountain", "tundra", "glacier", "cirque", "moraine", "karst", "basalt_terrace", "granite_domes", "slate_cliffs"] },
+    { v: "duty_frontier_trailblazing", zh: "荒原拓荒", resource: "極地、荒原與火山外圍探勘路線", mode: "unbounded_random", mode_zh: "無限制隨機", radius_m: 22, functions: ["sparring", "warden", "pursuit"], habitats: ["volcano", "rift_valley", "ice_field", "fjord", "plateau", "archipelago", "canyon", "eternal_day", "eternal_night", "desert", "swamp", "mountain", "tundra", "glacier", "cirque", "moraine", "basalt_terrace", "granite_domes"] },
+    { v: "duty_leyline_tuning", zh: "以太調律", resource: "地熱噴泉、晶簇與能量異常點測繪", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 13, functions: ["observant", "escort", "warden"], habitats: ["volcano", "rift_valley", "ice_field", "plateau", "cave", "eternal_day", "eternal_night", "mountain", "glacier", "basalt_terrace"] },
+    { v: "duty_trial_wardenship", zh: "試煉鎮守", resource: "進階地形與地城入口守望", mode: "bounded_random", mode_zh: "區域隨機", radius_m: 10, functions: ["warden", "champion"], habitats: ["forest", "river_valley", "volcano", "rift_valley", "ice_field", "fjord", "plateau", "archipelago", "canyon", "cave", "eternal_day", "eternal_night", "grassland", "desert", "swamp", "mountain", "tundra", "glacier", "cirque", "moraine", "karst", "basalt_terrace", "granite_domes", "slate_cliffs"] }
+  ],
+
+  // 聚落路人 NPC 職務（對應 NpcRole，僅限所屬聚落範圍內活動，不跑到城外）
+  NPC_DUTIES: [
+    { v: "IdlePlay", role: "None", zh: "空地嬉戲／閒晃", mode: "bounded_random", radius_m: 6 },
+    { v: "FieldTending", role: "Farmer", zh: "田園照料", mode: "shuttle", radius_m: 8 },
+    { v: "CatchSorting", role: "Forager", zh: "獵獲整理", mode: "bounded_random", radius_m: 7 },
+    { v: "NetMending", role: "Fisher", zh: "網具修整", mode: "bounded_random", radius_m: 6 },
+    { v: "OreSorting", role: "Miner", zh: "礦石分類", mode: "shuttle", radius_m: 7 },
+    { v: "WorkshopCraft", role: "Artisan", zh: "工坊鍛造", mode: "bounded_random", radius_m: 5 },
+    { v: "MarketHawking", role: "Merchant", zh: "市集兜售", mode: "shuttle", radius_m: 8 },
+    { v: "TownPatrol", role: "Guard", zh: "城鎮巡邏", mode: "loop", radius_m: 12 },
+    { v: "ArchiveStudy", role: "Scholar", zh: "典籍研讀", mode: "bounded_random", radius_m: 5 },
+    { v: "ShrineBlessing", role: "Cleric", zh: "壇前祈福", mode: "bounded_random", radius_m: 6 },
+    { v: "HerbTriage", role: "Healer", zh: "草藥調劑", mode: "bounded_random", radius_m: 6 },
+    { v: "CargoHauling", role: "Laborer", zh: "貨物搬運", mode: "shuttle", radius_m: 10 },
+    { v: "StreetBusking", role: "Performer", zh: "街頭獻藝", mode: "loop", radius_m: 7 },
+    { v: "CivicInspect", role: "Leader", zh: "政務巡視", mode: "loop", radius_m: 11 }
+  ],
+
+  trainerFunctionZh(v) {
+    const f = this.TRAINER_FUNCTIONS.find(x => x.v === v);
+    return f ? `${f.zh}（${f.radius_m}m）` : (v || "未定");
+  },
+  trainerDutyZh(v) {
+    const d = this.TRAINER_DUTIES.find(x => x.v === v);
+    return d ? `${d.zh}（${d.mode_zh} ${d.radius_m}m）` : (v || "未定");
+  },
+  npcDutyZh(v) {
+    const d = this.NPC_DUTIES.find(x => x.v === v);
+    return d ? `${d.zh}（${d.radius_m}m 城內）` : (v || "未定");
+  },
+
   CHARACTER: {
     // 角色人種：純粹外貌生理表型特徵，與文化地區互相獨立
     ethnicity: [
@@ -1147,7 +1206,55 @@ window.COSMI_CATALOG = {
       "過甜的油膩食物", "粗製濫造的機械", "被打斷思路", "突如其來的巨響", "繁瑣的繁文縟節", "浪費食物", "束縛感", "悶熱的封閉空間", "枯燥的長篇大論",
       "迷路", "苦澀的藥草", "沾到泥巴", "說教", "虛偽的奉承", "嚴寒凍僵的感覺", "未知"
     ],
-    role: ["玩家角色預設外觀", "隊友 NPC", "大廳 NPC：研究員", "大廳 NPC：孵蛋師", "大廳 NPC：商人", "星球原住民 NPC", "對手訓練家", "未知"],
+    role: ["玩家角色預設外觀", "隊友 NPC", "大廳 NPC：研究員", "大廳 NPC：孵蛋師", "大廳 NPC：商人", "星球原住民 NPC", "對手訓練家", "地形試煉主", "生活技能導師", "未知"],
+    // 訓練家與角色職業目錄（遊戲內職業 + 星球聚落時代職業 + 跨文化地區×時間線職業）
+    professions: [
+      // 遊戲內訓練家職業
+      { v: "trv_rookie", zh: "見習旅人（遊戲內）", origin: "ingame", duties: ["duty_road_courier", "duty_roving_minstrel", "duty_botanical_foraging"], default_function: "sparring", w: 10 },
+      { v: "trv_hiker", zh: "登山客（遊戲內）", origin: "ingame", duties: ["duty_prospect_mining", "duty_frontier_trailblazing", "duty_circuit_patrol"], default_function: "sparring", w: 8 },
+      { v: "trv_angler", zh: "釣客（遊戲內）", origin: "ingame", duties: ["duty_waterside_angling", "duty_roving_minstrel", "duty_road_courier"], default_function: "observant", w: 8 },
+      { v: "trv_ranger", zh: "森林巡守（遊戲內）", origin: "ingame", duties: ["duty_circuit_patrol", "duty_botanical_foraging", "duty_frontier_trailblazing"], default_function: "warden", w: 8 },
+      { v: "trv_brawler", zh: "拳術家（遊戲內）", origin: "ingame", duties: ["duty_martial_training", "duty_frontier_trailblazing", "duty_road_courier"], default_function: "pursuit", w: 8 },
+      { v: "trv_scholar", zh: "學者（遊戲內）", origin: "ingame", duties: ["duty_ruin_excavation", "duty_leyline_tuning", "duty_roving_minstrel"], default_function: "observant", w: 8 },
+      { v: "trv_bard", zh: "吟遊詩人（遊戲內）", origin: "ingame", duties: ["duty_roving_minstrel", "duty_road_courier", "duty_shrine_pilgrimage"], default_function: "observant", w: 8 },
+      { v: "trv_pilgrim", zh: "巡禮祭司（遊戲內）", origin: "ingame", duties: ["duty_shrine_pilgrimage", "duty_leyline_tuning", "duty_roving_minstrel"], default_function: "sparring", w: 8 },
+      { v: "trv_nightwalker", zh: "夜行者（遊戲內）", origin: "ingame", duties: ["duty_night_watch", "duty_bounty_hunting", "duty_ruin_excavation"], default_function: "pursuit", w: 8 },
+      { v: "trv_bounty", zh: "賞金獵人（遊戲內）", origin: "ingame", duties: ["duty_bounty_hunting", "duty_frontier_trailblazing", "duty_night_watch"], default_function: "champion", w: 6 },
+      { v: "trv_trial_master", zh: "地形試煉主（遊戲內）", origin: "ingame", duties: ["duty_trial_wardenship", "duty_leyline_tuning"], default_function: "champion", w: 4 },
+      { v: "trv_artisan_mentor", zh: "生活技能導師（遊戲內）", origin: "ingame", duties: ["duty_botanical_foraging", "duty_prospect_mining", "duty_waterside_angling", "duty_roving_minstrel"], default_function: "observant", w: 5 },
+      // 星球聚落八時代職業
+      { v: "era_primitive_totem_hunter", zh: "原始圖騰獵師（原始時代）", origin: "era", timeline: "遠古石器/部落圖騰紀元", duties: ["duty_circuit_patrol", "duty_frontier_trailblazing", "duty_shrine_pilgrimage"], default_function: "warden", w: 6 },
+      { v: "era_agrarian_field_warden", zh: "農耕巡田武者（農耕時代）", origin: "era", timeline: "封建王朝/古典帝國盛世", duties: ["duty_botanical_foraging", "duty_road_courier", "duty_martial_training"], default_function: "escort", w: 6 },
+      { v: "era_mercantile_caravan_guard", zh: "商貿護隊鏢師（商貿時代）", origin: "era", timeline: "大航海大發現/符文星盤開拓", duties: ["duty_road_courier", "duty_circuit_patrol", "duty_bounty_hunting"], default_function: "escort", w: 6 },
+      { v: "era_industrial_rail_inspector", zh: "工業鐵道巡檢（工業時代）", origin: "era", timeline: "柴油重工/符文鋼鐵要塞", duties: ["duty_prospect_mining", "duty_road_courier", "duty_frontier_trailblazing"], default_function: "warden", w: 6 },
+      { v: "era_steampunk_airship_navigator", zh: "蒸汽飛艇領航（蒸汽龐克）", origin: "era", timeline: "以太蒸汽/魔導第一次工業革命", duties: ["duty_frontier_trailblazing", "duty_leyline_tuning", "duty_roving_minstrel"], default_function: "sparring", w: 6 },
+      { v: "era_future_orbital_ranger", zh: "未來星軌巡航（未來時代）", origin: "era", timeline: "近未來軌道殖民/近地宙域", duties: ["duty_leyline_tuning", "duty_bounty_hunting", "duty_circuit_patrol"], default_function: "warden", w: 6 },
+      { v: "era_wasteland_salvage_hunter", zh: "廢土拾荒獵人（廢土時代）", origin: "era", timeline: "後啟示末日/廢土殘響重生", duties: ["duty_bounty_hunting", "duty_ruin_excavation", "duty_prospect_mining"], default_function: "pursuit", w: 6 },
+      { v: "era_ancient_relic_keeper", zh: "遠古遺蹟守衛（遠古時代）", origin: "era", timeline: "遠古神話/原始神代", duties: ["duty_ruin_excavation", "duty_trial_wardenship", "duty_shrine_pilgrimage"], default_function: "warden", w: 5 },
+      // 跨文化地區 × 時間線職業
+      { v: "cul_east_asia_talisman_swordsman", zh: "東亞符劍修者（東亞×古典/賽博）", origin: "culture", region: "東亞", timeline: "封建王朝/古典帝國盛世", duties: ["duty_shrine_pilgrimage", "duty_martial_training", "duty_roving_minstrel"], default_function: "sparring", w: 6 },
+      { v: "cul_south_asia_prana_ascetic", zh: "南亞氣脈苦行者（南亞×神代/古典）", origin: "culture", region: "南亞", timeline: "青銅神話/古典英雄時代", duties: ["duty_shrine_pilgrimage", "duty_leyline_tuning", "duty_martial_training"], default_function: "observant", w: 5 },
+      { v: "cul_southeast_asia_monsoon_wayfinder", zh: "東南亞季風領航者（東南亞×大航海/太陽龐克）", origin: "culture", region: "東南亞", timeline: "大航海大發現/符文星盤開拓", duties: ["duty_waterside_angling", "duty_botanical_foraging", "duty_frontier_trailblazing"], default_function: "sparring", w: 5 },
+      { v: "cul_middle_east_astrolabe_scholar", zh: "西亞星盤學者（西亞/中東×古典/蒸汽）", origin: "culture", region: "西亞/中東", timeline: "封建王朝/古典帝國盛世", duties: ["duty_ruin_excavation", "duty_leyline_tuning", "duty_road_courier"], default_function: "observant", w: 5 },
+      { v: "cul_africa_solarpunk_geomancer", zh: "非洲太陽能地脈師（非洲×太陽龐克）", origin: "culture", region: "非洲", timeline: "太陽龐克/生態科技綠色未來", duties: ["duty_leyline_tuning", "duty_botanical_foraging", "duty_frontier_trailblazing"], default_function: "warden", w: 5 },
+      { v: "cul_europe_high_fantasy_mage_knight", zh: "歐洲高奇幻魔導騎士（歐洲×騎士魔導）", origin: "culture", region: "歐洲", timeline: "中世紀高奇幻/騎士魔導王國", duties: ["duty_circuit_patrol", "duty_martial_training", "duty_bounty_hunting"], default_function: "warden", w: 6 },
+      { v: "cul_americas_canyon_sky_rider", zh: "美洲峽谷空騎手（美洲×開拓/圖騰）", origin: "culture", region: "美洲", timeline: "遠古石器/部落圖騰紀元", duties: ["duty_frontier_trailblazing", "duty_prospect_mining", "duty_roving_minstrel"], default_function: "sparring", w: 5 },
+      { v: "cul_oceania_star_navigator", zh: "大洋洲星象航海師（大洋洲×大航海）", origin: "culture", region: "大洋洲", timeline: "大航海大發現/符文星盤開拓", duties: ["duty_waterside_angling", "duty_roving_minstrel", "duty_frontier_trailblazing"], default_function: "sparring", w: 5 },
+      { v: "cul_central_asia_steppe_falconer", zh: "中亞草原獵鷹師（中亞/北亞×古典）", origin: "culture", region: "中亞/北亞", timeline: "封建王朝/古典帝國盛世", duties: ["duty_bounty_hunting", "duty_circuit_patrol", "duty_road_courier"], default_function: "pursuit", w: 5 },
+      { v: "cul_polar_aurora_sled_scout", zh: "極地極光雪橇斥候（極地×圖騰/近未來）", origin: "culture", region: "極地", timeline: "遠古石器/部落圖騰紀元", duties: ["duty_frontier_trailblazing", "duty_night_watch", "duty_waterside_angling"], default_function: "escort", w: 5 },
+      { v: "cul_cosmopolis_cyber_netrunner", zh: "世界都市賽博駭客（多元交融×晶石賽博）", origin: "culture", region: "多元交融/世界都市", timeline: "晶石賽博/霓虹魔導義體紀元", duties: ["duty_night_watch", "duty_leyline_tuning", "duty_bounty_hunting"], default_function: "pursuit", w: 6 },
+      { v: "cul_interstellar_warp_pioneer", zh: "星際曲率開拓者（星際宙域×太空歌劇）", origin: "culture", region: "星際宙域/跨星系殖民地", timeline: "太空歌劇/星際魔導帝國", duties: ["duty_frontier_trailblazing", "duty_leyline_tuning", "duty_bounty_hunting"], default_function: "champion", w: 5 }
+    ],
+    getWeightedProfessions(context) {
+      const reg = context?.region;
+      const tl = context?.timeline;
+      return this.professions.map(p => {
+        let boost = 1;
+        if (reg && p.region && p.region === reg) boost *= 4;
+        if (tl && p.timeline && p.timeline === tl) boost *= 3;
+        return Object.assign({}, p, { w: (p.w ?? 1) * boost });
+      });
+    },
     role_poses: {
       "玩家角色預設外觀": [
         "單手握持收服道具準備投擲，身體側轉微屈，衣袍披風在風中飛揚，眼神堅毅自信",
@@ -1190,6 +1297,14 @@ window.COSMI_CATALOG = {
         "單手高高拋起收服道具，眼神銳利如鷹隼直視鏡頭，周身散發強烈壓迫戰意",
         "單手猛力甩動披肩斗篷，另一手指向前方宣告決鬥，身後氣流激盪呼嘯",
         "背對畫面微微側頭，露出一半冷酷眼神，指尖扣在收服道具卡位蓄勢待發"
+      ],
+      "地形試煉主": [
+        "背負屬性圖騰長披風立於地城門階前，單手持收服道具沉穩凝視挑戰者",
+        "雙臂微展引動地形對應元素氣場，身形如石柱般鎮守試煉入口"
+      ],
+      "生活技能導師": [
+        "腰間掛滿採集工具與筆記卷軸，一手比劃野外實務技巧，神情從容親切",
+        "蹲身檢視野外礦石與植物樣本，身旁懸浮著調校好的收服道具"
       ],
       "未知": [
         "呈極具張力的冒險戰鬥架勢，右手握持收服道具，披風髮絲迎風翻卷，眼神冷靜銳利",
@@ -1809,14 +1924,26 @@ window.COSMI_CATALOG = {
       { id: "hit_react", zh: "受擊", f: 15 },
       { id: "faint", zh: "倒下", f: 40 },
       { id: "boss_enrage", zh: "BOSS 狂暴（階段轉換威嚇咆哮）", f: 48, ev: ["ev_spawn_fx@18"] },
-      { id: "atk_melee_front", zh: "近戰：正前", f: 26, ev: ["ev_hit@12", "ev_end_lock@20"] },
-      { id: "atk_melee_sweep", zh: "近戰：橫掃", f: 30, ev: ["ev_hit@14", "ev_end_lock@24"] },
-      { id: "atk_melee_burst", zh: "近戰：擴散", f: 34, ev: ["ev_spawn_fx@16", "ev_hit@18"] },
-      { id: "atk_dash", zh: "突進：直線衝鋒攻擊", f: 28, rm: true, ev: ["ev_hit@12", "ev_end_lock@22"] },
-      { id: "atk_ranged_line", zh: "射擊：直線", f: 30, ev: ["ev_spawn_fx@14"] },
-      { id: "atk_ranged_cone", zh: "射擊：扇形", f: 30, ev: ["ev_spawn_fx@14"] },
-      { id: "atk_ranged_arc", zh: "射擊：拋物線", f: 34, ev: ["ev_spawn_fx@18"] },
-      { id: "atk_burst_target", zh: "遠程：指定目標點爆破引導", f: 34, ev: ["ev_spawn_fx@16", "ev_hit@18"] },
+      { id: "atk_melee_front", zh: "近戰：正前", f: 26, ev: ["ev_hit@12", "ev_end_lock@20"], grips: ["two_handed", "one_hand_shield"], dist: "melee" },
+      { id: "atk_melee_front_r", zh: "雙持近戰（右手）：正前快斬", f: 22, ev: ["ev_hit@9", "ev_end_lock@16"], grips: ["dual_wield"], dist: "melee" },
+      { id: "atk_melee_front_l", zh: "雙持近戰（左手）：正前快斬", f: 22, ev: ["ev_hit@9", "ev_end_lock@16"], grips: ["dual_wield"], dist: "melee" },
+      { id: "atk_melee_sweep", zh: "近戰：橫掃", f: 30, ev: ["ev_hit@14", "ev_end_lock@24"], grips: ["two_handed", "one_hand_shield"], dist: "melee" },
+      { id: "atk_melee_sweep_r", zh: "雙持近戰（右手）：橫掃", f: 25, ev: ["ev_hit@11", "ev_end_lock@19"], grips: ["dual_wield"], dist: "melee" },
+      { id: "atk_melee_sweep_l", zh: "雙持近戰（左手）：橫掃", f: 25, ev: ["ev_hit@11", "ev_end_lock@19"], grips: ["dual_wield"], dist: "melee" },
+      { id: "atk_melee_burst", zh: "近戰：擴散", f: 34, ev: ["ev_spawn_fx@16", "ev_hit@18"], dist: "melee" },
+      { id: "atk_dash", zh: "突進：直線衝鋒攻擊", f: 28, rm: true, ev: ["ev_hit@12", "ev_end_lock@22"], grips: ["two_handed", "one_hand_shield"] },
+      { id: "atk_dash_r", zh: "雙持突進（右手）：疾風突刺", f: 24, rm: true, ev: ["ev_hit@10", "ev_end_lock@18"], grips: ["dual_wield"] },
+      { id: "atk_dash_l", zh: "雙持突進（左手）：疾風突刺", f: 24, rm: true, ev: ["ev_hit@10", "ev_end_lock@18"], grips: ["dual_wield"] },
+      { id: "atk_ranged_line", zh: "射擊：直線", f: 30, ev: ["ev_spawn_fx@14"], grips: ["two_handed", "one_hand_shield"], dist: "ranged" },
+      { id: "atk_ranged_line_r", zh: "雙持遠程（右手）：直線射擊／擲射", f: 24, ev: ["ev_spawn_fx@11", "ev_end_lock@18"], grips: ["dual_wield"], dist: "ranged" },
+      { id: "atk_ranged_line_l", zh: "雙持遠程（左手）：直線射擊／擲射", f: 24, ev: ["ev_spawn_fx@11", "ev_end_lock@18"], grips: ["dual_wield"], dist: "ranged" },
+      { id: "atk_ranged_cone", zh: "射擊：扇形", f: 30, ev: ["ev_spawn_fx@14"], grips: ["two_handed", "one_hand_shield"], dist: "ranged" },
+      { id: "atk_ranged_cone_r", zh: "雙持遠程（右手）：扇形散射", f: 26, ev: ["ev_spawn_fx@12", "ev_end_lock@20"], grips: ["dual_wield"], dist: "ranged" },
+      { id: "atk_ranged_cone_l", zh: "雙持遠程（左手）：扇形散射", f: 26, ev: ["ev_spawn_fx@12", "ev_end_lock@20"], grips: ["dual_wield"], dist: "ranged" },
+      { id: "atk_ranged_arc", zh: "射擊：拋物線", f: 34, ev: ["ev_spawn_fx@18"], grips: ["two_handed", "one_hand_shield"], dist: "ranged" },
+      { id: "atk_ranged_arc_r", zh: "雙持遠程（右手）：拋物線擲射", f: 28, ev: ["ev_spawn_fx@14", "ev_end_lock@22"], grips: ["dual_wield"], dist: "ranged" },
+      { id: "atk_ranged_arc_l", zh: "雙持遠程（左手）：拋物線擲射", f: 28, ev: ["ev_spawn_fx@14", "ev_end_lock@22"], grips: ["dual_wield"], dist: "ranged" },
+      { id: "atk_burst_target", zh: "遠程：指定目標點爆破引導", f: 34, ev: ["ev_spawn_fx@16", "ev_hit@18"], dist: "ranged" },
       { id: "sup_self", zh: "輔助：自身", f: 36, ev: ["ev_spawn_fx@18"] },
       { id: "sup_ally", zh: "輔助：他者", f: 36, ev: ["ev_spawn_fx@18"] },
       { id: "field_deploy", zh: "佈署場地", f: 48, ev: ["ev_spawn_fx@28"] },
@@ -1833,6 +1960,34 @@ window.COSMI_CATALOG = {
       { id: "hatch", zh: "破蛋而出（僅幼年）", f: 72 },
       { id: "victory", zh: "勝利", f: 60 }
     ]
+  },
+
+  GRIP_MODES: {
+    virtual_hand_rule: "武器與盾牌由虛擬大手持握並執行另外設計的獨立對應動畫，技能仍由宙獸本體發出（Socket_Front／Socket_Mouth／Socket_Core_FX）；因此宙獸本體模型與骨架動畫**不繪製、不包含任何武器、盾牌或虛擬大手**。Socket_Weapon_R／Socket_Weapon_L 僅作為空掛點預留於身體兩側適當安全間距，宙獸本體仍依持有模式節奏做出相應的軀幹、頭頸與四肢／羽翼動作。",
+    two_handed: {
+      zh: "雙手武器（two_handed）",
+      sockets: "Socket_Weapon_R（主手）＋ Socket_Weapon_L（雙手輔助）空掛點",
+      melee_types: ["雙頭刃／長棍", "長槍／戟", "雙手大劍", "巨斧／巨錘"],
+      ranged_types: ["連弩／獵弓", "長弓", "法杖", "重弩／巨砲杖"],
+      offhand_types: [],
+      pose: "本體重心沉穩，做出重型蓄力、大弧度揮身與射擊後座動作（不繪製武器），與獨立雙手武器動畫協調。"
+    },
+    dual_wield: {
+      zh: "雙持單手（dual_wield）",
+      sockets: "Socket_Weapon_R（主手）＋ Socket_Weapon_L（副手）空掛點，左右輪流節奏",
+      melee_types: ["匕首／拳爪", "單手劍／彎刀", "單手斧", "單手錘"],
+      ranged_types: ["飛刃／手裡劍", "手弩", "短杖／魔導銃", "投矛"],
+      offhand_types: [],
+      pose: "本體低重心敏捷側身，近戰／突進／遠程依 _r 與 _l 交替左右前探扭轉（不繪製武器），與獨立雙持武器動畫協調。"
+    },
+    one_hand_shield: {
+      zh: "單手＋盾（one_hand_shield）",
+      sockets: "Socket_Weapon_R（主手單手武器）＋ Socket_Weapon_L（副手盾牌）空掛點",
+      melee_types: ["匕首／拳爪", "單手劍／彎刀", "單手斧", "單手錘"],
+      ranged_types: ["飛刃／手裡劍", "手弩", "短杖／魔導銃", "投矛"],
+      offhand_types: ["圓盾", "鳶盾", "塔盾", "木圓盾", "符紋盾", "長方木盾"],
+      pose: "本體左側穩固護前、右側俐落發力或微探後座（不繪製武器與盾牌），與獨立單手武器＋盾牌動畫協調。"
+    }
   },
 
   VFX: {

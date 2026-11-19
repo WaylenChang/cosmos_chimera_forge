@@ -327,6 +327,19 @@
       { key: "ethnicity", label: "人種", options: s => C.getWeightedEthnicities(s.character.region?.[0]).concat(getCustom("character.ethnicity").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 1 }] },
       { key: "region", label: "文化地區", options: s => C.getWeightedRegions({ ethnicity: s.character.ethnicity?.[0], timeline: s.character.timeline?.[0] }).concat(uniform(getCustom("character.region"))), count: [{ n: 1, w: 1 }] },
       { key: "timeline", label: "文化時間線", options: s => C.getWeightedTimelines(s.character.region?.[0]).concat(getCustom("character.timeline").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
+      { key: "profession_id", label: "職業細項（遊戲內／地區×時代）", options: s => CH.getWeightedProfessions({ region: s.character.region?.[0], timeline: s.character.timeline?.[0] }).map(p => ({ v: p.v, zh: p.zh, w: p.w })).concat(getCustom("character.profession_id").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
+      { key: "duties", label: "候選職務（等同宙獸棲位）", options: s => {
+        const prof = CH.professions.find(p => p.v === s.character.profession_id?.[0]);
+        const preferred = new Set(prof?.duties || []);
+        return C.TRAINER_DUTIES.map(d => ({ v: d.v, zh: C.trainerDutyZh(d.v), w: preferred.has(d.v) ? 6 : 1 })).concat(getCustom("character.duties").map(v => ({ v, zh: v, w: 1 })));
+      }, count: [{ n: 2, w: 2 }, { n: 3, w: 1 }], max: 3, dep: "profession_id" },
+      { key: "trainer_function", label: "代表職能（等同宙獸習性）", options: s => {
+        const dutySet = new Set(s.character.duties || []);
+        const allowed = new Set();
+        C.TRAINER_DUTIES.forEach(d => { if (dutySet.has(d.v)) d.functions.forEach(f => allowed.add(f)); });
+        const prof = CH.professions.find(p => p.v === s.character.profession_id?.[0]);
+        return C.TRAINER_FUNCTIONS.map(f => ({ v: f.v, zh: C.trainerFunctionZh(f.v), w: (f.v === prof?.default_function ? 4 : 1) * (allowed.size === 0 || allowed.has(f.v) ? 4 : 1) })).concat(getCustom("character.trainer_function").map(v => ({ v, zh: v, w: 1 })));
+      }, count: [{ n: 1, w: 1 }], dep: "duties" },
       { key: "gender", label: "性別", options: () => CH.gender.map(g => ({ v: g.v, w: g.w })).concat(getCustom("character.gender").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "age_band", label: "年齡層", options: () => CH.age.map(a => ({ v: a.v, w: a.w })).concat(getCustom("character.age_band").map(v => ({ v, w: 1 }))), count: [{ n: 1, w: 1 }] },
       { key: "age", label: "年齡", options: s => { const b = CH.age.find(a => a.v === s.character.age_band?.[0]) || CH.age[1]; const r = []; for (let i = b.min; i <= b.max; i++) r.push({ v: String(i), w: 1 }); r.push({ v: "未知", w: 1 }); return r.concat(getCustom("character.age").map(v => ({ v, w: 1 }))); }, count: [{ n: 1, w: 1 }], dep: "age_band" },
@@ -497,6 +510,9 @@
         name_zh: dc.name_zh,
         name_en: dc.name_en,
         role: dc.role,
+        ...(dc.profession_id ? { profession_id: dc.profession_id } : {}),
+        ...(dc.duties ? { duties: dc.duties } : {}),
+        ...(dc.trainer_function ? { trainer_function: dc.trainer_function } : {}),
         ethnicity: dc.ethnicity,
         region: dc.region,
         timeline: dc.timeline,
@@ -535,7 +551,9 @@
     }
     const c = state.character;
     const res = {
-      id: subjectId("character"), role: c.role?.[0] || "未知", ethnicity: c.ethnicity?.[0] || "未知",
+      id: subjectId("character"), role: c.role?.[0] || "未知", profession_id: c.profession_id?.[0] || "trv_rookie",
+      duties: c.duties || [], trainer_function: c.trainer_function?.[0] || "sparring",
+      ethnicity: c.ethnicity?.[0] || "未知",
       region: c.region?.[0] || "未知", timeline: c.timeline?.[0] || "未知", gender: c.gender?.[0] || "未知",
       age: isNaN(Number(c.age?.[0])) ? (c.age?.[0] || "未知") : Number(c.age[0]), age_band: c.age_band?.[0] || "未知",
       height: c.height?.[0] || "未知", weight: c.weight?.[0] || "未知", body_fat: c.body_fat?.[0] || "未知"
@@ -781,6 +799,9 @@
         name_zh: c.name_zh || "角色",
         name_en: c.name_en || "Character",
         role: c.role,
+        ...(c.profession_id ? { profession_id: c.profession_id } : {}),
+        ...(c.duties && c.duties.length ? { duties: c.duties } : {}),
+        ...(c.trainer_function ? { trainer_function: c.trainer_function } : {}),
         gender: c.gender, age: c.age, height_cm: c.height, weight_kg: c.weight, body_fat_pct: c.body_fat,
         ...(c.gender === "女" && c.cup_size && c.cup_size !== "未知" ? { cup_size: c.cup_size } : {}),
         ethnicity: c.ethnicity, region: c.region, timeline: c.timeline,

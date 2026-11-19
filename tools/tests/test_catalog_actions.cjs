@@ -36,7 +36,7 @@ function extractGetClipCategory() {
 }
 
 test('ACTIONS preserves all legacy clip IDs and expands character & creature sets', () => {
-  assert.equal(C.version, '2.9.0');
+  assert.equal(C.version, '2.10.0');
   const chrIds = C.ACTIONS.character.map(a => a.id);
   const crIds = C.ACTIONS.creature.map(a => a.id);
 
@@ -48,7 +48,8 @@ test('ACTIONS preserves all legacy clip IDs and expands character & creature set
   }
 
   assert.equal(chrIds.length, 50);
-  assert.equal(crIds.length, 45);
+  assert.equal(crIds.length, 57);
+  assert.ok(C.GRIP_MODES && C.GRIP_MODES.two_handed && C.GRIP_MODES.dual_wield && C.GRIP_MODES.one_hand_shield);
 });
 
 test('ACTIONS entries have unique snake_case IDs, valid frame counts, and well-formed events', () => {
@@ -88,4 +89,44 @@ test('every character and creature clip maps to a known UI category in forge.js'
     const cat = getClipCategory(`cr_adult_${c.id}`);
     assert.ok(knownCategories.has(cat), `cr_adult_${c.id} fell into ${cat}`);
   }
+});
+
+test('creature-model-rig filters clips by allowed grip_mode and includes virtual giant hand rules', () => {
+  const tasksSrc = fs.readFileSync(path.join(root, 'tasks.js'), 'utf8');
+  const tCtx = { window: { COSMI_CATALOG: C } };
+  vm.runInNewContext(tasksSrc, tCtx);
+  const task = tCtx.window.COSMI_TASKS.find(t => t.id === 'creature-model-rig');
+  assert.ok(task, 'creature-model-rig should exist');
+  const allIds = C.ACTIONS.creature.map(a => a.id);
+
+  const dualPrompt = task.build({
+    header: '[COSMIMERA-TASK]',
+    task: { id: 'creature-model-rig' },
+    taskId: 'mdl-test',
+    subjectId: 'moon_night_pup',
+    concept: { locked: { stages: [{ stage: 'adult', grip_mode: 'dual_wield', signature_move: { range_class: 'melee' } }] } },
+    opts: { scope: 'single', stage: 'adult', grip_mode: 'auto', weapon_scope: 'all_allowed', actions_creature: allIds }
+  });
+  assert.match(dualPrompt, /虛擬大手/);
+  assert.match(dualPrompt, /不繪製、不包含任何武器、盾牌或虛擬大手/);
+  assert.match(dualPrompt, /技能仍由宙獸本體發出/);
+  assert.match(dualPrompt, /Socket_Weapon_R/);
+  assert.match(dualPrompt, /Socket_Weapon_L/);
+  assert.match(dualPrompt, /cr_adult_atk_melee_front_r/);
+  assert.match(dualPrompt, /cr_adult_atk_ranged_line_l/);
+  assert.doesNotMatch(dualPrompt, /`cr_adult_atk_melee_front`/);
+  assert.doesNotMatch(dualPrompt, /`cr_adult_atk_ranged_line`/);
+
+  const shieldRangedOnly = task.build({
+    header: '[COSMIMERA-TASK]',
+    task: { id: 'creature-model-rig' },
+    taskId: 'mdl-test-2',
+    subjectId: 'sun_mirror_chick',
+    concept: { locked: { stages: [{ stage: 'juvenile', grip_mode: 'one_hand_shield', signature_move: { range_class: 'long' } }] } },
+    opts: { scope: 'single', stage: 'juvenile', grip_mode: 'auto', weapon_scope: 'signature_only', actions_creature: allIds }
+  });
+  assert.match(shieldRangedOnly, /`one_hand_shield`/);
+  assert.match(shieldRangedOnly, /cr_juvenile_atk_ranged_line/);
+  assert.doesNotMatch(shieldRangedOnly, /cr_juvenile_atk_melee_front/);
+  assert.doesNotMatch(shieldRangedOnly, /_atk_ranged_line_r/);
 });

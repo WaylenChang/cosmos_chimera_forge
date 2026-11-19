@@ -82,6 +82,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mirrill",
               "naming_note": "鏡冠初生，如芽迎日。",
               "size_class": "S",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_nectar_visitor",
@@ -123,6 +125,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mirravel",
               "naming_note": "承接鏡冠，羽翼展成鏡陣。",
               "size_class": "M",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambush_predator",
@@ -164,6 +168,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mirravault",
               "naming_note": "環形鏡陣托起天空之姿。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambient_energy_feeder",
@@ -225,7 +231,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "全鏡面合攏聚光鎖定，射出貫穿天際的金色日冕光柱，伴隨刺目光波震盪。",
                 "desc_en": "Aligns all mirrors into a focused lock, unleashing a golden coronal pillar that pierces the heavens with radiant shockwaves.",
                 "visual": "全鏡面合攏聚光鎖定，射出貫穿天際的金色日冕光柱，伴隨刺目光波震盪。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -317,6 +324,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Nivetch",
               "naming_note": "夜色留下幼狼的足痕。",
               "size_class": "S",
+              "ai_style": "flank",
+              "grip_mode": "dual_wield",
               "niches": [
                 {
                   "niche": "niche_opportunistic_omnivore",
@@ -358,6 +367,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Niverren",
               "naming_note": "夜痕成長為伏行孤狼。",
               "size_class": "M",
+              "ai_style": "flank",
+              "grip_mode": "dual_wield",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -395,6 +406,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Nivervast",
               "naming_note": "霜原巨狼延續夜痕意象。",
               "size_class": "L",
+              "ai_style": "flank",
+              "grip_mode": "dual_wield",
               "niches": [
                 {
                   "niche": "niche_apex_predator",
@@ -456,7 +469,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "撕開暗影裂隙暴風突進，巨爪帶起幽藍極光與霜凍暗影大範圍橫掃。",
                 "desc_en": "Rips open shadow fissures in a blizzard rush, sweeping immense claws cloaked in auroral frost across a broad arc.",
                 "visual": "撕開暗影裂隙暴風突進，巨爪帶起幽藍極光與霜凍暗影大範圍橫掃。"
-              }
+              },
+              "grip_mode": "dual_wield"
             }
           ],
           "trait": {
@@ -548,6 +562,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltfoal",
               "naming_note": "星斑與帶電小蹄相映。",
               "size_class": "S",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -585,6 +601,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltrmane",
               "naming_note": "星蹄長成逐風的駿馬。",
               "size_class": "M",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -626,6 +644,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltrazent",
               "naming_note": "星蹄展翼，奔馳如天驥。",
               "size_class": "L",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -687,7 +707,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "雙翼聚斂百萬伏特雷暴，以超音速突進引發全場範圍的金色雷暴轟鳴。",
                 "desc_en": "Gathers a million-volt storm in its wings and charges at supersonic speed, igniting field-wide golden thunderclaps.",
                 "visual": "雙翼聚斂百萬伏特雷暴，以超音速突進引發全場範圍的金色雷暴轟鳴。"
-              }
+              },
+              "grip_mode": "two_handed"
             }
           ],
           "trait": {
@@ -776,6 +797,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Clepspro",
               "naming_note": "漏刻浮碗藏在初生齒輪間。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -817,6 +840,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Clepsward",
               "naming_note": "漏輪披甲，守住夥伴前方。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -854,6 +879,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Clepsarche",
               "naming_note": "漏輪化作巨象腹中的計時機關。",
               "size_class": "L",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -915,7 +942,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "全身青銅齒輪急轉蓄力，象足重踏大地引發全周金屬音波與環形地震波，重創全場敵方。",
                 "desc_en": "Spins every bronze gear at maximum speed and stomps the earth, unleashing field-wide seismic shockwaves and deafening metallic chimes.",
                 "visual": "全身青銅齒輪急轉蓄力，象足重踏大地引發全周金屬音波與環形地震波，重創全場敵方。"
-              }
+              },
+              "grip_mode": "two_handed"
             }
           ],
           "trait": {
@@ -1004,6 +1032,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Virellet",
               "naming_note": "初萌蕨葉捲成小小蔓冠。",
               "size_class": "S",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_ground_granivore",
@@ -1045,6 +1075,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Virelume",
               "naming_note": "蔓冠舒展，捲紋隨羽翼流動。",
               "size_class": "M",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_fruit_disperser",
@@ -1086,6 +1118,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Vireloria",
               "naming_note": "蔓冠長尾映出雙重虹彩。",
               "size_class": "L",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_fruit_disperser",
@@ -1147,7 +1181,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "振起七彩虹羽鋪展覆天樹冠，降下狂暴的翡翠荊棘雨與神聖虹光波，引發大範圍以太生機引爆。",
                 "desc_en": "Spreads seven-colored wings into a celestial canopy, raining down surging emerald briars and radiant rainbow flares across the entire field.",
                 "visual": "振起七彩虹羽鋪展覆天樹冠，降下狂暴的翡翠荊棘雨與神聖虹光波，引發大範圍以太生機引爆。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -1236,6 +1271,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Brinelle",
               "naming_note": "小鰻背上的水膜初展如帆。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_detritivore",
@@ -1277,6 +1314,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Brinavela",
               "naming_note": "潮帆長出雙浮筒，破浪如舟。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambush_predator",
@@ -1318,6 +1357,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Brinamar",
               "naming_note": "潮帆巨鰻如雙體大舟乘浪。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -1379,7 +1420,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "張開全重光翼蟹爪帆激引深海暗湧，以驚天之勢朝前方轟射吞沒長空的狂瀾水龍卷衝擊波。",
                 "desc_en": "Unfurls all light-weave crab-claw sails to command the deep ocean trench, unleashing a massive forward surge of swirling tidal waters that engulfs the front line.",
                 "visual": "張開全重光翼蟹爪帆激引深海暗湧，以驚天之勢朝前方轟射吞沒長空的狂瀾水龍卷衝擊波。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -1468,6 +1510,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Cindrel",
               "naming_note": "餘燼絨毛圍著幼獅頸邊。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_opportunistic_omnivore",
@@ -1505,6 +1549,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Cindrava",
               "naming_note": "燼鬃翻騰，額紋透出熔光。",
               "size_class": "M",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -1546,6 +1592,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Cindraval",
               "naming_note": "燼鬃盛開成三面獅的火冠。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_apex_predator",
@@ -1607,7 +1655,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "背部玫瑰岩熔爐全開聚集百萬度電漿核焰，向目標區域轟落核爆級別的環形烈焰。",
                 "desc_en": "Ignites the dorsal rose-sandstone furnace into a million-degree plasma flare, detonating a cataclysmic ring of fire over the target sector.",
                 "visual": "背部玫瑰岩熔爐全開聚集百萬度電漿核焰，向目標區域轟落核爆級別的環形烈焰。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -1696,6 +1745,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Gilduma",
               "naming_note": "金粉輕覆圓圓的小石偶。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -1737,6 +1788,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Gildumant",
               "naming_note": "金塵石偶戴上守陣面甲。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -1774,6 +1827,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Gildumara",
               "naming_note": "金塵凝成巨偶身上的晶脈。",
               "size_class": "L",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -1835,7 +1890,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "雙臂金晶巨柱以崩山之勢重砸地面，激起沖天黃金晶柱與連鎖地裂地震波，重創全場敵軍。",
                 "desc_en": "Slams its gold-crystal pillar arms into the earth with mountain-cleaving force, erupting towering auric spires and shattering seismic faults across the zone.",
                 "visual": "雙臂金晶巨柱以崩山之勢重砸地面，激起沖天黃金晶柱與連鎖地裂地震波，重創全場敵軍。"
-              }
+              },
+              "grip_mode": "two_handed"
             }
           ],
           "trait": {
@@ -1924,6 +1980,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Rimbril",
               "naming_note": "冰晶小角從雪白絨毛間探出。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -1965,6 +2023,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Rimbraven",
               "naming_note": "霜角分岔，為獵獸引導寒氣。",
               "size_class": "M",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -2006,6 +2066,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Rimbragard",
               "naming_note": "霜角巨獸披上永凍甲翼。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_apex_predator",
@@ -2067,7 +2129,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "鹿角匯聚極北永凍寒髓，仰天引吭咆哮，釋放橫掃全場的零度冰風暴與極地碎冰潮。",
                 "desc_en": "Channels the core frost of eternal glaciers through its antlers and unleashes an all-encompassing blizzard gale that entombs the battlefield in permafrost.",
                 "visual": "鹿角匯聚極北永凍寒髓，仰天引吭咆哮，釋放橫掃全場的零度冰風暴與極地碎冰潮。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -2156,6 +2219,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Reevilo",
               "naming_note": "竹笛小舟隨風發出清音。",
               "size_class": "S",
+              "ai_style": "flank",
+              "grip_mode": "dual_wield",
               "niches": [
                 {
                   "niche": "niche_nectar_visitor",
@@ -2197,6 +2262,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Reevilane",
               "naming_note": "笛風展翼，循著氣流巡航。",
               "size_class": "M",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambient_energy_feeder",
@@ -2238,6 +2305,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Reevilora",
               "naming_note": "笛風托起繡帆，巡行長空。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambient_energy_feeder",
@@ -2299,7 +2368,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "全船百組竹笛共振激發音爆颶風，在超高速巡航中沿直線向前轟出撕裂大氣的狂暴螺旋風壓波。",
                 "desc_en": "Vibrates hundred-flute arrays into a sonic tempest, projecting a spiraling atmospheric vacuum cannon forward in supersonic flight.",
                 "visual": "全船百組竹笛共振激發音爆颶風，在超高速巡航中沿直線向前轟出撕裂大氣的狂暴螺旋風壓波。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -2390,6 +2460,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Lamassugate",
               "naming_note": "四階段統一命名；青銅門環化作幼牛雙角。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -2431,6 +2503,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Lamassugate",
               "naming_note": "四階段統一命名；翼刃展開，門扉裝甲成形。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -2472,6 +2546,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Lamassugate",
               "naming_note": "四階段統一命名；五足神牛鎮守城門。",
               "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -2533,7 +2609,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "將十二道青銅翼牆聚合為巨型城塞鐵砧，從高空垂直鎮壓整片戰場。",
                 "desc_en": "Converges twelve bronze wing-walls into a colossal sky-anvil that crushes the entire arena.",
                 "visual": "將十二道青銅翼牆聚合為巨型城塞鐵砧，從高空垂直鎮壓整片戰場。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -2624,6 +2701,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Neaklotus",
               "naming_note": "四階段統一命名；檳榔花苞纏繞幼蛇頭冠。",
               "size_class": "XS",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_understory_insectivore",
@@ -2665,6 +2744,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Neaklotus",
               "naming_note": "四階段統一命名；花環藤蔓沿鱗脊攀附。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambush_predator",
@@ -2706,6 +2787,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Neaklotus",
               "naming_note": "四階段統一命名；七首蓮冠化作古樹龍威。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambush_predator",
@@ -2767,7 +2850,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "催動七瓣玉蓮光輪，令無數翡翠巨木破土而出並交織成壓頂聖林。",
                 "desc_en": "Pulses its seven-petaled lotus halo to erupt a towering canopy of emerald timber across the field.",
                 "visual": "催動七瓣玉蓮光輪，令無數翡翠巨木破土而出並交織成壓頂聖林。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -2857,6 +2941,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mobymael",
               "naming_note": "四階段統一命名；象牙白幼鯨額頭浮現鹽晶紋。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_detritivore",
@@ -2894,6 +2980,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mobymael",
               "naming_note": "四階段統一命名；背鰭纏繞斷裂捕鯨繩索與鹽霜。",
               "size_class": "L",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -2935,6 +3023,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mobymael",
               "naming_note": "四階段統一命名；白鯨破浪，漩渦翻湧。",
               "size_class": "XL",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_apex_predator",
@@ -2996,7 +3086,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "引動深海歸墟巨渦向前席捲，將沿途目標捲入高壓水牆之中徹底粉碎。",
                 "desc_en": "Unleashes a sweeping abyssal maelstrom forward, crushing everything caught in its roaring wall of water.",
                 "visual": "引動深海歸墟巨渦向前席捲，將沿途目標捲入高壓水牆之中徹底粉碎。"
-              }
+              },
+              "grip_mode": "two_handed"
             }
           ],
           "trait": {
@@ -3086,6 +3177,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Baobabhearth",
               "naming_note": "四階段統一命名；樹皮甲片下藏著跳動炭火。",
               "size_class": "S",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambush_predator",
@@ -3123,6 +3216,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Baobabhearth",
               "naming_note": "四階段統一命名；背脊木瘤化作熔岩爐口。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambush_predator",
@@ -3160,6 +3255,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Baobabhearth",
               "naming_note": "四階段統一命名；巨木化灶，火山口生於背脊。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_apex_predator",
@@ -3221,7 +3318,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "六座背脊火山口同時向天際噴發，降下覆蓋全場的熾金熔岩火雨。",
                 "desc_en": "Erupts all six dorsal caldera vents skyward, raining molten gold fire across the battlefield.",
                 "visual": "六座背脊火山口同時向天際噴發，降下覆蓋全場的熾金熔岩火雨。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -3311,6 +3409,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Yalipillar",
               "naming_note": "四階段統一命名；浮雕蓮座托起幼獸四蹄。",
               "size_class": "S",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_edge_browser",
@@ -3352,6 +3452,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Yalipillar",
               "naming_note": "四階段統一命名；神殿石柱與獠牙合而為一。",
               "size_class": "M",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_edge_browser",
@@ -3393,6 +3495,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Yalipillar",
               "naming_note": "四階段統一命名；百柱神獸，地動山搖。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_edge_browser",
@@ -3454,7 +3558,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "猛踏大地喚起神殿千柱從地底穿刺而出，同時引發劇烈岩脈震盪。",
                 "desc_en": "Stomps the earth to erupt a forest of temple stone pillars beneath opposing ranks.",
                 "visual": "猛踏大地喚起神殿千柱從地底穿刺而出，同時引發劇烈岩脈震盪。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -3544,6 +3649,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Framdrift",
               "naming_note": "四階段統一命名；木製雪橇滑板與冰標浮筒結合。",
               "size_class": "XS",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -3585,6 +3692,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Framdrift",
               "naming_note": "四階段統一命名；圓弧木船殼包覆耐壓冰甲。",
               "size_class": "M",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -3626,6 +3735,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Framdrift",
               "naming_note": "四階段統一命名；前進行艦，無懼冰封。",
               "size_class": "XL",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_mineral_feeder",
@@ -3687,7 +3798,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "借極光寒流加速破冰巨刃，沿直線貫穿全場並留下永凍冰牆。",
                 "desc_en": "Accelerates its aurora-charged prow in a devastating linear charge that leaves frozen spires behind.",
                 "visual": "借極光寒流加速破冰巨刃，沿直線貫穿全場並留下永凍冰牆。"
-              }
+              },
+              "grip_mode": "two_handed"
             }
           ],
           "trait": {
@@ -3777,6 +3889,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mistalbatross",
               "naming_note": "四階段統一命名；幼雛頸間掛著羅盤風標。",
               "size_class": "S",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_ground_granivore",
@@ -3814,6 +3928,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mistalbatross",
               "naming_note": "四階段統一命名；長翼展開，如十字弓弦拉滿。",
               "size_class": "M",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -3851,6 +3967,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Mistalbatross",
               "naming_note": "四階段統一命名；跨洋巨翼，御風不墜。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -3912,7 +4030,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "轉動胸前星盤氣流儀，喚起橫掃全場的超音速海霧颶風。",
                 "desc_en": "Spins its aerial astrolabe to sweep the entire field with supersonic sea-mist gales.",
                 "visual": "轉動胸前星盤氣流儀，喚起橫掃全場的超音速海霧颶風。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -4003,6 +4122,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Khorkhoivolt",
               "naming_note": "四階段統一命名；沙漠赤蟲體節閃爍靜電微光。",
               "size_class": "XS",
+              "ai_style": "flank",
+              "grip_mode": "dual_wield",
               "niches": [
                 {
                   "niche": "niche_detritivore",
@@ -4044,6 +4165,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Khorkhoivolt",
               "naming_note": "四階段統一命名；口器化作雙極電弧線圈。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_understory_insectivore",
@@ -4085,6 +4208,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Khorkhoivolt",
               "naming_note": "四階段統一命名；戈壁赤煞，電磁貫日。",
               "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambush_predator",
@@ -4146,7 +4271,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "十二座超導磁環同步充能，沿直線轟出將沙塵熔為晶柱的極限電漿雷砲。",
                 "desc_en": "Fires an overcharged plasma rail-beam through twelve floating coils, vitrifying everything in its path.",
                 "visual": "十二座超導磁環同步充能，沿直線轟出將沙塵熔為晶柱的極限電漿雷砲。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -4237,6 +4363,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Foilprism",
               "naming_note": "四階段統一命名；微光金箔折疊成精巧多面體。",
               "size_class": "XS",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambient_energy_feeder",
@@ -4274,6 +4402,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Foilprism",
               "naming_note": "四階段統一命名；雙重金箔環帶繞核高速旋轉。",
               "size_class": "M",
+              "ai_style": "hold",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambient_energy_feeder",
@@ -4315,6 +4445,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Foilprism",
               "naming_note": "四階段統一命名；千層金箔散射極光扇陣。",
               "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
               "niches": [
                 {
                   "niche": "niche_ambient_energy_feeder",
@@ -4372,7 +4504,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "展開幾何金箔星盤高速迴旋，向全場折射出覆蓋天地的七彩高能粒子光雨。",
                 "desc_en": "Spins a vast mandala of gold-foil mirrors to rain refracted high-energy aurora beams across the arena.",
                 "visual": "展開幾何金箔星盤高速迴旋，向全場折射出覆蓋天地的七彩高能粒子光雨。"
-              }
+              },
+              "grip_mode": "one_hand_shield"
             }
           ],
           "trait": {
@@ -4462,6 +4595,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Bootursteed",
               "naming_note": "四階段統一命名；黑鐵蹄印在雪地化作幽影。",
               "size_class": "S",
+              "ai_style": "flank",
+              "grip_mode": "dual_wield",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -4499,6 +4634,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Bootursteed",
               "naming_note": "四階段統一命名；雙重影甲疊映，踏步無聲。",
               "size_class": "M",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_ground_grazer",
@@ -4540,6 +4677,8 @@ window.COSMI_DESIGNED = {
               "name_en": "Bootursteed",
               "naming_note": "四階段統一命名；幽冥鐵騎，永夜不屈。",
               "size_class": "L",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
               "niches": [
                 {
                   "niche": "niche_patrol_hunter",
@@ -4601,7 +4740,8 @@ window.COSMI_DESIGNED = {
                 "desc_zh": "展開墨黑影翼率領無數幽影殘像沿直線奔騰衝鋒，斬裂並吞沒沿途光影。",
                 "desc_en": "Charges forward with shadowy wings and phantom afterimages, cleaving through the entire battlefield.",
                 "visual": "展開墨黑影翼率領無數幽影殘像沿直線奔騰衝鋒，斬裂並吞沒沿途光影。"
-              }
+              },
+              "grip_mode": "two_handed"
             }
           ],
           "trait": {
@@ -4610,6 +4750,1104 @@ window.COSMI_DESIGNED = {
             "idea_zh": "在極夜與暮色中融入環境陰影，降低移動時被鎖定的機率。"
           },
           "overload": "玄鐵幽駒（shadow_ironsteed_overload · XL）：啞光玄鐵戰甲與極夜暗影徹底融合，馬首生出雙重寒鐵戰角，身後展開如極夜極光般的墨黑影翼，四蹄踏過之處凝結黑霜"
+        }
+      }
+    },
+    {
+      "line_id": "line_metal_trial_boss",
+      "code_zh": "金",
+      "element": "metal",
+      "title_zh": "羅盤星儀巨偶",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_metal_trial_boss",
+        "elements": [
+          "metal（金）",
+          "earth（土，副專精）"
+        ],
+        "element_palettes": [
+          "黃銅金、玄鐵黑",
+          "海圖羊皮米白、鈷藍"
+        ],
+        "base_parents": [
+          "器械·天文/測量儀器",
+          "科幻機械·機甲/外骨骼"
+        ],
+        "bases": [
+          "黃銅星盤儀器",
+          "三十二向羅盤花準星環",
+          "雙桅重砲台機偶"
+        ],
+        "appearance_palette": [
+          "黃銅金",
+          "玄鐵黑",
+          "海圖羊皮米白",
+          "鈷藍"
+        ],
+        "timeline": "大航海與古典製圖時代（16 世紀鄂圖曼星象製圖）",
+        "region": "西亞/中東",
+        "archetype": "arch_piri_reis",
+        "archetype_name": "皮里·雷斯星盤海圖",
+        "archetype_type": "P5-02 考據庫·歷史製圖與航海",
+        "meaning": "以三十二向羅盤花與黃銅星盤校準全場座標的機房試煉守護機兵",
+        "motifs": "三十二向羅盤花、黃銅星盤、地中海雙桅帆船、瞪羚皮世界殘圖",
+        "sensitivity": "ok",
+        "role": "機房試煉 BOSS：遠程重砲壓制，進場錨定擴大射程",
+        "habit": "territorial",
+        "disposition": "精密冷靜、絕對校準",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "3.2 m",
+            "weight": "1450 kg",
+            "body_fat": "0%"
+          }
+        },
+        "height_length": "3.2 m",
+        "weight": "1450 kg",
+        "body_fat": "0%",
+        "formula": "metal（金） + earth（土，副專精） × 黃銅星盤儀器 + 三十二向羅盤花準星環 + 雙桅重砲台機偶 × 皮里·雷斯星盤海圖",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "metal_astrolabe_automaton",
+              "name_zh": "羅盤星儀巨偶",
+              "name_en": "Astrolabion",
+              "naming_note": "取星盤（astrolabe）與自動機偶（automaton）之意象。",
+              "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
+              "height_length": "3.2 m",
+              "weight": "1450 kg",
+              "body_fat": "0%",
+              "look": "黃銅星盤儀器 × 三十二向羅盤花與機房精密齒輪巨偶；身軀由多層同心黃銅星盤與黑鋼齒輪拼合而成，背脊懸浮三十二向羅盤花準星環，雙臂為可旋轉的雙桅重砲台",
+              "dex_zh": "由黃銅星盤與黑鋼齒輪構築的機房守護巨偶，背後的羅盤花準星能精準校準每一發遠程砲擊。",
+              "dex_en": "A laboratory guardian automaton forged from brass astrolabes and blackened steel gears, calibrating long-range barrages with a thirty-two-point compass halo.",
+              "signature_move": {
+                "move_id": "metal_siege_bombard",
+                "name_zh": "星儀重砲轟擊",
+                "name_en": "Siege Bombard",
+                "element": "metal",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "機房重砲遠程齊射。",
+                "desc_zh": "校準遠距離座標後發射高密度金屬砲彈，在目標點爆開重擊周圍敵人。",
+                "desc_en": "Calibrates distant coordinates and fires a heavy metallic shell that bursts around the target.",
+                "visual": "校準遠距離座標後發射高密度金屬砲彈，在目標點爆開重擊周圍敵人。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_metal_siege_anchoring",
+            "name_zh": "攻城錨定",
+            "idea_zh": "登場後 6 秒內射程提高百分之二十，但移動速度降低百分之十。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_wood_trial_boss",
+      "code_zh": "木",
+      "element": "wood",
+      "title_zh": "翠波石塔龜",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_wood_trial_boss",
+        "elements": [
+          "wood（木）",
+          "water（水，副專精）"
+        ],
+        "element_palettes": [
+          "翡翠綠、青苔灰",
+          "古銅金、碧波藍"
+        ],
+        "base_parents": [
+          "生物·爬蟲類",
+          "植物·蕨類/藤蔓",
+          "建築·古塔"
+        ],
+        "bases": [
+          "巨型翠玉靈龜",
+          "湖心古石塔背甲",
+          "翡翠木劍弩機"
+        ],
+        "appearance_palette": [
+          "翡翠綠",
+          "古銅金",
+          "青苔灰",
+          "碧波藍"
+        ],
+        "timeline": "古代東南亞水上神話",
+        "region": "東南亞",
+        "archetype": "arch_kim_quy_hoan_kiem",
+        "archetype_name": "還劍湖金龜傳奇",
+        "archetype_type": "P5-02 考據庫·神話傳說",
+        "meaning": "背負古石塔與翡翠水波紋木劍、鎮守雨林深處試煉場的巨型靈龜",
+        "motifs": "浮水巨型金龜、順天寶劍、湖心古石塔、翠綠水波光紋",
+        "sensitivity": "ok",
+        "role": "雨林試煉 BOSS：高血量遠距木弩狙擊，高血線加速壓迫",
+        "habit": "territorial",
+        "disposition": "沉穩莊嚴、鎮守聖域",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "3.4 m",
+            "weight": "1680 kg",
+            "body_fat": "14%"
+          }
+        },
+        "height_length": "3.4 m",
+        "weight": "1680 kg",
+        "body_fat": "14%",
+        "formula": "wood（木） + water（水，副專精） × 巨型翠玉靈龜 + 湖心古石塔背甲 + 翡翠木劍弩機 × 還劍湖金龜傳奇",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "wood_jade_tortoise",
+              "name_zh": "翠波石塔龜",
+              "name_en": "Viridichelys",
+              "naming_note": "取翡翠（viridi-）與靈龜（chelys）之意象。",
+              "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_edge_browser",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
+              "height_length": "3.4 m",
+              "weight": "1680 kg",
+              "body_fat": "14%",
+              "look": "巨型翠玉靈龜 × 湖心古石塔與木質劍脊；背甲如長滿藤蔓與蕨類的古老石塔，甲緣浮現翠綠水波光紋，口銜一柄纏繞樹根的翡翠木劍弩機",
+              "dex_zh": "背甲承載著苔蘚古塔與碧綠水波紋的雨林巨龜，口銜木劍弩機，在樹冠陰影下穩步守望。",
+              "dex_en": "A rainforest giant tortoise bearing a moss-grown stone pagoda and emerald ripple crests, firing wooden ballista bolts from beneath the canopy.",
+              "signature_move": {
+                "move_id": "wood_thorn_ballista",
+                "name_zh": "翠棘弩槍射擊",
+                "name_en": "Thorn Ballista",
+                "element": "wood",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "林木巨弩直線貫穿。",
+                "desc_zh": "蓄力射出纏繞硬棘的巨型木槍，沿長距離直線貫穿路徑上的敵人。",
+                "desc_en": "Launches a massive thorn-wrapped timber bolt in a long straight line.",
+                "visual": "蓄力射出纏繞硬棘的巨型木槍，沿長距離直線貫穿路徑上的敵人。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_wood_overgrowth_surge",
+            "name_zh": "茂盛湧動",
+            "idea_zh": "HP 高於百分之七十五時移動速度提高百分之十五，但火抗性降低十五點。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_water_trial_boss",
+      "code_zh": "水",
+      "element": "water",
+      "title_zh": "銀潮珊瑚巨鰻",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_water_trial_boss",
+        "elements": [
+          "water（水）"
+        ],
+        "element_palettes": [
+          "銀白、深海湛藍",
+          "珊瑚粉、珍珠光"
+        ],
+        "base_parents": [
+          "生物·魚類/海鰻",
+          "自然·珊瑚/礁岩"
+        ],
+        "bases": [
+          "深海銀鱗巨鰻",
+          "三孔珍珠珊瑚冠",
+          "半透明水流背鰭"
+        ],
+        "appearance_palette": [
+          "銀白",
+          "深海湛藍",
+          "珊瑚粉",
+          "珍珠光"
+        ],
+        "timeline": "大洋洲遠古口傳神話",
+        "region": "大洋洲",
+        "archetype": "arch_sina_and_eel",
+        "archetype_name": "西娜與椰樹銀鰻",
+        "archetype_type": "P5-02 考據庫·神話傳說",
+        "meaning": "盤踞深海暗礁、頭冠嵌有三孔珊瑚殼的銀白深淵巨鰻",
+        "motifs": "清泉銀鰻、三孔椰果、高聳椰林、珊瑚潟湖",
+        "sensitivity": "ok",
+        "role": "深海試煉 BOSS：高速遠距激流穿刺，連續施放水招延長射程",
+        "habit": "aggressive",
+        "disposition": "幽冷敏銳、隨流伏襲",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "4.8 m",
+            "weight": "820 kg",
+            "body_fat": "10%"
+          }
+        },
+        "height_length": "4.8 m",
+        "weight": "820 kg",
+        "body_fat": "10%",
+        "formula": "water（水） × 深海銀鱗巨鰻 + 三孔珍珠珊瑚冠 + 半透明水流背鰭 × 西娜與椰樹銀鰻",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "water_coral_serpent",
+              "name_zh": "銀潮珊瑚巨鰻",
+              "name_en": "Corallanguilla",
+              "naming_note": "取珊瑚（coral）與海鰻（anguilla）之意象。",
+              "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
+              "niches": [
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
+              "height_length": "4.8 m",
+              "weight": "820 kg",
+              "body_fat": "10%",
+              "look": "深海銀白巨鰻 × 三孔珊瑚冠與潟湖水膜；修長流線的銀鱗深海巨鰻，頭冠嵌有三孔珍珠珊瑚殼，背鰭如半透明水幕隨深海暗流起伏",
+              "dex_zh": "盤踞於深海暗礁的銀鱗巨鰻，頭冠嵌有三孔珍珠珊瑚殼，能以高速迴旋的水流長槍貫穿目標。",
+              "dex_en": "A silver-scaled abyssal eel crowned with a three-pored coral shell, piercing deep-sea currents with spinning maelstrom lances.",
+              "signature_move": {
+                "move_id": "water_maelstrom_lance",
+                "name_zh": "渦流貫穿槍",
+                "name_en": "Maelstrom Lance",
+                "element": "water",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "深海漩渦凝成直線水槍。",
+                "desc_zh": "將深海高壓水流壓縮為螺旋長槍，從遠處高速貫穿直線上的敵人。",
+                "desc_en": "Compresses deep-sea currents into a spiraling lance that pierces enemies along a long line.",
+                "visual": "將深海高壓水流壓縮為螺旋長槍，從遠處高速貫穿直線上的敵人。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_water_torrential_deluge",
+            "name_zh": "洪流延湧",
+            "idea_zh": "施放水屬性主動技後 4 秒內射程提高百分之十五，移動速度降低百分之十。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_fire_trial_boss",
+      "code_zh": "火",
+      "element": "fire",
+      "title_zh": "熔岩雙輪蚺",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_fire_trial_boss",
+        "elements": [
+          "fire（火）",
+          "earth（土，副專精）"
+        ],
+        "element_palettes": [
+          "黑曜岩黑、熔岩赤紅",
+          "熾金、古銅棕"
+        ],
+        "base_parents": [
+          "生物·爬蟲類",
+          "載具·戰車輪輻"
+        ],
+        "bases": [
+          "火山黑曜石巨蚺",
+          "燃燒火油雙輪戰車輪",
+          "熔岩裂縫鱗甲"
+        ],
+        "appearance_palette": [
+          "黑曜岩黑",
+          "熔岩赤紅",
+          "熾金",
+          "古銅棕"
+        ],
+        "timeline": "遠古安納托利亞神話",
+        "region": "西亞/中東",
+        "archetype": "arch_illuyanka",
+        "archetype_name": "伊盧揚卡風暴巨蛇",
+        "archetype_type": "P5-02 考據庫·神話象徵",
+        "meaning": "肩懸雙輪戰車火輪、盤踞火山岩窟的赤銅巨蚺",
+        "motifs": "盤繞岩窟巨蛇、雷霆雙輪牛車、陶製葡萄美酒甕、石灰岩浮雕",
+        "sensitivity": "ok",
+        "role": "火山試煉 BOSS：雙輪突進衝鋒，常駐縮短火招冷卻",
+        "habit": "aggressive",
+        "disposition": "熾烈狂暴、正面突破",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "4.5 m",
+            "weight": "1120 kg",
+            "body_fat": "8%"
+          }
+        },
+        "height_length": "4.5 m",
+        "weight": "1120 kg",
+        "body_fat": "8%",
+        "formula": "fire（火） + earth（土，副專精） × 火山黑曜石巨蚺 + 燃燒火油雙輪戰車輪 + 熔岩裂縫鱗甲 × 伊盧揚卡風暴巨蛇",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "fire_basalt_drake",
+              "name_zh": "熔岩雙輪蚺",
+              "name_en": "Pyrowheelis",
+              "naming_note": "取烈焰（pyro-）與戰車雙輪（wheel）之意象。",
+              "size_class": "XL",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
+              "niches": [
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
+              "height_length": "4.5 m",
+              "weight": "1120 kg",
+              "body_fat": "8%",
+              "look": "岩窟巨蛇 × 雙輪戰車黑曜石火輪；盤繞熔岩裂隙的黑曜石巨蚺，雙肩懸浮兩具燃燒著陶甕火油的雙輪戰車輪輻，鱗縫透出熾白岩漿紋",
+              "dex_zh": "棲息於火山岩窟的赤銅火蚺，肩側懸浮著燃燒油焰的黑曜石雙輪，衝鋒時宛如流星犁過焦土。",
+              "dex_en": "A volcanic cavern serpent flanked by twin burning obsidian chariot wheels, charging like a meteor across scorched craters.",
+              "signature_move": {
+                "move_id": "fire_meteor_rush",
+                "name_zh": "隕炎輪衝",
+                "name_en": "Meteor Rush",
+                "element": "fire",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "如隕石般拖曳烈焰突進。",
+                "desc_zh": "化作熾熱隕石沿長距離直線高速衝鋒，以猛烈火壓撞碎沿途阻礙。",
+                "desc_en": "Dashes forward along a long line like a blazing meteor, scorching everything in its path.",
+                "visual": "化作熾熱隕石沿長距離直線高速衝鋒，以猛烈火壓撞碎沿途阻礙。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_fire_smoldering_core",
+            "name_zh": "陰燃火核",
+            "idea_zh": "常駐縮短火屬性主動技冷卻百分之十，但水抗性降低十五點。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_earth_trial_boss",
+      "code_zh": "土",
+      "element": "earth",
+      "title_zh": "岩門石獅獸",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_earth_trial_boss",
+        "elements": [
+          "earth（土）"
+        ],
+        "element_palettes": [
+          "紅褐花崗岩、赭紅",
+          "金砂、蒼青"
+        ],
+        "base_parents": [
+          "自然·岩石/礦脈",
+          "生物·哺乳類",
+          "建築·石窟山門"
+        ],
+        "bases": [
+          "紅褐花崗岩雄獅",
+          "山門獅爪石柱前足",
+          "彩繪壁畫陶片鬃毛"
+        ],
+        "appearance_palette": [
+          "紅褐花崗岩",
+          "赭紅",
+          "金砂",
+          "蒼青"
+        ],
+        "timeline": "古代南亞岩壁宮殿文明",
+        "region": "南亞",
+        "archetype": "arch_kashyapa_sigiriya",
+        "archetype_name": "迦葉波與獅子岩",
+        "archetype_type": "P5-02 考據庫·建築與文化遺產",
+        "meaning": "如絕壁山門巨獅般鎮守地底礦坑試煉場的花崗岩巨獸",
+        "motifs": "巨岩獅爪山門、絕壁雲宮、對稱蓮花水苑、彩繪壁畫廊",
+        "sensitivity": "ok",
+        "role": "礦坑試煉 BOSS：高防禦遠距岩柱爆破，常駐高額土抗",
+        "habit": "territorial",
+        "disposition": "威嚴沉重、寸步不讓",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "3.1 m",
+            "weight": "1850 kg",
+            "body_fat": "4%"
+          }
+        },
+        "height_length": "3.1 m",
+        "weight": "1850 kg",
+        "body_fat": "4%",
+        "formula": "earth（土） × 紅褐花崗岩雄獅 + 山門獅爪石柱前足 + 彩繪壁畫陶片鬃毛 × 迦葉波與獅子岩",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "earth_citadel_lion",
+              "name_zh": "岩門石獅獸",
+              "name_en": "Litholeo",
+              "naming_note": "取巨岩（litho-）與雄獅（leo）之意象。",
+              "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
+              "niches": [
+                {
+                  "niche": "niche_mineral_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
+              "height_length": "3.1 m",
+              "weight": "1850 kg",
+              "body_fat": "4%",
+              "look": "巨岩雕獅 × 絕壁雲宮石柱與彩繪壁畫甲片；由紅褐花崗岩與礦脈晶石構成的雄獅巨獸，雙前足如山門獅爪石柱落地生根，鬃毛間嵌有彩繪壁畫陶板與蓮花石紋",
+              "dex_zh": "由紅褐花崗岩雕琢而成的礦窟巨獅，前爪如山門石柱般厚重，鬃毛間鑲嵌著古老礦脈晶石與壁畫陶片。",
+              "dex_en": "A cave-guarding lion sculpted from red-brown granite with pillar-like forepaws and mineral fresco plates set into its mane.",
+              "signature_move": {
+                "move_id": "earth_monolith_quarry",
+                "name_zh": "岩柱採掘震爆",
+                "name_en": "Monolith Quarry",
+                "element": "earth",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "召出巨型礦柱在遠處震裂。",
+                "desc_zh": "從目標腳下喚出巨型花崗岩柱並引爆岩壓，對遠處範圍造成沉重打擊。",
+                "desc_en": "Raises a colossal granite monolith beneath the distant target and detonates it with crushing force.",
+                "visual": "從目標腳下喚出巨型花崗岩柱並引爆岩壓，對遠處範圍造成沉重打擊。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_earth_monolith_posture",
+            "name_zh": "巨岩磐姿",
+            "idea_zh": "常駐提高土抗性二十五點，但閃避率降低百分之六。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_ice_trial_boss",
+      "code_zh": "冰",
+      "element": "ice",
+      "title_zh": "冰桅六分鯨",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_ice_trial_boss",
+        "elements": [
+          "ice（冰）"
+        ],
+        "element_palettes": [
+          "冰川藍白、雪白",
+          "朽木棕、黃銅金"
+        ],
+        "base_parents": [
+          "生物·海洋哺乳類",
+          "載具·木造帆船",
+          "器械·天文/測量儀器"
+        ],
+        "bases": [
+          "極地巨鯨",
+          "冰封三桅帆船龍骨脊",
+          "黃銅六分儀冰晶角"
+        ],
+        "appearance_palette": [
+          "冰川藍白",
+          "朽木棕",
+          "黃銅金",
+          "深海墨藍"
+        ],
+        "timeline": "近代極地探險時代（20 世紀初南極遠征）",
+        "region": "極地",
+        "archetype": "arch_ernest_shackleton",
+        "archetype_name": "歐內斯特·沙克爾頓冰海遠征",
+        "archetype_type": "P5-02 考據庫·極地探險史",
+        "meaning": "背負三桅帆船冰脊與黃銅六分儀角、橫渡永久凍土的極地巨鯨",
+        "motifs": "冰封三桅木帆船、驚濤救生小艇、六分儀航跡、南極鋸齒冰山",
+        "sensitivity": "ok",
+        "role": "冰棚試煉 BOSS：重裝遠距極寒扇形掃射，極高冰霜抗性",
+        "habit": "territorial",
+        "disposition": "堅忍沉靜、破冰前行",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "4.6 m",
+            "weight": "2400 kg",
+            "body_fat": "22%"
+          }
+        },
+        "height_length": "4.6 m",
+        "weight": "2400 kg",
+        "body_fat": "22%",
+        "formula": "ice（冰） × 極地巨鯨 + 冰封三桅帆船龍骨脊 + 黃銅六分儀冰晶角 × 歐內斯特·沙克爾頓冰海遠征",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "ice_sextant_leviathan",
+              "name_zh": "冰桅六分鯨",
+              "name_en": "Cryonaviga",
+              "naming_note": "取冰霜（cryo-）與航海（naviga）之意象。",
+              "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
+              "height_length": "4.6 m",
+              "weight": "2400 kg",
+              "body_fat": "22%",
+              "look": "極地巨鯨 × 冰封三桅木帆船與黃銅六分儀；背脊隆起如結霜三桅帆船龍骨的巨鯨，額角為透明冰晶鑄成的黃銅六分儀，尾鰭如鋸齒冰山破開凍土",
+              "dex_zh": "背脊高聳如冰封三桅帆船的極地巨鯨，額前黃銅六分儀角能折射極光並掃出封凍一切的極地暴雪。",
+              "dex_en": "A polar whale whose frozen three-masted ridge and brass sextant horn refract aurora light into sweeping subzero gales.",
+              "signature_move": {
+                "move_id": "ice_polar_sweep",
+                "name_zh": "極地霜潮橫掃",
+                "name_en": "Polar Sweep",
+                "element": "ice",
+                "range_class": "long",
+                "shape": "cone",
+                "movement": "none",
+                "naming_note": "極地暴雪扇形席捲。",
+                "desc_zh": "朝前方廣大扇形區域噴吐極寒冰晶狂風，凍結並撕裂遠處敵陣。",
+                "desc_en": "Sweeps a wide cone of razor-sharp polar ice crystals across distant foes.",
+                "visual": "朝前方廣大扇形區域噴吐極寒冰晶狂風，凍結並撕裂遠處敵陣。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_ice_permafrost_shell",
+            "name_zh": "永凍甲殼",
+            "idea_zh": "常駐提高冰抗性二十點，但移動速度降低百分之十。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_thunder_trial_boss",
+      "code_zh": "雷",
+      "element": "thunder",
+      "title_zh": "塔紋方尖獸",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_thunder_trial_boss",
+        "elements": [
+          "thunder（雷）",
+          "metal（金，副專精）"
+        ],
+        "element_palettes": [
+          "灰花崗岩、電光紫",
+          "金幣黃、湛藍電弧"
+        ],
+        "base_parents": [
+          "建築·方尖碑",
+          "生物·哺乳類"
+        ],
+        "bases": [
+          "花崗岩假窗方尖碑脊塔",
+          "雷電獅獸身軀",
+          "新月圓盤金環"
+        ],
+        "appearance_palette": [
+          "灰花崗岩",
+          "電光紫",
+          "金幣黃",
+          "湛藍電弧"
+        ],
+        "timeline": "古代東非阿克蘇姆王國",
+        "region": "非洲",
+        "archetype": "arch_ezana_aksum",
+        "archetype_name": "埃扎納王與方尖碑",
+        "archetype_type": "P5-02 考據庫·古代王國與碑銘",
+        "meaning": "背負多層假窗方尖碑導引高塔落雷、以新月金盤聚能突刺的電光巨獸",
+        "motifs": "多層假窗花崗岩方尖碑、新月圓盤金幣、麥穗浮雕、三語石碑",
+        "sensitivity": "ok",
+        "role": "高塔試煉 BOSS：高速電漿直線突進，常駐延伸技能射程",
+        "habit": "aggressive",
+        "disposition": "高傲迅捷、引雷為刃",
+        "size_profile": "L",
+        "stage_dims": {
+          "adult": {
+            "height_length": "2.4 m",
+            "weight": "520 kg",
+            "body_fat": "10%"
+          }
+        },
+        "height_length": "2.4 m",
+        "weight": "520 kg",
+        "body_fat": "10%",
+        "formula": "thunder（雷） + metal（金，副專精） × 花崗岩假窗方尖碑脊塔 + 雷電獅獸身軀 + 新月圓盤金環 × 埃扎納王與方尖碑",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "thunder_obelisk_chimera",
+              "name_zh": "塔紋方尖獸",
+              "name_en": "Obelivolt",
+              "naming_note": "取方尖碑（obelisk）與伏特（volt）之意象。",
+              "size_class": "L",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
+              "niches": [
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
+              "height_length": "2.4 m",
+              "weight": "520 kg",
+              "body_fat": "10%",
+              "look": "花崗岩方尖碑構裝 × 高塔避雷獅獸；四足矯健的雷電獅獸，脊背立著多層假窗刻紋的花崗岩方尖碑避雷塔，額頂懸浮新月金盤釋放高壓電弧",
+              "dex_zh": "身披多層假窗花崗岩甲的雷電巨獸，額頂懸浮的新月金盤不斷匯聚高塔電漿，化作閃電直線突刺。",
+              "dex_en": "An armored thunder beast clad in carved granite obelisk plates, channeling high-voltage tower plasma through its floating crescent disc.",
+              "signature_move": {
+                "move_id": "thunder_dynamo_charge",
+                "name_zh": "電漿驅動突進",
+                "name_en": "Dynamo Charge",
+                "element": "thunder",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "高壓電樞直線奔襲。",
+                "desc_zh": "讓全身電漿迴路超頻後高速直線衝鋒，以高壓電擊貫穿遠處目標。",
+                "desc_en": "Overclocks internal plasma coils to charge in a long high-voltage line.",
+                "visual": "讓全身電漿迴路超頻後高速直線衝鋒，以高壓電擊貫穿遠處目標。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_thunder_plasma_charge",
+            "name_zh": "電漿蓄能",
+            "idea_zh": "常駐提高射程百分之八，但土抗性降低十五點。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_wind_trial_boss",
+      "code_zh": "風",
+      "element": "wind",
+      "title_zh": "三翼星航鵬",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_wind_trial_boss",
+        "elements": [
+          "wind（風）"
+        ],
+        "element_palettes": [
+          "深航藍、銀鋁白",
+          "雲灰、星輝青"
+        ],
+        "base_parents": [
+          "生物·鳥類",
+          "載具·跨洋飛行器"
+        ],
+        "bases": [
+          "平流層巨翼信天翁",
+          "三引擎渦輪推進器",
+          "南十字星羅盤尾跡"
+        ],
+        "appearance_palette": [
+          "深航藍",
+          "銀鋁白",
+          "雲灰",
+          "星輝青"
+        ],
+        "timeline": "近代跨洋航空開拓時代（1928 南十字星號）",
+        "region": "大洋洲",
+        "archetype": "arch_kingsford_smith",
+        "archetype_name": "查爾斯·金斯福德·史密斯跨洋航線",
+        "archetype_type": "P5-02 考據庫·航空開拓史",
+        "meaning": "搭載三具渦輪氣流引擎、沿南十字星航跡衝破平流層的太空試煉巨禽",
+        "motifs": "三引擎藍翼飛機、南十字星羅盤、跨洋無線電、暴風積雲",
+        "sensitivity": "ok",
+        "role": "太空設施試煉 BOSS：全場最高速俯衝切入，進場大幅縮短風招冷卻",
+        "habit": "aggressive",
+        "disposition": "自由凌厲、御風巡航",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "3.6 m",
+            "weight": "480 kg",
+            "body_fat": "9%"
+          }
+        },
+        "height_length": "3.6 m",
+        "weight": "480 kg",
+        "body_fat": "9%",
+        "formula": "wind（風） × 平流層巨翼信天翁 + 三引擎渦輪推進器 + 南十字星羅盤尾跡 × 查爾斯·金斯福德·史密斯跨洋航線",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "wind_tristar_albatross",
+              "name_zh": "三翼星航鵬",
+              "name_en": "Tristaroc",
+              "naming_note": "取三引擎（tristar）與巨鵬（roc）之意象。",
+              "size_class": "XL",
+              "ai_style": "charge",
+              "grip_mode": "two_handed",
+              "niches": [
+                {
+                  "niche": "niche_patrol_hunter",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_apex_predator",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
+              "height_length": "3.6 m",
+              "weight": "480 kg",
+              "body_fat": "9%",
+              "look": "藍翼信天翁 × 三引擎軌道飛行器與南十字羅盤；展翼寬闊的深藍金屬羽翼巨鳥，胸前與雙翼嵌有三具旋風推進渦輪，尾羽浮現南十字星光軌羅盤",
+              "dex_zh": "具備三具氣流推進渦輪的平流層藍翼巨禽，尾羽牽引著南十字星羅盤軌跡，能無視稀薄大氣高速俯衝。",
+              "dex_en": "A stratospheric blue-winged albatross driven by three airflow turbines, trailing a Southern Cross compass wake through orbital facilities.",
+              "signature_move": {
+                "move_id": "wind_tailwind_dive",
+                "name_zh": "順風軌道俯衝",
+                "name_en": "Tailwind Dive",
+                "element": "wind",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "dash",
+                "naming_note": "乘順風氣流直線俯衝。",
+                "desc_zh": "乘著平流層順風氣流加速，自遠空沿直線猛烈俯衝撞擊目標。",
+                "desc_en": "Rides stratospheric tailwinds into a high-speed linear dive toward distant foes.",
+                "visual": "乘著平流層順風氣流加速，自遠空沿直線猛烈俯衝撞擊目標。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_wind_tempest_headway",
+            "name_zh": "暴風前驅",
+            "idea_zh": "登場後 5 秒內縮短風屬性主動技冷卻百分之二十，但閃避率降低百分之六。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_shadow_trial_boss",
+      "code_zh": "影",
+      "element": "shadow",
+      "title_zh": "千燈墨潮獸",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_shadow_trial_boss",
+        "elements": [
+          "shadow（影）"
+        ],
+        "element_palettes": [
+          "墨夜黑、幽紫",
+          "貝殼白、鬼火青"
+        ],
+        "base_parents": [
+          "生物·軟體動物/章魚",
+          "器物·幻燈/珊瑚面具"
+        ],
+        "bases": [
+          "墨霧八腕巨蛸靈體",
+          "珊瑚雕紋貝殼面具",
+          "千盞幽藍引魂幻燈"
+        ],
+        "appearance_palette": [
+          "墨夜黑",
+          "幽紫",
+          "貝殼白",
+          "鬼火青"
+        ],
+        "timeline": "古代印度洋群島口傳傳說",
+        "region": "南亞",
+        "archetype": "arch_rannamaari",
+        "archetype_name": "蘭納瑪里海魔",
+        "archetype_type": "P5-02 考據庫·民間傳說",
+        "meaning": "在迷宮深處懸掛千盞幽藍幻燈、喚出重力奇點吞噬侵入者的墨影巨蛸",
+        "motifs": "海上千燈幻影、珊瑚石海神廟、月夜黑浪、寶螺貝幣",
+        "sensitivity": "ok",
+        "role": "迷宮試煉 BOSS：超高陰攻奇點重力爆破，進場爆發暗影專精",
+        "habit": "dominant",
+        "disposition": "詭譎深邃、以幻惑敵",
+        "size_profile": "XL",
+        "stage_dims": {
+          "adult": {
+            "height_length": "3.8 m",
+            "weight": "340 kg",
+            "body_fat": "5%"
+          }
+        },
+        "height_length": "3.8 m",
+        "weight": "340 kg",
+        "body_fat": "5%",
+        "formula": "shadow（影） × 墨霧八腕巨蛸靈體 + 珊瑚雕紋貝殼面具 + 千盞幽藍引魂幻燈 × 蘭納瑪里海魔",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "shadow_lantern_kraken",
+              "name_zh": "千燈墨潮獸",
+              "name_en": "Noctilumina",
+              "naming_note": "取夜影（nocti-）與幻燈微光（lumina）之意象。",
+              "size_class": "XL",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
+              "niches": [
+                {
+                  "niche": "niche_ambush_predator",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_carrion_scavenger",
+                  "weight": 1
+                }
+              ],
+              "height_length": "3.8 m",
+              "weight": "340 kg",
+              "body_fat": "5%",
+              "look": "深海墨影巨蛸 × 海神廟珊瑚面具與漂浮幻燈群；墨黑霧氣凝成的八腕巨蛸靈體，面戴白色珊瑚雕紋貝殼面具，觸腕末端懸掛數十盞幽紫引魂幻燈",
+              "dex_zh": "隱沒於幽暗迷宮的墨霧巨蛸靈獸，面戴珊瑚貝殼面具，觸腕懸掛的千盞幽藍幻燈能喚出重力奇點。",
+              "dex_en": "An ink-mist labyrinth kraken wearing a carved coral-shell mask, summoning gravitational singularities amidst thousands of drifting ghost lanterns.",
+              "signature_move": {
+                "move_id": "shadow_singularity_maw",
+                "name_zh": "暗影奇點吞噬",
+                "name_en": "Singularity Maw",
+                "element": "shadow",
+                "range_class": "long",
+                "shape": "burst",
+                "movement": "none",
+                "naming_note": "召喚吞噬光線的暗影奇點。",
+                "desc_zh": "在遠處張開高密度暗影重力奇點，將範圍內的一切捲入猛烈崩塌。",
+                "desc_en": "Opens a dense shadow singularity at long range that collapses violently on enemies.",
+                "visual": "在遠處張開高密度暗影重力奇點，將範圍內的一切捲入猛烈崩塌。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_shadow_nightfall_creed",
+            "name_zh": "入夜信條",
+            "idea_zh": "登場後 6 秒內提高影屬性專精二十五點，但射程降低百分之十。"
+          },
+          "overload": "暫無超載型態"
+        }
+      }
+    },
+    {
+      "line_id": "line_light_trial_boss",
+      "code_zh": "光",
+      "element": "light",
+      "title_zh": "印紋聖角獸",
+      "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
+      "concept": {
+        "line_id": "line_light_trial_boss",
+        "elements": [
+          "light（光）",
+          "fire（火，副專精）"
+        ],
+        "element_palettes": [
+          "滑石象牙白、聖金",
+          "暖琥珀、青銅綠"
+        ],
+        "base_parents": [
+          "生物·哺乳類",
+          "器物·方印/祭祀香爐"
+        ],
+        "bases": [
+          "滑石玉雕單角神牛",
+          "菩提葉金紋護甲",
+          "鏤空聖光香爐角冠"
+        ],
+        "appearance_palette": [
+          "滑石象牙白",
+          "聖金",
+          "暖琥珀",
+          "青銅綠"
+        ],
+        "timeline": "遠古印度河谷文明（哈拉帕印章意象）",
+        "region": "南亞",
+        "archetype": "arch_harappan_unicorn",
+        "archetype_name": "哈拉帕獨角聖獸",
+        "archetype_type": "P5-02 考據庫·遠古印章文明",
+        "meaning": "額前單角托舉鏤空光爐、以方印聖光貫穿神廟試煉場的古代聖牛",
+        "motifs": "滑石方印、單角神牛、鏤空祭祀香爐、菩提葉紋",
+        "sensitivity": "ok",
+        "role": "神廟試煉 BOSS：極致直線光槍貫穿，常駐強化光屬性專精",
+        "habit": "dominant",
+        "disposition": "聖潔威嚴、審判迷障",
+        "size_profile": "L",
+        "stage_dims": {
+          "adult": {
+            "height_length": "2.4 m",
+            "weight": "610 kg",
+            "body_fat": "11%"
+          }
+        },
+        "height_length": "2.4 m",
+        "weight": "610 kg",
+        "body_fat": "11%",
+        "formula": "light（光） + fire（火，副專精） × 滑石玉雕單角神牛 + 菩提葉金紋護甲 + 鏤空聖光香爐角冠 × 哈拉帕獨角聖獸",
+        "locked": {
+          "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
+          "stages": [
+            {
+              "stage": "adult",
+              "creature_id": "light_seal_unicorn",
+              "name_zh": "印紋聖角獸",
+              "name_en": "Sigilicorn",
+              "naming_note": "取方印（sigil）與獨角獸（unicorn）之意象。",
+              "size_class": "L",
+              "ai_style": "keep_distance",
+              "grip_mode": "one_hand_shield",
+              "niches": [
+                {
+                  "niche": "niche_ground_grazer",
+                  "weight": 3
+                },
+                {
+                  "niche": "niche_ambient_energy_feeder",
+                  "weight": 2
+                },
+                {
+                  "niche": "niche_opportunistic_omnivore",
+                  "weight": 1
+                }
+              ],
+              "height_length": "2.4 m",
+              "weight": "610 kg",
+              "body_fat": "11%",
+              "look": "單角神牛 × 滑石方印光紋與鏤空聖光香爐；潔白如滑石玉雕的單角神牛，體側浮現方印幾何金紋與菩提葉光甲，額前長角托舉著旋轉的鏤空光能香爐",
+              "dex_zh": "身披滑石方印金紋與菩提葉光甲的單角聖牛，額前長角托舉著鏤空聖光香爐，以純淨光槍鎮守神廟。",
+              "dex_en": "A single-horned temple guardian etched with steatite seal patterns and bodhi-leaf armor, firing zenith light lances from its censer horn.",
+              "signature_move": {
+                "move_id": "light_zenith_lance",
+                "name_zh": "天頂聖光槍",
+                "name_en": "Zenith Lance",
+                "element": "light",
+                "range_class": "long",
+                "shape": "line",
+                "movement": "none",
+                "naming_note": "自天頂校準的純淨光槍。",
+                "desc_zh": "將聖光聚焦為極細長的直線光槍，從遠處瞬間貫穿敵方陣線。",
+                "desc_en": "Focuses temple radiance into a long linear lance that pierces distant targets.",
+                "visual": "將聖光聚焦為極細長的直線光槍，從遠處瞬間貫穿敵方陣線。"
+              }
+            }
+          ],
+          "trait": {
+            "trait_id": "trait_light_radiant_core",
+            "name_zh": "輝光核心",
+            "idea_zh": "常駐提高光屬性專精十點，但影抗性降低十五點。"
+          },
+          "overload": "暫無超載型態"
         }
       }
     },
@@ -4691,6 +5929,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "0.35 m",
               "weight": "1.2 kg",
@@ -4719,6 +5958,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "S",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "0.85 m",
               "weight": "18 kg",
@@ -4747,6 +5987,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "1.65 m",
               "weight": "95 kg",
@@ -4775,6 +6016,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Aquagel Slime",
               "naming_note": "四階段統一命名；靈澤泉精。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.2 m",
               "weight": "1450 kg",
@@ -4884,6 +6126,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "0.38 m",
               "weight": "4.5 kg",
@@ -4912,6 +6155,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "1.15 m",
               "weight": "68 kg",
@@ -4940,6 +6184,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "2.10 m",
               "weight": "340 kg",
@@ -4968,6 +6213,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Chronobeetle",
               "naming_note": "四階段統一命名；航海懷錶機關。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.8 m",
               "weight": "3200 kg",
@@ -5077,6 +6323,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "S",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "0.50 m",
               "weight": "22 kg",
@@ -5105,6 +6352,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "1.35 m",
               "weight": "195 kg",
@@ -5133,6 +6381,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "2.40 m",
               "weight": "780 kg",
@@ -5161,6 +6410,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Terragolem",
               "naming_note": "四階段統一命名；古窯陶岩護衛。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "5.5 m",
               "weight": "6200 kg",
@@ -5270,6 +6520,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.32 m",
               "weight": "0.6 kg",
@@ -5298,6 +6549,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "S",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.95 m",
               "weight": "14 kg",
@@ -5326,6 +6578,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "1.75 m",
               "weight": "88 kg",
@@ -5354,6 +6607,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Hearthwisp",
               "naming_note": "四階段統一命名；火灶爐魂。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.3 m",
               "weight": "920 kg",
@@ -5463,6 +6717,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "aggressive",
               "height_length": "0.42 m",
               "weight": "3.8 kg",
@@ -5491,6 +6746,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "aggressive",
               "height_length": "1.15 m",
               "weight": "38 kg",
@@ -5519,6 +6775,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "aggressive",
               "height_length": "1.85 m",
               "weight": "92 kg",
@@ -5547,6 +6804,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostblade",
               "naming_note": "四階段統一命名；極速冰刃手。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.0 m",
               "weight": "780 kg",
@@ -5656,6 +6914,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.45 m",
               "weight": "6 kg",
@@ -5684,6 +6943,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "1.30 m",
               "weight": "85 kg",
@@ -5712,6 +6972,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "2.30 m",
               "weight": "460 kg",
@@ -5740,6 +7001,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Frostsoul",
               "naming_note": "四階段統一命名；冬夜霜魄雪人。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "5.4 m",
               "weight": "4800 kg",
@@ -5849,6 +7111,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "0.40 m",
               "weight": "5 kg",
@@ -5877,6 +7140,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "1.35 m",
               "weight": "72 kg",
@@ -5905,6 +7169,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "2.45 m",
               "weight": "310 kg",
@@ -5933,6 +7198,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Inkstele",
               "naming_note": "四階段統一命名；墨林碑魂。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "5.2 m",
               "weight": "2600 kg",
@@ -6042,6 +7308,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.36 m",
               "weight": "2.5 kg",
@@ -6070,6 +7337,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "1.10 m",
               "weight": "55 kg",
@@ -6098,6 +7366,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "2.05 m",
               "weight": "240 kg",
@@ -6126,6 +7395,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Kheprisun",
               "naming_note": "四階段統一命名；凱布利推日聖甲蟲。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.8 m",
               "weight": "2100 kg",
@@ -6235,6 +7505,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "0.45 m",
               "weight": "18 kg",
@@ -6263,6 +7534,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "1.45 m",
               "weight": "260 kg",
@@ -6291,6 +7563,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "2.40 m",
               "weight": "980 kg",
@@ -6319,6 +7592,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Vaultmech",
               "naming_note": "四階段統一命名；模組貨櫃機兵。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "5.0 m",
               "weight": "8400 kg",
@@ -6428,6 +7702,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "0.35 m",
               "weight": "1.0 kg",
@@ -6456,6 +7731,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "S",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "0.95 m",
               "weight": "15 kg",
@@ -6484,6 +7760,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "vigilant",
               "height_length": "1.80 m",
               "weight": "65 kg",
@@ -6512,6 +7789,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voideye",
               "naming_note": "四階段統一命名；深空虛空之瞳。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.6 m",
               "weight": "1100 kg",
@@ -6621,6 +7899,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "S",
+              "grip_mode": "one_hand_shield",
               "habit": "aggressive",
               "height_length": "0.52 m",
               "weight": "12 kg",
@@ -6649,6 +7928,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "aggressive",
               "height_length": "1.30 m",
               "weight": "95 kg",
@@ -6677,6 +7957,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "aggressive",
               "height_length": "2.25 m",
               "weight": "280 kg",
@@ -6705,6 +7986,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Solmane",
               "naming_note": "四階段統一命名；日輪火鬃聖獅。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "5.0 m",
               "weight": "2900 kg",
@@ -6814,6 +8096,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.38 m",
               "weight": "2.2 kg",
@@ -6842,6 +8125,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "1.15 m",
               "weight": "42 kg",
@@ -6870,6 +8154,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "2.10 m",
               "weight": "180 kg",
@@ -6898,6 +8183,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Voltcraft",
               "naming_note": "四階段統一命名；超導巡航電翼。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.8 m",
               "weight": "1650 kg",
@@ -7007,6 +8293,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "0.40 m",
               "weight": "1.8 kg",
@@ -7035,6 +8322,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "1.20 m",
               "weight": "26 kg",
@@ -7063,6 +8351,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "territorial",
               "height_length": "2.15 m",
               "weight": "78 kg",
@@ -7091,6 +8380,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Verdaquila",
               "naming_note": "四階段統一命名；森冠巨鷲。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "5.2 m",
               "weight": "980 kg",
@@ -7200,6 +8490,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.28 m",
               "weight": "0.7 kg",
@@ -7228,6 +8519,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "S",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.85 m",
               "weight": "11 kg",
@@ -7256,6 +8548,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "1.65 m",
               "weight": "45 kg",
@@ -7284,6 +8577,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Zephyrlark",
               "naming_note": "四階段統一命名；天嵐雲雀。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.2 m",
               "weight": "680 kg",
@@ -7393,6 +8687,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "XS",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "0.42 m",
               "weight": "3.0 kg",
@@ -7421,6 +8716,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "M",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "1.25 m",
               "weight": "34 kg",
@@ -7449,6 +8745,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "L",
+              "grip_mode": "one_hand_shield",
               "habit": "tolerant",
               "height_length": "2.00 m",
               "weight": "110 kg",
@@ -7477,6 +8774,7 @@ window.COSMI_DESIGNED = {
               "name_en": "Woodpuppet",
               "naming_note": "四階段統一命名；靈木懸絲偶。",
               "size_class": "XL",
+              "grip_mode": "one_hand_shield",
               "habit": "dominant",
               "height_length": "4.6 m",
               "weight": "1200 kg",

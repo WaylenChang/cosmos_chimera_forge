@@ -424,14 +424,26 @@
     },
 
     {
-      // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊：立繪包已有的概念設定（名稱、屬性、基底等）不再重複，去除對 3D 無關緊要的贅詞。
-      id: "creature-model-rig", version: "5.0.1", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
+      // REQ: 使用者 2026-11-09 — 宙獸 img-to-3D 極致精簡與立繪規格對齊；2026-11-19 — 追蹤允許的武器/持有組合、虛擬大手動作規範。
+      id: "creature-model-rig", version: "5.1.0", zh: "宙獸 Image-to-3D 建模、綁骨與動作（雲端硬碟立繪包）", prefix: "mdl", platform: "gemini",
       needs: "creature", drop: "Art/_incoming", drive: true,
       options: [
         { key: "scope", type: "select", label: "模式", items: () => [{ v: "single", zh: "指定處理（單一立繪包）" }, { v: "batch", zh: "批量處理（01_portraits 內宙獸目錄）" }], def: "single" },
         { key: "source_pack", type: "text", label: "參照宙獸立繪包 ID (source_pack)", def: "", placeholder: "例：cr-20261106-7f3a-2105-adult", when: o => o.scope !== "batch" },
         { key: "input_img", type: "text", label: "指定輸入 img", def: "", placeholder: "選填，留空預設使用正面正交 + turnaround 三視圖", when: o => o.scope !== "batch" },
         { key: "stage", type: "select", label: "宙獸型態（四型態分開處理）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult", when: o => o.scope !== "batch" },
+        { key: "grip_mode", type: "select", label: "武器持有模式", items: () => [
+          { v: "auto", zh: "自動追蹤已設計組合（預設）" },
+          { v: "two_handed", zh: "雙手武器（two_handed）" },
+          { v: "dual_wield", zh: "雙持單手（dual_wield）" },
+          { v: "one_hand_shield", zh: "單手＋盾（one_hand_shield）" }
+        ], def: "auto", when: o => o.scope !== "batch" },
+        { key: "weapon_scope", type: "select", label: "武器距離過濾", items: () => [
+          { v: "all_allowed", zh: "該持有模式允許之近戰＋遠程（預設）" },
+          { v: "signature_only", zh: "僅依主招式距離過濾（melee / ranged）" },
+          { v: "melee_only", zh: "僅近戰武器動作" },
+          { v: "ranged_only", zh: "僅遠程武器動作" }
+        ], def: "all_allowed", when: o => o.scope !== "batch" },
         { key: "actions_creature", type: "checks", label: "宙獸動作", items: () => C.ACTIONS.creature.map(a => ({ v: a.id, zh: a.zh })), def: "all" }
       ],
       build(ctx) {
@@ -441,6 +453,15 @@
         const outId = batch ? ctx.taskId + "-<subject-id>" : ctx.taskId;
         const unit = batch ? "cr_" + S + "_<stage>" : "cr_" + S + "_" + curStage;
         const stageTag = batch ? "<stage>" : curStage;
+        const stageEntry = (!batch && c.locked?.stages) ? c.locked.stages.find(s => s.stage === curStage) : null;
+        const gripMode = batch ? "auto" : (o.grip_mode && o.grip_mode !== "auto" ? o.grip_mode : (stageEntry?.grip_mode || "one_hand_shield"));
+        const sigRange = stageEntry?.signature_move?.range_class || "";
+        const allowedDist = batch ? "all"
+          : o.weapon_scope === "melee_only" ? "melee"
+          : o.weapon_scope === "ranged_only" ? "ranged"
+          : (o.weapon_scope === "signature_only" && sigRange) ? (sigRange === "melee" ? "melee" : "ranged")
+          : "all";
+        const gripInfo = (!batch && C.GRIP_MODES) ? C.GRIP_MODES[gripMode] : null;
 
         // 體型與面數規格對齊
         const sizes = (c.size_profile || "S→M→L→XL").split("→");
@@ -462,11 +483,31 @@
           : `\`images/cr_${S}_${curStage}_front.png\`（正面正交基準 1:1）＋ \`images/cr_${S}_${curStage}_turnaround.png\`（正交三視圖合圖 16:9）`;
 
         const picked = o.actions_creature || [];
-        const clipLines = C.ACTIONS.creature.filter(a => picked.includes(a.id)).map(a =>
+        const clipLines = C.ACTIONS.creature.filter(a => {
+          if (!picked.includes(a.id)) return false;
+          if (!batch) {
+            if (a.grips && !a.grips.includes(gripMode)) return false;
+            if (allowedDist !== "all" && a.dist && a.dist !== allowedDist) return false;
+          }
+          return true;
+        }).map(a =>
           "| `cr_" + stageTag + "_" + a.id + "` | " + a.zh + " | " + a.f + " | " + (a.loop ? "✓" : "") + " | " + (a.rm ? "✓" : "") + " | " + (a.ev || []).join(", ") + " |"
         ).join("\n");
 
-        const rigRule = "Generic 骨架（≤ 60 骨骼）：`Root`（地面原點 pivot）→ `Hips` → `Spine_01..n` → `Neck` → `Head`；四肢以 `L_`/`R_` 為前綴；尾部 `Tail_01..n`；翅膀 `Wing_L_01..n`；插槽骨 `Socket_Mouth`、`Socket_Head`、`Socket_Front`、`Socket_Core_FX`、`Socket_PetTouch`、`Socket_Ground_FX`。";
+        const rigRule = "Generic 骨架（≤ 60 骨骼）：`Root`（地面原點 pivot）→ `Hips` → `Spine_01..n` → `Neck` → `Head`；四肢以 `L_`/`R_` 為前綴；尾部 `Tail_01..n`；翅膀 `Wing_L_01..n`；插槽骨 `Socket_Mouth`、`Socket_Head`、`Socket_Front`、`Socket_Core_FX`、`Socket_PetTouch`、`Socket_Ground_FX`、`Socket_Weapon_R`、`Socket_Weapon_L`（預留空掛點，不建武器網格）。";
+
+        const weaponAllowLines = [];
+        if (gripInfo) {
+          if (allowedDist === "all" || allowedDist === "melee") weaponAllowLines.push("近戰：" + gripInfo.melee_types.join("、"));
+          if (allowedDist === "all" || allowedDist === "ranged") weaponAllowLines.push("遠程：" + gripInfo.ranged_types.join("、"));
+          if (gripInfo.offhand_types?.length) weaponAllowLines.push("副手盾牌：" + gripInfo.offhand_types.join("、"));
+        }
+        const virtualHandBlock = [
+          `- **虛擬大手規範**：${C.GRIP_MODES?.virtual_hand_rule || "宙獸以懸浮虛擬大手（Socket_Weapon_R／Socket_Weapon_L）持握與操作武器，而非本體實體肢體；但設計動作時本體軀幹與四肢／羽翼仍須同步做出蓄力、扭轉、前壓、舉盾或後座力等相應動作。"}`,
+          batch
+            ? "- **持有組合追蹤（批量）**：依各宙獸已定案之 `grip_mode`（`two_handed`／`dual_wield`／`one_hand_shield`）過濾對應 clip（僅 `dual_wield` 需拆 `_r`/`_l` 交替動作），勿為不支援的持握方式製作無用動作。"
+            : `- **允許持握組合**：\`${gripMode}\`（${gripInfo?.zh || gripMode}）· 掛點：${gripInfo?.sockets || "Socket_Weapon_R + Socket_Weapon_L"} · 對應獨立武器類型（供預留空間參考，勿於宙獸內繪製）：${weaponAllowLines.join(" ｜ ")}。${gripInfo?.pose || ""}`
+        ].join("\n");
 
         const manifestObj = {
           spec: "cosmimera-art-task/1",
@@ -510,6 +551,7 @@
           "",
           "## 3. 骨架體系（Generic Rig）",
           "- " + rigRule,
+          virtualHandBlock,
           "",
           "## 4. 動畫動作清單（30 fps）",
           "| clip | 說明 | 幀數 | loop | RM | 事件@幀 |",

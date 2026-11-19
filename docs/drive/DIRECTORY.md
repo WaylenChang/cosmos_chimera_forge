@@ -1,7 +1,7 @@
 # Cosmos Chimera Forge — Google Drive 目錄結構、名稱／ID 對照與管線索引
 
 - **專案根目錄**：`cosmos_chimera_forge/`（Drive Folder ID: `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`）
-- **最後維護日期**：2026-11-17
+- **最後維護日期**：2026-11-19
 
 ## 1. Google Drive 目錄結構與命名規範
 
@@ -96,6 +96,7 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 | `03b_blender` | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 第三層保留 `<id>[_<stage>]_03b_blender[_<ver>].glb`；其餘（`.blend`、`_manifest.json`、貼圖、渲染圖）存於 `03b_blender/[<ver>/]` |
 | `04_review_3d` | `<kind>/prompts/04_review_3d.prompt.md` | 3D 最終驗收 | `04_review_3d/[<ver>/]<id>[_<stage>]_04_review_3d[_<ver>].json` |
 | `05_wiki` | `<kind>/prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 第三層保留 `<id>[_<stage>]_05_wiki[_<ver>].md`（僅於目標檔案不存在時建立） |
+| `skeleton_actions` | `<kind>/prompts/skeleton_actions.md` | 骨架與動作規格 | 角色（50 動作）／宙獸（57 動作＋`Socket_Weapon_R`/`L` 虛擬大手規範）／招式（施放動作與掛點對照） |
 | — | `docs/pipeline/TRIGGERS.md` | 簡易觸發語句 | 各步驟觸發指令與管線分支說明 |
 
 ## 3. 角色（Characters）名稱與 ID 對照

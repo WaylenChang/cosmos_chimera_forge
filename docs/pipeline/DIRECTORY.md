@@ -17,7 +17,7 @@ cosmos_chimera_forge/
       portraits/<asset_id>/
       models/<asset_id>/
     wiki/<subject_id>[_<stage>]_wiki.md
-    prompts/                      # 角色專屬階段模板（8 份）
+    prompts/                      # 角色專屬階段模板（8 份）＋ skeleton_actions.md（50 動作）
       jobs/                       # HTML 填入參數後的角色工作 prompt
     reviews/<asset_id>.json       # 審查結果、來源立繪 ID、時間、意見
     backup/
@@ -35,7 +35,7 @@ cosmos_chimera_forge/
       portraits/<asset_id>/
       models/<asset_id>/
     wiki/<subject_id>_<stage>_wiki.md  # 每個階段一份（含 _legacy/）
-    prompts/                      # 宙獸專屬階段模板（8 份）
+    prompts/                      # 宙獸專屬階段模板（8 份）＋ skeleton_actions.md（57 動作與虛擬大手掛點）
       jobs/
     reviews/<asset_id>.json
     backup/
@@ -47,7 +47,7 @@ cosmos_chimera_forge/
     01_vfx/<asset_id>/            # spec.json、storyboard、layers、flipbook
     03_completed/<asset_id>/
     wiki/<move_id>_wiki.md
-    prompts/                      # 主動技專屬 01b_move_vfx.prompt.md
+    prompts/                      # 主動技專屬 01b_move_vfx.prompt.md ＋ skeleton_actions.md（招式動作與掛點對照）
       jobs/
     reviews/<asset_id>.json
     backup/
