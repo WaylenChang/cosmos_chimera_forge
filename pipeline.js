@@ -28,12 +28,14 @@
     if (!Array.isArray(p.model_formats) || !["glb", "blend"].every(x => p.model_formats.includes(x))) throw Error("model_formats 需包含 glb 與 blend");
     return p;
   }
-  function appearance(ctx) {
+  function appearance(ctx, { pureVisual = false } = {}) {
     // Concept parameters are the sole appearance source; notes provide explicit amendments.
     const base = ctx.concept || {};
     const selected = base.locked?.stages?.find(s => s.stage === ctx.opts?.stage) || {};
     const concept = {...base, ...selected, stage: ctx.opts?.stage || base.stage};
-    const fields = ["name_zh", "name_en", "stage", "gender", "age", "body_type", "outfit_palette", "hair_palette", "eye_palette", "silhouette_keywords", "style", "pose", "element_palettes", "elements", "size_profile", "height", "height_length", "appearance", "look", "size_class", "appearance_palette", "hair", "eyes", "outfit", "accessories", "base_parents", "bases", "archetype", "motifs", "disposition", "social_structure", "reproduction", "formula"];
+    const visualFields = ["name_zh", "name_en", "stage", "gender", "age", "body_type", "outfit_palette", "hair_palette", "eye_palette", "silhouette_keywords", "style", "pose", "element_palettes", "elements", "size_profile", "height", "height_length", "appearance", "look", "size_class", "appearance_palette", "hair", "eyes", "outfit", "accessories", "base_parents", "bases", "motifs"];
+    const wikiFields = pureVisual ? [] : ["archetype", "disposition", "social_structure", "reproduction", "formula"];
+    const fields = [...visualFields, ...wikiFields];
     const lines = fields.filter(k => concept[k] != null).map(k => k + ": " + (typeof concept[k] === "object" ? JSON.stringify(concept[k]) : concept[k]));
     if (ctx.notes?.trim()) lines.push("補充／修改: " + ctx.notes.trim());
     return lines.join("\n") || "請先於設計概念參數設定角色／宙獸外觀";
@@ -110,7 +112,7 @@
     const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? root + "/" + (window.COSMI_DRIVE?.cleanSubjectId?.(root, sourceId) || sourceId) : "未指定");
     const imageHint = String(ctx.opts?.input_img || "").trim();
     const hasImage = stage === "blender" && graphMode === "prompt" ? false : Boolean(sourceId || imageHint || stage === "colab");
-    const visual = stage === "appearance" || (stage === "blender" && !hasImage) ? appearance(ctx) : "";
+    const visual = stage === "appearance" ? appearance(ctx) : (stage === "blender" && !hasImage) ? appearance(ctx, { pureVisual: true }) : "";
     let modelInput = "";
     if (is3D) {
       if (hasImage) {

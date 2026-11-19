@@ -1,7 +1,7 @@
 # 簡易觸發語句
 
 先指定 `<kind>`：角色 `characters`、宙獸 `creatures`、主動技 `moves`。不得從根目錄 `prompts/` 寫入新檔；舊共用模板僅供過渡期唯讀相容。角色與宙獸使用各自的模板，主動技使用 `moves/prompts/01b_move_vfx.prompt.md`。
-管線開工時，將 `<kind>/designed_prompts/<design_id>.prompt.md` 移入 `<kind>/<id>/`；若版本或步驟有調整，將更改內容追加於該 `.prompt.md`。`<kind>/<id>/` 只保留 `*.prompt.md` 與當前審核階段或已通過的檔案，已結束步驟或舊有版本移至 `<kind>/<id>/<step>/[<ver>/]`。
+管線開工（或已有 GLB 產出）時，將 `<kind>/designed_prompts/<design_id>.prompt.md`（純視覺特徵 Prompt，宙獸分述四型態一致性、各型態特徵、型態演化關係，每型態獨立產出一個 `.glb`）移入 `<kind>/<id>/`；若版本或步驟有調整，將更改內容追加於該 `.prompt.md`。`<kind>/<id>/` 只保留 `*.prompt.md` 與當前審核階段或已通過的檔案（宙獸不需審查 img，所有宙獸 img 移入 `01_portrait/`），已結束步驟或舊有版本移至 `<kind>/<id>/<step>/[<ver>/]`。
 先選定資產與參數，再擇一交給可讀取 Drive 的 AI；外觀、參數及圖片以指定檔案為準。
 
 - 主動技 VFX：讀取 cosmos_chimera_forge/moves/prompts/01b_move_vfx.prompt.md，使用指定主動技資產設定與輸出路徑。

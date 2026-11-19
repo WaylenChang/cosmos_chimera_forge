@@ -15,8 +15,8 @@
 
 > **三層主目錄與過渡檔分層規範**：
 > 1. 第一層為 `characters/`、`creatures/`、`moves/`；第二層為 `<id>/`（主體 ID）。
-> 2. **Designed Prompts 移轉與追加規則**：未開工主體的設計 Prompt 置於 `<kind>/designed_prompts/<design_id>.prompt.md`。**只要該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<id>/`**；若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md`（標註版本／步驟與調整摘要），不得覆寫原文。
-> 3. **第三層精簡規則**：`<kind>/<id>/` **只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（主立繪 `_01_portrait[_<ver>]_main.png`、最新 GLB `_<03a_colab|03b_blender>[_<ver>].glb`、圖鑑 `_05_wiki[_<ver>].md` 與遊戲格式數據）；**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<id>/<step>/[<ver>/]`**（如 `03a_colab/v1/`、`v2/`），檔名結構 `id_型態(宙獸才有型態)_管線與步驟_版本` 維持不變。
+> 2. **Designed Prompts 移轉與純視覺規範**：未開工主體的設計 Prompt 置於 `<kind>/designed_prompts/<design_id>.prompt.md`（其中 `creatures/designed_prompts/` 依類別分為 `starters/`、`lines/`、`trial_bosses/` 子目錄）。**`.prompt.md` 僅保留供 `prompt-to-img` 或 `prompt-to-3D` 使用的純視覺特徵（避免數值、性格、生態、招式等非視覺雜訊）；宙獸因每個型態皆須產出獨立 `.glb` 檔，必須將「四型態一致性」、「各型態特徵」、「型態演化關係」分開描述。只要該主體已開始任一管線生成步驟（或已有 GLB 產出），立即將對應 `.prompt.md` 移動到 `<kind>/<id>/`**；若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md`（標註版本／步驟與調整摘要），不得覆寫原文。
+> 3. **第三層精簡規則**：`<kind>/<id>/` **只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（角色主立繪 `_01_portrait[_<ver>]_main.png`、最新 GLB `_<03a_colab|03b_blender>[_<ver>].glb`、圖鑑 `_05_wiki[_<ver>].md` 與遊戲格式數據；**宙獸不需審查 img，所有宙獸立繪圖檔一律移入 `creatures/<id>/01_portrait/[<ver>/]`**）；**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<id>/<step>/[<ver>/]`**（如 `03a_colab/v1/`、`v2/`），檔名結構 `id_型態(宙獸才有型態)_管線與步驟_版本` 維持不變。
 > 4. 舊分類子目錄及 `<kind>/02_3d/legacy/` 只允許唯讀盤點與遷移相容讀取，不得作為新工作輸出位置。
 
 ---

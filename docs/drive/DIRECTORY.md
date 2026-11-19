@@ -8,11 +8,11 @@
 ### 1.1 三層主目錄結構與過渡性檔案分層
 
 - **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（主動技／技能）
-- **未開工設計 Prompt 區（`<kind>/designed_prompts/`）**：尚未開始管線生成的主體，其設計 Prompt（`<design_id>.prompt.md`）暫存於 `<kind>/designed_prompts/`；**一旦該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<id>/` 目錄**。若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md` 檔尾（標註版本與步驟），不覆寫原文亦不另建散裝檔案。
+- **未開工設計 Prompt 區（`<kind>/designed_prompts/`）**：尚未開始管線生成的主體，其純視覺設計 Prompt（`<design_id>.prompt.md`，供 `prompt-to-img`／`prompt-to-3D` 使用，不含數值、性格、生態、招式等非視覺雜訊）暫存於 `<kind>/designed_prompts/`；宙獸每個型態皆須產出獨立 `.glb` 檔，`.prompt.md` 須分開描述「四型態一致性」、「各型態特徵」、「型態演化關係」。**一旦該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<id>/` 目錄**。若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md` 檔尾（標註版本與步驟），不覆寫原文亦不另建散裝檔案。
 - **第二層**：`<id>/`（主體 ID，例如 `chr_1286`、`cr_aqua_slime`、`starter_moon_line`、`earth_boulder_roll`）
 - **第三層（`<kind>/<id>/`）**：**只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（即成果審查台等待審查或已通過的核心交付物），**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<id>/<step>/[<ver>/]`**：
   - **設計 Prompt**：`<design_id>.prompt.md`（管線開工後自 `designed_prompts/` 移入，版本／步驟調整時追加於此檔）
-  - **主立繪**：`<id>[_<stage>]_01_portrait[_<ver>]_main.png`（僅保留當前審核中或已通過之最新版本）
+  - **主立繪（僅角色）**：`<id>_01_portrait[_<ver>]_main.png`（僅保留當前審核中或已通過之最新版本；**宙獸不需審查 img，所有宙獸立繪圖檔一律移入 `creatures/<id>/01_portrait/[<ver>/]`**）
   - **GLB 檔**：`<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].glb`（僅保留當前審核中或已通過之最新版本；舊版移入 `<step>/v1/`、`v2/`…）
   - **圖鑑**：`<id>[_<stage>]_05_wiki[_<ver>].md`
   - **遊戲格式數據**：對應遊戲格式數據檔（若有）
@@ -58,16 +58,20 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 │   └── backup/                                    # 退件備份
 ├── creatures/                                     [1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C]
 │   ├── <id>/                                      # 第二層：宙獸 ID（含四階型態）
-│   │   ├── <id>_juvenile_01_portrait_main.png     # 第三層保留：主立繪
+│   │   ├── <design_id>.prompt.md                  # 第三層保留：設計 Prompt（已有 GLB／開工後自 designed_prompts/ 移入）
 │   │   ├── <id>_juvenile_03a_colab.glb            # 第三層保留：GLB
 │   │   ├── <id>_adult_03b_blender_v2.glb          # 第三層保留：GLB（多版本）
 │   │   ├── <id>_juvenile_05_wiki.md               # 第三層保留：圖鑑
 │   │   ├── 00_settings/
-│   │   ├── 01_portrait/
+│   │   ├── 01_portrait/                           # 宙獸不需審查 img，所有立繪 img（含 _main.png）移入此子目錄
 │   │   ├── 02_review_portrait/
 │   │   ├── 03a_colab/
 │   │   ├── 03b_blender/
 │   │   └── 04_review_3d/
+│   ├── designed_prompts/                          # 未開工宙獸純視覺 Prompt（四型態一致性／各型態特徵／型態演化關係）
+│   │   ├── starters/                              # 御三家（starter_*）
+│   │   ├── lines/                                 # 一般演化線（line_*）
+│   │   └── trial_bosses/                          # 地形試煉 BOSS（line_*_trial_boss）
 │   ├── prompts/                                   # 分類專屬管線模板
 │   └── backup/                                    # 退件備份
 ├── moves/                                         [1alulsIhFcb8m8UKXaA-9-orBCEr__P8B]
@@ -79,6 +83,7 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 │   │   │   └── <id>_01b_vfx_manifest.json
 │   │   └── 04_review_3d/
 │   │       └── <id>_04_review_3d.json
+│   ├── designed_prompts/                          # 未開工主動技設計 Prompt（開工後移入對應 <id>/）
 │   ├── prompts/                                   # 分類專屬管線模板
 │   └── backup/                                    # 退件備份
 ├── 00_settings/                                   [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV] # 全域預設

@@ -77,6 +77,9 @@ test('appearance prompt includes visual traits and encyclopedia generation while
   assert.match(crText,/creatures\/cr_one\/cr_one_adult_05_wiki\.md/);
   assert.match(crText,/母系氏族部落/);
   assert.match(crText,/卵生·硬殼築巢/);
+  const pureText=c.COSMI_PIPELINE.appearance(ctx,{pureVisual:true});
+  assert.match(pureText,/long coat/);
+  assert.doesNotMatch(pureText,/母系氏族部落|卵生·硬殼築巢/);
 });
 test('source paths resolve completed portraits by exact asset identity', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='colab';
