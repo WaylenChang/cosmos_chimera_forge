@@ -1482,8 +1482,7 @@
       "02_review_portrait": "review_portrait",
       "03a_colab": "colab",
       "03b_blender": "blender",
-      "04_review_3d": "review_3d",
-      "05_wiki": "encyclopedia"
+      "04_review_3d": "review_3d"
     };
     const stageSet = new Set(stageNames.map(s => s.toLowerCase()));
     return (idx.jobs || []).filter(f => {
@@ -1914,14 +1913,13 @@
         el("div", { class: "pipeline-stepper" },
           el("span", { class: "pipeline-step " + (pt.settingsDone ? "ok" : "") }, pt.settingsDone ? "✅ ① 外觀／參數" : "⬜ ① 外觀／參數"),
           el("span", { class: "muted" }, "→"),
-          el("span", { class: "pipeline-step " + (pt.wikiDone ? "ok" : "") }, pt.wikiDone ? "✅ ② 圖鑑" : "⬜ ② 圖鑑"),
           !isCreature || pt.portrait.pkg || pt.portrait.jobFile ? el("span", { class: "muted" }, "→") : null,
-          !isCreature ? el("span", { class: "pipeline-step " + pt.portrait.cls }, `③ 2D 立繪：${pt.portrait.label}`)
-            : (pt.portrait.pkg || pt.portrait.jobFile ? el("span", { class: "pipeline-step " + pt.portrait.cls }, `③ 參考圖：${pt.portrait.label}`) : null),
+          !isCreature ? el("span", { class: "pipeline-step " + pt.portrait.cls }, `② 2D 立繪：${pt.portrait.label}`)
+            : (pt.portrait.pkg || pt.portrait.jobFile ? el("span", { class: "pipeline-step " + pt.portrait.cls }, `② 參考圖：${pt.portrait.label}`) : null),
           el("span", { class: "muted" }, "→"),
-          el("span", { class: "pipeline-step " + pt.model3d.cls }, `${isCreature ? "③" : "④"} 3D 建模：${pt.model3d.label}`),
+          el("span", { class: "pipeline-step " + pt.model3d.cls }, `${isCreature ? "②" : "③"} 3D 建模：${pt.model3d.label}`),
           el("span", { class: "muted" }, "→"),
-          el("span", { class: "pipeline-step " + (pt.completed ? "ok" : "") }, pt.completed ? `✅ ${isCreature ? "④" : "⑤"} 完成區` : `⬜ ${isCreature ? "④" : "⑤"} 最終驗收`)
+          el("span", { class: "pipeline-step " + (pt.completed ? "ok" : "") }, pt.completed ? `✅ ${isCreature ? "③" : "④"} 完成區` : `⬜ ${isCreature ? "③" : "④"} 最終驗收`)
         ),
         detailHints.length ? el("div", { class: "muted", style: "font-size:11px;font-family:monospace;line-height:1.4" }, detailHints.join(" | ")) : null
       );
@@ -3665,14 +3663,12 @@
       displayedText = b.text;
     }
 
-    if ($("#pipelineStage")?.value === "encyclopedia") displayedText = window.COSMI_PIPELINE.build(b.ctx);
     $("#prompt").value = b.errors.length ? "⚠ " + b.errors.join("\n⚠ ") : displayedText;
     $("#copy").disabled = $("#download").disabled = b.errors.length > 0;
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const encyclopediaKind = t.id === "move-vfx" ? "moves" : t.id.startsWith("character") ? "characters" : "creatures";
-    const wikiDesc = window.COSMI_WIKI.describe(b.ctx);
-    const wikiPath = wikiDesc.path;
+    const wikiDesc = {subject: b.ctx.subjectId || b.ctx.taskId, stage: b.ctx.opts?.stage || b.ctx.concept?.stage || ""};
     const stageVal = document.getElementById("pipelineStage")?.value || "task";
     const subjectFolder = window.COSMI_DRIVE.packageDir(t.id, b.ctx.subjectId || b.ctx.taskId, stageVal);
     const jobStem = window.COSMI_DRIVE?.assetStem?.({
@@ -3702,8 +3698,8 @@
           : portraitAuto
           ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, subjectFolder + "/" + (window.COSMI_DRIVE?.assetStem?.({ kind: encyclopediaKind, id: wikiDesc.subject || b.ctx.subjectId || b.ctx.taskId, stage: wikiDesc.stage, step: "01_portrait" }) || b.ctx.taskId + "_01_portrait") + "_prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, jobPromptPath), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果檔案存放：", el("code", {}, stageVal === "encyclopedia" ? wikiPath : subjectFolder + "/"), "。第三層扁平化命名為 ", el("code", {}, "id[_型態]_管線與步驟[_版本]"), "。"),
-        el("li", {}, "參考來源：", el("code", {}, subjectFolder + "/"), "（同 ID 目錄內既有設定、圖鑑、立繪與模型；退件備份：", el("code", {}, encyclopediaKind + "/backup/"), "）。"),
+        el("li", {}, "成果檔案存放：", el("code", {}, subjectFolder + "/"), "。第三層扁平化命名為 ", el("code", {}, "id[_型態]_管線與步驟[_版本]"), "。"),
+        el("li", {}, "參考來源：", el("code", {}, subjectFolder + "/"), "（同 ID 目錄內既有設定、立繪與模型；退件備份：", el("code", {}, encyclopediaKind + "/backup/"), "）。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
     );
@@ -6550,20 +6546,10 @@
     $("#reroll").addEventListener("click", () => reseed(newSeed(), true));
     $("#seed").addEventListener("change", e => reseed(e.target.value, true));
     $("#notes").addEventListener("input", e => { state.notes = e.target.value; renderOutput(); save(); });
-    function ensureWikiOnPrompt(ctx) {
-      // Wiki creation belongs exclusively to the encyclopedia node, never a copy/download side effect.
-      if (document.getElementById("pipelineStage")?.value !== "encyclopedia" ||
-          !window.COSMI_DRIVE?.ensureWiki || !window.COSMI_PIPELINE?.supports(ctx)) return;
-      void window.COSMI_DRIVE.ensureWiki(ctx).catch(e => {
-        console.warn("尚未同步圖鑑："+e.message);
-        toast("圖鑑未同步至 Drive："+e.message);
-      });
-    }
     $("#copy").addEventListener("click", () => {
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
-      ensureWikiOnPrompt(b.ctx);
       copyText($("#prompt").value, `已複製本步驟 Prompt (${staged.taskId})；格式參數請另存 JSON`);
       record();
     });
@@ -6573,7 +6559,6 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[0]) return;
-      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 1;
       renderOutput();
       const staged = window.COSMI_PIPELINE?.supports(b.ctx) ? {taskId: b.ctx.taskId} : generateAndStageFormats(b);
@@ -6587,7 +6572,6 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[1]) return;
-      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 2;
       renderOutput();
       copyText(b.rounds[1].prompt, `已複製第 2 輪 (三視圖) Prompt！請貼入同對話接續生成`);
@@ -6598,13 +6582,12 @@
       const b = build();
       if (b.errors.length) { toast("Prompt 存在錯誤，無法複製"); return; }
       if (!b.rounds || !b.rounds[2]) return;
-      ensureWikiOnPrompt(b.ctx);
       state.currentRound = 3;
       renderOutput();
       copyText(b.rounds[2].prompt, `已複製第 3 輪 (主立繪) Prompt！請貼入同對話接續生成`);
       record();
     });
-    $("#download").addEventListener("click", () => { ensureWikiOnPrompt(lastBuild.ctx); download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
+    $("#download").addEventListener("click", () => { download(lastBuild.ctx.taskId + ".prompt.md", $("#prompt").value, "text/markdown"); record(); });
     $("#export").addEventListener("click", () => {
       const b = lastBuild; if (!b.ctx.concept) { toast("此任務沒有概念"); return; }
       download(b.ctx.subjectId + ".concept.json", JSON.stringify(b.ctx.concept, null, 2), "application/json");
@@ -6872,7 +6855,7 @@
     persistReview: saveReview,
     setPipelineStage: stage => {
       const flow = currentFlow();
-      if (flow && flow.category === "move" && stage !== "encyclopedia") { renderAll(); return; }
+      if (flow && flow.category === "move" && stage !== "move_vfx") { renderAll(); return; }
       const kind = flow?.category || (task().id.startsWith("character") ? "character" : "creature");
       const route = flow?.route || "image";
       const matching = taskFlow?.steps(kind,route).find(s=>s.stage===stage);
@@ -6905,6 +6888,7 @@
       const b = build();
       if (b.errors.length) throw Error(b.errors.join("；"));
       const stage = document.getElementById("pipelineStage")?.value || "task";
+      if (!Object.prototype.hasOwnProperty.call(window.COSMI_PIPELINE.stages, stage)) throw Error("不支援的生成步驟");
       recordPipelineJob(b.ctx, stage);
       const portrait = stage === "portrait" && window.COSMI_PIPELINE?.supports(b.ctx);
       const root = window.COSMI_DRIVE?.pipelineRoot?.(b.ctx)
