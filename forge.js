@@ -6551,7 +6551,9 @@
     $("#seed").addEventListener("change", e => reseed(e.target.value, true));
     $("#notes").addEventListener("input", e => { state.notes = e.target.value; renderOutput(); save(); });
     function ensureWikiOnPrompt(ctx) {
-      if(!window.COSMI_DRIVE?.ensureWiki || !window.COSMI_PIPELINE?.supports(ctx))return;
+      // Wiki creation belongs exclusively to the encyclopedia node, never a copy/download side effect.
+      if (document.getElementById("pipelineStage")?.value !== "encyclopedia" ||
+          !window.COSMI_DRIVE?.ensureWiki || !window.COSMI_PIPELINE?.supports(ctx)) return;
       void window.COSMI_DRIVE.ensureWiki(ctx).catch(e => {
         console.warn("尚未同步圖鑑："+e.message);
         toast("圖鑑未同步至 Drive："+e.message);
