@@ -8,7 +8,8 @@
   ]);
   const flow = Object.freeze({
     image: [
-      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "設計外觀與辨識特徵，並依概念參數建立角色／宙獸專屬各型態獨立圖鑑（存於 <kind>/<id>/），不混入 3D 或交付指令。", output: "<id>[_<stage>]_00_appearance.md、<id>[_<stage>]_05_wiki.md" },
+      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定", detail: "只整理本角色／本型態宙獸的視覺外觀與辨識特徵。", output: "<id>[_<stage>]_00_appearance.md" },
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成本對象圖鑑", detail: "只建立當前角色／宙獸型態的圖鑑，既有檔案直接沿用。", output: "<id>[_<stage>]_05_wiki.md" },
       { id: "portrait", stage: "portrait", task: "concept", name: "生成立繪", detail: "正面基準圖 → 多視角三視圖（角色另含動態主立繪）；可選手動複製或 Drive 自動模式。", output: "立繪圖片" },
       { id: "review_portrait", stage: "review_portrait", task: "concept", name: "立繪審查", detail: "核對各視角一致性與缺陷；通過後才允許圖片建模。", output: "立繪審查紀錄" },
       { id: "image_colab", stage: "colab", task: "model", name: "Colab + AI + Blender", detail: "Image-to-3D 分支 A：使用已核准立繪，Colab 生成初始模型，由 AI 協助 Blender 修復、檢查與輸出。與 AI + Blender 二選一。", output: ".glb ＋ .blend、骨架、動作、QA", alternate: true },
@@ -16,7 +17,8 @@
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "檢查模型與已核准立繪、材質、骨架、動作及 manifest；人工確認後才歸檔。", output: "最終審查紀錄" }
     ],
     text: [
-      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "先確定原創外觀與辨識特徵，並建立目前角色／宙獸型態獨立 Markdown 圖鑑；不需要先畫正面圖。", output: "<id>[_<stage>]_00_appearance.md、<id>[_<stage>]_05_wiki.md" },
+      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定", detail: "整理本對象視覺特徵，提供純文字建模的外觀基礎。", output: "<id>[_<stage>]_00_appearance.md" },
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成本對象圖鑑", detail: "只生成目前角色／宙獸型態的獨立 Markdown 圖鑑。", output: "<id>[_<stage>]_05_wiki.md" },
       { id: "prompt_3d", stage: "blender", task: "model", name: "AI + Blender（文字建模）", detail: "在立繪之前分岔。以文字直接在 Blender 原創建模、綁骨、製作動作並輸出 .glb／.blend；所有管線均引用獨立圖鑑，禁止在此重複生成。", output: ".glb ＋ .blend；關聯 wiki 路徑" },
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "檢查已完成的 3D 模型、材質、骨架、動作與 manifest；Prompt-to-3D 無需補立繪，缺 .glb／.blend 不得通過。", output: "最終審查紀錄" }
     ],
@@ -57,13 +59,14 @@
     if (kind === "move") return flow.move.map(step => ({type: "step", steps: [step]}));
     return [
       {type: "step", shared: true, steps: [flow.image[0]]},
+      {type: "step", shared: true, steps: [flow.image[1]]},
       {type: "fork", lanes: [
         {id: "image", segments: [
-          {type: "step", steps: [flow.image[1]]},
           {type: "step", steps: [flow.image[2]]},
+          {type: "step", steps: [flow.image[3]]},
           {type: "parallel", tracks: flow.image.filter(step => step.alternate).map(step => [step])}
         ]},
-        {id: "text", segments: flow.text.slice(1, -1).map(step => ({type: "step", steps: [step]}))}
+        {id: "text", segments: flow.text.slice(2, -1).map(step => ({type: "step", steps: [step]}))}
       ]},
       {type: "step", shared: true, steps: [flow.image[flow.image.length - 1]]}
     ];

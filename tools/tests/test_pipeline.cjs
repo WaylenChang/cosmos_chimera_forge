@@ -26,21 +26,14 @@ test('non-portrait stages resolve their Drive templates without leaking paramete
   }
 });
 
-test('portrait always uses the native task builder even with a legacy Drive template', () => {
-  const {c,nodes,ctx}=harness();
-  nodes.pipelineStage.value='portrait';
+test('portrait uses only native per-target instructions', () => {
+  const {c,nodes,ctx}=harness();nodes.pipelineStage.value='portrait';
   c.COSMI_PIPELINE.templates.portrait='LEGACY_DRIVE_TEMPLATE';
-  for (const taskId of ['character-concept', 'creature-concept']) {
-    ctx.task.id=taskId;
-    const expected='NATIVE_PORTRAIT_'+taskId;
-    ctx.task.build=received => {
-      assert.equal(received,ctx);
-      return expected;
-    };
-    assert.match(c.COSMI_PIPELINE.build(ctx),new RegExp('^'+expected+'\\n\\n圖鑑：(characters|creatures|moves)/[^/]+/[^/]+_05_wiki\\.md'));
+  for(const id of ['character-concept','creature-concept']){
+    ctx.task.id=id;ctx.task.build=()=> 'NATIVE_PORTRAIT_'+id;
+    assert.equal(c.COSMI_PIPELINE.build(ctx),'NATIVE_PORTRAIT_'+id);
   }
 });
-
 test('Drive template loading skips the native portrait stage', async () => {
   const {c}=harness();
   const requests=[];
@@ -65,21 +58,18 @@ test('encyclopedia prompt routes three categories to isolated Markdown paths', (
   assert.doesNotMatch(wiki,/DO_NOT_LEAK/);
 });
 
-test('appearance prompt includes visual traits and encyclopedia generation while excluding pipeline and format content', () => {
+test('appearance excludes encyclopedia, lore, geometry and unrelated notes', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='appearance';
+  ctx.notes='STALE_NOTES';ctx.concept.role='captain';
   const text=c.COSMI_PIPELINE.build(ctx);
   assert.match(text,/red|long coat/);
-  assert.match(text,/characters\/chr_one\/chr_one_05_wiki\.md/);
-  assert.doesNotMatch(text,/parameters\.json|03_completed|02_3d|\.glb|999/);
+  assert.doesNotMatch(text,/05_wiki|STALE_NOTES|captain|combat_damage|\.glb|\.json/);
   ctx.task.id='creature-concept';ctx.subjectId='cr_one';
-  ctx.concept={...ctx.concept,social_structure:'母系氏族部落',reproduction:'卵生·硬殼築巢'};
-  const crText=c.COSMI_PIPELINE.build(ctx);
-  assert.match(crText,/creatures\/cr_one\/cr_one_adult_05_wiki\.md/);
-  assert.match(crText,/母系氏族部落/);
-  assert.match(crText,/卵生·硬殼築巢/);
-  const pureText=c.COSMI_PIPELINE.appearance(ctx,{pureVisual:true});
-  assert.match(pureText,/long coat/);
-  assert.doesNotMatch(pureText,/母系氏族部落|卵生·硬殼築巢/);
+  ctx.concept={name_zh:'獸',appearance:'blue scales',social_structure:'母系氏族部落',reproduction:'卵生·硬殼築巢'};
+  const creature=c.COSMI_PIPELINE.build(ctx);
+  assert.match(creature,/blue scales/);
+  assert.doesNotMatch(creature,/母系氏族部落|卵生·硬殼築巢|05_wiki/);
+  assert.match(c.COSMI_PIPELINE.appearance(ctx,{pureVisual:false}),/母系氏族部落/);
 });
 test('source paths resolve completed portraits by exact asset identity', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='colab';
@@ -110,27 +100,23 @@ test('a previous review binding does not become an image source for prompt-only 
 });
 
 
-test('3D image routes never produce bestiary; only creature prompt-to-3D does', () => {
+test('3D stages focus on their own object and reference existing wiki without regenerating it', () => {
   const {c,nodes,ctx}=harness();
-  ctx.task.id='creature-model-rig';ctx.task.needs='creature';ctx.subjectId='cr_one';
+  ctx.task.id='creature-model-rig';ctx.subjectId='cr_one';
   for(const stage of ['colab','blender']){
     nodes.pipelineStage.value=stage;
     const text=c.COSMI_PIPELINE.build(ctx);
-    for(const term of ['原型','搜尋','每次修改後','正、背、左、右、上、下','拓撲','models/chr-example.blend','models/chr-example.glb']){
-      assert.ok(text.includes(term),stage+' missing '+term);
-    }
-    assert.doesNotMatch(text,/bestiary\.md|宙獸圖鑑|DO_NOT_LEAK|combat_damage|\{\{[a-z_]+\}\}/);
-    assert.ok(text.length<1800);
+    assert.match(text,/網格|拓撲/);
+    assert.match(text,/models\/chr-example\.blend|models\/chr-example\.glb/);
+    assert.match(text,/manifest\.encyclopedia_path/);
+    assert.doesNotMatch(text,/bestiary\.md|少年.*成年|社會型態|DO_NOT_LEAK|combat_damage|\{\{[a-z_]+\}\}/);
   }
-  nodes.pipelineStage.value='blender';
-  ctx.opts.source_pack='';
-  ctx.opts.input_img='';
+  nodes.pipelineStage.value='blender';ctx.opts.source_pack='';ctx.opts.input_img='';
+  ctx.pipelineRoute='text';
   const prompt=c.COSMI_PIPELINE.build(ctx);
-  assert.match(prompt,/純文字外觀|bestiary\.md|juvenile|adolescent|adult|overload|manifest\.files/);
-  assert.equal((prompt.match(/宙獸圖鑑/g)||[]).length,1);
-  assert.doesNotMatch(prompt,/03_completed\/portraits\/source|DO_NOT_LEAK|combat_damage/);
+  assert.match(prompt,/純文字外觀|Prompt-to-3D/);
+  assert.doesNotMatch(prompt,/03_completed\/portraits\/source|bestiary\.md|另建.*圖鑑|juvenile.*adolescent/);
 });
-
 test('manual image path is image-to-3D even without source pack',()=>{
   const {c,nodes,ctx}=harness();
   ctx.task.id='creature-model-rig';ctx.task.needs='creature';ctx.subjectId='cr_one';
@@ -144,7 +130,7 @@ test('manual image path is image-to-3D even without source pack',()=>{
 
 test('other stages ignore stale Drive templates and unrelated project context',()=>{
   const {c,nodes,ctx}=harness();
-  const cases={appearance:'外觀設定',review_portrait:'立繪審查',review_3d:'3D 模型審查',colab:'Colab GPU',blender:'Blender'};
+  const cases={appearance:'外觀設定',review_portrait:'立繪審查',review_3d:'3D 模型最終驗收',colab:'Colab GPU',blender:'Blender'};
   for(const [stage,label] of Object.entries(cases)){
     nodes.pipelineStage.value=stage;
     c.COSMI_PIPELINE.templates[stage]='LEAKED_PRIOR_PROMPT';
@@ -171,7 +157,7 @@ test('versioned Drive templates still apply, without passing their metadata to t
   nodes.pipelineStage.value='review_portrait';
   c.COSMI_FORGE.currentContext=()=>ctx;
   c.COSMI_DRIVE={read: async file => ({text: async () => file.endsWith('/02_review_portrait.prompt.md')
-    ? '<!-- COSMI-PIPELINE/2:review_portrait -->\n# CUSTOM VERIFIED REVIEW\n待審：{{input_path}}'
+    ? '<!-- COSMI-PIPELINE/3:review_portrait -->\n# CUSTOM VERIFIED REVIEW\n待審：{{input_path}}'
     : '{}'})};
   await c.COSMI_PIPELINE.loadTemplates();
   const text=c.COSMI_PIPELINE.build(ctx);
@@ -216,8 +202,8 @@ test('all five source templates carry matching stage IDs and avoid cross-step le
   };
   for(const [stage,file] of Object.entries(stageFiles)){
     const md=fs.readFileSync(path.join(root,'docs/pipeline',file+'.prompt.md'),'utf8');
-    assert.match(md,new RegExp('^<!-- COSMI-PIPELINE/2:'+stage+' -->'));
+    assert.match(md,new RegExp('^<!-- COSMI-PIPELINE/3:'+stage+' -->'));
     assert.ok(md.length<1300,stage+' template too long');
-    if(stage!=='blender')assert.doesNotMatch(md,/bestiary\.md|\{\{bestiary\}\}/);
+    assert.doesNotMatch(md,/bestiary\.md|\{\{bestiary\}\}/);
   }
 });

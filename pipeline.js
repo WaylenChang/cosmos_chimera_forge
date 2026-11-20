@@ -28,27 +28,34 @@
     if (!Array.isArray(p.model_formats) || !["glb", "blend"].every(x => p.model_formats.includes(x))) throw Error("model_formats 需包含 glb 與 blend");
     return p;
   }
-  function appearance(ctx, { pureVisual = false } = {}) {
-    // Concept parameters are the sole appearance source; notes provide explicit amendments.
+  function appearance(ctx, { pureVisual = true } = {}) {
     const base = ctx.concept || {};
-    const selected = base.locked?.stages?.find(s => s.stage === ctx.opts?.stage) || {};
-    const concept = {...base, ...selected, stage: ctx.opts?.stage || base.stage};
-    const visualFields = ["name_zh", "name_en", "stage", "gender", "age", "body_type", "outfit_palette", "hair_palette", "eye_palette", "silhouette_keywords", "style", "pose", "element_palettes", "elements", "size_profile", "height", "height_length", "appearance", "look", "size_class", "appearance_palette", "hair", "eyes", "outfit", "accessories", "base_parents", "bases", "motifs"];
-    const wikiFields = pureVisual ? [] : ["archetype", "disposition", "social_structure", "reproduction", "formula"];
-    const fields = [...visualFields, ...wikiFields];
-    const lines = fields.filter(k => concept[k] != null).map(k => k + ": " + (typeof concept[k] === "object" ? JSON.stringify(concept[k]) : concept[k]));
-    if (ctx.notes?.trim()) lines.push("補充／修改: " + ctx.notes.trim());
-    return lines.join("\n") || "請先於設計概念參數設定角色／宙獸外觀";
+    const stage = ctx.opts?.stage || base.stage || "";
+    const selected = base.locked?.stages?.find(item => item.stage === stage) || {};
+    const concept = {...base, ...selected, stage};
+    const creature = String(ctx.task?.id || "").startsWith("creature");
+    const visualFields = creature
+      ? ["name_zh","name_en","stage","appearance","look","anatomy","limbs","bases","base_parents",
+         "silhouette_keywords","height_length","size_class","appearance_palette","elements","motifs","accessories"]
+      : ["name_zh","name_en","gender","age","height","body_type","appearance","look","hair","eyes",
+         "outfit","accessories","hair_palette","eye_palette","outfit_palette","silhouette_keywords","style","pose"];
+    const loreFields = creature
+      ? ["archetype","disposition","social_structure","reproduction","niches","habit","signature_move"]
+      : ["role","biography","backstory_zh","disposition"];
+    const fields = pureVisual ? visualFields : [...visualFields, ...loreFields];
+    const lines = fields.filter(k => concept[k] != null && concept[k] !== "")
+      .map(k => k + ": " + (typeof concept[k] === "object" ? JSON.stringify(concept[k]) : concept[k]));
+    return lines.join("\n") || "尚未提供本對象的外觀設定";
   }
   // A task runs from exactly one versioned stage template; stale Drive files cannot inject old steps.
   const localTemplates = {
-    "appearance": "# 外觀設定\n依本次素材撰寫繁體中文原創外觀，只描述輪廓、體型比例、臉／感知器官、肢體、配色材質、服裝／表面構造與辨識特徵；保留已定特徵，不加入遊戲數值或後續製圖、建模指示。\n素材：\n{{appearance}}",
-    "review_portrait": "# 立繪審查\n待審：{{input_path}}/\n依該包外觀與參數檢查圖檔完整性、全身構造、視角與配色一致性、遮擋、瑕疵及水印。\n輸出逐檔缺陷、位置與建議通過／退件；只供人工決策，不修圖、不移動資產或代為核准。",
-    "colab": "# Colab GPU Image-to-3D\n{{model_input}}\n參數：`{{parameters_path}}`；輸出：`{{output_path}}/`\n先確認 Colab GPU 與生成模型可用，產生初始網格後交 Blender 修整、綁骨與匯出；無法執行則說明阻塞。\n1. 判定原型（人形、怪物、生物、奇幻生物或超自然物件），搜尋並查閱相關外形、解剖、材質、骨架與運動資料；無法搜尋則註明。\n2. 依本次輸入全新設計並建模，不套用或抄襲舊 3D 檔；依生物或機械構造配置蒙皮、關節與動作。\n3. 由 Blender 直接儲存 `models/{{asset_id}}.blend`、匯出 `models/{{asset_id}}.glb`，保留拓撲、UV、材質與骨架。\n4. 每次修改後檢查正、背、左、右、上、下視角及動作關鍵幀：臉／感知器官不被遮擋，軀幹與肢體完整連接；無破面、孔洞、透視露空、錯誤法線／貼圖、部件互穿、離體或關節錯位及各部位獨立亂移。\n5. 重開 `.blend` 並重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，記錄未完成項；不交 ZIP。",
-    "blender": "# Blender Image-to-3D／Prompt-to-3D\n{{model_input}}\n參數：`{{parameters_path}}`；輸出：`{{output_path}}/`\n直接以 Blender 製作完整模型，不以粗糙幾何堆疊充當成品。\n1. 判定原型（人形、怪物、生物、奇幻生物或超自然物件），搜尋並查閱相關外形、解剖、材質、骨架與運動資料；無法搜尋則註明。\n2. 依本次輸入全新設計並建模，不套用或抄襲舊 3D 檔；依生物或機械構造配置蒙皮、關節與動作。\n3. 由 Blender 直接儲存 `models/{{asset_id}}.blend`、匯出 `models/{{asset_id}}.glb`，保留拓撲、UV、材質與骨架。\n4. 每次修改後檢查正、背、左、右、上、下視角及動作關鍵幀：臉／感知器官不被遮擋，軀幹與肢體完整連接；無破面、孔洞、透視露空、錯誤法線／貼圖、部件互穿、離體或關節錯位及各部位獨立亂移。\n5. 重開 `.blend` 並重新匯入 `.glb` 驗證；交付 `models/`、`rig/`、`animations/`、`previews/`、`manifest.json`，記錄未完成項；不交 ZIP。\n{{bestiary}}",
-    "review_3d": "# 3D 模型審查\n模型：{{input_path}}/；來源立繪：{{source_path}}/\n依立繪（若有）、參數與 manifest 檢查 GLB／Blend 可用性、拓撲、材質、骨架及動畫變形、穿插與來源追溯。\nImage-to-3D 須有已核准來源立繪；Prompt-to-3D 無需補繪立繪。缺 `.glb`／`.blend` 不得通過。列明問題檔案及建議通過／退件；不補檔、不移動資產或代為核准。"
+    appearance: "# {{subject_label}}外觀設定\n{{subject_line}}\n依本次視覺素材整理輪廓、比例、臉部／感知器官、肢體、配色、材質及本對象特徵。\n{{appearance}}\n輸出：{{appearance_path}}",
+    review_portrait: "# {{subject_label}}立繪審查\n待審：{{input_path}}/\n檢查{{portrait_views}}的完整性、外觀比例、視角及配色一致性，逐檔記錄缺陷和通過／退件建議。\n人工決定審查結果。",
+    colab: "# Colab Image-to-3D｜{{subject_label}}\n{{model_input}}\n參數：{{parameters_path}}\n輸出：{{output_path}}/\n{{rig_plan}}\n{{action_plan}}\n以本次已核准圖片重建該對象網格與材質，再由 Blender 修整拓撲、UV、骨架、蒙皮及動作。\n在 Blender 檢查各視角、關節變形與貼圖，重開 .blend 並重匯入 .glb 驗證。\n交付 models/{{asset_id}}.blend、models/{{asset_id}}.glb、rig/、animations/、previews/ 與 manifest.json。\nmanifest.encyclopedia_path：{{wiki_path}}",
+    blender: "# Blender {{input_mode_label}}｜{{subject_label}}\n{{model_input}}\n參數：{{parameters_path}}\n輸出：{{output_path}}/\n{{rig_plan}}\n{{action_plan}}\n依本次輸入製作該對象的完整網格、材質、骨架、蒙皮及動作；保留臉部／感知器官、服裝或體表構造的辨識細節。\n檢查各視角、關節變形與貼圖，重開 .blend 並重匯入 .glb 驗證。\n交付 models/{{asset_id}}.blend、models/{{asset_id}}.glb、rig/、animations/、previews/ 與 manifest.json。\nmanifest.encyclopedia_path：{{wiki_path}}",
+    review_3d: "# {{subject_label}}3D 模型最終驗收\n模型：{{input_path}}/\n{{source_reference}}\n核對 .glb、.blend、manifest、拓撲、材質、骨架及本對象的動作變形和各方向外觀。\n逐檔記錄問題與通過／退件建議，由人工審核。"
   };
-  const templateMarker = stage => "<!-- COSMI-PIPELINE/2:" + stage + " -->";
+  const templateMarker = stage => "<!-- COSMI-PIPELINE/3:" + stage + " -->";
   function pipelineRootFor(ctx) {
     if (window.COSMI_DRIVE?.pipelineRoot) return window.COSMI_DRIVE.pipelineRoot(ctx);
     const id = String(ctx?.task?.id || "");
@@ -68,109 +75,111 @@
   function build(ctx) {
     const stage = $("pipelineStage")?.value || "portrait";
     if (stage === "portrait" || stage === "move_vfx") {
-      const content=ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
-      if (!window.COSMI_WIKI || !supports(ctx))return content;
-      const wiki=window.COSMI_WIKI.describe(ctx);
-      const sourceNote = stage === "move_vfx" ? "僅引用，未建立時先執行獨立圖鑑步驟；不可重複生成" : "於外觀設定階段建立，此處僅引用；不可重複生成";
-      return content + "\n\n圖鑑：" + wiki.path + "（" + sourceNote + "）。";
+      return ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
     }
+    const root = pipelineRootFor(ctx);
+    const wiki = window.COSMI_WIKI?.describe(ctx);
     if (stage === "encyclopedia") {
-      const wiki = window.COSMI_WIKI.describe(ctx);
-      const kind = wiki.kind, subject = wiki.subject;
-      const destination = wiki.path;
+      const kind = wiki.kind;
       const moveOptions = kind === "moves" ? Object.fromEntries(
-        Object.entries(ctx.opts || {}).filter(([key]) => ["element","shape","tier","use_creature","action","motion","name"].includes(key))
+        Object.entries(ctx.opts || {}).filter(([key]) =>
+          ["move_name","move_id","element","shape","tier","common"].includes(key))
       ) : null;
-      const focus = kind === "moves" ?
-        "主動技定位、施放條件、屬性、視覺形態、分鏡、效果節奏與動作規格" :
-        kind === "characters" ? "角色身份、背景、外觀、服裝、性格、技能與設計變體" :
-        "此階段宙獸原型、生態、棲息地、解剖結構、屬性、動作與主動技";
+      const focus = kind === "moves" ? "招式用途、視覺形態、施放動作、特效節奏與表現規格"
+        : kind === "characters" ? "角色身份、外觀特徵、服裝、背景與技能定位"
+        : "本型態外觀、生態、解剖特徵、屬性與動作";
       return [
-        "# 生成原創" + (kind === "moves" ? "主動技" : kind === "characters" ? "角色" : "宙獸") + "圖鑑",
-        "對象：" + subject + (wiki.stage ? "；當前型態：" + wiki.stage : ""),
-        "概念設定：", kind === "moves" ? JSON.stringify(moveOptions, null, 2) : appearance(ctx),
-        "只依目前概念與已確認的素材建立圖鑑，不借用其他對象的圖鑑內容。",
-        "內容包含：" + focus + "；只描述目前型態，不混入其他階段的外觀與主動技；未確認資料標示待核。",
-        "先檢查此精確路徑是否已存在：存在則使用現有圖鑑，不重新生成；若需改版請明確要求更新，禁止建立副本。",
-        "輸出 Markdown：" + destination,
-        "圖鑑獨立於 3D 模型目錄；若需模型關聯，記錄現有 asset_id 與模型路徑，不複製 GLB。",
-        "僅更新本對象的圖鑑，不修改或移動既有模型，也不得以產生圖鑑代替 3D QA 與最終驗收。"
+        "# 生成" + (kind === "moves" ? "主動技" : kind === "characters" ? "角色" : "宙獸") + "圖鑑",
+        "對象：" + wiki.subject + (wiki.stage ? "；型態：" + wiki.stage : ""),
+        "已確認設定：",
+        kind === "moves" ? JSON.stringify(moveOptions, null, 2) : appearance(ctx, {pureVisual: false}),
+        "內容：" + focus,
+        "先核對精確路徑；已有檔案沿用，未建立才產生草稿：",
+        wiki.path
       ].join("\n");
     }
-    const raw = templatesByKind.get(pipelineRootFor(ctx))?.[stage];
+    const raw = templatesByKind.get(root)?.[stage];
     const normalized = typeof raw === "string" ? raw.replace(/\r\n?/g, "\n").trim() : "";
     const prefix = templateMarker(stage);
-    const template = normalized.startsWith(prefix + "\n") ? normalized.slice(prefix.length).trim() : localTemplates[stage];
+    const template = normalized.startsWith(prefix + "\n")
+      ? normalized.slice(prefix.length).trim() : localTemplates[stage];
     if (!template) return "此步驟沒有可用的 Prompt 模板。";
-    const is3D = stage === "colab" || stage === "blender";
-    const active = window.COSMI_FORGE?.activePackage();
-    const sourceId = String((stage === "review_3d" ? active?.sourcePack || active?.manifest?.source_pack : ctx.opts?.source_pack) || "").trim();
-    const source = sourceId || "未指定";
-    const root = pipelineRootFor(ctx);
-    const subjectBase = (window.COSMI_DRIVE?.cleanSubjectId?.(root, ctx.subjectId || ctx.taskId) || ctx.subjectId || ctx.taskId);
+
+    const active = window.COSMI_FORGE?.activePackage?.();
+    const textRoute = ctx.pipelineRoute === "text" ||
+      (stage === "review_3d" && active?.manifest?.input_mode === "text");
+    const sourceId = textRoute ? "" : String((stage === "review_3d"
+      ? active?.sourcePack || active?.manifest?.source_pack
+      : ctx.opts?.source_pack) || "").trim();
+    const imageHint = textRoute ? "" : String(ctx.opts?.input_img || "").trim();
+    const hasImage = stage === "colab" || (!textRoute && Boolean(sourceId || imageHint));
+    const subjectBase = window.COSMI_DRIVE?.cleanSubjectId?.(root, ctx.subjectId || ctx.taskId)
+      || ctx.subjectId || ctx.taskId;
     const subjectFolder = root + "/" + subjectBase;
-    const sourcePath = window.COSMI_FORGE?.packages()?.find(p => p.id === sourceId)?.drivePath || (sourceId ? root + "/" + (window.COSMI_DRIVE?.cleanSubjectId?.(root, sourceId) || sourceId) : "未指定");
-    const imageHint = String(ctx.opts?.input_img || "").trim();
-    const hasImage = stage === "blender" && graphMode === "prompt" ? false : Boolean(sourceId || imageHint || stage === "colab");
-    const visual = stage === "appearance" ? appearance(ctx) : (stage === "blender" && !hasImage) ? appearance(ctx, { pureVisual: true }) : "";
-    let modelInput = "";
-    if (is3D) {
-      if (hasImage) {
-        const absoluteHint = /^(?:https?:\/\/|(?:characters|creatures|moves)\/)/.test(imageHint);
-        const imgPath = imageHint ? (sourceId && !absoluteHint ? sourcePath + "/" + imageHint.replace(/^\/+/, "") : imageHint) : (sourceId ? sourcePath + "/" : "未指定");
-        modelInput = "輸入圖片：" + imgPath + "\nsource_pack：" + source;
-      } else {
-        modelInput = "純文字外觀：\n" + visual;
-      }
-    }
-    const bestiary = stage === "blender" && !hasImage && isCreature(ctx)
-      ? "宙獸圖鑑：另建 `bestiary.md` 並列入 manifest.files；命名本種，分述幼年（juvenile）、少年（adolescent）、成年（adult）、超載（overload）的外觀、生態田野觀察與演化過程。未建模的形態註明概念推演。"
-      : "";
+    const sourcePkg = window.COSMI_FORGE?.packages?.()?.find(p =>
+      p.id === sourceId && String(p.drivePath || "").startsWith(root + "/"));
+    const sourcePath = sourcePkg?.drivePath ||
+      (sourceId ? root + "/01_portraits/" + sourceId : "");
     const activePath = String(active?.drivePath || "");
-    const activeIsPortrait = active && !/model|rig|anim/.test(active.type || "");
-    const activeIsModel = active && /model|rig|anim/.test(active.type || "");
-    const portraitPath = (/^(?:characters|creatures)\/(?:01_portraits|03_completed\/portraits)\//.test(activePath) || (activeIsPortrait && /^(?:characters|creatures)\/[^/]+$/.test(activePath)))
-      ? activePath : (sourceId ? sourcePath : "請指定待審立繪目錄");
-    const modelPath = (/^(?:characters|creatures)\/(?:02_3d|03_completed\/models)\//.test(activePath) || (activeIsModel && /^(?:characters|creatures)\/[^/]+$/.test(activePath)))
-      ? activePath : "請指定待審模型目錄";
+    const activeType = String(active?.type || "");
+    const activeIsPortrait = active && !/model|rig|anim/.test(activeType);
+    const activeIsModel = active && /model|rig|anim/.test(activeType);
+    const portraitPath = (activePath.startsWith(root + "/01_portraits/") ||
+      activePath.startsWith(root + "/03_completed/portraits/") ||
+      (activeIsPortrait && activePath.startsWith(root + "/") && activePath.split("/").length === 2))
+      ? activePath : (sourceId ? sourcePath : "請指定本對象待審立繪目錄");
+    const modelPath = (activePath.startsWith(root + "/02_3d/") ||
+      activePath.startsWith(root + "/03_completed/models/") ||
+      (activeIsModel && activePath.startsWith(root + "/") && activePath.split("/").length === 2))
+      ? activePath : "請指定本對象待審模型目錄";
     const paramStem = window.COSMI_DRIVE?.assetStem?.({
-      kind: root,
-      id: subjectBase,
-      stage: ctx.opts?.stage || ctx.concept?.stage,
-      step: "00_parameters",
-    }) || (subjectBase + (root === "creatures" ? "_" + (ctx.opts?.stage || ctx.concept?.stage || "adult") : "") + "_00_parameters");
-    const values = {
-      appearance: visual, model_input: modelInput, bestiary,
-      asset_id: ctx.taskId, subject_id: ctx.subjectId, source_pack: source, source_path: sourcePath,
-      input_path: stage === "review_portrait" ? portraitPath : modelPath,
-      output_path: window.COSMI_DRIVE?.pipelineDirectory?.(root, stage === "colab" || stage === "blender" ? stage : root === "moves" ? "vfx" : "portrait", subjectBase) || subjectFolder,
-      parameters_path: subjectFolder + "/" + paramStem + ".json"
-    };
-    const filled = template.replace(/\{\{([a-z_]+)\}\}/g, (_, k) => values[k] ?? "未指定").replace(/\n{3,}/g, "\n\n").trim();
-    if (stage === "appearance" && window.COSMI_WIKI && supports(ctx)) {
-      const wiki = window.COSMI_WIKI.describe(ctx);
-      const kindLabel = wiki.kind === "characters" ? "角色" : "宙獸";
-      const focus = wiki.kind === "characters"
-        ? "角色身份、背景、外觀、服裝、性格、技能與設計變體"
-        : "此階段宙獸原型、生態、社會型態、生育方式、棲息地、解剖結構、屬性、動作與主動技";
-      return [
-        filled,
-        "",
-        "## 同步生成原創" + kindLabel + "圖鑑",
-        "對象：" + wiki.subject + (wiki.stage ? "；當前型態：" + wiki.stage : ""),
-        "依本次外觀與概念設定建立本型態圖鑑（" + focus + "）；只描述目前型態，未確認資料標示待核，不借用其他對象或階段內容。",
-        "先檢查此精確路徑是否已存在：存在則使用現有圖鑑，不重新生成；輸出 Markdown：" + wiki.path
-      ].join("\n");
-    }
-    if (!["colab", "blender"].includes(stage)) return filled;
-    const kind = ctx.task.id.startsWith("character") ? "character" : "creature";
+      kind: root, id: subjectBase, stage: ctx.opts?.stage || ctx.concept?.stage, step: "00_parameters"
+    }) || subjectBase + "_00_parameters";
+    const appearanceStem = window.COSMI_DRIVE?.assetStem?.({
+      kind: root, id: subjectBase, stage: ctx.opts?.stage || ctx.concept?.stage, step: "00_appearance"
+    }) || subjectBase + "_00_appearance";
+    const subjectLabel = root === "characters" ? "角色" : root === "creatures" ? "宙獸" : "主動技";
+    const subjectLine = root === "creatures"
+      ? "對象：" + subjectBase + "；型態：" + (ctx.opts?.stage || ctx.concept?.stage || "adult")
+      : "對象：" + subjectBase;
+    const is3D = stage === "colab" || stage === "blender";
     const route = hasImage ? "image" : "text";
-    const anatomy = window.COSMI_ANATOMY?.plan(kind, ctx.concept, route);
-    const typed = anatomy ? filled + "\n解剖分類：" + anatomy.anatomy +
-      "；骨架／機構策略：" + anatomy.rig +
-      "。依指定原型與實際肢體建立專用動作，混合／不明拓撲先審查，不可擅套人形 Rig。" : filled;
-    const wiki = window.COSMI_WIKI.describe(ctx);
-    return typed + "\n共用圖鑑：" + wiki.path + "。此管線只引用既有圖鑑，不重新生成；若尚無該圖鑑，先於「外觀設定」步驟建立。manifest.encyclopedia_path 記錄同一路徑。";
+    const anatomy = is3D ? window.COSMI_ANATOMY?.plan(
+      root === "characters" ? "character" : "creature", ctx.concept, route) : null;
+    const rigPlan = anatomy
+      ? "解剖：" + anatomy.anatomy + "；骨架／機構：" + anatomy.rig
+      : "骨架依本對象的實際解剖與運動構造規劃";
+    const actionKey = root === "characters" ? "actions_character" : "actions_creature";
+    const actions = Array.isArray(ctx.opts?.[actionKey]) ? ctx.opts[actionKey] : [];
+    const actionPlan = actions.length
+      ? "本次動作：" + actions.join("、") + "；規格：" + root + "/prompts/skeleton_actions.md"
+      : "動作規格：" + root + "/prompts/skeleton_actions.md";
+    let modelInput = "";
+    if (is3D && hasImage) {
+      const absoluteHint = /^(?:https?:\/\/|(?:characters|creatures)\/)/.test(imageHint);
+      const imgPath = imageHint
+        ? (sourceId && !absoluteHint ? sourcePath + "/" + imageHint.replace(/^\/+/, "") : imageHint)
+        : (sourcePath || "請指定已核准圖片來源");
+      modelInput = "來源立繪：" + imgPath + (sourceId ? "\nsource_pack：" + sourceId : "");
+    } else if (is3D) {
+      modelInput = "純文字外觀：\n" + appearance(ctx);
+    }
+    const values = {
+      subject_label: subjectLabel, subject_line: subjectLine,
+      appearance: appearance(ctx), appearance_path: subjectFolder + "/" + appearanceStem + ".md",
+      portrait_views: root === "characters" ? "正面圖、三視圖及主立繪" : "正面圖及三視圖",
+      input_path: stage === "review_portrait" ? portraitPath : modelPath,
+      source_reference: sourceId ? "已核准來源立繪：" + sourcePath + "/" : "",
+      model_input: modelInput, input_mode_label: hasImage ? "Image-to-3D" : "Prompt-to-3D",
+      rig_plan: rigPlan, action_plan: actionPlan,
+      parameters_path: subjectFolder + "/" + paramStem + ".json",
+      output_path: window.COSMI_DRIVE?.pipelineDirectory?.(
+        root, stage === "colab" || stage === "blender" ? stage : "portrait", subjectBase
+      ) || subjectFolder,
+      asset_id: ctx.taskId, wiki_path: wiki?.path || ""
+    };
+    return template.replace(/\{\{([a-z_]+)\}\}/g, (_, key) => values[key] ?? "")
+      .replace(/\n{3,}/g, "\n\n").trim();
   }
   async function loadTemplates() {
     const root = pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {});

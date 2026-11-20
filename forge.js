@@ -695,7 +695,7 @@
     const ctx = {
       header, taskId, timestamp: s.day + "-" + s.hm, task: t, opts: o, concept, notes: state.notes.trim(),
       platform: state.platform, platformName: state.platform === "gemini" ? "Gemini Argon（任務模式）" : "ChatGPT（對話版）",
-      subjectId: subjId
+      subjectId: subjId, pipelineRoute: currentFlow()?.route || null
     };
     const pipeline = window.COSMI_PIPELINE?.supports(ctx);
     const pipelineStage = document.getElementById("pipelineStage")?.value;

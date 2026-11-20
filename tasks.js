@@ -683,7 +683,7 @@
     },
 
     {
-      id: "move-vfx", version: "1.1.1", zh: "主動技效果動畫（特效）", prefix: "fx", platform: "chatgpt",
+      id: "move-vfx", version: "1.2.0", zh: "主動技效果動畫（特效）", prefix: "fx", platform: "chatgpt",
       needs: null, drop: "Art/_incoming",
       options: [
         { key: "use_creature", type: "select", label: "示範施放者", items: () => [{ v: "yes", zh: "以目前宙獸概念示範" }, { v: "no", zh: "不指定（通用示範）" }], def: "yes" },
@@ -699,17 +699,20 @@
         const o = ctx.opts, el = C.ELEMENTS.find(e => e.v === o.element);
         const shape = C.VFX.shapes.find(s => s.v === o.shape), tier = C.VFX.tiers.find(t => t.v === o.tier);
         const base = "fx_" + o.element + "_" + o.shape + "_" + o.tier;
-        const commons = C.VFX.common.filter(x => o.common.includes(x.v));
+        const commons = C.VFX.common.filter(x => (o.common || []).includes(x.v));
         const body = [
           "## 主動技",
           json({
             move_name: o.move_name || "（請命名，中英各一）", element: o.element + "（" + el.zh + "）", palette: el.palette,
             shape: shape.v + "（" + shape.zh + "）", tier: tier.v + "（" + tier.zh + "）",
             move_id: o.move_id || "（請取 snake_case 通用名稱，不含任何宙獸名）",
-            demo_caster: o.use_creature === "yes" ? ctx.concept : "不指定，用中性體型示範"
+            demo_caster: o.use_creature === "yes" ? {
+              size_profile: ctx.concept?.size_profile || null,
+              anatomy: ctx.concept?.anatomy || ctx.concept?.locked?.stages?.find(x => x.stage === o.stage)?.anatomy || null
+            } : null
           }),
           // REQ: 使用者 2026-11-07 — 主動技圖鑑獨立於宙獸圖鑑，多隻宙獸可共用同一主動技。
-          "主動技是**獨立圖鑑條目**，任何宙獸都可能學會：demo_caster 只用於分鏡示範，特效不得依賴它的特定身體部位或外觀。",
+          "聚焦本招式的能量形態、施放方向、時間節奏與命中回饋；示範施放者只提供必要的比例與施放掛點。",
           "",
           "## 產出清單",
           "| 檔案 | 內容 | 層級 |",
@@ -718,7 +721,7 @@
           "| `images/" + base + "_storyboard.png` | 分鏡 6 格：預備 → 施放 → 飛行/展開 → 命中 → 餘韻 → 消散，標註毫秒 | L1 |",
           "| `images/" + base + "_layers.png` | 圖層拆解：核心、外光、粒子、拖尾、地面印記、衝擊波各自獨立示意 | L1 |",
           "| `vfx/" + base + "_flipbook.png` | 序列圖 8×8 格、2048²（每格 256²），純黑底（additive 用），單一主要元素循環 | L2 |",
-          commons.map(x => "| `vfx/fx_common_" + x.v + "_spec.json` + `images/fx_common_" + x.v + "_storyboard.png` | 通用特效：" + x.zh + " | L1 |").join("\n"),
+          ...(commons.length ? [commons.map(x => "| `vfx/fx_common_" + x.v + "_spec.json` + `images/fx_common_" + x.v + "_storyboard.png` | 通用特效：" + x.zh + " | L1 |").join("\n")] : []),
           "",
           "### spec.json 欄位",
           json({
@@ -739,7 +742,13 @@
             "特效從宙獸插槽骨發出（Socket_Front / Socket_Core_FX / Socket_Ground_FX），尺寸隨施放者體型（S/M/L/XL）縮放，在 spec 的 geometry.note 寫明縮放規則。"
           ])
         ].join("\n");
-        return common(ctx, body) + "\n\n" + deliverySection(ctx, "├── images/\n└── vfx/");
+        return [
+          ctx.header,
+          "# 任務：本主動技效果動畫",
+          body,
+          "輸出：moves/01_vfx/" + ctx.taskId + "/",
+          "交付本招式的 vfx/ 規格、images/ 分鏡與圖層、需要時的 flipbook，以及 manifest.json；未完成項列入 missing。"
+        ].join("\n\n");
       }
     },
 
