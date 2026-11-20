@@ -174,11 +174,11 @@ test('3D viewer isolates forms and animation clips without overlapping models or
   assert.doesNotMatch(playBlock, /crossFadeTo/);
 });
 
-test('all 35 designed creature lines (including 15 Drive cr_* and draft-02) have complete text data and unify under catalog rows', () => {
+test('all 45 designed creature lines (including 15 Drive cr_* and later batches) have complete text data and unify under catalog rows', () => {
   const ctx = vm.createContext({ window: {} });
   vm.runInContext(fs.readFileSync(path.join(root, 'designed.js'), 'utf8'), ctx);
   const designed = ctx.window.COSMI_DESIGNED;
-  assert.equal(designed.items.length, 35);
+  assert.equal(designed.items.length, 45);
   for (const item of designed.items) {
     assert.ok(item.title_zh, `${item.line_id} missing title_zh`);
     assert.ok(item.concept?.archetype_name, `${item.line_id} missing archetype_name`);
@@ -270,7 +270,6 @@ test('high-complexity Colab character models replace simple legacy/ai_blender mo
 test('selectModelFile resolves flattened Level 3 Drive GLBs even when migrated manifest lists models/<old>.glb', () => {
   const flatFiles = [
     { path: 'chr_1286_03a_colab.glb' },
-    { path: 'chr_1286_03a_colab_anime.glb' },
     { path: 'chr_1286_03a_colab_manifest.json' }
   ];
   const migratedManifest = {
@@ -282,6 +281,10 @@ test('selectModelFile resolves flattened Level 3 Drive GLBs even when migrated m
     'chr_1286_03a_colab.glb'
   );
   assert.throws(() => review.selectModelFile([], migratedManifest), /不存在/);
+  assert.throws(() => review.selectModelFile([
+    { path: 'chr_1286_03a_colab.glb' },
+    { path: 'chr_1286_03a_colab_anime.glb' }
+  ], migratedManifest), /不存在/, 'multiple unmatched GLBs must not be guessed');
 });
 
 
