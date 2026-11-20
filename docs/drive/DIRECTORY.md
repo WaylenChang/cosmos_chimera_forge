@@ -1,7 +1,8 @@
 # Cosmos Chimera Forge — Google Drive 通用目錄結構與管線規範
 
 - **專案根目錄**：`cosmos_chimera_forge/`（Drive Folder ID: `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`）
-- **最後維護日期**：2026-11-19
+- **最後維護日期**：2026-11-20
+- **維護正本**：此 GitHub 文件為通用目錄與流程契約的正本，Drive 根目錄 `DIRECTORY.md` 為唯讀鏡像，需在 GitHub PR 合併後由授權流程單向發布及驗證。個別主體成果與索引仍以 Drive 為正本。詳見 [STORAGE_BOUNDARY](../STORAGE_BOUNDARY.md)。
 
 ## 1. Google Drive 目錄結構與命名規範
 

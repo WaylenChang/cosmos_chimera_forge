@@ -1,5 +1,9 @@
 # Drive 角色／宙獸／主動技目錄規範
 
+> **通用模板與管線規則只在 GitHub 維護。** GitHub 分類模板位於 `docs/pipeline/characters/`、`creatures/`、`moves/`；Drive 中 `<kind>/_prompts/` 是供閱讀與引用的發布副本，個別任務 `_jobs/` 仍為可寫資產。部分舊文件稱 `<kind>/prompts/`，但已盤點到現有 Drive 使用 `_prompts/`，路徑修改需程式相容檢查。
+
+
+
 ```text
 cosmos_chimera_forge/
   00_settings/

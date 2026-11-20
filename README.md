@@ -9,7 +9,7 @@
 
 ## 資料主權與儲存範圍（2026-11-20）
 
-**Google Drive 是所有個別宙獸、角色、技能與成果的唯一正式資料來源。** GitHub 僅保存通用目錄結構圖、管線步驟流程、Prompt 模板、Schema、程式、Notebook 與測試，不應提交實際主體資料、圖片、模型、動畫、個別工作 Prompt、審查紀錄或完整索引快照。
+**Google Drive 是所有個別宙獸、角色、技能與成果的唯一正式資料來源；GitHub `main` 是通用目錄結構圖、管線步驟流程、Prompt 模板、Schema 與程式的唯一維護來源。** 通用文件與模板在 Google Drive 亦保留**唯讀鏡像**，只由授權發布程序從 GitHub 單向更新，不直接在 Drive 編修。GitHub 不應提交實際主體資料、圖片、模型、動畫、個別工作 Prompt、審查紀錄或完整索引快照。
 
 目前 `Data/_incoming/`、`designed.js` 等舊內容仍有網頁依賴，僅視為待遷移歷史存量，不是新增資料的範本。完成 Drive 動態讀取與測試後才能安全移除。詳見 [資料儲存邊界、概念目錄圖、流程圖與遷移守則](docs/STORAGE_BOUNDARY.md)。
 

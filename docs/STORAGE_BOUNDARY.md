@@ -4,17 +4,35 @@
 >
 > 本規範適用於後續新檔、新功能、AI Agent 與 Colab 工作。任何既有 Git 追蹤檔案的刪除，應先完成 Drive 對照與程式依賴遷移。
 
+## 通用資料雙存：GitHub 正本、Drive 唯讀鏡像
+
+本專案的「唯一正式來源」依資料類型區分：**個別資產以 Google Drive 為正本；通用目錄結構圖、管線步驟流程與 Prompt 模板以 GitHub `main` 為維護正本，Google Drive 另外留一份唯讀副本。**
+
+| 通用資料 | GitHub 維護正本 | Google Drive 閱讀副本 |
+| --- | --- | --- |
+| 目錄結構、命名契約 | `docs/drive/DIRECTORY.md`、`docs/pipeline/DIRECTORY.md` | 根目錄 `DIRECTORY.md` 等對應文件 |
+| 管線流程、觸發語句、Agent 指南 | `docs/pipeline/TRIGGERS.md`、`docs/drive/AGENT_QUICKSTART.md` | 根目錄 `AGENT_QUICKSTART.md` 與對應流程文件 |
+| 分類共用 Prompt 模板、骨架與動作規格 | `docs/pipeline/characters/`、`creatures/`、`moves/` | `characters/_prompts/`、`creatures/_prompts/`、`moves/_prompts/` |
+
+**單向發布：** GitHub 修改 → PR 審查、測試 → 合併 `main` → 由授權發布程序覆核並同步 Drive 鏡像 → 驗證版本、相對路徑與 SHA-256。禁止以 Drive 鏡像直接編輯共用模板再反向覆蓋 GitHub。鏡像若未更新或校驗失敗，須標明過期，不得當成最新版。
+
+**唯讀範圍只限通用副本。** 一般使用者、網頁與 Agent 可讀取、組裝或引用 Drive 共用模板，但不能直接覆寫／刪除這些副本；只有授權的同步身分可更新鏡像。個別主體的設計 Prompt、`<subject_id>/*.prompt.md`、`_designed_prompts/`、`_prompts/_jobs/` 與成果仍可正常寫入 Drive。
+
+**權限區別：**「唯讀」目前是維護政策；需要另行設定適當的 Drive ACL 或程式層寫入防護，才能從 API 層強制禁止修改。本 PR 不代表已變更 Drive 權限或完成發佈同步。現有 Drive 分類模板資料夾名稱為 `_prompts/`，而部分舊文件採 `prompts/`；修改程式或同步前須先核對路徑，不能直接重命名造成既有工作中斷。
+
+詳見 [通用文件單向鏡像規範](pipeline/MIRROR_POLICY.md)。
+
 ## 各系統責任
 
 | 系統 | 保存或執行內容 | 不應保存 |
 | --- | --- | --- |
-| Google Drive | 個別主體資料、設計 Prompt、外觀、數值、圖鑑、立繪、多視角、GLB／Blend、材質、骨架、動畫、特效、manifest、審查、歷史版本與備份 | 通用程式碼的唯一版本 |
-| GitHub | Drive 目錄結構及命名規範、管線流程、通用 Prompt 模板、Schema、分類規則、Notebook、工具、UI、測試與部署工作流 | 任何真實個別主體的 JSON／Markdown／圖片／模型／動畫、實際工作 Prompt、完整索引快照 |
+| Google Drive | 個別主體資料、設計 Prompt、外觀、數值、圖鑑、立繪、多視角、GLB／Blend、材質、骨架、動畫、特效、manifest、審查、歷史版本與備份 | 通用文件與模板的可編輯正本（Drive 只存唯讀鏡像） |
+| GitHub | 通用文件正本：Drive 目錄結構及命名規範、管線流程、通用 Prompt 模板、Schema、分類規則、Notebook、工具、UI、測試與部署工作流 | 任何真實個別主體的 JSON／Markdown／圖片／模型／動畫、實際工作 Prompt、完整索引快照 |
 | Colab／Blender／AI Agent | 按任務讀取 Drive 指定主體與版本，在執行環境暫存中間檔，交付結果回 Drive | 長期保存正式資產、在 GitHub 產出個別成果 |
 
 *「通用」意指不依賴特定角色／宙獸／技能 ID 的規則。測試所需的**合成 fixture** 可以留在 GitHub，但不得含正式個案。*
 * 公開 Google OAuth Client ID 與根資料夾設定可存在程式設定；Access Token、Refresh Token、個別主體 ID 清單與工作內容不可編入倉庫。
-* 不要求 GitHub 與 Google Drive 雙向同步個別檔案；取得最新內容時需在取得授權後即時從 Drive 解析。
+* 個別資產不與 GitHub 雙向同步，需授權後直接由 Drive 讀取；通用文件只從 GitHub 單向發布到 Drive 唯讀鏡像。
 
 ## 概念性 Drive 目錄圖
 
