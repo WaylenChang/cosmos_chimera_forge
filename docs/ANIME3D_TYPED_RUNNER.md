@@ -43,6 +43,10 @@ The preflight validates runtime and approved source; reference set validation in
 
 **Important:** Numeric appearance scoring, MV-Adapter, texture restoration and cross-backend candidate ranking are not claimed as integrated ML services in this PR. Missing evaluators, model weights or calibrated camera transforms must be disclosed rather than simulated.
 
+## Character-only staged Colab appearance gate (`character-colab/2`)
+
+The character Image-to-3D route now supports a separately enabled **hash-bound appearance gate** before SkinTokens/Blender. The spec and approved images remain in Google Drive; only common policy and code belong in GitHub. Require front, side+back or turnaround, and an independent 45-degree view. A turnaround sheet is not calibrated Pixal3D multi-view data; use `multiview_dir` only with real transforms.json poses. `--stage gpu` generates source GLB and stops; a real evaluator must then write `qa/appearance_review.json`, whose model/source hashes and five independent appearance scores are verified before `--stage post_gpu` can rig. Missing or stale scores block. See [Character Colab quality workflow](pipeline/CHARACTER_COLAB_QUALITY.md). Actual MV-Adapter and texture-repair inference are **not yet integrated**; the gate only produces targeted next-action recommendations, not fabricated output. Existing jobs without the `character_colab_workflow` opt-in remain on the legacy route.
+
 ## Production path
 
 \`\`\`text
