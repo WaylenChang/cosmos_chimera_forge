@@ -282,7 +282,7 @@ def run(a):
     if stage == "post_gpu":
         if not resume_source and backend != "existing":
             raise ValueError("Stage post_gpu requires completed N02 source GLB from gpu stage")
-        if rig_backend == "skintokens":
+        if rig_backend == "skintokens" and character_refs is None:
             rigged = out / "rig" / model.name
             prior_rig = state["steps"].get("rigging", {})
             if prior_rig.get("status") != "generated" or not prior_rig.get("sha256"):
@@ -386,10 +386,24 @@ def run(a):
         write(state_path, state)
         write_asset_manifest(out, a.asset_id, spec, profile, state)
         return 2
+    if character_refs is not None and stage == "gpu":
+        state["stage_completed"] = "gpu"
+        state["status"] = "REVIEW_REQUIRED"
+        state["warnings"].append("First-result appearance review required before character rigging")
+        write(state_path, state)
+        write_asset_manifest(out, a.asset_id, spec, profile, state)
+        return 0
     if character_refs is not None:
         gate_path = out / "qa" / "appearance_gate.json"
         report_path = out / "qa" / "appearance_review.json"
-        gate = assess_character(model, report_path, character_refs, spec, a.asset_id)
+        try:
+            gate = assess_character(model, report_path, character_refs, spec, a.asset_id)
+        except (ValueError, OSError) as exc:
+            state["status"] = "REVIEW_REQUIRED"
+            state["warnings"].append("Invalid character appearance review: " + str(exc)[-1000:])
+            write(state_path, state)
+            write_asset_manifest(out, a.asset_id, spec, profile, state)
+            return 2
         state["steps"]["appearance_gate"] = gate
         write(gate_path, gate)
         if not gate["allow_rig"]:
