@@ -35,17 +35,19 @@ flowchart TD
   "asset_id": "<asset_id>",
   "subject_id": "<subject_id>",
   "source_pack": "<approved_portrait_pack>",
-  "source_image": "images/front.png",
+  "source_image": "_01_portrait/front.png",
   "category": "character",
   "task_type": "character-model-rig",
   "input_mode": "image",
   "asset_class": "humanoid",
   "license_status": "verified",
   "character_colab_workflow": "character-colab/2",
+  "source_layout": "subject_v3",
+  "portrait_review": "_02_review_portrait/review.json",
   "reference_views": {
-    "front": "images/front.png",
-    "turnaround": "images/turnaround.png",
-    "three_quarter_45": "images/three_quarter_45.png"
+    "front": "_01_portrait/front.png",
+    "turnaround": "_01_portrait/turnaround.png",
+    "three_quarter_45": "_01_portrait/three_quarter_45.png"
   },
   "generation_attempt": 1,
   "max_auto_retries": 2,
@@ -53,7 +55,7 @@ flowchart TD
 }
 ```
 
-三視合圖和 45° 圖是外觀一致性參考，**不是**已校準的 Pixal3D 多視角輸入。只有在來源包下有真實 `multiview_dir/transforms.json` 與 2～16 張校準圖片時，`anime3d_backend_adapter.py` 才能切換 `inference_mv.py`。驗證來源時需有 `reviews/<source_pack>.json` 的真人 `status=ok`，不得由前置檢查自行製造批准。若資料夾為 `characters/<id>/` 三層形式，先確認相容的 runner staging 規則；目前 Python runner 仍按 `<category>/01_portraits/<source_pack>/` 或 `03_completed/portraits/<source_pack>/` 驗證，不可假定已支援全部 Drive 新舊路徑。
+三視合圖和 45° 圖是外觀一致性參考，**不是**已校準的 Pixal3D 多視角輸入。只有在來源包下有真實 `multiview_dir/transforms.json` 與 2～16 張校準圖片時，`anime3d_backend_adapter.py` 才能切換 `inference_mv.py`。驗證來源時需有 `reviews/<source_pack>.json` 的真人 `status=ok`，不得由前置檢查自行製造批准。現有新版 Drive 路徑使用 `source_layout: "subject_v3"`，並由 `characters/<subject_id>/_01_portrait/` 讀圖、`characters/<subject_id>/_02_review_portrait/` 明確指定人工核准 JSON（`portrait_review` 必須包含 `status: "ok"`、相符 `subject_id` 和 `source_pack`／`asset_id`）。runner 將結果寫入 `characters/<subject_id>/_03a_colab/<asset_id>/`；舊版未啟用 `source_layout` 者維持 `01_portraits/<source_pack>/` 或 `03_completed/portraits/<source_pack>/`。不得以圖片存在代替人工核准，實際 Drive 審查紀錄的檔名與欄位應核實後再填入 spec。
 
 ## 外觀評估報告（外部評估器／真人生成）
 
