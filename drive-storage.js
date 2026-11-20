@@ -246,6 +246,17 @@
     parts.push(base);
     return parts.join("/");
   }
+  // New writes use the physical subject folder as filename prefix; the path
+  // component stays a stable logical ID resolved by folder().
+  function newSubjectFilePath(root, subject, stage, role, step, version = "draft", ext = "json") {
+    const naming = window.COSMI_DRIVE_NAMES;
+    if (!naming?.assetFilename) throw Error("缺少新版檔名規範");
+    const physical = naming.canonicalFolderName(root, 1, cleanSubjectId(root, subject));
+    const name = naming.assetFilename({
+      kind: root, folderName: physical, role, stage, step, version, ext,
+    });
+    return subjectDir(root, subject) + "/" + stepSubdir(step) + "/" + version + "/" + name;
+  }
   // One canonical directory resolver for all category-specific pipeline outputs.
   // Level 1: characters / creatures / moves; Level 2: <id>; Level 3: flat files.
   function pipelineDirectory(kind, stage, id) {
@@ -279,7 +290,10 @@
       next.push(item);
       return next;
     };
-    const parsed = parseAssetFilename(name, pipelineRoot(clean));
+    const kind = pipelineRoot(clean);
+    const logical = clean.split("/")[1] || "";
+    const physical = logical && window.COSMI_DRIVE_NAMES?.canonicalFolderName(kind, 1, logical);
+    const parsed = parseAssetFilename(name, kind, physical);
     if (
       parsed?.step === "00_appearance" ||
       parsed?.step === "00_parameters" ||
@@ -1056,12 +1070,7 @@
     const id = parsed?.id || cleanSubjectId(root, pkg.subjectId || pkg.baseId || pkg.id);
     const stage = parsed?.stage || pkg.stage || pkg.manifest?.stage || "";
     const version = parsed?.version || pkg.manifest?.version || "";
-    const stem = assetStem({ kind: root, id, stage, step: revStep, version });
-    const dir =
-      pkg.drivePath && new RegExp("^" + root + "/[^/]+$").test(pkg.drivePath)
-        ? pkg.drivePath
-        : subjectDir(root, id);
-    return dir + "/" + assetSubpath(stem + ".json", root);
+    return newSubjectFilePath(root, id, stage, "review", revStep, version || "draft", "json");
   }
   async function review(pkg, status, note = "") {
     if (!pkg?.driveFolderId) throw Error("請先將資產資料夾儲存至 Drive");
@@ -2109,8 +2118,8 @@
           p = window.COSMI_PIPELINE.parameters(),
           root = pipelineRoot(d.delivery?.task_type || d.assetId),
           subject = d.subjectId || d.assetId,
-          stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
-        await jsonWrite(subjectDir(root, subject) + "/" + assetSubpath(stem + ".json", root), {
+          outputPath = newSubjectFilePath(root, subject, d.stage, "parameters", "00_parameters");
+        await jsonWrite(outputPath, {
           ...p,
           delivery: d.delivery,
         });
@@ -2126,6 +2135,7 @@
           stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
         let p;
         for (const candidate of [
+          newSubjectFilePath(root, subject, d.stage, "parameters", "00_parameters"),
           subjectDir(root, subject) + "/" + assetSubpath(stem + ".json", root),
           subjectDir(root, subject) + "/" + stem + ".json",
           root + "/00_settings/" + id + ".parameters.json",
