@@ -13,6 +13,8 @@
 
 - **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（主動技／技能）
 - **未開工設計 Prompt 區（`<kind>/designed_prompts/`）**：尚未開始管線生成的主體，其純視覺設計 Prompt（`<design_id>.prompt.md`，供 `prompt-to-img`／`prompt-to-3D` 使用，不含數值、性格、生態、招式等非視覺雜訊）暫存於 `<kind>/designed_prompts/`；宙獸每個型態皆須產出獨立 `.glb` 檔，`.prompt.md` 須分開描述「四型態一致性」、「各型態特徵」、「型態演化關係」。**一旦該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<id>/` 目錄**。若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md` 檔尾（標註版本與步驟），不覆寫原文亦不另建散裝檔案。
+
+> **宙獸設計 Prompt 檔名規範（2026-11-20）：**已開工宙獸目錄內的設計 Prompt 必須命名為 `<宙獸實體目錄名稱>.prompt.md`，例如 `ch_1st_batch_aqua_slime.prompt.md`、`ch_starter_moon_line.prompt.md`、`ch_trial_boss_earth_line.prompt.md`。只調整 Google Drive 檔案顯示名稱；遊戲內 `cr_*`／`starter_*`／`line_*` ID、資產 ID、管線模板及 Prompt 原文保持不變。程式讀取時應以目前實體目錄名稱尋找 Prompt，並可對舊檔名提供相容讀取；不可將舊檔名當作新檔案重新建立。
 - **第二層**：`<id>/`（主體 ID，例如 `chr_1286`、`cr_aqua_slime`、`starter_moon_line`、`earth_boulder_roll`）
 - **第三層（`<kind>/<id>/`）**：**只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（即成果審查台等待審查或已通過的核心交付物），**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<id>/<step>/[<ver>/]`**：
   - **設計 Prompt**：`<design_id>.prompt.md`（管線開工後自 `designed_prompts/` 移入，版本／步驟調整時追加於此檔）
