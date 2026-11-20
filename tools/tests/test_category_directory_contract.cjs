@@ -79,11 +79,11 @@ test("pipeline templates stay isolated across category switches", async () => {
   vm.runInNewContext(source("pipeline.js"), context, { filename: "pipeline.js" });
   const pipeline = context.window.COSMI_PIPELINE;
   await pipeline.loadTemplates();
-  assert.equal(pipeline.templates.review_portrait.includes("characters/prompts/"), true);
+  assert.equal(pipeline.templates.review_portrait.includes("characters/_prompts/"), true);
   current = { task: { id: "creature-model-rig" }, subjectId: "cr_fox", taskId: "cr_fox" };
   await pipeline.loadTemplates();
-  assert.equal(pipeline.templates.review_portrait.includes("creatures/prompts/"), true);
-  assert.equal(requested.some(x => x === "creatures/prompts/02_review_portrait.prompt.md"), true);
+  assert.equal(pipeline.templates.review_portrait.includes("creatures/_prompts/"), true);
+  assert.equal(requested.some(x => x === "creatures/_prompts/02_review_portrait.prompt.md"), true);
   current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
   const characterPrompt = pipeline.build(current);
   assert.match(characterPrompt, /characters\/prompts\/02_review_portrait\.prompt\.md/);
