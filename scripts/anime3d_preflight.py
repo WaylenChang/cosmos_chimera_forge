@@ -15,9 +15,11 @@ from anime3d_rig_adapter import runtime_config as rig_runtime_config
 
 
 def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, generator_executable=None,
-            rig_backend="none"):
+            rig_backend="none", stage="all"):
     root = Path(root).resolve()
-    checks, blockers = {}, []
+    if stage not in {"all", "pre_gpu", "gpu", "post_gpu"}:
+        raise ValueError("Unsupported preflight stage")
+    checks, blockers = {"stage": stage}, []
     try:
         profile = execution_profile(classify(spec), backend)
         checks["profile"] = profile
@@ -35,9 +37,9 @@ def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, 
         blockers.append("source: " + str(exc))
     blender = blender or shutil.which("blender")
     checks["blender"] = str(blender) if blender and Path(blender).is_file() else None
-    if not checks["blender"]:
+    if not checks["blender"] and stage in {"all", "post_gpu"}:
         blockers.append("Blender binary unavailable")
-    if rig_backend == "skintokens":
+    if rig_backend == "skintokens" and stage in {"all", "post_gpu"}:
         try:
             if not config:
                 raise ValueError("SkinTokens isolated config required")
@@ -71,7 +73,7 @@ def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, 
             checks["gpu"] = result.stdout.strip() if result.returncode == 0 else None
         else:
             checks["gpu"] = None
-        if not checks["gpu"]:
+        if not checks["gpu"] and stage in {"all", "gpu"}:
             blockers.append("NVIDIA GPU runtime not available")
     return {"asset_id": asset_id, "subject_id": spec.get("subject_id"), "backend": backend,
             "status": "READY_FOR_EXECUTION" if not blockers else "BLOCKED",
@@ -89,11 +91,12 @@ def main():
     p.add_argument("--blender")
     p.add_argument("--generator-executable")
     p.add_argument("--rig-backend", choices=["none", "skintokens"], default="none")
+    p.add_argument("--stage", choices=["all", "pre_gpu", "gpu", "post_gpu"], default="all")
     p.add_argument("--report")
     args = p.parse_args()
     spec = json.loads(Path(args.spec).read_text(encoding="utf8"))
     result = inspect(args.root, spec, args.asset_id, args.backend, args.backend_config, args.blender,
-                     args.generator_executable, args.rig_backend)
+                     args.generator_executable, args.rig_backend, args.stage)
     text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.report:
         target = Path(args.report)
