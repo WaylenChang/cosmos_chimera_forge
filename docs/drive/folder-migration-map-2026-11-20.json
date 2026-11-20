@@ -1,0 +1,3977 @@
+{
+  "generated": "2026-11-20",
+  "root": "1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0",
+  "folders": [
+    {
+      "kind": "moves",
+      "id": "1YBKLfe6wSoxYDrBNWXLB1cBjjAAyxqeV",
+      "parent": "1alulsIhFcb8m8UKXaA-9-orBCEr__P8B",
+      "depth": 1,
+      "old": "_prompts",
+      "target": "_prompts",
+      "path": "moves/_prompts"
+    },
+    {
+      "kind": "moves",
+      "id": "11LG5ahUWuSd19Xg8ja2Prwc7WO37tQXj",
+      "parent": "1alulsIhFcb8m8UKXaA-9-orBCEr__P8B",
+      "depth": 1,
+      "old": "_backup",
+      "target": "_backup",
+      "path": "moves/_backup"
+    },
+    {
+      "kind": "moves",
+      "id": "1l5WlAeQqr1lg0fWF97MOtzNFT74AXgB_",
+      "parent": "1alulsIhFcb8m8UKXaA-9-orBCEr__P8B",
+      "depth": 1,
+      "old": "_designed_prompts",
+      "target": "_designed_prompts",
+      "path": "moves/_designed_prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1gbeK2IxSW62qvGoSXg6qVLsW7btCAKwY",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "_prompts",
+      "target": "_prompts",
+      "path": "creatures/_prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "_backup",
+      "target": "_backup",
+      "path": "creatures/_backup"
+    },
+    {
+      "kind": "creatures",
+      "id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_aqua_slime",
+      "target": "ch_legacy_aqua_slime",
+      "path": "creatures/ch_legacy_aqua_slime"
+    },
+    {
+      "kind": "creatures",
+      "id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_chrono_beetle",
+      "target": "ch_legacy_chrono_beetle",
+      "path": "creatures/ch_legacy_chrono_beetle"
+    },
+    {
+      "kind": "creatures",
+      "id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_earth_golem",
+      "target": "ch_legacy_earth_golem",
+      "path": "creatures/ch_legacy_earth_golem"
+    },
+    {
+      "kind": "creatures",
+      "id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_fire_wisp",
+      "target": "ch_legacy_fire_wisp",
+      "path": "creatures/ch_legacy_fire_wisp"
+    },
+    {
+      "kind": "creatures",
+      "id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_frostblade_penguin",
+      "target": "ch_legacy_frostblade_penguin",
+      "path": "creatures/ch_legacy_frostblade_penguin"
+    },
+    {
+      "kind": "creatures",
+      "id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_ice_snowman",
+      "target": "ch_legacy_ice_snowman",
+      "path": "creatures/ch_legacy_ice_snowman"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_ink_stele",
+      "target": "ch_legacy_ink_stele",
+      "path": "creatures/ch_legacy_ink_stele"
+    },
+    {
+      "kind": "creatures",
+      "id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_light_khepri",
+      "target": "ch_legacy_light_khepri",
+      "path": "creatures/ch_legacy_light_khepri"
+    },
+    {
+      "kind": "creatures",
+      "id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_metal_vault",
+      "target": "ch_legacy_metal_vault",
+      "path": "creatures/ch_legacy_metal_vault"
+    },
+    {
+      "kind": "creatures",
+      "id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_shadow_eye",
+      "target": "ch_legacy_shadow_eye",
+      "path": "creatures/ch_legacy_shadow_eye"
+    },
+    {
+      "kind": "creatures",
+      "id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_solmane_lion",
+      "target": "ch_legacy_solmane_lion",
+      "path": "creatures/ch_legacy_solmane_lion"
+    },
+    {
+      "kind": "creatures",
+      "id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_thunder_drone",
+      "target": "ch_legacy_thunder_drone",
+      "path": "creatures/ch_legacy_thunder_drone"
+    },
+    {
+      "kind": "creatures",
+      "id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_verdant_aquila",
+      "target": "ch_legacy_verdant_aquila",
+      "path": "creatures/ch_legacy_verdant_aquila"
+    },
+    {
+      "kind": "creatures",
+      "id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_wind_bird",
+      "target": "ch_legacy_wind_bird",
+      "path": "creatures/ch_legacy_wind_bird"
+    },
+    {
+      "kind": "creatures",
+      "id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_legacy_wood_puppet",
+      "target": "ch_legacy_wood_puppet",
+      "path": "creatures/ch_legacy_wood_puppet"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_starter_moon_line",
+      "target": "ch_starter_moon_line",
+      "path": "creatures/ch_starter_moon_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_starter_star_line",
+      "target": "ch_starter_star_line",
+      "path": "creatures/ch_starter_star_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_starter_sun_line",
+      "target": "ch_starter_sun_line",
+      "path": "creatures/ch_starter_sun_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1gM7mjYUyKJ3HsUHvoEFLz1iDTRXxhb6g",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "_designed_prompts",
+      "target": "_designed_prompts",
+      "path": "creatures/_designed_prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Pv5T2R8pGM3JzgKgmi8gzyuZ-ztQEBw3",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_earth_line",
+      "target": "ch_trial_boss_earth_line",
+      "path": "creatures/ch_trial_boss_earth_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1yr9PUGyW6coWl6j07_DKhofCjmRb5xdH",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_fire_line",
+      "target": "ch_trial_boss_fire_line",
+      "path": "creatures/ch_trial_boss_fire_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1yanEtRWWCAv_tnr2q9-2DOfpv7jQJiqD",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_ice_line",
+      "target": "ch_trial_boss_ice_line",
+      "path": "creatures/ch_trial_boss_ice_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1a5lYTxxrPRq4AbibvAShqy_t9Zau5sLP",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_light_line",
+      "target": "ch_trial_boss_light_line",
+      "path": "creatures/ch_trial_boss_light_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1sjolAkYNtxFFKejE8JBuiEB3HS33wdCi",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_metal_line",
+      "target": "ch_trial_boss_metal_line",
+      "path": "creatures/ch_trial_boss_metal_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1SUZu7V0WNhN23A9_ZOMKF8MA-q6UjIHt",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_shadow_line",
+      "target": "ch_trial_boss_shadow_line",
+      "path": "creatures/ch_trial_boss_shadow_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "13KdV-8yENBqCTFXTAs2F6Q5icZVHseF8",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_thunder_line",
+      "target": "ch_trial_boss_thunder_line",
+      "path": "creatures/ch_trial_boss_thunder_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "14o_PGXYxJbywsylkLdbXgSSB4Bne3dai",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_water_line",
+      "target": "ch_trial_boss_water_line",
+      "path": "creatures/ch_trial_boss_water_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1U8CphT1VHVtELSqVTcBeTKQq3w17Hvv6",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_wind_line",
+      "target": "ch_trial_boss_wind_line",
+      "path": "creatures/ch_trial_boss_wind_line"
+    },
+    {
+      "kind": "creatures",
+      "id": "1-Xp7gDG5IuaALh8Hf7CiMk4hwsj3zg8o",
+      "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
+      "depth": 1,
+      "old": "ch_trial_boss_wood_line",
+      "target": "ch_trial_boss_wood_line",
+      "path": "creatures/ch_trial_boss_wood_line"
+    },
+    {
+      "kind": "characters",
+      "id": "1axJmP6h1JJirCF28ovl-JgEGDk3YRpdb",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "_prompts",
+      "target": "_prompts",
+      "path": "characters/_prompts"
+    },
+    {
+      "kind": "characters",
+      "id": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "_backup",
+      "target": "_backup",
+      "path": "characters/_backup"
+    },
+    {
+      "kind": "characters",
+      "id": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_legacy_yeh_chengxi",
+      "target": "chr_legacy_yeh_chengxi",
+      "path": "characters/chr_legacy_yeh_chengxi"
+    },
+    {
+      "kind": "characters",
+      "id": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_legacy_amemori_sumiha",
+      "target": "chr_legacy_amemori_sumiha",
+      "path": "characters/chr_legacy_amemori_sumiha"
+    },
+    {
+      "kind": "characters",
+      "id": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_legacy_roen",
+      "target": "chr_legacy_roen",
+      "path": "characters/chr_legacy_roen"
+    },
+    {
+      "kind": "characters",
+      "id": "1TbUMJQifkKL6gD9mDqXstEff0BhHXaY6",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "_designed_prompts",
+      "target": "_designed_prompts",
+      "path": "characters/_designed_prompts"
+    },
+    {
+      "kind": "characters",
+      "id": "1FmgdudrPqyLtLjzlTCUh9OOLkwUpzij8",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_temple_light",
+      "target": "chr_warden_temple_light",
+      "path": "characters/chr_warden_temple_light"
+    },
+    {
+      "kind": "characters",
+      "id": "1euKxcNU6T_SN54vlbswXNT8M64iCZe3W",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_labyrinth_shadow",
+      "target": "chr_warden_labyrinth_shadow",
+      "path": "characters/chr_warden_labyrinth_shadow"
+    },
+    {
+      "kind": "characters",
+      "id": "1NYihvenEerwwO5WRQRJi08N0Z9DCm1fm",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_space_wind",
+      "target": "chr_warden_space_wind",
+      "path": "characters/chr_warden_space_wind"
+    },
+    {
+      "kind": "characters",
+      "id": "1mNIHu-14ip2nsGWK3SyPYOYil04OISWS",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_tower_thunder",
+      "target": "chr_warden_tower_thunder",
+      "path": "characters/chr_warden_tower_thunder"
+    },
+    {
+      "kind": "characters",
+      "id": "1dysquZ0edHJUEHKoTauyKAo3oTCVJnOe",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_icecap_ice",
+      "target": "chr_warden_icecap_ice",
+      "path": "characters/chr_warden_icecap_ice"
+    },
+    {
+      "kind": "characters",
+      "id": "1FDsNiblCshcQQ9n8tSzU7m82AWR8If7C",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_cave_earth",
+      "target": "chr_warden_cave_earth",
+      "path": "characters/chr_warden_cave_earth"
+    },
+    {
+      "kind": "characters",
+      "id": "1cfqNHRaCX9ZfQCVegTBjeOwhQ7zYZrv0",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_volcano_fire",
+      "target": "chr_warden_volcano_fire",
+      "path": "characters/chr_warden_volcano_fire"
+    },
+    {
+      "kind": "characters",
+      "id": "1WSayFq9VQY--8asSE4x9iYODQvzXu0KY",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_deepsea_water",
+      "target": "chr_warden_deepsea_water",
+      "path": "characters/chr_warden_deepsea_water"
+    },
+    {
+      "kind": "characters",
+      "id": "1CXoWNZAUcCrCV2KGf64tmcYFuO6Wy_hN",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_rainforest_wood",
+      "target": "chr_warden_rainforest_wood",
+      "path": "characters/chr_warden_rainforest_wood"
+    },
+    {
+      "kind": "characters",
+      "id": "188QtLvWTXd3Q6ikEDL2n7V7Dy4jRhM5o",
+      "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
+      "depth": 1,
+      "old": "chr_warden_lab_metal",
+      "target": "chr_warden_lab_metal",
+      "path": "characters/chr_warden_lab_metal"
+    },
+    {
+      "kind": "creatures",
+      "id": "1J4kXahHPUWLwZ3ufQtfle9jR_pEMu8P0",
+      "parent": "14o_PGXYxJbywsylkLdbXgSSB4Bne3dai",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_trial_boss_water_line/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "11wMn0ezBvDSgRHjP72_L8U5tvBEY3Yij",
+      "parent": "1yanEtRWWCAv_tnr2q9-2DOfpv7jQJiqD",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_trial_boss_ice_line/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1D3pAlJNSI_fobm-yPj82CJH3i--VsdE9",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "line_earth_stone_lion",
+      "target": "_line_earth_stone_lion",
+      "path": "creatures/_backup/line_earth_stone_lion"
+    },
+    {
+      "kind": "creatures",
+      "id": "1wugtn72KR7SXn7FTfVA3Da388PPqHJnL",
+      "parent": "1gM7mjYUyKJ3HsUHvoEFLz1iDTRXxhb6g",
+      "depth": 2,
+      "old": "trial_bosses",
+      "target": "_trial_bosses",
+      "path": "creatures/_designed_prompts/trial_bosses"
+    },
+    {
+      "kind": "creatures",
+      "id": "1HOYObZOXt_fph1yNvjPb1RyN7hUw53zW",
+      "parent": "1gM7mjYUyKJ3HsUHvoEFLz1iDTRXxhb6g",
+      "depth": 2,
+      "old": "lines",
+      "target": "_lines",
+      "path": "creatures/_designed_prompts/lines"
+    },
+    {
+      "kind": "creatures",
+      "id": "1aX94s5X3lxRv_kyLlO91B-JDWrnH5f1V",
+      "parent": "1gM7mjYUyKJ3HsUHvoEFLz1iDTRXxhb6g",
+      "depth": 2,
+      "old": "starters",
+      "target": "_starters",
+      "path": "creatures/_designed_prompts/starters"
+    },
+    {
+      "kind": "creatures",
+      "id": "1YjpcYrcI8P31DaoKltFoavZyNVwGpTSW",
+      "parent": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_verdant_aquila/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "161a7TvPdDD1ab-NNorSljlYlyElh8SJS",
+      "parent": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_solmane_lion/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1xBeRhAoE_R5bo5CgBTsAur8Y7kpOZ9e7",
+      "parent": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_ink_stele/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1QlI5zRdffcZI8Aa14gmvnBoYnTLJwhRF",
+      "parent": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "depth": 2,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "creatures/ch_starter_sun_line/00_settings"
+    },
+    {
+      "kind": "creatures",
+      "id": "1okliF0tIA-_8kvcoObZMiqEM6RqWrbBK",
+      "parent": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_starter_sun_line/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cuLb1wdvir2SLi-a-LJOhzPpwooT95i4",
+      "parent": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_starter_sun_line/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ICI9GNcO64Rox_5WHLrfNzIUvvsdXgWb",
+      "parent": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "depth": 2,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "creatures/ch_starter_star_line/00_settings"
+    },
+    {
+      "kind": "creatures",
+      "id": "1-RBUaU1G218qcpIbQ6HFpkJnFX-Onkwl",
+      "parent": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_starter_star_line/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1qLayh0vZaz6mPeeDg9RvZ03dKzLoCZOC",
+      "parent": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_starter_star_line/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1OnoqUsVpXm82c2FXPdm_mNrir_HkmiON",
+      "parent": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "depth": 2,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "creatures/ch_starter_moon_line/00_settings"
+    },
+    {
+      "kind": "creatures",
+      "id": "1MaK865SPjviurOa5eCq7nQYK8J2ABNnE",
+      "parent": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_starter_moon_line/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1I9Gz0WX7eBo36VnIzM1-StOxD7L9Dt__",
+      "parent": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_starter_moon_line/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1YxhjHEIwlCM8hbGx-sGqOeuhsF-Vv8w0",
+      "parent": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_wood_puppet/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1E5baGUMOKKC6PYrCjxreKHT2RLg0Qhf-",
+      "parent": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_wind_bird/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1UTfCCD6Dm9KNpjeEk_N8pfCk8iFFx-ek",
+      "parent": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_verdant_aquila/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1eskI3GEq3sQ-dXLV_CHYLIM2xVwdktdh",
+      "parent": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_thunder_drone/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1QTlm_Vi_w4B_lEsdqbDBG4vcGL9P8_mn",
+      "parent": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_solmane_lion/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1tDs-f1L14Whton7-caWo4jN9Npw_oXkL",
+      "parent": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_shadow_eye/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1q9RbPgQ6HDBe1-9nOEVQru1a_eXw3oA8",
+      "parent": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_metal_vault/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1_oMhMR0_FjS_Vmq_pcjoY4bAwly1DVUD",
+      "parent": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_light_khepri/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1O9fych41BDynF-4xVci6lbL7bD-lylu3",
+      "parent": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_ink_stele/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1V3m55hmCWOg_5qP7pK7V7qUN7ocTqwjY",
+      "parent": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_ice_snowman/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1x20O4xuid9u1PhuQd7TtnbTSygJCrjjK",
+      "parent": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_ice_snowman/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1KLyWWMDCGndagezWoxAwcHt_bHYY3Og1",
+      "parent": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_frostblade_penguin/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1dyT9k6boRZbBx-4R0SE3U-JrSf7D888L",
+      "parent": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_frostblade_penguin/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1V1PXD-f0h0m4TQSFPNy3F-t_XO57SuOD",
+      "parent": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_fire_wisp/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1SbX22KHeloMO8JsN1vTIZcR4-7TCsyvj",
+      "parent": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_fire_wisp/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1TIlca9YmaEt5nlUxMfe1ep5TJF3BPTRT",
+      "parent": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_earth_golem/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1GCD5PUojrmI_Cd0lvUbce2l8K-a-u1ON",
+      "parent": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_earth_golem/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "15VQAJIt42TYZwlHeuTgfAqQ3Snj8s8Nw",
+      "parent": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_chrono_beetle/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "18tV6LlTrXC5HrHeprZXwrst-LsdgikRR",
+      "parent": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_chrono_beetle/03b_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1fJg1ZyZDvvqp9w2SilPm1QooRYRw4AAk",
+      "parent": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "creatures/ch_legacy_aqua_slime/01_portrait"
+    },
+    {
+      "kind": "creatures",
+      "id": "1rtTW2rer5xvl5x8Hi9EsLadD_bsx4Y27",
+      "parent": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "depth": 2,
+      "old": "03b_blender",
+      "target": "_03b_blender",
+      "path": "creatures/ch_legacy_aqua_slime/03b_blender"
+    },
+    {
+      "kind": "characters",
+      "id": "1ncnr8fhXRijVMqR_DQODcnoImha081ht",
+      "parent": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "depth": 2,
+      "old": "03a_colab",
+      "target": "_03a_colab",
+      "path": "characters/chr_legacy_roen/03a_colab"
+    },
+    {
+      "kind": "characters",
+      "id": "1xh_lvvTjBRmxz0BRyVpmCQP4QHzHyiv_",
+      "parent": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "depth": 2,
+      "old": "02_review_portrait",
+      "target": "_02_review_portrait",
+      "path": "characters/chr_legacy_roen/02_review_portrait"
+    },
+    {
+      "kind": "characters",
+      "id": "1ySvuy5pd6HATlUoKn8SZljS5ORjhaP9k",
+      "parent": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "characters/chr_legacy_roen/01_portrait"
+    },
+    {
+      "kind": "characters",
+      "id": "1rCixAbI0EDH6gCXaSn28PiXjyjtHXkEM",
+      "parent": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "depth": 2,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "characters/chr_legacy_roen/00_settings"
+    },
+    {
+      "kind": "characters",
+      "id": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "parent": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "depth": 2,
+      "old": "03a_colab",
+      "target": "_03a_colab",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab"
+    },
+    {
+      "kind": "characters",
+      "id": "1p7jc5KUHj60lUcT-QUvwABFVijLXrpDY",
+      "parent": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "depth": 2,
+      "old": "02_review_portrait",
+      "target": "_02_review_portrait",
+      "path": "characters/chr_legacy_amemori_sumiha/02_review_portrait"
+    },
+    {
+      "kind": "characters",
+      "id": "1RPAB8UpmTFGXP9noJQI5EynnJFyz0N9f",
+      "parent": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "characters/chr_legacy_amemori_sumiha/01_portrait"
+    },
+    {
+      "kind": "characters",
+      "id": "1IR2PEtB4Ybmp-JySdrtzOcb96knifrUr",
+      "parent": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "depth": 2,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "characters/chr_legacy_amemori_sumiha/00_settings"
+    },
+    {
+      "kind": "characters",
+      "id": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "parent": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "depth": 2,
+      "old": "03a_colab",
+      "target": "_03a_colab",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab"
+    },
+    {
+      "kind": "characters",
+      "id": "1uq9ZTBYIRnpN4L29FhufJUS60whyRzmN",
+      "parent": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "depth": 2,
+      "old": "02_review_portrait",
+      "target": "_02_review_portrait",
+      "path": "characters/chr_legacy_yeh_chengxi/02_review_portrait"
+    },
+    {
+      "kind": "characters",
+      "id": "1RiXMUjWiDtwvwwKYPwDy6RakCvPTFKLx",
+      "parent": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "depth": 2,
+      "old": "01_portrait",
+      "target": "_01_portrait",
+      "path": "characters/chr_legacy_yeh_chengxi/01_portrait"
+    },
+    {
+      "kind": "characters",
+      "id": "1WHQgNs4HWLU-coMlTtmTQ3J34d_-IMrr",
+      "parent": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "depth": 2,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "characters/chr_legacy_yeh_chengxi/00_settings"
+    },
+    {
+      "kind": "moves",
+      "id": "1HJ9_Vxy_52_BN3anU1oZD4c8Cc8oJ-kt",
+      "parent": "11LG5ahUWuSd19Xg8ja2Prwc7WO37tQXj",
+      "depth": 2,
+      "old": "legacy_pre_flat_20261116",
+      "target": "_legacy_pre_flat_20261116",
+      "path": "moves/_backup/legacy_pre_flat_20261116"
+    },
+    {
+      "kind": "creatures",
+      "id": "1OgHr8CX82FxrWD2DkgeSift-aWusmVrU",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "legacy_pre_flat_20261116",
+      "target": "_legacy_pre_flat_20261116",
+      "path": "creatures/_backup/legacy_pre_flat_20261116"
+    },
+    {
+      "kind": "characters",
+      "id": "1FS1DjX5bCa-Cwclf-tzQ7da3atTNt9Pa",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "legacy_pre_flat_20261116",
+      "target": "_legacy_pre_flat_20261116",
+      "path": "characters/_backup/legacy_pre_flat_20261116"
+    },
+    {
+      "kind": "creatures",
+      "id": "1heUsQcXsjP3vBrJ9SD023zqKv_uyv9DQ",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "wiki_legacy",
+      "target": "_wiki_legacy",
+      "path": "creatures/_backup/wiki_legacy"
+    },
+    {
+      "kind": "characters",
+      "id": "11P8F3tC7J_qepob2ra3q6VnZWnwN8FRp",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "legacy_colab_runs",
+      "target": "_legacy_colab_runs",
+      "path": "characters/_backup/legacy_colab_runs"
+    },
+    {
+      "kind": "characters",
+      "id": "1vSZeG9uxWDhlcHTWxiWu8OcXK0LoLTAB",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "legacy_loose_outputs",
+      "target": "_legacy_loose_outputs",
+      "path": "characters/_backup/legacy_loose_outputs"
+    },
+    {
+      "kind": "creatures",
+      "id": "1kj9cyhYULaBLfqRJdaLdZhs6F0vyVLjG",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "legacy_loose_outputs",
+      "target": "_legacy_loose_outputs",
+      "path": "creatures/_backup/legacy_loose_outputs"
+    },
+    {
+      "kind": "characters",
+      "id": "1tfhjVjveU-ZRAy9nVVPVY2JUhGkyboQc",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "legacy_archives",
+      "target": "_legacy_archives",
+      "path": "characters/_backup/legacy_archives"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Z2v47YcJMrCnwztnpJHqvbcSTPx88D4R",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "legacy_archives",
+      "target": "_legacy_archives",
+      "path": "creatures/_backup/legacy_archives"
+    },
+    {
+      "kind": "characters",
+      "id": "1JfGJvRN5KnBUmPRqEfzzhYwnnDblYk_x",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "legacy_prompts",
+      "target": "_legacy_prompts",
+      "path": "characters/_backup/legacy_prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1-YQDNbNXEIGm4kS_oaJhgjrLGipq5bky",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "legacy_prompts",
+      "target": "_legacy_prompts",
+      "path": "creatures/_backup/legacy_prompts"
+    },
+    {
+      "kind": "characters",
+      "id": "1JTh9VDGHNToNmclZcXv8GWgDiu5OGPAs",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "image_backup",
+      "target": "_image_backup",
+      "path": "characters/_backup/image_backup"
+    },
+    {
+      "kind": "characters",
+      "id": "1yXPOBHgaMp3psl0F8xOtvTvH30BA1_nd",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "legacy_3d",
+      "target": "_legacy_3d",
+      "path": "characters/_backup/legacy_3d"
+    },
+    {
+      "kind": "creatures",
+      "id": "1pqAAhfreibRY89xpnlqfVc9zUC-wc5f8",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "legacy_merge_backup",
+      "target": "_legacy_merge_backup",
+      "path": "creatures/_backup/legacy_merge_backup"
+    },
+    {
+      "kind": "creatures",
+      "id": "1g9Vnu2QwW6HGXcecwrMyPCIKP0yQirJD",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "legacy_blender_scripts",
+      "target": "_legacy_blender_scripts",
+      "path": "creatures/_backup/legacy_blender_scripts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1lbKG2oNJdL7-lUSjaPjdPahu-b6aZjkA",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "legacy_blender_briefs",
+      "target": "_legacy_blender_briefs",
+      "path": "creatures/_backup/legacy_blender_briefs"
+    },
+    {
+      "kind": "characters",
+      "id": "1jWvuzmH5nUiJIP8OHKSsgQIxn_Gwwl2g",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "_empty_before_migration_20261115_reviews",
+      "target": "_empty_before_migration_20261115_reviews",
+      "path": "characters/_backup/_empty_before_migration_20261115_reviews"
+    },
+    {
+      "kind": "characters",
+      "id": "1AP-Dt3O0bXNsC5_vs31dn_RlSTIZhq3H",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "_empty_before_migration_20261115_colab",
+      "target": "_empty_before_migration_20261115_colab",
+      "path": "characters/_backup/_empty_before_migration_20261115_colab"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ubdLa3uvJCrPOxxNc431yoDcOKelyhCv",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "_empty_before_migration_20261115_ai_blender",
+      "target": "_empty_before_migration_20261115_ai_blender",
+      "path": "creatures/_backup/_empty_before_migration_20261115_ai_blender"
+    },
+    {
+      "kind": "characters",
+      "id": "1GLheCcRmkxDVrnhJf9yDzFEYOCl9ezKS",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "_empty_before_migration_20261115_wiki",
+      "target": "_empty_before_migration_20261115_wiki",
+      "path": "characters/_backup/_empty_before_migration_20261115_wiki"
+    },
+    {
+      "kind": "creatures",
+      "id": "17v1LtrfjrGxWlsoRCRo2U1amucrr3kh1",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "_empty_before_migration_20261115_wiki",
+      "target": "_empty_before_migration_20261115_wiki",
+      "path": "creatures/_backup/_empty_before_migration_20261115_wiki"
+    },
+    {
+      "kind": "characters",
+      "id": "1Bop1gMmpwJjINgIWY6mmovcwYBWMnOIo",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "_backup_pre_fix_20261114",
+      "target": "_backup_pre_fix_20261114",
+      "path": "characters/_backup/_backup_pre_fix_20261114"
+    },
+    {
+      "kind": "moves",
+      "id": "1_mdEMJeeEV5Cdfoq4YZmGWlGTBANiKZr",
+      "parent": "11LG5ahUWuSd19Xg8ja2Prwc7WO37tQXj",
+      "depth": 2,
+      "old": "rejected_vfx",
+      "target": "_rejected_vfx",
+      "path": "moves/_backup/rejected_vfx"
+    },
+    {
+      "kind": "moves",
+      "id": "1tBB6vVd4DG_XT5f4QEf1XTQbZOiadcAt",
+      "parent": "1YBKLfe6wSoxYDrBNWXLB1cBjjAAyxqeV",
+      "depth": 2,
+      "old": "jobs",
+      "target": "_jobs",
+      "path": "moves/_prompts/jobs"
+    },
+    {
+      "kind": "creatures",
+      "id": "1QBL61mbwa1ExUPUAfgQXDFFsZMu5au3u",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "rejected_3d",
+      "target": "_rejected_3d",
+      "path": "creatures/_backup/rejected_3d"
+    },
+    {
+      "kind": "creatures",
+      "id": "10QfNoi7er91KAsWxsJ1wmb36zhzO0WYl",
+      "parent": "1eawR_YgbTHufPATI6LeEQlYl9w42p5BM",
+      "depth": 2,
+      "old": "rejected_portraits",
+      "target": "_rejected_portraits",
+      "path": "creatures/_backup/rejected_portraits"
+    },
+    {
+      "kind": "creatures",
+      "id": "1KEXvJpJnDA2Icu4zfjLhoY5qg1E5HRiy",
+      "parent": "1gbeK2IxSW62qvGoSXg6qVLsW7btCAKwY",
+      "depth": 2,
+      "old": "jobs",
+      "target": "_jobs",
+      "path": "creatures/_prompts/jobs"
+    },
+    {
+      "kind": "characters",
+      "id": "1yXflSiox_ct02KpWGKfV_M8keTVGmhkf",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "rejected_3d",
+      "target": "_rejected_3d",
+      "path": "characters/_backup/rejected_3d"
+    },
+    {
+      "kind": "characters",
+      "id": "1GE9a6k2RwfHojbARHVeV8hjNrMoUjNP0",
+      "parent": "1PS9053w41gNIhLhduOXECISoYccRXUOo",
+      "depth": 2,
+      "old": "rejected_portraits",
+      "target": "_rejected_portraits",
+      "path": "characters/_backup/rejected_portraits"
+    },
+    {
+      "kind": "characters",
+      "id": "1qM_iP6-pRSP6bgcGULJa-8cpjf6PU7Sw",
+      "parent": "1axJmP6h1JJirCF28ovl-JgEGDk3YRpdb",
+      "depth": 2,
+      "old": "jobs",
+      "target": "_jobs",
+      "path": "characters/_prompts/jobs"
+    },
+    {
+      "kind": "characters",
+      "id": "13NlKdeW96Ue8xm-hWxvOfhuOv5AYnFA4",
+      "parent": "1ncnr8fhXRijVMqR_DQODcnoImha081ht",
+      "depth": 3,
+      "old": "v6",
+      "target": "_v6",
+      "path": "characters/chr_legacy_roen/03a_colab/v6"
+    },
+    {
+      "kind": "characters",
+      "id": "19kiHtygtsPjZ8bcRmtC502AO4vzbpfNN",
+      "parent": "1ncnr8fhXRijVMqR_DQODcnoImha081ht",
+      "depth": 3,
+      "old": "v5",
+      "target": "_v5",
+      "path": "characters/chr_legacy_roen/03a_colab/v5"
+    },
+    {
+      "kind": "characters",
+      "id": "101AF4-SKa1G1XvIRwNtuGDLVzATKQprh",
+      "parent": "1ncnr8fhXRijVMqR_DQODcnoImha081ht",
+      "depth": 3,
+      "old": "v4",
+      "target": "_v4",
+      "path": "characters/chr_legacy_roen/03a_colab/v4"
+    },
+    {
+      "kind": "characters",
+      "id": "1bu_JNEAQ0DVAfAr-YI3Py_CbkzkKEK1k",
+      "parent": "1ncnr8fhXRijVMqR_DQODcnoImha081ht",
+      "depth": 3,
+      "old": "v3",
+      "target": "_v3",
+      "path": "characters/chr_legacy_roen/03a_colab/v3"
+    },
+    {
+      "kind": "characters",
+      "id": "1VHMtQoMV8NiZVLmA2q0owEsMLjOhknwR",
+      "parent": "1ncnr8fhXRijVMqR_DQODcnoImha081ht",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "characters/chr_legacy_roen/03a_colab/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "1WkKmMcodSFrGh0oVCxQ-ml6XD2dOkV9T",
+      "parent": "1ncnr8fhXRijVMqR_DQODcnoImha081ht",
+      "depth": 3,
+      "old": "v1",
+      "target": "_v1",
+      "path": "characters/chr_legacy_roen/03a_colab/v1"
+    },
+    {
+      "kind": "creatures",
+      "id": "1j2Xwa7yCwqHsn0TyNWqlgBo9QdmRDcDL",
+      "parent": "1tDs-f1L14Whton7-caWo4jN9Npw_oXkL",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "creatures/ch_legacy_shadow_eye/03b_blender/v2"
+    },
+    {
+      "kind": "creatures",
+      "id": "1sVHSGyom_s_5M-zdzgix4EaHM7_LFwVQ",
+      "parent": "1_oMhMR0_FjS_Vmq_pcjoY4bAwly1DVUD",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "creatures/ch_legacy_light_khepri/03b_blender/v2"
+    },
+    {
+      "kind": "creatures",
+      "id": "1iZEv4R3b_39vWLjVUpibJwOvAYgEISXO",
+      "parent": "1E5baGUMOKKC6PYrCjxreKHT2RLg0Qhf-",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "creatures/ch_legacy_wind_bird/03b_blender/v2"
+    },
+    {
+      "kind": "creatures",
+      "id": "1tGih_kHCTiZitdyD5suwW2kfbFmNoNAn",
+      "parent": "1x20O4xuid9u1PhuQd7TtnbTSygJCrjjK",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "creatures/ch_legacy_ice_snowman/03b_blender/v2"
+    },
+    {
+      "kind": "creatures",
+      "id": "1X36qyJWuBSJtQ_LP9Cu39oK5HKzq_Aw_",
+      "parent": "1eskI3GEq3sQ-dXLV_CHYLIM2xVwdktdh",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "creatures/ch_legacy_thunder_drone/03b_blender/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "19huCeAvaUnEgvbvll3-Rdwop7R0-PW7c",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v6",
+      "target": "_v6",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v6"
+    },
+    {
+      "kind": "characters",
+      "id": "17JQjrhZhTuaUSAaGks1bjfqz-dR5Ng0d",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v5",
+      "target": "_v5",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v5"
+    },
+    {
+      "kind": "characters",
+      "id": "1760q4PamZXd99GdO7gAQUXFpmc7bKkFf",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v4",
+      "target": "_v4",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v4"
+    },
+    {
+      "kind": "characters",
+      "id": "1cCDC5WFS3EeKMt3qYebb1kz0TfN-hR-i",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v3",
+      "target": "_v3",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v3"
+    },
+    {
+      "kind": "characters",
+      "id": "1Vka6M4Del58prd7jayQU4Gjf_f8008DF",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "19v28BINN7CtYzWMzD6GGJ0joIihUxfYk",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v1",
+      "target": "_v1",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v1"
+    },
+    {
+      "kind": "characters",
+      "id": "1gy_n0wVHqarp5S4pMx1DUuWNHH0A7aJJ",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v4",
+      "target": "_v4",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v4"
+    },
+    {
+      "kind": "characters",
+      "id": "10mC-n-vxGoBdQGUF8AC9LzPyza_PGX6t",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v3",
+      "target": "_v3",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v3"
+    },
+    {
+      "kind": "characters",
+      "id": "1GRY42Ew7m4b0I2I1A7OiYYjlWrKFLy41",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "1SD4Fj193nZlS2BbB-CaQqW3YXPHOTnb_",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v1",
+      "target": "_v1",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v1"
+    },
+    {
+      "kind": "characters",
+      "id": "1LVPyVni3s2YALNj09r_3nY9ct0322yZ3",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v3",
+      "target": "_v3_duplicate_1lvpyvni",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v3"
+    },
+    {
+      "kind": "characters",
+      "id": "1t9kqkS1j0_h4H8Rm75r50bHOgC4SlYX7",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v4",
+      "target": "_v4_duplicate_1t9kqks1",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v4"
+    },
+    {
+      "kind": "characters",
+      "id": "1PRFanAY_8Ttr3QH96or_3BIDtwYdUneA",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v3",
+      "target": "_v3_duplicate_1prfanay",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v3"
+    },
+    {
+      "kind": "characters",
+      "id": "1tK1nbrsOrS2qsAfF4EwQA_RlpYkJze4S",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2_duplicate_1tk1nbrs",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "1vYgMfYx_3zorFkN169QTxPyBKFJ92dJb",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v1",
+      "target": "_v1_duplicate_1vygmfyx",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v1"
+    },
+    {
+      "kind": "characters",
+      "id": "17JfLtXrQ8nfddODAUv23gD5gMEu9HC6d",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v3",
+      "target": "_v3_duplicate_17jfltxr",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v3"
+    },
+    {
+      "kind": "characters",
+      "id": "1W-TftV8nEKGJDdhp8vLSwOM3i5m3s6Ez",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2_duplicate_1wtftv8n",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "1Gmj4mlqWbI_fjdD9hZGfqv5e5NGu0K4u",
+      "parent": "1FX8pEXgcyCYVqTuJOCueY7RbW1ojO0aF",
+      "depth": 3,
+      "old": "v1",
+      "target": "_v1_duplicate_1gmj4mlq",
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v1"
+    },
+    {
+      "kind": "characters",
+      "id": "1At3QJQfgi7o1aaMqEo7t3HQ3iTxOX6Tl",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v4",
+      "target": "_v4_duplicate_1at3qjqf",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v4"
+    },
+    {
+      "kind": "characters",
+      "id": "1x0DrHx_yvJp7ulqKl5qtwXNR7VRbi_BQ",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v3",
+      "target": "_v3_duplicate_1x0drhxy",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v3"
+    },
+    {
+      "kind": "characters",
+      "id": "18ENacINmbt0v_wwTOXS1Qn8kmkbGFYEZ",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2_duplicate_18enacin",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "16ygdkjwus_faO9WfbCfAiU_Mte3IeKSI",
+      "parent": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "depth": 3,
+      "old": "v1",
+      "target": "_v1_duplicate_16ygdkjw",
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v1"
+    },
+    {
+      "kind": "characters",
+      "id": "1oYZj_d7IVDqlCmGxJWtydhziIdfC1G26",
+      "parent": "1WHQgNs4HWLU-coMlTtmTQ3J34d_-IMrr",
+      "depth": 3,
+      "old": "v2",
+      "target": "_v2",
+      "path": "characters/chr_legacy_yeh_chengxi/00_settings/v2"
+    },
+    {
+      "kind": "characters",
+      "id": "10x4xig1t2Dp7EjNDTKxwFcI5Fl1AGBYG",
+      "parent": "1FS1DjX5bCa-Cwclf-tzQ7da3atTNt9Pa",
+      "depth": 3,
+      "old": "reviews",
+      "target": "_reviews",
+      "path": "characters/_backup/legacy_pre_flat_20261116/reviews"
+    },
+    {
+      "kind": "characters",
+      "id": "1d8m0KbAOVNinotEK85h_AVF-chkVURpP",
+      "parent": "1FS1DjX5bCa-Cwclf-tzQ7da3atTNt9Pa",
+      "depth": 3,
+      "old": "wiki",
+      "target": "_wiki",
+      "path": "characters/_backup/legacy_pre_flat_20261116/wiki"
+    },
+    {
+      "kind": "creatures",
+      "id": "1XYWg2Qvhv4Pr8dGAjmOn6iMVbteTBiWQ",
+      "parent": "1OgHr8CX82FxrWD2DkgeSift-aWusmVrU",
+      "depth": 3,
+      "old": "wiki",
+      "target": "_wiki",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/wiki"
+    },
+    {
+      "kind": "moves",
+      "id": "1gW4XG7fsXI0fNcGXHMHOxNkupPeLJGOz",
+      "parent": "1HJ9_Vxy_52_BN3anU1oZD4c8Cc8oJ-kt",
+      "depth": 3,
+      "old": "reviews",
+      "target": "_reviews",
+      "path": "moves/_backup/legacy_pre_flat_20261116/reviews"
+    },
+    {
+      "kind": "moves",
+      "id": "1ziI5BLlIovEk_a6TcwOB-S0x4NsAGhj6",
+      "parent": "1HJ9_Vxy_52_BN3anU1oZD4c8Cc8oJ-kt",
+      "depth": 3,
+      "old": "wiki",
+      "target": "_wiki",
+      "path": "moves/_backup/legacy_pre_flat_20261116/wiki"
+    },
+    {
+      "kind": "moves",
+      "id": "1b8MXP0Nk8eVCkImpTLSzQ9UmGthYj17Q",
+      "parent": "1HJ9_Vxy_52_BN3anU1oZD4c8Cc8oJ-kt",
+      "depth": 3,
+      "old": "03_completed",
+      "target": "_03_completed",
+      "path": "moves/_backup/legacy_pre_flat_20261116/03_completed"
+    },
+    {
+      "kind": "moves",
+      "id": "1nspS2MHinS-z4kMRKy0BvmUqVYAeZMyj",
+      "parent": "1HJ9_Vxy_52_BN3anU1oZD4c8Cc8oJ-kt",
+      "depth": 3,
+      "old": "01_vfx",
+      "target": "_01_vfx",
+      "path": "moves/_backup/legacy_pre_flat_20261116/01_vfx"
+    },
+    {
+      "kind": "moves",
+      "id": "1NEffTj77sxkNoJI1BeMA1HvcRTe5ihfM",
+      "parent": "1HJ9_Vxy_52_BN3anU1oZD4c8Cc8oJ-kt",
+      "depth": 3,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "moves/_backup/legacy_pre_flat_20261116/00_settings"
+    },
+    {
+      "kind": "creatures",
+      "id": "1rQCwId-7tBG10Qm5w8ADx0oWkoOXcKdJ",
+      "parent": "1OgHr8CX82FxrWD2DkgeSift-aWusmVrU",
+      "depth": 3,
+      "old": "reviews",
+      "target": "_reviews",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/reviews"
+    },
+    {
+      "kind": "creatures",
+      "id": "181E4GIBMBx6FDpJeg1tFTHsXlb2shSx7",
+      "parent": "1OgHr8CX82FxrWD2DkgeSift-aWusmVrU",
+      "depth": 3,
+      "old": "03_completed",
+      "target": "_03_completed",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/03_completed"
+    },
+    {
+      "kind": "creatures",
+      "id": "1W8Gokkr5ZbIVPYqjb9eLsbRQpxgr9-do",
+      "parent": "1OgHr8CX82FxrWD2DkgeSift-aWusmVrU",
+      "depth": 3,
+      "old": "02_3d",
+      "target": "_02_3d",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d"
+    },
+    {
+      "kind": "creatures",
+      "id": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "parent": "1OgHr8CX82FxrWD2DkgeSift-aWusmVrU",
+      "depth": 3,
+      "old": "01_portraits",
+      "target": "_01_portraits",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Wn0VSasKLGo_n2gBvRVO-4ItiSFrNjna",
+      "parent": "1OgHr8CX82FxrWD2DkgeSift-aWusmVrU",
+      "depth": 3,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/00_settings"
+    },
+    {
+      "kind": "characters",
+      "id": "1McKIbN9l2Ka0oE7pVG0Ph7rV_X7E3gJY",
+      "parent": "1FS1DjX5bCa-Cwclf-tzQ7da3atTNt9Pa",
+      "depth": 3,
+      "old": "03_completed",
+      "target": "_03_completed",
+      "path": "characters/_backup/legacy_pre_flat_20261116/03_completed"
+    },
+    {
+      "kind": "characters",
+      "id": "1Yu9ndz_6jy0_akEYAMh6r5oqMXjCSqBC",
+      "parent": "1FS1DjX5bCa-Cwclf-tzQ7da3atTNt9Pa",
+      "depth": 3,
+      "old": "02_3d",
+      "target": "_02_3d",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d"
+    },
+    {
+      "kind": "characters",
+      "id": "1usiRK_rjxP2CBhgWpwpPkwmWgAzyUwni",
+      "parent": "1FS1DjX5bCa-Cwclf-tzQ7da3atTNt9Pa",
+      "depth": 3,
+      "old": "01_portraits",
+      "target": "_01_portraits",
+      "path": "characters/_backup/legacy_pre_flat_20261116/01_portraits"
+    },
+    {
+      "kind": "characters",
+      "id": "1uCAzOorzZJqOzpo1aUb8i7Dzcq1SR7cb",
+      "parent": "1FS1DjX5bCa-Cwclf-tzQ7da3atTNt9Pa",
+      "depth": 3,
+      "old": "00_settings",
+      "target": "_00_settings",
+      "path": "characters/_backup/legacy_pre_flat_20261116/00_settings"
+    },
+    {
+      "kind": "characters",
+      "id": "1B-ASd2PwvwUk4GDhtXKLKC1Bkn7RPGy-",
+      "parent": "1yXPOBHgaMp3psl0F8xOtvTvH30BA1_nd",
+      "depth": 3,
+      "old": "mdl-yeh-chengxi-colab-20261113",
+      "target": "_mdl_yeh_chengxi_colab_20261113",
+      "path": "characters/_backup/legacy_3d/mdl-yeh-chengxi-colab-20261113"
+    },
+    {
+      "kind": "characters",
+      "id": "1mDwl_qmIzzRMRztG5MKmExHZugZMjozo",
+      "parent": "1yXPOBHgaMp3psl0F8xOtvTvH30BA1_nd",
+      "depth": 3,
+      "old": "mdl-20261109-f048-1847-chr_3d04",
+      "target": "_mdl_20261109_f048_1847_chr_3d04",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_3d04"
+    },
+    {
+      "kind": "characters",
+      "id": "1n4ZmoOT6RWx3wlZzV2zZIa12WmpekQY3",
+      "parent": "1yXPOBHgaMp3psl0F8xOtvTvH30BA1_nd",
+      "depth": 3,
+      "old": "mdl-20261109-f048-1847-chr_1286_1855",
+      "target": "_mdl_20261109_f048_1847_chr_1286_1855",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286_1855"
+    },
+    {
+      "kind": "characters",
+      "id": "1tEyXR0YExqH7VwnGEPZzrtVXIGGInJlE",
+      "parent": "1yXPOBHgaMp3psl0F8xOtvTvH30BA1_nd",
+      "depth": 3,
+      "old": "mdl-20261109-f048-1847-chr_1286",
+      "target": "_mdl_20261109_f048_1847_chr_1286",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286"
+    },
+    {
+      "kind": "characters",
+      "id": "1muzUS-m0KJvz18PQzHwKhDc5t4LWb7qZ",
+      "parent": "1Yu9ndz_6jy0_akEYAMh6r5oqMXjCSqBC",
+      "depth": 4,
+      "old": "colab",
+      "target": "_colab",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab"
+    },
+    {
+      "kind": "creatures",
+      "id": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "parent": "1W8Gokkr5ZbIVPYqjb9eLsbRQpxgr9-do",
+      "depth": 4,
+      "old": "ai_blender",
+      "target": "_ai_blender",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "1SJRqzXzrryLY8AibZpcbdCQZwiKpJWsp",
+      "parent": "181E4GIBMBx6FDpJeg1tFTHsXlb2shSx7",
+      "depth": 4,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/03_completed/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cJVlRhu86TfmYvvxfeAaYCoKMpt3NPYb",
+      "parent": "181E4GIBMBx6FDpJeg1tFTHsXlb2shSx7",
+      "depth": 4,
+      "old": "portraits",
+      "target": "_portraits",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/03_completed/portraits"
+    },
+    {
+      "kind": "creatures",
+      "id": "1UtfyeCUHJQZ_MWthFDzlkKZjTL9fr_i3",
+      "parent": "1W8Gokkr5ZbIVPYqjb9eLsbRQpxgr9-do",
+      "depth": 4,
+      "old": "legacy",
+      "target": "_legacy",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/legacy"
+    },
+    {
+      "kind": "creatures",
+      "id": "1JHlUoO5wRGM3NURXEoZcYlYg6tz_KXbH",
+      "parent": "1W8Gokkr5ZbIVPYqjb9eLsbRQpxgr9-do",
+      "depth": 4,
+      "old": "colab",
+      "target": "_colab",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/colab"
+    },
+    {
+      "kind": "characters",
+      "id": "15syK63j1ZLYJ0PKP09pD97JX_Z4xtQvf",
+      "parent": "1McKIbN9l2Ka0oE7pVG0Ph7rV_X7E3gJY",
+      "depth": 4,
+      "old": "models",
+      "target": "_models",
+      "path": "characters/_backup/legacy_pre_flat_20261116/03_completed/models"
+    },
+    {
+      "kind": "characters",
+      "id": "1OJN4nv9_3DtXcnnoRndyEO9_ga8mWO30",
+      "parent": "1McKIbN9l2Ka0oE7pVG0Ph7rV_X7E3gJY",
+      "depth": 4,
+      "old": "portraits",
+      "target": "_portraits",
+      "path": "characters/_backup/legacy_pre_flat_20261116/03_completed/portraits"
+    },
+    {
+      "kind": "characters",
+      "id": "1qFQNX6sw6kF2b6Dv3iIZA5D3DPiOdeGk",
+      "parent": "1Yu9ndz_6jy0_akEYAMh6r5oqMXjCSqBC",
+      "depth": 4,
+      "old": "legacy",
+      "target": "_legacy",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/legacy"
+    },
+    {
+      "kind": "characters",
+      "id": "1k0W--TI0DUPRzIUPF9UttkOuvrhE8Tym",
+      "parent": "1Yu9ndz_6jy0_akEYAMh6r5oqMXjCSqBC",
+      "depth": 4,
+      "old": "ai_blender",
+      "target": "_ai_blender",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/ai_blender"
+    },
+    {
+      "kind": "creatures",
+      "id": "18gsHMmvYF5FpopoV4Md8xyCE6_mxF3Gj",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261114-cr_ice_snowman",
+      "target": "_cr_20261114_cr_ice_snowman",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_ice_snowman"
+    },
+    {
+      "kind": "creatures",
+      "id": "1SxwpJuZseoWX3zfQf9dOS_y-bKleTHyE",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261114-cr_frostblade_penguin",
+      "target": "_cr_20261114_cr_frostblade_penguin",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_frostblade_penguin"
+    },
+    {
+      "kind": "creatures",
+      "id": "14I1cfQAOVQdGPmUBid9OoF93V1rY2HUr",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261114-cr_fire_wisp",
+      "target": "_cr_20261114_cr_fire_wisp",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_fire_wisp"
+    },
+    {
+      "kind": "creatures",
+      "id": "1MTHO88qCBfVOiK4mjIbd6y7JgtZJPMnt",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261114-cr_earth_golem",
+      "target": "_cr_20261114_cr_earth_golem",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_earth_golem"
+    },
+    {
+      "kind": "creatures",
+      "id": "1tefVTK8DodcewHMT9ZKEPgrOamDHiHLy",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261114-cr_chrono_beetle",
+      "target": "_cr_20261114_cr_chrono_beetle",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_chrono_beetle"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Zvzr4rsv0nzZ4D3DZ-kbuXycSAQZ9oPV",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261114-cr_aqua_slime",
+      "target": "_cr_20261114_cr_aqua_slime",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_aqua_slime"
+    },
+    {
+      "kind": "characters",
+      "id": "1Fb9xYa59UPkeluhX7sjauixj_VLn1Qef",
+      "parent": "1usiRK_rjxP2CBhgWpwpPkwmWgAzyUwni",
+      "depth": 4,
+      "old": "chr-20261106-1855-1855",
+      "target": "_chr_20261106_1855_1855",
+      "path": "characters/_backup/legacy_pre_flat_20261116/01_portraits/chr-20261106-1855-1855"
+    },
+    {
+      "kind": "characters",
+      "id": "1TfpZQiZH0mSaJBXq9pKuwS0t73w_JLO7",
+      "parent": "1usiRK_rjxP2CBhgWpwpPkwmWgAzyUwni",
+      "depth": 4,
+      "old": "chr-20261106-1286-2039",
+      "target": "_chr_20261106_1286_2039",
+      "path": "characters/_backup/legacy_pre_flat_20261116/01_portraits/chr-20261106-1286-2039"
+    },
+    {
+      "kind": "characters",
+      "id": "1wtd6jMZ5BgBKKdTkIFBOE-nRWIeWRB4V",
+      "parent": "1usiRK_rjxP2CBhgWpwpPkwmWgAzyUwni",
+      "depth": 4,
+      "old": "chr-20261106-3d04-2100",
+      "target": "_chr_20261106_3d04_2100",
+      "path": "characters/_backup/legacy_pre_flat_20261116/01_portraits/chr-20261106-3d04-2100"
+    },
+    {
+      "kind": "characters",
+      "id": "1CxseWh1NdEdt4_WKuImIpCNX_FjlXBCV",
+      "parent": "1mDwl_qmIzzRMRztG5MKmExHZugZMjozo",
+      "depth": 4,
+      "old": "textures",
+      "target": "_textures",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_3d04/textures"
+    },
+    {
+      "kind": "characters",
+      "id": "1TbqypQzeUGwF3Bc0DBbFjbHMfcZNrVhI",
+      "parent": "1mDwl_qmIzzRMRztG5MKmExHZugZMjozo",
+      "depth": 4,
+      "old": "models",
+      "target": "_models",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_3d04/models"
+    },
+    {
+      "kind": "characters",
+      "id": "1lTud5xGndWKweVfO_yCqolOaWRGAEjfv",
+      "parent": "1mDwl_qmIzzRMRztG5MKmExHZugZMjozo",
+      "depth": 4,
+      "old": "rig",
+      "target": "_rig",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_3d04/rig"
+    },
+    {
+      "kind": "characters",
+      "id": "1x2PYOYcyLNVzGd1f3UTFeqqKU46b_kln",
+      "parent": "1mDwl_qmIzzRMRztG5MKmExHZugZMjozo",
+      "depth": 4,
+      "old": "images",
+      "target": "_images",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_3d04/images"
+    },
+    {
+      "kind": "characters",
+      "id": "1paKrjnyV85pmPeVXmH1-yWwXxLI4k1fq",
+      "parent": "1mDwl_qmIzzRMRztG5MKmExHZugZMjozo",
+      "depth": 4,
+      "old": "anims",
+      "target": "_anims",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_3d04/anims"
+    },
+    {
+      "kind": "characters",
+      "id": "1K0ruh3EsSJpb4f4PdnVYQys-aDcynk8S",
+      "parent": "1n4ZmoOT6RWx3wlZzV2zZIa12WmpekQY3",
+      "depth": 4,
+      "old": "textures",
+      "target": "_textures",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286_1855/textures"
+    },
+    {
+      "kind": "characters",
+      "id": "18IWY2E-8Y0lUYz-gjeqC7o1hq0ATVPEp",
+      "parent": "1n4ZmoOT6RWx3wlZzV2zZIa12WmpekQY3",
+      "depth": 4,
+      "old": "rig",
+      "target": "_rig",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286_1855/rig"
+    },
+    {
+      "kind": "characters",
+      "id": "1mAfOm7uB7PkKjoarUheJE19tYeq-QbZF",
+      "parent": "1n4ZmoOT6RWx3wlZzV2zZIa12WmpekQY3",
+      "depth": 4,
+      "old": "models",
+      "target": "_models",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286_1855/models"
+    },
+    {
+      "kind": "characters",
+      "id": "1f9Hp6Zymouq6-3atNX1E6kXjnUP8jLB2",
+      "parent": "1n4ZmoOT6RWx3wlZzV2zZIa12WmpekQY3",
+      "depth": 4,
+      "old": "images",
+      "target": "_images",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286_1855/images"
+    },
+    {
+      "kind": "characters",
+      "id": "1-TQvBGCdiHHsxY9bO0LpAssY9tb4FSTv",
+      "parent": "1n4ZmoOT6RWx3wlZzV2zZIa12WmpekQY3",
+      "depth": 4,
+      "old": "anims",
+      "target": "_anims",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286_1855/anims"
+    },
+    {
+      "kind": "characters",
+      "id": "1W-OaxcBaEqZR6q9a8TEHZJJ3B1dASAZT",
+      "parent": "1tEyXR0YExqH7VwnGEPZzrtVXIGGInJlE",
+      "depth": 4,
+      "old": "textures",
+      "target": "_textures",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286/textures"
+    },
+    {
+      "kind": "characters",
+      "id": "1YfxT1Kpcv2f5D-MoFSDh4RiYSagKu6NX",
+      "parent": "1tEyXR0YExqH7VwnGEPZzrtVXIGGInJlE",
+      "depth": 4,
+      "old": "rig",
+      "target": "_rig",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286/rig"
+    },
+    {
+      "kind": "characters",
+      "id": "1_lAqZOgnkD7TXbO-HCNc0l0XCl7dUl1E",
+      "parent": "1tEyXR0YExqH7VwnGEPZzrtVXIGGInJlE",
+      "depth": 4,
+      "old": "models",
+      "target": "_models",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286/models"
+    },
+    {
+      "kind": "characters",
+      "id": "1tChKkT8bE0x_oea6qP4fjpqttwC9vQWp",
+      "parent": "1tEyXR0YExqH7VwnGEPZzrtVXIGGInJlE",
+      "depth": 4,
+      "old": "images",
+      "target": "_images",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286/images"
+    },
+    {
+      "kind": "characters",
+      "id": "1gOgPI0dewVHalQ9NUTfgPFYsfI5rDVQm",
+      "parent": "1tEyXR0YExqH7VwnGEPZzrtVXIGGInJlE",
+      "depth": 4,
+      "old": "anims",
+      "target": "_anims",
+      "path": "characters/_backup/legacy_3d/mdl-20261109-f048-1847-chr_1286/anims"
+    },
+    {
+      "kind": "creatures",
+      "id": "1JbY1Ca0yzT_wusUy6Mdq3OzqZoPjv6Mm",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261111-c111-1200",
+      "target": "_cr_20261111_c111_1200",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-c111-1200"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Fy5JnDwWWkdM0-KsASGPKIGzfXCzXSOT",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261111-b111-1200",
+      "target": "_cr_20261111_b111_1200",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-b111-1200"
+    },
+    {
+      "kind": "creatures",
+      "id": "1eMyr8hrdz4OCbXmJaDNbz7MjOEgmwg75",
+      "parent": "1oK0wuLbYe-mgUFwzTtxXrrYdSpsIOeRE",
+      "depth": 4,
+      "old": "cr-20261111-a111-1200",
+      "target": "_cr_20261111_a111_1200",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-a111-1200"
+    },
+    {
+      "kind": "characters",
+      "id": "1scyR7nmibbCZtOsBHOIVRxESY5ituIPz",
+      "parent": "1muzUS-m0KJvz18PQzHwKhDc5t4LWb7qZ",
+      "depth": 5,
+      "old": "mdl-20261114-3d04-0000",
+      "target": "_mdl_20261114_3d04_0000",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-3d04-0000"
+    },
+    {
+      "kind": "characters",
+      "id": "1qPfyT0BxNFH__IN0pcJmKOpugOJ1I09E",
+      "parent": "1muzUS-m0KJvz18PQzHwKhDc5t4LWb7qZ",
+      "depth": 5,
+      "old": "mdl-20261114-1855-0000",
+      "target": "_mdl_20261114_1855_0000",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-1855-0000"
+    },
+    {
+      "kind": "creatures",
+      "id": "1iSZDtTfm75A_h2IKA82Q89KoHUdKVQZf",
+      "parent": "18gsHMmvYF5FpopoV4Md8xyCE6_mxF3Gj",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_ice_snowman/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1OR3UJSyDBpy0FfNqKbC09uaDKmjrP8Yy",
+      "parent": "18gsHMmvYF5FpopoV4Md8xyCE6_mxF3Gj",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_ice_snowman/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "1pvScOCr2PjEhf6JDdurhQu6MJw7_7cmm",
+      "parent": "1SxwpJuZseoWX3zfQf9dOS_y-bKleTHyE",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_frostblade_penguin/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1vVJj1BJlQV4BMKkztTC7nm8GGfzRX42z",
+      "parent": "1SxwpJuZseoWX3zfQf9dOS_y-bKleTHyE",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_frostblade_penguin/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "1_KsR5w1rdehTtz1WQ1PXP6OWQ1Ro830k",
+      "parent": "14I1cfQAOVQdGPmUBid9OoF93V1rY2HUr",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_fire_wisp/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1yHnfWoU3FqXOHMNxSMyV58ZWne8sXD66",
+      "parent": "14I1cfQAOVQdGPmUBid9OoF93V1rY2HUr",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_fire_wisp/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "1R8PxqZjisDrZZn0inWKl-rkvArij_HKX",
+      "parent": "1MTHO88qCBfVOiK4mjIbd6y7JgtZJPMnt",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_earth_golem/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1mt997VrLoQkuV1YdcIeho7MoSdj1h9mB",
+      "parent": "1MTHO88qCBfVOiK4mjIbd6y7JgtZJPMnt",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_earth_golem/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ZHC_eRrY2BsJ7h6gWpKaKRFoZz0mOcJr",
+      "parent": "1tefVTK8DodcewHMT9ZKEPgrOamDHiHLy",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_chrono_beetle/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1eWxtHh-x7Caw568wOXMQ6t-EmJtUTKIt",
+      "parent": "1tefVTK8DodcewHMT9ZKEPgrOamDHiHLy",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_chrono_beetle/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "1D6St3LU4Com9dqWpUPsIuC5oz5umNi1W",
+      "parent": "1Zvzr4rsv0nzZ4D3DZ-kbuXycSAQZ9oPV",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_aqua_slime/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1J05_vCxGe4oBUnBGfcTIoHOgzuLwCNPM",
+      "parent": "1Zvzr4rsv0nzZ4D3DZ-kbuXycSAQZ9oPV",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261114-cr_aqua_slime/images"
+    },
+    {
+      "kind": "characters",
+      "id": "1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9",
+      "parent": "1muzUS-m0KJvz18PQzHwKhDc5t4LWb7qZ",
+      "depth": 5,
+      "old": "mdl-20261113-1286-0000",
+      "target": "_mdl_20261113_1286_0000",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261113-1286-0000"
+    },
+    {
+      "kind": "creatures",
+      "id": "1xCvuwoVemfDmdTLAdloc6Xq5TbLyhhgT",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_chrono_beetle_overload",
+      "target": "_asset_cr_chrono_beetle_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1JidClNt_vs5NfuIASfIbJ0QtBCkZnaSK",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_chrono_beetle_adult",
+      "target": "_asset_cr_chrono_beetle_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "16akav045E1OrMEnbT1Ki6wvJ0xjT1h-s",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_chrono_beetle_juvenile",
+      "target": "_asset_cr_chrono_beetle_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1U3qDmh3UOrlZHJJKzDZSOqmBL8oyASEs",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_chrono_beetle_adolescent",
+      "target": "_asset_cr_chrono_beetle_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "13jJ-7N20aruFwqTmUBqMFifQYx3jtWCV",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_verdant_aquila_overload",
+      "target": "_asset_cr_verdant_aquila_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1no7GlNlyWTMqpv-77-Xh2CKaYTMru1nU",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_verdant_aquila_adult",
+      "target": "_asset_cr_verdant_aquila_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1_zw-I4Vk3yVX4JulR764V4NbxZZqvcul",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_verdant_aquila_adolescent",
+      "target": "_asset_cr_verdant_aquila_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1lo7eDzXlzIDPU87Fni9FH134xvfeB2JN",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_verdant_aquila_juvenile",
+      "target": "_asset_cr_verdant_aquila_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cKjO1iAF7VSsN94bC68qYEgmvs4JtLnj",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_frostblade_penguin_overload",
+      "target": "_asset_cr_frostblade_penguin_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1fvGjBMwnnk9u_sFxBFqRHGqKSAg4P0sC",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_frostblade_penguin_adult",
+      "target": "_asset_cr_frostblade_penguin_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1M7LmU4aPEXjvMLDgnnotbyYQViQeai5k",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_frostblade_penguin_adolescent",
+      "target": "_asset_cr_frostblade_penguin_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Uk43Y9UTModWG9ke9TSgUyqygV9kujkO",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_frostblade_penguin_juvenile",
+      "target": "_asset_cr_frostblade_penguin_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1nB6LhkOA31YzyaOKaya9gaqWS4Hy6etr",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_solmane_lion_overload",
+      "target": "_asset_cr_solmane_lion_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1amZLGjahQLJvvpnv_J_StqhKjlx60Wxq",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_solmane_lion_adult",
+      "target": "_asset_cr_solmane_lion_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1PTEGAq4OK81KUKBKGI3aUJimsEsD6MIu",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_solmane_lion_adolescent",
+      "target": "_asset_cr_solmane_lion_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1RlMxE_q8dYc4RHUHNSeV5SZThzeI2gpp",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_solmane_lion_juvenile",
+      "target": "_asset_cr_solmane_lion_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1uHBV_-UKlExBaTDYP_GfHC0VjY4-XbKy",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ink_stele_overload",
+      "target": "_asset_cr_ink_stele_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1QSNvXi-F8UP7RmiCT-5K3Qg3WE-fjVgE",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ink_stele_adult",
+      "target": "_asset_cr_ink_stele_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1LhKVeTgUEKbzgc0lcWKeD8V76tAMbgIG",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ink_stele_adolescent",
+      "target": "_asset_cr_ink_stele_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1wzgDYWKaM2hSOe2fEcnC4naqOOgPBsFO",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ink_stele_juvenile",
+      "target": "_asset_cr_ink_stele_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_juvenile"
+    },
+    {
+      "kind": "characters",
+      "id": "1OvtFNbRSljwR3r5oFiAW-s3GXEyKSyQG",
+      "parent": "1TfpZQiZH0mSaJBXq9pKuwS0t73w_JLO7",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "characters/_backup/legacy_pre_flat_20261116/01_portraits/chr-20261106-1286-2039/images"
+    },
+    {
+      "kind": "characters",
+      "id": "1srhJpWknH5ViuJ8RVGnbHX83w7eTUs7R",
+      "parent": "1wtd6jMZ5BgBKKdTkIFBOE-nRWIeWRB4V",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "characters/_backup/legacy_pre_flat_20261116/01_portraits/chr-20261106-3d04-2100/images"
+    },
+    {
+      "kind": "characters",
+      "id": "1hI6lcVPIoWHzyF4rmggHyRWFICdPrljR",
+      "parent": "1Fb9xYa59UPkeluhX7sjauixj_VLn1Qef",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "characters/_backup/legacy_pre_flat_20261116/01_portraits/chr-20261106-1855-1855/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "148KvUXSiWhhuBPiw83sQO6Tire8Zm6Hx",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_aqua_slime_juvenile",
+      "target": "_asset_cr_aqua_slime_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1QQpHVGKm2b_MvDVnFYXAT-wfVnObhyae",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_aqua_slime_adolescent",
+      "target": "_asset_cr_aqua_slime_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1UsN6GZwNHvx9sD27vdmdaittvco5d_Id",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_aqua_slime_adult",
+      "target": "_asset_cr_aqua_slime_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1rsO6TqBq4hxQ7lvTFIctxAP3DFaK4bMQ",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_aqua_slime_overload",
+      "target": "_asset_cr_aqua_slime_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1-4oQWZ6xBnka-213Gktg5_Kc2umU-TAU",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ice_snowman_juvenile",
+      "target": "_asset_cr_ice_snowman_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1RNErkr02D0pWDuRJUWCVRiHbAZUG2NfO",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ice_snowman_adolescent",
+      "target": "_asset_cr_ice_snowman_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1O-3rOxQEqsMrfiwJhF7liIhLsAoi4j_a",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ice_snowman_adult",
+      "target": "_asset_cr_ice_snowman_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "102Xl5B0fXAMh_IL8Hlwfim7GGxYfR9Tj",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_ice_snowman_overload",
+      "target": "_asset_cr_ice_snowman_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1DEBsMZH9MhhwZv44uUr_GhFS2cJQMa5W",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wood_puppet_juvenile",
+      "target": "_asset_cr_wood_puppet_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Z1c_cVWXm19H7HJjAjxL9AAUj4ekvhD9",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wood_puppet_adolescent",
+      "target": "_asset_cr_wood_puppet_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cDfThzVR6eUg8_2HnJUpPCQL_YD_v-39",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wood_puppet_adult",
+      "target": "_asset_cr_wood_puppet_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1A-myeP2Tgo9NA95CER-NnQ1rZ6Qaraat",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wood_puppet_overload",
+      "target": "_asset_cr_wood_puppet_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1JD1Vp_jbsrfjqSMLXXE4NTbV5r8a0Tt5",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_fire_wisp_juvenile",
+      "target": "_asset_cr_fire_wisp_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "14S0V2rVeiWyYN2463VL_uHFxE7ZCdW2U",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_fire_wisp_adolescent",
+      "target": "_asset_cr_fire_wisp_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1wsX-pzX15N8F3Ogdam9Vqq_qTjXCoS01",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_fire_wisp_adult",
+      "target": "_asset_cr_fire_wisp_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "17tXMVOGrFA8ljZF6N-o7yfgrcAQpFzEk",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_fire_wisp_overload",
+      "target": "_asset_cr_fire_wisp_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1AWN4Ybr-GCLUQjB4Xo1g3s0tpZ5Baj_-",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_earth_golem_juvenile",
+      "target": "_asset_cr_earth_golem_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "12IbCwmlcyPkbHey6ipuztKIU9FULQdnm",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_earth_golem_adolescent",
+      "target": "_asset_cr_earth_golem_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1sKdT4IwDU4ql9EKD-tVN5WOvBnLFci52",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_earth_golem_adult",
+      "target": "_asset_cr_earth_golem_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "12Cte0bvlZWRCPjhnPxatwH57ic1MpVAq",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_earth_golem_overload",
+      "target": "_asset_cr_earth_golem_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Fzu_caWAxpUhIEaQcV5XwOllbBFm-Gca",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wind_bird_juvenile",
+      "target": "_asset_cr_wind_bird_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cCMo7qEWw4XJUd5H05Wj8hoJA-rTZ2xi",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wind_bird_adolescent",
+      "target": "_asset_cr_wind_bird_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ZgNYQr5g0TesZnfhOSpcgCdyHC63XB7U",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wind_bird_adult",
+      "target": "_asset_cr_wind_bird_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1xD84OZu-Q4-ismuPI2pgOvGDUwcNdV33",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_wind_bird_overload",
+      "target": "_asset_cr_wind_bird_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1bT_SmUkB183yFCECk7qR5t8kW7803mjR",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_shadow_eye_juvenile",
+      "target": "_asset_cr_shadow_eye_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ErJVr6rCm9f2N_p1VQahOIeSGAWDoK1j",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_shadow_eye_adolescent",
+      "target": "_asset_cr_shadow_eye_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1nl-jnfM0F-R7ynCrW8BA_h6-qkUvKq5b",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_shadow_eye_adult",
+      "target": "_asset_cr_shadow_eye_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1NTiRrxfBhkrKUMSYdRPc51oK0QpYF1It",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_shadow_eye_overload",
+      "target": "_asset_cr_shadow_eye_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "11CH0SvpyuTX9S45bUCzO91YmFIaMT-5j",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_thunder_drone_juvenile",
+      "target": "_asset_cr_thunder_drone_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1HoU1uv_JPa7YqOrIO0Ll4rRqM6Fr2eiu",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_thunder_drone_adolescent",
+      "target": "_asset_cr_thunder_drone_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1t7nzpLTKHPWYFfiufdCfsoJkq6FjUvWG",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_thunder_drone_adult",
+      "target": "_asset_cr_thunder_drone_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "15hNqQWShE2yJqb5Z-UyNym8aUIB6cOOZ",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_thunder_drone_overload",
+      "target": "_asset_cr_thunder_drone_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1UZhwz7H2P5Z2NrYnWntwAe1Oa1Fgx-U5",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_metal_vault_juvenile",
+      "target": "_asset_cr_metal_vault_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1b5Gj2NPuFdrL6fQ5PZ6VRXVmVQU4jinl",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_metal_vault_adolescent",
+      "target": "_asset_cr_metal_vault_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "1_5OkWp9ipSGtQK6rb_h101u85cIFNqqF",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_metal_vault_adult",
+      "target": "_asset_cr_metal_vault_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1bWqjzt-a5xezAEowYAlmvne--RmeNGRL",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_metal_vault_overload",
+      "target": "_asset_cr_metal_vault_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1pULFmg5rWMX6dvImgULkk_Mo22Nt0taW",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_light_khepri_juvenile",
+      "target": "_asset_cr_light_khepri_juvenile",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_juvenile"
+    },
+    {
+      "kind": "creatures",
+      "id": "1QW4q6UqqcX_CocW5m3IKAd6_Z2Xk-YOw",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_light_khepri_adolescent",
+      "target": "_asset_cr_light_khepri_adolescent",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_adolescent"
+    },
+    {
+      "kind": "creatures",
+      "id": "13grs-U6bmvarQDzp9_hg2xqhAmXFkhf3",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_light_khepri_adult",
+      "target": "_asset_cr_light_khepri_adult",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_adult"
+    },
+    {
+      "kind": "creatures",
+      "id": "1tDTMlRcbCJ19Rn5QzAeXkvSYlMkB3ymv",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "asset_cr_light_khepri_overload",
+      "target": "_asset_cr_light_khepri_overload",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_overload"
+    },
+    {
+      "kind": "creatures",
+      "id": "1A7bpdzLs0XvDFPn8HIQZ8tPSfgMtGgAs",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-c111-1301",
+      "target": "_mdl_20261111_c111_1301",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1301"
+    },
+    {
+      "kind": "creatures",
+      "id": "1fudiiFN-lZ1mrdMFItoeQuciBTVNCjcI",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-c111-1303",
+      "target": "_mdl_20261111_c111_1303",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1303"
+    },
+    {
+      "kind": "creatures",
+      "id": "1fe3E7FN8eQ465Oluw654UMgPpGyYHlh3",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-c111-1302",
+      "target": "_mdl_20261111_c111_1302",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1302"
+    },
+    {
+      "kind": "creatures",
+      "id": "1q4iSla-Du7z0vq5Ee0AC-u_2NTCsC89K",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-c111-1300",
+      "target": "_mdl_20261111_c111_1300",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1300"
+    },
+    {
+      "kind": "creatures",
+      "id": "1wA1SyzBcJWJzT4SgxFJ2odXufnjjJ5Yq",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-b111-1303",
+      "target": "_mdl_20261111_b111_1303",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1303"
+    },
+    {
+      "kind": "creatures",
+      "id": "1GR2HwjXigGj-NrayceWV69nW-eJtqueB",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-b111-1302",
+      "target": "_mdl_20261111_b111_1302",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1302"
+    },
+    {
+      "kind": "creatures",
+      "id": "1irEIB2uoqsd50JJSQEEvCM6JK3r6t1YJ",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-b111-1301",
+      "target": "_mdl_20261111_b111_1301",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1301"
+    },
+    {
+      "kind": "creatures",
+      "id": "1tz4R-6KUpReUEp6AEsCGDYAVnfLSuBZy",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-b111-1300",
+      "target": "_mdl_20261111_b111_1300",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1300"
+    },
+    {
+      "kind": "creatures",
+      "id": "1GPYkkM52mhVBJY_zyBpiTeuNNzr8o2D-",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-a111-1303",
+      "target": "_mdl_20261111_a111_1303",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1303"
+    },
+    {
+      "kind": "creatures",
+      "id": "1k8_kDACbfTrBHd-tpbqj2MvPmU1RxoeN",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-a111-1302",
+      "target": "_mdl_20261111_a111_1302",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1302"
+    },
+    {
+      "kind": "creatures",
+      "id": "1zmjjdhft7Vn87UEG8YL57oKj2an-e34k",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-a111-1301",
+      "target": "_mdl_20261111_a111_1301",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1301"
+    },
+    {
+      "kind": "creatures",
+      "id": "1hrC4lIpkKXsOkPYXLZixKkgYwc7fjY60",
+      "parent": "1GsuHbj91Xt9ugXI2PRvkRYF47481ev0s",
+      "depth": 5,
+      "old": "mdl-20261111-a111-1300",
+      "target": "_mdl_20261111_a111_1300",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1300"
+    },
+    {
+      "kind": "creatures",
+      "id": "1kE5hAxdYqkv32-Zq6c4u4zD5nTonnHoC",
+      "parent": "1JbY1Ca0yzT_wusUy6Mdq3OzqZoPjv6Mm",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-c111-1200/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1efTQrrXzcy6RTTF5lh6CAaCtk0ArgC5P",
+      "parent": "1JbY1Ca0yzT_wusUy6Mdq3OzqZoPjv6Mm",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-c111-1200/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "1c2zY9frUR54ZqFy8Vi82E4vPTB0qaf4c",
+      "parent": "1Fy5JnDwWWkdM0-KsASGPKIGzfXCzXSOT",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-b111-1200/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "16Z4v1p14oCXJJbX3Sxdea7Kwu-fetn41",
+      "parent": "1Fy5JnDwWWkdM0-KsASGPKIGzfXCzXSOT",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-b111-1200/images"
+    },
+    {
+      "kind": "creatures",
+      "id": "160fxk1psRolA68lptnFa04wnUPGu1cm1",
+      "parent": "1eMyr8hrdz4OCbXmJaDNbz7MjOEgmwg75",
+      "depth": 5,
+      "old": "prompts",
+      "target": "_prompts",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-a111-1200/prompts"
+    },
+    {
+      "kind": "creatures",
+      "id": "1xAzmK8WVjTpWp-bhQMpj-ePXMjrs24tl",
+      "parent": "1eMyr8hrdz4OCbXmJaDNbz7MjOEgmwg75",
+      "depth": 5,
+      "old": "images",
+      "target": "_images",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/01_portraits/cr-20261111-a111-1200/images"
+    },
+    {
+      "kind": "characters",
+      "id": "1ciV-iFf6ymqlWtrYWr7ykTCK8NpG6PjM",
+      "parent": "1scyR7nmibbCZtOsBHOIVRxESY5ituIPz",
+      "depth": 6,
+      "old": "source",
+      "target": "_source",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-3d04-0000/source"
+    },
+    {
+      "kind": "characters",
+      "id": "1xZ5hb1UjLQg2sLQs9aCDW86TiLnx3oIL",
+      "parent": "1scyR7nmibbCZtOsBHOIVRxESY5ituIPz",
+      "depth": 6,
+      "old": "rig",
+      "target": "_rig",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-3d04-0000/rig"
+    },
+    {
+      "kind": "characters",
+      "id": "1cpIFcJ3UrZ2y1WTePBomt53ALnooV-gh",
+      "parent": "1scyR7nmibbCZtOsBHOIVRxESY5ituIPz",
+      "depth": 6,
+      "old": "qa",
+      "target": "_qa",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-3d04-0000/qa"
+    },
+    {
+      "kind": "characters",
+      "id": "1FDR6SZSZxO4io2KUlbmyMDtMnQtYlgeR",
+      "parent": "1scyR7nmibbCZtOsBHOIVRxESY5ituIPz",
+      "depth": 6,
+      "old": "previews",
+      "target": "_previews",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-3d04-0000/previews"
+    },
+    {
+      "kind": "characters",
+      "id": "1wanD7bVeKu_Fr6ZpA85bGVXBiBF34Q2o",
+      "parent": "1scyR7nmibbCZtOsBHOIVRxESY5ituIPz",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-3d04-0000/models"
+    },
+    {
+      "kind": "characters",
+      "id": "1_3zM15s5egeOqU67jS5894xATIBod0ri",
+      "parent": "1scyR7nmibbCZtOsBHOIVRxESY5ituIPz",
+      "depth": 6,
+      "old": "animations",
+      "target": "_animations",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-3d04-0000/animations"
+    },
+    {
+      "kind": "characters",
+      "id": "1mkrJrH6vY0P7ZLs2K08RN2lvvsT4ybeZ",
+      "parent": "1qPfyT0BxNFH__IN0pcJmKOpugOJ1I09E",
+      "depth": 6,
+      "old": "source",
+      "target": "_source",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-1855-0000/source"
+    },
+    {
+      "kind": "characters",
+      "id": "1jHHQxsI9zQifYs-iTaHOX2okLNvNw43b",
+      "parent": "1qPfyT0BxNFH__IN0pcJmKOpugOJ1I09E",
+      "depth": 6,
+      "old": "rig",
+      "target": "_rig",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-1855-0000/rig"
+    },
+    {
+      "kind": "characters",
+      "id": "1w4fGiUR5l69dPrJV1l7evAHp5Kf-yt7Q",
+      "parent": "1qPfyT0BxNFH__IN0pcJmKOpugOJ1I09E",
+      "depth": 6,
+      "old": "qa",
+      "target": "_qa",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-1855-0000/qa"
+    },
+    {
+      "kind": "characters",
+      "id": "1laWLdtqScXtsRoILTv-d3Vn1t_DKZikU",
+      "parent": "1qPfyT0BxNFH__IN0pcJmKOpugOJ1I09E",
+      "depth": 6,
+      "old": "previews",
+      "target": "_previews",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-1855-0000/previews"
+    },
+    {
+      "kind": "characters",
+      "id": "1e0w95G6CyvC_k8YyEN-KiJVNIO1oO1Nn",
+      "parent": "1qPfyT0BxNFH__IN0pcJmKOpugOJ1I09E",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-1855-0000/models"
+    },
+    {
+      "kind": "characters",
+      "id": "1bE1qAHWII-ppEOU7uFB_n1LMoDnVsqBh",
+      "parent": "1qPfyT0BxNFH__IN0pcJmKOpugOJ1I09E",
+      "depth": 6,
+      "old": "animations",
+      "target": "_animations",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261114-1855-0000/animations"
+    },
+    {
+      "kind": "characters",
+      "id": "1CYgi7cEu6AgS4ImxbvB8J4ODSdIUgP3x",
+      "parent": "1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9",
+      "depth": 6,
+      "old": "previews",
+      "target": "_previews",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261113-1286-0000/previews"
+    },
+    {
+      "kind": "characters",
+      "id": "144nRSHgo-rbhjzExIfV31J-w07d8EMkG",
+      "parent": "1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9",
+      "depth": 6,
+      "old": "animations",
+      "target": "_animations",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261113-1286-0000/animations"
+    },
+    {
+      "kind": "characters",
+      "id": "1RV1Dq8uk92kjPvCRhg1vPzEVGxX71eSE",
+      "parent": "1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261113-1286-0000/models"
+    },
+    {
+      "kind": "characters",
+      "id": "1hQANSYq6w9J-m25_lkvfX3u9Ql44oDR7",
+      "parent": "1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9",
+      "depth": 6,
+      "old": "rig",
+      "target": "_rig",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261113-1286-0000/rig"
+    },
+    {
+      "kind": "characters",
+      "id": "1sjjIuKpF5dwFkItiyVlHfS1uo7QZPpJl",
+      "parent": "1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9",
+      "depth": 6,
+      "old": "source",
+      "target": "_source",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261113-1286-0000/source"
+    },
+    {
+      "kind": "characters",
+      "id": "1lK0cCkRfifLTEvFdtrLtuBm09wNOX7eB",
+      "parent": "1k8wNfhPIffvC-OwXEs0jSGy_N4D30Cl9",
+      "depth": 6,
+      "old": "qa",
+      "target": "_qa",
+      "path": "characters/_backup/legacy_pre_flat_20261116/02_3d/colab/mdl-20261113-1286-0000/qa"
+    },
+    {
+      "kind": "creatures",
+      "id": "1QwF3hhGSNh2ZGFjT0wzHHTITOKVTvyJ4",
+      "parent": "1xCvuwoVemfDmdTLAdloc6Xq5TbLyhhgT",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1akG4PFhxWnexND4fqZu7JVocyHJU0B2f",
+      "parent": "1JidClNt_vs5NfuIASfIbJ0QtBCkZnaSK",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1fBDWv3pfxyZPbN__mV1PGcaaCxThuH_8",
+      "parent": "1U3qDmh3UOrlZHJJKzDZSOqmBL8oyASEs",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1GLriLQGnyaEHQYMxdu7-Q1l4wwwrwMjh",
+      "parent": "16akav045E1OrMEnbT1Ki6wvJ0xjT1h-s",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_chrono_beetle_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1s7MhBV7fAYsnuNOaCHu-VLocxCcUzsSm",
+      "parent": "1no7GlNlyWTMqpv-77-Xh2CKaYTMru1nU",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1qGR64jIhkeSYHEf8FUnrHT78VunwNy8P",
+      "parent": "13jJ-7N20aruFwqTmUBqMFifQYx3jtWCV",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1OIwOi6TgaeWoVvYZ_WEpPzQJiAgqOs3q",
+      "parent": "1_zw-I4Vk3yVX4JulR764V4NbxZZqvcul",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1DUyzotL6CK7IQE8jiMp65PNnWrvm9o2R",
+      "parent": "1cKjO1iAF7VSsN94bC68qYEgmvs4JtLnj",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1uQbfoUfCkoXveSv5URnE65B14pC_2PK1",
+      "parent": "1lo7eDzXlzIDPU87Fni9FH134xvfeB2JN",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_verdant_aquila_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cqkI_bWrwamnDjlYpGFLPdIoU5afguTN",
+      "parent": "1fvGjBMwnnk9u_sFxBFqRHGqKSAg4P0sC",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1C8Q2xsYmnvifPnKbH5585FEUC6HMGKI1",
+      "parent": "1M7LmU4aPEXjvMLDgnnotbyYQViQeai5k",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1txmXHWfpgeHlj-C9iEHgtPbLB_1hsvxx",
+      "parent": "1Uk43Y9UTModWG9ke9TSgUyqygV9kujkO",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_frostblade_penguin_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cLBMCRAuRjuUpRKzspgOLjuE5Q55Tg5C",
+      "parent": "1nB6LhkOA31YzyaOKaya9gaqWS4Hy6etr",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1_iI48Xb71ErdArbRv9AmJVAVuzaer3zw",
+      "parent": "1amZLGjahQLJvvpnv_J_StqhKjlx60Wxq",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ROv9vqEIpQrqHkGuliF7LJEU6njaiBkh",
+      "parent": "1PTEGAq4OK81KUKBKGI3aUJimsEsD6MIu",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "135hidIN3pVn8N2ggIZQAYmi40Uda9FLJ",
+      "parent": "1RlMxE_q8dYc4RHUHNSeV5SZThzeI2gpp",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_solmane_lion_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1jWCrTEUwJfYNpnlP6GRHfykJdRqWArBe",
+      "parent": "1uHBV_-UKlExBaTDYP_GfHC0VjY4-XbKy",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1J5y7dSr6Y-HRMYD7YxtGr22cl-h_vXHO",
+      "parent": "1QSNvXi-F8UP7RmiCT-5K3Qg3WE-fjVgE",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1kNnxE9IW63wUVaqZlzUVodg6AAZeeF1f",
+      "parent": "1LhKVeTgUEKbzgc0lcWKeD8V76tAMbgIG",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1txRCTWDuWQfovpfQ96gDjff4tN1IGT7K",
+      "parent": "1wzgDYWKaM2hSOe2fEcnC4naqOOgPBsFO",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ink_stele_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1LPs_krIqxPfMAX6hDE6cKDjBrQU6s8hM",
+      "parent": "148KvUXSiWhhuBPiw83sQO6Tire8Zm6Hx",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1bO5nvFA1R2dGxjfSq6AzBx5MWhi0Ki1U",
+      "parent": "1QQpHVGKm2b_MvDVnFYXAT-wfVnObhyae",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1dNA75AHTZ3y_rvmZyBHgdGDE6RlTR1gi",
+      "parent": "1UsN6GZwNHvx9sD27vdmdaittvco5d_Id",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1zap4FCjqMSdHMuuP8hu1nxnVjy6FQnQp",
+      "parent": "1rsO6TqBq4hxQ7lvTFIctxAP3DFaK4bMQ",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_aqua_slime_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1WYC07BnlSnEu_qW4jaZhWbyE7psRo7fO",
+      "parent": "1-4oQWZ6xBnka-213Gktg5_Kc2umU-TAU",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Sg3UXoLjWfqI1gj4-wlWy79ZpafjQoa5",
+      "parent": "1RNErkr02D0pWDuRJUWCVRiHbAZUG2NfO",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1gOMy4cjqpXDkoWLJMlXALJZqZA8-Ra1Z",
+      "parent": "1O-3rOxQEqsMrfiwJhF7liIhLsAoi4j_a",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1IvraFJ8DigK4I16oN1Vk1A1EajoyVOg8",
+      "parent": "102Xl5B0fXAMh_IL8Hlwfim7GGxYfR9Tj",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_ice_snowman_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1VES2UKoVB2N2GcifmSkPp9cWgArSVGi6",
+      "parent": "1DEBsMZH9MhhwZv44uUr_GhFS2cJQMa5W",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1cN_Fb5OfHCDnlA8yx9edIAqt8YqAIgCd",
+      "parent": "1Z1c_cVWXm19H7HJjAjxL9AAUj4ekvhD9",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1BKjhu64NpvzrzYb3LrCQivqnOEdt8eIw",
+      "parent": "1cDfThzVR6eUg8_2HnJUpPCQL_YD_v-39",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1qJa1vFUdqewEU0X-tqwDpDkfioL7UJEE",
+      "parent": "1A-myeP2Tgo9NA95CER-NnQ1rZ6Qaraat",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wood_puppet_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1DJ36HUJUeAfYt4murs1HxoSOFoIQxHSB",
+      "parent": "1JD1Vp_jbsrfjqSMLXXE4NTbV5r8a0Tt5",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1p955ohPX07Qq29vLNi4CPY--ADUzhJYH",
+      "parent": "14S0V2rVeiWyYN2463VL_uHFxE7ZCdW2U",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "12waaO7K2-xCFECZUqToIwakgI071xb6s",
+      "parent": "1wsX-pzX15N8F3Ogdam9Vqq_qTjXCoS01",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1TBwagADM11yB6NUZxXUehnuApPxDH1NH",
+      "parent": "17tXMVOGrFA8ljZF6N-o7yfgrcAQpFzEk",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_fire_wisp_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "12sn9iQbKWyO9wOzGO7u3HxS1xB9Yexhe",
+      "parent": "1AWN4Ybr-GCLUQjB4Xo1g3s0tpZ5Baj_-",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Ym2AQHxG_sB7hVcS4Qj7lIk_uFnoZS7r",
+      "parent": "12IbCwmlcyPkbHey6ipuztKIU9FULQdnm",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1vLcA9cIJu2QbFQ-cs6bm9lKD8UhO-H0X",
+      "parent": "1sKdT4IwDU4ql9EKD-tVN5WOvBnLFci52",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1xUHM2zUtsTluzZC63cBprqM7s_nIASX2",
+      "parent": "12Cte0bvlZWRCPjhnPxatwH57ic1MpVAq",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_earth_golem_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "17EBSsRo2Tc9wvebmAtRoCHDJTa0sTrMR",
+      "parent": "1Fzu_caWAxpUhIEaQcV5XwOllbBFm-Gca",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1SE4dD1CW9kWm-xVx30sa4_DisXh5kb-p",
+      "parent": "1cCMo7qEWw4XJUd5H05Wj8hoJA-rTZ2xi",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "19eGOR4WnTHOOS2w23kD8oxmxqCkYBiWn",
+      "parent": "1xD84OZu-Q4-ismuPI2pgOvGDUwcNdV33",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1LAm0AtHCGjbnF624txexvfzE5Uk2978G",
+      "parent": "1ZgNYQr5g0TesZnfhOSpcgCdyHC63XB7U",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_wind_bird_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "16yaXhVtoALuefRq5eQ73lSoUz9l5XHJn",
+      "parent": "1bT_SmUkB183yFCECk7qR5t8kW7803mjR",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "16Ft00f7wQzQbSlZwUtyoklPwOZQwj4Ve",
+      "parent": "1ErJVr6rCm9f2N_p1VQahOIeSGAWDoK1j",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1PNKcczF3YUkJM4Py4ZoZDvc78Kgxhat9",
+      "parent": "1nl-jnfM0F-R7ynCrW8BA_h6-qkUvKq5b",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1z6Ex550p1DgJ6lAm6qqAEKbIWSOaSzRx",
+      "parent": "1NTiRrxfBhkrKUMSYdRPc51oK0QpYF1It",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_shadow_eye_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Znslbw6BHoAPAHFEx05C9yQ8j19ZjFbq",
+      "parent": "11CH0SvpyuTX9S45bUCzO91YmFIaMT-5j",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ZnCTz7HTFcw8o6RrKnJpcGs-ulIqkPR-",
+      "parent": "1HoU1uv_JPa7YqOrIO0Ll4rRqM6Fr2eiu",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1qmSBqCQWNNigToqPD7O81CXbVWMTkMdi",
+      "parent": "1t7nzpLTKHPWYFfiufdCfsoJkq6FjUvWG",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1kLNmvPXuWvZJKF7VtBqN94rdRqFpKVuV",
+      "parent": "15hNqQWShE2yJqb5Z-UyNym8aUIB6cOOZ",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_thunder_drone_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1JbIBTKQjmz5MrB9R16wn4ATJWIBht_mz",
+      "parent": "1UZhwz7H2P5Z2NrYnWntwAe1Oa1Fgx-U5",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1PCJnTm_GMsvYVksoR_7PxRPd2DB7mxWp",
+      "parent": "1b5Gj2NPuFdrL6fQ5PZ6VRXVmVQU4jinl",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ZfKbl2mg8gsaEpDTpzOXQBUry6NMcKrD",
+      "parent": "1_5OkWp9ipSGtQK6rb_h101u85cIFNqqF",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Lvi9dEWnK5go-YdtnzRcnJ0vjbbyv0Op",
+      "parent": "1bWqjzt-a5xezAEowYAlmvne--RmeNGRL",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_metal_vault_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "11EoJBWPO4StdUz8uWXJvrtnKMX0MMGR4",
+      "parent": "1pULFmg5rWMX6dvImgULkk_Mo22Nt0taW",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_juvenile/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "14EWUCerDbGc_STgjwI3mA7Fx7e5sYbmu",
+      "parent": "1QW4q6UqqcX_CocW5m3IKAd6_Z2Xk-YOw",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_adolescent/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1g7IfCEdFxU5L70QisY3tfb8k6JFkhZSk",
+      "parent": "13grs-U6bmvarQDzp9_hg2xqhAmXFkhf3",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_adult/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1E53XYFOC0duONCA0SdlESqXBuKSc4__k",
+      "parent": "1tDTMlRcbCJ19Rn5QzAeXkvSYlMkB3ymv",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/asset_cr_light_khepri_overload/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "14jvg0IWx9pO0YOnZYqUe4zECIGFVmltd",
+      "parent": "1fudiiFN-lZ1mrdMFItoeQuciBTVNCjcI",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1303/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "19XVjTV6rWTKoQB3_RS1MUkwOi6YY8Nst",
+      "parent": "1fudiiFN-lZ1mrdMFItoeQuciBTVNCjcI",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1303/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1d_mG8jeFXUTaZBZDUqvbZFj8blgrMcOY",
+      "parent": "1fudiiFN-lZ1mrdMFItoeQuciBTVNCjcI",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1303/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1JAP4j5m5xSMKNV74tY0gicI05I2tl7PJ",
+      "parent": "1A7bpdzLs0XvDFPn8HIQZ8tPSfgMtGgAs",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1301/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1bXJQKTce17cENUsHgghhRd27Y79tvV0I",
+      "parent": "1A7bpdzLs0XvDFPn8HIQZ8tPSfgMtGgAs",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1301/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1hfkKd4OZeyD3X3iaZG6OczmXIA8l2H5E",
+      "parent": "1A7bpdzLs0XvDFPn8HIQZ8tPSfgMtGgAs",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1301/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1BOrX1_IyAsq9Fwxxh0aYlOPBGs-dbscg",
+      "parent": "1fe3E7FN8eQ465Oluw654UMgPpGyYHlh3",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1302/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Faz3bmW_2-YUXLfdg7hLY9s9FBVFTe8n",
+      "parent": "1fe3E7FN8eQ465Oluw654UMgPpGyYHlh3",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1302/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1OHK1smM2DNpM5yjx3CX3-3Zivkw-JDnp",
+      "parent": "1fe3E7FN8eQ465Oluw654UMgPpGyYHlh3",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1302/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1aQGrT-vgNxoNsvQqpc_E1Iw7ldKnZNwn",
+      "parent": "1q4iSla-Du7z0vq5Ee0AC-u_2NTCsC89K",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1300/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Trw8cYMlWgsnupnTPx4IbxfwUBGo8rfC",
+      "parent": "1q4iSla-Du7z0vq5Ee0AC-u_2NTCsC89K",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1300/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Acg8QVWfPJnbHum01tw6afYhsi_SGOnk",
+      "parent": "1q4iSla-Du7z0vq5Ee0AC-u_2NTCsC89K",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-c111-1300/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ec1uawqFFyILzUNanL1WQxHbxBgkYFB1",
+      "parent": "1wA1SyzBcJWJzT4SgxFJ2odXufnjjJ5Yq",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1303/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "15LvSOZhGNoAhwpFHJY5kzQbuzBJPRgHt",
+      "parent": "1wA1SyzBcJWJzT4SgxFJ2odXufnjjJ5Yq",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1303/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1hf7rJhor2U_3ULE00Pf-pU7V6_LPNywE",
+      "parent": "1wA1SyzBcJWJzT4SgxFJ2odXufnjjJ5Yq",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1303/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1JqWn6NWw-h7JPfnCFLcHUAoGvfu5rvyf",
+      "parent": "1GR2HwjXigGj-NrayceWV69nW-eJtqueB",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1302/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "113eSE8078q8os_4vfn-xJ_4eaRw8Hn6X",
+      "parent": "1GR2HwjXigGj-NrayceWV69nW-eJtqueB",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1302/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "17k0qXDYcYtIQo6Z-NLBnaVY9dr9eOMu4",
+      "parent": "1GR2HwjXigGj-NrayceWV69nW-eJtqueB",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1302/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "13gcuf9MN0-YE175GBo3I9Oka2xNERSSd",
+      "parent": "1irEIB2uoqsd50JJSQEEvCM6JK3r6t1YJ",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1301/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1KS-EV0EMftc98k6xJmqaSNhH50Tw8n4s",
+      "parent": "1irEIB2uoqsd50JJSQEEvCM6JK3r6t1YJ",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1301/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1vlzc03LqFJ5OOpu22g8Df7pzy96NlNMp",
+      "parent": "1irEIB2uoqsd50JJSQEEvCM6JK3r6t1YJ",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1301/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1FH6orIfxsdhP1XcWoyxCVH5HI9Hx4Xsy",
+      "parent": "1tz4R-6KUpReUEp6AEsCGDYAVnfLSuBZy",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1300/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1GiKQWurbEyZZWBuluZ9F6qZ1EZ6IOzxy",
+      "parent": "1tz4R-6KUpReUEp6AEsCGDYAVnfLSuBZy",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1300/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1MwCDdbGiNNedg0nnbGR5RmMy7CksvEWo",
+      "parent": "1tz4R-6KUpReUEp6AEsCGDYAVnfLSuBZy",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-b111-1300/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1OgfvnZD4X5W2ndUSbcHR8Zp5vTaQE0nO",
+      "parent": "1GPYkkM52mhVBJY_zyBpiTeuNNzr8o2D-",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1303/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1ZLrw5lKatb3O2DaiixIsT2bPxPB_fEhQ",
+      "parent": "1GPYkkM52mhVBJY_zyBpiTeuNNzr8o2D-",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1303/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1KyuQWyrBD4yH1Wz06VFGhbyBtxcDUun1",
+      "parent": "1GPYkkM52mhVBJY_zyBpiTeuNNzr8o2D-",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1303/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1Ti3qyd5aaC0JK6HDpAP_qdN4IXz6ZnFS",
+      "parent": "1k8_kDACbfTrBHd-tpbqj2MvPmU1RxoeN",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1302/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1X1nzKtdIW9k5cZkLwplwBeymA2JBXJpN",
+      "parent": "1k8_kDACbfTrBHd-tpbqj2MvPmU1RxoeN",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1302/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1CsEG63QIJ8ue5MA6wN_T1QvRp2wWwi4_",
+      "parent": "1k8_kDACbfTrBHd-tpbqj2MvPmU1RxoeN",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1302/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "15mmF8RodhGn27dzHtlJF6BKuT2gnLqv0",
+      "parent": "1zmjjdhft7Vn87UEG8YL57oKj2an-e34k",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1301/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "18k3_2T-5Kc7C14A0lRGyznDbmox2GM5R",
+      "parent": "1zmjjdhft7Vn87UEG8YL57oKj2an-e34k",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1301/models"
+    },
+    {
+      "kind": "creatures",
+      "id": "1hL_70ugY0HQ5sosIbC5-vpyjwIQuIPd8",
+      "parent": "1zmjjdhft7Vn87UEG8YL57oKj2an-e34k",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1301/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "18I4Ou2EmtmQynq0fcDSLC2UNSg8nR8at",
+      "parent": "1hrC4lIpkKXsOkPYXLZixKkgYwc7fjY60",
+      "depth": 6,
+      "old": "textures",
+      "target": "_textures",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1300/textures"
+    },
+    {
+      "kind": "creatures",
+      "id": "1xaIIg2MHkVWHB-ifGAKQUVof8dpvD1t7",
+      "parent": "1hrC4lIpkKXsOkPYXLZixKkgYwc7fjY60",
+      "depth": 6,
+      "old": "review",
+      "target": "_review",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1300/review"
+    },
+    {
+      "kind": "creatures",
+      "id": "1L_VQV7yChDC5BWr8tknte9CQ2dv9S4ui",
+      "parent": "1hrC4lIpkKXsOkPYXLZixKkgYwc7fjY60",
+      "depth": 6,
+      "old": "models",
+      "target": "_models",
+      "path": "creatures/_backup/legacy_pre_flat_20261116/02_3d/ai_blender/mdl-20261111-a111-1300/models"
+    }
+  ],
+  "collisions": [
+    {
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v3",
+      "id": "1LVPyVni3s2YALNj09r_3nY9ct0322yZ3",
+      "original": "_v3",
+      "target": "_v3_duplicate_1lvpyvni"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v4",
+      "id": "1t9kqkS1j0_h4H8Rm75r50bHOgC4SlYX7",
+      "original": "_v4",
+      "target": "_v4_duplicate_1t9kqks1"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v3",
+      "id": "1PRFanAY_8Ttr3QH96or_3BIDtwYdUneA",
+      "original": "_v3",
+      "target": "_v3_duplicate_1prfanay"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v2",
+      "id": "1tK1nbrsOrS2qsAfF4EwQA_RlpYkJze4S",
+      "original": "_v2",
+      "target": "_v2_duplicate_1tk1nbrs"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v1",
+      "id": "1vYgMfYx_3zorFkN169QTxPyBKFJ92dJb",
+      "original": "_v1",
+      "target": "_v1_duplicate_1vygmfyx"
+    },
+    {
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v3",
+      "id": "17JfLtXrQ8nfddODAUv23gD5gMEu9HC6d",
+      "original": "_v3",
+      "target": "_v3_duplicate_17jfltxr"
+    },
+    {
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v2",
+      "id": "1W-TftV8nEKGJDdhp8vLSwOM3i5m3s6Ez",
+      "original": "_v2",
+      "target": "_v2_duplicate_1wtftv8n"
+    },
+    {
+      "path": "characters/chr_legacy_amemori_sumiha/03a_colab/v1",
+      "id": "1Gmj4mlqWbI_fjdD9hZGfqv5e5NGu0K4u",
+      "original": "_v1",
+      "target": "_v1_duplicate_1gmj4mlq"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v4",
+      "id": "1At3QJQfgi7o1aaMqEo7t3HQ3iTxOX6Tl",
+      "original": "_v4",
+      "target": "_v4_duplicate_1at3qjqf"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v3",
+      "id": "1x0DrHx_yvJp7ulqKl5qtwXNR7VRbi_BQ",
+      "original": "_v3",
+      "target": "_v3_duplicate_1x0drhxy"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v2",
+      "id": "18ENacINmbt0v_wwTOXS1Qn8kmkbGFYEZ",
+      "original": "_v2",
+      "target": "_v2_duplicate_18enacin"
+    },
+    {
+      "path": "characters/chr_legacy_yeh_chengxi/03a_colab/v1",
+      "id": "16ygdkjwus_faO9WfbCfAiU_Mte3IeKSI",
+      "original": "_v1",
+      "target": "_v1_duplicate_16ygdkjw"
+    }
+  ]
+}
