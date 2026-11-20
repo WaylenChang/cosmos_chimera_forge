@@ -1,9 +1,11 @@
 # Cosmos Chimera Forge — Google Drive 目錄結構、名稱／ID 對照與管線索引
 
 - **專案根目錄**：`cosmos_chimera_forge/`（Drive Folder ID: `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`）
-- **最後維護日期**：2026-11-19
+- **最後維護日期**：2026-11-20
 
 ## 1. Google Drive 目錄結構與命名規範
+
+> **2026-11-20 physical Drive rename:** The concrete Google Drive folder names have been normalized: category helper folders and all nested processing/version/backup folders start with `_`; subject folders use `chr_<batch>_<name>`, `ch_<batch>_<name>` or `mv_<batch>_<name>`. The historical paths and asset IDs displayed below are **logical compatibility paths**, not literal physical Drive folder paths. Examples: `characters/chr_1286/03a_colab/v2` resolves to `characters/chr_legacy_yeh_chengxi/_03a_colab/_v2`; `creatures/cr_aqua_slime/03b_blender` resolves to `creatures/ch_legacy_aqua_slime/_03b_blender`. Retain original filenames/game IDs. The exact 433-folder name+ID mapping is in `folder-migration-map-2026-11-20.json`, and full metadata readback confirms zero naming violations. The updated Drive resolver is available in PR #25 and must be deployed before relying on the new physical paths in the live app.
 
 ### 1.1 三層主目錄結構與過渡性檔案分層
 
