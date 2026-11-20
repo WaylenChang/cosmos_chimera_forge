@@ -5,7 +5,7 @@
 
 ## 1. Google Drive 目錄結構與命名規範
 
-> **PR #25 檔案命名規則更新：**個別 ID 目錄內的新檔名，請以 [FILE_NAMING_CONTRACT.md](FILE_NAMING_CONTRACT.md) 為準；角色／招式 `<實體ID目錄>_<功能>[_<步驟>_<版本>].<ext>`，宙獸 `<實體ID目錄>_<功能>_<i>型態[_<步驟>_<版本>].<ext>`。只有正式最終成果才省略步驟與版本。下方保留的 `cr_*`、英文型態名、`_03b_blender` 等檔名範例為**尚未完成遷移的歷史格式**，不得當作新寫入規範。舊資產與共用跨型態 Prompt 需先經相容性與核准狀態稽核後再實體更名；目前不能宣稱整個 Drive 檔案已更名完畢。
+> **PR #25 檔案命名規則更新：**個別 ID 目錄內的新檔名，請以 [FILE_NAMING_CONTRACT.md](FILE_NAMING_CONTRACT.md) 為準；角色／招式 `<實體ID目錄>_<功能>[_<步驟>_<版本>].<ext>`，宙獸 `<physical_subject_folder>_<file_function>_form<i>[_<pipeline_step>_<version>].<ext>`。只有正式最終成果才省略步驟與版本。下方保留的 `cr_*`、英文型態名、`_03b_blender` 等檔名範例為**尚未完成遷移的歷史格式**，不得當作新寫入規範。舊資產與共用跨型態 Prompt 需先經相容性與核准狀態稽核後再實體更名；目前不能宣稱整個 Drive 檔案已更名完畢。
 
 
 
