@@ -1,0 +1,89 @@
+// Physical Google Drive folder naming contract (does not rename game IDs or files).
+// The resolver supports legacy logical paths until the separate Drive migration is complete.
+(function (global) {
+  "use strict";
+
+  const ROOTS = new Set(["characters", "creatures", "moves"]);
+  const SUBJECT_PREFIX = Object.freeze({
+    characters: "chr",
+    creatures: "ch",
+    moves: "mv",
+  });
+  const LEGACY_CHARACTERS = Object.freeze({
+    chr_1286: "chr_legacy_yeh_chengxi",
+    chr_1855: "chr_legacy_amemori_sumiha",
+    chr_3d04: "chr_legacy_roen",
+  });
+  const CATEGORY_HELPERS = new Set([
+    "designed_prompts", "prompts", "backup", "wiki", "reviews",
+    "00_settings", "01_portraits", "01_portrait", "01_vfx", "01b_vfx",
+    "02_3d", "02_review_portrait", "03_completed", "03a_colab",
+    "03b_blender", "04_review_3d", "05_wiki",
+  ]);
+
+  function slug(value) {
+    const raw = String(value || "").trim();
+    if (!/^[a-z0-9_-]+$/i.test(raw)) {
+      throw Error("Drive folder name must be English ASCII letters, digits, hyphens or underscores: " + raw);
+    }
+    const clean = raw.toLowerCase().replace(/-+/g, "_").replace(/_+/g, "_").replace(/^_+|_+$/g, "");
+    if (!clean) throw Error("Drive folder name cannot be empty");
+    return clean;
+  }
+
+  function subjectPattern(kind) {
+    const prefix = SUBJECT_PREFIX[kind];
+    if (!prefix) throw Error("Unknown Drive asset category: " + kind);
+    return new RegExp("^" + prefix + "_[a-z][a-z0-9]*(?:_[a-z][a-z0-9]*)+$");
+  }
+
+  function isCompliant(kind, depth, folderName) {
+    if (!ROOTS.has(kind)) return false;
+    const name = String(folderName || "");
+    if (depth === 0) return name === kind;
+    if (depth === 1 && subjectPattern(kind).test(name)) return true;
+    return /^_[a-z0-9]+(?:_[a-z0-9]+)*$/.test(name);
+  }
+
+  function canonicalFolderName(kind, depth, folderName) {
+    const original = String(folderName || "");
+    if (depth === 0 || !ROOTS.has(kind)) return original;
+    const s = slug(original);
+    if (depth > 1 || original.startsWith("_")) return "_" + s;
+
+    if (CATEGORY_HELPERS.has(s)) return "_" + s;
+    if (kind === "characters") {
+      if (LEGACY_CHARACTERS[s]) return LEGACY_CHARACTERS[s];
+      if (subjectPattern(kind).test(s)) return s;
+      if (s.startsWith("chr_")) return "chr_legacy_" + s.slice(4);
+      return "_" + s;
+    }
+    if (kind === "creatures") {
+      if (subjectPattern(kind).test(s)) return s;
+      if (s.startsWith("cr_")) return "ch_legacy_" + s.slice(3);
+      if (s.startsWith("starter_")) return "ch_starter_" + s.slice(8);
+      const boss = /^line_(.+)_trial_boss$/.exec(s);
+      if (boss) return "ch_trial_boss_" + boss[1] + "_line";
+      if (s.startsWith("line_")) return "ch_legacy_" + s;
+      return "_" + s;
+    }
+    if (subjectPattern(kind).test(s)) return s;
+    if (/^(?:fx_|vsl_|move_|[a-z]+_[a-z]+_)/.test(s)) return "mv_legacy_" + s;
+    return "_" + s;
+  }
+
+  function folderCandidates(kind, depth, folderName) {
+    const original = String(folderName || "");
+    const canonical = canonicalFolderName(kind, depth, original);
+    return canonical === original ? [canonical] : [canonical, original];
+  }
+
+  const api = Object.freeze({
+    SUBJECT_PREFIX,
+    canonicalFolderName,
+    folderCandidates,
+    isCompliant,
+  });
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  if (global) global.COSMI_DRIVE_NAMES = api;
+})(typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : null);
