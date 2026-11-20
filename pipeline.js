@@ -99,15 +99,15 @@
         : wiki.kind === "characters"
           ? ["name_zh","name_en","role","gender","age","height","ethnicity","region","timeline","biography","backstory_zh","appearance","look","outfit","hair_palette","eye_palette","outfit_palette"]
           : ["name_zh","name_en","elements","archetype","bases","region","timeline","social_structure","reproduction","disposition","niches","dex_zh","appearance_palette","look","appearance","anatomy","limbs","height_length","weight","size_class","signature_move"];
-      const values = wiki.kind === "moves" ? ctx.opts || {} : {...c,...selected};
-      const details = Object.fromEntries(fields.filter(k => values[k] != null && values[k] !== "" && values[k] !== "未知" &&
-        (!Array.isArray(values[k]) || values[k].length)).map(k => [k,values[k]]));
+      const read = k => wiki.kind === "moves" ? ctx.opts?.[k] :
+        Object.prototype.hasOwnProperty.call(selected,k) ? selected[k] : c[k];
+      const details = Object.fromEntries(fields.filter(k => read(k) != null && read(k) !== "" && read(k) !== "未知" &&
+        (!Array.isArray(read(k)) || read(k).length)).map(k => [k,read(k)]));
       return ["# 編寫玩家可閱讀的" + (wiki.kind === "moves" ? "主動技" : wiki.kind === "characters" ? "角色" : "宙獸") + "圖鑑",
         "目標：" + wiki.subject + (wiki.stage ? "；型態：" + wiki.stage : ""),
         "依目前已確認的概念參數整理遊戲內圖鑑的名稱、簡介、外觀、相關生態／背景與招式說明。只描述當前對象與型態；未知內容註明待核，不能臆造已核准的資產或數值。",
         "確認資料：",JSON.stringify(details,null,2),
-        "輸出 Markdown 草稿：" + wiki.path,
-        "圖鑑供玩家閱讀與審核，不作為其他藝術資產生成步驟的 Prompt 或參考來源。"
+        "輸出 Markdown 草稿：" + wiki.path
       ].join("\n\n");
     }
     // Non-wiki stages never read game encyclopedia data.
@@ -265,10 +265,12 @@
     if (action) {
       // Manual portrait already has one copy action next to the Prompt.
       action.hidden = isPortrait && !automatic;
-      const hint = !isPortrait ? "從 Google Drive 讀取本步驟 Prompt 模板"
+      const wiki = $("pipelineStage")?.value === "encyclopedia";
+      const hint = wiki ? "依目前設定建立玩家圖鑑 Markdown 草稿；既有檔案不覆寫"
+        : !isPortrait ? "從 Google Drive 讀取本步驟 Prompt 模板"
         : automatic ? "建立完整立繪 Prompt .md 並上傳 Google Drive"
         : "複製目前立繪 Prompt，貼入生成平台";
-      action.textContent = !isPortrait ? "📖" : automatic ? "☁" : "📋";
+      action.textContent = wiki ? "☁" : !isPortrait ? "📖" : automatic ? "☁" : "📋";
       action.setAttribute("aria-label", hint);
       action.dataset.tip = hint;
     }
