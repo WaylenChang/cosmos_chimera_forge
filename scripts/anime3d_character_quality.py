@@ -58,7 +58,7 @@ def subject_v3_folder(root: Path, spec: dict) -> Path:
 
 def _subject_file(folder: Path, relative: str, label: str) -> Path:
     if (not isinstance(relative, str) or not relative or
-            Path(relative).is_absolute() or "\\\\" in relative):
+            Path(relative).is_absolute() or "\\" in relative):
         raise ValueError(label + " must be a safe relative path")
     file = (folder / relative).resolve()
     if not file.is_relative_to(folder) or not file.is_file():
