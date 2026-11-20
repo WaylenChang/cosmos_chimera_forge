@@ -1482,7 +1482,8 @@
       "02_review_portrait": "review_portrait",
       "03a_colab": "colab",
       "03b_blender": "blender",
-      "04_review_3d": "review_3d"
+      "04_review_3d": "review_3d",
+      "05_wiki": "encyclopedia"
     };
     const stageSet = new Set(stageNames.map(s => s.toLowerCase()));
     return (idx.jobs || []).filter(f => {
@@ -3668,7 +3669,7 @@
     $("#header").textContent = b.ctx.header;
     $("#chars").textContent = displayedText.length.toLocaleString() + " 字元";
     const encyclopediaKind = t.id === "move-vfx" ? "moves" : t.id.startsWith("character") ? "characters" : "creatures";
-    const wikiDesc = {subject: b.ctx.subjectId || b.ctx.taskId, stage: b.ctx.opts?.stage || b.ctx.concept?.stage || ""};
+    const wikiDesc = window.COSMI_WIKI.describe(b.ctx);
     const stageVal = document.getElementById("pipelineStage")?.value || "task";
     const subjectFolder = window.COSMI_DRIVE.packageDir(t.id, b.ctx.subjectId || b.ctx.taskId, stageVal);
     const jobStem = window.COSMI_DRIVE?.assetStem?.({
@@ -3698,7 +3699,7 @@
           : portraitAuto
           ? el("li", {}, "自動模式：按管線設定中的 ☁ 建立完整立繪 Prompt .md 並上傳 Drive：", el("code", {}, subjectFolder + "/" + (window.COSMI_DRIVE?.assetStem?.({ kind: encyclopediaKind, id: wikiDesc.subject || b.ctx.subjectId || b.ctx.taskId, stage: wikiDesc.stage, step: "01_portrait" }) || b.ctx.taskId + "_01_portrait") + "_prompt.md"))
           : el("li", {}, "Prompt 讀寫：", el("code", {}, jobPromptPath), "，可用上方 Drive 儲存與讀取按鈕。"),
-        el("li", {}, "成果檔案存放：", el("code", {}, subjectFolder + "/"), "。第三層扁平化命名為 ", el("code", {}, "id[_型態]_管線與步驟[_版本]"), "。"),
+        el("li", {}, "成果檔案存放：", el("code", {}, stageVal === "encyclopedia" ? wikiDesc.path : subjectFolder + "/"), "。第三層扁平化命名為 ", el("code", {}, "id[_型態]_管線與步驟[_版本]"), "。"),
         el("li", {}, "參考來源：", el("code", {}, subjectFolder + "/"), "（同 ID 目錄內既有設定、立繪與模型；退件備份：", el("code", {}, encyclopediaKind + "/backup/"), "）。"),
         el("li", {}, "登入後自動載入雲端成果包，亦可按「重新載入 Drive 成果包」更新審查台。")
       )
@@ -6855,7 +6856,7 @@
     persistReview: saveReview,
     setPipelineStage: stage => {
       const flow = currentFlow();
-      if (flow && flow.category === "move" && stage !== "move_vfx") { renderAll(); return; }
+      if (flow && flow.category === "move" && stage !== "move_vfx" && stage !== "encyclopedia") { renderAll(); return; }
       const kind = flow?.category || (task().id.startsWith("character") ? "character" : "creature");
       const route = flow?.route || "image";
       const matching = taskFlow?.steps(kind,route).find(s=>s.stage===stage);
@@ -6889,7 +6890,7 @@
       if (b.errors.length) throw Error(b.errors.join("；"));
       const stage = document.getElementById("pipelineStage")?.value || "task";
       if (!Object.prototype.hasOwnProperty.call(window.COSMI_PIPELINE.stages, stage)) throw Error("不支援的生成步驟");
-      recordPipelineJob(b.ctx, stage);
+      if (stage !== "encyclopedia") recordPipelineJob(b.ctx, stage);
       const portrait = stage === "portrait" && window.COSMI_PIPELINE?.supports(b.ctx);
       const root = window.COSMI_DRIVE?.pipelineRoot?.(b.ctx)
         || (b.ctx.task?.id === "move-vfx" ? "moves" : b.ctx.task?.id?.startsWith("character") ? "characters" : "creatures");
