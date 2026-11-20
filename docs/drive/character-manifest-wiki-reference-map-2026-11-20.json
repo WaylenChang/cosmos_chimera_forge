@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-20",
+  "scope": "PR #25: repair active encyclopedia_path in three character portrait manifests and one character Colab manifest",
+  "safety": "Exact one-string path replacements only. files[].path values are legacy/archive delivery slots and remain unchanged. File IDs, parent folders, QA statuses and binary assets are unmodified.",
+  "count": 4,
+  "entries": [
+    {
+      "subject_id": "chr_3d04",
+      "step": "01_portrait",
+      "manifest_drive_file_id": "1MVDfr_cBk-l1Wbzsj3DGYQ5N5snTW3Re",
+      "manifest_filename": "chr_3d04_01_portrait_manifest.json",
+      "catalog_wiki_drive_file_id": "1_sCbBxpN_738iHYQzGORdh55WKVX8vDj",
+      "previous_path": "characters/wiki/chr_3d04_wiki.md",
+      "verified_wiki_path": "characters/chr_protagonist_roen/chr_protagonist_roen_wiki_05_wiki_legacy.md",
+      "before_sha256": "8cc8f75e4e089e04e2f47e9a9b4dd052eeaae51b1dbc983826570747043da2ec",
+      "after_sha256": "597bfc3baa0712dd86de7b4250f2852592c4609e9362d4843df735e68016bd1b",
+      "original_mime_type": "application/json",
+      "byte_span_changes": 1,
+      "qa_status_unchanged": true
+    },
+    {
+      "subject_id": "chr_1855",
+      "step": "01_portrait",
+      "manifest_drive_file_id": "1C9M7U7f2XzEq157nEIDddR-sLvwdr_DF",
+      "manifest_filename": "chr_1855_01_portrait_manifest.json",
+      "catalog_wiki_drive_file_id": "1M8vT1Ce0FK0dAsSqSE5InKYTCGofrStq",
+      "previous_path": "characters/wiki/chr_1855_wiki.md",
+      "verified_wiki_path": "characters/chr_protagonist_amemori_sumiha/chr_protagonist_amemori_sumiha_wiki_05_wiki_legacy.md",
+      "before_sha256": "51f71776cb719f7fb9fbadd4f0546cb7f9251891881db163b1d89fa1b284d834",
+      "after_sha256": "de1901b58124cccd13d4b08240a338c63a82f9f9b45821b0205ece10f88f7849",
+      "original_mime_type": "application/json",
+      "byte_span_changes": 1,
+      "qa_status_unchanged": true
+    },
+    {
+      "subject_id": "chr_1286",
+      "step": "01_portrait",
+      "manifest_drive_file_id": "1cmGFf3MXhorReb95kkLBzGqccgFCLsbr",
+      "manifest_filename": "chr_1286_01_portrait_manifest.json",
+      "catalog_wiki_drive_file_id": "1txczBZl_oLCkzrEhpGpQ7RQG9bH5WPlW",
+      "previous_path": "characters/wiki/chr_1286_wiki.md",
+      "verified_wiki_path": "characters/chr_protagonist_yeh_chengxi/chr_protagonist_yeh_chengxi_wiki_05_wiki_legacy.md",
+      "before_sha256": "230aad3d714a0d58dd2911dd1a7a2d38591cb9579469b950c538a111641043e1",
+      "after_sha256": "2fd08a033f7402a6a03cea94c4da27c02a280b9d5a22176624d5c01824ce404b",
+      "original_mime_type": "application/json",
+      "byte_span_changes": 1,
+      "qa_status_unchanged": true
+    },
+    {
+      "subject_id": "chr_1286",
+      "step": "03a_colab",
+      "manifest_drive_file_id": "1ODpUAo41jq9nL1q8HkjrxO47jrdAW2Nm",
+      "manifest_filename": "chr_1286_03a_colab_manifest.json",
+      "catalog_wiki_drive_file_id": "1txczBZl_oLCkzrEhpGpQ7RQG9bH5WPlW",
+      "previous_path": "characters/wiki/chr_1286_wiki.md",
+      "verified_wiki_path": "characters/chr_protagonist_yeh_chengxi/chr_protagonist_yeh_chengxi_wiki_05_wiki_legacy.md",
+      "before_sha256": "f8937e9b1f2d67c6b32022b3f33a25ce96e683f7a5d1080c58ca15ae2dec837e",
+      "after_sha256": "1c13298208f3f9a2f6f105fe2b50542bc73e9a6f86de6a1246cba8c2a10b876c",
+      "original_mime_type": "application/json",
+      "byte_span_changes": 1,
+      "qa_status_unchanged": true
+    }
+  ]
+}
