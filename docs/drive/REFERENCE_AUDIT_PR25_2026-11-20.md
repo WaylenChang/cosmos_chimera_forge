@@ -1,5 +1,7 @@
 # PR #25 — live Google Drive reference audit (2026-11-20)
 
+> **Current verification disposition (2026-11-20):** The standalone pipeline-input Prompt legacy-reference verification has been **closed by owner decision**, not passed. Earlier lists of proposed Prompt follow-up checks in this historical audit are no longer active to-dos for PR #25. See the closing section below; other independently required pipeline/runtime checks are outside this closure.
+
 
 This is a **partial, verified, in-place Drive audit** on the Draft PR #25 branch. The content here documents live Drive modifications and their verification; it does **not** mean every nested asset, manifest, or legacy reference has been migrated.
 
@@ -204,7 +206,16 @@ The project owner clarified that **Blender `.blend` files are pipeline outputs, 
 - **No longer PR-blocking on their own:** the 16 nonstandard `.blend` header/container cases, the 28 `.blend` Drive MIME anomalies, historical `.blend` archive-byte equivalence, and any output-only Blender-load/scene inspection. Keep the existing 139-slot crosswalk only as a read-only traceability record; do not rewrite historical `files[].path` strings solely for naming consistency.
 - **No longer PR-blocking on their own:** the eight absent Water trial-boss output-only V8/closeup QC images and unresolved provenance of otherwise unconsumed historical GLBs. Do not fabricate output files, alter QA status, or make cosmetic renames. Reopen only if a concrete active consumer requires those exact files or paths.
 - **Conditional runtime issue only:** three same-parent duplicate protagonist source GLB pairs. Inspect only if a live importer, next-stage pipeline step, model-review selector, or export/runtime resolver chooses between them by ambiguous name. If all active consumers use explicit, correct Drive file IDs or do not read these files, no further duplicate-origin work is required. Never select an arbitrary same-name binary.
-- **Keep in scope:** design and generated `*.prompt.md` loading/writing; step-specific prompt purity; actual stage-input files (including images or GLBs when consumed by the next stage); stage transitions; canonical subject/folder and filename lookup; active Wiki/encyclopedia references if a pipeline consumer uses them; site-build inclusion; source compatibility; and executable regression/Drive-authenticated end-to-end checks.
+- **Scope distinction:** The historical, bulk Prompt old-reference audit is no longer an active workstream. Independently observed failures in active stage-input loading/writing, runtime path resolution, or required pipeline CI/E2E remain actionable in their own right; do not relabel them as pending completion of the closed Prompt audit.
 - **Decision test:** before creating a task for an old reference or asset anomaly, identify the exact active pipeline reader, write target, runtime lookup, or required validation that would fail. Without a concrete impact path, classify the finding as **informational/out of PR #25 scope**, not a release blocker.
 
 This decision changes prioritization and blocking labels, not the recorded historical observations. No binary, prompt, QA decision, or runtime code was changed by this scope clarification. PR #25 stays Draft pending checks that can actually affect pipeline execution.
+
+
+## 2026-11-20 closure: Prompt legacy-reference verification
+
+- **Status: CLOSED BY OWNER; not a verification pass.** End the dedicated work to locate additional old names or paths inside input Prompts and their historical load paths. No further 41-file bulk Prompt-body scan, old-template fallback version chase, or recurring verification check is planned as part of this effort.
+- **Evidence available at closure:** the dated Drive inventory lists **41** top-level subject design Prompt files, each named exactly after its physical subject folder. The previously inspected **17** shared template files (8 character, 8 creature, 1 move) did not expose an obvious old subject path in the screened text. Three protagonist Prompt filenames were previously renamed in place while retaining their Drive file IDs. These observations are not a complete semantic audit of all Prompt bodies.
+- **Explicitly unverified, not failed:** the full contents of all 41 subject design-Prompt files and authenticated live selection of canonical templates versus the legacy read-only fallback. The owner elected to stop this check, so the unperformed checks do not remain in PR #25's active plan or block PR readiness on their own.
+- **Preserve past evidence:** historical mapping files, prior corrections, this reference audit, and existing Prompt bytes are retained as-is. No files, templates, binaries, review records, or game IDs are deleted or changed by this administrative closure.
+- **Reopen criterion:** only a reproducible, specifically identified pipeline reader, stage-input mismatch, or runtime/CI regression establishes new work. General old naming, output-only Blender/QC issues, and archived provenance do not reopen this verification campaign. PR #25 stays Draft for its independent work; closing this campaign does not merge, deploy, or certify the PR.
