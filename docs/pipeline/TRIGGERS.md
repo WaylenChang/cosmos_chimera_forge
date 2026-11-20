@@ -8,7 +8,7 @@
 - 外觀：讀取 cosmos_chimera_forge/<kind>/prompts/00_appearance.prompt.md，依附上的素材執行。
 - 立繪：讀取 cosmos_chimera_forge/<kind>/prompts/01_portrait.prompt.md，使用指定資產的 appearance.md 和 parameters.json 執行。
 - 立繪審查：讀取 cosmos_chimera_forge/<kind>/prompts/02_review_portrait.prompt.md，檢查我指定的立繪目錄。
-- Colab：讀取 cosmos_chimera_forge/<kind>/prompts/03a_colab.prompt.md，處理我指定的已核准立繪目錄及 parameters.json。
+- Colab：以 GitHub `docs/pipeline/<kind>/03a_colab.prompt.md` 為維護正本、Drive `<kind>/_prompts/03a_colab.prompt.md` 為唯讀發布副本。角色先確認已核准正面＋三視＋45°圖，首次 Image-to-3D 後獨立外觀評分；僅缺角度時建議補 MV-Adapter，幾何／材質分別修復，身份不符則修改 Prompt 或比較後端並限制重試；未達門檻不進入綁骨。實際角色與工作 Prompt 均只存 Drive。
 - AI Blender：讀取 cosmos_chimera_forge/<kind>/prompts/03b_blender.prompt.md；提供已核准圖片即為 Image-to-3D，未提供任何圖片時依外觀與 parameters.json 執行 Prompt-to-3D。圖鑑統一使用 `<kind>/<id>/<id>[_<stage>]_05_wiki.md` 的既有檔案，缺少時才建立，不重複生成。此分支由立繪階段分岔，建模完成後無需補繪立繪，直接進入最終驗收。
 - 最終審查：讀取 cosmos_chimera_forge/<kind>/prompts/04_review_3d.prompt.md，檢查模型與對應立繪（Image-to-3D）；Prompt-to-3D 無需補立繪。
 

@@ -11,20 +11,26 @@ from anime3d_agent import validate, digest
 from anime3d_profiles import classify
 from anime3d_backend_adapter import runtime_config
 from anime3d_universal import execution_profile
+from anime3d_character_quality import (enabled as character_gate_enabled, reference_views,
+                                       validate_subject_v3)
 from anime3d_rig_adapter import runtime_config as rig_runtime_config
 
 
 def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, generator_executable=None,
-            rig_backend="none"):
+            rig_backend="none", stage="all"):
     root = Path(root).resolve()
-    checks, blockers = {}, []
+    if stage not in {"all", "pre_gpu", "gpu", "post_gpu"}:
+        raise ValueError("Unsupported preflight stage")
+    checks, blockers = {"stage": stage}, []
     try:
         profile = execution_profile(classify(spec), backend)
         checks["profile"] = profile
     except ValueError as exc:
         blockers.append(str(exc))
     try:
-        image = validate(root, spec, asset_id)
+        subject_v3 = (spec.get("character_colab_workflow") == "character-colab/2"
+                      and spec.get("source_layout") == "subject_v3")
+        image = validate_subject_v3(root, spec) if subject_v3 else validate(root, spec, asset_id)
         from PIL import Image
         with Image.open(image) as source:
             source.verify()
@@ -33,11 +39,16 @@ def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, 
                                 "size": list(source.size), "format": source.format}
     except (ValueError, OSError, ImportError) as exc:
         blockers.append("source: " + str(exc))
+    if character_gate_enabled(spec, "colab") and "source" in checks:
+        try:
+            checks["reference_views"] = reference_views(root, spec, image)
+        except (ValueError, OSError) as exc:
+            blockers.append("reference_views: " + str(exc))
     blender = blender or shutil.which("blender")
     checks["blender"] = str(blender) if blender and Path(blender).is_file() else None
-    if not checks["blender"]:
+    if not checks["blender"] and stage in {"all", "post_gpu"}:
         blockers.append("Blender binary unavailable")
-    if rig_backend == "skintokens":
+    if rig_backend == "skintokens" and stage in {"all", "post_gpu"}:
         try:
             if not config:
                 raise ValueError("SkinTokens isolated config required")
@@ -71,7 +82,7 @@ def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, 
             checks["gpu"] = result.stdout.strip() if result.returncode == 0 else None
         else:
             checks["gpu"] = None
-        if not checks["gpu"]:
+        if not checks["gpu"] and (stage in {"all", "gpu"} or (stage == "post_gpu" and rig_backend == "skintokens")):
             blockers.append("NVIDIA GPU runtime not available")
     return {"asset_id": asset_id, "subject_id": spec.get("subject_id"), "backend": backend,
             "status": "READY_FOR_EXECUTION" if not blockers else "BLOCKED",
@@ -89,11 +100,12 @@ def main():
     p.add_argument("--blender")
     p.add_argument("--generator-executable")
     p.add_argument("--rig-backend", choices=["none", "skintokens"], default="none")
+    p.add_argument("--stage", choices=["all", "pre_gpu", "gpu", "post_gpu"], default="all")
     p.add_argument("--report")
     args = p.parse_args()
     spec = json.loads(Path(args.spec).read_text(encoding="utf8"))
     result = inspect(args.root, spec, args.asset_id, args.backend, args.backend_config, args.blender,
-                     args.generator_executable, args.rig_backend)
+                     args.generator_executable, args.rig_backend, args.stage)
     text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.report:
         target = Path(args.report)
