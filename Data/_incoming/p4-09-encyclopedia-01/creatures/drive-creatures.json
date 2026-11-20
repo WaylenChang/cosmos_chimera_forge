@@ -63,7 +63,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_aqua_slime/cr_aqua_slime_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_aqua_slime/ch_1st_batch_aqua_slime_wiki_form1_05_wiki_legacy.md",
         "sha256": "9df91a854109384253a63b4d2b56f477688059c6e610a7f63bbbe0634386b626",
         "drive_file_id": "1lk3QBffpmUE8qiYqUqKUMlPTUjKHtkqF"
       },
@@ -136,7 +136,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_aqua_slime/cr_aqua_slime_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_aqua_slime/ch_1st_batch_aqua_slime_wiki_form2_05_wiki_legacy.md",
         "sha256": "01dc8829b13b14b44073e5cebf2fc92dc8fde6b032b25d364b50dab93d3d7535",
         "drive_file_id": "1kOMJsi5kBJ65KxfWVR99Zz6bWhBFIrLb"
       },
@@ -200,7 +200,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_aqua_slime/cr_aqua_slime_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_aqua_slime/ch_1st_batch_aqua_slime_wiki_form3_05_wiki_legacy.md",
         "sha256": "7a9797fcdfa05733c40a33d0459d538292a943087cdf6c90ee4cc3de798f1fe1",
         "drive_file_id": "1AxsrGerR06355rCbsM7r9mulVZ7uBUwV"
       },
@@ -264,7 +264,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_aqua_slime/cr_aqua_slime_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_aqua_slime/ch_1st_batch_aqua_slime_wiki_form4_05_wiki_legacy.md",
         "sha256": "26440a0162f6731bf1b7be278b375ceb33d837cab55df4f9965959063ae623df",
         "drive_file_id": "10b1FKQPmw_1L0R03nwA99sHScBjga2hK"
       },
@@ -339,7 +339,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_chrono_beetle/cr_chrono_beetle_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_chrono_beetle/ch_1st_batch_chrono_beetle_wiki_form1_05_wiki_legacy.md",
         "sha256": "527d086417aeee7ec2db666e345e3909eb1d37f3656e8941672518435214de47",
         "drive_file_id": "198rPhm1lrV58tHbkeiNn-B8ZMr7k3vjq"
       },
@@ -409,7 +409,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_chrono_beetle/cr_chrono_beetle_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_chrono_beetle/ch_1st_batch_chrono_beetle_wiki_form2_05_wiki_legacy.md",
         "sha256": "0dcb2968659726784c8be8ba955d9ed26c49e91411bbdaa97e5a2deef6088ea4",
         "drive_file_id": "1lS54N7m_nJ-3vJSqxbtGHJQRbgb1rADS"
       },
@@ -474,7 +474,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_chrono_beetle/cr_chrono_beetle_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_chrono_beetle/ch_1st_batch_chrono_beetle_wiki_form3_05_wiki_legacy.md",
         "sha256": "ef371ca79b7be00c243868e86da2ed0e7849cb5a6375c22dc57e71d4f42eb221",
         "drive_file_id": "1fep__GPhQpMF325-RJpRtHSEV_8Pd1of"
       },
@@ -539,7 +539,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_chrono_beetle/cr_chrono_beetle_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_chrono_beetle/ch_1st_batch_chrono_beetle_wiki_form4_05_wiki_legacy.md",
         "sha256": "637716b8b2ea22c52881d80e41ad036c090ae70bb7ed9ac0d7c4e27f6bdcc412",
         "drive_file_id": "15W3jF2salK9uv7zCluN5vjaTXwsmdZAf"
       },
@@ -613,7 +613,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_earth_golem/cr_earth_golem_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_earth_golem/ch_1st_batch_earth_golem_wiki_form1_05_wiki_legacy.md",
         "sha256": "a40827c1edeed8a08e39bb67493ceeee8c9bde8f1d71a94d96083a0df86bd03e",
         "drive_file_id": "19nOTLUm1JLiTzzB6IlBkECMjyEG68chu"
       },
@@ -682,7 +682,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_earth_golem/cr_earth_golem_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_earth_golem/ch_1st_batch_earth_golem_wiki_form2_05_wiki_legacy.md",
         "sha256": "3085d2d91205f6e2a85c68ceea11c476d9602ac9e966e8ff5c3091c15ee29c29",
         "drive_file_id": "1GM2SH0bqZAE4mdz4xPPVABWRVZw2Yn81"
       },
@@ -746,7 +746,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_earth_golem/cr_earth_golem_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_earth_golem/ch_1st_batch_earth_golem_wiki_form3_05_wiki_legacy.md",
         "sha256": "c3f850a104f7f18807d334a11ea13ccae3af84b704c8aa31e6299d886e5e7c86",
         "drive_file_id": "1E8LKmlWUhOyUbvgvSeRTTrepv5xZx-OA"
       },
@@ -810,7 +810,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_earth_golem/cr_earth_golem_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_earth_golem/ch_1st_batch_earth_golem_wiki_form4_05_wiki_legacy.md",
         "sha256": "267af4dc872f1d3ead48577893ff56f139e4c0afe802604421df712470910389",
         "drive_file_id": "145Dkz7RAminBqUbFBHciga0DMtjEff_n"
       },
@@ -880,7 +880,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_fire_wisp/cr_fire_wisp_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_fire_wisp/ch_1st_batch_fire_wisp_wiki_form1_05_wiki_legacy.md",
         "sha256": "2f39a8a83aa112c2804fdb4e54ac65d562213613cec7f1582718ab543ff9395f",
         "drive_file_id": "126mF9F5N6uAiQdFv-eSLeyrmER4_0KuB"
       },
@@ -953,7 +953,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_fire_wisp/cr_fire_wisp_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_fire_wisp/ch_1st_batch_fire_wisp_wiki_form2_05_wiki_legacy.md",
         "sha256": "0e6cc20c0e2b6439891753c84f745f01ec373987710a461d17f7f26e1fa8e08a",
         "drive_file_id": "147OzvQ87We65V-ktWn453sV6FhFMSYve"
       },
@@ -1017,7 +1017,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_fire_wisp/cr_fire_wisp_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_fire_wisp/ch_1st_batch_fire_wisp_wiki_form3_05_wiki_legacy.md",
         "sha256": "6f080a0c7176e20543c9b6f422f5d5f02a1d5a5fa96e5a61396ea0bca8616fa8",
         "drive_file_id": "1b7KngoFJ5ZVrAfmmkRuBm1PGbtqs7zYe"
       },
@@ -1081,7 +1081,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_fire_wisp/cr_fire_wisp_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_fire_wisp/ch_1st_batch_fire_wisp_wiki_form4_05_wiki_legacy.md",
         "sha256": "5d0d32e388968e886aaa745e2c0e297b15728217b705b2cd1cf00a922f3e7509",
         "drive_file_id": "1n3cW1KBbAUuogB75C7VLn-2yiVTRR34b"
       },
@@ -1156,7 +1156,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_frostblade_penguin/cr_frostblade_penguin_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_frostblade_penguin/ch_1st_batch_frostblade_penguin_wiki_form1_05_wiki_legacy.md",
         "sha256": "d51fe21a83b9140b6f1499bb823624bd15c3f4f91a1121ac301e7ed7093dadd0",
         "drive_file_id": "1QVfhL60cp99PvhGPe11W95ZQ6I8blOri"
       },
@@ -1230,7 +1230,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_frostblade_penguin/cr_frostblade_penguin_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_frostblade_penguin/ch_1st_batch_frostblade_penguin_wiki_form2_05_wiki_legacy.md",
         "sha256": "614bc11712931b81796baf7ce4030e821cf948f45cf3813a06a75edd815e0f13",
         "drive_file_id": "1y3B0pht5d-1IfX0rdNcvRLXgotu04lTq"
       },
@@ -1295,7 +1295,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_frostblade_penguin/cr_frostblade_penguin_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_frostblade_penguin/ch_1st_batch_frostblade_penguin_wiki_form3_05_wiki_legacy.md",
         "sha256": "3ab689583a0a692c1e8900fb1408997dc44768b685614084af721873a4bdff93",
         "drive_file_id": "1s18dW5OzXjXIlZpI1IhgHVOFRUehxhrB"
       },
@@ -1360,7 +1360,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_frostblade_penguin/cr_frostblade_penguin_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_frostblade_penguin/ch_1st_batch_frostblade_penguin_wiki_form4_05_wiki_legacy.md",
         "sha256": "fd3b1d90ab9f5619cee4c11435129b9c47d998baac025226b4acf807de6420e9",
         "drive_file_id": "1msldAvkbKVodocZwYdPjQRvUSxS0n7mc"
       },
@@ -1434,7 +1434,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ice_snowman/cr_ice_snowman_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ice_snowman/ch_1st_batch_ice_snowman_wiki_form1_05_wiki_legacy.md",
         "sha256": "ab03aa22f45a2c2e0554461e5dbd9db689274d5adb5420f1bd96e97dbb68f78c",
         "drive_file_id": "1ol-PZ1mDCLBKo91RH3m_WVf8WiI7ObC0"
       },
@@ -1507,7 +1507,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ice_snowman/cr_ice_snowman_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ice_snowman/ch_1st_batch_ice_snowman_wiki_form2_05_wiki_legacy.md",
         "sha256": "d482666fcb82473d7ebe096282fd0b09848bb61f9abd58526fe40131cb735c79",
         "drive_file_id": "1de9_SNjh66qKLlv25PxKpHqDx_8SL_cP"
       },
@@ -1571,7 +1571,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ice_snowman/cr_ice_snowman_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ice_snowman/ch_1st_batch_ice_snowman_wiki_form3_05_wiki_legacy.md",
         "sha256": "4e7f422164990ddd2c915bc06d70bc420dfdcecfa3eaa9917dd5c092a379773a",
         "drive_file_id": "1M3f1tDaxL48BUnmGq1GPs2WqIN3lc2Ml"
       },
@@ -1635,7 +1635,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ice_snowman/cr_ice_snowman_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ice_snowman/ch_1st_batch_ice_snowman_wiki_form4_05_wiki_legacy.md",
         "sha256": "9ae2b97e64e29e3d954f5077f7d5ad1b0eb9fbc0f81e917ece4ca9d9975084ff",
         "drive_file_id": "1Kb5UE5v_zZboR-FwDTx8mXA8qGtrYhMF"
       },
@@ -1710,7 +1710,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ink_stele/cr_ink_stele_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ink_stele/ch_1st_batch_ink_stele_wiki_form1_05_wiki_legacy.md",
         "sha256": "257acedd06129f166a5e646fd39c81f6a1f5e26d846321908d934a0e264e42e4",
         "drive_file_id": "1-67WaFzszFfpO_R0hjY9dcAkQwaTTg7i"
       },
@@ -1780,7 +1780,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ink_stele/cr_ink_stele_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ink_stele/ch_1st_batch_ink_stele_wiki_form2_05_wiki_legacy.md",
         "sha256": "6851eda75d07459adac4534e1e20ebf169d343306574247aded1cf093937926b",
         "drive_file_id": "1513_Pyc4v5wk-KgHpjARPzO-KS9mWvjm"
       },
@@ -1845,7 +1845,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ink_stele/cr_ink_stele_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ink_stele/ch_1st_batch_ink_stele_wiki_form3_05_wiki_legacy.md",
         "sha256": "99be814159a3478ceff7e71734ae24a6f8806a77214bf66142c123e441a02718",
         "drive_file_id": "1Y-bYIBJ5JD7Do7bESHMDJd1Pj6ydadOd"
       },
@@ -1910,7 +1910,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_ink_stele/cr_ink_stele_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_ink_stele/ch_1st_batch_ink_stele_wiki_form4_05_wiki_legacy.md",
         "sha256": "88fdafaff05389da2ff0cb949e5fd7c97308f61bea8badfddff0a7a2adbcefb3",
         "drive_file_id": "1XtAMtWvdCj6gKC1ADdSo2nXBnpTsMkc1"
       },
@@ -1984,7 +1984,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_light_khepri/cr_light_khepri_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_light_khepri/ch_1st_batch_light_khepri_wiki_form1_05_wiki_legacy.md",
         "sha256": "cc5ec92825e75530d22050e0aead7360147bdd94810aa0cfade44db30b0b0957",
         "drive_file_id": "1gJUsPqzlNdHGjmSjGRPCzlgyj_CXLQ7w"
       },
@@ -2057,7 +2057,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_light_khepri/cr_light_khepri_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_light_khepri/ch_1st_batch_light_khepri_wiki_form2_05_wiki_legacy.md",
         "sha256": "b6c6141bbc413998edf2634b5780e4e7782fd92b1a84effa0d228d3a521044e9",
         "drive_file_id": "1B0DDa4qizv24Hvvu_mbjLQbt-iF42WLM"
       },
@@ -2121,7 +2121,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_light_khepri/cr_light_khepri_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_light_khepri/ch_1st_batch_light_khepri_wiki_form3_05_wiki_legacy.md",
         "sha256": "7774b0f6d018a7bee84815b4f1defbea0c396b4b0bdd405d59eac59657381809",
         "drive_file_id": "1i4xEmbeAZN2ycZDox2NAs6DexnjDUOXr"
       },
@@ -2185,7 +2185,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_light_khepri/cr_light_khepri_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_light_khepri/ch_1st_batch_light_khepri_wiki_form4_05_wiki_legacy.md",
         "sha256": "f91d7b1fc56c60f16af5186a2599d317c964ca6b6de44f864a2c3efbf734cc9f",
         "drive_file_id": "18lpDbVU_QiJCDKTRZM4gx1430wpN3e-x"
       },
@@ -2259,7 +2259,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_metal_vault/cr_metal_vault_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_metal_vault/ch_1st_batch_metal_vault_wiki_form1_05_wiki_legacy.md",
         "sha256": "97ef0b8706ba74724df65cfcf7393669b14df7b80861c7ef034757f7db115a5f",
         "drive_file_id": "1ksgafN07FojHHIgGSa0k8FodbYLEbSB-"
       },
@@ -2328,7 +2328,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_metal_vault/cr_metal_vault_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_metal_vault/ch_1st_batch_metal_vault_wiki_form2_05_wiki_legacy.md",
         "sha256": "3a7dbc751014089f41aafd42cc75447a8311c536be55b700b7ed5e26ac1069d2",
         "drive_file_id": "1ZgXK2uCn3qEne-xg-X0pTD-6HFHLSuDw"
       },
@@ -2392,7 +2392,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_metal_vault/cr_metal_vault_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_metal_vault/ch_1st_batch_metal_vault_wiki_form3_05_wiki_legacy.md",
         "sha256": "8285387ba04c395e52c5504b7934ae9bd9f7b6fb25f41d5610bfacfd9d0eb92c",
         "drive_file_id": "1JQtZH2xgLjy60bnlgKvkGx47F9M-tpyi"
       },
@@ -2456,7 +2456,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_metal_vault/cr_metal_vault_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_metal_vault/ch_1st_batch_metal_vault_wiki_form4_05_wiki_legacy.md",
         "sha256": "45d78a2acfcb6cdffb53a4995777240c3b2902e6bd7db426c32e76a91d389867",
         "drive_file_id": "1jG6Vrsoj9em3SDD31dStGTpol6b4nRqs"
       },
@@ -2530,7 +2530,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_shadow_eye/cr_shadow_eye_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_shadow_eye/ch_1st_batch_shadow_eye_wiki_form1_05_wiki_legacy.md",
         "sha256": "2868365724716cdaefbc6ab85e7be920197e97f13cfe09998eeeb8421dbee438",
         "drive_file_id": "1wvMNsVwg-DxskfK3DyIMO4cgRiEFvw0A"
       },
@@ -2599,7 +2599,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_shadow_eye/cr_shadow_eye_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_shadow_eye/ch_1st_batch_shadow_eye_wiki_form2_05_wiki_legacy.md",
         "sha256": "94849ed909bb0d3536ad320510da522d51b9f631cdfd783f09d8c135f67bbb8b",
         "drive_file_id": "1t95Ave2AzU_GI0bBcMWBZlgr3Lyw_jag"
       },
@@ -2663,7 +2663,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_shadow_eye/cr_shadow_eye_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_shadow_eye/ch_1st_batch_shadow_eye_wiki_form3_05_wiki_legacy.md",
         "sha256": "c8a4a234b253097f8a3c9b8c8843ff6263695db98520c199fd1deb81a9507908",
         "drive_file_id": "1g6fw-9-JN7_rsvYpv077oVKffk48nih6"
       },
@@ -2727,7 +2727,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_shadow_eye/cr_shadow_eye_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_shadow_eye/ch_1st_batch_shadow_eye_wiki_form4_05_wiki_legacy.md",
         "sha256": "b08a50451e953d792f122868b7b65b9be0f809f4d15cdc35bfe55ae83a32aeb6",
         "drive_file_id": "1EXwt6tp-lBIElWIEGjhwpfJZY1JxQP48"
       },
@@ -2798,7 +2798,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_solmane_lion/cr_solmane_lion_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_solmane_lion/ch_1st_batch_solmane_lion_wiki_form1_05_wiki_legacy.md",
         "sha256": "83c46b89977c359cddf4a883f80fd878011f4c4c721d6bafa4839b2fceb83b66",
         "drive_file_id": "1HllPIgWCbw7igxv1N-eUqrhN_iDlI9Pz"
       },
@@ -2872,7 +2872,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_solmane_lion/cr_solmane_lion_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_solmane_lion/ch_1st_batch_solmane_lion_wiki_form2_05_wiki_legacy.md",
         "sha256": "aef18595ce12d0c0a86f547faddce8a2aed839480413ce9893b4787aaaa344c2",
         "drive_file_id": "1BkEb84vLT3RZYyydHBNC1ATxXmnCe30a"
       },
@@ -2937,7 +2937,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_solmane_lion/cr_solmane_lion_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_solmane_lion/ch_1st_batch_solmane_lion_wiki_form3_05_wiki_legacy.md",
         "sha256": "a7181d4daa4c65d3dcf4545bebcbc3032527d5f12b870ee2523d4899d41b8805",
         "drive_file_id": "170rtIqOnLW30Y31k_KpRIySp9Acj2xlj"
       },
@@ -3002,7 +3002,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_solmane_lion/cr_solmane_lion_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_solmane_lion/ch_1st_batch_solmane_lion_wiki_form4_05_wiki_legacy.md",
         "sha256": "40b1993598c2ac28c6992bcfdd402860cb2b66667e858fb16fcd6ce6be181953",
         "drive_file_id": "1bTgshDzrHrwIn9V-i53aeImv19osKYU0"
       },
@@ -3072,7 +3072,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_thunder_drone/cr_thunder_drone_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_thunder_drone/ch_1st_batch_thunder_drone_wiki_form1_05_wiki_legacy.md",
         "sha256": "181e5df244faf6b8dfcbd3d0e3c1a285950875169a09769e6e6911dcca02badd",
         "drive_file_id": "1xNig-d5CRA6ifan3z8gDTETDyoRLsViX"
       },
@@ -3145,7 +3145,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_thunder_drone/cr_thunder_drone_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_thunder_drone/ch_1st_batch_thunder_drone_wiki_form2_05_wiki_legacy.md",
         "sha256": "cd49583127ba06746e354ce8c7be9ec8539f6279f9a7dfdffcd0d2858a86a1bd",
         "drive_file_id": "1iTI19bcTUT7bQHyQVIpa0iXu9hCz7J_t"
       },
@@ -3209,7 +3209,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_thunder_drone/cr_thunder_drone_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_thunder_drone/ch_1st_batch_thunder_drone_wiki_form3_05_wiki_legacy.md",
         "sha256": "ff73ae3311eb774248e164a9d45bb6647c7a141112655ab571b2258065d973f1",
         "drive_file_id": "1ASdg2v1X_WFqA0Bm7xnewQWubFt7xa95"
       },
@@ -3273,7 +3273,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_thunder_drone/cr_thunder_drone_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_thunder_drone/ch_1st_batch_thunder_drone_wiki_form4_05_wiki_legacy.md",
         "sha256": "db2be13c5ae19c7b2f156d3b8a671de16e678c0ba7fc5e8b63d4c644245ffe8f",
         "drive_file_id": "1C548mJ_-aHJmD2mCgViRMh77RLalktor"
       },
@@ -3348,7 +3348,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_verdant_aquila/cr_verdant_aquila_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_verdant_aquila/ch_1st_batch_verdant_aquila_wiki_form1_05_wiki_legacy.md",
         "sha256": "e97d4cd87cb12ce351f0a467c96b54d643135b76b9b02d27e1cb2d52f1b6ea47",
         "drive_file_id": "1Sj_roFW5nlIGtjXERaweeDySL5DXH2Zn"
       },
@@ -3422,7 +3422,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_verdant_aquila/cr_verdant_aquila_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_verdant_aquila/ch_1st_batch_verdant_aquila_wiki_form2_05_wiki_legacy.md",
         "sha256": "3dfe6ca841d0912652282c31dcde1d3a2f4d7fdf4083ead1fd1fbb8ae9e09700",
         "drive_file_id": "13UtFsu_PEgt1TECCubN1x87QBvOhDGas"
       },
@@ -3487,7 +3487,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_verdant_aquila/cr_verdant_aquila_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_verdant_aquila/ch_1st_batch_verdant_aquila_wiki_form3_05_wiki_legacy.md",
         "sha256": "d326a281b4601999db59551105cfa87eeeefb11534b15fed4744f2ad204676b4",
         "drive_file_id": "1s_nHoffvZMJuI8V6gXY5JDegsgsFqCjv"
       },
@@ -3552,7 +3552,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_verdant_aquila/cr_verdant_aquila_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_verdant_aquila/ch_1st_batch_verdant_aquila_wiki_form4_05_wiki_legacy.md",
         "sha256": "0bc360dc0b80d26b8d0244413021ef6ebe6edbc9e4ca40556c1c485a3dc50ae8",
         "drive_file_id": "1-xyjuOfxXKK-Bhh2h5tsdbHKzncKnU8J"
       },
@@ -3626,7 +3626,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wind_bird/cr_wind_bird_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wind_bird/ch_1st_batch_wind_bird_wiki_form1_05_wiki_legacy.md",
         "sha256": "5efdcfc1b11be0470ab8471b869a1965a1f5c5f84a2e06ca75ed7388d6f08dc8",
         "drive_file_id": "180X5tRSWRcXs9-3W6m4cI5j7HI74WI4k"
       },
@@ -3699,7 +3699,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wind_bird/cr_wind_bird_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wind_bird/ch_1st_batch_wind_bird_wiki_form2_05_wiki_legacy.md",
         "sha256": "26cbdf0850e16d52a3bdb621cb4aada6605922c72e3f1e292ff8482bf4418ecc",
         "drive_file_id": "1JSp4QU5bADkWwUbN-US1yyX1P47B03aE"
       },
@@ -3763,7 +3763,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wind_bird/cr_wind_bird_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wind_bird/ch_1st_batch_wind_bird_wiki_form3_05_wiki_legacy.md",
         "sha256": "25101f90ccbd71ae79efe5445a95ebf7c5cb97ec045d739a20221651904db373",
         "drive_file_id": "1AbIXJjH600SutHFW18tIpEu5KKFfbf5L"
       },
@@ -3827,7 +3827,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wind_bird/cr_wind_bird_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wind_bird/ch_1st_batch_wind_bird_wiki_form4_05_wiki_legacy.md",
         "sha256": "35dd229b2d7f44d94462d53298369b4fb5f2e130093afa9d2e5cc7a2482bbc43",
         "drive_file_id": "1Lb_X9TlaoSAhaU9eGLVYxoxtSu1ieo4I"
       },
@@ -3901,7 +3901,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wood_puppet/cr_wood_puppet_juvenile_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wood_puppet/ch_1st_batch_wood_puppet_wiki_form1_05_wiki_legacy.md",
         "sha256": "8d78ff6879bc513064d7ca512c0f2fb063907e196a048fac67d0e50a018171bf",
         "drive_file_id": "1mzJVD43kmcXGg54IvAEc-TqPm_QfquIm"
       },
@@ -3974,7 +3974,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wood_puppet/cr_wood_puppet_adolescent_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wood_puppet/ch_1st_batch_wood_puppet_wiki_form2_05_wiki_legacy.md",
         "sha256": "4fa87e7e8b4c1357e98c9aeb14d0be622b0dd0adf8e7337fb28945db9e73cbb5",
         "drive_file_id": "1r7hqsD49ZVgQQXixB-Mj8ridw5NKpFh0"
       },
@@ -4038,7 +4038,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wood_puppet/cr_wood_puppet_adult_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wood_puppet/ch_1st_batch_wood_puppet_wiki_form3_05_wiki_legacy.md",
         "sha256": "8b46e80bf0829cbe717f156cb2ec30a7197139f43b313bb8ccb8fc7ff6695c64",
         "drive_file_id": "1hpDUitGnpQgLzfV2MxxHl3MmVZahh4ZW"
       },
@@ -4102,7 +4102,7 @@
       "source_wiki": {
         "id": "wiki",
         "storage": "drive",
-        "path": "creatures/cr_wood_puppet/cr_wood_puppet_overload_05_wiki.md",
+        "path": "creatures/ch_1st_batch_wood_puppet/ch_1st_batch_wood_puppet_wiki_form4_05_wiki_legacy.md",
         "sha256": "b133646cab34ace2807e4b71d0f54a4135963af0af0f7d6aa6094bba2f78e82f",
         "drive_file_id": "1QY9t0WFU_0Bo_6AkhZh3QC2KPtg94LlJ"
       },
