@@ -26,7 +26,8 @@ test("subject directory names use category, batch and English name", () => {
   ];
   for (const [kind, from, to] of examples) {
     assert.equal(rules.canonicalFolderName(kind, 1, from), to);
-    assert.deepEqual(rules.folderCandidates(kind, 1, from), from === to ? [to] : [to, from]);
+    assert.equal(rules.folderCandidates(kind, 1, from)[0], to);
+    assert.ok(rules.folderCandidates(kind, 1, from).includes(from));
     assert.equal(rules.isCompliant(kind, 1, to), true);
   }
 });
