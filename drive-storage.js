@@ -613,7 +613,7 @@
       if (f.mimeType === MIME) {
         if (folderNames.has(f.name)) throw Error(prefix + f.name + " 名稱重複");
         folderNames.add(f.name);
-        subfolders.push(walk(f.id, prefix + f.name + "/", depth + 1));
+        subfolders.push(walk(f.id, prefix + (window.COSMI_DRIVE_NAMES?.logicalSubfolderName(f.name) || f.name) + "/", depth + 1));
       } else {
         if (/\.zip$/i.test(f.name)) continue;
         const prev = filesByName.get(f.name);
@@ -805,7 +805,14 @@
                   !f.name.startsWith("_") &&
                   !RESERVED_CATEGORY_FOLDERS.has(f.name),
               )
-              .map((entry) => ({ dir, entry }));
+              .map((entry) => ({
+                dir,
+                entry: {
+                  ...entry,
+                  name: window.COSMI_DRIVE_NAMES?.logicalSubjectId(dir, entry.name) || entry.name,
+                  physicalName: entry.name,
+                },
+              }));
           } catch (e) {
             if (!/不存在/.test(e.message)) errors.push(dir + ": " + e.message);
             return [];
@@ -1783,7 +1790,11 @@
         const entries = await list(await folder(root));
         subjectFolders = entries.filter(
           (f) => f.mimeType === MIME && !f.name.startsWith("_") && !RESERVED_CATEGORY_FOLDERS.has(f.name),
-        );
+        ).map((entry) => ({
+          ...entry,
+          name: window.COSMI_DRIVE_NAMES?.logicalSubjectId(root, entry.name) || entry.name,
+          physicalName: entry.name,
+        }));
       } catch (_) {}
       await Promise.all(
         subjectFolders.map(async (sub) => {
