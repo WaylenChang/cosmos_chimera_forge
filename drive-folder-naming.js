@@ -154,7 +154,7 @@
     if (kind === "creatures" && !i) throw Error("Creature asset filenames require an explicit 1-4 form");
     if (kind !== "creatures" && stage !== undefined && stage !== null && stage !== "")
       throw Error("Character/move assets must not have a creature form");
-    const suffix = kind === "creatures" ? "_" + i + "型態" : "";
+    const suffix = kind === "creatures" ? "_form" + i : "";
     if (final) {
       if (step || version) throw Error("Final filename must omit pipeline step and version");
       return folderName + "_" + func + suffix + "." + extension;
@@ -171,21 +171,21 @@
     if (!ROOTS.has(kind) || !isCompliant(kind, 1, folderName)) return null;
     const name = String(filename || "");
     const prefix = folderName + "_";
-    if (!name.startsWith(prefix) || name.includes("/") || name.includes("\\")) return null;
+    if (!name.startsWith(prefix) || name.includes("/") || name.includes("\\") || /[^\x20-\x7e]/.test(name)) return null;
     const extMatch = /(\.prompt\.md|\.[a-z0-9]+)$/i.exec(name);
     if (!extMatch) return null;
     const ext = extMatch[1].slice(1).toLowerCase();
     let rest = name.slice(prefix.length, -extMatch[1].length);
     let stage = "", form = 0;
     if (kind === "creatures") {
-      const m = /_([1-4])型態(?=_|$)/.exec(rest);
-      if (!m || rest.indexOf("型態", m.index + m[0].length) !== -1) return null;
+      const m = /_form([1-4])(?=_|$)/.exec(rest);
+      if (!m || /_form[1-4](?=_|$)/.test(rest.slice(m.index + m[0].length))) return null;
       form = Number(m[1]);
       stage = FORM_STAGES[form - 1];
       const before = rest.slice(0, m.index);
       const after = rest.slice(m.index + m[0].length);
       rest = before + "||" + after;
-    } else if (/型態/.test(rest)) {
+    } else if (/_form[1-4](?:_|$)/.test(rest)) {
       return null;
     }
     const split = rest.split("||");
