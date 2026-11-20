@@ -25,11 +25,13 @@
     const base=stage&&subject.endsWith("_"+stage)?subject.slice(0,-stage.length-1):subject;
     // Newly generated wikis are review-required drafts, not approved final files.
     // Preserve the stable subject ID in the directory component for the Drive resolver.
-    const physical = window.COSMI_DRIVE_NAMES?.canonicalFolderName(kind, 1, base);
-    const stem = window.COSMI_DRIVE_NAMES?.assetFilename({
+    const names=window.COSMI_DRIVE_NAMES;
+    if (!names?.assetFilename) throw Error("缺少新版檔案命名契約");
+    const physical = names.canonicalFolderName(kind, 1, base);
+    const stem = names.assetFilename({
       kind, folderName: physical, role: "wiki", stage,
       step: "05_wiki", version: "draft", ext: "md"
-    }) || (base+(stage?"_"+stage:"")+"_05_wiki.md");
+    });
     const legacyName=base+(stage?"_"+stage:"")+"_05_wiki.md";
     const path=kind+"/"+base+"/"+stem;
     return {kind,subject:base,stage,stem:stem.replace(/\.md$/,""),path,legacyName,key:kind+"/"+base+(stage?"/"+stage:"")};
