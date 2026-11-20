@@ -63,11 +63,15 @@
       "look","appearance","anatomy","limbs","signature_move","niches","habit","dex_zh","outfit",
       "accessories","silhouette_keywords"];
     const fields=[];
-    for(const name of shared)if(c[name]!=null)fields.push("- "+name+": "+JSON.stringify(c[name]));
-    for(const name of form)if(selected[name]!=null)fields.push("- "+name+": "+JSON.stringify(selected[name]));
-    if(d.kind==="moves")for(const name of ["element","shape","tier","action","motion","name"])
-      if(ctx.opts?.[name]!=null)fields.push("- "+name+": "+JSON.stringify(ctx.opts[name]));
-    const title=selected.name_zh||c.name_zh||d.subject;
+    if(d.kind==="moves"){
+      // The move wiki is built from move parameters, never the demonstration caster's concept.
+      for(const name of ["move_name","move_id","element","shape","tier","common"])
+        if(ctx.opts?.[name]!=null && ctx.opts[name]!=="")fields.push("- "+name+": "+JSON.stringify(ctx.opts[name]));
+    }else{
+      for(const name of shared)if(c[name]!=null)fields.push("- "+name+": "+JSON.stringify(c[name]));
+      for(const name of form)if(selected[name]!=null)fields.push("- "+name+": "+JSON.stringify(selected[name]));
+    }
+    const title=d.kind==="moves"?(ctx.opts?.move_name||d.subject):(selected.name_zh||c.name_zh||d.subject);
     return ["# "+title+" — "+(d.stage?STAGE_ZH[d.stage]+"型態 ":"")+KIND[d.kind]+"圖鑑",
       "",
       "- subject_id: "+d.subject,
