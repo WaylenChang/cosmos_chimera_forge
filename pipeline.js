@@ -3,8 +3,7 @@
   "use strict";
   const stages = {
     appearance: "00_appearance", portrait: "01_portrait", review_portrait: "02_review_portrait",
-    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d",
-    encyclopedia: "05_encyclopedia"
+    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d"
   };
   const templates = {};
   const templatesByKind = new Map();
@@ -58,8 +57,8 @@
   const localTemplates = {
     appearance: "# {{subject_label}}外觀設定\n{{subject_line}}\n依本次視覺素材整理輪廓、比例、臉部／感知器官、肢體、配色、材質及本對象特徵。\n{{appearance}}\n輸出：{{appearance_path}}",
     review_portrait: "# {{subject_label}}立繪審查\n待審：{{input_path}}/\n檢查{{portrait_views}}的完整性、外觀比例、視角及配色一致性，逐檔記錄缺陷和通過／退件建議。\n人工決定審查結果。",
-    colab: "# Colab Image-to-3D｜{{subject_label}}\n{{model_input}}\n參數：{{parameters_path}}\n輸出：{{output_path}}/\n{{rig_plan}}\n{{action_plan}}\n以本次已核准圖片重建該對象網格與材質，再由 Blender 修整拓撲、UV、骨架、蒙皮及動作。\n在 Blender 檢查各視角、關節變形與貼圖，重開 .blend 並重匯入 .glb 驗證。\n交付 models/{{asset_id}}.blend、models/{{asset_id}}.glb、rig/、animations/、previews/ 與 manifest.json。\nmanifest.encyclopedia_path：{{wiki_path}}",
-    blender: "# Blender {{input_mode_label}}｜{{subject_label}}\n{{model_input}}\n參數：{{parameters_path}}\n輸出：{{output_path}}/\n{{rig_plan}}\n{{action_plan}}\n依本次輸入製作該對象的完整網格、材質、骨架、蒙皮及動作；保留臉部／感知器官、服裝或體表構造的辨識細節。\n檢查各視角、關節變形與貼圖，重開 .blend 並重匯入 .glb 驗證。\n交付 models/{{asset_id}}.blend、models/{{asset_id}}.glb、rig/、animations/、previews/ 與 manifest.json。\nmanifest.encyclopedia_path：{{wiki_path}}",
+    colab: "# Colab Image-to-3D｜{{subject_label}}\n{{model_input}}\n參數：{{parameters_path}}\n輸出：{{output_path}}/\n{{rig_plan}}\n{{action_plan}}\n以本次已核准圖片重建該對象網格與材質，再由 Blender 修整拓撲、UV、骨架、蒙皮及動作。\n在 Blender 檢查各視角、關節變形與貼圖，重開 .blend 並重匯入 .glb 驗證。\n交付 models/{{asset_id}}.blend、models/{{asset_id}}.glb、rig/、animations/、previews/ 與 manifest.json。",
+    blender: "# Blender {{input_mode_label}}｜{{subject_label}}\n{{model_input}}\n參數：{{parameters_path}}\n輸出：{{output_path}}/\n{{rig_plan}}\n{{action_plan}}\n依本次輸入製作該對象的完整網格、材質、骨架、蒙皮及動作；保留臉部／感知器官、服裝或體表構造的辨識細節。\n檢查各視角、關節變形與貼圖，重開 .blend 並重匯入 .glb 驗證。\n交付 models/{{asset_id}}.blend、models/{{asset_id}}.glb、rig/、animations/、previews/ 與 manifest.json。",
     review_3d: "# {{subject_label}}3D 模型最終驗收\n模型：{{input_path}}/\n{{source_reference}}\n核對 .glb、.blend、manifest、拓撲、材質、骨架及本對象的動作變形和各方向外觀。\n逐檔記錄問題與通過／退件建議，由人工審核。"
   };
   const templateMarker = stage => "<!-- COSMI-PIPELINE/3:" + stage + " -->";
@@ -85,31 +84,17 @@
       return ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
     }
     const root = pipelineRootFor(ctx);
-    const wiki = window.COSMI_WIKI?.describe(ctx);
-    if (stage === "encyclopedia") {
-      const kind = wiki.kind;
-      const moveOptions = kind === "moves" ? Object.fromEntries(
-        Object.entries(ctx.opts || {}).filter(([key]) =>
-          ["move_name","move_id","element","shape","tier","common"].includes(key))
-      ) : null;
-      const focus = kind === "moves" ? "招式用途、視覺形態、施放動作、特效節奏與表現規格"
-        : kind === "characters" ? "角色身份、外觀特徵、服裝、背景與技能定位"
-        : "本型態外觀、生態、解剖特徵、屬性與動作";
-      return [
-        "# 生成" + (kind === "moves" ? "主動技" : kind === "characters" ? "角色" : "宙獸") + "圖鑑",
-        "對象：" + wiki.subject + (wiki.stage ? "；型態：" + wiki.stage : ""),
-        "已確認設定：",
-        kind === "moves" ? JSON.stringify(moveOptions, null, 2) : appearance(ctx, {pureVisual: false}),
-        "內容：" + focus,
-        "先核對精確路徑；已有檔案沿用，未建立才產生草稿：",
-        wiki.path
-      ].join("\n");
+    // Player encyclopedia is game data. It has no generation stage or prompt.
+    if (!Object.prototype.hasOwnProperty.call(stages, stage)) {
+      return "請選擇有效的生成管線步驟。";
     }
     const raw = templatesByKind.get(root)?.[stage];
     const normalized = typeof raw === "string" ? raw.replace(/\r\n?/g, "\n").trim() : "";
     const prefix = templateMarker(stage);
-    const template = normalized.startsWith(prefix + "\n")
-      ? normalized.slice(prefix.length).trim() : localTemplates[stage];
+    const loaded = normalized.startsWith(prefix + "\n") ? normalized.slice(prefix.length).trim() : "";
+    // No game-encyclopedia references in any generated prompt, including upgraded Drive templates.
+    const forbidden = /(?:encyclopedia|bestiary|圖鑑|百科|_05_wiki|wiki_path|\/wiki\/|encyclopedia_path)/i;
+    const template = loaded && !forbidden.test(loaded) ? loaded : localTemplates[stage];
     if (!template) return "此步驟沒有可用的 Prompt 模板。";
 
     const subjectBase = window.COSMI_DRIVE?.cleanSubjectId?.(root, ctx.subjectId || ctx.taskId)
@@ -198,7 +183,7 @@
       output_path: window.COSMI_DRIVE?.pipelineDirectory?.(
         root, stage === "colab" || stage === "blender" ? stage : "portrait", subjectBase
       ) || subjectFolder,
-      asset_id: ctx.taskId, wiki_path: wiki?.path || ""
+      asset_id: ctx.taskId
     };
     return template.replace(/\{\{([a-z_]+)\}\}/g, (_, key) => values[key] ?? "")
       .replace(/\n{3,}/g, "\n\n").trim();
@@ -206,7 +191,7 @@
   async function loadTemplates() {
     const root = pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {});
     const kindTemplates = templatesByKind.get(root) || {};
-    const entries = Object.entries(stages).filter(([key]) => !["portrait", "encyclopedia"].includes(key));
+    const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
     const jobs = entries.map(async ([key, name]) => {
       try {
         const canonical = root + "/prompts/" + name + ".prompt.md";
