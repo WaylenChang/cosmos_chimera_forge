@@ -36,16 +36,17 @@
 
 ## 2026-11-20: Live Google Drive file migration, first verified batch
 
-**Completed:** 185 in-place Google Drive file renames, retaining existing file IDs, parent folders, MIME types, and payloads (metadata-only file-name updates). Each group was checked via a fresh folder listing keyed by file ID; the single non-ASCII legacy note was checked by file metadata.
+**Completed:** 205 in-place Google Drive file renames, retaining existing file IDs, parent folders, MIME types, and payloads (metadata-only file-name updates). Each group was checked via a fresh folder listing keyed by file ID; the single non-ASCII legacy note was checked by file metadata.
 
 - First batch: 15 creature subject directories, 120 top-level 3D model/wiki files (eight per subject).
 - Starters: 3 creature subject directories, 24 top-level 3D model/wiki files (eight per subject).
 - Protagonists: 3 character subject directories, 9 top-level main portrait/3D model/wiki files.
 - Wardens: 10 character subject directories, 31 top-level front/turnaround/hero/keyart image files.
+- Trial bosses: 5 directories with unambiguous `03b_blender` model names, 20 GLB files (four per subject). Historical shared wikis and ambiguous boss GLBs are not counted.
 - Nested Colab note: 1 file with Chinese characters in its original filename, renamed to `chr_protagonist_yeh_chengxi_acceptance_notes_03a_colab_legacy.txt`.
 
 The migrated files use **ASCII English only** and preserve prior workflow context with an explicit `_legacy` version token. **A legacy version token is not human approval**; do not drop pipeline steps/versions until a separately verified final approval is available.
 
-**Remaining:** 10 trial-boss subject directories with nonuniform/ambiguous model and wiki names; individual subject nested version and working directories (including duplicate names and model/texture/preview paths); cross-form shared `<physical-folder>.prompt.md` files that cannot honestly be assigned one form; manifest links and references to original filenames; full runtime/browser, deployment and CI validation. Category-wide shared template/backup/index paths are outside the per-subject filename rule. Do not claim full migration until a recursive audit and safe compatibility rollout are complete.
+**Remaining:** 10 trial-boss subject directories still have nonuniform/ambiguous files (five now have their four explicitly labeled `03b_blender` models renamed); individual subject nested version and working directories (including duplicate names and model/texture/preview paths); cross-form shared `<physical-folder>.prompt.md` files that cannot honestly be assigned one form; manifest links and references to original filenames; full runtime/browser, deployment and CI validation. Category-wide shared template/backup/index paths are outside the per-subject filename rule. Do not claim full migration until a recursive audit and safe compatibility rollout are complete.
 
 **Safety:** No file contents rewritten, no game IDs changed, no files merged/deleted, and no Colab/GPU job executed.
