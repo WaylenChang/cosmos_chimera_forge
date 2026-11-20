@@ -189,8 +189,24 @@
     }
     return parts.join("_");
   }
-  function parseAssetFilename(name, kind) {
+  function parseAssetFilename(name, kind, physicalFolder = "") {
     const base = String(name || "").split("/").pop();
+    const names = window.COSMI_DRIVE_NAMES;
+    const modern = physicalFolder && names?.parseSubjectFilename?.(kind, physicalFolder, base);
+    if (modern) {
+      const logicalId = names.logicalSubjectId(kind, physicalFolder);
+      // Official files have no pipeline marker. Their functional role is
+      // enough to classify the asset for the existing package index.
+      const inferred = modern.role === "wiki" ? "05_wiki" :
+        modern.role === "model" || modern.role === "blend" ? "03b_blender" :
+        /^(?:front|turnaround|main|side|back|expressions|props)$/.test(modern.role) ? "01_portrait" :
+        "";
+      const step = modern.step || inferred;
+      if (!step) return null;
+      const stem = [logicalId, modern.stage, step, modern.version].filter(Boolean).join("_");
+      return {id: logicalId, stage: modern.stage, step, version: modern.version,
+        role: modern.role, ext: modern.ext, stem, physicalFolder, official: modern.final};
+    }
     const m = /^(.+?)(?:_(juvenile|adolescent|adult|overload))?_(00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(v\d+|\d{8}(?:[-_]\d{4})?))?(?:_([^.]+))?\.([^.]+)$/i.exec(
       base,
     );
@@ -703,7 +719,7 @@
         const grouped = new Map();
         const inlineReviews = new Map();
         for (const f of files) {
-          const parsed = parseAssetFilename(f.path, kind);
+          const parsed = parseAssetFilename(f.path, kind, entry.physicalName || entry.name);
           if (!parsed) continue;
           if (parsed.step === "02_review_portrait" || parsed.step === "04_review_3d") {
             const rawKey = entry.name + "/" + f.path;
@@ -1807,7 +1823,7 @@
             files = await safeList(root + "/" + sub.name);
           }
           for (const f of files) {
-            const parsed = parseAssetFilename(f.name, root);
+            const parsed = parseAssetFilename(f.name, root, sub.physicalName);
             if (parsed?.step === "00_appearance" || parsed?.step === "00_parameters") settings.push(f);
             else if (/_(?:prompt|job)\.md$/i.test(f.name)) jobs.push(f);
             else if (parsed?.step === "05_wiki") {
