@@ -1986,7 +1986,7 @@
       run(async () => {
         const path = $("drivePromptPath").value.trim();
         // Prompt loading is restricted to prompt files; game encyclopedia Markdown is never prompt input.
-        if (!/^(?:(?:characters|creatures|moves)\/(?:prompts\/.*|[^/]+\/[^/]+)|prompts\/.*)\.prompt\.md$/.test(path) ||
+        if (!/^(?:(?:characters|creatures|moves)\/(?:prompts\/.*|[^/]+\/[^/]+)|prompts\/.*)(?:\.prompt|_prompt)\.md$/.test(path) ||
             /(?:encyclopedia|bestiary|wiki|05_wiki)/i.test(path))
           throw Error("僅可載入管線 .prompt.md；玩家圖鑑不能作為生成 Prompt");
         const source = await (await read(path)).text();
