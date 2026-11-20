@@ -1985,13 +1985,14 @@
     $("driveLoadPrompt").addEventListener("click", () =>
       run(async () => {
         const path = $("drivePromptPath").value.trim();
-        if (
-          !/^(?:(?:characters|creatures|moves)\/(?:prompts\/.*|[^/]+\/[^/]+)|prompts\/.*)\.md$/.test(path)
-        )
-          throw Error(
-            "請輸入 <類別>/<id>/ 或 <類別>/prompts/ 下的 Markdown 相對路徑",
-          );
-        window.COSMI_FORGE.showPrompt(await (await read(path)).text());
+        // Prompt loading is restricted to prompt files; game encyclopedia Markdown is never prompt input.
+        if (!/^(?:(?:characters|creatures|moves)\/(?:prompts\/.*|[^/]+\/[^/]+)|prompts\/.*)\.prompt\.md$/.test(path) ||
+            /(?:encyclopedia|bestiary|wiki|05_wiki)/i.test(path))
+          throw Error("僅可載入管線 .prompt.md；玩家圖鑑不能作為生成 Prompt");
+        const source = await (await read(path)).text();
+        if (/(?:encyclopedia|bestiary|圖鑑|百科|_05_wiki|\/wiki\/|encyclopedia_path)/i.test(source))
+          throw Error("此檔包含玩家圖鑑內容，不可作為生成 Prompt");
+        window.COSMI_FORGE.showPrompt(source);
         $("driveStatus").textContent = "已讀取 " + path;
       }),
     );
@@ -2011,35 +2012,16 @@
       }
       run(async () => {
         const key = $("pipelineStage").value;
-        if (key === "encyclopedia") {
-          const ctx = window.COSMI_FORGE.currentContext?.();
-          if (!ctx) throw Error("目前沒有可用的圖鑑概念設定");
-          const wiki = await ensureWiki(ctx);
-          window.COSMI_FORGE.showPrompt(
-            window.COSMI_FORGE.currentPrompt().text,
-          );
-          $("driveStatus").textContent =
-            (wiki.created ? "已建立" : "已存在，未重複生成") + " " + wiki.path;
-          return;
-        }
-        if (
-          [
-            "appearance",
-            "portrait",
-            "review_portrait",
-            "colab",
-            "blender",
-            "review_3d",
-            "move_vfx",
-          ].includes(key)
-        ) {
-          const context = window.COSMI_FORGE.currentContext?.();
-          // A stage template read must not create an unrelated encyclopedia draft.
-        }
+        if (!Object.prototype.hasOwnProperty.call(window.COSMI_PIPELINE.stages, key))
+          throw Error("圖鑑不屬於生成管線，無法載入為 Prompt");
+        const context = window.COSMI_FORGE.currentContext?.();
         const name = window.COSMI_PIPELINE.stages[key];
-        window.COSMI_PIPELINE.templates[key] = await (
-          await read(pipelineRoot(context || window.COSMI_FORGE.currentContext?.() || "creatures") + "/prompts/" + name + ".prompt.md")
+        const templateText = await (
+          await read(pipelineRoot(context || "creatures") + "/prompts/" + name + ".prompt.md")
         ).text();
+        if (/(?:encyclopedia|bestiary|圖鑑|百科|_05_wiki|\/wiki\/|encyclopedia_path)/i.test(templateText))
+          throw Error("管線模板包含玩家圖鑑資訊，不可作為生成 Prompt");
+        window.COSMI_PIPELINE.templates[key] = templateText;
         window.COSMI_FORGE.refresh();
         window.COSMI_FORGE.showPrompt(window.COSMI_FORGE.currentPrompt().text);
       });
