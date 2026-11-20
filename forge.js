@@ -973,7 +973,7 @@
     state.taskId = category === "move" ? "move-vfx"
       : category === "character" ? "character-concept" : "creature-concept";
     const stage = $("#pipelineStage");
-    if (stage && category !== "move") stage.value = "appearance";
+    if (stage) stage.value = category === "move" ? "encyclopedia" : "appearance";
     renderAll();
   }
   function chooseFlow(category, route, step) {
