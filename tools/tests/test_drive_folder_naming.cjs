@@ -83,9 +83,9 @@ test("strict subject filenames use physical directory names, function then form 
     "chr_protagonist_yeh_chengxi_main.png",
     "chr_warden_space_wind_front.png",
     "mv_legacy_earth_pebble_shot_manifest_01b_vfx_draft.json",
-    "ch_1st_batch_aqua_slime_model_1型態.glb",
-    "ch_starter_sun_line_turnaround_3型態_01_portrait_v2.png",
-    "ch_trial_boss_wood_line_wiki_4型態.md",
+    "ch_1st_batch_aqua_slime_model_form1.glb",
+    "ch_starter_sun_line_turnaround_form3_01_portrait_v2.png",
+    "ch_trial_boss_wood_line_wiki_form4.md",
   ];
   expected.forEach((input,i) => {
     const name = rules.assetFilename(input);
@@ -99,7 +99,7 @@ test("strict subject filenames use physical directory names, function then form 
   });
 });
 
-test("creature form ordinals are explicit; unknown/unofficial files fail closed", () => {
+test("ASCII English creature form ordinals are explicit; unknown/unofficial files fail closed", () => {
   const folder = "ch_1st_batch_aqua_slime";
   assert.equal(rules.stageIndex("juvenile"),1);
   assert.equal(rules.stageIndex("adolescent"),2);
@@ -109,11 +109,12 @@ test("creature form ordinals are explicit; unknown/unofficial files fail closed"
     "cr_aqua_slime_adult_03b_blender.glb",
     folder + "_model.glb",
     folder + "_model_adult.glb",
-    folder + "_model_5型態.glb",
-    folder + "_model_1型態_03b_blender.glb",
-    folder + "_model_1型態_v1.glb",
-    folder + "_model_1型態_03b_blender_v0.glb",
-    folder + "_front_1型態_01_portrait_foobar.png",
+    folder + "_model_form5.glb",
+    folder + "_model_form1_03b_blender.glb",
+    folder + "_model_form1_v1.glb",
+    folder + "_model_1型態.glb",
+    folder + "_model_form1_03b_blender_v0.glb",
+    folder + "_front_form1_01_portrait_foobar.png",
   ]) assert.equal(rules.isCompliantSubjectFilename("creatures",folder,file),false,file);
   assert.throws(() => rules.assetFilename({kind:"creatures",folderName:folder,role:"model",ext:"glb",final:true}),/form/);
   assert.throws(() => rules.assetFilename({kind:"creatures",folderName:folder,role:"model",stage:"adult",step:"03b_blender",ext:"blend"}),/version/);
@@ -125,6 +126,6 @@ test("shared creature prompts are not misrepresented as a particular stage", () 
   assert.equal(rules.isCompliantSubjectFilename("creatures",folder,folder+".prompt.md"),false);
   assert.equal(rules.isCompliantSubjectFilename("creatures",folder,folder+"_design.prompt.md"),false);
   const named = rules.assetFilename({kind:"creatures",folderName:folder,role:"design",stage:"juvenile",ext:"prompt.md",final:true});
-  assert.equal(named,folder+"_design_1型態.prompt.md");
+  assert.equal(named,folder+"_design_form1.prompt.md");
   assert.equal(rules.isCompliantSubjectFilename("creatures",folder,named),true);
 });
