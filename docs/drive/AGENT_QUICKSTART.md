@@ -4,6 +4,8 @@
 
 ---
 
+> **PR #25 實體路徑優先（2026-11-20）：**本文件以下沿用的 `<kind>/<id>/`、`<kind>/prompts/`、`<kind>/designed_prompts/`、`creatures/designed_prompts/starters/`、`03a_colab/` 等路徑是**歷史邏輯路徑／範例**，不是新建 Google Drive 實體目錄的命名依據。執行 Agent 必須先查閱 [FILE_NAMING_CONTRACT.md](FILE_NAMING_CONTRACT.md)、[DIRECTORY.md](DIRECTORY.md) 與實際 Drive folder ID，並透過既有 logical-to-physical resolver 解析後再讀寫；禁止直接依歷史字串建立資料夾或推導實體檔名。實體主體資料夾使用 `characters/chr_<batch>_<name>/`、`creatures/ch_<batch>_<name>/`、`moves/mv_<batch>_<name>/`；其餘輔助／步驟／版本資料夾以 `_` 開頭且採英文。宙獸新產物以 `form1`～`form4` 標示四型態；既有 `juvenile`、`adolescent`、`adult`、`overload` 名稱僅作歷史相容。正式檔名必須使用實體主體資料夾名稱作前綴；非最終產物須含管線步驟及版本。不得因路徑修正而覆寫既有 `*.prompt.md`，也不得更動穩定遊戲 ID。
+
 ## 1. 專案根目錄與唯一正式路徑規則
 
 - **Drive 專案根目錄**：`project/cosmos_chimera_forge/`（Folder ID：`1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`）
