@@ -52,3 +52,16 @@ The migrated files use **ASCII English only** and preserve prior workflow contex
 **Remaining:** 10 trial-boss subject directories still have nonuniform/ambiguous files (five now have their four explicitly labeled `03b_blender` models renamed); individual subject nested version and working directories (including duplicate names and model/texture/preview paths); cross-form shared `<physical-folder>.prompt.md` files that cannot honestly be assigned one form; manifest links and references to original filenames; full runtime/browser, deployment and CI validation. Category-wide shared template/backup/index paths are outside the per-subject filename rule. Do not claim full migration until a recursive audit and safe compatibility rollout are complete.
 
 **Safety:** No file contents rewritten, no game IDs changed, no files merged/deleted, and no Colab/GPU job executed.
+
+
+## 2026-11-20: Continued nested-folder migration
+
+**Additional completed: 24 in-place file renames**, verified by parent-folder readback and unchanged file IDs:
+- `ch_1st_batch_aqua_slime/_03b_blender`: 12 per-form Blender, profile, and manifest assets.
+- `ch_1st_batch_aqua_slime/_01_portrait`: 4 per-form main image, concept, and manifest assets.
+- `ch_trial_boss_ice_line/_03b_blender`: 4 per-form `inspect_16views` images.
+- `ch_trial_boss_water_line/_03b_blender`: 4 per-form `qc_h8` images.
+
+Exact rollback/verification mapping: `file-migration-2026-11-20-nested-batch.json` (24). **Cumulative verified rename count: 229** (205 prior + 24 in this continuation).
+
+**Deferred intentionally:** trial-boss GLBs whose filenames omit pipeline step, combined cross-form codex/wiki documents, shared build scripts/manifests, large starter and Colab working directories, and references stored inside manifests. These require a separate semantic/version audit or reference update before renaming. The Drive migration is not complete.
