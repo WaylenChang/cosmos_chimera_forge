@@ -1,6 +1,7 @@
 """No-GPU tests for character img-to-3D reference and appearance gates."""
 from __future__ import annotations
 import hashlib
+from argparse import Namespace
 import json
 from pathlib import Path
 import sys
@@ -8,6 +9,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from anime3d_universal import run as run_character_job
 from anime3d_character_quality import (WORKFLOW, REVIEW_SCHEMA, assess, enabled,
                                        reference_views, sha256_file, validate_subject_v3)
 
@@ -131,6 +133,40 @@ class CharacterGateTests(unittest.TestCase):
                                           "source_pack": "portrait_v1"}), encoding="utf8")
             with self.assertRaisesRegex(ValueError, "not approved"):
                 validate_subject_v3(root, spec)
+
+
+    def test_subject_v3_pre_gpu_writes_only_into_selected_character(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "characters"
+            folder = root / "chr_test"
+            pictures, reviews = folder / "_01_portrait", folder / "_02_review_portrait"
+            pictures.mkdir(parents=True)
+            reviews.mkdir(parents=True)
+            for name in ("front", "side", "back", "three_quarter_45"):
+                (pictures / (name + ".png")).write_bytes(name.encode())
+            (reviews / "review.json").write_text(json.dumps({
+                "status": "ok", "subject_id": "chr_test", "source_pack": "portrait_v1"
+            }), encoding="utf8")
+            spec = {"asset_class": "humanoid", "category": "character", "input_mode": "image",
+                    "subject_id": "chr_test", "source_pack": "portrait_v1",
+                    "source_image": "_01_portrait/front.png",
+                    "source_layout": "subject_v3",
+                    "portrait_review": "_02_review_portrait/review.json",
+                    "character_colab_workflow": WORKFLOW, "license_status": "internal_only",
+                    "reference_views": {name: "_01_portrait/" + name + ".png" for name in
+                                        ("front", "side", "back", "three_quarter_45")}}
+            spec_file = folder / "00_settings" / "asset_spec.json"
+            spec_file.parent.mkdir()
+            spec_file.write_text(json.dumps(spec), encoding="utf8")
+            args = Namespace(root=str(root), spec=str(spec_file), asset_id="mdl-new",
+                             execute=False, allow_paid_tripo=False,
+                             backend="pixal3d", pipeline="colab", generator_executable=None,
+                             rig_backend="none", backend_config=None, input_model=None,
+                             blender=None, stage="pre_gpu")
+            self.assertEqual(run_character_job(args), 0)
+            self.assertTrue((folder / "_03a_colab/mdl-new/typed_state.json").is_file())
+            self.assertTrue((folder / "_03a_colab/mdl-new/qa/reference_views.json").is_file())
+            self.assertFalse((root / "02_3d/colab/mdl-new").exists())
 
 if __name__ == "__main__":
     unittest.main()
