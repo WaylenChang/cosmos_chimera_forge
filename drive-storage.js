@@ -1985,13 +1985,16 @@
     $("driveLoadPrompt").addEventListener("click", () =>
       run(async () => {
         const path = $("drivePromptPath").value.trim();
-        // Prompt loading is restricted to prompt files; game encyclopedia Markdown is never prompt input.
+        // A wiki-specific instruction file may be reopened only in the wiki step.
+        // The resulting player-facing _05_wiki.md is never a prompt file.
+        const isWikiStep = $("pipelineStage").value === "encyclopedia";
+        const isWikiPrompt = /_05_wiki_prompt\.md$/i.test(path);
         if (!/^(?:(?:characters|creatures|moves)\/(?:prompts\/.*|[^/]+\/[^/]+)|prompts\/.*)(?:\.prompt|_prompt)\.md$/.test(path) ||
-            /(?:encyclopedia|bestiary|wiki|05_wiki)/i.test(path))
-          throw Error("僅可載入管線 .prompt.md；玩家圖鑑不能作為生成 Prompt");
+            (isWikiStep ? !isWikiPrompt : /(?:encyclopedia|bestiary|wiki|05_wiki)/i.test(path)))
+          throw Error("僅能載入當前步驟適用的 Prompt 檔案，不能直接載入玩家圖鑑");
         const source = await (await read(path)).text();
-        if (/(?:encyclopedia|bestiary|圖鑑|百科|_05_wiki|\/wiki\/|encyclopedia_path)/i.test(source))
-          throw Error("此檔包含玩家圖鑑內容，不可作為生成 Prompt");
+        if (!isWikiStep && /(?:encyclopedia|bestiary|圖鑑|百科|_05_wiki|\/wiki\/|encyclopedia_path)/i.test(source))
+          throw Error("此檔包含玩家圖鑑內容，不可作為美術生成 Prompt");
         window.COSMI_FORGE.showPrompt(source);
         $("driveStatus").textContent = "已讀取 " + path;
       }),
