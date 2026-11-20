@@ -1,0 +1,133 @@
+{
+  "date": "2026-11-20",
+  "scope": "trial-boss unambiguous models and Colab note",
+  "count": 21,
+  "entries": [
+    {
+      "file_id": "1F_Jwboo8tTgOclUyjS-xXOPyXpJDtBEj",
+      "parent_id": "1yanEtRWWCAv_tnr2q9-2DOfpv7jQJiqD",
+      "original_name": "line_ice_trial_boss_adolescent_03b_blender.glb",
+      "new_name": "ch_trial_boss_ice_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "18ZmwkYeUrBylpDmfzSoLPn8y8toqSduI",
+      "parent_id": "1yanEtRWWCAv_tnr2q9-2DOfpv7jQJiqD",
+      "original_name": "line_ice_trial_boss_juvenile_03b_blender.glb",
+      "new_name": "ch_trial_boss_ice_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "17pkmLAYCeFX7H1XspDXpngYeocpdh155",
+      "parent_id": "1yanEtRWWCAv_tnr2q9-2DOfpv7jQJiqD",
+      "original_name": "line_ice_trial_boss_overload_03b_blender.glb",
+      "new_name": "ch_trial_boss_ice_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1K4MacaWZilbrK2ykbN1QeqfaXj-bUNLU",
+      "parent_id": "1yanEtRWWCAv_tnr2q9-2DOfpv7jQJiqD",
+      "original_name": "line_ice_trial_boss_adult_03b_blender.glb",
+      "new_name": "ch_trial_boss_ice_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1EyJhQOda4XmGIC4VQpWdweyilSa11FsV",
+      "parent_id": "1a5lYTxxrPRq4AbibvAShqy_t9Zau5sLP",
+      "original_name": "line_light_trial_boss_juvenile_03b_blender.glb",
+      "new_name": "ch_trial_boss_light_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "15KyvSMf8hL8V-HGf1Y6h79Gm0_TrClCz",
+      "parent_id": "1a5lYTxxrPRq4AbibvAShqy_t9Zau5sLP",
+      "original_name": "line_light_trial_boss_adolescent_03b_blender.glb",
+      "new_name": "ch_trial_boss_light_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1ytYcSjMK-UFKk0Bxt7_8ABbf6pq3HGaw",
+      "parent_id": "1a5lYTxxrPRq4AbibvAShqy_t9Zau5sLP",
+      "original_name": "line_light_trial_boss_adult_03b_blender.glb",
+      "new_name": "ch_trial_boss_light_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1SGi0XpqsP_sxt8mILwIGUg75zViOOT0m",
+      "parent_id": "1a5lYTxxrPRq4AbibvAShqy_t9Zau5sLP",
+      "original_name": "line_light_trial_boss_overload_03b_blender.glb",
+      "new_name": "ch_trial_boss_light_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1zE-xleeLENZK3c9zwdEn6O8ynFDuFVbH",
+      "parent_id": "1sjolAkYNtxFFKejE8JBuiEB3HS33wdCi",
+      "original_name": "line_metal_trial_boss_adult_03b_blender.glb",
+      "new_name": "ch_trial_boss_metal_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1a7dtqIlXkvjBfdCUC9XtQRwL00NODftI",
+      "parent_id": "1sjolAkYNtxFFKejE8JBuiEB3HS33wdCi",
+      "original_name": "line_metal_trial_boss_overload_03b_blender.glb",
+      "new_name": "ch_trial_boss_metal_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1yMe-KBWHZ2zIa88APLOegub-5IDJA6kD",
+      "parent_id": "1sjolAkYNtxFFKejE8JBuiEB3HS33wdCi",
+      "original_name": "line_metal_trial_boss_juvenile_03b_blender.glb",
+      "new_name": "ch_trial_boss_metal_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "11iQmnzr5S3AZtwsVvbny4k_1jMJf7gJN",
+      "parent_id": "1sjolAkYNtxFFKejE8JBuiEB3HS33wdCi",
+      "original_name": "line_metal_trial_boss_adolescent_03b_blender.glb",
+      "new_name": "ch_trial_boss_metal_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1LSINmHdZg1iYsNJtIBxiq3dvrVR8zcUK",
+      "parent_id": "1SUZu7V0WNhN23A9_ZOMKF8MA-q6UjIHt",
+      "original_name": "line_shadow_trial_boss_adolescent_03b_blender.glb",
+      "new_name": "ch_trial_boss_shadow_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1rLooHqE-_I4unmT1Ag6but8OlSk2fISv",
+      "parent_id": "1SUZu7V0WNhN23A9_ZOMKF8MA-q6UjIHt",
+      "original_name": "line_shadow_trial_boss_juvenile_03b_blender.glb",
+      "new_name": "ch_trial_boss_shadow_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1Tp-WEjW_auQVgzOJWfOct3ISQCqYAD1D",
+      "parent_id": "1SUZu7V0WNhN23A9_ZOMKF8MA-q6UjIHt",
+      "original_name": "line_shadow_trial_boss_adult_03b_blender.glb",
+      "new_name": "ch_trial_boss_shadow_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1ex7O5Nu1BYQP4uA2PA2g3btwgIFTmGVe",
+      "parent_id": "1SUZu7V0WNhN23A9_ZOMKF8MA-q6UjIHt",
+      "original_name": "line_shadow_trial_boss_overload_03b_blender.glb",
+      "new_name": "ch_trial_boss_shadow_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1aBFUW458bhWAmqVt4gGVwQxNPqvU-1cn",
+      "parent_id": "14o_PGXYxJbywsylkLdbXgSSB4Bne3dai",
+      "original_name": "line_water_trial_boss_juvenile_03b_blender.glb",
+      "new_name": "ch_trial_boss_water_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1sBfntyD8OsY1k9Ks9G5dumY8VwjFtjZr",
+      "parent_id": "14o_PGXYxJbywsylkLdbXgSSB4Bne3dai",
+      "original_name": "line_water_trial_boss_adolescent_03b_blender.glb",
+      "new_name": "ch_trial_boss_water_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1DSl98knFKE4TBq-IyEpi5e2Equ4UBUqh",
+      "parent_id": "14o_PGXYxJbywsylkLdbXgSSB4Bne3dai",
+      "original_name": "line_water_trial_boss_adult_03b_blender.glb",
+      "new_name": "ch_trial_boss_water_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1nM7IitRUv1YmaHLP5kL0ASdwbvqri4QS",
+      "parent_id": "14o_PGXYxJbywsylkLdbXgSSB4Bne3dai",
+      "original_name": "line_water_trial_boss_overload_03b_blender.glb",
+      "new_name": "ch_trial_boss_water_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1h7JJXIUxlJQV0lpwKVx8Q2EDpvjKyYiw",
+      "parent_id": "1vxl-a53ID1USTsxG8sbqfC6qKfMS_3Oq",
+      "original_name": "chr_1286_03a_colab_驗收說明.txt",
+      "new_name": "chr_protagonist_yeh_chengxi_acceptance_notes_03a_colab_legacy.txt"
+    }
+  ]
+}
