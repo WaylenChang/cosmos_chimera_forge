@@ -49,21 +49,22 @@ test('both routes are visible in one horizontal diagram with shared endpoints', 
   const flow = flowModule();
   for (const kind of ['character','creature']) {
     const rows = Array.from(flow.diagram(kind));
-    assert.equal(rows.length,3);
+    assert.equal(rows.length,4);
     assert.equal(rows[0].type,'step');
     assert.equal(rows[0].shared,true);
     assert.equal(rows[0].steps[0].id,'appearance');
-    assert.equal(rows[1].type,'fork');
-    assert.equal(rows[2].shared,true);
-    assert.equal(rows[2].steps[0].id,'review_3d');
-    const lanes=Array.from(rows[1].lanes);
+    assert.equal(rows[1].steps[0].id,'encyclopedia');
+    assert.equal(rows[2].type,'fork');
+    assert.equal(rows[3].shared,true);
+    assert.equal(rows[3].steps[0].id,'review_3d');
+    const lanes=Array.from(rows[2].lanes);
     assert.deepEqual(lanes.map(l=>l.id),['image','text']);
     assert.deepEqual(Array.from(lanes[0].segments,s=>s.type),['step','step','parallel']);
     assert.deepEqual(Array.from(lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
     assert.deepEqual(Array.from(lanes[1].segments,s=>s.steps[0].id),
       ['prompt_3d']);
   }
-  assert.deepEqual(Array.from(flow.diagram('move'),r=>r.steps[0].id),['move_vfx']);
+  assert.deepEqual(Array.from(flow.diagram('move'),r=>r.steps[0].id),['encyclopedia','move_vfx']);
 });
 test('task graph is horizontally scrollable and category selection needs no route switch', () => {
   assert.match(html, /<h2>任務流程圖<\/h2>/);
