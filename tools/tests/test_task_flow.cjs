@@ -15,38 +15,38 @@ test('three entry categories are character, creature, move', () => {
   const flow = loadFlow();
   assert.deepEqual(Array.from(flow.categories,c=>c.id),['character','creature','move']);
   assert.equal(flow.resolve('move','move','move_vfx').taskId,'move-vfx');
-  assert.equal(flow.steps('move','move').length,2);
-  assert.equal(flow.steps('move','move')[0].id,'encyclopedia');
+  assert.equal(flow.steps('move','move').length,1);
+  assert.equal(flow.steps('move','move')[0].id,'move_vfx');
 });
 test('image route has two exclusive Blender routes after portrait approval', () => {
   const flow=loadFlow();
   const steps=Array.from(flow.steps('character','image'),s=>s.id);
-  assert.deepEqual(steps,['appearance','encyclopedia','portrait','review_portrait','image_colab','image_blender','review_3d']);
+  assert.deepEqual(steps,['appearance','portrait','review_portrait','image_colab','image_blender','review_3d']);
   assert.equal(flow.resolve('character','image','image_colab').taskId,'character-model-rig');
   assert.equal(flow.resolve('creature','image','image_blender').taskId,'creature-model-rig');
 });
 test('prompt to 3D branches before portraits and goes directly to final review without post-model portrait', () => {
   const flow=loadFlow();
   const steps=Array.from(flow.steps('creature','text'),s=>s.id);
-  assert.deepEqual(steps,['appearance','encyclopedia','prompt_3d','review_3d']);
+  assert.deepEqual(steps,['appearance','prompt_3d','review_3d']);
   assert.equal(flow.resolve('creature','text','prompt_3d').stage,'blender');
   assert.equal(flow.resolve('character','text','portrait_3d'),null);
   assert.equal(flow.resolve('character','text','image_colab'),null);
 });
-test('encyclopedia is an independent step for each kind', () => {
+test('player encyclopedia does not appear in generation flow', () => {
   const flow=loadFlow();
-  for(const kind of ['character','creature']) for(const route of ['image','text']) {
-    assert.equal(flow.resolve(kind,route,'encyclopedia').stage,'encyclopedia');
-    assert.doesNotMatch(flow.resolve(kind,route,'appearance').output,/05_wiki\.md/);
+  for(const kind of ['character','creature']) for(const route of ['image','text']){
+    assert.equal(flow.resolve(kind,route,'encyclopedia'),null);
+    assert.ok(!flow.steps(kind,route).some(step=>step.stage==='encyclopedia'));
   }
-  assert.equal(flow.resolve('move','move','encyclopedia').stage,'encyclopedia');
+  assert.equal(flow.resolve('move','move','encyclopedia'),null);
+  assert.equal(flow.selectRoute(flow.selectCategory('move'),'move').step,'move_vfx');
   const rows=flow.diagram('creature');
-  const fork=rows.find(r=>r.type==='fork');
+  const fork=rows.find(row=>row.type==='fork');
   assert.deepEqual(Array.from(fork.lanes,l=>l.id),['image','text']);
-  assert.deepEqual(Array.from(fork.lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
+  assert.deepEqual(Array.from(fork.lanes[0].segments[2].tracks,t=>t[0].id),['image_colab','image_blender']);
   assert.equal(rows[0].steps[0].id,'appearance');
   assert.equal(rows.at(-1).steps[0].id,'review_3d');
-  assert.equal(flow.selectRoute(flow.selectCategory('move'),'move').step,'encyclopedia');
 });
 test('legacy task and stage can be mapped to new flow', () => {
   const flow=loadFlow();
@@ -140,7 +140,7 @@ test('browser anatomy planner respects mixed origins and explicit wings', () => 
 test('minimal rail diagram exposes both image backends without text route headers', () => {
   const flow=loadFlow();
   const rows=flow.diagram('character');
-  const lanes=rows[2].lanes;
+  const lanes=rows[1].lanes;
   assert.deepEqual(Array.from(lanes[0].segments[2].tracks,t=>t[0].name),
     ['Colab + AI + Blender','AI + Blender']);
   assert.equal(lanes[1].segments[0].steps[0].name,'AI + Blender（文字建模）');
