@@ -56,18 +56,23 @@
   }
   function initialMarkdown(ctx) {
     const d=describe(ctx), c=ctx.concept||{}, selected=c.locked?.stages?.find(s=>s.stage===d.stage)||{};
-    const shared=["name_zh","name_en","elements","region","timeline","culture","bases",
-      "base_parents","archetype","role","gender","age","height","ethnicity","biography","backstory_zh",
-      "disposition","social_structure","reproduction","dex_zh","appearance_palette","hair_palette","eye_palette","outfit_palette"];
-    const form=["creature_id","name_zh","name_en","stage","height_length","weight","size_class",
-      "look","appearance","anatomy","limbs","signature_move","niches","habit","dex_zh","outfit",
-      "accessories","silhouette_keywords"];
-    const fields=[];
-    for(const name of shared)if(c[name]!=null)fields.push("- "+name+": "+JSON.stringify(c[name]));
-    for(const name of form)if(selected[name]!=null)fields.push("- "+name+": "+JSON.stringify(selected[name]));
-    if(d.kind==="moves")for(const name of ["element","shape","tier","action","motion","name"])
-      if(ctx.opts?.[name]!=null)fields.push("- "+name+": "+JSON.stringify(ctx.opts[name]));
-    const title=selected.name_zh||c.name_zh||d.subject;
+    // Project a kind-specific wiki schema; do not transfer caster lore into move documentation.
+    const fieldsByKind = {
+      characters:["name_zh","name_en","role","gender","age","height","ethnicity","region","timeline",
+        "biography","backstory_zh","disposition","appearance","look","outfit","accessories",
+        "hair_palette","eye_palette","outfit_palette","silhouette_keywords"],
+      creatures:["creature_id","name_zh","name_en","stage","elements","bases","base_parents",
+        "archetype","appearance_palette","height_length","weight","size_class","look",
+        "appearance","anatomy","limbs","signature_move","niches","habit","social_structure",
+        "reproduction","dex_zh","accessories","silhouette_keywords"],
+      moves:["move_name","move_id","element","shape","tier","common"]
+    };
+    const details = d.kind === "moves" ? ctx.opts || {} : {...c,...selected};
+    const meaningful = value => value != null && value !== "" && value !== "未知" &&
+      (!Array.isArray(value) || value.length > 0);
+    const fields=fieldsByKind[d.kind].filter(name => meaningful(details[name]))
+      .map(name => "- "+name+": "+JSON.stringify(details[name]));
+    const title=d.kind === "moves" ? (ctx.opts?.move_name || d.subject) : (selected.name_zh||c.name_zh||d.subject);
     return ["# "+title+" — "+(d.stage?STAGE_ZH[d.stage]+"型態 ":"")+KIND[d.kind]+"圖鑑",
       "",
       "- subject_id: "+d.subject,
