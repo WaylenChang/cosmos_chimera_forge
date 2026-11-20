@@ -32,7 +32,8 @@
     const base = ctx.concept || {};
     const stage = ctx.opts?.stage || base.stage || "";
     const selected = base.locked?.stages?.find(item => item.stage === stage) || {};
-    const concept = {...base, ...selected, stage};
+    // Access only explicitly permitted fields; spreading the entire concept would
+    // evaluate unrelated player-wiki getters even if we never printed those fields.
     const creature = pipelineRootFor(ctx) === "creatures";
     const visualFields = creature
       ? ["name_zh","name_en","stage","appearance","look","anatomy","limbs","bases","base_parents",
@@ -50,8 +51,10 @@
       if (typeof value === "object") return Object.values(value).some(meaningful);
       return true;
     };
-    const lines = fields.filter(k => meaningful(concept[k]))
-      .map(k => k + ": " + (typeof concept[k] === "object" ? JSON.stringify(concept[k]) : concept[k]));
+    const read = k => k === "stage" ? stage
+      : Object.prototype.hasOwnProperty.call(selected,k) ? selected[k] : base[k];
+    const lines = fields.filter(k => meaningful(read(k)))
+      .map(k => k + ": " + (typeof read(k) === "object" ? JSON.stringify(read(k)) : read(k)));
     return lines.join("\n") || "尚未提供本對象的外觀設定";
   }
   // A task runs from exactly one versioned stage template; stale Drive files cannot inject old steps.
