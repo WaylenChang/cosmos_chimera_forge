@@ -178,7 +178,6 @@ The current PR #25 branch was checked against a locally reconstructed source/tes
 - Their source `03a_colab` manifests retain historical `models/<task>.glb`, `source/<task>.glb`, and `rig/<task>.glb` paths but do **not** specify an exact Drive File ID for these same-name duplicates. Size alone does not prove which file corresponds to which historical build slot. Thus **no duplicate binary was renamed, removed, merged, promoted, or assigned a new provenance**; any name-only resolver must fail closed until source build records are correlated by verified IDs/bytes.
 - No `*.prompt.md` payload, GLB/PNG bytes, review decision or game data was modified. No GPU/Blender job was started. PR remains Draft pending source/version provenance and authenticated browser/Drive E2E.
 
-
 ## 2026-11-20 follow-up: first-batch Wiki manifest-reference repair (verified)
 
 - **Completed in place in Google Drive:** 66 legacy first-batch creature JSON Manifest files across 15 `ch_1st_batch_*` subjects; exactly **90** stale active `encyclopedia_path` / `encyclopedia_paths` field values changed from `creatures/wiki/cr_<slug>_<stage>_wiki.md` to the existing `creatures/ch_1st_batch_<slug>/ch_1st_batch_<slug>_wiki_form<N>_05_wiki_legacy.md` file. `juvenile=1`, `adolescent=2`, `adult=3`, `overload=4`. The 60 expected target Wiki files were located by live Drive listing before the repair.
