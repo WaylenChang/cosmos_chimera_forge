@@ -18,7 +18,8 @@ import sys
 from anime3d_profiles import classify, PROCEDURAL
 from anime3d_backend_adapter import run as run_official_backend, validate_glb, BackendError
 from anime3d_rig_adapter import run as run_skintokens, validate_skin
-from anime3d_character_quality import enabled as character_gate_enabled, reference_views, assess as assess_character
+from anime3d_character_quality import (enabled as character_gate_enabled, reference_views,
+                                       assess as assess_character, validate_subject_v3)
 
 
 def read(path):
@@ -183,7 +184,10 @@ def run(a):
         pipeline = "colab" if profile["input_mode"] == "image" else "ai_blender"
     if pipeline == "colab" and profile["input_mode"] != "image":
         raise ValueError("Prompt-to-3D is an AI+Blender route, not an image Colab job")
-    out = root / "02_3d" / pipeline / a.asset_id
+    subject_v3 = (pipeline == "colab" and spec.get("character_colab_workflow") == "character-colab/2"
+                  and spec.get("source_layout") == "subject_v3")
+    out = (root / str(spec.get("subject_id")) / "_03a_colab" / a.asset_id) if subject_v3 else (
+        root / "02_3d" / pipeline / a.asset_id)
     state_path = out / "typed_state.json"
     profile_path = out / "profile.json"
     backend = a.backend
@@ -225,7 +229,7 @@ def run(a):
     if profile["input_mode"] == "image":
         # Same explicit source authorization used by older agent.
         from anime3d_agent import validate
-        image = validate(root, spec, a.asset_id)
+        image = validate_subject_v3(root, spec) if subject_v3 else validate(root, spec, a.asset_id)
     else:
         if not (spec.get("appearance") or spec.get("prompt") or (spec.get("concept") or {}).get("appearance")):
             raise ValueError("Text-to-3D requires an explicit original design brief")
