@@ -3,7 +3,8 @@
   "use strict";
   const stages = {
     appearance: "00_appearance", portrait: "01_portrait", review_portrait: "02_review_portrait",
-    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d"
+    colab: "03a_colab", blender: "03b_blender", review_3d: "04_review_3d",
+    encyclopedia: "05_encyclopedia"
   };
   const templates = {};
   const templatesByKind = new Map();
@@ -84,7 +85,29 @@
       return ctx.task.nativeBuild ? ctx.task.nativeBuild(ctx) : ctx.task.build(ctx);
     }
     const root = pipelineRootFor(ctx);
-    // Player encyclopedia is game data. It has no generation stage or prompt.
+    if (stage === "encyclopedia") {
+      // This isolated generation prompt is one-way: concept/options -> player wiki.
+      // No other build stage reads either its output or the saved wiki file.
+      const wiki = window.COSMI_WIKI?.describe(ctx);
+      if (!wiki) throw Error("無法解析目前的圖鑑對象");
+      const c = ctx.concept || {}, selected = c.locked?.stages?.find(x => x.stage === wiki.stage) || {};
+      const fields = wiki.kind === "moves"
+        ? ["move_name","move_id","element","shape","tier","common"]
+        : wiki.kind === "characters"
+          ? ["name_zh","name_en","role","gender","age","height","ethnicity","region","timeline","biography","backstory_zh","appearance","look","outfit","hair_palette","eye_palette","outfit_palette"]
+          : ["name_zh","name_en","elements","archetype","bases","region","timeline","social_structure","reproduction","disposition","niches","dex_zh","appearance_palette","look","appearance","anatomy","limbs","height_length","weight","size_class","signature_move"];
+      const values = wiki.kind === "moves" ? ctx.opts || {} : {...c,...selected};
+      const details = Object.fromEntries(fields.filter(k => values[k] != null && values[k] !== "" && values[k] !== "未知" &&
+        (!Array.isArray(values[k]) || values[k].length)).map(k => [k,values[k]]));
+      return ["# 編寫玩家可閱讀的" + (wiki.kind === "moves" ? "主動技" : wiki.kind === "characters" ? "角色" : "宙獸") + "圖鑑",
+        "目標：" + wiki.subject + (wiki.stage ? "；型態：" + wiki.stage : ""),
+        "依目前已確認的概念參數整理遊戲內圖鑑的名稱、簡介、外觀、相關生態／背景與招式說明。只描述當前對象與型態；未知內容註明待核，不能臆造已核准的資產或數值。",
+        "確認資料：",JSON.stringify(details,null,2),
+        "輸出 Markdown 草稿：" + wiki.path,
+        "圖鑑供玩家閱讀與審核，不作為其他藝術資產生成步驟的 Prompt 或參考來源。"
+      ].join("\n\n");
+    }
+    // Non-wiki stages never read game encyclopedia data.
     if (!Object.prototype.hasOwnProperty.call(stages, stage)) {
       return "請選擇有效的生成管線步驟。";
     }
@@ -191,7 +214,7 @@
   async function loadTemplates() {
     const root = pipelineRootFor(window.COSMI_FORGE?.currentContext?.() || {});
     const kindTemplates = templatesByKind.get(root) || {};
-    const entries = Object.entries(stages).filter(([key]) => key !== "portrait");
+    const entries = Object.entries(stages).filter(([key]) => key !== "portrait" && key !== "encyclopedia");
     const jobs = entries.map(async ([key, name]) => {
       try {
         const canonical = root + "/prompts/" + name + ".prompt.md";
