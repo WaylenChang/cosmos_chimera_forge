@@ -11,7 +11,8 @@ from anime3d_agent import validate, digest
 from anime3d_profiles import classify
 from anime3d_backend_adapter import runtime_config
 from anime3d_universal import execution_profile
-from anime3d_character_quality import enabled as character_gate_enabled, reference_views
+from anime3d_character_quality import (enabled as character_gate_enabled, reference_views,
+                                       validate_subject_v3)
 from anime3d_rig_adapter import runtime_config as rig_runtime_config
 
 
@@ -27,7 +28,9 @@ def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, 
     except ValueError as exc:
         blockers.append(str(exc))
     try:
-        image = validate(root, spec, asset_id)
+        subject_v3 = (spec.get("character_colab_workflow") == "character-colab/2"
+                      and spec.get("source_layout") == "subject_v3")
+        image = validate_subject_v3(root, spec) if subject_v3 else validate(root, spec, asset_id)
         from PIL import Image
         with Image.open(image) as source:
             source.verify()
