@@ -170,9 +170,9 @@
     // mirror cannot silently replace the quality gate or reference requirements.
     const characterColab = stage === "colab" && root === "characters";
     const scoped = characterColab ? filled +
-      "\\n角色專用：先使用 Drive 已核准的正面＋三視圖（或三視合圖）＋獨立45°圖。個別 asset_spec 設 character_colab_workflow=character-colab/2、reference_views（front, turnaround 或 side+back, three_quarter_45）。三視若無校準相機，不得冒充 Pixal3D multiview_dir。" +
-      "\\n初次 Pixal3D 建模後先由獨立人工／視覺評估器寫入 qa/appearance_review.json，評估輪廓／臉／服裝／細節／材質，綁定模型與參考圖 SHA-256。未評估或未達門檻不得綁骨。" +
-      "\\n缺角度才建議 MV-Adapter（最多一次且須另配置外部模型）；幾何問題先局部修復；材質問題 Texture Refinement；身份或服裝不符才改 Prompt／參考圖或比較模型。最多初次＋兩次重建，換版本必須新 asset_id，禁止盲目重跑。品質通過後才 SkinTokens、Blender、動作與人工驗收。GitHub 模板為維護正本，Drive 通用模板只供閱讀。" : filled;
+      "\n角色專用：先使用 Drive 已核准的正面＋三視圖（或三視合圖）＋獨立45°圖。個別 asset_spec 設 character_colab_workflow=character-colab/2、reference_views（front, turnaround 或 side+back, three_quarter_45）。三視若無校準相機，不得冒充 Pixal3D multiview_dir。" +
+      "\n初次 Pixal3D 建模後先由獨立人工／視覺評估器寫入 qa/appearance_review.json，評估輪廓／臉／服裝／細節／材質，綁定模型與參考圖 SHA-256。未評估或未達門檻不得綁骨。" +
+      "\n缺角度才建議 MV-Adapter（最多一次且須另配置外部模型）；幾何問題先局部修復；材質問題 Texture Refinement；身份或服裝不符才改 Prompt／參考圖或比較模型。最多初次＋兩次重建，換版本必須新 asset_id，禁止盲目重跑。品質通過後才 SkinTokens、Blender、動作與人工驗收。GitHub 模板為維護正本，Drive 通用模板只供閱讀。" : filled;
     const typed = anatomy ? scoped + "\n解剖分類：" + anatomy.anatomy +
       "；骨架／機構策略：" + anatomy.rig +
       "。依指定原型與實際肢體建立專用動作，混合／不明拓撲先審查，不可擅套人形 Rig。" : scoped;
