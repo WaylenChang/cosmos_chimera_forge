@@ -12,6 +12,12 @@
 - 以 Drive 上的個別 `asset_spec.json` 填寫 `character_colab_workflow: "character-colab/2"`、`reference_views`、模型後端及角色辨識特徵。這些個別檔案僅存 Drive；GitHub 的本模板為唯一維護正本，Drive 同名模板僅為唯讀發布鏡像。
 - 不可從三視圖合圖臆造相機外參。Pixal3D 的 `multiview_dir` 需實際校準的 `transforms.json`；沒有時先使用可用的已核准正面圖，其他角度供品質驗收與後續補圖。
 
+## 視圖前處理（CPU，於首次 GPU 前執行）
+- 正式 Image-to-3D 輸入必須包含獨立正面圖及三視圖中的側、背影像。若三視是拼接合圖，先依確認過的區塊座標／順序裁切，不能直接把整張合圖當成單一視角輸入；獨立 45° 圖用於外觀 QA。
+- 使用 `scripts/anime3d_view_preprocess.py` 產生 `_03a_colab/<asset_id>/inputs/front.png`、`side.png`、`back.png` 及 `qa/view_preprocess.json`。檢查視角標記、左右方向、去背遮罩、頭腳手髮配件完整性、構圖和一致性，維持原圖不可變及來源／結果 SHA-256。固定色去背須人工查看可能的誤刪或邊緣瑕疵。
+- 此 CPU 工具僅負責裁切、基本去背與縮放，不自動證明圖像審核通過、相機已校準或模型已使用全部影像。若多視角後端尚未整合，維持 BLOCKED，不以單張正面圖推論替代。
+- 詳細規範、設定範例與異常條件見 [CHARACTER_COLAB_VIEW_PREPROCESS.md](../CHARACTER_COLAB_VIEW_PREPROCESS.md)。
+
 ## 分段執行及品質閘門
 1. **Preflight（CPU）**：核對 Drive 授權／審查 `status=ok`、來源檔與 SHA-256、正面＋三視＋45°、授權、GPU/VRAM、後端與模型權重。無法驗證即中止，不代建核准紀錄。
 2. **首次 GPU 推論**：使用已安裝後端（例如 Pixal3D）生成 `source/<asset_id>.glb`；不可憑空宣稱 TRELLIS.2／Hunyuan3D 已整合。保留來源 GLB 與狀態、後端設定和輸入雜湊。
