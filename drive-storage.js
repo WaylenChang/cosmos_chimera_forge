@@ -1317,9 +1317,15 @@
       // Serialize same-path requests within this browser tab, and never
       // overwrite or fork a previously generated wiki.
       const knownNames = new Set([wiki.path.split("/").pop(), wiki.legacyName]);
-      const found = (await list(destination)).filter(
-        (file) => file.mimeType !== MIME && knownNames.has(file.name),
-      );
+      const physicalSubject = window.COSMI_DRIVE_NAMES.canonicalFolderName(wiki.kind, 1, wiki.subject);
+      const found = (await list(destination)).filter((file) => {
+        if (file.mimeType === MIME) return false;
+        if (knownNames.has(file.name)) return true;
+        const candidate = window.COSMI_DRIVE_NAMES.parseSubjectFilename(
+          wiki.kind, physicalSubject, file.name,
+        );
+        return candidate?.role === "wiki" && candidate.stage === wiki.stage;
+      });
       // An existing legacy wiki is the same artifact, never a reason to create
       // a second draft under the new physical filename.
       if (found.length > 1) throw Error(wiki.path + " 圖鑑已存在多份，請人工整理");
