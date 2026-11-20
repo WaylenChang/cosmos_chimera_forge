@@ -20,7 +20,8 @@
     const kind=kindFor(ctx?.task?.id), subject=cleanId(ctx?.subjectId||ctx?.taskId);
     const candidate=ctx?.opts?.stage||ctx?.concept?.stage||"";
     // Creatures have four independently maintained forms; characters and moves have no stage.
-    const stage=kind==="creatures"?(STAGES.includes(candidate)?candidate:"adult"):"";
+    if (kind === "creatures" && !STAGES.includes(candidate)) throw Error("宙獸圖鑑必須指定 juvenile/adolescent/adult/overload 型態");
+    const stage=kind==="creatures"?candidate:"";
     const base=stage&&subject.endsWith("_"+stage)?subject.slice(0,-stage.length-1):subject;
     // Newly generated wikis are review-required drafts, not approved final files.
     // Preserve the stable subject ID in the directory component for the Drive resolver.
