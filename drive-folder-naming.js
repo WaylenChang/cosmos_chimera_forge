@@ -1,5 +1,5 @@
 // Physical Google Drive folder naming contract (does not rename game IDs or files).
-// The resolver supports legacy logical paths until the separate Drive migration is complete.
+// Stable game IDs resolve to renamed physical Drive folders; transitional names remain readable.
 (function (global) {
   "use strict";
 
@@ -10,9 +10,9 @@
     moves: "mv",
   });
   const LEGACY_CHARACTERS = Object.freeze({
-    chr_1286: "chr_legacy_yeh_chengxi",
-    chr_1855: "chr_legacy_amemori_sumiha",
-    chr_3d04: "chr_legacy_roen",
+    chr_1286: "chr_protagonist_yeh_chengxi",
+    chr_1855: "chr_protagonist_amemori_sumiha",
+    chr_3d04: "chr_protagonist_roen",
   });
   const CATEGORY_HELPERS = new Set([
     "designed_prompts", "prompts", "backup", "wiki", "reviews",
@@ -34,14 +34,14 @@
   function subjectPattern(kind) {
     const prefix = SUBJECT_PREFIX[kind];
     if (!prefix) throw Error("Unknown Drive asset category: " + kind);
-    return new RegExp("^" + prefix + "_[a-z][a-z0-9]*(?:_[a-z][a-z0-9]*)+$");
+    return new RegExp("^" + prefix + "_[a-z0-9]+(?:_[a-z0-9]+)+$");
   }
 
   function isCompliant(kind, depth, folderName) {
     if (!ROOTS.has(kind)) return false;
     const name = String(folderName || "");
     if (depth === 0) return name === kind;
-    if (depth === 1 && subjectPattern(kind).test(name)) return true;
+    if (depth === 1 && subjectPattern(kind).test(name) && !/^(?:chr|ch)_legacy_/.test(name)) return true;
     return /^_[a-z0-9]+(?:_[a-z0-9]+)*$/.test(name);
   }
 
@@ -54,17 +54,19 @@
     if (CATEGORY_HELPERS.has(s)) return "_" + s;
     if (kind === "characters") {
       if (LEGACY_CHARACTERS[s]) return LEGACY_CHARACTERS[s];
+      if (s.startsWith("chr_legacy_")) return "chr_protagonist_" + s.slice("chr_legacy_".length);
       if (subjectPattern(kind).test(s)) return s;
-      if (s.startsWith("chr_")) return "chr_legacy_" + s.slice(4);
+      if (s.startsWith("chr_")) return "chr_protagonist_" + s.slice(4);
       return "_" + s;
     }
     if (kind === "creatures") {
+      if (s.startsWith("ch_legacy_")) return "ch_1st_batch_" + s.slice("ch_legacy_".length);
       if (subjectPattern(kind).test(s)) return s;
-      if (s.startsWith("cr_")) return "ch_legacy_" + s.slice(3);
+      if (s.startsWith("cr_")) return "ch_1st_batch_" + s.slice(3);
       if (s.startsWith("starter_")) return "ch_starter_" + s.slice(8);
       const boss = /^line_(.+)_trial_boss$/.exec(s);
       if (boss) return "ch_trial_boss_" + boss[1] + "_line";
-      if (s.startsWith("line_")) return "ch_legacy_" + s;
+      if (s.startsWith("line_")) return "ch_1st_batch_" + s;
       return "_" + s;
     }
     if (subjectPattern(kind).test(s)) return s;
@@ -77,10 +79,12 @@
     const s = String(folderName || "");
     if (kind === "characters") {
       for (const [previous, current] of Object.entries(LEGACY_CHARACTERS)) {
-        if (s === current) return previous;
+        if (s === current || s === current.replace("chr_protagonist_", "chr_legacy_")) return previous;
       }
     }
     if (kind === "creatures") {
+      if (s.startsWith("ch_1st_batch_line_")) return s.slice("ch_1st_batch_".length);
+      if (s.startsWith("ch_1st_batch_")) return "cr_" + s.slice("ch_1st_batch_".length);
       if (s.startsWith("ch_legacy_line_")) return s.slice("ch_legacy_".length);
       if (s.startsWith("ch_legacy_")) return "cr_" + s.slice("ch_legacy_".length);
       if (s.startsWith("ch_starter_")) return "starter_" + s.slice("ch_starter_".length);
@@ -105,7 +109,11 @@
   function folderCandidates(kind, depth, folderName) {
     const original = String(folderName || "");
     const canonical = canonicalFolderName(kind, depth, original);
-    return canonical === original ? [canonical] : [canonical, original];
+    if (depth !== 1 || canonical === original) return canonical === original ? [canonical] : [canonical, original];
+    const former = canonical
+      .replace(/^chr_protagonist_/, "chr_legacy_")
+      .replace(/^ch_1st_batch_/, "ch_legacy_");
+    return [...new Set([canonical, former, original])];
   }
 
   const api = Object.freeze({
