@@ -53,8 +53,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_aqua_slime",
-      "target": "ch_legacy_aqua_slime",
-      "path": "creatures/ch_legacy_aqua_slime"
+      "target": "ch_1st_batch_aqua_slime",
+      "path": "creatures/ch_legacy_aqua_slime",
+      "previous_migration_target": "ch_legacy_aqua_slime"
     },
     {
       "kind": "creatures",
@@ -62,8 +63,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_chrono_beetle",
-      "target": "ch_legacy_chrono_beetle",
-      "path": "creatures/ch_legacy_chrono_beetle"
+      "target": "ch_1st_batch_chrono_beetle",
+      "path": "creatures/ch_legacy_chrono_beetle",
+      "previous_migration_target": "ch_legacy_chrono_beetle"
     },
     {
       "kind": "creatures",
@@ -71,8 +73,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_earth_golem",
-      "target": "ch_legacy_earth_golem",
-      "path": "creatures/ch_legacy_earth_golem"
+      "target": "ch_1st_batch_earth_golem",
+      "path": "creatures/ch_legacy_earth_golem",
+      "previous_migration_target": "ch_legacy_earth_golem"
     },
     {
       "kind": "creatures",
@@ -80,8 +83,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_fire_wisp",
-      "target": "ch_legacy_fire_wisp",
-      "path": "creatures/ch_legacy_fire_wisp"
+      "target": "ch_1st_batch_fire_wisp",
+      "path": "creatures/ch_legacy_fire_wisp",
+      "previous_migration_target": "ch_legacy_fire_wisp"
     },
     {
       "kind": "creatures",
@@ -89,8 +93,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_frostblade_penguin",
-      "target": "ch_legacy_frostblade_penguin",
-      "path": "creatures/ch_legacy_frostblade_penguin"
+      "target": "ch_1st_batch_frostblade_penguin",
+      "path": "creatures/ch_legacy_frostblade_penguin",
+      "previous_migration_target": "ch_legacy_frostblade_penguin"
     },
     {
       "kind": "creatures",
@@ -98,8 +103,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_ice_snowman",
-      "target": "ch_legacy_ice_snowman",
-      "path": "creatures/ch_legacy_ice_snowman"
+      "target": "ch_1st_batch_ice_snowman",
+      "path": "creatures/ch_legacy_ice_snowman",
+      "previous_migration_target": "ch_legacy_ice_snowman"
     },
     {
       "kind": "creatures",
@@ -107,8 +113,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_ink_stele",
-      "target": "ch_legacy_ink_stele",
-      "path": "creatures/ch_legacy_ink_stele"
+      "target": "ch_1st_batch_ink_stele",
+      "path": "creatures/ch_legacy_ink_stele",
+      "previous_migration_target": "ch_legacy_ink_stele"
     },
     {
       "kind": "creatures",
@@ -116,8 +123,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_light_khepri",
-      "target": "ch_legacy_light_khepri",
-      "path": "creatures/ch_legacy_light_khepri"
+      "target": "ch_1st_batch_light_khepri",
+      "path": "creatures/ch_legacy_light_khepri",
+      "previous_migration_target": "ch_legacy_light_khepri"
     },
     {
       "kind": "creatures",
@@ -125,8 +133,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_metal_vault",
-      "target": "ch_legacy_metal_vault",
-      "path": "creatures/ch_legacy_metal_vault"
+      "target": "ch_1st_batch_metal_vault",
+      "path": "creatures/ch_legacy_metal_vault",
+      "previous_migration_target": "ch_legacy_metal_vault"
     },
     {
       "kind": "creatures",
@@ -134,8 +143,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_shadow_eye",
-      "target": "ch_legacy_shadow_eye",
-      "path": "creatures/ch_legacy_shadow_eye"
+      "target": "ch_1st_batch_shadow_eye",
+      "path": "creatures/ch_legacy_shadow_eye",
+      "previous_migration_target": "ch_legacy_shadow_eye"
     },
     {
       "kind": "creatures",
@@ -143,8 +153,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_solmane_lion",
-      "target": "ch_legacy_solmane_lion",
-      "path": "creatures/ch_legacy_solmane_lion"
+      "target": "ch_1st_batch_solmane_lion",
+      "path": "creatures/ch_legacy_solmane_lion",
+      "previous_migration_target": "ch_legacy_solmane_lion"
     },
     {
       "kind": "creatures",
@@ -152,8 +163,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_thunder_drone",
-      "target": "ch_legacy_thunder_drone",
-      "path": "creatures/ch_legacy_thunder_drone"
+      "target": "ch_1st_batch_thunder_drone",
+      "path": "creatures/ch_legacy_thunder_drone",
+      "previous_migration_target": "ch_legacy_thunder_drone"
     },
     {
       "kind": "creatures",
@@ -161,8 +173,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_verdant_aquila",
-      "target": "ch_legacy_verdant_aquila",
-      "path": "creatures/ch_legacy_verdant_aquila"
+      "target": "ch_1st_batch_verdant_aquila",
+      "path": "creatures/ch_legacy_verdant_aquila",
+      "previous_migration_target": "ch_legacy_verdant_aquila"
     },
     {
       "kind": "creatures",
@@ -170,8 +183,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_wind_bird",
-      "target": "ch_legacy_wind_bird",
-      "path": "creatures/ch_legacy_wind_bird"
+      "target": "ch_1st_batch_wind_bird",
+      "path": "creatures/ch_legacy_wind_bird",
+      "previous_migration_target": "ch_legacy_wind_bird"
     },
     {
       "kind": "creatures",
@@ -179,8 +193,9 @@
       "parent": "1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C",
       "depth": 1,
       "old": "ch_legacy_wood_puppet",
-      "target": "ch_legacy_wood_puppet",
-      "path": "creatures/ch_legacy_wood_puppet"
+      "target": "ch_1st_batch_wood_puppet",
+      "path": "creatures/ch_legacy_wood_puppet",
+      "previous_migration_target": "ch_legacy_wood_puppet"
     },
     {
       "kind": "creatures",
@@ -332,8 +347,9 @@
       "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
       "depth": 1,
       "old": "chr_legacy_yeh_chengxi",
-      "target": "chr_legacy_yeh_chengxi",
-      "path": "characters/chr_legacy_yeh_chengxi"
+      "target": "chr_protagonist_yeh_chengxi",
+      "path": "characters/chr_legacy_yeh_chengxi",
+      "previous_migration_target": "chr_legacy_yeh_chengxi"
     },
     {
       "kind": "characters",
@@ -341,8 +357,9 @@
       "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
       "depth": 1,
       "old": "chr_legacy_amemori_sumiha",
-      "target": "chr_legacy_amemori_sumiha",
-      "path": "characters/chr_legacy_amemori_sumiha"
+      "target": "chr_protagonist_amemori_sumiha",
+      "path": "characters/chr_legacy_amemori_sumiha",
+      "previous_migration_target": "chr_legacy_amemori_sumiha"
     },
     {
       "kind": "characters",
@@ -350,8 +367,9 @@
       "parent": "1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD",
       "depth": 1,
       "old": "chr_legacy_roen",
-      "target": "chr_legacy_roen",
-      "path": "characters/chr_legacy_roen"
+      "target": "chr_protagonist_roen",
+      "path": "characters/chr_legacy_roen",
+      "previous_migration_target": "chr_legacy_roen"
     },
     {
       "kind": "characters",
@@ -3973,5 +3991,101 @@
       "original": "_v1",
       "target": "_v1_duplicate_16ygdkjw"
     }
-  ]
+  ],
+  "followup_migration": {
+    "date": "2026-11-20",
+    "purpose": "Rename character legacy -> protagonist; creature legacy -> 1st_batch",
+    "changes": [
+      {
+        "id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+        "from": "ch_legacy_aqua_slime",
+        "to": "ch_1st_batch_aqua_slime"
+      },
+      {
+        "id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+        "from": "ch_legacy_chrono_beetle",
+        "to": "ch_1st_batch_chrono_beetle"
+      },
+      {
+        "id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+        "from": "ch_legacy_earth_golem",
+        "to": "ch_1st_batch_earth_golem"
+      },
+      {
+        "id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+        "from": "ch_legacy_fire_wisp",
+        "to": "ch_1st_batch_fire_wisp"
+      },
+      {
+        "id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+        "from": "ch_legacy_frostblade_penguin",
+        "to": "ch_1st_batch_frostblade_penguin"
+      },
+      {
+        "id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+        "from": "ch_legacy_ice_snowman",
+        "to": "ch_1st_batch_ice_snowman"
+      },
+      {
+        "id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+        "from": "ch_legacy_ink_stele",
+        "to": "ch_1st_batch_ink_stele"
+      },
+      {
+        "id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+        "from": "ch_legacy_light_khepri",
+        "to": "ch_1st_batch_light_khepri"
+      },
+      {
+        "id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+        "from": "ch_legacy_metal_vault",
+        "to": "ch_1st_batch_metal_vault"
+      },
+      {
+        "id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+        "from": "ch_legacy_shadow_eye",
+        "to": "ch_1st_batch_shadow_eye"
+      },
+      {
+        "id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+        "from": "ch_legacy_solmane_lion",
+        "to": "ch_1st_batch_solmane_lion"
+      },
+      {
+        "id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+        "from": "ch_legacy_thunder_drone",
+        "to": "ch_1st_batch_thunder_drone"
+      },
+      {
+        "id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+        "from": "ch_legacy_verdant_aquila",
+        "to": "ch_1st_batch_verdant_aquila"
+      },
+      {
+        "id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+        "from": "ch_legacy_wind_bird",
+        "to": "ch_1st_batch_wind_bird"
+      },
+      {
+        "id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+        "from": "ch_legacy_wood_puppet",
+        "to": "ch_1st_batch_wood_puppet"
+      },
+      {
+        "id": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+        "from": "chr_legacy_yeh_chengxi",
+        "to": "chr_protagonist_yeh_chengxi"
+      },
+      {
+        "id": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+        "from": "chr_legacy_amemori_sumiha",
+        "to": "chr_protagonist_amemori_sumiha"
+      },
+      {
+        "id": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+        "from": "chr_legacy_roen",
+        "to": "chr_protagonist_roen"
+      }
+    ]
+  }
 }
