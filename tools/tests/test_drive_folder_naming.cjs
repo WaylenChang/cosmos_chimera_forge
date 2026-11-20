@@ -34,3 +34,21 @@ test("invalid non-English and traversal-like folder names fail closed", () => {
   assert.throws(() => rules.canonicalFolderName("moves", 2, "../secret"));
   assert.equal(rules.isCompliant("characters", 2, "03a_colab"), false);
 });
+
+test("renamed Drive folders continue resolving original logical game identifiers", () => {
+  for (const [kind, physical, logical] of [
+    ["characters", "chr_legacy_yeh_chengxi", "chr_1286"],
+    ["characters", "chr_legacy_amemori_sumiha", "chr_1855"],
+    ["creatures", "ch_legacy_aqua_slime", "cr_aqua_slime"],
+    ["creatures", "ch_starter_moon_line", "starter_moon_line"],
+    ["creatures", "ch_trial_boss_wood_line", "line_wood_trial_boss"],
+    ["moves", "mv_legacy_earth_pebble_shot", "earth_pebble_shot"],
+  ]) assert.equal(rules.logicalSubjectId(kind, physical), logical);
+  for (const [physical, logical] of [
+    ["_03b_blender", "03b_blender"],
+    ["_v2", "v2"],
+    ["_models", "models"],
+    ["_backup_pre_fix_20261114", "_backup_pre_fix_20261114"],
+    ["_empty_before_migration_20261115_wiki", "_empty_before_migration_20261115_wiki"],
+  ]) assert.equal(rules.logicalSubfolderName(physical), logical);
+});
