@@ -174,16 +174,18 @@ test('3D viewer isolates forms and animation clips without overlapping models or
   assert.doesNotMatch(playBlock, /crossFadeTo/);
 });
 
-test('all 35 designed creature lines (including 15 Drive cr_* and draft-02) have complete text data and unify under catalog rows', () => {
+test('all existing designed creature lines have complete text data and unify under catalog rows', () => {
   const ctx = vm.createContext({ window: {} });
   vm.runInContext(fs.readFileSync(path.join(root, 'designed.js'), 'utf8'), ctx);
   const designed = ctx.window.COSMI_DESIGNED;
-  assert.equal(designed.items.length, 35);
+  assert.ok(designed.items.length >= 35, 'historical catalog must retain 35+ designed lines');
+  assert.equal(new Set(designed.items.map(x => x.line_id)).size, designed.items.length, 'designed line IDs must be unique');
   for (const item of designed.items) {
     assert.ok(item.title_zh, `${item.line_id} missing title_zh`);
     assert.ok(item.concept?.archetype_name, `${item.line_id} missing archetype_name`);
     assert.ok(item.concept?.meaning, `${item.line_id} missing meaning`);
-    assert.equal(item.concept?.locked?.stages?.length, 4, `${item.line_id} must have 4 stages`);
+    const expectedStages = /_trial_boss$/.test(item.line_id) ? 1 : 4;
+    assert.equal(item.concept?.locked?.stages?.length, expectedStages, `${item.line_id} must have ${expectedStages} stages`);
     for (const st of item.concept.locked.stages) {
       assert.ok(st.name_zh && st.name_en, `${item.line_id}/${st.stage} missing names`);
       assert.ok(st.look && st.dex_zh && st.dex_en, `${item.line_id}/${st.stage} missing look/dex`);

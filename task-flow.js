@@ -11,7 +11,7 @@
       { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "設計外觀與辨識特徵，並依概念參數建立角色／宙獸專屬各型態獨立圖鑑（存於 <kind>/<id>/），不混入 3D 或交付指令。", output: "<id>[_<stage>]_00_appearance.md、<id>[_<stage>]_05_wiki.md" },
       { id: "portrait", stage: "portrait", task: "concept", name: "生成立繪", detail: "正面基準圖 → 多視角三視圖（角色另含動態主立繪）；可選手動複製或 Drive 自動模式。", output: "立繪圖片" },
       { id: "review_portrait", stage: "review_portrait", task: "concept", name: "立繪審查", detail: "核對各視角一致性與缺陷；通過後才允許圖片建模。", output: "立繪審查紀錄" },
-      { id: "image_colab", stage: "colab", task: "model", name: "Colab + AI + Blender", detail: "Image-to-3D 分支 A：使用已核准立繪，Colab 生成初始模型，由 AI 協助 Blender 修復、檢查與輸出。與 AI + Blender 二選一。", output: ".glb ＋ .blend、骨架、動作、QA", alternate: true },
+      { id: "image_colab", stage: "colab", task: "model", name: "Colab + AI + Blender", detail: "Image-to-3D 分支 A：角色先以已核准正面＋三視＋45°圖生成初模 → 輪廓／臉／服裝／細節／材質外觀評估 → 缺角度才補 MV-Adapter，幾何局部修復或材質精修；不合格時有限次修改 Prompt／比較模型且新 asset_id 續作，通過後才 SkinTokens、Blender、動作與人工驗收。宙獸沿既有型態管線。與 AI + Blender 二選一。", output: ".glb ＋ .blend、骨架、動作、QA", alternate: true },
       { id: "image_blender", stage: "blender", task: "model", name: "AI + Blender", detail: "Image-to-3D 分支 B：使用已核准立繪，由 AI 操作 Blender 建模、綁骨、製作動作及檢查。與 Colab + AI + Blender 二選一。", output: ".glb ＋ .blend、骨架、動作、QA", alternate: true },
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "檢查模型與已核准立繪、材質、骨架、動作及 manifest；人工確認後才歸檔。", output: "最終審查紀錄" }
     ],

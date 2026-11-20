@@ -22,7 +22,7 @@ test('non-portrait stages resolve their Drive templates without leaking paramete
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.ok(text.length>100);
     assert.doesNotMatch(text,/\{\{[a-z_]+\}\}|DO_NOT_LEAK|combat_damage/);
-    assert.ok(text.length<1800);
+    assert.ok(text.length < (stage === 'colab' ? 3200 : 1800));
   }
 });
 
@@ -50,7 +50,7 @@ test('Drive template loading skips the native portrait stage', async () => {
   }};
   await c.COSMI_PIPELINE.loadTemplates();
   assert.ok(!requests.some(file => file.endsWith('/01_portrait.prompt.md')));
-  assert.equal(requests.filter(file => file.startsWith('creatures/prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
+  assert.equal(requests.filter(file => file.startsWith('creatures/_prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
 });
 
 test('encyclopedia prompt routes three categories to isolated Markdown paths', () => {
@@ -151,7 +151,7 @@ test('other stages ignore stale Drive templates and unrelated project context',(
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.match(text,new RegExp(label));
     assert.doesNotMatch(text,/LEAKED_PRIOR_PROMPT|image_in\/|3D_out\/|PR #|DO_NOT_LEAK|\{\{[a-z_]+\}\}/);
-    assert.ok(text.length<1800);
+    assert.ok(text.length < (stage === 'colab' ? 3200 : 1800));
   }
   nodes.pipelineStage.value='appearance';
   const appearance=c.COSMI_PIPELINE.build(ctx);
@@ -220,4 +220,20 @@ test('all five source templates carry matching stage IDs and avoid cross-step le
     assert.ok(md.length<1300,stage+' template too long');
     if(stage!=='blender')assert.doesNotMatch(md,/bestiary\.md|\{\{bestiary\}\}/);
   }
+});
+
+test('character Colab renders quality gate and keeps creature branch isolated', () => {
+  const {c,nodes,ctx}=harness();
+  nodes.pipelineStage.value='colab';
+  ctx.task.id='character-model-rig';
+  const output=c.COSMI_PIPELINE.build(ctx);
+  assert.match(output,/character_colab_workflow=character-colab\/2/);
+  assert.match(output,/three_quarter_45|45°/);
+  assert.match(output,/MV-Adapter/);
+  assert.match(output,/Texture Refinement/);
+  assert.match(output,/appearance_review\.json/);
+  assert.doesNotMatch(output,/DO_NOT_LEAK|\{\{[a-z_]+\}\}/);
+  ctx.task.id='creature-model-rig';
+  const creature=c.COSMI_PIPELINE.build(ctx);
+  assert.doesNotMatch(creature,/character_colab_workflow=character-colab\/2|MV-Adapter/);
 });

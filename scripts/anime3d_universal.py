@@ -18,6 +18,8 @@ import sys
 from anime3d_profiles import classify, PROCEDURAL
 from anime3d_backend_adapter import run as run_official_backend, validate_glb, BackendError
 from anime3d_rig_adapter import run as run_skintokens, validate_skin
+from anime3d_character_quality import (enabled as character_gate_enabled, reference_views,
+                                       assess as assess_character, validate_subject_v3)
 
 
 def read(path):
@@ -92,6 +94,9 @@ def write_asset_manifest(out, asset_id, spec, profile, state):
     ) and not result_wiki:
         missing.append({"item": "wiki", "level": "L1",
                         "reason": "Category-local stage wiki required for text-to-3D creatures"})
+    if spec.get("character_colab_workflow") and not state.get("steps", {}).get("appearance_gate", {}).get("allow_rig"):
+        missing.append({"item": "character appearance gate", "level": "L1",
+                        "reason": "Independent appearance evaluation has not passed"})
     result = {
         "spec": "cosmimera-art-task/1",
         "task_header": spec.get("task_header", ""),
@@ -179,7 +184,10 @@ def run(a):
         pipeline = "colab" if profile["input_mode"] == "image" else "ai_blender"
     if pipeline == "colab" and profile["input_mode"] != "image":
         raise ValueError("Prompt-to-3D is an AI+Blender route, not an image Colab job")
-    out = root / "02_3d" / pipeline / a.asset_id
+    subject_v3 = (pipeline == "colab" and spec.get("character_colab_workflow") == "character-colab/2"
+                  and spec.get("source_layout") == "subject_v3")
+    out = (root / str(spec.get("subject_id")) / "_03a_colab" / a.asset_id) if subject_v3 else (
+        root / "02_3d" / pipeline / a.asset_id)
     state_path = out / "typed_state.json"
     profile_path = out / "profile.json"
     backend = a.backend
@@ -221,13 +229,19 @@ def run(a):
     if profile["input_mode"] == "image":
         # Same explicit source authorization used by older agent.
         from anime3d_agent import validate
-        image = validate(root, spec, a.asset_id)
+        image = validate_subject_v3(root, spec) if subject_v3 else validate(root, spec, a.asset_id)
     else:
         if not (spec.get("appearance") or spec.get("prompt") or (spec.get("concept") or {}).get("appearance")):
             raise ValueError("Text-to-3D requires an explicit original design brief")
     source_sha = ""
+    character_refs = None
     if profile["input_mode"] == "image":
         source_sha = hashlib.sha256(image.read_bytes()).hexdigest()
+        if character_gate_enabled(spec, pipeline):
+            character_refs = reference_views(root, spec, image)
+            source_sha += character_refs["reference_sha256"]
+        elif spec.get("character_colab_workflow"):
+            raise ValueError("Unsupported character Colab workflow")
     if a.input_model:
         model_source = Path(a.input_model)
         if model_source.is_file():
@@ -245,6 +259,8 @@ def run(a):
         state = {"asset_id": a.asset_id, "fingerprint": fingerprint, "backend": backend,
                  "pipeline": pipeline, "status": "QUEUED", "steps": {}, "warnings": profile["warnings"]}
     write(profile_path, profile)
+    if character_refs is not None:
+        write(out / "qa" / "reference_views.json", character_refs)
     model = out / "source" / (a.asset_id + ".glb")
     write(state_path, state)
     # Reuse only a successful source whose bytes still match this job's record.
@@ -270,7 +286,7 @@ def run(a):
     if stage == "post_gpu":
         if not resume_source and backend != "existing":
             raise ValueError("Stage post_gpu requires completed N02 source GLB from gpu stage")
-        if rig_backend == "skintokens":
+        if rig_backend == "skintokens" and character_refs is None:
             rigged = out / "rig" / model.name
             prior_rig = state["steps"].get("rigging", {})
             if prior_rig.get("status") != "generated" or not prior_rig.get("sha256"):
@@ -374,6 +390,32 @@ def run(a):
         write(state_path, state)
         write_asset_manifest(out, a.asset_id, spec, profile, state)
         return 2
+    if character_refs is not None and stage == "gpu":
+        state["stage_completed"] = "gpu"
+        state["status"] = "REVIEW_REQUIRED"
+        state["warnings"].append("First-result appearance review required before character rigging")
+        write(state_path, state)
+        write_asset_manifest(out, a.asset_id, spec, profile, state)
+        return 0
+    if character_refs is not None:
+        gate_path = out / "qa" / "appearance_gate.json"
+        report_path = out / "qa" / "appearance_review.json"
+        try:
+            gate = assess_character(model, report_path, character_refs, spec, a.asset_id)
+        except (ValueError, OSError) as exc:
+            state["status"] = "REVIEW_REQUIRED"
+            state["warnings"].append("Invalid character appearance review: " + str(exc)[-1000:])
+            write(state_path, state)
+            write_asset_manifest(out, a.asset_id, spec, profile, state)
+            return 2
+        state["steps"]["appearance_gate"] = gate
+        write(gate_path, gate)
+        if not gate["allow_rig"]:
+            state["status"] = "REVIEW_REQUIRED"
+            state["warnings"].append("Character appearance gate: " + gate["next_action"])
+            write(state_path, state)
+            write_asset_manifest(out, a.asset_id, spec, profile, state)
+            return 2
     if rig_backend == "skintokens":
         rigged = out / "rig" / model.name
         prior = state["steps"].get("rigging", {})
