@@ -2034,7 +2034,7 @@
           ].includes(key)
         ) {
           const context = window.COSMI_FORGE.currentContext?.();
-          if (context) await ensureWiki(context);
+          // A stage template read must not create an unrelated encyclopedia draft.
         }
         const name = window.COSMI_PIPELINE.stages[key];
         window.COSMI_PIPELINE.templates[key] = await (
