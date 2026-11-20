@@ -150,6 +150,7 @@
     "wiki",
     "reviews",
     "backup",
+    "designed_prompts",
   ]);
   function stepCode(stage) {
     const key = String(stage || "").trim();
@@ -478,27 +479,38 @@
     if (!path) return config.rootId;
     let parent = config.rootId,
       prefix = "";
-    for (const part of relative(path)) {
+    const parts = relative(path);
+    const category = categoryRoots.includes(parts[0]) ? parts[0] : "";
+    for (let index = 0; index < parts.length; index++) {
+      const part = parts[index];
       prefix = prefix ? prefix + "/" + part : part;
       if (!folders.has(prefix)) {
-        let m = await list(
-          parent,
-          "name = '" + escapeQuery(part) + "' and mimeType = '" + MIME + "'",
-        );
-        if (!m.length && create)
+        const candidates = category && index > 0 && window.COSMI_DRIVE_NAMES
+          ? window.COSMI_DRIVE_NAMES.folderCandidates(category, index, part)
+          : [part];
+        let m = [];
+        // Prefer the canonical physical folder. Preserve reads of old folders
+        // until a verified migration has renamed them.
+        for (const name of candidates) {
+          m = await list(parent, "name = '" + escapeQuery(name) + "' and mimeType = '" + MIME + "'");
+          if (m.length) break;
+        }
+        if (!m.length && create) {
+          const name = candidates[0];
           m = [
             await (
               await request(API + "?fields=id,name", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  name: part,
+                  name,
                   mimeType: MIME,
                   parents: [parent],
                 }),
               })
             ).json(),
           ];
+        }
         if (m.length !== 1)
           throw Error(prefix + " 資料夾" + (m.length ? "名稱重複" : "不存在"));
         folders.set(prefix, m[0].id);
