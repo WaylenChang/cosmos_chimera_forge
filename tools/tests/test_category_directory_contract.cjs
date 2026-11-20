@@ -86,8 +86,8 @@ test("pipeline templates stay isolated across category switches", async () => {
   assert.equal(requested.some(x => x === "creatures/_prompts/02_review_portrait.prompt.md"), true);
   current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
   const characterPrompt = pipeline.build(current);
-  assert.match(characterPrompt, /characters\/prompts\/02_review_portrait\.prompt\.md/);
+  assert.match(characterPrompt, /characters\/_prompts\/02_review_portrait\.prompt\.md/);
   current = { task: { id: "creature-model-rig" }, subjectId: "cr_fox", taskId: "cr_fox" };
   const creaturePrompt = pipeline.build(current);
-  assert.match(creaturePrompt, /creatures\/prompts\/02_review_portrait\.prompt\.md/);
+  assert.match(creaturePrompt, /creatures\/_prompts\/02_review_portrait\.prompt\.md/);
 });
