@@ -17,3 +17,21 @@ crawl_*.py
 /Art/_prompts/*
 !/Art/_prompts/README.md
 /_site/
+
+# Per-subject/asset data live in Google Drive only.
+# Existing tracked historical files require a separate verified migration.
+/Data/_incoming/
+/palworld_data/
+/Logs/
+/docs/examples/
+/characters/
+/creatures/
+/moves/
+/Art/_incoming/
+/Art/_prompts/
+*.glb
+*.blend
+*.fbx
+*.gltf
+*.mp4
+*.mov
