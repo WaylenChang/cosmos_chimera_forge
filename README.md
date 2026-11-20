@@ -48,7 +48,7 @@ Google Drive 已建立 `{characters,creatures,moves}/wiki/` 及 `creatures/wiki/
 
 `prompts/` 存各自獨立的單步驟 `.prompt.md`、`TRIGGERS.md` 與 `DIRECTORY.md`；已填入資產路徑的版本另存 `<category>/prompts/jobs/`。舊的跨步驟長 prompt 放 `<category>/backup/legacy_prompts/`。本機同步來源見 [docs/pipeline](docs/pipeline/DIRECTORY.md)。
 
-HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。角色、宙獸與招式的生成 Prompt 僅使用目前步驟的概念／外觀／圖片／動作參數。玩家圖鑑是獨立的遊戲展示資料（`characters/encyclopedia.json`、`creatures/encyclopedia.json`、`moves/encyclopedia.json` 及既有 Wiki Markdown），不屬於生成管線、不作為 Prompt 輸入、不由生成 Prompt 建立或補寫。舊 manifest 中的 `encyclopedia_path` 僅供資產追溯與資料維護，不送入模型生成指令。立繪原生三輪 Prompt 不再附加過時的 ZIP／舊存放路徑。Drive 的單步驟模板若無相容版本標記，網頁採用內建精簡版本；可將 `docs/pipeline/` 中新版 `.prompt.md` 同步至 Drive 的 `prompts/`。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
+HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。角色、宙獸與招式的生成 Prompt 僅使用目前步驟的概念／外觀／圖片／動作參數。玩家圖鑑是獨立的遊戲展示資料（`characters/encyclopedia.json`、`creatures/encyclopedia.json`、`moves/encyclopedia.json` 及既有 Wiki Markdown）。管線可在使用者明確選擇「玩家圖鑑」步驟時依當前概念參數生成圖鑑專用 Prompt，並可建立尚不存在的 Markdown 草稿；既有圖鑑不自動覆寫。圖鑑內容、圖鑑檔案與圖鑑專用 Prompt 均不可作為其他立繪、建模、招式動畫或驗收步驟的生成輸入。舊 manifest 中的 `encyclopedia_path` 僅供資產追溯與資料維護，不送入模型生成指令。立繪原生三輪 Prompt 不再附加過時的 ZIP／舊存放路徑。Drive 的單步驟模板若無相容版本標記，網頁採用內建精簡版本；可將 `docs/pipeline/` 中新版 `.prompt.md` 同步至 Drive 的 `prompts/`。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
 
 本機匯入／匯出亦使用展開後的資產目錄。遊戲交付仍可逐檔交給相鄰遊戲專案驗收。Google OAuth 登入需 HTTP(S) 網站來源，無法直接用 file:// 啟用 Drive 功能。
 
