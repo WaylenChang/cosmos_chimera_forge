@@ -110,3 +110,12 @@ test("old manifest wiki links are normalized without touching asset files or QA"
  assert.equal(w.normalizeWikiPath("wiki/moves/fx_burst_wiki.md"),"moves/fx_burst/fx_burst_05_wiki.md");
  assert.equal(w.normalizeWikiPath("creatures/wiki/cr_fox_adult_wiki.md"),"creatures/cr_fox/cr_fox_adult_05_wiki.md");
 });
+
+test("move wiki draft reads only move fields, not demo-caster details",()=>{
+  const w=load();
+  const md=w.initialMarkdown({task:{id:"move-vfx"},subjectId:"fx_fire",
+    opts:{move_name:"烈焰",element:"fire",shape:"cone",tier:"heavy",use_creature:"yes"},
+    concept:{name_zh:"SECRET_CASTER",social_structure:"SECRET_LORE",appearance:"SECRET_BODY"}});
+  assert.match(md,/烈焰|fire|cone|heavy/);
+  assert.doesNotMatch(md,/SECRET_CASTER|SECRET_LORE|SECRET_BODY/);
+});
