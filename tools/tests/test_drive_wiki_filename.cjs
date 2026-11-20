@@ -12,7 +12,7 @@ test("new creature wiki drafts use physical subject, numbered form, pipeline ste
   const {path, legacyName, subject, stage} = window.COSMI_WIKI.describe({
     task: {id:"creature-3d"}, subjectId:"cr_aqua_slime", opts:{stage:"juvenile"}, concept:{},
   });
-  assert.equal(path,"creatures/cr_aqua_slime/ch_1st_batch_aqua_slime_wiki_1型態_05_wiki_draft.md");
+  assert.equal(path,"creatures/cr_aqua_slime/ch_1st_batch_aqua_slime_wiki_form1_05_wiki_draft.md");
   assert.equal(legacyName,"cr_aqua_slime_juvenile_05_wiki.md");
   assert.equal(subject,"cr_aqua_slime");
   assert.equal(stage,"juvenile");
