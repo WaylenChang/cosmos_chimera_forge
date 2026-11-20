@@ -22,9 +22,16 @@
     // Creatures have four independently maintained forms; characters and moves have no stage.
     const stage=kind==="creatures"?(STAGES.includes(candidate)?candidate:"adult"):"";
     const base=stage&&subject.endsWith("_"+stage)?subject.slice(0,-stage.length-1):subject;
-    const stem=base+(stage?"_"+stage:"")+"_05_wiki";
-    const path=kind+"/"+base+"/"+stem+".md";
-    return {kind,subject:base,stage,stem,path,key:kind+"/"+base+(stage?"/"+stage:"")};
+    // Newly generated wikis are review-required drafts, not approved final files.
+    // Preserve the stable subject ID in the directory component for the Drive resolver.
+    const physical = window.COSMI_DRIVE_NAMES?.canonicalFolderName(kind, 1, base);
+    const stem = window.COSMI_DRIVE_NAMES?.assetFilename({
+      kind, folderName: physical, role: "wiki", stage,
+      step: "05_wiki", version: "draft", ext: "md"
+    }) || (base+(stage?"_"+stage:"")+"_05_wiki.md");
+    const legacyName=base+(stage?"_"+stage:"")+"_05_wiki.md";
+    const path=kind+"/"+base+"/"+stem;
+    return {kind,subject:base,stage,stem:stem.replace(/\\.md$/,""),path,legacyName,key:kind+"/"+base+(stage?"/"+stage:"")};
   }
   // Historical Drive manifests may still contain paths from before the subject-folder layout.
   // Normalize references only, never rename an asset file or mark its QA as complete.
