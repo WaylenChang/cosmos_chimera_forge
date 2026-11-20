@@ -1,4 +1,4 @@
-// Physical Google Drive folder naming contract (does not rename game IDs or files).
+// Physical Drive folder and subject-file naming contract (never mutate stable game IDs).
 // Stable game IDs resolve to renamed physical Drive folders; transitional names remain readable.
 (function (global) {
   "use strict";
@@ -116,8 +116,128 @@
     return [...new Set([canonical, former, original])];
   }
 
+  
+  // Subject file naming is independent of stable game IDs and folder aliases.
+  // Only files INSIDE a subject folder use this contract; category templates and
+  // the historical migration backup keep their own names.
+  const FORM_INDEX = Object.freeze({juvenile: 1, adolescent: 2, adult: 3, overload: 4});
+  const FORM_STAGES = Object.freeze(["juvenile", "adolescent", "adult", "overload"]);
+  const FILE_STEPS = Object.freeze([
+    "00_appearance", "00_parameters", "01_portrait", "01b_vfx",
+    "02_review_portrait", "03a_colab", "03b_blender", "04_review_3d", "05_wiki",
+  ]);
+  const FILE_TOKEN = /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/;
+  const VERSION_TOKEN = /^(?:v[1-9][0-9]*|draft(?:_[a-z0-9]+)*|legacy(?:_[a-z0-9]+)*|[0-9]{8}(?:_[0-9]{4})?)$/;
+  const EXTENSION_TOKEN = /^(?:[a-z0-9]+|prompt\.md)$/;
+
+  function fileRole(role) {
+    const value = String(role || "").toLowerCase().trim();
+    if (!FILE_TOKEN.test(value)) throw Error("Asset file function must be an ASCII snake-case token: " + role);
+    return value;
+  }
+
+  function stageIndex(value) {
+    if (typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 4) return value;
+    if (typeof value === "string" && /^[1-4]$/.test(value)) return Number(value);
+    return FORM_INDEX[String(value || "").toLowerCase()] || 0;
+  }
+
+  // "final" must reflect actual approval/publication; merely producing a GLB
+  // or a wiki draft does not make it an approved final deliverable.
+  function assetFilename({kind, folderName, role, stage, step = "", version = "", final = false, ext} = {}) {
+    if (!ROOTS.has(kind) || !isCompliant(kind, 1, folderName))
+      throw Error("Asset filename requires a canonical physical subject folder");
+    const func = fileRole(role);
+    const extension = String(ext || "").toLowerCase().replace(/^\./, "");
+    if (!EXTENSION_TOKEN.test(extension)) throw Error("Unsupported asset extension: " + ext);
+    const i = stageIndex(stage);
+    if (kind === "creatures" && !i) throw Error("Creature asset filenames require an explicit 1-4 form");
+    if (kind !== "creatures" && stage !== undefined && stage !== null && stage !== "")
+      throw Error("Character/move assets must not have a creature form");
+    const suffix = kind === "creatures" ? "_" + i + "型態" : "";
+    if (final) {
+      if (step || version) throw Error("Final filename must omit pipeline step and version");
+      return folderName + "_" + func + suffix + "." + extension;
+    }
+    if (!FILE_STEPS.includes(step)) throw Error("Nonfinal file requires a known pipeline step");
+    if (!VERSION_TOKEN.test(String(version))) throw Error("Nonfinal file requires a version label");
+    return folderName + "_" + func + suffix + "_" + step + "_" + version + "." + extension;
+  }
+
+  // Strict, reversible parse (requires the physical subject folder as context).
+  // Files without a form, including cross-form shared creature prompts/tools,
+  // deliberately do NOT pass as stage-specific deliverables.
+  function parseSubjectFilename(kind, folderName, filename) {
+    if (!ROOTS.has(kind) || !isCompliant(kind, 1, folderName)) return null;
+    const name = String(filename || "");
+    const prefix = folderName + "_";
+    if (!name.startsWith(prefix) || name.includes("/") || name.includes("\\")) return null;
+    const extMatch = /(\.prompt\.md|\.[a-z0-9]+)$/i.exec(name);
+    if (!extMatch) return null;
+    const ext = extMatch[1].slice(1).toLowerCase();
+    let rest = name.slice(prefix.length, -extMatch[1].length);
+    let stage = "", form = 0;
+    if (kind === "creatures") {
+      const m = /_([1-4])型態(?=_|$)/.exec(rest);
+      if (!m || rest.indexOf("型態", m.index + m[0].length) !== -1) return null;
+      form = Number(m[1]);
+      stage = FORM_STAGES[form - 1];
+      const before = rest.slice(0, m.index);
+      const after = rest.slice(m.index + m[0].length);
+      rest = before + "||" + after;
+    } else if (/型態/.test(rest)) {
+      return null;
+    }
+    const split = rest.split("||");
+    if (split.length > 2) return null;
+    const before = split[0];
+    let after = kind === "creatures" ? split[1] : "";
+    let role = before;
+    let step = "", version = "";
+    if (kind !== "creatures") {
+      // Step markers are unambiguous because they contain a numeric pipeline code.
+      for (const candidate of FILE_STEPS) {
+        const needle = "_" + candidate + "_";
+        const at = rest.lastIndexOf(needle);
+        if (at > 0) {
+          role = rest.slice(0, at);
+          step = candidate;
+          version = rest.slice(at + needle.length);
+          break;
+        }
+      }
+    } else if (after) {
+      if (!after.startsWith("_")) return null;
+      for (const candidate of FILE_STEPS) {
+        const marker = "_" + candidate + "_";
+        if (after.startsWith(marker)) {
+          step = candidate;
+          version = after.slice(marker.length);
+          break;
+        }
+      }
+      if (!step) return null;
+    }
+    if (!FILE_TOKEN.test(role)) return null;
+    const final = !step;
+    if (!final && !VERSION_TOKEN.test(version)) return null;
+    const result = {kind, folderName, role, stage, form, step, version, final, ext};
+    return assetFilename(result) === name ? result : null;
+  }
+
+  function isCompliantSubjectFilename(kind, folderName, filename) {
+    return parseSubjectFilename(kind, folderName, filename) !== null;
+  }
+
   const api = Object.freeze({
     SUBJECT_PREFIX,
+    FORM_INDEX,
+    FORM_STAGES,
+    FILE_STEPS,
+    assetFilename,
+    parseSubjectFilename,
+    isCompliantSubjectFilename,
+    stageIndex,
     canonicalFolderName,
     folderCandidates,
     isCompliant,
