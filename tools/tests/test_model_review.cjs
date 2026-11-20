@@ -283,3 +283,35 @@ test('selectModelFile resolves flattened Level 3 Drive GLBs even when migrated m
   );
   assert.throws(() => review.selectModelFile([], migratedManifest), /不存在/);
 });
+
+
+test('migrated four-form model references resolve only the corresponding physical GLB', () => {
+  for (const line of ['sun', 'moon', 'star']) {
+    const stages = ['juvenile', 'adolescent', 'adult', 'overload'];
+    const files = stages.map(stage => ({path: 'starter_' + line + '_line_' + stage + '_03b_blender.glb'}));
+    for (const stage of stages) {
+      const legacyPath = 'models/cr_starter_' + line + '_line_' + stage + '_v3_structure.glb';
+      const result = review.selectModelFile(files, {files: [{path: legacyPath, kind: 'model', level: 'L1'}]});
+      assert.equal(result.path, 'starter_' + line + '_line_' + stage + '_03b_blender.glb');
+    }
+  }
+});
+
+test('four-form model selection supports form1-4 names and fails closed on missing or duplicate forms', () => {
+  const files = [1, 2, 3, 4].map(form => ({
+    path: 'ch_trial_boss_ice_line_model_form' + form + '_03b_blender_legacy.glb'
+  }));
+  const legacy = stage => ({files: [{
+    path: 'models/line_ice_trial_boss_' + stage + '_03b_blender.glb',
+    kind: 'model', level: 'L1'
+  }]});
+  assert.equal(review.selectModelFile(files, legacy('juvenile')).path, files[0].path);
+  assert.equal(review.selectModelFile(files, legacy('overload')).path, files[3].path);
+  assert.throws(() => review.selectModelFile(files, {files: [{
+    path: 'models/unknown.glb', kind: 'model', level: 'L1'
+  }]}), /不存在/);
+  assert.throws(() => review.selectModelFile([...files, {path: 'shadow_model_form1.glb'}], legacy('juvenile')), /不存在/);
+  assert.equal(review.selectModelFile([{path: 'chr_1286_03a_colab.glb'}], {
+    files: [{path: 'models/mdl-20261113-1286-0000.glb', kind: 'model', level: 'L1'}]
+  }).path, 'chr_1286_03a_colab.glb');
+});
