@@ -32,3 +32,20 @@
 4. **共用四型態的設計 Prompt** 不是任一 `form<i>` 檔案。現存 `<實體目錄>.prompt.md` 屬跨型態共用規格，須另訂例外存放區或由負責人拆分四型態後才能讓全目錄達到逐檔嚴格遵循；不能自動將共用內容強行標示為 `form1`。
 5. **管線結束與正式核准不等價。** 未確認是否正式的現有 `.glb`、`.md` 一律不得僅因位於目錄根層就移除步驟／版本標記。
 6. **先更新與測試所有讀寫端，再批次更名**，包括 `drive-storage.js`、`wiki.js`、`pipeline.js`、`tasks.js`、圖片／模型審查與 UI 引用。PR #25 維持 Draft 直到 Drive 唯讀稽核、無碰撞實體更名、回讀驗證與 E2E 回歸通過。
+
+
+## 2026-11-20: Live Google Drive file migration, first verified batch
+
+**Completed:** 185 in-place Google Drive file renames, retaining existing file IDs, parent folders, MIME types, and payloads (metadata-only file-name updates). Each group was checked via a fresh folder listing keyed by file ID; the single non-ASCII legacy note was checked by file metadata.
+
+- First batch: 15 creature subject directories, 120 top-level 3D model/wiki files (eight per subject).
+- Starters: 3 creature subject directories, 24 top-level 3D model/wiki files (eight per subject).
+- Protagonists: 3 character subject directories, 9 top-level main portrait/3D model/wiki files.
+- Wardens: 10 character subject directories, 31 top-level front/turnaround/hero/keyart image files.
+- Nested Colab note: 1 file with Chinese characters in its original filename, renamed to `chr_protagonist_yeh_chengxi_acceptance_notes_03a_colab_legacy.txt`.
+
+The migrated files use **ASCII English only** and preserve prior workflow context with an explicit `_legacy` version token. **A legacy version token is not human approval**; do not drop pipeline steps/versions until a separately verified final approval is available.
+
+**Remaining:** 10 trial-boss subject directories with nonuniform/ambiguous model and wiki names; individual subject nested version and working directories (including duplicate names and model/texture/preview paths); cross-form shared `<physical-folder>.prompt.md` files that cannot honestly be assigned one form; manifest links and references to original filenames; full runtime/browser, deployment and CI validation. Category-wide shared template/backup/index paths are outside the per-subject filename rule. Do not claim full migration until a recursive audit and safe compatibility rollout are complete.
+
+**Safety:** No file contents rewritten, no game IDs changed, no files merged/deleted, and no Colab/GPU job executed.
