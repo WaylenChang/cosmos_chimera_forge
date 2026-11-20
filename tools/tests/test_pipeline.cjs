@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
 function harness() {
   const nodes = {pipelineStage: {value: 'portrait'}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
-  const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({drivePath: 'characters/02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'characters/03_completed/portraits/source'}]}};
+  const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({subjectId:'chr_one',drivePath: 'characters/02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'characters/03_completed/portraits/source'}]}};
   c.window = c;
   vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);
@@ -88,7 +88,7 @@ test('appearance comes only from concept parameters and cannot inherit another s
 
 test('final review uses the active model source instead of another forge task source', () => {
   const {c,nodes,ctx}=harness();nodes.pipelineStage.value='review_3d';ctx.opts.source_pack='unrelated';
-  c.COSMI_FORGE.activePackage=()=>({drivePath:'02_3d/ai_blender/model',sourcePack:'source'});
+  c.COSMI_FORGE.activePackage=()=>({subjectId:'chr_one',drivePath:'characters/02_3d/ai_blender/model',sourcePack:'source'});
   const text=c.COSMI_PIPELINE.build(ctx);
   assert.match(text,/03_completed\/portraits\/source/);assert.doesNotMatch(text,/unrelated/);
 });
@@ -130,7 +130,7 @@ test('manual image path is image-to-3D even without source pack',()=>{
 
 test('other stages ignore stale Drive templates and unrelated project context',()=>{
   const {c,nodes,ctx}=harness();
-  const cases={appearance:'外觀設定',review_portrait:'立繪審查',review_3d:'3D 模型最終驗收',colab:'Colab GPU',blender:'Blender'};
+  const cases={appearance:'外觀設定',review_portrait:'立繪審查',review_3d:'3D 模型最終驗收',colab:'Colab Image-to-3D',blender:'Blender'};
   for(const [stage,label] of Object.entries(cases)){
     nodes.pipelineStage.value=stage;
     c.COSMI_PIPELINE.templates[stage]='LEAKED_PRIOR_PROMPT';
@@ -206,4 +206,34 @@ test('original v2 source templates are retained with their existing stage IDs',(
     assert.ok(md.length<1300,stage+' template too long');
     if(stage!=='blender') assert.doesNotMatch(md,/bestiary\.md|\{\{bestiary\}\}/);
   }
+});
+
+test('image route never silently becomes text modeling when a source is absent', () => {
+  const {c,nodes,ctx}=harness();
+  nodes.pipelineStage.value='blender';
+  ctx.pipelineRoute='image';ctx.opts={source_pack:'',input_img:''};
+  const prompt=c.COSMI_PIPELINE.build(ctx);
+  assert.match(prompt,/Image-to-3D|請指定已核准圖片來源/);
+  assert.doesNotMatch(prompt,/純文字外觀|Prompt-to-3D/);
+});
+
+test('review never borrows another subject\'s active model or source', () => {
+  const {c,nodes,ctx}=harness();
+  nodes.pipelineStage.value='review_3d';
+  c.COSMI_FORGE.activePackage=()=>({
+    subjectId:'chr_other',drivePath:'characters/02_3d/other_model',
+    sourcePack:'other_source',manifest:{input_mode:'text'}
+  });
+  ctx.pipelineRoute='image';
+  const prompt=c.COSMI_PIPELINE.build(ctx);
+  assert.match(prompt,/請指定本對象待審模型目錄/);
+  assert.doesNotMatch(prompt,/other_model|other_source|純文字外觀/);
+});
+
+test('appearance ignores empty and unknown fields but keeps relevant visual features', () => {
+  const {c,ctx}=harness();
+  ctx.concept={appearance:'silver armor',height:'未知',hair_palette:[],role:'SECRET_ROLE',social_structure:'SECRET_LORE'};
+  const result=c.COSMI_PIPELINE.appearance(ctx);
+  assert.match(result,/silver armor/);
+  assert.doesNotMatch(result,/未知|hair_palette|SECRET_ROLE|SECRET_LORE/);
 });
