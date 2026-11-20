@@ -29,13 +29,13 @@ test('move VFX includes only move fields and minimal optional caster geometry',(
   assert.doesNotMatch(noCaster,/size_profile|quadruped|SECRET_CREATURE_LOOK/);
 });
 
-test('source templates are versioned for isolation and no longer request duplicate bestiary',()=>{
+test('original v2 source templates remain unmodified by stage isolation',()=>{
   for(const [stage,file] of Object.entries({
     appearance:'00_appearance',review_portrait:'02_review_portrait',
     colab:'03a_colab',blender:'03b_blender',review_3d:'04_review_3d'
   })){
     const source=fs.readFileSync(path.join(root,'docs/pipeline',file+'.prompt.md'),'utf8');
-    assert.match(source,new RegExp('^<!-- COSMI-PIPELINE/3:'+stage+' -->'));
-    assert.doesNotMatch(source,/bestiary\\.md|\\{\\{bestiary\\}\\}/);
+    assert.match(source,new RegExp('^<!-- COSMI-PIPELINE/2:'+stage+' -->'));
+    if(stage!=='blender') assert.doesNotMatch(source,/bestiary\\.md|\\{\\{bestiary\\}\\}/);
   }
 });

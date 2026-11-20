@@ -1,6 +1,5 @@
-<!-- COSMI-PIPELINE/3:appearance -->
-# {{subject_label}}外觀設定
-{{subject_line}}
-依本次視覺素材整理輪廓、比例、臉部／感知器官、肢體、配色、材質及本對象辨識特徵。
+<!-- COSMI-PIPELINE/2:appearance -->
+# 外觀設定
+依本次素材撰寫繁體中文原創外觀，只描述輪廓、體型比例、臉／感知器官、肢體、配色材質、服裝／表面構造與辨識特徵；保留已定特徵，不加入遊戲數值或後續製圖、建模指示。
+素材：
 {{appearance}}
-輸出：{{appearance_path}}

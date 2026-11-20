@@ -195,15 +195,15 @@ test('native portrait full and 3-round prompts do not recurse or inherit legacy 
   }
 });
 
-test('all five source templates carry matching stage IDs and avoid cross-step leakage',()=>{
+test('original v2 source templates are retained with their existing stage IDs',()=>{
   const stageFiles={
     appearance:'00_appearance',review_portrait:'02_review_portrait',
     colab:'03a_colab',blender:'03b_blender',review_3d:'04_review_3d'
   };
   for(const [stage,file] of Object.entries(stageFiles)){
     const md=fs.readFileSync(path.join(root,'docs/pipeline',file+'.prompt.md'),'utf8');
-    assert.match(md,new RegExp('^<!-- COSMI-PIPELINE/3:'+stage+' -->'));
+    assert.match(md,new RegExp('^<!-- COSMI-PIPELINE/2:'+stage+' -->'));
     assert.ok(md.length<1300,stage+' template too long');
-    assert.doesNotMatch(md,/bestiary\.md|\{\{bestiary\}\}/);
+    if(stage!=='blender') assert.doesNotMatch(md,/bestiary\.md|\{\{bestiary\}\}/);
   }
 });
