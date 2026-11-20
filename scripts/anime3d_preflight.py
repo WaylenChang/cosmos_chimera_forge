@@ -73,7 +73,7 @@ def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, 
             checks["gpu"] = result.stdout.strip() if result.returncode == 0 else None
         else:
             checks["gpu"] = None
-        if not checks["gpu"] and stage in {"all", "gpu"}:
+        if not checks["gpu"] and (stage in {"all", "gpu"} or (stage == "post_gpu" and rig_backend == "skintokens")):
             blockers.append("NVIDIA GPU runtime not available")
     return {"asset_id": asset_id, "subject_id": spec.get("subject_id"), "backend": backend,
             "status": "READY_FOR_EXECUTION" if not blockers else "BLOCKED",
