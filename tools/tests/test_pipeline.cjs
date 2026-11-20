@@ -52,7 +52,8 @@ test('independent encyclopedia step generates a scoped player-wiki prompt', () =
   nodes.pipelineStage.value='encyclopedia';
   ctx.concept={name_zh:'角色甲',role:'守護者',appearance:'blue armor',secret_skill:'NOT_FOR_WIKI'};
   const character=c.COSMI_PIPELINE.build(ctx);
-  assert.match(character,/編寫玩家可閱讀的角色圖鑑|characters\\/chr_one\\/chr_one_05_wiki\\.md/);
+  assert.match(character,/編寫玩家可閱讀的角色圖鑑/);
+  assert.ok(character.includes('characters/chr_one/chr_one_05_wiki.md'));
   assert.match(character,/守護者|blue armor/);
   assert.doesNotMatch(character,/NOT_FOR_WIKI/);
   ctx.task.id='creature-concept';ctx.subjectId='cr_one';ctx.opts={stage:'juvenile'};
@@ -61,14 +62,14 @@ test('independent encyclopedia step generates a scoped player-wiki prompt', () =
     {stage:'adult',look:'ADULT_SECRET'}
   ]},appearance:'blue scales'};
   const creature=c.COSMI_PIPELINE.build(ctx);
-  assert.match(creature,/creatures\\/cr_one\\/cr_one_juvenile_05_wiki\\.md|JUVENILE_ONLY/);
+  assert.ok(creature.includes('creatures/cr_one/cr_one_juvenile_05_wiki.md'));
   assert.doesNotMatch(creature,/ADULT_SECRET/);
   ctx.task.id='move-vfx';ctx.subjectId='fx_fire';ctx.opts={
     move_name:'烈焰',element:'fire',shape:'cone',tier:'heavy',use_creature:'yes'
   };
   ctx.concept={name_zh:'SECRET_CASTER',biography:'SECRET_BIO'};
   const move=c.COSMI_PIPELINE.build(ctx);
-  assert.match(move,/moves\\/fx_fire\\/fx_fire_05_wiki\\.md|烈焰/);
+  assert.ok(move.includes('moves/fx_fire/fx_fire_05_wiki.md'));
   assert.doesNotMatch(move,/SECRET_CASTER|SECRET_BIO/);
 });
 
