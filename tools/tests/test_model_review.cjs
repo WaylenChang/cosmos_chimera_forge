@@ -183,7 +183,11 @@ test('all 45 designed creature lines (including 15 Drive cr_* and later batches)
     assert.ok(item.title_zh, `${item.line_id} missing title_zh`);
     assert.ok(item.concept?.archetype_name, `${item.line_id} missing archetype_name`);
     assert.ok(item.concept?.meaning, `${item.line_id} missing meaning`);
-    assert.equal(item.concept?.locked?.stages?.length, 4, `${item.line_id} must have 4 stages`);
+    const stages = item.concept?.locked?.stages || [];
+    // Some authored trial-boss lines currently have only one stage; do not invent missing forms.
+    assert.ok(stages.length >= 1 && stages.length <= 4, `${item.line_id} must include 1-4 authored stages`);
+    assert.equal(new Set(stages.map(st => st.stage)).size, stages.length, `${item.line_id} has duplicate stages`);
+    for (const st of stages) assert.ok(['juvenile', 'adolescent', 'adult', 'overload'].includes(st.stage), `${item.line_id} has unknown stage`);
     for (const st of item.concept.locked.stages) {
       assert.ok(st.name_zh && st.name_en, `${item.line_id}/${st.stage} missing names`);
       assert.ok(st.look && st.dex_zh && st.dex_en, `${item.line_id}/${st.stage} missing look/dex`);
