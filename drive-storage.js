@@ -1266,13 +1266,15 @@
       const destination = await folder(wiki.kind + "/" + wiki.subject, true);
       // Serialize same-path requests within this browser tab, and never
       // overwrite or fork a previously generated wiki.
-      const found = await list(
-        destination,
-        "name = '" + escapeQuery(wiki.path.split("/").pop()) + "'",
+      const knownNames = new Set([wiki.path.split("/").pop(), wiki.legacyName]);
+      const found = (await list(destination)).filter(
+        (file) => file.mimeType !== MIME && knownNames.has(file.name),
       );
-      if (found.length > 1) throw Error(wiki.path + " 名稱重複，請人工整理");
+      // An existing legacy wiki is the same artifact, never a reason to create
+      // a second draft under the new physical filename.
+      if (found.length > 1) throw Error(wiki.path + " 圖鑑已存在多份，請人工整理");
       if (found.length === 1)
-        return { path: wiki.path, created: false, id: found[0].id };
+        return { path: wiki.kind + "/" + wiki.subject + "/" + found[0].name, created: false, id: found[0].id };
       const text = window.COSMI_WIKI.initialMarkdown(ctx);
       const written = await write(
         wiki.path,
