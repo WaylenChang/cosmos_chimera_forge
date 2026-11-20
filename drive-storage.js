@@ -1276,6 +1276,8 @@
       targetNames.push({key, flatName});
     }
     const storagePrefix = stepSubdir(step) + "/" + version + "/";
+    // Resolve/create the version folder before running no-overwrite checks.
+    await folder(path + "/" + storagePrefix.slice(0, -1), true);
     const manifestName = naming.assetFilename({
       kind: root, folderName: physical, role: "manifest", stage, step, version, ext: "json",
     });
