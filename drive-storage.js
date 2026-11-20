@@ -2012,8 +2012,16 @@
       }
       run(async () => {
         const key = $("pipelineStage").value;
+        if (key === "encyclopedia") {
+          // Explicit output action, never a source read for another generation step.
+          const ctx = window.COSMI_FORGE.currentContext?.();
+          if (!ctx) throw Error("沒有可用的玩家圖鑑概念設定");
+          const result = await ensureWiki(ctx);
+          $("driveStatus").textContent = (result.created ? "已建立圖鑑草稿：" : "既有圖鑑，未覆寫：") + result.path;
+          return;
+        }
         if (!Object.prototype.hasOwnProperty.call(window.COSMI_PIPELINE.stages, key))
-          throw Error("圖鑑不屬於生成管線，無法載入為 Prompt");
+          throw Error("不支援的生成管線步驟");
         const context = window.COSMI_FORGE.currentContext?.();
         const name = window.COSMI_PIPELINE.stages[key];
         const templateText = await (
