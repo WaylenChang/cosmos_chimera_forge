@@ -11,13 +11,13 @@ function harness() {
   vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);
   for (const [key, name] of Object.entries(c.COSMI_PIPELINE.stages)) {
-    if (!['portrait','encyclopedia'].includes(key)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
+    if (!['portrait'].includes(key)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
   }
   return {c,nodes,ctx:{task:{id:'character-concept'},taskId:'chr-example',subjectId:'chr_one',concept:{hair_palette:['red'],combat_damage:999,appearance:'long coat'},opts:{source_pack:'source'}}};
 }
 test('non-portrait stages resolve their Drive templates without leaking parameters', () => {
   const {c,nodes,ctx}=harness();
-  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => !['portrait','encyclopedia'].includes(name))) {
+  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => !['portrait'].includes(name))) {
     nodes.pipelineStage.value=stage;
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.ok(text.length>100);
@@ -43,19 +43,17 @@ test('Drive template loading skips the native portrait stage', async () => {
   }};
   await c.COSMI_PIPELINE.loadTemplates();
   assert.ok(!requests.some(file => file.endsWith('/01_portrait.prompt.md')));
-  assert.equal(requests.filter(file => file.startsWith('creatures/prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
+  assert.equal(requests.filter(file => file.startsWith('creatures/prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-1);
 });
 
-test('encyclopedia prompt routes three categories to isolated Markdown paths', () => {
-  const {c,nodes,ctx}=harness();nodes.pipelineStage.value='encyclopedia';
-  assert.match(c.COSMI_PIPELINE.build(ctx),/characters\/chr_one\/chr_one_05_wiki\.md/);
-  ctx.task.id='creature-concept';
-  assert.match(c.COSMI_PIPELINE.build(ctx),/creatures\/chr_one\/chr_one_adult_05_wiki\.md/);
-  ctx.task.id='move-vfx';ctx.subjectId='fx_fire_burst';ctx.opts={element:'fire',shape:'burst',tier:'heavy'};
-  const wiki=c.COSMI_PIPELINE.build(ctx);
-  assert.match(wiki,/moves\/fx_fire_burst\/fx_fire_burst_05_wiki\.md/);
-  assert.match(wiki,/fire|burst/);
-  assert.doesNotMatch(wiki,/DO_NOT_LEAK/);
+test('player encyclopedia cannot be a generation stage', () => {
+  const {c,nodes,ctx}=harness();
+  assert.equal(c.COSMI_PIPELINE.stages.encyclopedia,undefined);
+  nodes.pipelineStage.value='encyclopedia';
+  for(const kind of ['character-concept','creature-concept','move-vfx']){
+    ctx.task.id=kind;
+    assert.match(c.COSMI_PIPELINE.build(ctx),/有效的生成管線步驟/);
+  }
 });
 
 test('appearance excludes encyclopedia, lore, geometry and unrelated notes', () => {
@@ -100,7 +98,7 @@ test('a previous review binding does not become an image source for prompt-only 
 });
 
 
-test('3D stages focus on their own object and reference existing wiki without regenerating it', () => {
+test('3D stages focus on their own object without game encyclopedia instructions', () => {
   const {c,nodes,ctx}=harness();
   ctx.task.id='creature-model-rig';ctx.subjectId='cr_one';
   for(const stage of ['colab','blender']){
@@ -108,8 +106,8 @@ test('3D stages focus on their own object and reference existing wiki without re
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.match(text,/網格|拓撲/);
     assert.match(text,/models\/chr-example\.blend|models\/chr-example\.glb/);
-    assert.match(text,/manifest\.encyclopedia_path/);
-    assert.doesNotMatch(text,/bestiary\.md|少年.*成年|社會型態|DO_NOT_LEAK|combat_damage|\{\{[a-z_]+\}\}/);
+    assert.doesNotMatch(text,/encyclopedia|wiki|bestiary|圖鑑|百科/i);
+    assert.doesNotMatch(text,/少年.*成年|社會型態|DO_NOT_LEAK|combat_damage|\{\{[a-z_]+\}\}/);
   }
   nodes.pipelineStage.value='blender';ctx.opts.source_pack='';ctx.opts.input_img='';
   ctx.pipelineRoute='text';
@@ -236,4 +234,17 @@ test('appearance ignores empty and unknown fields but keeps relevant visual feat
   const result=c.COSMI_PIPELINE.appearance(ctx);
   assert.match(result,/silver armor/);
   assert.doesNotMatch(result,/未知|hair_palette|SECRET_ROLE|SECRET_LORE/);
+});
+
+test('a current version Drive template containing encyclopedia instructions is rejected',async()=>{
+  const {c,nodes,ctx}=harness();
+  nodes.pipelineStage.value='blender';
+  c.COSMI_FORGE.currentContext=()=>ctx;
+  c.COSMI_DRIVE={read:async path=>({text:async()=>path.endsWith('/03b_blender.prompt.md')
+    ? '<!-- COSMI-PIPELINE/3:blender -->\\n# WIKI_POISON\\n請參照玩家圖鑑產生3D\\n{{model_input}}'
+    : '{}'})};
+  await c.COSMI_PIPELINE.loadTemplates();
+  const text=c.COSMI_PIPELINE.build(ctx);
+  assert.match(text,/Blender/);
+  assert.doesNotMatch(text,/WIKI_POISON|圖鑑|wiki/i);
 });
