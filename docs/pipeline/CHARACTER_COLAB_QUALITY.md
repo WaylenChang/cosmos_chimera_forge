@@ -26,6 +26,13 @@ flowchart TD
 
 目前已實作：參考圖路徑／hash 驗證、GLB 原始輸出及 hash 綁定、品質報告 Schema 驗證、單次決策、擋下未評分或未達門檻的綁骨、留存 `typed_state.json`、`qa/appearance_gate.json`、`manifest.json`。**尚未實作**：實際自動視覺評分器、MV-Adapter 生成器、Texture Refinement 執行器、跨模型自動批次比較與修圖／選模；本版只明確提出動作供人員或另外驗證過的 adapter 執行，不得宣稱已自動修復。
 
+## N00 CPU 視圖前處理
+- 正面圖與三視（正／側／背）是強制的 Image-to-3D 圖片來源；合圖先切出 Side、Back，採用獨立已核准正面圖作 Front。45° 圖供外觀 QA。
+- 在 GPU 之前執行 `scripts/anime3d_view_preprocess.py`，輸出 `inputs/front.png`、`inputs/side.png`、`inputs/back.png` 與 `qa/view_preprocess.json`；來源及衍生圖像都記錄 SHA-256，不覆寫原圖。
+- 必須明確指定合圖分割區與視角排列、側面左右方向，以及既有 Alpha／遮罩／固定背景色的處理模式；檢查裁切、去背、比例、遮擋與角色外觀一致性。缺少視角或無法確認時 BLOCKED／REVIEW_REQUIRED。
+- 裁切後的圖片並非已校準相機影像；Pixal3D `inference_mv.py` 仍需真實 `transforms.json`。CPU 前處理結果不代表 GPU 模型已消耗所有影像；目前未整合完整多視角推論後端，不可降級成單圖模型視為通過。
+- 操作與配置說明：[CHARACTER_COLAB_VIEW_PREPROCESS.md](CHARACTER_COLAB_VIEW_PREPROCESS.md)。
+
 ## 個別 Drive 設定（不可提交 GitHub）
 
 角色 spec（`characters/<subject_id>/00_settings/asset_spec.json`）使用獨立 asset_id；啟用新版（舊任務不受影響）：
