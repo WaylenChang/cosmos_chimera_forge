@@ -9,7 +9,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from anime3d_character_quality import (WORKFLOW, REVIEW_SCHEMA, assess, enabled,
-                                       reference_views, sha256_file)
+                                       reference_views, sha256_file, validate_subject_v3)
 
 
 class CharacterGateTests(unittest.TestCase):
@@ -96,6 +96,41 @@ class CharacterGateTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "generation_attempt"):
                 assess(model, report, ref, spec, "mdl-example")
 
+
+
+    def test_subject_v3_requires_real_review_and_preserves_category_layout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "characters"
+            folder = root / "chr_test"
+            pictures = folder / "_01_portrait"
+            reviews = folder / "_02_review_portrait"
+            pictures.mkdir(parents=True)
+            reviews.mkdir(parents=True)
+            for name in ("front", "side", "back", "three_quarter_45"):
+                (pictures / (name + ".png")).write_bytes(name.encode())
+            review = reviews / "review.json"
+            review.write_text(json.dumps({"status": "ok", "subject_id": "chr_test",
+                                          "source_pack": "portrait_v1"}), encoding="utf8")
+            spec = {"category": "character", "input_mode": "image", "subject_id": "chr_test",
+                    "source_pack": "portrait_v1", "source_layout": "subject_v3",
+                    "character_colab_workflow": WORKFLOW,
+                    "portrait_review": "_02_review_portrait/review.json",
+                    "source_image": "_01_portrait/front.png",
+                    "reference_views": {v: "_01_portrait/" + v + ".png" for v in
+                                        ("front", "side", "back", "three_quarter_45")}}
+            source = validate_subject_v3(root, spec)
+            self.assertEqual(source, pictures / "front.png")
+            self.assertEqual(len(reference_views(root, spec, source)["views"]), 4)
+            with self.assertRaisesRegex(ValueError, "relative path"):
+                validate_subject_v3(root, dict(spec, source_image="..\\\\front.png"))
+            review.write_text(json.dumps({"status": "reject", "subject_id": "chr_test",
+                                          "source_pack": "portrait_v1"}), encoding="utf8")
+            with self.assertRaisesRegex(ValueError, "not approved"):
+                validate_subject_v3(root, spec)
+            review.write_text(json.dumps({"status": "ok", "subject_id": "chr_other",
+                                          "source_pack": "portrait_v1"}), encoding="utf8")
+            with self.assertRaisesRegex(ValueError, "not approved"):
+                validate_subject_v3(root, spec)
 
 if __name__ == "__main__":
     unittest.main()
