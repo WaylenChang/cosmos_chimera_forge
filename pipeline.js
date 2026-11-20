@@ -33,7 +33,7 @@
     const stage = ctx.opts?.stage || base.stage || "";
     const selected = base.locked?.stages?.find(item => item.stage === stage) || {};
     const concept = {...base, ...selected, stage};
-    const creature = String(ctx.task?.id || "").startsWith("creature");
+    const creature = pipelineRootFor(ctx) === "creatures";
     const visualFields = creature
       ? ["name_zh","name_en","stage","appearance","look","anatomy","limbs","bases","base_parents",
          "silhouette_keywords","height_length","size_class","appearance_palette","elements","motifs","accessories"]
@@ -43,7 +43,14 @@
       ? ["archetype","disposition","social_structure","reproduction","niches","habit","signature_move"]
       : ["role","biography","backstory_zh","disposition"];
     const fields = pureVisual ? visualFields : [...visualFields, ...loreFields];
-    const lines = fields.filter(k => concept[k] != null && concept[k] !== "")
+    const meaningful = value => {
+      if (value == null) return false;
+      if (typeof value === "string") return value.trim() !== "" && value.trim() !== "未知";
+      if (Array.isArray(value)) return value.some(meaningful);
+      if (typeof value === "object") return Object.values(value).some(meaningful);
+      return true;
+    };
+    const lines = fields.filter(k => meaningful(concept[k]))
       .map(k => k + ": " + (typeof concept[k] === "object" ? JSON.stringify(concept[k]) : concept[k]));
     return lines.join("\n") || "尚未提供本對象的外觀設定";
   }
@@ -105,32 +112,47 @@
       ? normalized.slice(prefix.length).trim() : localTemplates[stage];
     if (!template) return "此步驟沒有可用的 Prompt 模板。";
 
-    const active = window.COSMI_FORGE?.activePackage?.();
-    const textRoute = ctx.pipelineRoute === "text" ||
-      (stage === "review_3d" && active?.manifest?.input_mode === "text");
-    const sourceId = textRoute ? "" : String((stage === "review_3d"
-      ? active?.sourcePack || active?.manifest?.source_pack
-      : ctx.opts?.source_pack) || "").trim();
-    const imageHint = textRoute ? "" : String(ctx.opts?.input_img || "").trim();
-    const hasImage = stage === "colab" || (!textRoute && Boolean(sourceId || imageHint));
     const subjectBase = window.COSMI_DRIVE?.cleanSubjectId?.(root, ctx.subjectId || ctx.taskId)
       || ctx.subjectId || ctx.taskId;
     const subjectFolder = root + "/" + subjectBase;
-    const sourcePkg = window.COSMI_FORGE?.packages?.()?.find(p =>
-      p.id === sourceId && String(p.drivePath || "").startsWith(root + "/"));
+    const candidate = window.COSMI_FORGE?.activePackage?.();
+    const candidatePath = String(candidate?.drivePath || "");
+    const candidateSubject = String(candidate?.subjectId || candidate?.manifest?.subject_id || "").trim();
+    // A selected review package is not evidence for another subject, even in the same category.
+    const sameSubject = Boolean(candidate && (candidateSubject
+      ? (window.COSMI_DRIVE?.cleanSubjectId?.(root, candidateSubject) || candidateSubject) === subjectBase
+      : candidatePath.startsWith(subjectFolder + "/")));
+    const active = sameSubject ? candidate : null;
+    const activePath = String(active?.drivePath || "");
+    const textRoute = ctx.pipelineRoute === "text" ||
+      (ctx.pipelineRoute !== "image" && stage === "review_3d" && active?.manifest?.input_mode === "text");
+    const requestedSource = textRoute ? "" : String((stage === "review_3d"
+      ? active?.sourcePack || active?.manifest?.source_pack
+      : ctx.opts?.source_pack) || "").trim();
+    const imageHint = textRoute ? "" : String(ctx.opts?.input_img || "").trim();
+    const knownPackages = window.COSMI_FORGE?.packages?.() || [];
+    const sourcePkg = knownPackages.find(p => {
+      if (p.id !== requestedSource || !String(p.drivePath || "").startsWith(root + "/")) return false;
+      const id = String(p.subjectId || p.manifest?.subject_id || "").trim();
+      return !id || (window.COSMI_DRIVE?.cleanSubjectId?.(root, id) || id) === subjectBase;
+    });
+    // A known package belonging to a different kind or subject must never become a source.
+    const sourceId = knownPackages.some(p => p.id === requestedSource) && !sourcePkg ? "" : requestedSource;
+    // Explicit Image-to-3D remains image-only even before an approved reference is selected.
+    const hasImage = stage === "colab" || (!textRoute &&
+      (ctx.pipelineRoute === "image" || Boolean(sourceId || imageHint)));
     const sourcePath = sourcePkg?.drivePath ||
       (sourceId ? root + "/01_portraits/" + sourceId : "");
-    const activePath = String(active?.drivePath || "");
     const activeType = String(active?.type || "");
     const activeIsPortrait = active && !/model|rig|anim/.test(activeType);
     const activeIsModel = active && /model|rig|anim/.test(activeType);
-    const portraitPath = (activePath.startsWith(root + "/01_portraits/") ||
+    const portraitPath = (active && (activePath.startsWith(root + "/01_portraits/") ||
       activePath.startsWith(root + "/03_completed/portraits/") ||
-      (activeIsPortrait && activePath.startsWith(root + "/") && activePath.split("/").length === 2))
+      (activeIsPortrait && activePath.startsWith(root + "/") && activePath.split("/").length === 2)))
       ? activePath : (sourceId ? sourcePath : "請指定本對象待審立繪目錄");
-    const modelPath = (activePath.startsWith(root + "/02_3d/") ||
+    const modelPath = (active && (activePath.startsWith(root + "/02_3d/") ||
       activePath.startsWith(root + "/03_completed/models/") ||
-      (activeIsModel && activePath.startsWith(root + "/") && activePath.split("/").length === 2))
+      (activeIsModel && activePath.startsWith(root + "/") && activePath.split("/").length === 2)))
       ? activePath : "請指定本對象待審模型目錄";
     const paramStem = window.COSMI_DRIVE?.assetStem?.({
       kind: root, id: subjectBase, stage: ctx.opts?.stage || ctx.concept?.stage, step: "00_parameters"
