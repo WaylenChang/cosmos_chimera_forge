@@ -1,0 +1,247 @@
+{
+  "date": "2026-11-20",
+  "purpose": "Read-only exact inventory of trial boss legacy GLB references with unspecified provenance",
+  "warning": "DO NOT automatically rename or assign 03b_blender or final status; source pipeline and approval not verified; keep stable subject ID and old wiki links until consumer compatibility tests.",
+  "results": [
+    {
+      "name": "earth",
+      "physical_subject_folder": "ch_trial_boss_earth_line",
+      "folder_id": "1Pv5T2R8pGM3JzgKgmi8gzyuZ-ztQEBw3",
+      "wiki_document_id": "1f4qmk8CNS8rOZZumMlmm1BH8mxFqukBclyxXLVfEUzM",
+      "models": [
+        {
+          "form": 1,
+          "stage": "juvenile",
+          "original_filename": "line_earth_trial_boss_juvenile.glb",
+          "original_drive_file_id": "1vsw4jQVrANWA6oevbxyZY89DV5dyuqtH",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 2,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 2,
+          "stage": "adolescent",
+          "original_filename": "line_earth_trial_boss_adolescent.glb",
+          "original_drive_file_id": "1IcrVwwPu4CrUUlbPu_vqHaYH96vPst6Q",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 2,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 3,
+          "stage": "adult",
+          "original_filename": "line_earth_trial_boss_adult.glb",
+          "original_drive_file_id": "1LaAV5visnEd_cdVZ6sns32uR29HeNVad",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 2,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 4,
+          "stage": "overload",
+          "original_filename": "line_earth_trial_boss_overload.glb",
+          "original_drive_file_id": "1rzHJl6gJABhc_b-4wiZQ5yqPUijPuAUb",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 2,
+          "unverified_production_step": true,
+          "proposed_name": null
+        }
+      ]
+    },
+    {
+      "name": "fire",
+      "physical_subject_folder": "ch_trial_boss_fire_line",
+      "folder_id": "1yr9PUGyW6coWl6j07_DKhofCjmRb5xdH",
+      "wiki_document_id": "1hZgWZ5Skz-m35xHtTCPgdtns0kNbUe57igWXoWlqS84",
+      "models": [
+        {
+          "form": 1,
+          "stage": "juvenile",
+          "original_filename": "line_fire_trial_boss_01_juvenile_cindermoth.glb",
+          "original_drive_file_id": "1eBgU_5SIDDuouGEzknad_GDyWQa8bsH4",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 2,
+          "stage": "adolescent",
+          "original_filename": "line_fire_trial_boss_02_adolescent_bellowsmoth.glb",
+          "original_drive_file_id": "1IvDgtrxbMmMPLkhWlx1mHyT7zslOaO5u",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 3,
+          "stage": "adult",
+          "original_filename": "line_fire_trial_boss_03_adult_pyrefurnax.glb",
+          "original_drive_file_id": "1pSdh7lvL9svFPerna9WOr8r1BYbv8MAC",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 4,
+          "stage": "overload",
+          "original_filename": "line_fire_trial_boss_04_overload_solarpyre.glb",
+          "original_drive_file_id": "1B6OSEay05i7T44YoDf5rzATmZaCd6MB_",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        }
+      ]
+    },
+    {
+      "name": "thunder",
+      "physical_subject_folder": "ch_trial_boss_thunder_line",
+      "folder_id": "13KdV-8yENBqCTFXTAs2F6Q5icZVHseF8",
+      "wiki_document_id": "1SeQgddL1IHnd0-mn8AVNYrUeEEdstIKcHcH6Jm-Tk4I",
+      "models": [
+        {
+          "form": 1,
+          "stage": "juvenile",
+          "original_filename": "line_thunder_trial_boss_01_juvenile_voltcomp.glb",
+          "original_drive_file_id": "1WD-QWnF7R9gra5lBYtvKL-IrtmrEWoV0",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 2,
+          "stage": "adolescent",
+          "original_filename": "line_thunder_trial_boss_02_adolescent_coilraptor.glb",
+          "original_drive_file_id": "1U-W5fl3RzP0oEsU88ka_T_qb3LztB9P3",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 3,
+          "stage": "adult",
+          "original_filename": "line_thunder_trial_boss_03_adult_teslaraptor.glb",
+          "original_drive_file_id": "1bPCBVm3jRtzNC8VnXD_-M9GEbTKAwb87",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 4,
+          "stage": "overload",
+          "original_filename": "line_thunder_trial_boss_04_overload_hyperionvolt.glb",
+          "original_drive_file_id": "17R2LBLko73oKIBvxr8kZqOAzsy-_4Q9f",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        }
+      ]
+    },
+    {
+      "name": "wind",
+      "physical_subject_folder": "ch_trial_boss_wind_line",
+      "folder_id": "1U8CphT1VHVtELSqVTcBeTKQq3w17Hvv6",
+      "wiki_document_id": "1SZ7c1-PAbBWKhnNc490U-rSIGHGPVm8RM_SXzw5qBqQ",
+      "models": [
+        {
+          "form": 1,
+          "stage": "juvenile",
+          "original_filename": "line_wind_trial_boss_01_juvenile_skyray.glb",
+          "original_drive_file_id": "1VPfncPODWaoOJcfe5eEByC5NqhGD5jLh",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 2,
+          "stage": "adolescent",
+          "original_filename": "line_wind_trial_boss_02_adolescent_galewing.glb",
+          "original_drive_file_id": "1SmBLiB8g_2nlka1Ui3g8l9r4vsRkQrwM",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 3,
+          "stage": "adult",
+          "original_filename": "line_wind_trial_boss_03_adult_stratomanta.glb",
+          "original_drive_file_id": "1UZG1bnNk1Dcl4oCpNdiAfQPzQsHkfq45",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 4,
+          "stage": "overload",
+          "original_filename": "line_wind_trial_boss_04_overload_auroramanta.glb",
+          "original_drive_file_id": "1P3tY7cbe_h4vq033V6-BCMD53ArYYEKW",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        }
+      ]
+    },
+    {
+      "name": "wood",
+      "physical_subject_folder": "ch_trial_boss_wood_line",
+      "folder_id": "1-Xp7gDG5IuaALh8Hf7CiMk4hwsj3zg8o",
+      "wiki_document_id": "1Fn_ZA0pYJ8VR6HY0L47Vm9QQ9cb08bR4XUyF_DmlZwM",
+      "models": [
+        {
+          "form": 1,
+          "stage": "juvenile",
+          "original_filename": "line_wood_trial_boss_01_juvenile_viridipup.glb",
+          "original_drive_file_id": "1G-27AOPXX-aZFki_Fb9ZX5IGgotfLUQG",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 2,
+          "stage": "adolescent",
+          "original_filename": "line_wood_trial_boss_02_adolescent_viridishell.glb",
+          "original_drive_file_id": "1-I0krDRNqtJgChASTeYYJ0mOl75jpOgP",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 3,
+          "stage": "adult",
+          "original_filename": "line_wood_trial_boss_03_adult_viridichelys.glb",
+          "original_drive_file_id": "1pERq4nkxp_NRqa-PLZnLDvq_mGitX25D",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        },
+        {
+          "form": 4,
+          "stage": "overload",
+          "original_filename": "line_wood_trial_boss_04_overload_viridicitadel.glb",
+          "original_drive_file_id": "1b46RksUaKnwbE41WtqjpOlltfxH3YKaJ",
+          "mime_type": "model/gltf-binary",
+          "wiki_occurrences": 1,
+          "unverified_production_step": true,
+          "proposed_name": null
+        }
+      ]
+    }
+  ]
+}
