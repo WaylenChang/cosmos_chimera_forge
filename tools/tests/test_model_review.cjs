@@ -184,7 +184,8 @@ test('all existing designed creature lines have complete text data and unify und
     assert.ok(item.title_zh, `${item.line_id} missing title_zh`);
     assert.ok(item.concept?.archetype_name, `${item.line_id} missing archetype_name`);
     assert.ok(item.concept?.meaning, `${item.line_id} missing meaning`);
-    assert.equal(item.concept?.locked?.stages?.length, 4, `${item.line_id} must have 4 stages`);
+    const expectedStages = /_trial_boss$/.test(item.line_id) ? 1 : 4;
+    assert.equal(item.concept?.locked?.stages?.length, expectedStages, `${item.line_id} must have ${expectedStages} stages`);
     for (const st of item.concept.locked.stages) {
       assert.ok(st.name_zh && st.name_en, `${item.line_id}/${st.stage} missing names`);
       assert.ok(st.look && st.dex_zh && st.dex_en, `${item.line_id}/${st.stage} missing look/dex`);
