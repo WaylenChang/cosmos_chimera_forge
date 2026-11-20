@@ -58,3 +58,10 @@ Existing file: `creatures/ch_trial_boss_ice_line/_03b_blender/line_ice_trial_bos
 4. Run CI, browser and connected Drive end-to-end regressions and deploy compatible resolver before closing the Draft PR.
 
 No `*.prompt.md` contents, GLB bytes, image bytes, or game IDs were modified. No Colab GPU job was started.
+
+## Further continuation: naming contract and water QC links (2026-11-20)
+
+- Added the previously absent `FILE_NAMING_CONTRACT.md` to the **root** of the live Drive project (file ID `12J_5ZpNVWn2zXv0ivzS7b5thkmTYJQra`, parent `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`). Content was checked **exactly equal** to GitHub `docs/drive/FILE_NAMING_CONTRACT.md` (5,924 characters), with one root file of this name. This repairs the existing links in `DIRECTORY.md` and `AGENT_QUICKSTART.md`; the GitHub document was not rewritten.
+- Continued in-place editing the water trial-boss manifest (same Drive ID `1ietSBYrADa9Zvj1u2nnykJPuaai4JFg4`): changed the **four** `qc_views[0]` H8 filename references from `<stage>_h8.png` to the verified in-folder names `ch_trial_boss_water_line_qc_h8_form<i>_03b_blender_legacy.png` (forms 1–4). Verified the four PNG files by individual Drive ID in the live `_03b_blender` directory and a post-upload SHA-256 exact match of the full JSON payload. File ID, MIME type, and parent unchanged.
+- **Scope correction:** The water manifest now has **13** corrected references (9 earlier + 4 H8); the ice manifest has **4**. Combined, the two manifests have **17** corrected references after this continuation. The earlier counts in this audit reflect their respective earlier checkpoints, not the new cumulative total.
+- The eight remaining water `qc_views` entries named `<stage>_v8.png` and `<stage>_closeups.png` do not match the direct files found in the current Blender folder; they remain untouched as **unverified historical references**, not proof that those QC outputs currently exist. No files were fabricated or marked complete.
