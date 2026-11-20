@@ -1,0 +1,1302 @@
+{
+  "generated": "2026-11-20",
+  "scope": "verified live Drive locations for 12 historical starter Blender manifests",
+  "project_root_folder_id": "1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0",
+  "manifest_path_semantics": "archive-era logical source path, not current physical Drive path",
+  "safety": "Read-only mapping: no assets renamed, merged, deleted, or rewritten; stable game IDs and original manifest paths preserved.",
+  "lines": [
+    {
+      "logical_subject_id": "starter_sun_line",
+      "physical_subject_folder": "ch_starter_sun_line",
+      "blender_folder_id": "1okliF0tIA-_8kvcoObZMiqEM6RqWrbBK",
+      "stages": [
+        {
+          "stage": "juvenile",
+          "form": 1,
+          "manifest_id": "1flztqMPaGpmyu37uwth9VHtc-EKt4GIC",
+          "manifest_name": "starter_sun_line_juvenile_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_sun_line_juvenile_v3_structure.blend",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender.blend",
+              "drive_file_id": "10iMwuICV8wYWpoXVCpH8gvlWETEwesS7",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_sun_line_juvenile_v3_structure.glb",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender.glb",
+              "drive_file_id": "1z72NMhlOq0kJJyLo26ezfbEfmK66TpAP",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_juvenile_base_color.png",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_textures_cr_starter_sun_line_juvenile_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_textures_cr_starter_sun_line_juvenile_base_color.png",
+              "drive_file_id": "1BxgeROjHg6wYophiPNkcB_sFgtIYUkyE",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_juvenile_normal.png",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_textures_cr_starter_sun_line_juvenile_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_textures_cr_starter_sun_line_juvenile_normal.png",
+              "drive_file_id": "10KmLZOpeUgNXPVU6xaIPbYnsIc4NQCdk",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_juvenile_orm.png",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_textures_cr_starter_sun_line_juvenile_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_textures_cr_starter_sun_line_juvenile_orm.png",
+              "drive_file_id": "1SvDPll6fxbBsshwe-uU4QqMe-QokfEFV",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_rig_spec.json",
+              "drive_file_id": "1J-GIGFkKFKVlaXC4ay8uxJ0Pq6gKfpUU",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_motion_spec.json",
+              "drive_file_id": "1fuwMTrZhuhDvZ-CzKolp6oNHvglPy82d",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_build_report.json",
+              "drive_file_id": "1KRkmqR1o3rQHyU4EejzRL6JQSAH3wu0K",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1UEtjP2cGh4NfDanrSwqsQqOuIndHw_Xm",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1hNIar0FNXgaMeU-w2KvAFzTdZRiTY7Fj",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1iH3v_JTVsPKma34Zls25_3fU-aXzg1_v",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_review_material_side.jpg",
+              "drive_file_id": "10XNQ1KK_LruqfxGsWw1zZIumX63OEuNw",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1l9_i-5vCSbvfREDQ_3lKo5hi1hUieOni",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_sun_line_juvenile_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_juvenile_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1uybaSNwlSLYLDzOvXvmLIXV_V5buKphw",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "adolescent",
+          "form": 2,
+          "manifest_id": "1F9YqpYSzBR0FMixEH_6VwdWAko7KO9po",
+          "manifest_name": "starter_sun_line_adolescent_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_sun_line_adolescent_v3_structure.blend",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender.blend",
+              "drive_file_id": "1iYnCnPQ3sCFuSHQrZaBkQk5Baj8HL6V5",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_sun_line_adolescent_v3_structure.glb",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender.glb",
+              "drive_file_id": "1gSwRAgWK7QN5J2otokFc3pEyZCjHZHLH",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_adolescent_base_color.png",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_textures_cr_starter_sun_line_adolescent_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_textures_cr_starter_sun_line_adolescent_base_color.png",
+              "drive_file_id": "1nU21gQHqQtyC2WAkeCJ0paT9XYARtE4p",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_adolescent_normal.png",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_textures_cr_starter_sun_line_adolescent_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_textures_cr_starter_sun_line_adolescent_normal.png",
+              "drive_file_id": "1TI1jY3FHmtTEwg3mjNS3HhXj6i8YWNUG",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_adolescent_orm.png",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_textures_cr_starter_sun_line_adolescent_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_textures_cr_starter_sun_line_adolescent_orm.png",
+              "drive_file_id": "1qVVRopHEHkMvF0es21-H-A_7eQSuPQkB",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_rig_spec.json",
+              "drive_file_id": "1xEEWlyawv7pcR7C23KfECfe3JHZqt-Cu",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_motion_spec.json",
+              "drive_file_id": "1P2X8zin_TRzeoiWycA6DTKwRW3MDprQ3",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_build_report.json",
+              "drive_file_id": "1uBEo1_i6nCcjh80mb5Xnh-8wbBULJ9VP",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1e9OK6oBTDnKGlbTDweonW5pmCBChjXuB",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1S9vcOL6TUo-KF0EIudniTNqrPAU7Gnbz",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1HBY4x3ApW6l4BONTX8ccFJvDrkkRA2Qt",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1s9ckr_tCzb-BNfSta0wnl1m7wrZCKeNT",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "138SFzbR1WEv-nUerjamp1GkEQvRkPxbc",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_sun_line_adolescent_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adolescent_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1oBDa1qG3lwiowmFJEWXM9Nvn2jBRdrl6",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "adult",
+          "form": 3,
+          "manifest_id": "146Aq0LMxM34o_4DeSx0B5gv5u1uz7T1s",
+          "manifest_name": "starter_sun_line_adult_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_sun_line_adult_v3_structure.blend",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender.blend",
+              "drive_file_id": "1SfSnZRFYKSheg7-WqiIHvhZMGUVngjkU",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_sun_line_adult_v3_structure.glb",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender.glb",
+              "drive_file_id": "1TinZIpimF7oAL9MJnJSjKmvUFEwRXqDa",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_adult_base_color.png",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_textures_cr_starter_sun_line_adult_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_textures_cr_starter_sun_line_adult_base_color.png",
+              "drive_file_id": "1k81wS0od71Fi8qPSlfcp2QvVYvQjRX-k",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_adult_normal.png",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_textures_cr_starter_sun_line_adult_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_textures_cr_starter_sun_line_adult_normal.png",
+              "drive_file_id": "1FbVoV6qCrf0ed_HL0II_e_yZ9PSDr5bf",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_adult_orm.png",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_textures_cr_starter_sun_line_adult_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_textures_cr_starter_sun_line_adult_orm.png",
+              "drive_file_id": "1m1U1B-waoTB7Y-T_6HokF2sOKRGlQer4",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_rig_spec.json",
+              "drive_file_id": "1l2VvLwoqDcuugCGF3NhGPRApbRoESvTW",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_motion_spec.json",
+              "drive_file_id": "1UXCP7i-jdb5Spxsp0bECjqAIpa3yTOJ3",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_build_report.json",
+              "drive_file_id": "1E3QrXFr61NJyWZlTh2zNbW0cXtLKH38R",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "17DqmtyNxQjPdCrdS6u96PsbzjbUKFgw6",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1sKbIS7trmKjbleEO3iBj8Q09q1ozK7qw",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1zP8wFDpNZwF_5-21GxZITmdeXKUMvK_q",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1ptNExR4-gusmeazRoC1ZKDS8GfS2Hjqv",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1uJtJRCJTZdN9LkORVcabPJvVFtwC-y1E",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_sun_line_adult_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_adult_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1_hCbpYUMH1ebBIdSdWUEKNu3YhONTAZs",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "overload",
+          "form": 4,
+          "manifest_id": "1AJPu4ViemN6nqEOm5EZjn_uNel8n7HmG",
+          "manifest_name": "starter_sun_line_overload_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_sun_line_overload_v3_structure.blend",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender.blend",
+              "drive_file_id": "1l5jiXu7C1YgfY30VkHwQhDj6QcxjkxT_",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_sun_line_overload_v3_structure.glb",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender.glb",
+              "drive_file_id": "1w_pONFc2Vm43sS23PTzzaeLcngq_Abfx",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_overload_base_color.png",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_textures_cr_starter_sun_line_overload_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_textures_cr_starter_sun_line_overload_base_color.png",
+              "drive_file_id": "1ZZ6htCE6ccxxf0ndeswffpXrHNCxw-FV",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_overload_normal.png",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_textures_cr_starter_sun_line_overload_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_textures_cr_starter_sun_line_overload_normal.png",
+              "drive_file_id": "1AMydNW3_SGRhxtzR8y08LtgQuEPmElNj",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_sun_line_overload_orm.png",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_textures_cr_starter_sun_line_overload_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_textures_cr_starter_sun_line_overload_orm.png",
+              "drive_file_id": "1SIW16jojOTCR1qWr3C6s2OYSGneCaJg-",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_rig_spec.json",
+              "drive_file_id": "1e5g3saajqHkYhcVNH8ccTXvzy1uD3Q5R",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_motion_spec.json",
+              "drive_file_id": "1iNKDrCJ2ZVfZnyYr2KOtMJKrubk5HkM_",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_build_report.json",
+              "drive_file_id": "1ze1RqdLh7rlQwZPfJuPgRYh_KW6k34Xw",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1vd2qylyFf8BQnQOqNc8m3aTi4gr8wydo",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1msngiOSsOSHJD64Cr0BFxp5CcJBhHu9E",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1x5IF98g0r8lIQW0SmL4_zXvye7fBixUW",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1glQEuxtEh297T9Me56gPNKeJg06FKcTl",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1c9C2pjG-sp3bgnEF4lvDk9eQjGnNaUvq",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_sun_line_overload_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_sun_line/_03b_blender/starter_sun_line_overload_03b_blender_review_structure_verification.json",
+              "drive_file_id": "15p2ai-nPJJvXzKNUAWpZxIAyrvVvw_Py",
+              "mime_type": "application/json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "logical_subject_id": "starter_moon_line",
+      "physical_subject_folder": "ch_starter_moon_line",
+      "blender_folder_id": "1MaK865SPjviurOa5eCq7nQYK8J2ABNnE",
+      "stages": [
+        {
+          "stage": "juvenile",
+          "form": 1,
+          "manifest_id": "1bN7U26WT-S_xHZZFJxv_TS5hppDHbyKT",
+          "manifest_name": "starter_moon_line_juvenile_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_moon_line_juvenile_v3_structure.blend",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender.blend",
+              "drive_file_id": "1tBpB07KdZC-uxIbQvPX0YSnQ-Ren0vhB",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_moon_line_juvenile_v3_structure.glb",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender.glb",
+              "drive_file_id": "1AL3MqmrWiqtHaIrhZpbd_SVpbmHB2uY2",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_juvenile_base_color.png",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_textures_cr_starter_moon_line_juvenile_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_textures_cr_starter_moon_line_juvenile_base_color.png",
+              "drive_file_id": "1mEkq8Yh8AHovkHck6CR2-NW-koRYm5FZ",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_juvenile_normal.png",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_textures_cr_starter_moon_line_juvenile_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_textures_cr_starter_moon_line_juvenile_normal.png",
+              "drive_file_id": "15DnE0KpLps5RRJmHUXp-YFws4pnS1ZkI",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_juvenile_orm.png",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_textures_cr_starter_moon_line_juvenile_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_textures_cr_starter_moon_line_juvenile_orm.png",
+              "drive_file_id": "1x47ejkddN5J7ztxLf1oMMmql_VxCVBos",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_rig_spec.json",
+              "drive_file_id": "1yvksDMgNxnOpJAFCYw2zQ4MCNWghIHQ8",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_motion_spec.json",
+              "drive_file_id": "1jlpieWfTW5QNs7N3_Ni-TN5EJWWe6GOL",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_build_report.json",
+              "drive_file_id": "1-tlL6UqLuW_QgEB2qKYTHm2l6e3ybv6z",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1fsCde3anL44l_Un7l0oE4IISAywOLrNp",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1m0M50zSh6uVdNN6nW0oGdWRFSnc7EMum",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1vTAM3aS7jO-gTwbXR2nyVnI0XI_OQYFi",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1xs-Fnq8SO7QdWwpkB5UWgCysvxUoJnz9",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1Z2ugNn3ZbVQGT9AIcdvQ4rzmEfwCJLXg",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_moon_line_juvenile_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_juvenile_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1KVxJ4Rn1kjk1hosy4LL4rbTAGiY9qxEb",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "adolescent",
+          "form": 2,
+          "manifest_id": "1VKNnSLzOhv54pyBNlwC1Q_pNf8nySUMr",
+          "manifest_name": "starter_moon_line_adolescent_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_moon_line_adolescent_v3_structure.blend",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender.blend",
+              "drive_file_id": "1JoDRrDmM4_uFnVoHWK353Ri-FR3nmFdR",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_moon_line_adolescent_v3_structure.glb",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender.glb",
+              "drive_file_id": "1B04VZXkOA-Zpb3rJCh7fEkZ6rtbD7wRz",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_adolescent_base_color.png",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_textures_cr_starter_moon_line_adolescent_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_textures_cr_starter_moon_line_adolescent_base_color.png",
+              "drive_file_id": "1e9g7DUb45ADyoBiHFZpIKkZ3r0CzVCg1",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_adolescent_normal.png",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_textures_cr_starter_moon_line_adolescent_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_textures_cr_starter_moon_line_adolescent_normal.png",
+              "drive_file_id": "1YpdNEIDvIq_TOcrEWWE59tZX3CQa8D7Z",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_adolescent_orm.png",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_textures_cr_starter_moon_line_adolescent_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_textures_cr_starter_moon_line_adolescent_orm.png",
+              "drive_file_id": "1kkBHJFss_JaKFNK_Vur9H8u14HxWomhL",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_rig_spec.json",
+              "drive_file_id": "1gRqqs-KKvsZL65Nd_42nC9OtJZBRTl-j",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_motion_spec.json",
+              "drive_file_id": "1o2IqsbJ2yl4GbOkBtsM8TDnv1JzxsMmL",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_build_report.json",
+              "drive_file_id": "176nfwD5xIEEcVMEFYJ9nGqdPJtILuhlP",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1V46ufjImyk1Kj9CjLy8LdWTYYPRLlsa3",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1f2JABMH-72FGk5xBB_IY7KLFsSYEtsk7",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1rmKQ0rkCYTQMM1BSTC05ehEB2EGzAVla",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_review_material_side.jpg",
+              "drive_file_id": "15kZXuWBNfnBudVtQE2Bo1nQ_HacC2yNa",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1QxdfooNu2CzX2KnHhQA6rlHoe1H-Hud0",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_moon_line_adolescent_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adolescent_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1kjsA1L81bL9zoUyiQwRXFkHgvqZbPqoN",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "adult",
+          "form": 3,
+          "manifest_id": "16frky1hR7c0AhG42tQZikyudqlvxnINR",
+          "manifest_name": "starter_moon_line_adult_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_moon_line_adult_v3_structure.blend",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender.blend",
+              "drive_file_id": "1wuSaqEiSzOuRmLBREbq9rLM0n9qBl8PL",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_moon_line_adult_v3_structure.glb",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender.glb",
+              "drive_file_id": "1_2Zc-Mos1A5Z_p9oYLzgWqJsPzVtHK93",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_adult_base_color.png",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_textures_cr_starter_moon_line_adult_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_textures_cr_starter_moon_line_adult_base_color.png",
+              "drive_file_id": "1wIRFXhcfPjsoKKziv3dZNL_gL4QvDCLX",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_adult_normal.png",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_textures_cr_starter_moon_line_adult_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_textures_cr_starter_moon_line_adult_normal.png",
+              "drive_file_id": "14E4NkD1xd1QFrYDn27aR2x1vJv2TVA8X",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_adult_orm.png",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_textures_cr_starter_moon_line_adult_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_textures_cr_starter_moon_line_adult_orm.png",
+              "drive_file_id": "1oB_7MiE8oL9p85Gn3kaKV1h96gAbgTS4",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_rig_spec.json",
+              "drive_file_id": "1A3ARm1U3fSx8G9ZmeVHdzcj0tfvpCrqN",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_motion_spec.json",
+              "drive_file_id": "1akXXmYNSxma_yitBDwgY_fvGvKR8IdCh",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_build_report.json",
+              "drive_file_id": "1CYRIX3ehdupxffZkHUoa9IlhHwwsniwT",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1w73q7O1OyI05DcNpDXQPe0l8lX3Z10tS",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1WM6dGvS9M7PxiU6n49CSR3Ly867p-c5H",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1UYlzV4LM-iMpqnvl8Zf59BA1LrePH_Vn",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1imc1D5PhO-V-HS1KdRTSEfarkbZpeiLG",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "17Rzgy2tm2uGFFQ7KcSVkeCgLMo_4Qb4Q",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_moon_line_adult_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_adult_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1zcNMvBZ3BqF9Bd3-NZrHdOphBX2mL1CO",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "overload",
+          "form": 4,
+          "manifest_id": "15OjnYRKAVg5T222R3IEjUnhU0EgFduny",
+          "manifest_name": "starter_moon_line_overload_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_moon_line_overload_v3_structure.blend",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender.blend",
+              "drive_file_id": "15qnbuoheYE54MDMxX51-5cWM7BFJ6LYU",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_moon_line_overload_v3_structure.glb",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender.glb",
+              "drive_file_id": "1C5ASEBpJPpVZ8cxCBEGtpy5XambDxhD3",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_overload_base_color.png",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_textures_cr_starter_moon_line_overload_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_textures_cr_starter_moon_line_overload_base_color.png",
+              "drive_file_id": "1hifUzmVFzuFZmyf0Z8LRGMdN9nxgIgQR",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_overload_normal.png",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_textures_cr_starter_moon_line_overload_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_textures_cr_starter_moon_line_overload_normal.png",
+              "drive_file_id": "1sbUma0jPj5K-GRUZ299K6m7WeT3RGXXB",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_moon_line_overload_orm.png",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_textures_cr_starter_moon_line_overload_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_textures_cr_starter_moon_line_overload_orm.png",
+              "drive_file_id": "1qkEX7JBJwF35YH7BVnJ30tlyMEBLAb5u",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_rig_spec.json",
+              "drive_file_id": "1pZjmPDss8W_8b9t35WIt8hg4Wc9hxIig",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_motion_spec.json",
+              "drive_file_id": "1QFMrXHa7JQBpEs65WgOzEDDQWCYhkPFu",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_build_report.json",
+              "drive_file_id": "10-n_oUiYiR_06UtZjPOBU_5CGEnSNvPX",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1VLWfl270XAmRgg9b-VG8PSYnPYHF0vHk",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1bv2Eh-j9aiC0L_uCCPyWfErwgoGy4N3E",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1FkTI4Z0EwyTftmcdS4Cnpu5b_2riRLs9",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_review_material_side.jpg",
+              "drive_file_id": "13PH9uEfMXUQqtMUTFMgcH5ARhxXJGjMh",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1_o2z3qmWE458yrpLltdNGXKth1Qh10by",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_moon_line_overload_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_moon_line/_03b_blender/starter_moon_line_overload_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1mglQkwzXnG7YZ4qqV47HFpfWr7ya_z9H",
+              "mime_type": "application/json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "logical_subject_id": "starter_star_line",
+      "physical_subject_folder": "ch_starter_star_line",
+      "blender_folder_id": "1-RBUaU1G218qcpIbQ6HFpkJnFX-Onkwl",
+      "stages": [
+        {
+          "stage": "juvenile",
+          "form": 1,
+          "manifest_id": "1q2t1lra4FOYu-w8kEhrAWOQPVlLQEB30",
+          "manifest_name": "starter_star_line_juvenile_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_star_line_juvenile_v3_structure.blend",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender.blend",
+              "drive_file_id": "1QIzsJ1vN5eu3wfDWOpN0FN4NE6MSXNms",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_star_line_juvenile_v3_structure.glb",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender.glb",
+              "drive_file_id": "1U6KFPET9XlMQ6xGvofZFnf38oUS6fH1K",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_juvenile_base_color.png",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_textures_cr_starter_star_line_juvenile_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_textures_cr_starter_star_line_juvenile_base_color.png",
+              "drive_file_id": "1omd3xLy5G295zlFI37JjcorcekVoEfmZ",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_juvenile_normal.png",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_textures_cr_starter_star_line_juvenile_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_textures_cr_starter_star_line_juvenile_normal.png",
+              "drive_file_id": "18_D6EAgD4lSHqNGUtqT8gOi7uULGmGwh",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_juvenile_orm.png",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_textures_cr_starter_star_line_juvenile_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_textures_cr_starter_star_line_juvenile_orm.png",
+              "drive_file_id": "1gxro83gwoqnWNCoUs_gakFLlaaM0zVVV",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_rig_spec.json",
+              "drive_file_id": "153otIKvL8A_7PdzYdahw0uR1SMbHWoEG",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_motion_spec.json",
+              "drive_file_id": "1eBmXueDnSX-coLHg5lwzuw93Hevxa08S",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_build_report.json",
+              "drive_file_id": "1fsixT5VMs4KY_ieTwT7-_nTjn1dYP3sI",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1VGhJYyDR_Y1SdhaXNLXGhiW8x9GIVSnc",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1oJuJnEIJ8lHmhyNyY-qzL7PtAA7PqyvN",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1EONJx2YwOrZGlRfwAz3HcBXKFUPTTRm8",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1sFAxqcermvANM_pdLPYOw-YwxABFkhyz",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1ub_CHEuhhma-p-0XVSJ78mIwNyKWj4Z7",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_star_line_juvenile_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_juvenile_03b_blender_review_structure_verification.json",
+              "drive_file_id": "14nPSgJeYtdqKBJhBdCSkgGTw3xFVgyut",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "adolescent",
+          "form": 2,
+          "manifest_id": "1RR1IF6VlVkhnT1c6TEfWH23aQMDwlCcp",
+          "manifest_name": "starter_star_line_adolescent_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_star_line_adolescent_v3_structure.blend",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender.blend",
+              "drive_file_id": "19UAzQTBS0bGen1TKakOTI8vkLoBSL2It",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_star_line_adolescent_v3_structure.glb",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender.glb",
+              "drive_file_id": "1XAb0cYKH4c9m1Gq45bUy1vyrzI8nXzRt",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_adolescent_base_color.png",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_textures_cr_starter_star_line_adolescent_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_textures_cr_starter_star_line_adolescent_base_color.png",
+              "drive_file_id": "1XkM5bTLlSRq4XQr4NsO7_BFzgz_6SL8E",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_adolescent_normal.png",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_textures_cr_starter_star_line_adolescent_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_textures_cr_starter_star_line_adolescent_normal.png",
+              "drive_file_id": "1uMERfcEaIuJITWuYBLkNUP4ZQv5H3ioo",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_adolescent_orm.png",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_textures_cr_starter_star_line_adolescent_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_textures_cr_starter_star_line_adolescent_orm.png",
+              "drive_file_id": "18D3g11BFSSdCizyXlXITZryx0EhNlUJa",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_rig_spec.json",
+              "drive_file_id": "1QsD5LFIUmwmk6Oov6mMYhTJnKCrbiqlG",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_motion_spec.json",
+              "drive_file_id": "1Xm7ptvfdsbUYmuO2YWi20KLlBIw9xgD-",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_build_report.json",
+              "drive_file_id": "1qBrMmnnOctq0t4ltitb02CpZCSKbnq43",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1leswKR5eEvg60y-YwgNf5lp0ijryI3sL",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1sFP7AwOChyF8QLEFR1b1eeimTU5-CwWZ",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1M8qWHtmupUVqtzquHyOK_AwQP734djpP",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1SeFBi57q_YhywkmjYyf4nrQmm_8z92zB",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1Cu04cx1aGsKG4uO2sLg_P5SqoWoNg4aH",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_star_line_adolescent_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adolescent_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1YLzq__ukc1vI_Xb7jCGywMVYavF_2_OQ",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "adult",
+          "form": 3,
+          "manifest_id": "1h1hT8ovftw9wbUmlhpbXxKrrzC0HkX7Q",
+          "manifest_name": "starter_star_line_adult_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_star_line_adult_v3_structure.blend",
+              "current_drive_filename": "starter_star_line_adult_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender.blend",
+              "drive_file_id": "12wB2R71Ics3xwu6hAbdW5jc3mm0nQ_vI",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_star_line_adult_v3_structure.glb",
+              "current_drive_filename": "starter_star_line_adult_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender.glb",
+              "drive_file_id": "10d0ffPv8adnw2PSCv--ozfJa4Odbp_Yk",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_adult_base_color.png",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_textures_cr_starter_star_line_adult_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_textures_cr_starter_star_line_adult_base_color.png",
+              "drive_file_id": "1EzGLr9KlmLv1m0Kbzscst5UlCBfS_eM4",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_adult_normal.png",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_textures_cr_starter_star_line_adult_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_textures_cr_starter_star_line_adult_normal.png",
+              "drive_file_id": "1_FhTDBkrFtS1G7p8ABgkeXQxvBhp0nwo",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_adult_orm.png",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_textures_cr_starter_star_line_adult_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_textures_cr_starter_star_line_adult_orm.png",
+              "drive_file_id": "1BR1LwBjoUX_7MtGVFDjrbw8VVtzKIOxK",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_rig_spec.json",
+              "drive_file_id": "1EPKe1bScMy7rLMV8pxZ1dKnf7gV9FvtP",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_motion_spec.json",
+              "drive_file_id": "19Lg7CIDhpd2YNm1r8t6fst4-4cv_bsc3",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_build_report.json",
+              "drive_file_id": "1S1cfklqbzFkh9Ln-DNYEzXchoOa5G3dg",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "14Dxl-7-IOTjbCFjHOVmLIR1KUcRyPrHT",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_review_material_back.jpg",
+              "drive_file_id": "12dEdMslHBcpncPKa0c0cFoIBmBqPZRqS",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1cnDBFC_wggdpFCkt7xrr6R7H7P12dy4n",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1uvijoz3CEmbHq-B2ib2rMjJXOQA5rUtk",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1zsoKuP5wLTWK60C0Tr--JVDmu5OgTUwx",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_star_line_adult_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_adult_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1mSfkgnGfHhCvod_yw_-nS19DKY5iwmSk",
+              "mime_type": "application/json"
+            }
+          ]
+        },
+        {
+          "stage": "overload",
+          "form": 4,
+          "manifest_id": "1lP_wABmJk5Xs1KCUFFYlGXt_pRBefhko",
+          "manifest_name": "starter_star_line_overload_03b_blender_manifest.json",
+          "files": [
+            {
+              "archive_path": "models/cr_starter_star_line_overload_v3_structure.blend",
+              "current_drive_filename": "starter_star_line_overload_03b_blender.blend",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender.blend",
+              "drive_file_id": "16HSbQHQguuNgFZ34j21iRkbx2msmmr4e",
+              "mime_type": "application/octet-stream"
+            },
+            {
+              "archive_path": "models/cr_starter_star_line_overload_v3_structure.glb",
+              "current_drive_filename": "starter_star_line_overload_03b_blender.glb",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender.glb",
+              "drive_file_id": "1jEtH1kHzTNtx4je5wY_Mu8HE-KsTnW45",
+              "mime_type": "model/gltf-binary"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_overload_base_color.png",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_textures_cr_starter_star_line_overload_base_color.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_textures_cr_starter_star_line_overload_base_color.png",
+              "drive_file_id": "1zQUHO-dLf9ZOgUrWstnnKLGI37CvWDMg",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_overload_normal.png",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_textures_cr_starter_star_line_overload_normal.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_textures_cr_starter_star_line_overload_normal.png",
+              "drive_file_id": "1FW2xZtB9d0YbCtzaTfrTpyTugnnKeLw1",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "textures/cr_starter_star_line_overload_orm.png",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_textures_cr_starter_star_line_overload_orm.png",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_textures_cr_starter_star_line_overload_orm.png",
+              "drive_file_id": "1zOt913fv2kJQIDOxxBsQKvNirOPKfSk7",
+              "mime_type": "image/png"
+            },
+            {
+              "archive_path": "rig_spec.json",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_rig_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_rig_spec.json",
+              "drive_file_id": "1dxvmdn4rCErelMtYGO4Jp4vxvOb-u0Fj",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "motion_spec.json",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_motion_spec.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_motion_spec.json",
+              "drive_file_id": "1U7tdPvE7_br6DPAqDAzJPCwTGchMPzGd",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "build_report.json",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_build_report.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_build_report.json",
+              "drive_file_id": "1bkoho-ljEcVB183dsSnj3ksjeQbiI26l",
+              "mime_type": "application/json"
+            },
+            {
+              "archive_path": "review/anatomy_review.jpg",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_review_anatomy_review.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_review_anatomy_review.jpg",
+              "drive_file_id": "1vK9FQnD6xcwhLHHW6SgCsooMDUFTOOUM",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_back.jpg",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_review_material_back.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_review_material_back.jpg",
+              "drive_file_id": "1UG51WPmboGY-JKstGj5Jc1Nj13uz2111",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_front.jpg",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_review_material_front.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_review_material_front.jpg",
+              "drive_file_id": "1vBsEKBVAPk22Lf82P0z--G95EdIWXYWm",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/material_side.jpg",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_review_material_side.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_review_material_side.jpg",
+              "drive_file_id": "1dRMr83sWfg2jbrJYp-0xyARSEQctprMm",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/motion_diagnostic.jpg",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_review_motion_diagnostic.jpg",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_review_motion_diagnostic.jpg",
+              "drive_file_id": "1rzW2EDBCpgrWPzcsjcwjukbJHbn3jhOP",
+              "mime_type": "image/jpeg"
+            },
+            {
+              "archive_path": "review/structure_verification.json",
+              "current_drive_filename": "starter_star_line_overload_03b_blender_review_structure_verification.json",
+              "current_drive_relative_path": "creatures/ch_starter_star_line/_03b_blender/starter_star_line_overload_03b_blender_review_structure_verification.json",
+              "drive_file_id": "1nFsBRw7MATgvlfnYigZyoAYLYIx3NCyM",
+              "mime_type": "application/json"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
