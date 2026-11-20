@@ -8,6 +8,41 @@ default topology. Catalog inference is a suggestion; when the creature is
 hybrid, unusual, or anatomy ambiguous, author explicit \`anatomy\`, \`limbs\`
 and world-space \`landmarks\` in the per-asset spec.
 
+## Character Colab Image-to-3D v2 (GitHub-maintained)
+
+**Scope:** This opt-in upgrade is for `category=character`, `input_mode=image`, `pipeline=colab`, with `character_colab_workflow: "character-colab/2"`. Existing jobs without this flag keep their previous reproducible execution behavior. Every per-character spec, screenshot, scoring report, GLB and derived asset belongs only in Drive. GitHub owns this generic specification and `docs/pipeline/characters/03a_colab.prompt.md`; Drive's `characters/_prompts/` copy is an ordinary read-only publication mirror (not yet ACL-enforced).
+
+### Reference and calibration prerequisites
+
+The user provides **front + side/back (or a turnaround sheet) + an independent 45° three-quarter image**. The source `source_pack` must be approved in `reviews/<source_pack>.json`; `source_image` must point to the exact front file. The new `reference_views` mapping contains `front`, `three_quarter_45` and either `side`+`back` or `turnaround`, all relative to the approved portrait folder. Source files are hashed into `qa/reference_views.json`; any mismatch requires a new model asset ID. Uncalibrated three-view sheets are **not** passed to Pixal3D as calibrated multi-view: only a `multiview_dir` with verified `transforms.json`, image paths and valid camera matrices can enable `inference_mv.py`.
+
+### Deterministic quality gate
+
+After the first actual generated GLB, **before rigging**, the runner writes `qa/appearance_gate.json` and returns `REVIEW_REQUIRED` if `qa/appearance_review.json` does not exist or is not sufficient. This does not execute a vision model automatically. An independent reviewer or integrated, actually executed visual evaluator must write a report with:
+- `schema: "cosmimera-character-appearance-review/1"`, `asset_id`, `model_sha256`, `reference_sha256`, `method: "human"|"external_vision"|"hybrid"`, a nonempty `reviewer`;
+- complete `scores` object with normalized [0,1] `silhouette`, `face`, `outfit`, `details`, `texture`, and optional typed `issues` objects with `type` from `missing_angle`, `occlusion`, `geometry`, `identity`, `outfit`, `details`, `texture`, `uncertain`.
+
+Suggested initial thresholds are silhouette .82, face .85, outfit .82, details .80 and texture .76. These are **project heuristics**, not validated perceptual scores. Passing numeric scores allows the existing rigging/Blender QA to proceed; it is **never** the human final approval.
+
+Decision table:
+
+| Issue/evidence | Next action | Guardrail |
+| --- | --- | --- |
+| Missing/occluded angle | `REQUEST_MV_ADAPTER` | MV-Adapter is a **recommendation only**, not an installed inference step. At most one supplementation pass; keep source identity/poses consistent and supply real calibration before multi-view inference |
+| Topology/geometry defect | `REPAIR_GEOMETRY` | Local Blender correction; do not confuse model holes with missing view data |
+| Face, silhouette, outfit or identity mismatch | `REVISE_PROMPT_OR_COMPARE_BACKEND` | Targeted prompt/mask/reference update or truly installed alternative model, not seed-only loops; at most 2 re-generations |
+| Material/UV/color issue only | `REFINE_TEXTURE` | Repair UV, seams, texture maps and detail fidelity without unnecessary remeshing |
+| Uncertain evaluation, retry budget exhausted | `HUMAN_REVIEW_MODEL` | Present candidates to human; do not continue unreviewed |
+| Every dimension passed, no issues | `CONTINUE_RIG` | Resume with the same frozen model/spec/review hashes |
+
+Each input/model/backend change must be assigned **a fresh `asset_id`** (the runner prevents changed fingerprints from reusing a result). The module does not automatically re-run, change prompts, generate supplemental images or switch models. It returns an explicit action for an authorized worker to carry out in a new version, preventing repeated, low-evidence generation loops. The gate runs again against each actual candidate.
+
+### Stage and QA
+
+The preflight validates runtime and approved source; reference set validation in the runner additionally checks required v2 views. On `--stage gpu`, missing external appearance review stops at `REVIEW_REQUIRED` *after* initial source generation and before SkinTokens. The notebook's GPU shutdown guard must still execute, including on nonzero process exit. After the reviewer supplies the exact hash-matched report, re-run the same asset/spec/revision, GPU resources as needed for SkinTokens, then `post_gpu` for Blender topology, UV, materials, animation and GLB round-trip checks. Review outputs remain in Drive; GitHub receives only reusable workflow changes.
+
+**Important:** Numeric appearance scoring, MV-Adapter, texture restoration and cross-backend candidate ranking are not claimed as integrated ML services in this PR. Missing evaluators, model weights or calibrated camera transforms must be disclosed rather than simulated.
+
 ## Production path
 
 \`\`\`text
