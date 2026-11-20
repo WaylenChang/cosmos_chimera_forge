@@ -72,6 +72,36 @@
     return "_" + s;
   }
 
+  // Keep saved game subject IDs stable even when the physical Drive folder is renamed.
+  function logicalSubjectId(kind, folderName) {
+    const s = String(folderName || "");
+    if (kind === "characters") {
+      for (const [previous, current] of Object.entries(LEGACY_CHARACTERS)) {
+        if (s === current) return previous;
+      }
+    }
+    if (kind === "creatures") {
+      if (s.startsWith("ch_legacy_line_")) return s.slice("ch_legacy_".length);
+      if (s.startsWith("ch_legacy_")) return "cr_" + s.slice("ch_legacy_".length);
+      if (s.startsWith("ch_starter_")) return "starter_" + s.slice("ch_starter_".length);
+      const boss = /^ch_trial_boss_(.+)_line$/.exec(s);
+      if (boss) return "line_" + boss[1] + "_trial_boss";
+    }
+    if (kind === "moves" && s.startsWith("mv_legacy_")) {
+      return s.slice("mv_legacy_".length);
+    }
+    return s;
+  }
+
+  // The web application keeps using logical legacy step paths while physical Drive
+  // directories use the leading underscore. Older already-prefixed backup folders
+  // must retain their historical names.
+  function logicalSubfolderName(folderName) {
+    const name = String(folderName || "");
+    if (/^_(?:empty_before_migration_|backup_pre_fix_)/.test(name)) return name;
+    return name.startsWith("_") ? name.slice(1) : name;
+  }
+
   function folderCandidates(kind, depth, folderName) {
     const original = String(folderName || "");
     const canonical = canonicalFolderName(kind, depth, original);
@@ -83,6 +113,8 @@
     canonicalFolderName,
     folderCandidates,
     isCompliant,
+    logicalSubjectId,
+    logicalSubfolderName,
   });
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (global) global.COSMI_DRIVE_NAMES = api;
