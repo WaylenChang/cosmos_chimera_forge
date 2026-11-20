@@ -5,6 +5,10 @@
 
 ## 1. Google Drive 目錄結構與命名規範
 
+> **PR #25 檔案命名規則更新：**個別 ID 目錄內的新檔名，請以 [FILE_NAMING_CONTRACT.md](FILE_NAMING_CONTRACT.md) 為準；角色／招式 `<實體ID目錄>_<功能>[_<步驟>_<版本>].<ext>`，宙獸 `<實體ID目錄>_<功能>_<i>型態[_<步驟>_<版本>].<ext>`。只有正式最終成果才省略步驟與版本。下方保留的 `cr_*`、英文型態名、`_03b_blender` 等檔名範例為**尚未完成遷移的歷史格式**，不得當作新寫入規範。舊資產與共用跨型態 Prompt 需先經相容性與核准狀態稽核後再實體更名；目前不能宣稱整個 Drive 檔案已更名完畢。
+
+
+
 > **2026-11-20 physical Drive rename:** The concrete Google Drive folder names have been normalized: category helper folders and all nested processing/version/backup folders start with `_`; subject folders use `chr_<batch>_<name>`, `ch_<batch>_<name>` or `mv_<batch>_<name>`. The historical paths and asset IDs displayed below are **logical compatibility paths**, not literal physical Drive folder paths. Examples: `characters/chr_1286/03a_colab/v2` resolves to `characters/chr_protagonist_yeh_chengxi/_03a_colab/_v2`; `creatures/cr_aqua_slime/03b_blender` resolves to `creatures/ch_1st_batch_aqua_slime/_03b_blender`. Retain original filenames/game IDs. The exact 433-folder name+ID mapping is in `folder-migration-map-2026-11-20.json`, and full metadata readback confirms zero naming violations. The updated Drive resolver is available in PR #25 and must be deployed before relying on the new physical paths in the live app.
 
 > **批次名稱更新（2026-11-20）：**角色正式資料夾使用 `chr_protagonist_<name>`（3 個），第一批宙獸正式資料夾使用 `ch_1st_batch_<name>`（15 個）。舊 `chr_legacy_*`、`ch_legacy_*` 僅為過渡相容名稱；遊戲主體 ID 和檔名未變。歷史備份 `_legacy_*` 目錄不在本次更名範圍。
