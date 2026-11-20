@@ -30,6 +30,8 @@ def enabled(spec: dict, pipeline: str) -> bool:
     if value and (pipeline != "colab" or spec.get("input_mode", "image") != "image"
                   or str(spec.get("category") or "") not in ("character", "characters")):
         raise ValueError("character-colab/2 requires an image character Colab job")
+    if value and spec.get("source_layout", "legacy") not in ("legacy", "subject_v3"):
+        raise ValueError("Unsupported character source_layout")
     return value == WORKFLOW
 
 
@@ -39,6 +41,58 @@ def sha256_file(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def subject_v3_folder(root: Path, spec: dict) -> Path:
+    """Resolve the current Drive characters/<subject_id> folder, without guessing identity."""
+    root = Path(root).resolve()
+    subject = spec.get("subject_id")
+    if (root.name != "characters" or not isinstance(subject, str) or
+            not subject or not all(x.isalnum() or x in "_-" for x in subject) or ".." in subject):
+        raise ValueError("subject_v3 requires a safe subject_id under the characters root")
+    folder = (root / subject).resolve()
+    if not folder.is_relative_to(root) or not folder.is_dir():
+        raise ValueError("subject_v3 character folder not found")
+    return folder
+
+
+def _subject_file(folder: Path, relative: str, label: str) -> Path:
+    if (not isinstance(relative, str) or not relative or
+            Path(relative).is_absolute() or "\\\\" in relative):
+        raise ValueError(label + " must be a safe relative path")
+    file = (folder / relative).resolve()
+    if not file.is_relative_to(folder) or not file.is_file():
+        raise ValueError(label + " missing/unsafe file")
+    return file
+
+
+def validate_subject_v3(root: Path, spec: dict) -> Path:
+    """Authorize a current Drive subject folder using an explicit human review.
+
+    A file merely existing in _01_portrait never implies approval. No synthetic
+    approval, inferred review path, guessed subject or fallback to another folder.
+    """
+    folder = subject_v3_folder(root, spec)
+    source = spec.get("source_pack")
+    if (not isinstance(source, str) or not source or
+            not all(ch.isalnum() or ch in "-_" for ch in source) or ".." in source):
+        raise ValueError("subject_v3 requires an exact source_pack ID")
+    review_relative = spec.get("portrait_review")
+    if not isinstance(review_relative, str) or not review_relative.startswith("_02_review_portrait/"):
+        raise ValueError("subject_v3 requires an explicit _02_review_portrait/ review file")
+    review = json.loads(_subject_file(folder, review_relative, "portrait_review").read_text(encoding="utf8"))
+    if (not isinstance(review, dict) or review.get("status") != "ok" or
+            review.get("subject_id") != spec["subject_id"] or
+            source not in (review.get("source_pack"), review.get("asset_id"))):
+        raise ValueError("source portrait not approved for this subject/source_pack")
+    image = _subject_file(folder, spec.get("source_image"), "source_image")
+    rel = image.relative_to(folder).as_posix()
+    if not rel.startswith("_01_portrait/") and not (
+            image.parent == folder and "_01_portrait_" in image.name):
+        raise ValueError("source_image must be inside _01_portrait or the approved main portrait root")
+    if image.suffix.lower() not in VIEW_FORMATS or not 0 < image.stat().st_size <= 20 * 1024 * 1024:
+        raise ValueError("source_image must be a nonempty PNG/JPG/WebP within size limit")
+    return image
 
 
 def reference_views(root: Path, spec: dict, approved_image: Path) -> dict:
@@ -52,12 +106,15 @@ def reference_views(root: Path, spec: dict, approved_image: Path) -> dict:
     source = spec.get("source_pack")
     if not isinstance(source, str) or not source or "/" in source or "\\" in source or source in (".", ".."):
         raise ValueError("Missing/unsafe approved source_pack")
-    candidates = [root / "01_portraits" / source,
-                  root / "03_completed" / "portraits" / source]
-    folders = [folder.resolve() for folder in candidates if folder.is_dir()]
-    if len(folders) != 1:
-        raise ValueError("Expected exactly one approved portrait directory")
-    folder = folders[0]
+    if spec.get("source_layout") == "subject_v3":
+        folder = subject_v3_folder(root, spec)
+    else:
+        candidates = [root / "01_portraits" / source,
+                      root / "03_completed" / "portraits" / source]
+        folders = [folder.resolve() for folder in candidates if folder.is_dir()]
+        if len(folders) != 1:
+            raise ValueError("Expected exactly one approved portrait directory")
+        folder = folders[0]
     approved_image = Path(approved_image).resolve()
     if not approved_image.is_relative_to(folder):
         raise ValueError("Approved source image lies outside source_pack")
