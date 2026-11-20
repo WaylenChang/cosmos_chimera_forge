@@ -174,16 +174,20 @@ test('3D viewer isolates forms and animation clips without overlapping models or
   assert.doesNotMatch(playBlock, /crossFadeTo/);
 });
 
-test('all 35 designed creature lines (including 15 Drive cr_* and draft-02) have complete text data and unify under catalog rows', () => {
+test('all 45 designed creature lines (including 15 Drive cr_* and later batches) have complete text data and unify under catalog rows', () => {
   const ctx = vm.createContext({ window: {} });
   vm.runInContext(fs.readFileSync(path.join(root, 'designed.js'), 'utf8'), ctx);
   const designed = ctx.window.COSMI_DESIGNED;
-  assert.equal(designed.items.length, 35);
+  assert.equal(designed.items.length, 45);
   for (const item of designed.items) {
     assert.ok(item.title_zh, `${item.line_id} missing title_zh`);
     assert.ok(item.concept?.archetype_name, `${item.line_id} missing archetype_name`);
     assert.ok(item.concept?.meaning, `${item.line_id} missing meaning`);
-    assert.equal(item.concept?.locked?.stages?.length, 4, `${item.line_id} must have 4 stages`);
+    const stages = item.concept?.locked?.stages || [];
+    // Some authored trial-boss lines currently have only one stage; do not invent missing forms.
+    assert.ok(stages.length >= 1 && stages.length <= 4, `${item.line_id} must include 1-4 authored stages`);
+    assert.equal(new Set(stages.map(st => st.stage)).size, stages.length, `${item.line_id} has duplicate stages`);
+    for (const st of stages) assert.ok(['juvenile', 'adolescent', 'adult', 'overload'].includes(st.stage), `${item.line_id} has unknown stage`);
     for (const st of item.concept.locked.stages) {
       assert.ok(st.name_zh && st.name_en, `${item.line_id}/${st.stage} missing names`);
       assert.ok(st.look && st.dex_zh && st.dex_en, `${item.line_id}/${st.stage} missing look/dex`);
@@ -270,7 +274,6 @@ test('high-complexity Colab character models replace simple legacy/ai_blender mo
 test('selectModelFile resolves flattened Level 3 Drive GLBs even when migrated manifest lists models/<old>.glb', () => {
   const flatFiles = [
     { path: 'chr_1286_03a_colab.glb' },
-    { path: 'chr_1286_03a_colab_anime.glb' },
     { path: 'chr_1286_03a_colab_manifest.json' }
   ];
   const migratedManifest = {
@@ -282,4 +285,40 @@ test('selectModelFile resolves flattened Level 3 Drive GLBs even when migrated m
     'chr_1286_03a_colab.glb'
   );
   assert.throws(() => review.selectModelFile([], migratedManifest), /不存在/);
+  assert.throws(() => review.selectModelFile([
+    { path: 'chr_1286_03a_colab.glb' },
+    { path: 'chr_1286_03a_colab_anime.glb' }
+  ], migratedManifest), /不存在/, 'multiple unmatched GLBs must not be guessed');
+});
+
+
+test('migrated four-form model references resolve only the corresponding physical GLB', () => {
+  for (const line of ['sun', 'moon', 'star']) {
+    const stages = ['juvenile', 'adolescent', 'adult', 'overload'];
+    const files = stages.map(stage => ({path: 'starter_' + line + '_line_' + stage + '_03b_blender.glb'}));
+    for (const stage of stages) {
+      const legacyPath = 'models/cr_starter_' + line + '_line_' + stage + '_v3_structure.glb';
+      const result = review.selectModelFile(files, {files: [{path: legacyPath, kind: 'model', level: 'L1'}]});
+      assert.equal(result.path, 'starter_' + line + '_line_' + stage + '_03b_blender.glb');
+    }
+  }
+});
+
+test('four-form model selection supports form1-4 names and fails closed on missing or duplicate forms', () => {
+  const files = [1, 2, 3, 4].map(form => ({
+    path: 'ch_trial_boss_ice_line_model_form' + form + '_03b_blender_legacy.glb'
+  }));
+  const legacy = stage => ({files: [{
+    path: 'models/line_ice_trial_boss_' + stage + '_03b_blender.glb',
+    kind: 'model', level: 'L1'
+  }]});
+  assert.equal(review.selectModelFile(files, legacy('juvenile')).path, files[0].path);
+  assert.equal(review.selectModelFile(files, legacy('overload')).path, files[3].path);
+  assert.throws(() => review.selectModelFile(files, {files: [{
+    path: 'models/unknown.glb', kind: 'model', level: 'L1'
+  }]}), /不存在/);
+  assert.throws(() => review.selectModelFile([...files, {path: 'shadow_model_form1.glb'}], legacy('juvenile')), /不存在/);
+  assert.equal(review.selectModelFile([{path: 'chr_1286_03a_colab.glb'}], {
+    files: [{path: 'models/mdl-20261113-1286-0000.glb', kind: 'model', level: 'L1'}]
+  }).path, 'chr_1286_03a_colab.glb');
 });

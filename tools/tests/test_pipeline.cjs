@@ -8,6 +8,7 @@ function harness() {
   const nodes = {pipelineStage: {value: 'portrait'}, pipelineParameters: {value: '{"secret_format":"DO_NOT_LEAK"}'}, pipelineSource: {value: ''}};
   const c = {document: {getElementById: id => nodes[id], addEventListener() {}}, COSMI_FORGE: {activePackage: () => ({subjectId:'chr_one',drivePath: 'characters/02_3d/colab/model'}), packages: () => [{id:'source',drivePath:'characters/03_completed/portraits/source'}]}};
   c.window = c;
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'drive-folder-naming.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);
   for (const [key, name] of Object.entries(c.COSMI_PIPELINE.stages)) {
@@ -53,7 +54,7 @@ test('independent encyclopedia step generates a scoped player-wiki prompt', () =
   ctx.concept={name_zh:'角色甲',role:'守護者',appearance:'blue armor',secret_skill:'NOT_FOR_WIKI'};
   const character=c.COSMI_PIPELINE.build(ctx);
   assert.match(character,/編寫玩家可閱讀的角色圖鑑/);
-  assert.ok(character.includes('characters/chr_one/chr_one_05_wiki.md'));
+  assert.ok(character.includes('characters/chr_one/chr_protagonist_one_wiki_05_wiki_draft.md'));
   assert.match(character,/守護者|blue armor/);
   assert.doesNotMatch(character,/NOT_FOR_WIKI/);
   ctx.task.id='creature-concept';ctx.subjectId='cr_one';ctx.opts={stage:'juvenile'};
@@ -62,14 +63,14 @@ test('independent encyclopedia step generates a scoped player-wiki prompt', () =
     {stage:'adult',look:'ADULT_SECRET'}
   ]},appearance:'blue scales'};
   const creature=c.COSMI_PIPELINE.build(ctx);
-  assert.ok(creature.includes('creatures/cr_one/cr_one_juvenile_05_wiki.md'));
+  assert.ok(creature.includes('creatures/cr_one/ch_1st_batch_one_wiki_form1_05_wiki_draft.md'));
   assert.doesNotMatch(creature,/ADULT_SECRET/);
   ctx.task.id='move-vfx';ctx.subjectId='fx_fire';ctx.opts={
     move_name:'烈焰',element:'fire',shape:'cone',tier:'heavy',use_creature:'yes'
   };
   ctx.concept={name_zh:'SECRET_CASTER',biography:'SECRET_BIO'};
   const move=c.COSMI_PIPELINE.build(ctx);
-  assert.ok(move.includes('moves/fx_fire/fx_fire_05_wiki.md'));
+  assert.ok(move.includes('moves/fx_fire/mv_legacy_fx_fire_wiki_05_wiki_draft.md'));
   assert.doesNotMatch(move,/SECRET_CASTER|SECRET_BIO/);
 });
 

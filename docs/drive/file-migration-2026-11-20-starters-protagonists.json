@@ -1,0 +1,205 @@
+{
+  "date": "2026-11-20",
+  "scope": "starters and protagonists top-level renames",
+  "count": 33,
+  "entries": [
+    {
+      "file_id": "1CIBPES1dRu6gk9wSGFt_hB_fn-dGZ5uS",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_adolescent_05_wiki.md",
+      "new_name": "ch_starter_sun_line_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1JYesS7Zxmt0cg405_2m4K6q3JcQ-QYOb",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_adult_05_wiki.md",
+      "new_name": "ch_starter_sun_line_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "10lqfKmc0__3slGsiUOtlD2HyekJKNXlZ",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_juvenile_05_wiki.md",
+      "new_name": "ch_starter_sun_line_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1hsCZ1sj63Pq8XmH7KcJy98fVysbIrNmA",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_overload_05_wiki.md",
+      "new_name": "ch_starter_sun_line_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1ZkCtDbcdK9s8n9xS7u4twO38ufsncEJ5",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_juvenile_03b_blender.glb",
+      "new_name": "ch_starter_sun_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1bGoge2TlET1ftTg5SwjwR-UAByL3dc5t",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_adolescent_03b_blender.glb",
+      "new_name": "ch_starter_sun_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1g_hbNkw_DBkdbDokrqMoS9Qr2Y2YZ3uS",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_adult_03b_blender.glb",
+      "new_name": "ch_starter_sun_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1WETY5M1V2E8P2z-MpncVzm5ygeC3f44X",
+      "parent_id": "1S6pzoN9fJ9iUsZAT9iabGNpXYHt7XBOM",
+      "original_name": "starter_sun_line_overload_03b_blender.glb",
+      "new_name": "ch_starter_sun_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "14OvOE_ZqoSXxMhu4NAUjcuzarTrG3nLi",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_adolescent_05_wiki.md",
+      "new_name": "ch_starter_moon_line_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1FeLAGIIOAH7D4p7wgUFAPsuuw0g7eZ3r",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_adult_05_wiki.md",
+      "new_name": "ch_starter_moon_line_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1qxKRIXcGA7tK5VRBu9xdKcDRkijG7CU-",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_juvenile_05_wiki.md",
+      "new_name": "ch_starter_moon_line_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "14EZNKYbztRi7vK4GwKFChi4uqAEzFxuj",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_overload_05_wiki.md",
+      "new_name": "ch_starter_moon_line_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1BnV12SIOTYKqZqHhso7f6k58rxoU2ZGP",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_overload_03b_blender.glb",
+      "new_name": "ch_starter_moon_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1sPqTDEGCuR0DjtFtGmRQBehDpueEXxWc",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_adult_03b_blender.glb",
+      "new_name": "ch_starter_moon_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1JAgEiptg__5IntLOhVGCBtlQEW-YVw1V",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_adolescent_03b_blender.glb",
+      "new_name": "ch_starter_moon_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1Sl0mZiI30cmpmgWcvKHyKPTXF61O2Pj8",
+      "parent_id": "1Uw0vNFqcMVl8d4igHY5MIDWjqKAL4TL3",
+      "original_name": "starter_moon_line_juvenile_03b_blender.glb",
+      "new_name": "ch_starter_moon_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1JcbUmuR6c5aDHt9he34SWrPja_VfuBgF",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_adolescent_05_wiki.md",
+      "new_name": "ch_starter_star_line_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "17qOmJld0WZ8QPP8tLxiQEWDaS0GHd3CK",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_adult_05_wiki.md",
+      "new_name": "ch_starter_star_line_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1g99CUb91j3M5p4GKAG4drwIwBN6ntSEU",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_juvenile_05_wiki.md",
+      "new_name": "ch_starter_star_line_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "17RYaS5lTFlva9cHkjYQyLUw4rmDU_lWV",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_overload_05_wiki.md",
+      "new_name": "ch_starter_star_line_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1A7nA7owLIAMjIT_T48UuDLGHqzXN1pF1",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_juvenile_03b_blender.glb",
+      "new_name": "ch_starter_star_line_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1WMg5HaLE0NuJN44cbJgSI2wV3dGaRN0p",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_adolescent_03b_blender.glb",
+      "new_name": "ch_starter_star_line_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1e94SfD9Pjd0EF6u-tyD_lCfF2UjLrNXn",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_adult_03b_blender.glb",
+      "new_name": "ch_starter_star_line_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1jFmU6hIRU3lcQZCeAyDma8hnsNhZW3VN",
+      "parent_id": "17FDE_x_ExmwtjcgrQX_toIT701Guq1TA",
+      "original_name": "starter_star_line_overload_03b_blender.glb",
+      "new_name": "ch_starter_star_line_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1jxI8pjSwJ2JYPniSO5Ef5cGZGA3Q7qb0",
+      "parent_id": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "original_name": "chr_1286_01_portrait_main.png",
+      "new_name": "chr_protagonist_yeh_chengxi_main_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1txczBZl_oLCkzrEhpGpQ7RQG9bH5WPlW",
+      "parent_id": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "original_name": "chr_1286_05_wiki.md",
+      "new_name": "chr_protagonist_yeh_chengxi_wiki_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1MQ2N_podNQQxKXx4mpM58pDmGohD8XLc",
+      "parent_id": "1lsBr_EAzSC4NUdr8qViBh6xugvrN7K8-",
+      "original_name": "chr_1286_03a_colab.glb",
+      "new_name": "chr_protagonist_yeh_chengxi_model_03a_colab_legacy.glb"
+    },
+    {
+      "file_id": "1YEW5LWWsIzdce9U2FpN-TRrLkU4C43f-",
+      "parent_id": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "original_name": "chr_3d04_01_portrait_main.png",
+      "new_name": "chr_protagonist_roen_main_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1_sCbBxpN_738iHYQzGORdh55WKVX8vDj",
+      "parent_id": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "original_name": "chr_3d04_05_wiki.md",
+      "new_name": "chr_protagonist_roen_wiki_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1RejaO9nL6egqBX8q0lFFjcku1PnyM6DW",
+      "parent_id": "1XqlvUO5ejeOzjIin1A-bRJqA940uo_iB",
+      "original_name": "chr_3d04_03a_colab.glb",
+      "new_name": "chr_protagonist_roen_model_03a_colab_legacy.glb"
+    },
+    {
+      "file_id": "1NHhzJpXd3CnkxI0cTd6Em2lR7jIyJnN2",
+      "parent_id": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "original_name": "chr_1855_01_portrait_main.png",
+      "new_name": "chr_protagonist_amemori_sumiha_main_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1M8vT1Ce0FK0dAsSqSE5InKYTCGofrStq",
+      "parent_id": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "original_name": "chr_1855_05_wiki.md",
+      "new_name": "chr_protagonist_amemori_sumiha_wiki_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "18dtqNR8H64VzF5I3iKCcEy2oCqnjq9KQ",
+      "parent_id": "1FWClHTAPscaSROs8duDcUXG4mxI92QHy",
+      "original_name": "chr_1855_03a_colab.glb",
+      "new_name": "chr_protagonist_amemori_sumiha_model_03a_colab_legacy.glb"
+    }
+  ]
+}

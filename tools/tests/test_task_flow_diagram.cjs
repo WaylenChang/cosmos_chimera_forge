@@ -42,7 +42,8 @@ test('category must be selected before route; route must be selected before node
   assert.equal(flow.selectStep(routed, 'image_colab'), null);
   assert.equal(flow.selectStep(routed, 'prompt_3d').step, 'prompt_3d');
   const move = flow.selectRoute(flow.selectCategory('move'), 'move');
-  assert.equal(move.step, 'move_vfx');
+  assert.equal(move.step, 'encyclopedia');
+  assert.equal(flow.selectStep(move, 'move_vfx').step, 'move_vfx');
   assert.equal(flow.selectRoute(flow.selectCategory('move'), 'image'), null);
 });
 test('both routes are visible in one horizontal diagram with shared endpoints', () => {

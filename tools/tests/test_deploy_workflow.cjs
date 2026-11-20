@@ -7,7 +7,8 @@ const workflow = fs.readFileSync(path.resolve(__dirname, '../../.github/workflow
 const [verification, afterBuild, deployment] = workflow.split(/^  (?:pages-build|deploy):\s*$/m);
 
 test('pull requests verify all regressions and Blender before building Pages', () => {
-  assert.match(workflow, /^  pull_request:\s*\n    branches: \[main\]$/m);
+  assert.match(workflow, /^  pull_request:\s*$/m);
+  assert.doesNotMatch(workflow, /^  pull_request:\s*\n    branches: \[main\]$/m);
   assert.match(verification, /^  verify:\s*$/m);
   assert.match(verification, /node --test tools\/tests\/\*\.cjs/);
   assert.match(verification, /^  blender-smoke:$/m);

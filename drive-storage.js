@@ -150,6 +150,7 @@
     "wiki",
     "reviews",
     "backup",
+    "designed_prompts",
   ]);
   function stepCode(stage) {
     const key = String(stage || "").trim();
@@ -188,8 +189,24 @@
     }
     return parts.join("_");
   }
-  function parseAssetFilename(name, kind) {
+  function parseAssetFilename(name, kind, physicalFolder = "") {
     const base = String(name || "").split("/").pop();
+    const names = window.COSMI_DRIVE_NAMES;
+    const modern = physicalFolder && names?.parseSubjectFilename?.(kind, physicalFolder, base);
+    if (modern) {
+      const logicalId = names.logicalSubjectId(kind, physicalFolder);
+      // Official files have no pipeline marker. Their functional role is
+      // enough to classify the asset for the existing package index.
+      const inferred = modern.role === "wiki" ? "05_wiki" :
+        modern.role === "model" || modern.role === "blend" ? "03b_blender" :
+        /^(?:front|turnaround|main|side|back|expressions|props)$/.test(modern.role) ? "01_portrait" :
+        "";
+      const step = modern.step || inferred;
+      if (!step) return null;
+      const stem = [logicalId, modern.stage, step, modern.version].filter(Boolean).join("_");
+      return {id: logicalId, stage: modern.stage, step, version: modern.version,
+        role: modern.role, ext: modern.ext, stem, physicalFolder, official: modern.final};
+    }
     const m = /^(.+?)(?:_(juvenile|adolescent|adult|overload))?_(00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(v\d+|\d{8}(?:[-_]\d{4})?))?(?:_([^.]+))?\.([^.]+)$/i.exec(
       base,
     );
@@ -229,6 +246,17 @@
     parts.push(base);
     return parts.join("/");
   }
+  // New writes use the physical subject folder as filename prefix; the path
+  // component stays a stable logical ID resolved by folder().
+  function newSubjectFilePath(root, subject, stage, role, step, version = "draft", ext = "json") {
+    const naming = window.COSMI_DRIVE_NAMES;
+    if (!naming?.assetFilename) throw Error("缺少新版檔名規範");
+    const physical = naming.canonicalFolderName(root, 1, cleanSubjectId(root, subject));
+    const name = naming.assetFilename({
+      kind: root, folderName: physical, role, stage, step, version, ext,
+    });
+    return subjectDir(root, subject) + "/" + stepSubdir(step) + "/" + version + "/" + name;
+  }
   // One canonical directory resolver for all category-specific pipeline outputs.
   // Level 1: characters / creatures / moves; Level 2: <id>; Level 3: flat files.
   function pipelineDirectory(kind, stage, id) {
@@ -262,7 +290,12 @@
       next.push(item);
       return next;
     };
-    const parsed = parseAssetFilename(name, pipelineRoot(clean));
+    const kind = pipelineRoot(clean);
+    const logical = clean.split("/")[1] || "";
+    const physical = categoryRoots.includes(clean.split("/")[0]) && logical && !logical.startsWith("_") && !RESERVED_CATEGORY_FOLDERS.has(logical)
+      ? window.COSMI_DRIVE_NAMES?.canonicalFolderName(kind, 1, logical)
+      : "";
+    const parsed = parseAssetFilename(name, kind, physical);
     if (
       parsed?.step === "00_appearance" ||
       parsed?.step === "00_parameters" ||
@@ -478,27 +511,38 @@
     if (!path) return config.rootId;
     let parent = config.rootId,
       prefix = "";
-    for (const part of relative(path)) {
+    const parts = relative(path);
+    const category = categoryRoots.includes(parts[0]) ? parts[0] : "";
+    for (let index = 0; index < parts.length; index++) {
+      const part = parts[index];
       prefix = prefix ? prefix + "/" + part : part;
       if (!folders.has(prefix)) {
-        let m = await list(
-          parent,
-          "name = '" + escapeQuery(part) + "' and mimeType = '" + MIME + "'",
-        );
-        if (!m.length && create)
+        const candidates = category && index > 0 && window.COSMI_DRIVE_NAMES
+          ? window.COSMI_DRIVE_NAMES.folderCandidates(category, index, part)
+          : [part];
+        let m = [];
+        // Prefer the canonical physical folder. Preserve reads of old folders
+        // until a verified migration has renamed them.
+        for (const name of candidates) {
+          m = await list(parent, "name = '" + escapeQuery(name) + "' and mimeType = '" + MIME + "'");
+          if (m.length) break;
+        }
+        if (!m.length && create) {
+          const name = candidates[0];
           m = [
             await (
               await request(API + "?fields=id,name", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  name: part,
+                  name,
                   mimeType: MIME,
                   parents: [parent],
                 }),
               })
             ).json(),
           ];
+        }
         if (m.length !== 1)
           throw Error(prefix + " 資料夾" + (m.length ? "名稱重複" : "不存在"));
         folders.set(prefix, m[0].id);
@@ -601,7 +645,7 @@
       if (f.mimeType === MIME) {
         if (folderNames.has(f.name)) throw Error(prefix + f.name + " 名稱重複");
         folderNames.add(f.name);
-        subfolders.push(walk(f.id, prefix + f.name + "/", depth + 1));
+        subfolders.push(walk(f.id, prefix + (window.COSMI_DRIVE_NAMES?.logicalSubfolderName(f.name) || f.name) + "/", depth + 1));
       } else {
         if (/\.zip$/i.test(f.name)) continue;
         const prev = filesByName.get(f.name);
@@ -691,7 +735,7 @@
         const grouped = new Map();
         const inlineReviews = new Map();
         for (const f of files) {
-          const parsed = parseAssetFilename(f.path, kind);
+          const parsed = parseAssetFilename(f.path, kind, entry.physicalName || entry.name);
           if (!parsed) continue;
           if (parsed.step === "02_review_portrait" || parsed.step === "04_review_3d") {
             const rawKey = entry.name + "/" + f.path;
@@ -793,7 +837,14 @@
                   !f.name.startsWith("_") &&
                   !RESERVED_CATEGORY_FOLDERS.has(f.name),
               )
-              .map((entry) => ({ dir, entry }));
+              .map((entry) => ({
+                dir,
+                entry: {
+                  ...entry,
+                  name: window.COSMI_DRIVE_NAMES?.logicalSubjectId(dir, entry.name) || entry.name,
+                  physicalName: entry.name,
+                },
+              }));
           } catch (e) {
             if (!/不存在/.test(e.message)) errors.push(dir + ": " + e.message);
             return [];
@@ -1021,12 +1072,7 @@
     const id = parsed?.id || cleanSubjectId(root, pkg.subjectId || pkg.baseId || pkg.id);
     const stage = parsed?.stage || pkg.stage || pkg.manifest?.stage || "";
     const version = parsed?.version || pkg.manifest?.version || "";
-    const stem = assetStem({ kind: root, id, stage, step: revStep, version });
-    const dir =
-      pkg.drivePath && new RegExp("^" + root + "/[^/]+$").test(pkg.drivePath)
-        ? pkg.drivePath
-        : subjectDir(root, id);
-    return dir + "/" + assetSubpath(stem + ".json", root);
+    return newSubjectFilePath(root, id, stage, "review", revStep, version || "draft", "json");
   }
   async function review(pkg, status, note = "") {
     if (!pkg?.driveFolderId) throw Error("請先將資產資料夾儲存至 Drive");
@@ -1191,46 +1237,71 @@
     const type = pkg.manifest?.task_type || pkg.type || "";
     const subjectId = pkg.manifest?.subject_id || pkg.subjectId || pkg.id;
     const root = pipelineRoot({ type, id: subjectId });
-    const stage = pkg.stage || pkg.manifest?.stage || (root === "creatures" ? "adult" : "");
+    const stage = pkg.stage || pkg.manifest?.stage || "";
+    if (root === "creatures" && !window.COSMI_DRIVE_NAMES?.stageIndex(stage))
+      throw Error("宙獸新檔案必須明確指定第 1–4 型態，禁止預設成年型態");
     const step =
       root === "moves"
         ? "01b_vfx"
         : /model|rig|anim/.test(type)
           ? stepCode($("pipelineStage")?.value === "colab" || pkg.manifest?.pipeline === "colab" ? "03a_colab" : "03b_blender")
           : "01_portrait";
-    const version = pkg.manifest?.version || "";
-    const stem = assetStem({ kind: root, id: subjectId, stage, step, version });
+    // Imported packages are pending approval and always carry a version.
+    const version = String(pkg.manifest?.version || "draft").trim();
+    const physical = window.COSMI_DRIVE_NAMES?.canonicalFolderName(root, 1, cleanSubjectId(root, subjectId));
+    const naming = window.COSMI_DRIVE_NAMES;
+    if (!naming?.assetFilename) throw Error("缺少新版檔案命名契約");
     const path = packageDir(type, subjectId, $("pipelineStage")?.value);
     const keys = Object.keys(pkg.rawFiles),
       rooted = keys.every((k) => k.startsWith(pkg.id + "/"));
     const targetNames = [];
+    const used = new Set();
     for (const key of keys) {
       const rel = rooted ? key.slice(pkg.id.length + 1) : key;
       relative(rel);
-      if (/\.zip$/i.test(rel)) throw Error("正式目錄不接受 ZIP");
-      let flatName;
-      if (parseAssetFilename(rel.split("/").pop(), root)) {
-        flatName = rel.split("/").pop();
-      } else if (/\.(glb|blend)$/i.test(rel)) {
-        const ext = rel.split(".").pop().toLowerCase();
-        flatName = stem + "." + ext;
-      } else {
-        const cleaned = rel
-          .replace(/^(?:images|models|previews|animations|rig|vfx|storyboard|layers|flipbook|source)\//i, "")
-          .replace(/\//g, "_");
-        flatName = stem + "_" + cleaned;
-      }
-      targetNames.push({ key, flatName });
+      if (/\\.zip$/i.test(rel)) throw Error("正式目錄不接受 ZIP");
+      const leaf = rel.split("/").pop();
+      const match = /\\.(prompt\\.md|[a-z0-9]+)$/i.exec(leaf);
+      if (!match) throw Error("無法判定資產副檔名：" + leaf);
+      const ext = match[1].toLowerCase();
+      const already = naming.parseSubjectFilename(root, physical, leaf);
+      const previous = parseAssetFilename(leaf, root);
+      const stem = leaf.slice(0, -match[0].length);
+      const legacyPrefix = previous?.stem && stem.startsWith(previous.stem) ?
+        stem.slice(previous.stem.length).replace(/^_/, "") : "";
+      const originalRole = already?.role || legacyPrefix || (
+        /\\.(glb)$/i.test(leaf) ? "model" :
+        /\\.(blend)$/i.test(leaf) ? "blend" :
+        rel.replace(/\\.[^.]+$/, "").replace(/^(?:images|models|previews|animations|rig|vfx|storyboard|layers|flipbook|source)\\//i,"").replace(/\\//g,"_")
+      );
+      let role = originalRole.replace(/^(?:main|models?)_(?:model|glb)$/, "model")
+        .toLowerCase().replace(/[^a-z0-9_]+/g, "_").replace(/^_+|_+$/g,"");
+      if (ext === "glb" && role === stem.toLowerCase()) role = "model";
+      if (ext === "blend" && role === stem.toLowerCase()) role = "blend";
+      if (!role) throw Error("檔案功能無法識別：" + rel);
+      const flatName = naming.assetFilename({
+        kind: root, folderName: physical, role, stage, step, version, ext,
+      });
+      if (used.has(flatName)) throw Error("同一交付包檔名衝突：" + flatName);
+      used.add(flatName);
+      targetNames.push({key, flatName});
     }
-    const manifestSubpath = assetSubpath(stem + "_manifest.json", root);
-    const existing = await find(path + "/" + manifestSubpath);
-    const existingFlat = existing.file ? existing : await find(path + "/" + stem + "_manifest.json");
-    if (existingFlat.file)
-      throw Error("已有同名資產，請使用新版本（如 v2）或重新載入");
+    const storagePrefix = stepSubdir(step) + "/" + version + "/";
+    // Resolve/create the version folder before running no-overwrite checks.
+    await folder(path + "/" + storagePrefix.slice(0, -1), true);
+    const manifestName = naming.assetFilename({
+      kind: root, folderName: physical, role: "manifest", stage, step, version, ext: "json",
+    });
+    const existing = await find(path + "/" + storagePrefix + manifestName);
+    if (existing.file) throw Error("同版本交付已存在，禁止覆寫：" + manifestName);
+    // Check every destination (including paths without manifest) before any write.
+    for (const {flatName} of targetNames) {
+      if ((await find(path + "/" + storagePrefix + flatName)).file)
+        throw Error("同名資產已存在，禁止覆寫：" + flatName);
+    }
     const id = await folder(path, true);
-    for (const { key, flatName } of targetNames) {
-      await write(path + "/" + assetSubpath(flatName, root), new Blob([pkg.rawFiles[key]]));
-    }
+    for (const {key, flatName} of targetNames)
+      await write(path + "/" + storagePrefix + flatName, new Blob([pkg.rawFiles[key]]));
     pkg.drivePath = path;
     pkg.driveFolderId = id;
     pkg.driveFiles = await walk(id);
@@ -1247,13 +1318,21 @@
       const destination = await folder(wiki.kind + "/" + wiki.subject, true);
       // Serialize same-path requests within this browser tab, and never
       // overwrite or fork a previously generated wiki.
-      const found = await list(
-        destination,
-        "name = '" + escapeQuery(wiki.path.split("/").pop()) + "'",
-      );
-      if (found.length > 1) throw Error(wiki.path + " 名稱重複，請人工整理");
+      const knownNames = new Set([wiki.path.split("/").pop(), wiki.legacyName]);
+      const physicalSubject = window.COSMI_DRIVE_NAMES.canonicalFolderName(wiki.kind, 1, wiki.subject);
+      const found = (await list(destination)).filter((file) => {
+        if (file.mimeType === MIME) return false;
+        if (knownNames.has(file.name)) return true;
+        const candidate = window.COSMI_DRIVE_NAMES.parseSubjectFilename(
+          wiki.kind, physicalSubject, file.name,
+        );
+        return candidate?.role === "wiki" && candidate.stage === wiki.stage;
+      });
+      // An existing legacy wiki is the same artifact, never a reason to create
+      // a second draft under the new physical filename.
+      if (found.length > 1) throw Error(wiki.path + " 圖鑑已存在多份，請人工整理");
       if (found.length === 1)
-        return { path: wiki.path, created: false, id: found[0].id };
+        return { path: wiki.kind + "/" + wiki.subject + "/" + found[0].name, created: false, id: found[0].id };
       const text = window.COSMI_WIKI.initialMarkdown(ctx);
       const written = await write(
         wiki.path,
@@ -1771,7 +1850,11 @@
         const entries = await list(await folder(root));
         subjectFolders = entries.filter(
           (f) => f.mimeType === MIME && !f.name.startsWith("_") && !RESERVED_CATEGORY_FOLDERS.has(f.name),
-        );
+        ).map((entry) => ({
+          ...entry,
+          name: window.COSMI_DRIVE_NAMES?.logicalSubjectId(root, entry.name) || entry.name,
+          physicalName: entry.name,
+        }));
       } catch (_) {}
       await Promise.all(
         subjectFolders.map(async (sub) => {
@@ -1782,7 +1865,7 @@
             files = await safeList(root + "/" + sub.name);
           }
           for (const f of files) {
-            const parsed = parseAssetFilename(f.name, root);
+            const parsed = parseAssetFilename(f.name, root, sub.physicalName);
             if (parsed?.step === "00_appearance" || parsed?.step === "00_parameters") settings.push(f);
             else if (/_(?:prompt|job)\.md$/i.test(f.name)) jobs.push(f);
             else if (parsed?.step === "05_wiki") {
@@ -2043,8 +2126,8 @@
           p = window.COSMI_PIPELINE.parameters(),
           root = pipelineRoot(d.delivery?.task_type || d.assetId),
           subject = d.subjectId || d.assetId,
-          stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
-        await jsonWrite(subjectDir(root, subject) + "/" + assetSubpath(stem + ".json", root), {
+          outputPath = newSubjectFilePath(root, subject, d.stage, "parameters", "00_parameters");
+        await jsonWrite(outputPath, {
           ...p,
           delivery: d.delivery,
         });
@@ -2060,6 +2143,7 @@
           stem = assetStem({ kind: root, id: subject, stage: d.stage, step: "00_parameters" });
         let p;
         for (const candidate of [
+          newSubjectFilePath(root, subject, d.stage, "parameters", "00_parameters"),
           subjectDir(root, subject) + "/" + assetSubpath(stem + ".json", root),
           subjectDir(root, subject) + "/" + stem + ".json",
           root + "/00_settings/" + id + ".parameters.json",

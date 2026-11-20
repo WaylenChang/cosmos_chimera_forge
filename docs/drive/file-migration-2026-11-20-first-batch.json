@@ -1,0 +1,727 @@
+{
+  "date": "2026-11-20",
+  "scope": "first-batch creature subject top-level verified file renames",
+  "count": 120,
+  "entries": [
+    {
+      "file_id": "1r7hqsD49ZVgQQXixB-Mj8ridw5NKpFh0",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_wood_puppet_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1hpDUitGnpQgLzfV2MxxHl3MmVZahh4ZW",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_wood_puppet_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1mzJVD43kmcXGg54IvAEc-TqPm_QfquIm",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_wood_puppet_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1QY9t0WFU_0Bo_6AkhZh3QC2KPtg94LlJ",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_wood_puppet_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1xRkqxzmbIvG8SJc35kB_0Zi-2mUJTJaU",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_wood_puppet_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1KnKHgWj7TQbXxsTrru7YeYDpd5JQJlis",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_wood_puppet_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1r2hq1IYN_odo5u6u9KWkwTvOvEOUojrS",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_wood_puppet_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1Yle_H4xC_Kx5JZ1uerbg4CjvckqHq18M",
+      "parent_id": "1LEzGRcwBaRHiXM1ZfcNB388Xi8zaBa01",
+      "original_name": "cr_wood_puppet_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_wood_puppet_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1JSp4QU5bADkWwUbN-US1yyX1P47B03aE",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_wind_bird_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1AbIXJjH600SutHFW18tIpEu5KKFfbf5L",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_wind_bird_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "180X5tRSWRcXs9-3W6m4cI5j7HI74WI4k",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_wind_bird_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1Lb_X9TlaoSAhaU9eGLVYxoxtSu1ieo4I",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_wind_bird_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1czFuSaXYrWcmpdRg7gLRb2OXGZ2EgbkP",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_wind_bird_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1f4XiG4sLdjjF032ZvfijNKKrLJgbvJ8l",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_wind_bird_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1HdqKoRPOtkk9USPQnz7AUtPo-nYXNlfN",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_wind_bird_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1Uk3r9ULUawsTlIGdFl_Meyy1ERCz636A",
+      "parent_id": "1t3EmfDlNBnUo4T2rAkEls3VrEABpjPkl",
+      "original_name": "cr_wind_bird_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_wind_bird_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "13UtFsu_PEgt1TECCubN1x87QBvOhDGas",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_verdant_aquila_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1s_nHoffvZMJuI8V6gXY5JDegsgsFqCjv",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_verdant_aquila_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1Sj_roFW5nlIGtjXERaweeDySL5DXH2Zn",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_verdant_aquila_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1-xyjuOfxXKK-Bhh2h5tsdbHKzncKnU8J",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_verdant_aquila_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1lqXmymDZ3fPph5dS1T0cEdBvuOP3kZ_u",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_verdant_aquila_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1lKNtdkBcHZJsHm6JvXlVVzPocj1dFayf",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_verdant_aquila_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1h3U-KL8V-hU-nO8Qw1X4zM6UJmZ00dW1",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_verdant_aquila_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1BubQQhPJ9V6uB-d9hXmh-N_AyANH3O-z",
+      "parent_id": "1vbz8fjTETfpcfcqjoCU2xkqhDYOvpicg",
+      "original_name": "cr_verdant_aquila_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_verdant_aquila_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1iTI19bcTUT7bQHyQVIpa0iXu9hCz7J_t",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_thunder_drone_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1ASdg2v1X_WFqA0Bm7xnewQWubFt7xa95",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_thunder_drone_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1xNig-d5CRA6ifan3z8gDTETDyoRLsViX",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_thunder_drone_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1C548mJ_-aHJmD2mCgViRMh77RLalktor",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_thunder_drone_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1L3XTATvSNWQLhSYsqPmf7j_cgVe1AEKE",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_thunder_drone_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1Voxs_dSi4SYFNUDW7ehXpIlFFTtqJ5T6",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_thunder_drone_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1opSe9UVRsDmEPZzK7NUw08xZ8u8_Iog0",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_thunder_drone_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1C_mrR2wCPn4pcEeYUF75Z4ygJAc8bQu0",
+      "parent_id": "11KtvpiXbaBqBm3BiAFaM6T4ZevdhEzPw",
+      "original_name": "cr_thunder_drone_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_thunder_drone_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1BkEb84vLT3RZYyydHBNC1ATxXmnCe30a",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_solmane_lion_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "170rtIqOnLW30Y31k_KpRIySp9Acj2xlj",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_solmane_lion_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1HllPIgWCbw7igxv1N-eUqrhN_iDlI9Pz",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_solmane_lion_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1bTgshDzrHrwIn9V-i53aeImv19osKYU0",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_solmane_lion_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1LM29H9bBz68MAZQqd_xDn2ifwSUTOdUN",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_solmane_lion_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1o2MJXrZS_XXHEl1DPvEItk_NauFfFEo7",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_solmane_lion_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1UVw5-qsB1WuidK_34hnFAvN6X6K46byQ",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_solmane_lion_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1-dNriBTpySvH99OSmNn3mrdA9e00OXEu",
+      "parent_id": "1vZlvEen5mxqnT93A1jczdXPJq5J5TcxA",
+      "original_name": "cr_solmane_lion_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_solmane_lion_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1t95Ave2AzU_GI0bBcMWBZlgr3Lyw_jag",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_shadow_eye_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1g6fw-9-JN7_rsvYpv077oVKffk48nih6",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_shadow_eye_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1wvMNsVwg-DxskfK3DyIMO4cgRiEFvw0A",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_shadow_eye_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1EXwt6tp-lBIElWIEGjhwpfJZY1JxQP48",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_shadow_eye_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1QHIoGxMpLPdYlgD9wNszVHB8cEnyqdmf",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_shadow_eye_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1rb927gU3DoPQJDgAxZPCbQ-d6HJYbZW5",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_shadow_eye_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1C8cMPWBpk96zqMW4FBu2xEoEuZwkPtr4",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_shadow_eye_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1MLy_jTrrrD5b1v8jMobaSaLeZtP-EsfY",
+      "parent_id": "1-XkvrsZxmfxcUeXSZWZjOTnHPUVOSrIO",
+      "original_name": "cr_shadow_eye_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_shadow_eye_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1ZgXK2uCn3qEne-xg-X0pTD-6HFHLSuDw",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_metal_vault_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1JQtZH2xgLjy60bnlgKvkGx47F9M-tpyi",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_metal_vault_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1ksgafN07FojHHIgGSa0k8FodbYLEbSB-",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_metal_vault_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1jG6Vrsoj9em3SDD31dStGTpol6b4nRqs",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_metal_vault_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1IqICwanGS-W7g43HfeyoTeHvblc7LWPC",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_metal_vault_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1lD_uxMmJY4zEoDGtTZP9lbBjHW3U8rlY",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_metal_vault_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1m4YmentFZX6aHWEWOdteUAJ4lDmPpGgP",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_metal_vault_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1w8ezucBNvOFx_gmPjZVtX4wcO-WfXCdF",
+      "parent_id": "1LaaPDHPLAqUw3qsjORT_isa6P42C7bLe",
+      "original_name": "cr_metal_vault_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_metal_vault_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1B0DDa4qizv24Hvvu_mbjLQbt-iF42WLM",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_light_khepri_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1i4xEmbeAZN2ycZDox2NAs6DexnjDUOXr",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_light_khepri_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1gJUsPqzlNdHGjmSjGRPCzlgyj_CXLQ7w",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_light_khepri_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "18lpDbVU_QiJCDKTRZM4gx1430wpN3e-x",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_light_khepri_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1QcWkLDOWIPDZA3iYQINLJoYTn4PA4gHE",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_light_khepri_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1AbQI3sUXUTm8RAJJh7RaE-tCqq09Csln",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_light_khepri_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1bGTujB-Ltlu_gvHHf_z3BJbW6__MqVwe",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_light_khepri_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1KbkUN5u3NdyFUg1RM6oSXi9xtXyyodJ8",
+      "parent_id": "10GJsHzl6WFXegm06wkXY2LSKn7_7PBI0",
+      "original_name": "cr_light_khepri_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_light_khepri_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1513_Pyc4v5wk-KgHpjARPzO-KS9mWvjm",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_ink_stele_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1Y-bYIBJ5JD7Do7bESHMDJd1Pj6ydadOd",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_ink_stele_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1-67WaFzszFfpO_R0hjY9dcAkQwaTTg7i",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_ink_stele_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1XtAMtWvdCj6gKC1ADdSo2nXBnpTsMkc1",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_ink_stele_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1BZMeu4GA-dlO1OSW3Zl_ZCov1rWS6rjz",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_ink_stele_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1lDlgVtH3uIRBgHOHYzBWdKLn1b05YoCa",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_ink_stele_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1yWJXFhAWQSaP3XE7rc7YvJpTZpCLStA6",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_ink_stele_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1DUM2LJhqH3SnzrT62Xw76UeUGcS_NNhB",
+      "parent_id": "1Q65eKFFxFz3PfjWwkY4VRtFqKCGOVB-2",
+      "original_name": "cr_ink_stele_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_ink_stele_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1de9_SNjh66qKLlv25PxKpHqDx_8SL_cP",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_ice_snowman_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1M3f1tDaxL48BUnmGq1GPs2WqIN3lc2Ml",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_ice_snowman_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1ol-PZ1mDCLBKo91RH3m_WVf8WiI7ObC0",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_ice_snowman_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1Kb5UE5v_zZboR-FwDTx8mXA8qGtrYhMF",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_ice_snowman_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1uT0pajy2ffNnBU5FItWhsr8C5gUzr_WQ",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_ice_snowman_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1_kouYlzRrM7ymb8dVBEoQiMfq1z3KIlo",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_ice_snowman_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1pM4GgWZca81WBQcC98poYpmmLIry-yoD",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_ice_snowman_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1WwhQZ82IYassWoJ_zSGxrH4bVjjm2kr4",
+      "parent_id": "1J0a4GbMRUYxKUVG-gSxOr77c48W6hxuc",
+      "original_name": "cr_ice_snowman_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_ice_snowman_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1y3B0pht5d-1IfX0rdNcvRLXgotu04lTq",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_frostblade_penguin_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1s18dW5OzXjXIlZpI1IhgHVOFRUehxhrB",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_frostblade_penguin_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1QVfhL60cp99PvhGPe11W95ZQ6I8blOri",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_frostblade_penguin_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1msldAvkbKVodocZwYdPjQRvUSxS0n7mc",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_frostblade_penguin_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "11cGHXeGk9TJqGsUwDbJQIK6GFK-fTWQc",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_frostblade_penguin_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "162BV-u5B1chtxa0Iq8RqWVGTTYkp9Khu",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_frostblade_penguin_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1K5Z7n-m6hueOSbJKWs-kNZb5UF8Ca6Km",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_frostblade_penguin_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1urj2Ky6KB9kq4pmjiF4lVQybYlH_nFU1",
+      "parent_id": "1i6RPbW1dkzgtEPM-rx54-zGLzGkmxOoJ",
+      "original_name": "cr_frostblade_penguin_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_frostblade_penguin_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "147OzvQ87We65V-ktWn453sV6FhFMSYve",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_fire_wisp_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1b7KngoFJ5ZVrAfmmkRuBm1PGbtqs7zYe",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_fire_wisp_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "126mF9F5N6uAiQdFv-eSLeyrmER4_0KuB",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_fire_wisp_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1n3cW1KBbAUuogB75C7VLn-2yiVTRR34b",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_fire_wisp_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1WoYSrD6OghSnscWnjloak58BaIfuCWRO",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_fire_wisp_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1-YGvT9kipFUPDHZUViUv4dhjjzeoJVVC",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_fire_wisp_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1tc1fxThPua9jOW8VZN0C-uEr2keY_Mmq",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_fire_wisp_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1RGzSGurCPbdmxE27P771MqNiWSh6CFq7",
+      "parent_id": "1LH09NUj7fseBB9aN3_SFGiWn6oBoHAPQ",
+      "original_name": "cr_fire_wisp_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_fire_wisp_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1GM2SH0bqZAE4mdz4xPPVABWRVZw2Yn81",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_earth_golem_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1E8LKmlWUhOyUbvgvSeRTTrepv5xZx-OA",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_earth_golem_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "19nOTLUm1JLiTzzB6IlBkECMjyEG68chu",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_earth_golem_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "145Dkz7RAminBqUbFBHciga0DMtjEff_n",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_earth_golem_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1qDKdhJcruBYyvBxVB4FDb0F2mZsKP1b7",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_earth_golem_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1n7FQ3pJWd26_S8NMgD-qKQ9U1QtMm8BB",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_earth_golem_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "10xTw4TSc4mstyS2EN17F75tmg_ZIdHzh",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_earth_golem_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1fvDO74O7o_MRLs148UzxgZ6sqKoDreoX",
+      "parent_id": "16RQmUGyG079F1loduM7iJ69CnnBDqXUs",
+      "original_name": "cr_earth_golem_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_earth_golem_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1lS54N7m_nJ-3vJSqxbtGHJQRbgb1rADS",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_chrono_beetle_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1fep__GPhQpMF325-RJpRtHSEV_8Pd1of",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_chrono_beetle_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "198rPhm1lrV58tHbkeiNn-B8ZMr7k3vjq",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_chrono_beetle_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "15W3jF2salK9uv7zCluN5vjaTXwsmdZAf",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_chrono_beetle_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1p4rsnT7vu3kVN1J7aTCGS8pQ6Ek_rzID",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_chrono_beetle_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1d8_WcZ0D72UY83Nw7f1r9H_CSJRoyIcL",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_chrono_beetle_model_form3_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1lYD8I5Hgjc6f2fWtlMXDsA4BI4HwSxIZ",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_chrono_beetle_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1KeqL4NYCdo48RMPtcOyGvv8T2HZsmajz",
+      "parent_id": "1jxMF1eiHYy-nG4_TLVmldyac04Zm1kpf",
+      "original_name": "cr_chrono_beetle_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_chrono_beetle_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1kOMJsi5kBJ65KxfWVR99Zz6bWhBFIrLb",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_adolescent_05_wiki.md",
+      "new_name": "ch_1st_batch_aqua_slime_wiki_form2_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1AxsrGerR06355rCbsM7r9mulVZ7uBUwV",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_adult_05_wiki.md",
+      "new_name": "ch_1st_batch_aqua_slime_wiki_form3_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1lk3QBffpmUE8qiYqUqKUMlPTUjKHtkqF",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_juvenile_05_wiki.md",
+      "new_name": "ch_1st_batch_aqua_slime_wiki_form1_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "10b1FKQPmw_1L0R03nwA99sHScBjga2hK",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_overload_05_wiki.md",
+      "new_name": "ch_1st_batch_aqua_slime_wiki_form4_05_wiki_legacy.md"
+    },
+    {
+      "file_id": "1ROawcGcbfLCIQ8rj01jQfQDKi_5P_OUS",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_juvenile_03b_blender.glb",
+      "new_name": "ch_1st_batch_aqua_slime_model_form1_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1WPK8cusj3f3KEajt-Q2NlbJ99SIGihdV",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_adolescent_03b_blender.glb",
+      "new_name": "ch_1st_batch_aqua_slime_model_form2_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1thZU-k92C001Y0NeC_Z0aJxJ05ZqFVTK",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_overload_03b_blender.glb",
+      "new_name": "ch_1st_batch_aqua_slime_model_form4_03b_blender_legacy.glb"
+    },
+    {
+      "file_id": "1a1HBdnuGFJbYXlBCOi92ka_ml6YLuua4",
+      "parent_id": "1_mwX-4sbQsjQIdFIj3lvB3is4pRbXVgq",
+      "original_name": "cr_aqua_slime_adult_03b_blender.glb",
+      "new_name": "ch_1st_batch_aqua_slime_model_form3_03b_blender_legacy.glb"
+    }
+  ]
+}

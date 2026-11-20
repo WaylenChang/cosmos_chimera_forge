@@ -8,13 +8,14 @@ const source = name => fs.readFileSync(path.join(root, name), "utf8");
 
 test("all category wikis resolve under their own subject root", () => {
   const context = { window: {} };
+  vm.runInNewContext(source("drive-folder-naming.js"), context, { filename: "drive-folder-naming.js" });
   vm.runInNewContext(source("wiki.js"), context, { filename: "wiki.js" });
   const describe = context.window.COSMI_WIKI.describe;
   for (const [task, subject, stage, expected] of [
-    ["character-concept", "chr_hero", "", "characters/chr_hero/chr_hero_05_wiki.md"],
-    ["creature-concept", "cr_fox", "juvenile", "creatures/cr_fox/cr_fox_juvenile_05_wiki.md"],
-    ["creature-model-rig", "cr_fox", "adult", "creatures/cr_fox/cr_fox_adult_05_wiki.md"],
-    ["move-vfx", "fx_burst", "", "moves/fx_burst/fx_burst_05_wiki.md"],
+    ["character-concept", "chr_hero", "", "characters/chr_hero/chr_protagonist_hero_wiki_05_wiki_draft.md"],
+    ["creature-concept", "cr_fox", "juvenile", "creatures/cr_fox/ch_1st_batch_fox_wiki_form1_05_wiki_draft.md"],
+    ["creature-model-rig", "cr_fox", "adult", "creatures/cr_fox/ch_1st_batch_fox_wiki_form3_05_wiki_draft.md"],
+    ["move-vfx", "fx_burst", "", "moves/fx_burst/mv_legacy_fx_burst_wiki_05_wiki_draft.md"],
   ]) {
     assert.equal(describe({ task: { id: task }, subjectId: subject, opts: { stage } }).path, expected);
   }
@@ -32,7 +33,7 @@ test("task-flow documentation never produces wiki/category paths", () => {
   const flow = source("task-flow.js");
   assert.doesNotMatch(flow, /wiki\/<characters\|creatures>/);
   assert.doesNotMatch(flow, /wiki\/moves\//);
-  assert.match(flow, /moves\/<id>\/<id>_05_wiki\.md/);
+  assert.match(flow, /output: "<id>_05_wiki\.md"/);
 });
 
 test("category-first pipeline directory resolver handles aliases and rejects invalid stages", () => {
@@ -86,8 +87,9 @@ test("pipeline templates stay isolated across category switches", async () => {
   assert.equal(requested.some(x => x === "creatures/prompts/02_review_portrait.prompt.md"), true);
   current = { task: { id: "character-model-rig" }, subjectId: "chr_hero", taskId: "chr_hero" };
   const characterPrompt = pipeline.build(current);
-  assert.match(characterPrompt, /characters\/prompts\/02_review_portrait\.prompt\.md/);
+  assert.match(characterPrompt, /角色立繪審查/);
   current = { task: { id: "creature-model-rig" }, subjectId: "cr_fox", taskId: "cr_fox" };
   const creaturePrompt = pipeline.build(current);
-  assert.match(creaturePrompt, /creatures\/prompts\/02_review_portrait\.prompt\.md/);
+  assert.match(creaturePrompt, /立繪審查/);
+  assert.doesNotMatch(creaturePrompt, /characters\/prompts\//);
 });
