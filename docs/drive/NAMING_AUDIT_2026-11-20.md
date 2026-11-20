@@ -32,6 +32,16 @@ A full readback recursion of Google Drive returned **433/433** expected folder I
 
 GitHub includes logical-to-physical folder resolution, inverse mapping for legacy game subject IDs, and nested path normalization in `drive-storage.js`; these changes are in the Draft PR branch, **not necessarily the deployed site**. Full runtime regression and deployment remain outstanding.
 
+## Batch-label follow-up — 2026-11-20
+
+Following the full 433-folder migration, **18 existing subject folders were renamed in place**:
+- Characters (3): `chr_legacy_*` → `chr_protagonist_*`.
+- Creatures (15): `ch_legacy_*` → `ch_1st_batch_*`.
+
+Google Drive metadata readback confirmed all 18 destination names and unchanged original folder IDs; no `chr_legacy_*` or `ch_legacy_*` subject directories remain at category level. This update concerns only physical subject-folder labels; original `chr_1286`, `cr_aqua_slime`, etc. game IDs, filenames and content are retained. Historical backup folders starting `_legacy_*` remain untouched. The mapping file records both the former migrated label and the new target.
+
+The naming helper now includes `1st_batch` as a valid English/digit batch slug and resolves both interim (`legacy`) and original logical names for compatibility. GitHub PR #25 remains Draft until browser, Drive read/write and CI verification.
+
 ## Compatibility/rollout
 
 This branch introduces an English folder-name contract and a folder resolver that tries the new physical name before the old one. Physical Drive directory renames have been completed with ID-preserving, collision-safe updates and full metadata readback; the site rollout and full runtime verification still require completion. Renaming hundreds of directories first would break unpatched paths in `drive-storage.js`, `pipeline.js`, `wiki.js`, `tasks.js`, stored manifests, asset references, and historical wiki paths.
