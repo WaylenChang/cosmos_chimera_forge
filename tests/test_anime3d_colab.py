@@ -182,6 +182,56 @@ class ColabContracts(unittest.TestCase):
             self.assertFalse(report["inference_executed"])
             self.assertFalse((Path(tmp) / "reviews").exists())
 
+    def test_character_gpu_stage_waits_for_scored_review_before_rig(self):
+        from anime3d_character_quality import REVIEW_SCHEMA, sha256_file
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            folder = root / "01_portraits/approved/images"
+            folder.mkdir(parents=True)
+            views = {}
+            for role in ("front", "side", "back", "three_quarter_45"):
+                picture = folder / (role + ".png")
+                picture.write_bytes(role.encode())
+                views[role] = "images/" + role + ".png"
+            source = root / "existing.glb"
+            container(source)
+            spec = root / "spec.json"
+            agent.save(spec, {"source_pack": "approved", "source_image": views["front"],
+                             "category": "character", "task_type": "character-model-rig",
+                             "input_mode": "image", "asset_class": "humanoid",
+                             "license_status": "internal_only",
+                             "character_colab_workflow": "character-colab/2",
+                             "reference_views": views})
+            args = Namespace(root=str(root), asset_id="mdl-character-test", spec=str(spec),
+                             execute=True, allow_paid_tripo=False, backend="existing",
+                             pipeline="colab", generator_executable=None,
+                             input_model=str(source), backend_config=None,
+                             rig_backend="none", blender=None, stage="gpu")
+            with patch.object(agent, "validate", return_value=folder / "front.png"):
+                self.assertEqual(runner.run(args), 0)
+                job = root / "02_3d/colab/mdl-character-test"
+                state = agent.load(job / "typed_state.json")
+                self.assertEqual(state["status"], "REVIEW_REQUIRED")
+                self.assertNotIn("rigging", state["steps"])
+                self.assertTrue((job / "source/mdl-character-test.glb").is_file())
+                args.stage = "post_gpu"
+                self.assertEqual(runner.run(args), 2)
+                gate = agent.load(job / "qa/appearance_gate.json")
+                self.assertEqual(gate["next_action"], "ASSESS_FIRST_RESULT")
+                model = job / "source/mdl-character-test.glb"
+                refs = agent.load(job / "qa/reference_views.json")
+                agent.save(job / "qa/appearance_review.json", {
+                    "schema": REVIEW_SCHEMA, "asset_id": "mdl-character-test",
+                    "model_sha256": sha256_file(model),
+                    "reference_sha256": refs["reference_sha256"],
+                    "method": "human", "reviewer": "test-human-evaluator",
+                    "scores": {x: .99 for x in
+                               ("silhouette", "face", "outfit", "details", "texture")},
+                    "issues": []})
+                self.assertEqual(runner.run(args), 2)  # Blender unavailable, not falsely complete
+                gate = agent.load(job / "qa/appearance_gate.json")
+                self.assertEqual(gate["next_action"], "CONTINUE_RIG")
+                self.assertEqual(agent.load(job / "typed_state.json")["status"], "QA_PENDING")
 
 if __name__ == "__main__":
     unittest.main()
