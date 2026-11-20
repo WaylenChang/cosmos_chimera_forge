@@ -241,7 +241,7 @@ test('a current version Drive template containing encyclopedia instructions is r
   nodes.pipelineStage.value='blender';
   c.COSMI_FORGE.currentContext=()=>ctx;
   c.COSMI_DRIVE={read:async path=>({text:async()=>path.endsWith('/03b_blender.prompt.md')
-    ? '<!-- COSMI-PIPELINE/3:blender -->\\n# WIKI_POISON\\n請參照玩家圖鑑產生3D\\n{{model_input}}'
+    ? '<!-- COSMI-PIPELINE/3:blender -->\n# WIKI_POISON\n請參照玩家圖鑑產生3D\n{{model_input}}'
     : '{}'})};
   await c.COSMI_PIPELINE.loadTemplates();
   const text=c.COSMI_PIPELINE.build(ctx);
