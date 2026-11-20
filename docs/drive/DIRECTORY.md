@@ -124,6 +124,9 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 
 ## 4. 宙獸（Creatures）名稱與 ID 對照
 
+> **四階段命名一致性（2026-11-20）：**同一宙獸演化線的 `juvenile`、`adolescent`、`adult`、`overload` 共用**一個正式中文名稱及一個正式英文名稱**；四階段的 `creature_id`、`stage`、外觀描述、技能與各自 GLB/Wiki/立繪檔案維持獨立。已有三階資料的草案不虛構第四階遊戲資料。正式名稱以 `designed.js` 各演化線成年／超載定稿的名稱為準，原先逐階名字僅作歷史型態外觀暱稱，不再寫入正式 `name_zh`／`name_en`。Drive 主目錄仍按**整條演化線 ID**命名，例如 `ch_1st_batch_aqua_slime`、`ch_starter_moon_line`、`ch_trial_boss_earth_line`；不另拆為四個階段目錄、不更名既有 ID 或資產檔名。圖鑑 UI 會以 `designed.js` 的共用正式名稱校正尚未更新的舊版 Drive 索引，但圖鑑來源文件與既有歷史描述應分別維護。
+
+
 ### 4.1 既有 `cr_*` 系列（各含 `juvenile` / `adolescent` / `adult` / `overload` 四階）
 
 | Subject ID | 中文名稱 | 現有 3D（Prompt-to-3D） | 現有立繪包 | Wiki 檔名格式 |

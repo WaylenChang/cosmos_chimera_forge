@@ -2,16 +2,16 @@
   "creatures": [
     {
       "id": "sun_mirror_chick",
-      "name_zh": "鏡芽雀",
-      "name_en": "Mirrill",
+      "name_zh": "鏡環天鷺",
+      "name_en": "Mirravault",
       "naming_note": "鏡冠初生，如芽迎日。",
       "dex_zh": "圓滾滾的身子披著象牙白絨羽，頭頂的小圓鏡總追著日光轉。牠喜歡站在苔地上練習聚光，隔著遠遠的距離射出細細的光束。",
       "dex_en": "This round, ivory chick turns its little crown mirror toward the sun. It practices focusing light from mossy perches, sending narrow beams at distant targets while keeping safely out of reach."
     },
     {
       "id": "sun_heliostat_heron",
-      "name_zh": "鏡羽鷺",
-      "name_en": "Mirravel",
+      "name_zh": "鏡環天鷺",
+      "name_en": "Mirravault",
       "naming_note": "承接鏡冠，羽翼展成鏡陣。",
       "dex_zh": "牠常單腳佇立，讓扇形鏡羽隨日影緩緩轉動。發現威脅時，牠會退到夥伴後方調整鏡面，將聚攏的光芒化作筆直遠射的光束。",
       "dex_en": "Standing on one leg, it slowly turns its fan of mirror feathers to follow the sun. When danger approaches, it retreats behind its companions and directs a straight beam from afar."
@@ -26,16 +26,16 @@
     },
     {
       "id": "moon_night_pup",
-      "name_zh": "夜痕仔",
-      "name_en": "Nivetch",
+      "name_zh": "夜痕霜狼",
+      "name_en": "Nivervast",
       "naming_note": "夜色留下幼狼的足痕。",
       "dex_zh": "尾尖閃著一點星光，小小身軀投下的影子卻比自己還大。牠繞到對手背後，揮爪拍向身前，接著緊貼對手繼續交戰。",
       "dex_en": "A light glimmers at its tail tip, while its shadow stretches larger than its small body. It circles behind an opponent, strikes with its paw, and stays close to fight."
     },
     {
       "id": "moon_shade_wolf",
-      "name_zh": "夜痕狼",
-      "name_en": "Niverren",
+      "name_zh": "夜痕霜狼",
+      "name_en": "Nivervast",
       "naming_note": "夜痕成長為伏行孤狼。",
       "dex_zh": "墨藍皮毛上的星斑隨呼吸明滅，像極夜冰原上的微光。牠繞向對手背後，沿直線向前突進，隨即貼近對手繼續交戰。",
       "dex_en": "Starry markings pulse with each breath across its dark blue coat, like lights on a polar plain. It circles behind an opponent, lunges forward in a straight line, and keeps fighting up close."
@@ -50,16 +50,16 @@
     },
     {
       "id": "star_blaze_foal",
-      "name_zh": "星蹄駒",
-      "name_en": "Voltfoal",
+      "name_zh": "星蹄天驥",
+      "name_en": "Voltrazent",
       "naming_note": "星斑與帶電小蹄相映。",
       "dex_zh": "額上的白色星斑不時迸出細小電光，蹄子踏過草地也會濺起火花。牠總跌跌撞撞地向前衝，遇到對手便鼓起勇氣帶電撞去。",
       "dex_en": "Sparks dance from the white star on its forehead and scatter beneath its hooves. It tumbles through the grass in eager practice, gathering courage to charge an opponent with crackling energy."
     },
     {
       "id": "star_storm_colt",
-      "name_zh": "星蹄騏",
-      "name_en": "Voltrmane",
+      "name_zh": "星蹄天驥",
+      "name_en": "Voltrazent",
       "naming_note": "星蹄長成逐風的駿馬。",
       "dex_zh": "跳動的電弧化作長鬃，金色翼芽從肩胛間探出。牠喜歡迎風奔過草原，衝入敵群後揚起前蹄，讓電光向身邊四散，逼退圍來的對手。",
       "dex_en": "Its mane flickers with living arcs, and golden wing buds rise from its shoulders. It races into the wind and, surrounded by foes, rears up to scatter electricity around itself."
