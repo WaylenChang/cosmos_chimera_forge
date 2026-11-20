@@ -31,7 +31,7 @@
     }) || (base+(stage?"_"+stage:"")+"_05_wiki.md");
     const legacyName=base+(stage?"_"+stage:"")+"_05_wiki.md";
     const path=kind+"/"+base+"/"+stem;
-    return {kind,subject:base,stage,stem:stem.replace(/\\.md$/,""),path,legacyName,key:kind+"/"+base+(stage?"/"+stage:"")};
+    return {kind,subject:base,stage,stem:stem.replace(/\.md$/,""),path,legacyName,key:kind+"/"+base+(stage?"/"+stage:"")};
   }
   // Historical Drive manifests may still contain paths from before the subject-folder layout.
   // Normalize references only, never rename an asset file or mark its QA as complete.
