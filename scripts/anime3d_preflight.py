@@ -11,6 +11,7 @@ from anime3d_agent import validate, digest
 from anime3d_profiles import classify
 from anime3d_backend_adapter import runtime_config
 from anime3d_universal import execution_profile
+from anime3d_character_quality import enabled as character_gate_enabled, reference_views
 from anime3d_rig_adapter import runtime_config as rig_runtime_config
 
 
@@ -35,6 +36,11 @@ def inspect(root, spec, asset_id, backend="pixal3d", config=None, blender=None, 
                                 "size": list(source.size), "format": source.format}
     except (ValueError, OSError, ImportError) as exc:
         blockers.append("source: " + str(exc))
+    if character_gate_enabled(spec, "colab") and "source" in checks:
+        try:
+            checks["reference_views"] = reference_views(root, spec, image)
+        except (ValueError, OSError) as exc:
+            blockers.append("reference_views: " + str(exc))
     blender = blender or shutil.which("blender")
     checks["blender"] = str(blender) if blender and Path(blender).is_file() else None
     if not checks["blender"] and stage in {"all", "post_gpu"}:
