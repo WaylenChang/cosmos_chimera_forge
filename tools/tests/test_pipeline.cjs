@@ -11,13 +11,13 @@ function harness() {
   vm.runInNewContext(fs.readFileSync(path.join(root, 'wiki.js'), 'utf8'), c);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'pipeline.js'), 'utf8'), c);
   for (const [key, name] of Object.entries(c.COSMI_PIPELINE.stages)) {
-    if (!['portrait'].includes(key)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
+    if (!['portrait','encyclopedia'].includes(key)) c.COSMI_PIPELINE.templates[key] = fs.readFileSync(path.join(root, 'docs/pipeline', name + '.prompt.md'), 'utf8');
   }
   return {c,nodes,ctx:{task:{id:'character-concept'},taskId:'chr-example',subjectId:'chr_one',concept:{hair_palette:['red'],combat_damage:999,appearance:'long coat'},opts:{source_pack:'source'}}};
 }
 test('non-portrait stages resolve their Drive templates without leaking parameters', () => {
   const {c,nodes,ctx}=harness();
-  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => !['portrait'].includes(name))) {
+  for (const stage of Object.keys(c.COSMI_PIPELINE.stages).filter(name => !['portrait','encyclopedia'].includes(name))) {
     nodes.pipelineStage.value=stage;
     const text=c.COSMI_PIPELINE.build(ctx);
     assert.ok(text.length>100);
@@ -43,17 +43,33 @@ test('Drive template loading skips the native portrait stage', async () => {
   }};
   await c.COSMI_PIPELINE.loadTemplates();
   assert.ok(!requests.some(file => file.endsWith('/01_portrait.prompt.md')));
-  assert.equal(requests.filter(file => file.startsWith('creatures/prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-1);
+  assert.equal(requests.filter(file => file.startsWith('creatures/prompts/')).length, Object.keys(c.COSMI_PIPELINE.stages).length-2);
 });
 
-test('player encyclopedia cannot be a generation stage', () => {
+test('independent encyclopedia step generates a scoped player-wiki prompt', () => {
   const {c,nodes,ctx}=harness();
-  assert.equal(c.COSMI_PIPELINE.stages.encyclopedia,undefined);
+  assert.equal(c.COSMI_PIPELINE.stages.encyclopedia,'05_encyclopedia');
   nodes.pipelineStage.value='encyclopedia';
-  for(const kind of ['character-concept','creature-concept','move-vfx']){
-    ctx.task.id=kind;
-    assert.match(c.COSMI_PIPELINE.build(ctx),/有效的生成管線步驟/);
-  }
+  ctx.concept={name_zh:'角色甲',role:'守護者',appearance:'blue armor',secret_skill:'NOT_FOR_WIKI'};
+  const character=c.COSMI_PIPELINE.build(ctx);
+  assert.match(character,/編寫玩家可閱讀的角色圖鑑|characters\\/chr_one\\/chr_one_05_wiki\\.md/);
+  assert.match(character,/守護者|blue armor/);
+  assert.doesNotMatch(character,/NOT_FOR_WIKI/);
+  ctx.task.id='creature-concept';ctx.subjectId='cr_one';ctx.opts={stage:'juvenile'};
+  ctx.concept={name_zh:'獸甲',locked:{stages:[
+    {stage:'juvenile',look:'JUVENILE_ONLY',social_structure:'群居'},
+    {stage:'adult',look:'ADULT_SECRET'}
+  ]},appearance:'blue scales'};
+  const creature=c.COSMI_PIPELINE.build(ctx);
+  assert.match(creature,/creatures\\/cr_one\\/cr_one_juvenile_05_wiki\\.md|JUVENILE_ONLY/);
+  assert.doesNotMatch(creature,/ADULT_SECRET/);
+  ctx.task.id='move-vfx';ctx.subjectId='fx_fire';ctx.opts={
+    move_name:'烈焰',element:'fire',shape:'cone',tier:'heavy',use_creature:'yes'
+  };
+  ctx.concept={name_zh:'SECRET_CASTER',biography:'SECRET_BIO'};
+  const move=c.COSMI_PIPELINE.build(ctx);
+  assert.match(move,/moves\\/fx_fire\\/fx_fire_05_wiki\\.md|烈焰/);
+  assert.doesNotMatch(move,/SECRET_CASTER|SECRET_BIO/);
 });
 
 test('appearance excludes encyclopedia, lore, geometry and unrelated notes', () => {
@@ -247,4 +263,15 @@ test('a current version Drive template containing encyclopedia instructions is r
   const text=c.COSMI_PIPELINE.build(ctx);
   assert.match(text,/Blender/);
   assert.doesNotMatch(text,/WIKI_POISON|圖鑑|wiki/i);
+});
+
+test('other stages never consult wiki and ignore a poisoned wiki concept property', () => {
+  const {c,nodes,ctx}=harness();
+  Object.defineProperty(ctx.concept,'wiki',{enumerable:true,get(){throw Error('PLAYER_WIKI_WAS_READ')}});
+  Object.defineProperty(ctx.concept,'encyclopedia',{enumerable:true,get(){throw Error('PLAYER_WIKI_WAS_READ')}});
+  for(const stage of ['appearance','review_portrait','colab','blender','review_3d']){
+    nodes.pipelineStage.value=stage;
+    assert.doesNotThrow(()=>c.COSMI_PIPELINE.build(ctx),stage);
+    assert.doesNotMatch(c.COSMI_PIPELINE.build(ctx),/PLAYER_WIKI_WAS_READ|圖鑑|wiki/i);
+  }
 });
