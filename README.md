@@ -38,17 +38,17 @@ Google Drive 已建立 `{characters,creatures,moves}/wiki/` 及 `creatures/wiki/
 
 正式資產使用 Google Drive 深層資料夾，逐檔讀取與交付。每個資產版本以唯一 asset_id 建目錄，保留 manifest.json、concept.json、images/ 或 models/、rig/、animations/、previews/。角色與宙獸共用結構，以 task_type 區分。
 
-1. HTML 隨機／圖鑑設定或 AI 生成基礎外觀；外觀 Markdown 與格式參數 JSON 分開保存於 `<category>/00_settings/`。
+1. HTML 概念設定或 AI 生成基礎外觀；外觀 Markdown 與格式參數 JSON 分開保存於 `<category>/00_settings/`。
 2. 立繪輸出至 `<category>/01_portraits/<asset_id>/`。主用 ChatGPT／Codex，Gemini／Antigravity 輔助。
 3. 審查台核准立繪時原位保存；退件時整個目錄搬到 `<category>/backup/rejected_portraits/<revision>/`。
 4. Colab GPU 路線輸出至 `<category>/02_3d/colab/<asset_id>/`；AI Blender（Argon／Codex）輸出至 `<category>/02_3d/ai_blender/<asset_id>/`。歷史待審模型在 `<category>/02_3d/legacy/`。Colab 模型與修復細節尚待實機決定。
-5. 最終人工核准前須有已核准的來源立繪及 .glb／.blend。核准後模型與立繪分別移至 `<category>/03_completed/models/`、`<category>/03_completed/portraits/`；模型退件搬到 `<category>/backup/rejected_3d/`，保留立繪原位。純 prompt 建模須補立繪後綁定 source_pack。
+5. 最終人工核准前須有 .glb／.blend；Image-to-3D 另須有已核准的來源立繪。核准後模型與立繪分別移至 `<category>/03_completed/models/`、`<category>/03_completed/portraits/`；模型退件搬到 `<category>/backup/rejected_3d/`，保留立繪原位。純文字 Prompt-to-3D 以本對象外觀概念建模，不強制補繪立繪。
 
 審查結果存 `<category>/reviews/<asset_id>.json`。目錄移動保留 Drive ID，搬移或寫入失敗時嘗試回復；回復失敗會明示需重新載入核對。不同資產版本不得同名。歷史 ZIP 僅留在 `<category>/backup/legacy_archives/`，不再用於正式交付。
 
-`prompts/` 存六個互相獨立的單步驟 `.prompt.md`、`TRIGGERS.md` 與 `DIRECTORY.md`；已填入資產路徑的版本另存 `<category>/prompts/jobs/`。舊的跨步驟長 prompt 放 `<category>/backup/legacy_prompts/`。本機同步來源見 [docs/pipeline](docs/pipeline/DIRECTORY.md)。
+`prompts/` 存各自獨立的單步驟 `.prompt.md`、`TRIGGERS.md` 與 `DIRECTORY.md`；已填入資產路徑的版本另存 `<category>/prompts/jobs/`。舊的跨步驟長 prompt 放 `<category>/backup/legacy_prompts/`。本機同步來源見 [docs/pipeline](docs/pipeline/DIRECTORY.md)。
 
-HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。各步驟只使用本次資產與任務內容；各條管線共用 `<category>/wiki/` 下的獨立圖鑑，缺件時才建立草稿；建模不重複輸出 `bestiary.md`，並以 `manifest.encyclopedia_path` 關聯現有圖鑑。立繪原生三輪 Prompt 不再附加過時的 ZIP／舊存放路徑。Drive 的單步驟模板若無相容版本標記，網頁採用內建精簡版本；可將 `docs/pipeline/` 中新版 `.prompt.md` 同步至 Drive 的 `prompts/`。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
+HTML 選步驟後按「讀取本步驟 .md／複製執行」，即可預覽並複製 Drive 上的最新指令。先按「儲存外觀 .md ＋ 參數 .json」，再把參數檔與圖片交給所選 AI。讀取指令不會自動啟動外部 AI、Colab 或 Blender。角色、宙獸與招式的生成 Prompt 僅使用目前步驟的概念／外觀／圖片／動作參數。玩家圖鑑是獨立的遊戲展示資料（`characters/encyclopedia.json`、`creatures/encyclopedia.json`、`moves/encyclopedia.json` 及既有 Wiki Markdown）。管線可在使用者明確選擇「玩家圖鑑」步驟時依當前概念參數生成圖鑑專用 Prompt，並可建立尚不存在的 Markdown 草稿；既有圖鑑不自動覆寫。圖鑑內容、圖鑑檔案與圖鑑專用 Prompt 均不可作為其他立繪、建模、招式動畫或驗收步驟的生成輸入。舊 manifest 中的 `encyclopedia_path` 僅供資產追溯與資料維護，不送入模型生成指令。立繪原生三輪 Prompt 不再附加過時的 ZIP／舊存放路徑。Drive 的單步驟模板若無相容版本標記，網頁採用內建精簡版本；可將 `docs/pipeline/` 中新版 `.prompt.md` 同步至 Drive 的 `prompts/`。範例觸發：「讀取 cosmos_chimera_forge/prompts/03b_blender.prompt.md，使用指定圖片或 appearance.md 及 parameters.json 執行。」
 
 本機匯入／匯出亦使用展開後的資產目錄。遊戲交付仍可逐檔交給相鄰遊戲專案驗收。Google OAuth 登入需 HTTP(S) 網站來源，無法直接用 file:// 啟用 Drive 功能。
 

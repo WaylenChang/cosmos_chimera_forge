@@ -3,8 +3,8 @@ name: Deploy Prompt Forge & Review Studio
 on:
   push:
     branches: [main]
+  # Validate PRs targeting feature branches too; deployment remains main-only.
   pull_request:
-    branches: [main]
   workflow_dispatch:
 
 # Cancel obsolete PR verification runs, including expensive Blender packages.

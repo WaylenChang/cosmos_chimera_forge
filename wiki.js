@@ -20,11 +20,21 @@
     const kind=kindFor(ctx?.task?.id), subject=cleanId(ctx?.subjectId||ctx?.taskId);
     const candidate=ctx?.opts?.stage||ctx?.concept?.stage||"";
     // Creatures have four independently maintained forms; characters and moves have no stage.
-    const stage=kind==="creatures"?(STAGES.includes(candidate)?candidate:"adult"):"";
+    if (kind === "creatures" && !STAGES.includes(candidate)) throw Error("宙獸圖鑑必須指定 juvenile/adolescent/adult/overload 型態");
+    const stage=kind==="creatures"?candidate:"";
     const base=stage&&subject.endsWith("_"+stage)?subject.slice(0,-stage.length-1):subject;
-    const stem=base+(stage?"_"+stage:"")+"_05_wiki";
-    const path=kind+"/"+base+"/"+stem+".md";
-    return {kind,subject:base,stage,stem,path,key:kind+"/"+base+(stage?"/"+stage:"")};
+    // Newly generated wikis are review-required drafts, not approved final files.
+    // Preserve the stable subject ID in the directory component for the Drive resolver.
+    const names=window.COSMI_DRIVE_NAMES;
+    if (!names?.assetFilename) throw Error("缺少新版檔案命名契約");
+    const physical = names.canonicalFolderName(kind, 1, base);
+    const stem = names.assetFilename({
+      kind, folderName: physical, role: "wiki", stage,
+      step: "05_wiki", version: "draft", ext: "md"
+    });
+    const legacyName=base+(stage?"_"+stage:"")+"_05_wiki.md";
+    const path=kind+"/"+base+"/"+stem;
+    return {kind,subject:base,stage,stem:stem.replace(/\.md$/,""),path,legacyName,key:kind+"/"+base+(stage?"/"+stage:"")};
   }
   // Historical Drive manifests may still contain paths from before the subject-folder layout.
   // Normalize references only, never rename an asset file or mark its QA as complete.
@@ -63,11 +73,15 @@
       "look","appearance","anatomy","limbs","signature_move","niches","habit","dex_zh","outfit",
       "accessories","silhouette_keywords"];
     const fields=[];
-    for(const name of shared)if(c[name]!=null)fields.push("- "+name+": "+JSON.stringify(c[name]));
-    for(const name of form)if(selected[name]!=null)fields.push("- "+name+": "+JSON.stringify(selected[name]));
-    if(d.kind==="moves")for(const name of ["element","shape","tier","action","motion","name"])
-      if(ctx.opts?.[name]!=null)fields.push("- "+name+": "+JSON.stringify(ctx.opts[name]));
-    const title=selected.name_zh||c.name_zh||d.subject;
+    if(d.kind==="moves"){
+      // The move wiki is built from move parameters, never the demonstration caster's concept.
+      for(const name of ["move_name","move_id","element","shape","tier","common"])
+        if(ctx.opts?.[name]!=null && ctx.opts[name]!=="")fields.push("- "+name+": "+JSON.stringify(ctx.opts[name]));
+    }else{
+      for(const name of shared)if(c[name]!=null)fields.push("- "+name+": "+JSON.stringify(c[name]));
+      for(const name of form)if(selected[name]!=null)fields.push("- "+name+": "+JSON.stringify(selected[name]));
+    }
+    const title=d.kind==="moves"?(ctx.opts?.move_name||d.subject):(selected.name_zh||c.name_zh||d.subject);
     return ["# "+title+" — "+(d.stage?STAGE_ZH[d.stage]+"型態 ":"")+KIND[d.kind]+"圖鑑",
       "",
       "- subject_id: "+d.subject,

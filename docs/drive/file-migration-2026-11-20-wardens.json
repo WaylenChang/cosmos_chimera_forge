@@ -1,0 +1,193 @@
+{
+  "date": "2026-11-20",
+  "scope": "warden portrait subject files",
+  "count": 31,
+  "entries": [
+    {
+      "file_id": "1p5osAflzCBpVxTUN8d4kSAe_cnXMh7N1",
+      "parent_id": "1FmgdudrPqyLtLjzlTCUh9OOLkwUpzij8",
+      "original_name": "chr_warden_temple_light_front.png",
+      "new_name": "chr_warden_temple_light_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1NwdsHD73MvbGVS2IeRDTS1gxcAgCVPr7",
+      "parent_id": "1FmgdudrPqyLtLjzlTCUh9OOLkwUpzij8",
+      "original_name": "chr_warden_temple_light_turnaround.png",
+      "new_name": "chr_warden_temple_light_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1jwHbVN4412Xkcb3DfnqEivsDQAOXLhe1",
+      "parent_id": "1FmgdudrPqyLtLjzlTCUh9OOLkwUpzij8",
+      "original_name": "chr_warden_temple_light_hero.png",
+      "new_name": "chr_warden_temple_light_hero_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1XnEtjD2vEGD9rhZxPCs3qpST78tb3vQ7",
+      "parent_id": "1euKxcNU6T_SN54vlbswXNT8M64iCZe3W",
+      "original_name": "chr_warden_labyrinth_shadow_front.png",
+      "new_name": "chr_warden_labyrinth_shadow_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1CX5jt6EZax3PwP_hel9dbmd1le5fig49",
+      "parent_id": "1euKxcNU6T_SN54vlbswXNT8M64iCZe3W",
+      "original_name": "chr_warden_labyrinth_shadow_turnaround.png",
+      "new_name": "chr_warden_labyrinth_shadow_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1AtqlWEaOilnUutIvyLS5I_HCC4XImdRv",
+      "parent_id": "1euKxcNU6T_SN54vlbswXNT8M64iCZe3W",
+      "original_name": "chr_warden_labyrinth_shadow_keyart.png",
+      "new_name": "chr_warden_labyrinth_shadow_keyart_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1ydglW911ds0s-RZ4bBmpuJx8xFV-1Myg",
+      "parent_id": "1NYihvenEerwwO5WRQRJi08N0Z9DCm1fm",
+      "original_name": "chr_warden_space_wind_front.png",
+      "new_name": "chr_warden_space_wind_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1xN3Bjw1wGxmXBfAZCjPSWWiCFeA0FN9m",
+      "parent_id": "1NYihvenEerwwO5WRQRJi08N0Z9DCm1fm",
+      "original_name": "chr_warden_space_wind_turnaround.png",
+      "new_name": "chr_warden_space_wind_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1S65hVKmLXcNL37it6RFosMURNn2PVEMX",
+      "parent_id": "1NYihvenEerwwO5WRQRJi08N0Z9DCm1fm",
+      "original_name": "chr_warden_space_wind_keyart_A.png",
+      "new_name": "chr_warden_space_wind_keyart_a_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1-ld9juNc6nsBX07UbsOOSUN-IbLJt25d",
+      "parent_id": "1NYihvenEerwwO5WRQRJi08N0Z9DCm1fm",
+      "original_name": "chr_warden_space_wind_keyart_B.png",
+      "new_name": "chr_warden_space_wind_keyart_b_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "14L9RwP_SF5lMc9O0nrw4o7qcDm-MLMen",
+      "parent_id": "1mNIHu-14ip2nsGWK3SyPYOYil04OISWS",
+      "original_name": "chr_warden_tower_thunder_front.png",
+      "new_name": "chr_warden_tower_thunder_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1Dq1xOg6T2fZP2wQUbY8PRmQTtXqaABIB",
+      "parent_id": "1mNIHu-14ip2nsGWK3SyPYOYil04OISWS",
+      "original_name": "chr_warden_tower_thunder_turnaround.png",
+      "new_name": "chr_warden_tower_thunder_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1MAzR5a4VjXuM8sbe2qMDLP6s2n4pVykR",
+      "parent_id": "1mNIHu-14ip2nsGWK3SyPYOYil04OISWS",
+      "original_name": "chr_warden_tower_thunder_keyart.png",
+      "new_name": "chr_warden_tower_thunder_keyart_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1HG9a18CRdaDZv7wUmvB8nhTvQ-GFXHXp",
+      "parent_id": "1dysquZ0edHJUEHKoTauyKAo3oTCVJnOe",
+      "original_name": "chr_warden_icecap_ice_front.png",
+      "new_name": "chr_warden_icecap_ice_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "18zfwZqIfctyF5pOqtB7-VeBnPO4kaCdk",
+      "parent_id": "1dysquZ0edHJUEHKoTauyKAo3oTCVJnOe",
+      "original_name": "chr_warden_icecap_ice_turnaround.png",
+      "new_name": "chr_warden_icecap_ice_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1pJqcEDskOxdy0e15lrR-4TfWmoiEUbP9",
+      "parent_id": "1dysquZ0edHJUEHKoTauyKAo3oTCVJnOe",
+      "original_name": "chr_warden_icecap_ice_keyart.png",
+      "new_name": "chr_warden_icecap_ice_keyart_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "181oodrAd4GiwAm3hDmc14nrED2TgNgTq",
+      "parent_id": "1FDsNiblCshcQQ9n8tSzU7m82AWR8If7C",
+      "original_name": "chr_warden_cave_earth_front.png",
+      "new_name": "chr_warden_cave_earth_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1AY7PmQq89VRG838-75s1jBESaYlE2xHM",
+      "parent_id": "1FDsNiblCshcQQ9n8tSzU7m82AWR8If7C",
+      "original_name": "chr_warden_cave_earth_turnaround.png",
+      "new_name": "chr_warden_cave_earth_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1RsZaCdeRsu7T4IDUDR22rOcYUeOCIcj2",
+      "parent_id": "1FDsNiblCshcQQ9n8tSzU7m82AWR8If7C",
+      "original_name": "chr_warden_cave_earth_keyart.png",
+      "new_name": "chr_warden_cave_earth_keyart_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1KNOUL8-hJsTZFYxSzlBPmiGcHSXDV7B6",
+      "parent_id": "1cfqNHRaCX9ZfQCVegTBjeOwhQ7zYZrv0",
+      "original_name": "chr_warden_volcano_fire_front.png",
+      "new_name": "chr_warden_volcano_fire_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1B7A_UQf1LhCsuCbcY71_Qh2J2j1x11up",
+      "parent_id": "1cfqNHRaCX9ZfQCVegTBjeOwhQ7zYZrv0",
+      "original_name": "chr_warden_volcano_fire_turnaround.png",
+      "new_name": "chr_warden_volcano_fire_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1oG1IUMG1uB4t4X_HPm5EYLlRDtJWggZK",
+      "parent_id": "1cfqNHRaCX9ZfQCVegTBjeOwhQ7zYZrv0",
+      "original_name": "chr_warden_volcano_fire_keyart.png",
+      "new_name": "chr_warden_volcano_fire_keyart_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1KOdbe9SAKBx-WLCVJdP4s4ekFDNY7IOM",
+      "parent_id": "1WSayFq9VQY--8asSE4x9iYODQvzXu0KY",
+      "original_name": "chr_warden_deepsea_water_front.png",
+      "new_name": "chr_warden_deepsea_water_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1ITy0E5dzzfEaVkTdZePQvdMtcIS4Pv3C",
+      "parent_id": "1WSayFq9VQY--8asSE4x9iYODQvzXu0KY",
+      "original_name": "chr_warden_deepsea_water_turnaround.png",
+      "new_name": "chr_warden_deepsea_water_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "133ReU-v49gyTAX5qHBRGdqn1-5SY4mdx",
+      "parent_id": "1WSayFq9VQY--8asSE4x9iYODQvzXu0KY",
+      "original_name": "chr_warden_deepsea_water_keyart.png",
+      "new_name": "chr_warden_deepsea_water_keyart_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1NwFeU5WIjcODZVXkn7PTFXx7eLygcssC",
+      "parent_id": "1CXoWNZAUcCrCV2KGf64tmcYFuO6Wy_hN",
+      "original_name": "chr_warden_rainforest_wood_front.png",
+      "new_name": "chr_warden_rainforest_wood_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1iU4p9QvnArHuTUzZSN2z0zIemC_50ujo",
+      "parent_id": "1CXoWNZAUcCrCV2KGf64tmcYFuO6Wy_hN",
+      "original_name": "chr_warden_rainforest_wood_turnaround.png",
+      "new_name": "chr_warden_rainforest_wood_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1_ozwYRgQxNufgrHB2L5n7YrdDK9ngCGO",
+      "parent_id": "1CXoWNZAUcCrCV2KGf64tmcYFuO6Wy_hN",
+      "original_name": "chr_warden_rainforest_wood_keyart.png",
+      "new_name": "chr_warden_rainforest_wood_keyart_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1KyUVWU82zyq0aLDO0pf5C0-DfjHtauhl",
+      "parent_id": "188QtLvWTXd3Q6ikEDL2n7V7Dy4jRhM5o",
+      "original_name": "chr_warden_lab_metal_front.png",
+      "new_name": "chr_warden_lab_metal_front_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "1xNvdEVFFnBZym7CbQaWeobFmAvTh9m4e",
+      "parent_id": "188QtLvWTXd3Q6ikEDL2n7V7Dy4jRhM5o",
+      "original_name": "chr_warden_lab_metal_turnaround.png",
+      "new_name": "chr_warden_lab_metal_turnaround_01_portrait_legacy.png"
+    },
+    {
+      "file_id": "12jixfvrKfk4mOmpGdoogFJtpzeb3KrNF",
+      "parent_id": "188QtLvWTXd3Q6ikEDL2n7V7Dy4jRhM5o",
+      "original_name": "chr_warden_lab_metal_keyart.png",
+      "new_name": "chr_warden_lab_metal_keyart_01_portrait_legacy.png"
+    }
+  ]
+}

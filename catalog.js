@@ -960,8 +960,7 @@ window.COSMI_CATALOG = {
         "- **輸入參考圖**：先上傳前一階正面基準圖 `" + prevFrontImg + "`（" + prevStageZh + "正面圖）作為本輪唯一視覺基底（Image-to-Image）。",
         "- **保留特徵（50% 鎖定）**：嚴格保留原生物面部五官結構、眼眸幾何特徵與瞳色、核心標誌特徵與雙色調，確保家族辨識度。",
         "- **本階進化（50% 突變）**：" + mode.prompt_guidance,
-        "- **提示詞注入**：`" + mode.positive_tokens + "`",
-        "- **負向排除**：`" + mode.negative_tokens + "`"
+        "- **本階外觀特徵**：`" + mode.positive_tokens + "`"
       ].join("\n")
     };
   },

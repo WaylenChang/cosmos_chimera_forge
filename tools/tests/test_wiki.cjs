@@ -6,17 +6,18 @@ const path=require("node:path");
 const root=path.resolve(__dirname,"../..");
 function load(){
  const c={window:{}};
+ vm.runInNewContext(fs.readFileSync(path.join(root,"drive-folder-naming.js"),"utf8"),c);
  vm.runInNewContext(fs.readFileSync(path.join(root,"wiki.js"),"utf8"),c);
  return c.window.COSMI_WIKI;
 }
 test("all subject types share a canonical _05_wiki.md suffix",()=>{
  const w=load();
  const make=(id,subjectId,stage)=>({task:{id},subjectId,opts:{stage}});
- assert.equal(w.describe(make("creature-concept","cr_fox","juvenile")).path,"creatures/cr_fox/cr_fox_juvenile_05_wiki.md");
- assert.equal(w.describe(make("creature-model-rig","cr_fox","juvenile")).path,"creatures/cr_fox/cr_fox_juvenile_05_wiki.md");
- assert.equal(w.describe(make("character-concept","chr_fox")).path,"characters/chr_fox/chr_fox_05_wiki.md");
- assert.equal(w.describe(make("move-vfx","fx_burst")).path,"moves/fx_burst/fx_burst_05_wiki.md");
- assert.equal(w.describe(make("creature-concept","cr_fox_adult","adult")).path,"creatures/cr_fox/cr_fox_adult_05_wiki.md");
+ assert.equal(w.describe(make("creature-concept","cr_fox","juvenile")).path,"creatures/cr_fox/ch_1st_batch_fox_wiki_form1_05_wiki_draft.md");
+ assert.equal(w.describe(make("creature-model-rig","cr_fox","juvenile")).path,"creatures/cr_fox/ch_1st_batch_fox_wiki_form1_05_wiki_draft.md");
+ assert.equal(w.describe(make("character-concept","chr_fox")).path,"characters/chr_fox/chr_protagonist_fox_wiki_05_wiki_draft.md");
+ assert.equal(w.describe(make("move-vfx","fx_burst")).path,"moves/fx_burst/mv_legacy_fx_burst_wiki_05_wiki_draft.md");
+ assert.equal(w.describe(make("creature-concept","cr_fox_adult","adult")).path,"creatures/cr_fox/ch_1st_batch_fox_wiki_form3_05_wiki_draft.md");
  for(const stage of w.STAGES)assert.equal(w.describe(make("creature-concept","cr_fox",stage)).stage,stage);
 });
 test("legacy extraction selects each stage independently and refuses missing stages",()=>{
@@ -109,4 +110,13 @@ test("old manifest wiki links are normalized without touching asset files or QA"
  assert.equal(w.normalizeWikiPath("wiki/characters/chr_1286_wiki.md"),"characters/chr_1286/chr_1286_05_wiki.md");
  assert.equal(w.normalizeWikiPath("wiki/moves/fx_burst_wiki.md"),"moves/fx_burst/fx_burst_05_wiki.md");
  assert.equal(w.normalizeWikiPath("creatures/wiki/cr_fox_adult_wiki.md"),"creatures/cr_fox/cr_fox_adult_05_wiki.md");
+});
+
+test("move wiki draft reads only move fields, not demo-caster details",()=>{
+  const w=load();
+  const md=w.initialMarkdown({task:{id:"move-vfx"},subjectId:"fx_fire",
+    opts:{move_name:"烈焰",element:"fire",shape:"cone",tier:"heavy",use_creature:"yes"},
+    concept:{name_zh:"SECRET_CASTER",social_structure:"SECRET_LORE",appearance:"SECRET_BODY"}});
+  assert.match(md,/烈焰|fire|cone|heavy/);
+  assert.doesNotMatch(md,/SECRET_CASTER|SECRET_LORE|SECRET_BODY/);
 });

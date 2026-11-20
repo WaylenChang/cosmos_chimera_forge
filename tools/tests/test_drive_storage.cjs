@@ -22,6 +22,7 @@ function harness({ clientId = '123-test.apps.googleusercontent.com', handle, ses
   }
   const context = {
     Blob, File, Headers, URLSearchParams, Event, crypto, Date, sessionStorage,
+    COSMI_DRIVE_NAMES: require('../../drive-folder-naming.js'),
     setTimeout(fn) { timers.push(fn); return timers.length; }, clearTimeout() {},
     document: { getElementById: node, addEventListener(_, fn) { fn(); } },
     COSMI_DRIVE_CONFIG: { clientId, rootId: 'project-root', rootPath: 'project/cosmos_chimera_forge' },
@@ -160,11 +161,11 @@ test('ambiguous duplicate Drive names fail instead of overwriting arbitrary data
 test('legacy Prompt-to-3D migration never invents model or overwrites missing GLB', async () => {
   const h=harness({handle:u=>{
     const q=u.searchParams.get('q')||'';
-    if(q==="'ai_blender-id' in parents and trashed = false")return Response.json({files:[
+    if(q==="'_ai_blender-id' in parents and trashed = false")return Response.json({files:[
       {id:'old-model',name:'asset_cr_sample_adult',mimeType:'application/vnd.google-apps.folder'}]});
     if(q==="'old-model' in parents and trashed = false")return Response.json({files:[
       {id:'old-models',name:'models',mimeType:'application/vnd.google-apps.folder'}]});
-    if(q==="'old-models' in parents and trashed = false")return Response.json({files:[]});
+    if(q==="'_models-id' in parents and trashed = false")return Response.json({files:[]});
     if(q==="'creatures-id' in parents and trashed = false")return Response.json({files:[]});
   }});
   await h.login();
@@ -181,7 +182,7 @@ test('all concurrent Prompt-to-Image and 3D wiki calls create one stage-specific
   let created=false, uploads=0;
   const h=harness({handle:(u,options)=>{
     const q=u.searchParams.get('q')||'';
-    if(q.includes("_05_wiki.md"))return Response.json({files:created?[{id:'wiki-item',name:'cr_new_juvenile_05_wiki.md'}]:[]});
+    if(q.includes("'ch_1st_batch_new-id' in parents") && !q.includes("name = "))return Response.json({files:created?[{id:'wiki-item',name:'ch_1st_batch_new_wiki_form1_05_wiki_draft.md',mimeType:'text/markdown'}]:[]});
     if(u.pathname.includes('/upload/')){
       uploads++;created=true;return Response.json({id:'wiki-item',name:'cr_new_juvenile_05_wiki.md'});
     }
@@ -195,7 +196,7 @@ test('all concurrent Prompt-to-Image and 3D wiki calls create one stage-specific
     h.context.COSMI_DRIVE.ensureWiki(ctx)
   ]);
   assert.equal(uploads,1);
-  assert.equal(a.path,'creatures/cr_new/cr_new_juvenile_05_wiki.md');
+  assert.equal(a.path,'creatures/cr_new/ch_1st_batch_new_wiki_form1_05_wiki_draft.md');
   assert.equal(a.id,b.id);
   assert.equal(c.id,a.id);
   const later=await h.context.COSMI_DRIVE.ensureWiki(ctx);
@@ -221,12 +222,13 @@ test('production build excludes asset and prompt directories and requires OAuth 
   assert.equal(result.status, 0, result.stderr.toString());
   const names = fs.readdirSync(path.join(root, '_site'));
   assert.ok(!names.includes('Art') && !names.includes('Data') && !names.includes('.git'));
+  assert.ok(names.includes('drive-folder-naming.js'), 'published site must include Drive naming resolver');
   assert.match(fs.readFileSync(path.join(root, '_site/drive-config.js'), 'utf8'), /123-test.apps.googleusercontent.com/);
   assert.match(fs.readFileSync(path.join(root, '_site/index.html'), 'utf8'), /id="driveApp" hidden/);
   const builtHtml = fs.readFileSync(path.join(root, '_site/index.html'), 'utf8');
   assert.ok(!names.includes('model-review.css'), 'retired duplicate 3D viewer CSS must not ship');
   assert.doesNotMatch(builtHtml, /model-review\.css/);
-  for (const asset of ['forge.js','drive-storage.js','model-review.js','drive-config.js']) {
+  for (const asset of ['forge.js','drive-storage.js','drive-folder-naming.js','model-review.js','drive-config.js']) {
     const digest = require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'_site',asset))).digest('hex').slice(0,12);
     assert.ok(builtHtml.includes(`="${asset}?v=${digest}"`), asset+' must bypass stale Pages cache using its content hash');
   }

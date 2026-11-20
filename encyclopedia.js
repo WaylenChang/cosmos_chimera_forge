@@ -31,6 +31,27 @@
     return level === "complete" || level === "author" ? structuredClone(values[entry.id] || []) : [];
   }
 
+  // Google Drive may still contain stage-specific historical labels. The published
+  // species name comes from designed.js; stage, assets and descriptions remain distinct.
+  function normalizeCreatureNames(entries, designs) {
+    const names = new Map();
+    for (const item of Array.isArray(designs) ? designs : []) {
+      const forms = item?.concept?.locked?.stages;
+      if (!Array.isArray(forms) || !forms.length || !item.line_id) continue;
+      const form = forms.find(x => x.stage === "overload")
+        || forms.find(x => x.stage === "adult") || forms[forms.length - 1];
+      if (form?.name_zh && form?.name_en)
+        names.set(item.line_id, {name_zh:form.name_zh, name_en:form.name_en});
+    }
+    return entries.map(entry => {
+      const canonical = entry?.kind === "creature" ? names.get(entry.subject_id) : null;
+      if (!canonical || !entry.basic) return entry;
+      if (entry.basic.name_zh === canonical.name_zh && entry.basic.name_en === canonical.name_en)
+        return entry;
+      return {...entry, basic:{...entry.basic, ...canonical}};
+    });
+  }
+
   function install(win) {
     const doc=win.document, button=doc.getElementById("viewBtnEncyclopedia");
     if (!button) return;
@@ -98,7 +119,7 @@
         const catalogs=await Promise.all(CATALOG_PATHS.map(async path=>JSON.parse(await(await win.COSMI_DRIVE.read(path)).text())));
         const numeric=JSON.parse(await(await win.COSMI_DRIVE.read("moves/encyclopedia-values.json")).text());
         if(token!==generation||!dialog.open)return;
-        entries=catalogs.flat();values=numeric;render();
+        entries=normalizeCreatureNames(catalogs.flat(),win.COSMI_DESIGNED?.items);values=numeric;render();
       }catch(error){if(token===generation)status.textContent="圖鑑未載入："+error.message;}
       finally{reload.disabled=false;}
     }
@@ -108,5 +129,5 @@
     const app=doc.getElementById("driveApp");
     if(app)new MutationObserver(()=>{if(app.hidden){clear();if(dialog.open)dialog.close();}}).observe(app,{attributes:true,attributeFilter:["hidden"]});
   }
-  return Object.freeze({CATALOG_PATHS,project,title,filter,visibleValues,install});
+  return Object.freeze({CATALOG_PATHS,project,title,filter,visibleValues,normalizeCreatureNames,install});
 });

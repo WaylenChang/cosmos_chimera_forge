@@ -1,113 +1,126 @@
 # Cosmos Chimera Forge — Google Drive 目錄結構、名稱／ID 對照與管線索引
 
 - **專案根目錄**：`cosmos_chimera_forge/`（Drive Folder ID: `1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0`）
-- **最後維護日期**：2026-11-19
+- **最後維護日期**：2026-11-20
 
 ## 1. Google Drive 目錄結構與命名規範
 
+> **PR #25 檔案命名規則更新：**個別 ID 目錄內的新檔名，請以 [FILE_NAMING_CONTRACT.md](FILE_NAMING_CONTRACT.md) 為準；角色／招式 `<實體ID目錄>_<功能>[_<步驟>_<版本>].<ext>`，宙獸 `<physical_subject_folder>_<file_function>_form<i>[_<pipeline_step>_<version>].<ext>`。只有正式最終成果才省略步驟與版本。下方保留的 `cr_*`、英文型態名、`_03b_blender` 等檔名範例為**尚未完成遷移的歷史格式**，不得當作新寫入規範。舊資產與共用跨型態 Prompt 需先經相容性與核准狀態稽核後再實體更名；目前不能宣稱整個 Drive 檔案已更名完畢。
+
+
+
+> **2026-11-20 physical Drive rename:** The concrete Google Drive folder names have been normalized: category helper folders and all nested processing/version/backup folders start with `_`; subject folders use `chr_<batch>_<name>`, `ch_<batch>_<name>` or `mv_<batch>_<name>`. The historical paths and asset IDs displayed below are **logical compatibility paths**, not literal physical Drive folder paths. Examples: `characters/chr_1286/03a_colab/v2` resolves to `characters/chr_protagonist_yeh_chengxi/_03a_colab/_v2`; `creatures/cr_aqua_slime/03b_blender` resolves to `creatures/ch_1st_batch_aqua_slime/_03b_blender`. Retain original filenames/game IDs. The exact 433-folder name+ID mapping is in `folder-migration-map-2026-11-20.json`, and full metadata readback confirms zero naming violations. The updated Drive resolver is available in PR #25 and must be deployed before relying on the new physical paths in the live app.
+
+> **批次名稱更新（2026-11-20）：**角色正式資料夾使用 `chr_protagonist_<name>`（3 個），第一批宙獸正式資料夾使用 `ch_1st_batch_<name>`（15 個）。舊 `chr_legacy_*`、`ch_legacy_*` 僅為過渡相容名稱；遊戲主體 ID 和檔名未變。歷史備份 `_legacy_*` 目錄不在本次更名範圍。
+
 ### 1.1 三層主目錄結構與過渡性檔案分層
 
-- **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（主動技／技能）
-- **未開工設計 Prompt 區（`<kind>/designed_prompts/`）**：尚未開始管線生成的主體，其純視覺設計 Prompt（`<design_id>.prompt.md`，供 `prompt-to-img`／`prompt-to-3D` 使用，不含數值、性格、生態、招式等非視覺雜訊）暫存於 `<kind>/designed_prompts/`；宙獸每個型態皆須產出獨立 `.glb` 檔，`.prompt.md` 須分開描述「四型態一致性」、「各型態特徵」、「型態演化關係」。**一旦該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<id>/` 目錄**。若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<id>/*.prompt.md` 檔尾（標註版本與步驟），不覆寫原文亦不另建散裝檔案。
-- **第二層**：`<id>/`（主體 ID，例如 `chr_1286`、`cr_aqua_slime`、`starter_moon_line`、`earth_boulder_roll`）
-- **第三層（`<kind>/<id>/`）**：**只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（即成果審查台等待審查或已通過的核心交付物），**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<id>/<step>/[<ver>/]`**：
-  - **設計 Prompt**：`<design_id>.prompt.md`（管線開工後自 `designed_prompts/` 移入，版本／步驟調整時追加於此檔）
-  - **主立繪（僅角色）**：`<id>_01_portrait[_<ver>]_main.png`（僅保留當前審核中或已通過之最新版本；**宙獸不需審查 img，所有宙獸立繪圖檔一律移入 `creatures/<id>/01_portrait/[<ver>/]`**）
-  - **GLB 檔**：`<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].glb`（僅保留當前審核中或已通過之最新版本；舊版移入 `<step>/v1/`、`v2/`…）
+- **第一層**：`characters/`（角色）、`creatures/`（宙獸）、`moves/`（主動技／技能）；第二層實體目錄使用 `chr_<batch>_<name>`、`ch_<batch>_<name>`、`mv_<batch>_<name>`（由 resolver 映射穩定遊戲 ID）
+- **未開工設計 Prompt 區（`<kind>/_designed_prompts/`）**：尚未開始管線生成的主體，其純視覺設計 Prompt（`<design_id>.prompt.md`，供 `prompt-to-img`／`prompt-to-3D` 使用，不含數值、性格、生態、招式等非視覺雜訊）暫存於 `<kind>/_designed_prompts/`；宙獸每個型態皆須產出獨立 `.glb` 檔，`.prompt.md` 須分開描述「四型態一致性」、「各型態特徵」、「型態演化關係」。**一旦該主體已開始任一管線生成步驟，立即將對應 `.prompt.md` 移動到 `<kind>/<physical_subject_folder>/` 目錄**。若生成版本或步驟有調整，將更改內容**追加**在該 `<kind>/<physical_subject_folder>/*.prompt.md` 檔尾（標註版本與步驟），不覆寫原文亦不另建散裝檔案。
+
+> **宙獸設計 Prompt 檔名規範（2026-11-20）：**已開工宙獸目錄內的設計 Prompt 必須命名為 `<宙獸實體目錄名稱>.prompt.md`，例如 `ch_1st_batch_aqua_slime.prompt.md`、`ch_starter_moon_line.prompt.md`、`ch_trial_boss_earth_line.prompt.md`。只調整 Google Drive 檔案顯示名稱；遊戲內 `cr_*`／`starter_*`／`line_*` ID、資產 ID、管線模板及 Prompt 原文保持不變。程式讀取時應以目前實體目錄名稱尋找 Prompt，並可對舊檔名提供相容讀取；不可將舊檔名當作新檔案重新建立。
+- **第二層**：`<physical_subject_folder>/`（實體資料夾名稱；`chr_1286`、`cr_aqua_slime`、`starter_moon_line`、`earth_boulder_roll` 等為穩定遊戲 ID／歷史邏輯查詢鍵，不是實體資料夾名稱）。
+- **第三層（`<kind>/<physical_subject_folder>/`）**：**只保留 `*.prompt.md` 與當前審核階段或已通過的檔案**（即成果審查台等待審查或已通過的核心交付物），**已結束步驟或舊有版本必須移動到對應的子目錄 `<kind>/<physical_subject_folder>/_<step>/[_<ver>/]`**：
+  - **設計 Prompt**：`<design_id>.prompt.md`（管線開工後自 `_designed_prompts/` 移入，版本／步驟調整時追加於此檔）
+  - **主立繪（僅角色）**：`<id>_01_portrait[_<ver>]_main.png`（僅保留當前審核中或已通過之最新版本；**宙獸不需審查 img，所有宙獸立繪圖檔一律移入 `creatures/<physical_subject_folder>/_01_portrait/[_<ver>/]`**）
+  - **GLB 檔**：`<id>[_<stage>]_<03a_colab|03b_blender>[_<ver>].glb`（僅保留當前審核中或已通過之最新版本；舊版移入 `_<step>/_v1/`、`_v2/`…）
   - **圖鑑**：`<id>[_<stage>]_05_wiki[_<ver>].md`
   - **遊戲格式數據**：對應遊戲格式數據檔（若有）
-- **功能性／中間流程過渡性檔案子目錄（`<kind>/<id>/<step>/[<ver>/]`）**：其餘功能性、中間過渡檔案、已結束步驟產物及舊有版本，依管線步驟（有調整版本或歷史重複產出時再建 `<ver>/` 子目錄）存放，**檔名結構維持不變**：
-  - **命名結構**：`id_型態(宙獸才有型態)_管線與步驟_版本(可以沒有，多版本才需要)`
+- **功能性／中間流程過渡性檔案子目錄（`<kind>/<physical_subject_folder>/_<step>/[_<ver>/]`）**：其餘功能性、中間過渡檔案、已結束步驟產物及舊有版本，依管線步驟（有調整版本或歷史重複產出時再建 `<ver>/` 子目錄）存放，**新檔名依 `FILE_NAMING_CONTRACT.md`；既有檔名僅保留歷史相容**：
+  - **新產物命名結構**：角色／招式 `<physical_subject_folder>_<file_function>[_<pipeline_step>_<version>].<ext>`；宙獸 `<physical_subject_folder>_<file_function>_form<i>[_<pipeline_step>_<version>].<ext>`（`i=1..4`）。歷史 `id_型態_步驟_版本` 為相容讀取格式。
   - 多檔產出（如立繪多視角圖、manifest、concept、VFX 分鏡）於基底命名後加上角色／副檔名，例如 `_front.png`、`_manifest.json`、`_concept.json`。
+
+> **下方目錄樹以現行實體資料夾名稱示範**；`<id>_*` 等既有檔名僅是歷史範例，新增檔案一律依 `FILE_NAMING_CONTRACT.md`，不得複製此樹內的舊檔名慣例。
 
 ```text
 cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4GcEC0]
 ├── characters/                                    [1NQ4omQINkHXTCbmdd0zSRmyPiGIL4daD]
-│   ├── <id>/                                      # 第二層：角色 ID（無型態）
-│   │   ├── <design_id>.prompt.md                  # 第三層保留：設計 Prompt（開工後自 designed_prompts/ 移入，調整時追加）
+│   ├── <physical_subject_folder>/               # 第二層：實體角色主體資料夾
+│   │   ├── <design_id>.prompt.md                  # 第三層保留：設計 Prompt（開工後自 _designed_prompts/ 移入，調整時追加）
 │   │   ├── <id>_01_portrait_main.png              # 第三層保留：主立繪（僅當前審核中或已通過之最新）
 │   │   ├── <id>_03a_colab.glb                     # 第三層保留：GLB（僅當前審核中或已通過之最新）
 │   │   ├── <id>_03b_blender_v2.glb                # 第三層保留：GLB（多版本最新）
 │   │   ├── <id>_05_wiki.md                        # 第三層保留：圖鑑
-│   │   ├── 00_settings/                           # 外觀與參數（有版本則進 v2/）
+│   │   ├── _00_settings/                           # 外觀與參數（有版本則進 _v2/）
 │   │   │   ├── <id>_00_appearance.md
 │   │   │   ├── <id>_00_parameters.json
-│   │   │   └── v2/
+│   │   │   └── _v2/
 │   │   │       ├── <id>_00_appearance_v2.md
 │   │   │       └── <id>_00_parameters_v2.json
-│   │   ├── 01_portrait/                           # 立繪過渡檔案（多視角、concept、manifest）
+│   │   ├── _01_portrait/                           # 立繪過渡檔案（多視角、concept、manifest）
 │   │   │   ├── <id>_01_portrait_front.png
 │   │   │   ├── <id>_01_portrait_turnaround.png
 │   │   │   ├── <id>_01_portrait_concept.json
 │   │   │   └── <id>_01_portrait_manifest.json
-│   │   ├── 02_review_portrait/                    # 立繪審查紀錄
+│   │   ├── _02_review_portrait/                    # 立繪審查紀錄
 │   │   │   └── <id>_02_review_portrait.json
-│   │   ├── 03a_colab/                             # Colab 中間檔與舊版 GLB（依版本進 v1/、v2/…）
+│   │   ├── _03a_colab/                             # Colab 中間檔與舊版 GLB（依版本進 _v1/、_v2/…）
 │   │   │   ├── <id>_03a_colab.blend
 │   │   │   ├── <id>_03a_colab_manifest.json
-│   │   │   └── v1/
+│   │   │   └── _v1/
 │   │   │       └── <id>_03a_colab.glb
-│   │   ├── 03b_blender/                           # AI Blender 中間檔（依版本進 v2/）
-│   │   │   └── v2/
+│   │   ├── _03b_blender/                           # AI Blender 中間檔（依版本進 _v2/）
+│   │   │   └── _v2/
 │   │   │       ├── <id>_03b_blender_v2.blend
 │   │   │       └── <id>_03b_blender_v2_manifest.json
-│   │   └── 04_review_3d/                          # 3D 審查紀錄
+│   │   └── _04_review_3d/                          # 3D 審查紀錄
 │   │       └── <id>_04_review_3d.json
-│   ├── designed_prompts/                          # 未開工設計 Prompt（開工後移入對應 <id>/）
-│   ├── prompts/                                   # 分類專屬管線模板
-│   └── backup/                                    # 退件備份
+│   ├── _designed_prompts/                          # 未開工設計 Prompt（開工後移入對應 <physical_subject_folder>/）
+│   ├── _prompts/                                   # 分類專屬管線模板
+│   └── _backup/                                    # 退件備份
 ├── creatures/                                     [1zAbLoEZMv5BxKmPaEZJJLrt99H3kro9C]
-│   ├── <id>/                                      # 第二層：宙獸 ID（含四階型態）
-│   │   ├── <design_id>.prompt.md                  # 第三層保留：設計 Prompt（已有 GLB／開工後自 designed_prompts/ 移入）
+│   ├── <physical_subject_folder>/               # 第二層：實體宙獸演化線資料夾
+│   │   ├── <design_id>.prompt.md                  # 第三層保留：設計 Prompt（已有 GLB／開工後自 _designed_prompts/ 移入）
 │   │   ├── <id>_juvenile_03a_colab.glb            # 第三層保留：GLB
 │   │   ├── <id>_adult_03b_blender_v2.glb          # 第三層保留：GLB（多版本）
 │   │   ├── <id>_juvenile_05_wiki.md               # 第三層保留：圖鑑
-│   │   ├── 00_settings/
-│   │   ├── 01_portrait/                           # 宙獸不需審查 img，所有立繪 img（含 _main.png）移入此子目錄
-│   │   ├── 02_review_portrait/
-│   │   ├── 03a_colab/
-│   │   ├── 03b_blender/
-│   │   └── 04_review_3d/
-│   ├── designed_prompts/                          # 未開工宙獸純視覺 Prompt（四型態一致性／各型態特徵／型態演化關係）
-│   │   ├── starters/                              # 御三家（starter_*）
-│   │   ├── lines/                                 # 一般演化線（line_*）
-│   │   └── trial_bosses/                          # 地形試煉 BOSS（line_*_trial_boss）
-│   ├── prompts/                                   # 分類專屬管線模板
-│   └── backup/                                    # 退件備份
+│   │   ├── _00_settings/
+│   │   ├── _01_portrait/                           # 宙獸不需審查 img，所有立繪 img（含 _main.png）移入此子目錄
+│   │   ├── _02_review_portrait/
+│   │   ├── _03a_colab/
+│   │   ├── _03b_blender/
+│   │   └── _04_review_3d/
+│   ├── _designed_prompts/                          # 未開工宙獸純視覺 Prompt（四型態一致性／各型態特徵／型態演化關係）
+│   │   ├── _starters/                              # 御三家（starter_*）
+│   │   ├── _lines/                                 # 一般演化線（line_*）
+│   │   └── _trial_bosses/                          # 地形試煉 BOSS（line_*_trial_boss）
+│   ├── _prompts/                                   # 分類專屬管線模板
+│   └── _backup/                                    # 退件備份
 ├── moves/                                         [1alulsIhFcb8m8UKXaA-9-orBCEr__P8B]
-│   ├── <id>/                                      # 第二層：技能／主動技 ID（無型態）
+│   ├── <physical_subject_folder>/               # 第二層：實體技能／主動技資料夾
 │   │   ├── <id>_05_wiki.md                        # 第三層保留：圖鑑
-│   │   ├── 00_settings/
-│   │   ├── 01b_vfx/
+│   │   ├── _00_settings/
+│   │   ├── _01b_vfx/
 │   │   │   ├── <id>_01b_vfx_spec.json
 │   │   │   └── <id>_01b_vfx_manifest.json
-│   │   └── 04_review_3d/
+│   │   └── _04_review_3d/
 │   │       └── <id>_04_review_3d.json
-│   ├── designed_prompts/                          # 未開工主動技設計 Prompt（開工後移入對應 <id>/）
-│   ├── prompts/                                   # 分類專屬管線模板
-│   └── backup/                                    # 退件備份
-├── 00_settings/                                   [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV] # 全域預設
-├── prompts/                                       [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz] # 舊版唯讀相容模板
+│   ├── _designed_prompts/                          # 未開工主動技設計 Prompt（開工後移入對應 <physical_subject_folder>/）
+│   ├── _prompts/                                   # 分類專屬管線模板
+│   └── _backup/                                    # 退件備份
 ├── DIRECTORY.md                                   [1UT4_289o-zh6-9wyq3rG_qMpfzdkjsi7]
 ├── AGENT_QUICKSTART.md                            [1oN0va-tlEct7ofhgVNTsYc5_hKSSpf5O]
-└── backup/                                        [1j1URF-pjZA_AJKj6MzG4vNVWrD2-ziqy] # 退役資料夾與歷史索引
+├── FILE_NAMING_CONTRACT.md                         [12J_5ZpNVWn2zXv0ivzS7b5thkmTYJQra]
+└── backup/                                        [1j1URF-pjZA_AJKj6MzG4vNVWrD2-ziqy] # 根目錄歸檔例外，唯讀
+    ├── 00_settings/                               [1USaqcFqwmGocRYFdX3J9CeSj0-iu8qkV] # 退役全域預設
+    └── _retired_root_prompts_20261116/           [1p6os1X7vw58i0aqGco0r89ztXkLPzNGz] # 退役根層 Prompt
 ```
 
-## 2. 管線流程各步驟參考 Prompt（分類專屬 `<kind>/prompts/`）
+## 2. 管線流程各步驟參考 Prompt（分類專屬 `<kind>/_prompts/`）
 
-新工作一律從 `characters/prompts/`、`creatures/prompts/` 或 `moves/prompts/` 讀取模板。核心交付物（主立繪 `_main.png`、`.glb`、`_05_wiki.md`、遊戲格式數據）直接寫入 `<kind>/<id>/`（第三層）；其餘功能性與中間流程過渡檔寫入 `<kind>/<id>/<step>/[<ver>/]`，檔名結構不變。根目錄 `prompts/` 僅供舊版讀取相容，不再作為新工作寫入路徑。
+新工作一律從 `characters/_prompts/`、`creatures/_prompts/` 或 `moves/_prompts/` 讀取模板。核心交付物（主立繪 `_main.png`、`.glb`、`_05_wiki.md`、遊戲格式數據）直接寫入 `<kind>/<physical_subject_folder>/`（實體第三層）；其餘功能性與中間流程過渡檔寫入 `<kind>/<physical_subject_folder>/_<step>/[_<ver>/]`，新檔名依 `FILE_NAMING_CONTRACT.md`；既有檔名只作相容。根目錄原 `prompts/` 已歸檔於 `backup/_retired_root_prompts_20261116/`，僅供舊版相容／來源溯源，不再作為新工作寫入路徑。根目錄 `backup/` 不屬於三個分類內部的 `_` 前綴規範。
 
-| 步驟代碼 | 模板檔案 | 對應流程節點 | 輸出命名與存放路徑（`<kind>/<id>/` 下） |
+| 步驟代碼 | 模板檔案 | 對應流程節點 | 輸出命名與存放路徑（`<kind>/<physical_subject_folder>/` 下） |
 | :--- | :--- | :--- | :--- |
-| `00_appearance` / `00_parameters` | `<kind>/prompts/00_appearance.prompt.md` | 外觀設定 | `00_settings/[<ver>/]<id>[_<stage>]_00_appearance[_<ver>].md`、`_00_parameters[_<ver>].json` |
-| `01_portrait` | `<kind>/prompts/01_portrait.prompt.md` | 立繪生成 | 第三層保留 `<id>[_<stage>]_01_portrait[_<ver>]_main.png`；其餘（`_front.png`、`_turnaround.png`、`_concept.json`、`_manifest.json`）存於 `01_portrait/[<ver>/]` |
-| `01b_vfx` | `moves/prompts/01b_move_vfx.prompt.md` | 主動技特效 | `01b_vfx/[<ver>/]<id>_01b_vfx[_<ver>]_spec.json`、`_manifest.json` |
-| `02_review_portrait` | `<kind>/prompts/02_review_portrait.prompt.md` | 立繪審查 | `02_review_portrait/[<ver>/]<id>[_<stage>]_02_review_portrait[_<ver>].json`（只輸出建議，不代為核准） |
-| `03a_colab` | `<kind>/prompts/03a_colab.prompt.md` | Colab Image-to-3D | 第三層保留 `<id>[_<stage>]_03a_colab[_<ver>].glb`；其餘（`.blend`、`_manifest.json`、預覽、動畫）存於 `03a_colab/[<ver>/]` |
-| `03b_blender` | `<kind>/prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 第三層保留 `<id>[_<stage>]_03b_blender[_<ver>].glb`；其餘（`.blend`、`_manifest.json`、貼圖、渲染圖）存於 `03b_blender/[<ver>/]` |
-| `04_review_3d` | `<kind>/prompts/04_review_3d.prompt.md` | 3D 最終驗收 | `04_review_3d/[<ver>/]<id>[_<stage>]_04_review_3d[_<ver>].json` |
-| `05_wiki` | `<kind>/prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 第三層保留 `<id>[_<stage>]_05_wiki[_<ver>].md`（僅於目標檔案不存在時建立） |
-| `skeleton_actions` | `<kind>/prompts/skeleton_actions.md` | 骨架與動作規格 | 角色（50 動作）／宙獸（57 動作＋`Socket_Weapon_R`/`L` 虛擬大手規範）／招式（施放動作與掛點對照） |
+| `00_appearance` / `00_parameters` | `<kind>/_prompts/00_appearance.prompt.md` | 外觀設定 | `_00_settings/[_<ver>/]<id>[_<stage>]_00_appearance[_<ver>].md`、`_00_parameters[_<ver>].json` |
+| `01_portrait` | `<kind>/_prompts/01_portrait.prompt.md` | 立繪生成 | 第三層保留 `<id>[_<stage>]_01_portrait[_<ver>]_main.png`；其餘（`_front.png`、`_turnaround.png`、`_concept.json`、`_manifest.json`）存於 `_01_portrait/[_<ver>/]` |
+| `01b_vfx` | `moves/_prompts/01b_move_vfx.prompt.md` | 主動技特效 | `_01b_vfx/[_<ver>/]<id>_01b_vfx[_<ver>]_spec.json`、`_manifest.json` |
+| `02_review_portrait` | `<kind>/_prompts/02_review_portrait.prompt.md` | 立繪審查 | `_02_review_portrait/[_<ver>/]<id>[_<stage>]_02_review_portrait[_<ver>].json`（只輸出建議，不代為核准） |
+| `03a_colab` | `<kind>/_prompts/03a_colab.prompt.md` | Colab Image-to-3D | 第三層保留 `<id>[_<stage>]_03a_colab[_<ver>].glb`；其餘（`.blend`、`_manifest.json`、預覽、動畫）存於 `_03a_colab/[_<ver>/]` |
+| `03b_blender` | `<kind>/_prompts/03b_blender.prompt.md` | AI Blender（圖生／文生 3D） | 第三層保留 `<id>[_<stage>]_03b_blender[_<ver>].glb`；其餘（`.blend`、`_manifest.json`、貼圖、渲染圖）存於 `_03b_blender/[_<ver>/]` |
+| `04_review_3d` | `<kind>/_prompts/04_review_3d.prompt.md` | 3D 最終驗收 | `_04_review_3d/[_<ver>/]<id>[_<stage>]_04_review_3d[_<ver>].json` |
+| `05_wiki` | `<kind>/_prompts/05_encyclopedia.prompt.md` | 獨立圖鑑生成 | 第三層保留 `<id>[_<stage>]_05_wiki[_<ver>].md`（僅於目標檔案不存在時建立） |
+| `skeleton_actions` | `<kind>/_prompts/skeleton_actions.md` | 骨架與動作規格 | 角色（50 動作）／宙獸（57 動作＋`Socket_Weapon_R`/`L` 虛擬大手規範）／招式（施放動作與掛點對照） |
 | — | `docs/pipeline/TRIGGERS.md` | 簡易觸發語句 | 各步驟觸發指令與管線分支說明 |
 
 ## 3. 角色（Characters）名稱與 ID 對照
@@ -119,6 +132,9 @@ cosmos_chimera_forge/                              [1AQR7UfEk7lL85rHHiZTK9PBOHc4
 | `chr_3d04` | `chr_roen` | 洛恩 | Roen | `chr-20261106-3d04-2100` / `mdl-20261114-3d04-0000` | `characters/wiki/chr_3d04_wiki.md` |
 
 ## 4. 宙獸（Creatures）名稱與 ID 對照
+
+> **四階段命名一致性（2026-11-20）：**同一宙獸演化線的 `juvenile`、`adolescent`、`adult`、`overload` 共用**一個正式中文名稱及一個正式英文名稱**；四階段的 `creature_id`、`stage`、外觀描述、技能與各自 GLB/Wiki/立繪檔案維持獨立。已有三階資料的草案不虛構第四階遊戲資料。正式名稱以 `designed.js` 各演化線成年／超載定稿的名稱為準，原先逐階名字僅作歷史型態外觀暱稱，不再寫入正式 `name_zh`／`name_en`。Drive 主目錄仍按**整條演化線 ID**命名，例如 `ch_1st_batch_aqua_slime`、`ch_starter_moon_line`、`ch_trial_boss_earth_line`；不另拆為四個階段目錄、不更名既有 ID 或資產檔名。圖鑑 UI 會以 `designed.js` 的共用正式名稱校正尚未更新的舊版 Drive 索引，但圖鑑來源文件與既有歷史描述應分別維護。
+
 
 ### 4.1 既有 `cr_*` 系列（各含 `juvenile` / `adolescent` / `adult` / `overload` 四階）
 

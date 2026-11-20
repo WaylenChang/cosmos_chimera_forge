@@ -43,20 +43,22 @@ test('category must be selected before route; route must be selected before node
   assert.equal(flow.selectStep(routed, 'prompt_3d').step, 'prompt_3d');
   const move = flow.selectRoute(flow.selectCategory('move'), 'move');
   assert.equal(move.step, 'encyclopedia');
+  assert.equal(flow.selectStep(move, 'move_vfx').step, 'move_vfx');
   assert.equal(flow.selectRoute(flow.selectCategory('move'), 'image'), null);
 });
 test('both routes are visible in one horizontal diagram with shared endpoints', () => {
   const flow = flowModule();
   for (const kind of ['character','creature']) {
     const rows = Array.from(flow.diagram(kind));
-    assert.equal(rows.length,3);
+    assert.equal(rows.length,4);
     assert.equal(rows[0].type,'step');
     assert.equal(rows[0].shared,true);
     assert.equal(rows[0].steps[0].id,'appearance');
-    assert.equal(rows[1].type,'fork');
-    assert.equal(rows[2].shared,true);
-    assert.equal(rows[2].steps[0].id,'review_3d');
-    const lanes=Array.from(rows[1].lanes);
+    assert.equal(rows[1].steps[0].id,'encyclopedia');
+    assert.equal(rows[2].type,'fork');
+    assert.equal(rows[3].shared,true);
+    assert.equal(rows[3].steps[0].id,'review_3d');
+    const lanes=Array.from(rows[2].lanes);
     assert.deepEqual(lanes.map(l=>l.id),['image','text']);
     assert.deepEqual(Array.from(lanes[0].segments,s=>s.type),['step','step','parallel']);
     assert.deepEqual(Array.from(lanes[0].segments[2].tracks,s=>s[0].id),['image_colab','image_blender']);
@@ -83,6 +85,7 @@ test('task graph is horizontally scrollable and category selection needs no rout
 test('appearance is derived from current concept data, without duplicate input', () => {
   const pipeline = pipelineModule();
   const context = {
+    task:{id:'creature-concept'},
     concept: {name_zh: '測試角色', body_type: ['高挑'], appearance_palette: ['冷色']},
     opts: {stage: 'adult'},
     notes: '增加金色線條'
@@ -90,7 +93,7 @@ test('appearance is derived from current concept data, without duplicate input',
   const result = pipeline.appearance(context);
   assert.match(result, /name_zh: 測試角色/);
   assert.match(result, /appearance_palette/);
-  assert.match(result, /補充／修改: 增加金色線條/);
+  assert.doesNotMatch(result, /增加金色線條/);
   assert.doesNotMatch(html, /id="pipelineAppearance"/);
   assert.doesNotMatch(pipelineSource, /pipelineAppearance/);
   assert.doesNotMatch(drive, /pipelineAppearance/);

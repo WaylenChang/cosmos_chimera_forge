@@ -8,7 +8,8 @@
   ]);
   const flow = Object.freeze({
     image: [
-      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "設計外觀與辨識特徵，並依概念參數建立角色／宙獸專屬各型態獨立圖鑑（存於 <kind>/<id>/），不混入 3D 或交付指令。", output: "<id>[_<stage>]_00_appearance.md、<id>[_<stage>]_05_wiki.md" },
+      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定", detail: "只整理本角色／本型態宙獸的視覺外觀與辨識特徵。", output: "<id>[_<stage>]_00_appearance.md" },
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "玩家圖鑑（獨立產出）", detail: "依目前確認的概念設定產出玩家閱讀的 Markdown 圖鑑；不作立繪、建模、招式動畫或審查 Prompt 的輸入，也不作為前置驗收條件。", output: "<id>[_<stage>]_05_wiki.md" },
       { id: "portrait", stage: "portrait", task: "concept", name: "生成立繪", detail: "正面基準圖 → 多視角三視圖（角色另含動態主立繪）；可選手動複製或 Drive 自動模式。", output: "立繪圖片" },
       { id: "review_portrait", stage: "review_portrait", task: "concept", name: "立繪審查", detail: "核對各視角一致性與缺陷；通過後才允許圖片建模。", output: "立繪審查紀錄" },
       { id: "image_colab", stage: "colab", task: "model", name: "Colab + AI + Blender", detail: "Image-to-3D 分支 A：使用已核准立繪，Colab 生成初始模型，由 AI 協助 Blender 修復、檢查與輸出。與 AI + Blender 二選一。", output: ".glb ＋ .blend、骨架、動作、QA", alternate: true },
@@ -16,13 +17,14 @@
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "檢查模型與已核准立繪、材質、骨架、動作及 manifest；人工確認後才歸檔。", output: "最終審查紀錄" }
     ],
     text: [
-      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定與生成圖鑑", detail: "先確定原創外觀與辨識特徵，並建立目前角色／宙獸型態獨立 Markdown 圖鑑；不需要先畫正面圖。", output: "<id>[_<stage>]_00_appearance.md、<id>[_<stage>]_05_wiki.md" },
-      { id: "prompt_3d", stage: "blender", task: "model", name: "AI + Blender（文字建模）", detail: "在立繪之前分岔。以文字直接在 Blender 原創建模、綁骨、製作動作並輸出 .glb／.blend；所有管線均引用獨立圖鑑，禁止在此重複生成。", output: ".glb ＋ .blend；關聯 wiki 路徑" },
+      { id: "appearance", stage: "appearance", task: "concept", name: "外觀設定", detail: "整理本對象視覺特徵，提供純文字建模的外觀基礎。", output: "<id>[_<stage>]_00_appearance.md" },
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "玩家圖鑑（獨立產出）", detail: "可單獨建立本角色／宙獸玩家圖鑑；不作文字建模 Prompt 的輸入。", output: "<id>[_<stage>]_05_wiki.md" },
+      { id: "prompt_3d", stage: "blender", task: "model", name: "AI + Blender（文字建模）", detail: "以本對象外觀概念直接在 Blender 建模、綁骨、製作動作並輸出 .glb／.blend。", output: ".glb ＋ .blend" },
       { id: "review_3d", stage: "review_3d", task: "model", name: "最終驗收", detail: "檢查已完成的 3D 模型、材質、骨架、動作與 manifest；Prompt-to-3D 無需補立繪，缺 .glb／.blend 不得通過。", output: "最終審查紀錄" }
     ],
     move: [
-      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "生成主動技圖鑑", detail: "先按主動技的屬性、功能、外觀與動作需求生成獨立 Markdown 圖鑑，存於 moves/<id>/。", output: "moves/<id>/<id>_05_wiki.md" },
-      { id: "move_vfx", stage: "move_vfx", task: "concept", name: "主動技與特效設計", detail: "獨立主動技圖鑑條目：設定屬性、形狀與強度，生成規格、六格分鏡、分層拆解與序列圖。施放者僅用於示範。", output: "spec.json、storyboard、layers、flipbook" }
+      { id: "encyclopedia", stage: "encyclopedia", task: "concept", name: "主動技玩家圖鑑（獨立產出）", detail: "以主動技設計設定建立供玩家閱讀的圖鑑條目；不將圖鑑內容輸入招式動畫生成。", output: "<id>_05_wiki.md" },
+      { id: "move_vfx", stage: "move_vfx", task: "concept", name: "主動技與特效設計", detail: "依本招式屬性、形狀與強度製作規格、六格分鏡、分層拆解與序列圖。施放者僅用於尺度示範。", output: "spec.json、storyboard、layers、flipbook" }
     ]
   });
   function category(id) { return categories.find(c => c.id === id) || null; }
@@ -41,7 +43,7 @@
   function infer(taskId, stage, opts) {
     const c = categories.find(x => x.concept === taskId || x.model === taskId);
     if (!c) return null;
-    if (c.id === "move") return { category: "move", route: "move", step: "move_vfx" };
+    if (c.id === "move") return { category: "move", route: "move", step: stage === "encyclopedia" ? "encyclopedia" : "move_vfx" };
     const text = stage === "blender" && (!opts || (!opts.source_pack && !opts.input_img));
     const route = text ? "text" : "image";
     let step = stage === "colab" ? "image_colab" :
@@ -57,13 +59,15 @@
     if (kind === "move") return flow.move.map(step => ({type: "step", steps: [step]}));
     return [
       {type: "step", shared: true, steps: [flow.image[0]]},
+      // Separate player-facing data output; its content is never passed to later nodes.
+      {type: "step", shared: true, steps: [flow.image[1]]},
       {type: "fork", lanes: [
         {id: "image", segments: [
-          {type: "step", steps: [flow.image[1]]},
           {type: "step", steps: [flow.image[2]]},
+          {type: "step", steps: [flow.image[3]]},
           {type: "parallel", tracks: flow.image.filter(step => step.alternate).map(step => [step])}
         ]},
-        {id: "text", segments: flow.text.slice(1, -1).map(step => ({type: "step", steps: [step]}))}
+        {id: "text", segments: flow.text.slice(2, -1).map(step => ({type: "step", steps: [step]}))}
       ]},
       {type: "step", shared: true, steps: [flow.image[flow.image.length - 1]]}
     ];

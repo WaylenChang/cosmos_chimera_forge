@@ -171,7 +171,19 @@
       const byName = candidates.find(f => f.path === base);
       if (byName) return byName;
       if (/^(?:models|rig|source)\//i.test(expectedPath)) {
-        return candidates.slice().sort((a, b) => a.path.length - b.path.length || a.path.localeCompare(b.path))[0];
+        // A migrated subject folder may contain all four creature forms.
+        // Never select a different form just because its filename sorts first.
+        const stage = /(?:^|_)(juvenile|adolescent|adult|overload)(?=_|\.|$)/i.exec(base)?.[1]?.toLowerCase();
+        if (stage) {
+          const form = { juvenile: 1, adolescent: 2, adult: 3, overload: 4 }[stage];
+          const matches = candidates.filter(f =>
+            new RegExp('(?:^|_)' + stage + '(?:_|\\.|$)', 'i').test(f.path) ||
+            new RegExp('_form' + form + '(?:_|\\.|$)', 'i').test(f.path));
+          return matches.length === 1 ? matches[0] : null;
+        }
+        // Legacy single-GLB character packages can lack a shared filename stem.
+        // Multiple unmatched files are ambiguous and must fail closed.
+        return candidates.length === 1 ? candidates[0] : null;
       }
     }
     return null;

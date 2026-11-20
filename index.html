@@ -913,8 +913,8 @@
       <section class="settings-card" id="pipelineControls">
         <h3>管線與來源設定</h3>
         <label hidden>目前步驟 <select id="pipelineStage">
-          <option value="appearance">0 · 外觀設定與生成圖鑑（Gemini Flash／Codex）</option>
-          <option value="encyclopedia">圖鑑 · 主動技 Markdown（獨立步驟）</option>
+          <option value="appearance">0 · 外觀設定（Gemini Flash／Codex）</option>
+          <option value="encyclopedia">圖鑑 · 玩家資料（獨立生成，不供其他 Prompt 參照）</option>
           <option value="move_vfx">主動技與特效設計</option>
           <option value="portrait" selected>1 · 立繪（ChatGPT／Codex；Gemini／Antigravity 輔助）</option>
           <option value="review_portrait">2 · 立繪審查</option>
@@ -1252,6 +1252,7 @@
 </div>
 
 <script src="drive-config.js"></script>
+<script src="drive-folder-naming.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="stylesheet" href="encyclopedia.css"><script src="encyclopedia.js"></script><script src="wiki.js"></script>
 <script src="pipeline.js"></script>

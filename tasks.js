@@ -390,7 +390,7 @@
         ] : [
           "### 步驟 1（基準錨定圖 · 基於前階進化）：`images/cr_" + S + "_" + curStage + "_front.png`",
           "- **前置操作**：**先上傳前一階正面圖 `" + evoInfo.prevFrontImg + "`（" + evoInfo.prevStageZh + "）** 作為本階演化唯一視覺基底（Image-to-Image）。",
-          "- **演化規範**：基於前階正面圖描述本階進化外觀（50% 鎖定面部五官/瞳色/核心特徵；50% 突變：`" + evoInfo.mode.prompt_guidance + "`；注入 `" + evoInfo.mode.positive_tokens + "` / 排除 `" + evoInfo.mode.negative_tokens + "`）。",
+          "- **演化規範**：基於前階正面圖描述本階進化外觀（50% 鎖定面部五官/瞳色/核心特徵；50% 突變：`" + evoInfo.mode.prompt_guidance + "`；本階外觀特徵 `" + evoInfo.mode.positive_tokens + "`）。",
           "- **畫面規格**：**正面正交基準圖 1:1**，全身居中、平視正交、自然平正站姿、平光無陰影。背景：" + bgInfo.promptGuide + "。"
         ];
 
@@ -683,7 +683,7 @@
     },
 
     {
-      id: "move-vfx", version: "1.1.1", zh: "主動技效果動畫（特效）", prefix: "fx", platform: "chatgpt",
+      id: "move-vfx", version: "1.2.0", zh: "主動技效果動畫（特效）", prefix: "fx", platform: "chatgpt",
       needs: null, drop: "Art/_incoming",
       options: [
         { key: "use_creature", type: "select", label: "示範施放者", items: () => [{ v: "yes", zh: "以目前宙獸概念示範" }, { v: "no", zh: "不指定（通用示範）" }], def: "yes" },
@@ -699,17 +699,20 @@
         const o = ctx.opts, el = C.ELEMENTS.find(e => e.v === o.element);
         const shape = C.VFX.shapes.find(s => s.v === o.shape), tier = C.VFX.tiers.find(t => t.v === o.tier);
         const base = "fx_" + o.element + "_" + o.shape + "_" + o.tier;
-        const commons = C.VFX.common.filter(x => o.common.includes(x.v));
+        const commons = C.VFX.common.filter(x => (o.common || []).includes(x.v));
         const body = [
           "## 主動技",
           json({
             move_name: o.move_name || "（請命名，中英各一）", element: o.element + "（" + el.zh + "）", palette: el.palette,
             shape: shape.v + "（" + shape.zh + "）", tier: tier.v + "（" + tier.zh + "）",
             move_id: o.move_id || "（請取 snake_case 通用名稱，不含任何宙獸名）",
-            demo_caster: o.use_creature === "yes" ? ctx.concept : "不指定，用中性體型示範"
+            ...(o.use_creature === "yes" ? {demo_caster: Object.fromEntries(Object.entries({
+              size_profile: ctx.concept?.size_profile,
+              anatomy: ctx.concept?.anatomy || ctx.concept?.locked?.stages?.find(x => x.stage === o.stage)?.anatomy
+            }).filter(([, value]) => value && value !== "未知"))} : {})
           }),
           // REQ: 使用者 2026-11-07 — 主動技圖鑑獨立於宙獸圖鑑，多隻宙獸可共用同一主動技。
-          "主動技是**獨立圖鑑條目**，任何宙獸都可能學會：demo_caster 只用於分鏡示範，特效不得依賴它的特定身體部位或外觀。",
+          "聚焦本招式的能量形態、施放方向、時間節奏與命中回饋；示範施放者只提供必要的比例與施放掛點。",
           "",
           "## 產出清單",
           "| 檔案 | 內容 | 層級 |",
@@ -718,7 +721,7 @@
           "| `images/" + base + "_storyboard.png` | 分鏡 6 格：預備 → 施放 → 飛行/展開 → 命中 → 餘韻 → 消散，標註毫秒 | L1 |",
           "| `images/" + base + "_layers.png` | 圖層拆解：核心、外光、粒子、拖尾、地面印記、衝擊波各自獨立示意 | L1 |",
           "| `vfx/" + base + "_flipbook.png` | 序列圖 8×8 格、2048²（每格 256²），純黑底（additive 用），單一主要元素循環 | L2 |",
-          commons.map(x => "| `vfx/fx_common_" + x.v + "_spec.json` + `images/fx_common_" + x.v + "_storyboard.png` | 通用特效：" + x.zh + " | L1 |").join("\n"),
+          ...(commons.length ? ["- 本招式附帶效果：" + commons.map(x => x.zh).join("、") + "；併入本招式圖層與規格，不建立獨立招式。"] : []),
           "",
           "### spec.json 欄位",
           json({
@@ -726,7 +729,7 @@
             colors_hex: { core: "#", glow: "#", accent: "#" },
             geometry: { range_class: "melee|mid|long", shape: shape.v, length_m: 0, width_m: 0, angle_deg: 0, radius_m: 0, arc_height_m: 0, note: "尺寸以 base_range 為 1.0 的比例另列 scale_by_range" },
             layers: [{ name: "", type: "mesh|particles|trail|decal|light|distortion", count: 0, lifetime_ms: 0, size_m: 0, speed_mps: 0, texture: "", blend: "additive|alpha" }],
-            sockets: ["Socket_Front"], hit_stop_ms: 0, camera_shake: { amplitude: 0, duration_ms: 0 },
+            ...(o.use_creature === "yes" ? {sockets: ["Socket_Front"]} : {}), hit_stop_ms: 0, camera_shake: { amplitude: 0, duration_ms: 0 },
             sound_cues_zh: [""], deck_budget: { max_particles: 0, note: "Steam Deck 版粒子數約為 PC 的 50%" },
             unity_notes: "URP VFX Graph 實作建議；卡通風：硬邊漸層、2–3 色階、避免寫實煙霧"
           }),
@@ -736,10 +739,16 @@
             "形狀必須清楚表達判定範圍（玩家要看得出會不會被打到）；地面印記表示範圍邊界。",
             "強度越高：預備時間越長、畫面占比越大；超載必殺可加短暫的全螢幕色調變化（≤ 400 ms）。",
             "同屬性的特效共用配色語言：" + el.palette + "。",
-            "特效從宙獸插槽骨發出（Socket_Front / Socket_Core_FX / Socket_Ground_FX），尺寸隨施放者體型（S/M/L/XL）縮放，在 spec 的 geometry.note 寫明縮放規則。"
+            ...(o.use_creature === "yes" ? ["依示範施放者實際體型與可用發射掛點決定特效比例及起點，在 geometry.note 記錄縮放。"] : [])
           ])
         ].join("\n");
-        return common(ctx, body) + "\n\n" + deliverySection(ctx, "├── images/\n└── vfx/");
+        return [
+          ctx.header,
+          "# 任務：本主動技效果動畫",
+          body,
+          "輸出：moves/01_vfx/" + ctx.taskId + "/",
+          "交付本招式的 vfx/ 規格、images/ 分鏡與圖層、需要時的 flipbook，以及 manifest.json；未完成項列入 missing。"
+        ].join("\n\n");
       }
     },
 

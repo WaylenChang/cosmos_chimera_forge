@@ -1740,6 +1740,17 @@ def main() -> int:
     for spec in DRIVE_CREATURES:
         items.append(build_drive_creature_item(spec))
 
+    # Species names are immutable across forms; form identity belongs in stage/creature_id.
+    for item in items:
+        forms = item["concept"]["locked"]["stages"]
+        if len(forms) < 2:
+            continue
+        for field in ("name_zh", "name_en"):
+            values = {form.get(field, "") for form in forms}
+            if len(values) != 1 or not next(iter(values)):
+                print(f"error: {item['line_id']} has inconsistent {field} across stages", file=sys.stderr)
+                return 1
+
     # Load pre-designed characters from canonical sample batch
     char_batch = REPO / "Data/_incoming/p0-05-samples/valid/characters/characters.json"
     characters = []
