@@ -292,7 +292,9 @@
     };
     const kind = pipelineRoot(clean);
     const logical = clean.split("/")[1] || "";
-    const physical = logical && window.COSMI_DRIVE_NAMES?.canonicalFolderName(kind, 1, logical);
+    const physical = categoryRoots.includes(clean.split("/")[0]) && logical && !logical.startsWith("_") && !RESERVED_CATEGORY_FOLDERS.has(logical)
+      ? window.COSMI_DRIVE_NAMES?.canonicalFolderName(kind, 1, logical)
+      : "";
     const parsed = parseAssetFilename(name, kind, physical);
     if (
       parsed?.step === "00_appearance" ||
