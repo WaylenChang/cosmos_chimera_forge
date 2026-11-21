@@ -27,9 +27,8 @@
     return entries.filter(entry => (!kind || entry.kind === kind) && (!search ||
       (level !== "unknown" && title(entry,level).toLocaleLowerCase().includes(search))));
   }
-  function visibleValues() {
-    // Game stats/values are strictly managed in cosmos_chimera & Game Data tab (🌌), never mixed into Wiki.
-    return [];
+  function visibleValues(values, entry, level) {
+    return level === "complete" || level === "author" ? structuredClone(values[entry.id] || []) : [];
   }
 
   function install(win) {
