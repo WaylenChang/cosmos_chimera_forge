@@ -82,15 +82,15 @@
         Object.entries(ctx.opts || {}).filter(([key]) => ["element","shape","tier","use_creature","action","motion","name"].includes(key))
       ) : null;
       const focus = kind === "moves" ?
-        "主動技定位、施放條件、屬性、視覺形態、分鏡、效果節奏與動作規格" :
-        kind === "characters" ? "角色身份、背景、外觀、服裝、性格、技能與設計變體" :
-        "此階段宙獸原型、生態、棲息地、解剖結構、屬性、動作與主動技";
+        "招式世界觀由來、視覺意象、施放姿態與場域表現文本（不含遊戲數值、冷卻、威力或效果公式）" :
+        kind === "characters" ? "角色出生背景、成長經歷、體型外觀、服裝、性格與社會結構關係文本（不含戰鬥數值與技能表）" :
+        "此階段宙獸之出生、發育、演化、體型、社會結構、生態分析與棲地觀察文本（不含遊戲數值、效果或戰鬥關係表）";
       return [
         "# 生成原創" + (kind === "moves" ? "主動技" : kind === "characters" ? "角色" : "宙獸") + "圖鑑",
         "對象：" + subject + (wiki.stage ? "；當前型態：" + wiki.stage : ""),
         "概念設定：", kind === "moves" ? JSON.stringify(moveOptions, null, 2) : appearance(ctx),
         "只依目前概念與已確認的素材建立圖鑑，不借用其他對象的圖鑑內容。",
-        "內容包含：" + focus + "；只描述目前型態，不混入其他階段的外觀與主動技；未確認資料標示待核。",
+        "內容包含：" + focus + "；只描述目前型態，不混入其他階段的外觀或遊戲數值/效果；未確認資料標示待核。",
         "先檢查此精確路徑是否已存在：存在則使用現有圖鑑，不重新生成；若需改版請明確要求更新，禁止建立副本。",
         "輸出 Markdown：" + destination,
         "圖鑑獨立於 3D 模型目錄；若需模型關聯，記錄現有 asset_id 與模型路徑，不複製 GLB。",

@@ -60,7 +60,7 @@
       "base_parents","archetype","role","gender","age","height","ethnicity","biography","backstory_zh",
       "disposition","social_structure","reproduction","dex_zh","appearance_palette","hair_palette","eye_palette","outfit_palette"];
     const form=["creature_id","name_zh","name_en","stage","height_length","weight","size_class",
-      "look","appearance","anatomy","limbs","signature_move","niches","habit","dex_zh","outfit",
+      "look","appearance","anatomy","limbs","niches","habit","dex_zh","outfit",
       "accessories","silhouette_keywords"];
     const fields=[];
     for(const name of shared)if(c[name]!=null)fields.push("- "+name+": "+JSON.stringify(c[name]));
@@ -77,8 +77,11 @@
       "## 已提供的概念設定",
       fields.join("\n")||"尚無已確認的概念資料，請補充本型態設定。",
       "",
-      "## 外觀、生態與動作",
-      "待依此型態的已核准素材補充；不可複製其他型態描述冒充本型態。",
+      "## 出生、發育、演化與體型",
+      "待補充出生／繁殖、發育階段、演化脈絡與體型觀察文本（不含遊戲數值與效果）。",
+      "",
+      "## 社會結構、生態分析與棲地觀察",
+      "待依此型態的已核准素材補充社會結構、生態定位與棲地觀察；不可複製其他型態描述冒充本型態。",
       "",
       "## 資產關聯與品質審查",
       "待關聯原始圖片／模型資產與人工 QA 紀錄；建立圖鑑不代表圖像或 3D 已通過審查。",

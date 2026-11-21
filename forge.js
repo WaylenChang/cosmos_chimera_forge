@@ -6414,6 +6414,8 @@
     if (mode === "designed") mode = "review";
     state.activeTab = mode;
     saveViewMemory();
+    $("#gameDataView")?.classList.remove("active");
+    $("#viewBtnGameData")?.classList.remove("on");
     if (mode === "review") {
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.add("active");
@@ -6426,6 +6428,17 @@
       if (!window.COSMI_DRIVE?.pipelineIndex?.()?.syncedAt) {
         void window.COSMI_DRIVE?.syncPipelineIndex?.().catch(() => {});
       }
+    } else if (mode === "gamedata") {
+      $("#forgeView").style.display = "none";
+      $("#reviewView").classList.remove("active");
+      $("#settingsView")?.classList.remove("active");
+      $("#viewBtnForge").classList.remove("on");
+      $("#viewBtnReview").classList.remove("on");
+      $("#viewBtnSettings")?.classList.remove("on");
+      $("#gameDataView")?.classList.add("active");
+      $("#viewBtnGameData")?.classList.add("on");
+      $("#forgeHeaderControls").style.display = "none";
+      window.COSMI_GAME_DATA?.onActivate?.();
     } else if (mode === "settings") {
       $("#forgeView").style.display = "none";
       $("#reviewView").classList.remove("active");
@@ -6520,6 +6533,7 @@
     // 視圖切換事件
     $("#viewBtnForge").addEventListener("click", () => setViewMode("forge"));
     $("#viewBtnReview").addEventListener("click", () => setViewMode("review"));
+    $("#viewBtnGameData")?.addEventListener("click", () => setViewMode("gamedata"));
     $("#viewBtnSettings")?.addEventListener("click", () => setViewMode("settings"));
 
     $("#toReview").addEventListener("click", () => {

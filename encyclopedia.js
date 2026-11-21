@@ -7,8 +7,8 @@
 })(typeof window === "undefined" ? null : window, function () {
   "use strict";
   const CATALOG_PATHS = Object.freeze(["characters/encyclopedia.json", "creatures/encyclopedia.json", "moves/encyclopedia.json"]);
-  const FIELDS = Object.freeze({appearance:"外觀／招式描述",summary:"簡介",ecology:"生態學",habits:"習性",habitat:"棲地",reproduction:"生育與幼體",growth:"成長與階段變化",occupation:"職業",biography:"生平",race:"種族",physique:"身材",likes:"喜好",dislikes:"厭惡",description:"招式描述",effects:"功能與效果",field_effects:"生活效果"});
-  const VALUE_LABELS = Object.freeze({star:"星級",power:"威力",cooldown_ms:"冷卻",windup_ms:"前搖",accuracy:"命中率",base_range_mm:"基礎範圍",duration_ms:"持續時間",effect_duration_ms:"效果時間",field_duration_ms:"場地時間",delta:"效果變動量",percent:"百分比",max_stacks:"疊加上限",distance_mm:"移動距離",height_mm:"高度"});
+  const FIELDS = Object.freeze({appearance:"外觀／招式意象",summary:"簡介",ecology:"生態分析",habits:"習性",habitat:"棲地觀察",reproduction:"出生與繁殖",growth:"發育與演化階段",social_structure:"社會結構",occupation:"職業",biography:"生平",race:"種族",physique:"體型",likes:"喜好",dislikes:"厭惡",description:"招式世界觀描述"});
+  const HIDDEN_GAME_FIELDS = new Set(["effects", "field_effects", "value_refs"]);
 
   function project(entry, level) {
     if (!["unknown", "basic", "complete", "author"].includes(level)) throw Error("無效的預覽狀態");
@@ -27,8 +27,9 @@
     return entries.filter(entry => (!kind || entry.kind === kind) && (!search ||
       (level !== "unknown" && title(entry,level).toLocaleLowerCase().includes(search))));
   }
-  function visibleValues(values, entry, level) {
-    return level === "complete" || level === "author" ? structuredClone(values[entry.id] || []) : [];
+  function visibleValues() {
+    // Game stats/values are strictly managed in cosmos_chimera & Game Data tab (🌌), never mixed into Wiki.
+    return [];
   }
 
   function install(win) {
@@ -45,14 +46,16 @@
     for(const [value,label] of [["author","作者全覽（待審內容）"],["unknown","玩家：未知"],["basic","玩家：基本資料"],["complete","玩家：完整資料"]]) level.add(new Option(label,value));
     const search=doc.createElement("input"); search.type="search"; search.placeholder="搜尋已公開名稱"; search.setAttribute("aria-label","搜尋圖鑑");
     const reload=doc.createElement("button"); reload.className="btn"; reload.type="button"; reload.textContent="從 Drive 重新讀取";
+    const openGameData=doc.createElement("button"); openGameData.className="btn ghost"; openGameData.type="button"; openGameData.textContent="🌌 遊戲數值與關係";
+    openGameData.addEventListener("click",()=>{dialog.close();doc.getElementById("viewBtnGameData")?.click();});
     const status=doc.createElement("p"); status.setAttribute("role","status"); status.setAttribute("aria-live","polite");
     const body=doc.createElement("div"); body.className="encyclopedia-body";
     const list=doc.createElement("div"); list.className="encyclopedia-list";
     const details=doc.createElement("article"); details.className="encyclopedia-details";
-    toolbar.append(category,level,search,reload,close); body.append(list,details); dialog.append(heading,toolbar,status,body); doc.body.append(dialog);
-    let entries=[], values={}, active=null, generation=0, portraitUrl=null;
+    toolbar.append(category,level,search,reload,openGameData,close); body.append(list,details); dialog.append(heading,toolbar,status,body); doc.body.append(dialog);
+    let entries=[], active=null, generation=0, portraitUrl=null;
     const revoke=()=>{if(portraitUrl){URL.revokeObjectURL(portraitUrl);portraitUrl=null;}};
-    const clear=()=>{generation++;revoke();entries=[];values={};active=null;list.replaceChildren();details.replaceChildren();};
+    const clear=()=>{generation++;revoke();entries=[];active=null;list.replaceChildren();details.replaceChildren();};
     function line(parent,tag,text){const node=doc.createElement(tag);node.textContent=text;parent.append(node);return node;}
     async function renderDetails(entry) {
       revoke(); details.replaceChildren(); active=entry;
@@ -62,12 +65,8 @@
       if(entry.authored_fields?.length)line(details,"p","含新設計內容・待審");
       if(visible.stage)line(details,"p",({juvenile:"幼年",adolescent:"少年",adult:"成年",overload:"超載"})[visible.stage]);
       for(const group of [visible.basic,visible.details]) if(group)for(const [key,value] of Object.entries(group)){
-        if(key.startsWith("name_")||key==="value_refs")continue;
+        if(key.startsWith("name_")||HIDDEN_GAME_FIELDS.has(key))continue;
         line(details,"h4",FIELDS[key]||key);line(details,"p",value==null?"資料待補":Array.isArray(value)?value.join("、"):String(value));
-      }
-      for(const value of visibleValues(values,entry,level.value)){
-        const key=value.pointer.split("/").pop(), unit=value.unit==="percent"?"%":value.unit==="ms"||value.unit==="mm"?value.unit:"";
-        line(details,"p",(VALUE_LABELS[key]||"數值")+"："+value.value+unit);
       }
       if(level.value==="basic")line(details,"p","捕獲／角色任務／取得技能後，才顯示完整資料。資料待補與玩家未解鎖是不同狀態。");
       if(level.value==="author"){
@@ -88,7 +87,7 @@
     }
     function render(){
       const matches=filter(entries,category.value,search.value,level.value);list.replaceChildren();
-      status.textContent=matches.length+" / "+entries.length+" 筆；數值取自遊戲資料匯出快照。";
+      status.textContent=matches.length+" / "+entries.length+" 筆；僅顯示 Wiki 圖鑑文本（遊戲數值與效果請至 🌌 分頁檢視）。";
       for(const entry of matches){const item=doc.createElement("button");item.type="button";item.className="btn ghost";item.textContent=title(entry,level.value);item.addEventListener("click",()=>renderDetails(entry));list.append(item);}
       if(matches.length)void renderDetails(matches.includes(active)?active:matches[0]);else{generation++;revoke();details.replaceChildren();}
     }
@@ -96,9 +95,8 @@
       clear();const token=generation;status.textContent="正在讀取已授權的 Drive 圖鑑…";reload.disabled=true;
       try{
         const catalogs=await Promise.all(CATALOG_PATHS.map(async path=>JSON.parse(await(await win.COSMI_DRIVE.read(path)).text())));
-        const numeric=JSON.parse(await(await win.COSMI_DRIVE.read("moves/encyclopedia-values.json")).text());
         if(token!==generation||!dialog.open)return;
-        entries=catalogs.flat();values=numeric;render();
+        entries=catalogs.flat();render();
       }catch(error){if(token===generation)status.textContent="圖鑑未載入："+error.message;}
       finally{reload.disabled=false;}
     }
