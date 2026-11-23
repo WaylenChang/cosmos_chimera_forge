@@ -285,11 +285,11 @@
   #stageTag .stage-switch-seg { pointer-events: auto; }
   #stageTag .stage-switch-seg .segb { pointer-events: auto; cursor: pointer; }
   
-  #stageViewport { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; user-select: none; }
+  #stageViewport { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; user-select: text; }
   #stageEmpty { text-align: center; color: var(--muted); padding: 40px; font-size: 13.5px; border: 2px dashed var(--line); border-radius: 12px; margin: 20px; background: rgba(23,26,33,.5); }
   
   /* 單圖檢視容器 */
-  #stageSingleView { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+  #stageSingleView { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; user-select: none; }
   #stageImg { max-width: 90%; max-height: 90%; object-fit: contain; box-shadow: 0 4px 24px rgba(0,0,0,.6); transition: transform .1s ease-out; transform-origin: center; cursor: grab; }
   #stageImg:active { cursor: grabbing; }
 

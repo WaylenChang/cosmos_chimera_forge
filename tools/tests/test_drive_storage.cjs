@@ -923,6 +923,86 @@ test('localhost prioritizes local Drive/ API for read and write when local data 
   assert.equal(localCalls.some((u) => u.startsWith('/__local_drive__/')), true);
 });
 
+test('syncPackages groups FILE_NAMING_CONTRACT character portraits and form<i> creature assets without splitting', async () => {
+  const folderMime = 'application/vnd.google-apps.folder';
+  const h = harness({
+    handle: (u) => {
+      const q = u.searchParams.get('q') || '';
+      if (q.includes("'characters-id' in parents") && !q.includes('mimeType')) {
+        return Response.json({
+          files: [{ id: 'chr-sumiha-id', name: 'chr_protagonist_amemori_sumiha', mimeType: folderMime }],
+        });
+      }
+      if (q.includes("'chr-sumiha-id' in parents")) {
+        return Response.json({
+          files: [
+            { id: 'sumiha-front', name: 'chr_protagonist_amemori_sumiha_front_01_portrait_legacy.png', mimeType: 'image/png' },
+            { id: 'sumiha-main', name: 'chr_protagonist_amemori_sumiha_main_01_portrait_legacy.png', mimeType: 'image/png' },
+            { id: 'sumiha-turn', name: 'chr_protagonist_amemori_sumiha_turnaround_01_portrait_legacy.png', mimeType: 'image/png' },
+            { id: 'sumiha-glb', name: 'chr_protagonist_amemori_sumiha_03b_blender.glb', mimeType: 'model/gltf-binary' },
+          ],
+        });
+      }
+      if (q.includes("'creatures-id' in parents") && !q.includes('mimeType')) {
+        return Response.json({
+          files: [{ id: 'cr-slime-id', name: 'ch_1st_batch_aqua_slime', mimeType: folderMime }],
+        });
+      }
+      if (q.includes("'cr-slime-id' in parents")) {
+        return Response.json({
+          files: [
+            { id: 'slime-glb', name: 'ch_1st_batch_aqua_slime_model_form1_03b_blender_legacy.glb', mimeType: 'model/gltf-binary' },
+            { id: 'slime-3d-dir', name: '_03b_blender', mimeType: folderMime },
+          ],
+        });
+      }
+      if (q.includes("'slime-3d-dir' in parents")) {
+        return Response.json({
+          files: [
+            { id: 'slime-blend', name: 'ch_1st_batch_aqua_slime_blend_form1_03b_blender_legacy.blend', mimeType: 'application/octet-stream' },
+            { id: 'slime-mf', name: 'ch_1st_batch_aqua_slime_manifest_form1_03b_blender_legacy.json', mimeType: 'application/json' },
+          ],
+        });
+      }
+      if (u.pathname.endsWith('/sumiha-front') || u.pathname.endsWith('/sumiha-main') || u.pathname.endsWith('/sumiha-turn')) {
+        return new Response('PNG');
+      }
+      if (u.pathname.endsWith('/slime-mf')) {
+        return Response.json({
+          task_id: 'ch_1st_batch_aqua_slime_juvenile_03b_blender_legacy',
+          task_type: 'creature-model-rig',
+          subject_id: 'cr_aqua_slime',
+          stage: 'juvenile',
+        });
+      }
+    },
+  });
+  const loaded = [];
+  h.context.COSMI_FORGE.loadAssetFiles = async (raw, file) => {
+    const pkg = {
+      id: file.name,
+      type: file.name.includes('03b_blender') ? (file.name.startsWith('chr') ? 'character-model-rig' : 'creature-model-rig') : 'character-concept',
+      status: 'provisional',
+      rawFiles: raw,
+      files: Object.keys(raw),
+    };
+    loaded.push(pkg);
+    return pkg;
+  };
+  await h.login();
+  loaded.length = 0;
+  await h.context.COSMI_DRIVE.syncPackages({ force: true });
+  const sumihaPortrait = loaded.find((p) => p.id === 'chr_protagonist_amemori_sumiha_01_portrait_legacy');
+  const sumihaModel = loaded.find((p) => p.id === 'chr_protagonist_amemori_sumiha_03b_blender');
+  const slimeForm1 = loaded.find((p) => p.id === 'ch_1st_batch_aqua_slime_juvenile_03b_blender_legacy');
+  assert.ok(sumihaPortrait, 'all three character portrait views should group into one package');
+  assert.equal(sumihaPortrait.files.length, 3);
+  assert.ok(sumihaModel, 'character 3D model should be its own package');
+  assert.ok(slimeForm1, 'creature form1 model/blend/manifest should group into one juvenile package');
+  assert.equal(slimeForm1.files.length, 1, 'manifest downloaded into one juvenile package');
+  assert.equal(loaded.length, 3);
+});
+
 
 
 

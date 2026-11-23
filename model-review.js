@@ -15,19 +15,42 @@
     const type = String(pkg.type || pkg.manifest?.task_type || "").toLowerCase();
     const id = String(pkg.id || "").toLowerCase();
     const model = /model|rig|anim/.test(type) || /^(?:mdl|anim)(?:[-_]|$)/.test(id);
-    const creature = type.startsWith("creature-") || /^(?:asset_)?cr(?:[-_]|$)/.test(id);
+    const creature = type.startsWith("creature-") || /^(?:asset_)?(?:cr|ch)(?:[-_]|$)/.test(id);
     const character = type.startsWith("character-") || /^(?:asset_)?chr(?:[-_]|$)/.test(id);
     if (category === "mdl") return model;
     if (category === "cr") return creature;
     if (category === "chr") return character;
-    if (category === "fx") return /vfx|effect/.test(type) || /^fx(?:[-_]|$)/.test(id);
+    if (category === "fx") return /vfx|effect/.test(type) || /^(?:fx|mv)(?:[-_]|$)/.test(id);
     return true;
   }
 
   const CHARACTER_ALIASES = {
-    chr_yeh_chengxi: ["chr_yeh_chengxi", "chr_1286", "chr-20261106-1286-2039", "mdl-20261113-1286-0000"],
-    chr_amemori_sumiha: ["chr_amemori_sumiha", "chr_1855", "chr-20261106-1286-1855", "chr-20261106-1855-1855", "mdl-20261114-1855-0000", "mdl-20261109-f048-1847-chr_1286_1855"],
-    chr_roen: ["chr_roen", "chr_3d04", "chr-20261106-3d04-2100", "mdl-20261114-3d04-0000"]
+    chr_yeh_chengxi: [
+      "chr_yeh_chengxi",
+      "chr_protagonist_yeh_chengxi",
+      "chr_protagonist_yeh_chengxi_v1_legacy",
+      "chr_1286",
+      "chr-20261106-1286-2039",
+      "mdl-20261113-1286-0000"
+    ],
+    chr_amemori_sumiha: [
+      "chr_amemori_sumiha",
+      "chr_protagonist_amemori_sumiha",
+      "chr_protagonist_amemori_sumiha_v1_legacy",
+      "chr_1855",
+      "chr-20261106-1286-1855",
+      "chr-20261106-1855-1855",
+      "mdl-20261114-1855-0000",
+      "mdl-20261109-f048-1847-chr_1286_1855"
+    ],
+    chr_roen: [
+      "chr_roen",
+      "chr_protagonist_roen",
+      "chr_protagonist_roen_v1_legacy",
+      "chr_3d04",
+      "chr-20261106-3d04-2100",
+      "mdl-20261114-3d04-0000"
+    ]
   };
   const isCharacterModelPkg = pkg => isModel(pkg) && (
     String(pkg?.type || pkg?.manifest?.task_type || "").toLowerCase().startsWith("character-") ||
@@ -58,8 +81,8 @@
   function unifiedEntries(packages = [], creatures = [], characters = [], category = "all", search = "") {
     const norm = value => String(value || "").trim().toLowerCase();
     const base = value => norm(value)
-      .replace(/^asset_(?=(?:cr|chr)[_-])/, "")
-      .replace(/[-_](juvenile|adolescent|adult|overload)$/, "");
+      .replace(/^asset_(?=(?:cr|chr|ch)[_-])/, "")
+      .replace(/[-_](?:juvenile|adolescent|adult|overload|form[1-4])$/, "");
     const catalogs = new Map(), aliases = new Map(), groups = new Map();
     const addCatalog = (kind, id, label, item, ids) => {
       if (!id) return;
@@ -71,8 +94,12 @@
       }
     };
     for (const d of creatures) {
+      const lineId = String(d.line_id || "");
+      const creatureAliases = [lineId, ...(d.concept?.locked?.stages || []).map(s => s.creature_id)];
+      if (lineId.startsWith("cr_")) creatureAliases.push("ch_1st_batch_" + lineId.slice(3));
+      else if (lineId.startsWith("starter_") || lineId.startsWith("line_")) creatureAliases.push("ch_" + lineId);
       addCatalog("creature", d.line_id, [d.code_zh, d.title_zh].filter(Boolean).join(" · ") || d.line_id, d,
-        [d.line_id, ...(d.concept?.locked?.stages || []).map(s => s.creature_id)]);
+        creatureAliases);
     }
     for (const c of characters) {
       const charAliases = [c.id, ...(CHARACTER_ALIASES[c.id] || [])];

@@ -189,18 +189,35 @@
     }
     return parts.join("_");
   }
-  function parseAssetFilename(name, kind) {
+  const FORM_TO_STAGE = Object.freeze({
+    form1: "juvenile",
+    form2: "adolescent",
+    form3: "adult",
+    form4: "overload",
+  });
+  function normalizeStageToken(token) {
+    const t = String(token || "").toLowerCase();
+    return FORM_TO_STAGE[t] || t;
+  }
+  function parseAssetFilename(name, kind, subjectFolder = "") {
     const base = String(name || "").split("/").pop();
-    const m = /^(.+?)(?:_(juvenile|adolescent|adult|overload))?_(00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(v\d+|\d{8}(?:[-_]\d{4})?))?(?:_([^.]+))?\.([^.]+)$/i.exec(
+    const m = /^(.+?)(?:_(juvenile|adolescent|adult|overload|form[1-4]))?_(00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(v\d+|legacy|draft(?:_review)?|\d{8}(?:[-_]\d{4})?))?(?:_([^.]+))?\.([^.]+)$/i.exec(
       base,
     );
     if (!m) return null;
-    const rawId = m[1];
-    const stage = kind === "creatures" ? m[2] || "" : "";
-    const id = !kind || kind === "creatures" ? rawId : m[2] ? rawId + "_" + m[2] : rawId;
+    let rawId = m[1];
+    let fileFunction = "";
+    const folderPrefix = subjectFolder ? String(subjectFolder).trim() + "_" : "";
+    if (folderPrefix && rawId.toLowerCase().startsWith(folderPrefix.toLowerCase())) {
+      fileFunction = rawId.slice(folderPrefix.length);
+      rawId = rawId.slice(0, folderPrefix.length - 1);
+    }
+    const stageToken = normalizeStageToken(m[2] || "");
+    const stage = kind === "creatures" ? stageToken : "";
+    const id = !kind || kind === "creatures" ? rawId : stageToken ? rawId + "_" + stageToken : rawId;
     const step = m[3];
     const version = m[4] || "";
-    const role = m[5] || "";
+    const role = m[5] || fileFunction || "";
     const ext = m[6];
     const stem = [id, stage, step, version].filter(Boolean).join("_");
     return { id, stage, step, version, role, ext, stem };
@@ -211,7 +228,7 @@
     if (parsed.step === "01_portrait" && /^main$/i.test(parsed.role)) return true;
     if (
       (parsed.step === "03a_colab" || parsed.step === "03b_blender") &&
-      !parsed.role &&
+      (!parsed.role || /^model$/i.test(parsed.role)) &&
       /^glb$/i.test(parsed.ext)
     )
       return true;
@@ -774,9 +791,15 @@
         const kind = pipelineRoot(dir);
         const grouped = new Map();
         const inlineReviews = new Map();
+        const looseRootImages = [];
         for (const f of files) {
-          const parsed = parseAssetFilename(f.path, kind);
-          if (!parsed) continue;
+          const parsed = parseAssetFilename(f.path, kind, entry.name);
+          if (!parsed) {
+            if (!f.path.includes("/") && /\.(png|jpe?g|webp)$/i.test(f.path)) {
+              looseRootImages.push(f);
+            }
+            continue;
+          }
           if (parsed.step === "02_review_portrait" || parsed.step === "04_review_3d") {
             const rawKey = entry.name + "/" + f.path;
             if (raw[rawKey]) {
@@ -800,6 +823,13 @@
           if (!grouped.has(parsed.stem)) grouped.set(parsed.stem, []);
           grouped.get(parsed.stem).push(f);
         }
+        if (looseRootImages.length && kind !== "moves") {
+          const portraitStem =
+            [...grouped.keys()].find((k) => /_01_portrait(?:_|$)/i.test(k)) ||
+            entry.name + "_01_portrait";
+          if (!grouped.has(portraitStem)) grouped.set(portraitStem, []);
+          grouped.get(portraitStem).push(...looseRootImages);
+        }
         if (!grouped.size) {
           const hasLegacyAsset = files.some((f) => /(?:^|\/)(?:manifest|concept)\.json$/i.test(f.path) || /\.glb$/i.test(f.path));
           if (!hasLegacyAsset) return [];
@@ -808,12 +838,14 @@
         const imported = [];
         for (const [stem, groupFiles] of grouped) {
           const subRaw = {};
+          let hasDeferredModel = false;
           for (const gf of groupFiles) {
             const k = entry.name + "/" + gf.path;
             const leaf = gf.name || gf.path.split("/").pop();
             if (raw[k]) subRaw[stem + "/" + leaf] = raw[k];
+            else if (/\.glb$/i.test(leaf)) hasDeferredModel = true;
           }
-          if (!Object.keys(subRaw).length) continue;
+          if (!Object.keys(subRaw).length && !hasDeferredModel) continue;
           const rev = inlineReviews.get(stem) || fallbackReviewRecord || null;
           imported.push(await importSinglePackage(dir, entry, groupFiles, subRaw, rev, stem));
         }

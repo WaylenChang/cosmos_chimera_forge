@@ -149,11 +149,14 @@
   const STAGE_KEYS = ["juvenile", "adolescent", "adult", "overload"];
   const STAGE_ZH = { juvenile: "幼年", adolescent: "少年", adult: "成年", overload: "超載" };
 
+  const STAGE_FORM_MAP = { form1: "juvenile", form2: "adolescent", form3: "adult", form4: "overload" };
+
   function parsePackageStage(pkgId, manifest, concept) {
-    const stageRegex = /[-_](juvenile|adolescent|adult|overload)(?:_(?:00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?)?(?:\.zip)?$/i;
+    const stageRegex = /[-_](juvenile|adolescent|adult|overload|form[1-4])(?:_(?:00_appearance|00_parameters|01_portrait|01b_vfx|02_review_portrait|03a_colab|03b_blender|04_review_3d|05_wiki)(?:_(?:v\d+|legacy|draft(?:_review)?|\d{8}(?:[-_]\d{4})?))?)?(?:\.zip)?$/i;
     const m = (pkgId || "").match(stageRegex);
     if (m) {
-      return { stage: m[1].toLowerCase(), baseId: pkgId.slice(0, m.index) };
+      const rawStage = m[1].toLowerCase();
+      return { stage: STAGE_FORM_MAP[rawStage] || rawStage, baseId: pkgId.slice(0, m.index) };
     }
     if (manifest?.stage && STAGE_KEYS.includes(manifest.stage)) return {stage: manifest.stage, baseId: pkgId};
     if (concept?.stage && STAGE_KEYS.includes(concept.stage)) {
@@ -3942,16 +3945,18 @@
 
   function inferTaskType(taskId, manifestData) {
     if (manifestData?.task_type) return manifestData.task_type;
-    if (/_01b_vfx(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?$/i.test(taskId)) return "move-vfx";
-    if (/_(?:03a_colab|03b_blender)(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?$/i.test(taskId)) {
+    const verOpt = "(?:_(?:v\\d+|legacy|draft(?:_review)?|\\d{8}(?:[-_]\\d{4})?))?";
+    if (new RegExp(`_01b_vfx${verOpt}$`, "i").test(taskId)) return "move-vfx";
+    if (new RegExp(`_(?:03a_colab|03b_blender)${verOpt}$`, "i").test(taskId)) {
       if (taskId.startsWith("chr") || manifestData?.source_pack?.startsWith("chr") || manifestData?.subject_id?.startsWith("chr")) return "character-model-rig";
       return "creature-model-rig";
     }
-    if (/_01_portrait(?:_(?:v\d+|\d{8}(?:[-_]\d{4})?))?$/i.test(taskId)) {
+    if (new RegExp(`_01_portrait${verOpt}$`, "i").test(taskId)) {
       return taskId.startsWith("chr") ? "character-concept" : "creature-concept";
     }
     if (taskId.startsWith("chr")) return "character-concept";
-    if (taskId.startsWith("cr")) return "creature-concept";
+    if (taskId.startsWith("cr") || taskId.startsWith("ch_")) return "creature-concept";
+    if (taskId.startsWith("mv_")) return "move-vfx";
     if (taskId.startsWith("mdl") || taskId.startsWith("anim")) {
       if (manifestData?.source_pack?.startsWith("chr") || manifestData?.subject_id?.startsWith("chr")) return "character-model-rig";
       return "creature-model-rig";
@@ -4068,7 +4073,7 @@
         ? (pkg.baseId || pkg.subjectId || pkg.id)
         : (is3dType(pkg.type) || pkg.id.startsWith("mdl"))
         ? (pkg.manifest?.source_pack || pkg.subjectId || pkg.baseId || pkg.id)
-        : pkg.id;
+        : (pkg.subjectId || pkg.id);
 
       const idx = reviewState.packages.findIndex(p => p.id === pkg.id);
       if (idx >= 0) reviewState.packages[idx] = pkg;
@@ -6743,7 +6748,8 @@
     // 鍵盤快速鍵支援 (空白鍵暫停/播放、[ ] 切換動作、B 骨架、W 拓撲、L 循環、R 重設)
     window.addEventListener("keydown", e => {
       if (state.activeTab !== "review") return;
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT" || e.target.isContentEditable) return;
 
       if (e.code === "Space") {
         e.preventDefault();

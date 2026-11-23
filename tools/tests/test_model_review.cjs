@@ -285,3 +285,34 @@ test('selectModelFile resolves flattened Level 3 Drive GLBs even when migrated m
   );
   assert.throws(() => review.selectModelFile([], migratedManifest), /不存在/);
 });
+
+test('physical Drive protagonist and creature folders unify with catalog rows without duplicates', () => {
+  const characters = [
+    { id: 'chr_yeh_chengxi', name_zh: '葉澄汐', name_en: 'Chengxi Yeh' },
+    { id: 'chr_amemori_sumiha', name_zh: '雨森澄羽', name_en: 'Amemori Sumiha' },
+    { id: 'chr_roen', name_zh: '洛恩', name_en: 'Roen' }
+  ];
+  const creatures = [
+    { line_id: 'cr_aqua_slime', code_zh: '靈澤', title_zh: '凝膠史萊姆' },
+    { line_id: 'starter_moon_line', code_zh: '月痕', title_zh: '夜痕霜狼' }
+  ];
+  const packages = [
+    { id: 'chr_protagonist_amemori_sumiha_01_portrait_legacy', type: 'character-concept', subjectId: 'chr_protagonist_amemori_sumiha', status: 'ok' },
+    { id: 'chr_protagonist_amemori_sumiha_03b_blender', type: 'character-model-rig', subjectId: 'chr_protagonist_amemori_sumiha', status: 'provisional' },
+    { id: 'chr_protagonist_yeh_chengxi_01_portrait_legacy', type: 'character-concept', subjectId: 'chr_protagonist_yeh_chengxi', status: 'ok' },
+    { id: 'chr_protagonist_roen_03b_blender', type: 'character-model-rig', subjectId: 'chr_protagonist_roen', status: 'provisional' },
+    { id: 'chr_warden_cave_earth_01_portrait_legacy', type: 'character-concept', subjectId: 'chr_warden_cave_earth', status: 'provisional' },
+    { id: 'ch_1st_batch_aqua_slime_juvenile_03b_blender_legacy', type: 'creature-model-rig', subjectId: 'ch_1st_batch_aqua_slime', stage: 'juvenile', status: 'provisional' },
+    { id: 'ch_starter_moon_line_adult_03b_blender_legacy', type: 'creature-model-rig', subjectId: 'ch_starter_moon_line', stage: 'adult', status: 'provisional' }
+  ];
+  const entries = review.unifiedEntries(packages, creatures, characters, 'all');
+  assert.equal(entries.filter(e => e.catalog?.kind === 'character').length, 3);
+  assert.equal(entries.filter(e => /chr_protagonist_/i.test(e.key)).length, 0, 'protagonist Drive folders must not create duplicate character rows');
+  assert.equal(entries.find(e => e.catalog?.id === 'chr_amemori_sumiha').packages.length, 2);
+  assert.equal(entries.find(e => e.catalog?.id === 'chr_yeh_chengxi').packages.length, 1);
+  assert.equal(entries.find(e => e.catalog?.id === 'chr_roen').packages.length, 1);
+  assert.equal(entries.filter(e => e.subjectId === 'chr_warden_cave_earth' || e.key === 'subject:chr_warden_cave_earth').length, 1);
+  assert.equal(entries.find(e => e.catalog?.id === 'cr_aqua_slime').packages.length, 1);
+  assert.equal(entries.find(e => e.catalog?.id === 'starter_moon_line').packages.length, 1);
+  assert.equal(entries.filter(e => /ch_1st_batch_|ch_starter_/i.test(e.key)).length, 0);
+});
