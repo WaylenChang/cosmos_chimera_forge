@@ -10,6 +10,8 @@ import numpy as np
 folder = Path(__file__).resolve().parent
 sys.path.insert(0,str(folder.parent/'.agents/skills/blender-anime-character/scripts'))
 from mesh_contacts import Assembly
+sys.path.insert(0,str(folder.parent/'tools/acg-character'))
+from game_paths import GAME
 
 for path in sorted(folder.glob('*.blend')):
     bpy.ops.wm.open_mainfile(filepath=str(path))
@@ -20,11 +22,12 @@ for path in sorted(folder.glob('*.blend')):
         assert o.parent == rig and any(m.type=='ARMATURE' and m.object==rig for m in o.modifiers),o.name
         assert all(g.name in rig.pose.bones for g in o.vertex_groups)
         assert all(0<len(v.groups)<=4 and abs(sum(g.weight for g in v.groups)-1)<1e-5 for v in o.data.vertices),o.name
-    spec = folder.parent/'Assets/_Project/Art/Characters'/('chr_'+path.stem)/'Anim/anim_spec.json'
+    spec = Path(GAME)/'Assets/_Project/Art/Characters'/('chr_'+path.stem)/'Anim/anim_spec.json'
     clips = json.loads(spec.read_text(encoding='utf8'))['clips']
     assert set(bpy.data.actions.keys()) == {'Idle_Art'} | {c['clip'] for c in clips}
     for c in clips:
         action = bpy.data.actions[c['clip']]
+        assert action['mocap_source'].startswith('CMU ')
         rig.animation_data.action = action
         assert rig.animation_data.action_slot and tuple(action.frame_range)==(0,c['frames'])
         assert action.use_cyclic == c['loop'] and scene.render.fps == c['fps']
@@ -38,6 +41,25 @@ for path in sorted(folder.glob('*.blend')):
             assert np.max(abs(poses[0]-poses[-1]))<.001,(path.name,action.name,np.max(abs(poses[0]-poses[-1])))
         dist = rig.pose.bones['Root'].location.length
         assert (dist>0.1 if c['root_motion'] else dist<.0001),(action.name,dist)
+        if action.name in ('chr_walk','chr_run','chr_sneak_move'):
+            for side in ('Left','Right'):
+                knee, elbow = [], []
+                for frame in range(c['frames']+1):
+                    scene.frame_set(frame)
+                    p = rig.pose.bones
+                    thigh, shin, arm, forearm = [p[side+n].vector.normalized() for n in
+                                                 ('UpperLeg','LowerLeg','UpperArm','LowerArm')]
+                    knee.append(np.degrees(np.arctan2(thigh.cross(shin).x,thigh.dot(shin))))
+                    elbow.append(np.degrees(arm.angle(forearm)))
+                assert min(knee)>-10 and max(knee)>25,(action.name,side,min(knee),max(knee))
+                if action.name=='chr_run':
+                    assert max(elbow)>45,(side,max(elbow))
+            if c['events']:
+                support = []
+                for event in c['events']:
+                    scene.frame_set(event['frame'])
+                    support.append(min(('Left','Right'),key=lambda s:rig.pose.bones[s+'Foot'].head.z))
+                assert len(set(support))==2,(action.name,support)
     wardrobe = bpy.data.objects['Wardrobe']
     for clip_name,frame in [('chr_run',5),('chr_block',15),('chr_roll_dodge',10),('Idle_Art',0)]:
         rig.animation_data.action = bpy.data.actions[clip_name]

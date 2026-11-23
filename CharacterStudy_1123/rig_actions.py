@@ -12,9 +12,10 @@ from mathutils import Matrix, Vector
 HERE = Path(__file__).resolve().parent
 MODEL = Path(bpy.data.filepath)
 HERO = MODEL.stem
-ASSETS = HERE.parent / 'Assets/_Project/Art/Characters' / ('chr_' + HERO)
 sys.path.insert(0, str(HERE.parent / 'tools/acg-character'))
 from acg_render import art_pose
+from game_paths import GAME
+ASSETS = Path(GAME) / 'Assets/_Project/Art/Characters' / ('chr_' + HERO)
 
 # Centerline, chin, shoulder, waist, knee, ankle offset, elbow and wrist in sheet pixels.
 c, chin, sh, waist, knee, ankle, elbow, wrist = {
@@ -249,7 +250,9 @@ for n,deg in pose.get('curl',[]):
 for p in rig.pose.bones:
     p.keyframe_insert('rotation_quaternion',frame=0,group=p.name)
     p.keyframe_insert('location',frame=0,group=p.name)
-rig.animation_data.action = bpy.data.actions['chr_idle']
+sys.path.insert(0, str(HERE))
+from human_motion import apply_motion
+apply_motion(rig)
 scene.frame_start,scene.frame_end = 0,int(rig.animation_data.action.frame_end)
 scene.frame_set(0)
 bpy.ops.object.select_all(action='DESELECT')
