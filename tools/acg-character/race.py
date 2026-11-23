@@ -223,6 +223,7 @@ def main():
                 sk.data[i].co = o.data.vertices[i].co + Vector(dv)
     bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(a.blend))
 
+    # After the save: the export edits the scene (helpers deleted), and the .blend must keep them for re-exports.
     if a.fbx:
         _export(a.fbx)
     if a.report:
@@ -234,7 +235,33 @@ def main():
     print("RACE_OK keys=%d vanished=%s" % (len(report["keys"]), ",".join(gone) or "none"))
 
 
+def _strip_hidden(o):
+    """Deletes the vertices o's MASK modifiers hide (MPFB "Hide helpers": skirt, tights, hair and joint cubes) and
+    removes those modifiers. The FBX export runs without modifiers to keep the shape keys, so it would otherwise
+    ship the helpers as visible geometry. bmesh carries the shape-key layers through the deletion."""
+    import bmesh
+    for mod in [m for m in o.modifiers if m.type == "MASK"]:
+        vg = o.vertex_groups.get(mod.vertex_group)
+        if vg is None or mod.mode != "VERTEX_GROUP":
+            raise RuntimeError("%s: mask %s is not a vertex-group mask" % (o.name, mod.name))
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        dl = bm.verts.layers.deform.active
+        keep = (lambda v: vg.index in v[dl] and v[dl][vg.index] > 0.0)
+        kill = [v for v in bm.verts if keep(v) == mod.invert_vertex_group]
+        bmesh.ops.delete(bm, geom=kill, context="VERTS")
+        bm.to_mesh(o.data)
+        bm.free()
+        o.modifiers.remove(mod)
+
+
 def _export(path):
+    """Exports the base and its shape keys for Unity (forge game_paths: <game>/_UMA/Npc/Bases/), as acg_render.export_fbx
+    does for the protagonists, except that modifiers stay unapplied: the exporter drops shape keys from meshes whose
+    modifiers it applies. So the helpers are deleted, the generated images are saved beside the FBX with a
+    "<name>_materials.json" cel table, and skinning is trimmed to Unity's 4 bones per vertex here.
+    Side effects: edits the open scene (do not save it afterwards)."""
+    import acg_render
     rig = next(o for o in bpy.data.objects if o.type == "ARMATURE")
     for o in bpy.data.objects:
         for mod in getattr(o, "modifiers", []):
@@ -242,13 +269,34 @@ def _export(path):
                 mod.show_viewport = mod.show_render = False
     coll = bpy.data.collections.new("race_export")
     coll.objects.link(rig)
+    bones = set(rig.data.bones.keys())
     for o in rig.children_recursive:
         if o.type == "MESH" and not o.name.startswith("prop_"):
             coll.objects.link(o)
-    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-    # Modifiers stay unapplied: the exporter drops shape keys from meshes whose modifiers it applies.
+            _strip_hidden(o)
+            slots = [i for i, sl in enumerate(o.material_slots) if sl.material and sl.material.name == "acg_outline"]
+            for i in reversed(slots):
+                o.data.materials.pop(index=i)
+            acg_render._limit_weights(o, bones, 4)
+    out_dir = os.path.dirname(os.path.abspath(path))
+    os.makedirs(out_dir, exist_ok=True)
+    used = {sl.material.name for o in coll.objects if o.type == "MESH" for sl in o.material_slots if sl.material}
+    for img in bpy.data.images:
+        users = [m for m in bpy.data.materials if m.name in used and m.use_nodes
+                 and any(n.type == "TEX_IMAGE" and n.image == img for n in m.node_tree.nodes)]
+        if users and (img.packed_file or img.has_data or img.source == "GENERATED"):
+            img.filepath_raw = os.path.join(out_dir, img.name)
+            img.file_format = "PNG"
+            img.save()
+    base = os.path.splitext(os.path.abspath(path))[0]
+    rows = [dict(name=k, **v) for k, v in sorted(acg_render._fbx_materials().items()) if k in used]
+    with open(base + "_materials.json", "w", encoding="utf-8", newline="\n") as f:
+        # A list, not a map: Unity's JsonUtility reads arrays of records but not dictionaries.
+        json.dump({"materials": rows}, f, indent=1, sort_keys=True)
+        f.write("\n")
     bpy.ops.export_scene.fbx(filepath=os.path.abspath(path), collection=coll.name, object_types={"ARMATURE", "MESH"},
                              mesh_smooth_type="FACE", use_mesh_modifiers=False, bake_anim=False, add_leaf_bones=False,
+                             path_mode="RELATIVE", embed_textures=False,
                              apply_unit_scale=True, apply_scale_options="FBX_SCALE_UNITS", axis_forward="-Z", axis_up="Y")
     bpy.data.collections.remove(coll)
 
