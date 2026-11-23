@@ -117,9 +117,9 @@
       "details.growth"
     ],
     "basic": {
-      "name_zh": "銀潮珊瑚巨鰻",
-      "name_en": "Corallanguilla",
-      "appearance": "修長流線的銀鱗深海巨鰻，頭冠嵌有三孔珍珠珊瑚殼，背鰭如半透明水幕隨深海暗流起伏；體色以銀白、深海湛藍與珊瑚粉為主。",
+      "name_zh": "銀潮珊瑚巨鱝",
+      "name_en": "Corallamanta",
+      "appearance": "展翼修長的銀鱗深海巨蝠鱝，頭冠嵌有三孔珍珠珊瑚殼，雙翼邊緣如半透明水幕隨深海暗流起伏；體色以銀白、深海湛藍與珊瑚粉為主。",
       "summary": "深海試煉 BOSS · 單一成年型態（持有深海適應 immune_deep_sea）"
     },
     "details": {
@@ -217,9 +217,9 @@
       "details.growth"
     ],
     "basic": {
-      "name_zh": "岩門石獅獸",
-      "name_en": "Litholeo",
-      "appearance": "由紅褐花崗岩與礦脈晶石構成的雄獅巨獸，雙前足如山門獅爪石柱落地生根，鬃毛間嵌有彩繪壁畫陶板與蓮花石紋；體色以紅褐花崗岩、赭紅與金砂為主。",
+      "name_zh": "岩門赤岩巨熊",
+      "name_en": "Lithoursus",
+      "appearance": "由紅褐花崗岩與礦脈晶石構成的雄渾巨熊，雙前掌如山門石柱落地生根，肩背間嵌有彩繪壁畫陶板與蓮花石紋；體色以紅褐花崗岩、赭紅與金砂為主。",
       "summary": "礦坑試煉 BOSS · 單一成年型態（持有礦坑適應 immune_cave）"
     },
     "details": {
@@ -267,9 +267,9 @@
       "details.growth"
     ],
     "basic": {
-      "name_zh": "冰桅六分鯨",
-      "name_en": "Cryonaviga",
-      "appearance": "背脊隆起如結霜三桅帆船龍骨的巨鯨，額角為透明冰晶鑄成的黃銅六分儀，尾鰭如鋸齒冰山破開凍土；體色以冰川藍白、朽木棕與黃銅金為主。",
+      "name_zh": "冰桅六分海象",
+      "name_en": "Cryowalrus",
+      "appearance": "背脊隆起如結霜三桅帆船龍骨的極地巨海象，雙長牙為透明冰晶鑄成的黃銅六分儀構裝，尾鰭如鋸齒冰山破開凍土；體色以冰川藍白、朽木棕與黃銅金為主。",
       "summary": "冰棚試煉 BOSS · 單一成年型態（持有冰冠適應 immune_ice_cap）"
     },
     "details": {
@@ -317,9 +317,9 @@
       "details.growth"
     ],
     "basic": {
-      "name_zh": "塔紋方尖獸",
+      "name_zh": "塔紋方尖巨蜥",
       "name_en": "Obelivolt",
-      "appearance": "四足矯健的雷電獅獸，脊背立著多層假窗刻紋的花崗岩方尖碑避雷塔，額頂懸浮新月金盤釋放高壓電弧；體色以灰花崗岩、電光紫與金幣黃為主。",
+      "appearance": "四足貼地的重甲雷電巨蜥，脊背立著多層假窗刻紋的花崗岩方尖碑避雷塔，額頂懸浮新月金盤釋放高壓電弧；體色以灰花崗岩、電光紫與金幣黃為主。",
       "summary": "高塔試煉 BOSS · 單一成年型態（持有高塔適應 immune_tower）"
     },
     "details": {
@@ -367,9 +367,9 @@
       "details.growth"
     ],
     "basic": {
-      "name_zh": "三翼星航鵬",
-      "name_en": "Tristaroc",
-      "appearance": "展翼寬闊的深藍金屬羽翼巨鳥，胸前與雙翼嵌有三具旋風推進渦輪，尾羽浮現南十字星光軌羅盤；體色以深航藍、銀鋁白與星輝青為主。",
+      "name_zh": "三翼星航巨蜓",
+      "name_en": "Tristarodon",
+      "appearance": "四翼展幅寬闊的深藍金屬平流層巨蜻蜓，胸尾嵌有三具旋風推進渦輪，尾端浮現南十字星光軌羅盤；體色以深航藍、銀鋁白與星輝青為主。",
       "summary": "太空試煉 BOSS · 單一成年型態（持有太空適應 immune_space）"
     },
     "details": {
@@ -467,9 +467,9 @@
       "details.growth"
     ],
     "basic": {
-      "name_zh": "印紋聖角獸",
-      "name_en": "Sigilicorn",
-      "appearance": "潔白如滑石玉雕的單角神牛，體側浮現方印幾何金紋與菩提葉光甲，額前長角托舉著旋轉的鏤空光能香爐；體色以滑石象牙白、聖金與暖琥珀為主。",
+      "name_zh": "印紋聖角劍羚",
+      "name_en": "Sigiloryx",
+      "appearance": "潔白如滑石玉雕的單角劍羚，體側浮現方印幾何金紋與菩提葉光甲，額前長直螺旋角托舉著旋轉的鏤空光能香爐；體色以滑石象牙白、聖金與暖琥珀為主。",
       "summary": "神廟試煉 BOSS · 單一成年型態（持有神廟適應 immune_temple）"
     },
     "details": {

@@ -26,27 +26,27 @@
     },
     {
       "id": "wood_fern_chick",
-      "name_zh": "蔓冠雛",
-      "name_en": "Virellet",
-      "naming_note": "初萌蕨葉捲成小小蔓冠。",
-      "dex_zh": "蓬鬆的翠綠幼鳥站在雕花底座上，頭頂蕨葉捲成柔軟的冠羽。牠平時依偎在夥伴身邊，遇險便裹著荊棘短距直衝。",
-      "dex_en": "Curled fern leaves crown this fluffy green chick as it perches on a carved base. It stays close to its companions, darting forward a short distance through danger wrapped in briars."
+      "name_zh": "蔓冠守宮",
+      "name_en": "Virecko",
+      "naming_note": "初萌蕨葉捲成葉尾守宮的小小蔓冠。",
+      "dex_zh": "翠綠圓潤的小守宮站穩枝頭，頭頂蕨葉捲成柔軟冠羽，扁平尾葉輕輕擺動。遇險時會裹著荊棘短距撲擊。",
+      "dex_en": "A plump emerald leaf-tailed gecko crowned with a curled fern crest. When threatened, it darts forward cloaked in briars."
     },
     {
       "id": "wood_plume_peafowl",
-      "name_zh": "蔓冠翎",
+      "name_zh": "蔓冠棘龍",
       "name_en": "Virelume",
-      "naming_note": "蔓冠舒展，捲紋隨羽翼流動。",
-      "dex_zh": "舒展的彩翼下，捲紋藤蔓沿著背脊生長，雙爪覆著堅硬的木質金屬鱗。牠留在隊伍中段，讓根槍沿直線刺向遠敵。",
-      "dex_en": "Curled vines trail down its back beneath colorful wings, and hard scales cover its claws. From the middle of the group, it sends a root spear in a straight line toward distant threats."
+      "naming_note": "蔓冠舒展，藤棘沿樹蜥背脊生長。",
+      "dex_zh": "樹棲翠蜥背脊生出捲紋藤蔓棘冠，趾間覆著木質金屬鱗片。牠留在隊伍中段，沿直線射出貫穿敵陣的根槍。",
+      "dex_en": "An arboreal lizard whose vine-crest unfurls along a thorny spine. Holding mid-rank, it fires linear root lances at distant foes."
     },
     {
       "id": "wood_canopy_regent",
-      "name_zh": "蔓冠虹禽",
+      "name_zh": "蔓冠翠蜥",
       "name_en": "Vireloria",
-      "naming_note": "蔓冠長尾映出雙重虹彩。",
-      "dex_zh": "七彩羽翼覆住巨木頂端，兩道虹彩長尾如垂藤般輕晃，翠玉色花朵在身旁盛開。牠遙望中距離的敵人，令枝葉在目標周圍壓落。",
-      "dex_en": "Perched atop a great tree, it trails twin iridescent tails like hanging vines amid jade-green blossoms. It watches the middle distance and brings a canopy crashing down around its chosen target."
+      "naming_note": "琉璃彩葉扇尾綻放出雙重虹光。",
+      "dex_zh": "盤踞古木高枝的華麗翠蜥，葉脈雙尾化作琉璃七彩葉扇，翠玉繁花在身旁盛開，引導枝葉朝中距目標壓落。",
+      "dex_en": "A regal forest lizard perched high in the canopy, fanning twin iridescent leaf-tails to call down emerald boughs from mid-range."
     },
     {
       "id": "water_wave_elver",
@@ -74,51 +74,51 @@
     },
     {
       "id": "fire_ember_cub",
-      "name_zh": "燼鬃仔",
+      "name_zh": "燼角羔",
       "name_en": "Cindrel",
-      "naming_note": "餘燼絨毛圍著幼獅頸邊。",
-      "dex_zh": "赤褐色的小獅頸邊圍著暗紅絨毛，每走一步都從爪尖迸出火星。牠喜歡搶在夥伴前頭，甩出火焰橫掃靠近的對手。",
-      "dex_en": "Dark red fluff circles this tawny cub's neck, and sparks spring from its paws with every step. It races ahead of its companions and lashes fire across enemies that come close."
+      "naming_note": "玫瑰砂岩短角帶著初生餘燼。",
+      "dex_zh": "赤褐小羱羊羔額前冒出微光炭紅短角，四蹄踏出細碎火星。牠喜歡搶在夥伴前頭，甩出火焰橫掃靠近的對手。",
+      "dex_en": "A russet ibex kid sprouting glowing ember horns and sparking hooves, leaping ahead to sweep foes with close-range flames."
     },
     {
       "id": "fire_mane_stalker",
-      "name_zh": "燼鬃獅",
+      "name_zh": "燼角羱",
       "name_en": "Cindrava",
-      "naming_note": "燼鬃翻騰，額紋透出熔光。",
-      "dex_zh": "結實的荒原獅低伏身軀，火浪般的長鬃映亮額前三道熔岩裂紋。牠盯住前方的對手，裹著烈焰沿直線猛然衝去。",
-      "dex_en": "Three molten cracks glow across the brow of this powerful plains lion, whose mane rolls like a wave of fire. It fixes its gaze ahead and charges straight through the flames."
+      "naming_note": "電漿雙彎角與砂岩護盾成形。",
+      "dex_zh": "結實的荒原羱羊雙角刻滿熔岩火紋，玫瑰砂岩護甲覆滿雙肩。牠盯住前方的對手，裹著烈焰沿直線猛衝過去。",
+      "dex_en": "A sturdy canyon ibex armored in rose-sandstone shoulder plates, charging straight through enemy ranks behind blazing horns."
     },
     {
       "id": "fire_pyre_monarch",
-      "name_zh": "燼鬃焰獅",
+      "name_zh": "熔岩羱羊",
       "name_en": "Cindraval",
-      "naming_note": "燼鬃盛開成三面獅的火冠。",
-      "dex_zh": "三面的雄獅昂首咆哮，金紅鬃毛如盛放蓮花，震響在砂岩間迴盪。牠與敵人保持距離，朝遠處目標引爆一團擴散的烈焰。",
-      "dex_en": "A golden-red crown of fire opens around this lion's three faces, and its roar echoes through sandstone. It keeps its distance and detonates a spreading blaze around a distant target."
+      "naming_note": "玫瑰砂岩火口甲胄燃起高溫電漿。",
+      "dex_zh": "沙漠巨羱羊背負玫瑰砂岩火口甲胄，方塊聖石雙瞳映出熾白電漿。牠與敵保持距離，朝目標引爆擴散烈焰。",
+      "dex_en": "A towering desert ibex bearing a rose-sandstone furnace carapace, detonating plasma-fire flares across distant battlegrounds."
     },
     {
       "id": "earth_pebble_pawn",
-      "name_zh": "金塵偶",
+      "name_zh": "金殼仔",
       "name_en": "Gilduma",
-      "naming_note": "金粉輕覆圓圓的小石偶。",
-      "dex_zh": "圓潤的小石偶沾滿細細金粉，胸前的綠寶石晶核泛著微光。牠慢吞吞地跟在隊伍前方，朝中距離敵人直射小石子。",
-      "dex_en": "Fine gold dust coats this round little stone figure, and a green crystal glimmers in its chest. It waddles near the front of the group, shooting pebbles straight toward threats at medium range."
+      "naming_note": "聖湖金箔覆蓋初生小犰狳背甲。",
+      "dex_zh": "圓滾敦實的小犰狳背甲沾滿金箔砂岩微粒，胸前嵌著微光翡翠。牠沉穩守在夥伴前方，震起碎岩守護同伴。",
+      "dex_en": "A stout little armadillo dusted with gold-leaf sandstone and an emerald core, raising protective stones before its allies."
     },
     {
       "id": "earth_gilded_warden",
-      "name_zh": "金塵衛",
-      "name_en": "Gildumant",
-      "naming_note": "金塵石偶戴上守陣面甲。",
-      "dex_zh": "幾何金面甲遮住岩土行者的面容，層疊板狀黏土和金晶護著肩背。牠站在隊伍前方，猛擊地面使震波向身邊擴散。",
-      "dex_en": "A geometric gold mask covers its face, while layers of clay and growing crystals protect its shoulders. It stands near the front and strikes the ground, sending tremors outward around itself."
+      "name_zh": "金甲滾犰",
+      "name_en": "Gildumaur",
+      "naming_note": "九節鎏金陶甲隨翻滾嵌合。",
+      "dex_zh": "披覆九節鎏金陶甲與蘆葦紋金盾的金甲犰狳，以沉重身軀擋在陣前，重踏地脈沿直線震出岩層衝擊。",
+      "dex_en": "Clad in segmented gilded ceramic bands and reed-etched shields, this armored armadillo holds the line with linear earth shocks."
     },
     {
       "id": "earth_auric_sovereign",
-      "name_zh": "金塵岩偶",
+      "name_zh": "聖湖金甲犰",
       "name_en": "Gildumara",
-      "naming_note": "金塵凝成巨偶身上的晶脈。",
-      "dex_zh": "巨大的岩偶雙臂如柱，鎏金結晶與翡翠石脈在厚重身軀上交錯。牠屹立隊伍前方，必要時沿長長直線向敵陣衝去。",
-      "dex_en": "Golden crystals and green stone veins cross the massive body of this rock figure, whose arms resemble pillars. It stands before its companions and charges along a long straight path when pressed."
+      "naming_note": "聖湖金甲與翡翠稜柱共鳴鎮嶽。",
+      "dex_zh": "重裝金甲巨犰狳背負翡翠稜柱與金箔九節穹甲，能將萬鈞壓力化為正面衝鋒的崩山重擊，穩穩鎮壓戰線。",
+      "dex_en": "A massive gilded armadillo bearing emerald prisms on its nine-banded dome, anchoring the vanguard with seismic slams."
     },
     {
       "id": "ice_frost_fledgling",

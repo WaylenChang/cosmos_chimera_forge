@@ -708,9 +708,11 @@
         if (state.stage && cr.stage !== state.stage) continue;
         if (state.element && !Object.keys(cr.mastery || {}).includes(state.element)) continue;
         const zh = displayName(cr.id), en = displaySubName(cr.id);
-        if (!matchText(cr.id, cr.line_id, zh, en, cr.signature_move, cr.concept?.base)) continue;
+        const protos = Array.isArray(cr.concept?.design_prototypes) ? cr.concept.design_prototypes : [];
+        const morphs = [cr.concept?.base_entity, cr.concept?.morphology_primary, ...(cr.concept?.morphology_secondary || [])].filter(Boolean);
+        if (!matchText(cr.id, cr.line_id, zh, en, cr.signature_move, cr.concept?.base, ...protos, ...morphs)) continue;
         const mainElems = Object.entries(cr.mastery || {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([k]) => ELEMENT_ZH[k] || k).join("/");
-        out.push({ type: "creature", id: cr.id, zh, en, meta: [STAGE_ZH[cr.stage] || cr.stage, cr.size_class, mainElems].filter(Boolean) });
+        out.push({ type: "creature", id: cr.id, zh, en, meta: [STAGE_ZH[cr.stage] || cr.stage, cr.size_class, mainElems, protos[0], cr.concept?.morphology_primary].filter(Boolean) });
       }
     }
     if (state.category === "all" || state.category === "move") {
@@ -806,6 +808,10 @@
         el("span", { class: "gd-badge accent" }, STAGE_ZH[c.stage] || c.stage),
         el("span", { class: "gd-badge" }, `體型 ${c.size_class} (${SIZE_ZH[c.size_class] || ""})`),
         el("span", { class: "gd-badge" }, AI_STYLE_ZH[c.ai_style] || c.ai_style),
+        c.concept?.base_entity ? el("span", { class: "gd-badge" }, c.concept.base_entity) : null,
+        c.concept?.morphology_primary ? el("span", { class: "gd-badge accent" }, c.concept.morphology_primary) : null,
+        ...(Array.isArray(c.concept?.morphology_secondary) ? c.concept.morphology_secondary.map(t => el("span", { class: "gd-badge" }, t)) : []),
+        ...(Array.isArray(c.concept?.design_prototypes) ? c.concept.design_prototypes.map(p => el("span", { class: "gd-badge warn" }, p)) : []),
         c.field_utility && c.field_utility !== "none" ? el("span", { class: "gd-badge warn" }, `生活技：${c.field_utility}`) : null
       )
     );

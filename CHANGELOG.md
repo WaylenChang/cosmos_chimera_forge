@@ -1,3 +1,10 @@
+## 2026-11-23 · catalog@2.11.0 · tool@2.10.0 · 整合 AGC 宙獸形態標籤與混搭路由至鍛造台
+
+- 宙獸設計去重與表格強化：更換 11 條與已生成宙獸或彼此撞型之未生成草稿線原型並修正 `line_metal_citadelbull` 4 足翼牛構造，於 `Data/schemas/creature.schema.json`、`gen_designed.py`、`designed.js`、`forge.js`（已設計項目規格／審查預覽）與 `game-data.js`（宙獸列表／詳細卡）納入多標籤 `design_prototypes` 與 `base_entity`／`morphology_primary`／`morphology_secondary`，並新增全圖鑑對照表 `docs/design/creature-roster-table.md`；同步更新所有 27 條未生成宙獸 `creature-concept` 生圖 Prompt。
+- `catalog.js` 新增 `CREATURE.base_entities`（4 類基礎存在軸）與 `CREATURE.morphology_tags`（8 大形態標籤，對應 `.agents/skills/agc-morph-*`），並新增 `getWeightedMorphologyPrimary`、`getWeightedMorphologySecondary` 與 `resolveMorphologyGuide` 軟性權重與混搭解析工具（全去識別化，含 `bio-totem` 自動觸發 `sensitivity: review`）。
+- `forge.js` `FIELDS.creature` 新增可鎖定／重抽的 `base_entity`、`morphology_primary`（60–70% 主標籤）與 `morphology_secondary`（0–2 個副標籤，30–40%），支援空陣列重抽與概念摘要／審查卡預覽。
+- `pipeline.js`（`appearance()`）與 `tasks.js`（`creature-concept@6.6.0`）自動輸出形態標籤與混搭指引至外觀設定與生圖 Prompt。
+
 ## 2026-11-17 · catalog@2.9.0 · data@1.2.0 · 同步現行遊戲資料並新增道具／裝備／場景物件任務模板
 
 - 從 `cosmos_chimera` 同步 `Data/schemas/`（含 `craft-*.schema.json`、`egg.schema.json`、`env-materials.schema.json`、`food.schema.json`、`ingredient.schema.json`）、`Data/balance.json` 與最新批次（`life-crafting-draft-01`、`p3-12-env-materials-draft-01`、`p3-31-ecology-draft-01`、`p4-05-eggs-draft-01`、`p5-03-creatures-draft-03`、`d0-s1-six-stats`），並重產 `designed.js`（35 條宙獸線、3 位角色）。

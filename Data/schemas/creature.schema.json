@@ -76,6 +76,10 @@
           "description": "Open by design: shaped by creature-concept-pipeline.md, not consumed by game rules.",
           "type": "object",
           "properties": {
+            "design_prototypes": { "type": "array", "items": { "type": "string" } },
+            "base_entity": { "enum": ["natural-bio", "supernatural-bio", "humanoid-bio", "non-bio"] },
+            "morphology_primary": { "type": "string" },
+            "morphology_secondary": { "type": "array", "maxItems": 2, "items": { "type": "string" } },
             "sensitivity": { "enum": ["review"] }
           }
         }

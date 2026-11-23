@@ -5,7 +5,20 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_mineral_feeder", "weight": 3}, {"niche": "niche_detritivore", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_mineral_feeder",
+        "weight": 3
+      },
+      {
+        "niche": "niche_detritivore",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "metal_gear_strider",
     "evolution": {
       "level": 28,
@@ -32,7 +45,14 @@
     "mastery": {
       "metal": 15
     },
-    "stats": {"hp": 102, "speed": 36, "yin_atk": 43, "yang_atk": 71, "yin_def": 74, "yang_def": 74},
+    "stats": {
+      "hp": 102,
+      "speed": 36,
+      "yin_atk": 43,
+      "yang_atk": 71,
+      "yin_def": 74,
+      "yang_def": 74
+    },
     "signature_move": "metal_needle_thrust",
     "trait": "trait_metal_dense_alloy",
     "field_utility": "magnet_pickup_double",
@@ -47,7 +67,17 @@
         "盤龍平衡桿"
       ],
       "role": "前排坦克：高體質，近距前方斬擊",
-      "palette": "青銅綠、黃銅金、玄鐵黑"
+      "palette": "青銅綠、黃銅金、玄鐵黑",
+      "design_prototypes": [
+        "巨象",
+        "青銅發條",
+        "水力浮碗"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "inanimate-biomimic"
+      ]
     }
   },
   {
@@ -56,7 +86,16 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_mineral_feeder", "weight": 4}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_mineral_feeder",
+        "weight": 4
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "metal_chronos_engine",
     "evolution": {
       "level": 48,
@@ -83,7 +122,14 @@
     "mastery": {
       "metal": 25
     },
-    "stats": {"hp": 128, "speed": 45, "yin_atk": 53, "yang_atk": 88, "yin_def": 93, "yang_def": 93},
+    "stats": {
+      "hp": 128,
+      "speed": 45,
+      "yin_atk": 53,
+      "yang_atk": 88,
+      "yin_def": 93,
+      "yang_def": 93
+    },
     "signature_move": "metal_iron_cleave",
     "trait": "trait_metal_dense_alloy",
     "field_utility": "immune_laboratory",
@@ -98,7 +144,17 @@
         "盤龍平衡桿"
       ],
       "role": "前排坦克：高體質，近距橫掃",
-      "palette": "青銅綠、黃銅金、玄鐵黑"
+      "palette": "青銅綠、黃銅金、玄鐵黑",
+      "design_prototypes": [
+        "巨象",
+        "青銅發條",
+        "水力浮碗"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "inanimate-biomimic"
+      ]
     }
   },
   {
@@ -107,7 +163,20 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "charge",
-    "niches": [{"niche": "niche_mineral_feeder", "weight": 3}, {"niche": "niche_ambient_energy_feeder", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_mineral_feeder",
+        "weight": 3
+      },
+      {
+        "niche": "niche_ambient_energy_feeder",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -126,7 +195,14 @@
       "metal": 40,
       "earth": 15
     },
-    "stats": {"hp": 157, "speed": 52, "yin_atk": 63, "yang_atk": 104, "yin_def": 112, "yang_def": 112},
+    "stats": {
+      "hp": 157,
+      "speed": 52,
+      "yin_atk": 63,
+      "yang_atk": 104,
+      "yin_def": 112,
+      "yang_def": 112
+    },
     "signature_move": "metal_lance_charge",
     "trait": "trait_metal_dense_alloy",
     "field_utility": "catch_rate_up",
@@ -141,7 +217,17 @@
         "盤龍平衡桿"
       ],
       "role": "前排坦克：遠距直線突進破陣，常駐金抗換取移速",
-      "palette": "青銅綠、黃銅金、玄鐵黑"
+      "palette": "青銅綠、黃銅金、玄鐵黑",
+      "design_prototypes": [
+        "巨象",
+        "青銅發條",
+        "水力浮碗"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "inanimate-biomimic"
+      ]
     }
   },
   {
@@ -150,7 +236,20 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "charge",
-    "niches": [{"niche": "niche_ground_granivore", "weight": 3}, {"niche": "niche_fruit_disperser", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_ground_granivore",
+        "weight": 3
+      },
+      {
+        "niche": "niche_fruit_disperser",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "wood_plume_peafowl",
     "evolution": {
       "level": 24,
@@ -177,22 +276,40 @@
     "mastery": {
       "wood": 15
     },
-    "stats": {"hp": 81, "speed": 47, "yin_atk": 28, "yang_atk": 46, "yin_def": 99, "yang_def": 99},
+    "stats": {
+      "hp": 81,
+      "speed": 47,
+      "yin_atk": 28,
+      "yang_atk": 46,
+      "yin_def": 99,
+      "yang_def": 99
+    },
     "signature_move": "wood_briar_dash",
     "trait": "trait_wood_photosynthesis",
     "field_utility": "forage_berries",
     "concept": {
-      "base": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠",
-      "stage_look": "蓬鬆翠綠幼鳥，頭頂生出初萌的捲曲蕨葉冠羽，雙足踏著金木雕花底座",
+      "base": "葉尾守宮 × 初萌蕨葉藤蔓冠",
+      "stage_look": "翠綠圓潤的小葉尾守宮，頭頂生出捲曲嫩蕨冠，扁平尾葉隨呼吸輕晃",
       "archetype": "arch_sarimanok",
       "region": "東南亞",
       "motifs_used": [
-        "流線捲紋羽冠",
-        "雙重虹彩長尾",
-        "黃銅雕花底座"
+        "葉尾偽裝皮膜",
+        "捲曲蕨葉冠",
+        "黃銅雕花木飾"
       ],
       "role": "中排輸出：短距直線突進，上場時自我治療",
-      "palette": "翡翠綠、孔雀藍、琉璃金"
+      "palette": "翡翠綠、孔雀藍、琉璃金",
+      "design_prototypes": [
+        "葉尾守宮",
+        "變色龍",
+        "藤蔓冠"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-nature",
+      "morphology_secondary": [
+        "bio-totem"
+      ],
+      "sensitivity": "review"
     }
   },
   {
@@ -201,7 +318,20 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "keep_distance",
-    "niches": [{"niche": "niche_fruit_disperser", "weight": 3}, {"niche": "niche_understory_insectivore", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_fruit_disperser",
+        "weight": 3
+      },
+      {
+        "niche": "niche_understory_insectivore",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "wood_canopy_regent",
     "evolution": {
       "level": 40,
@@ -228,22 +358,40 @@
     "mastery": {
       "wood": 25
     },
-    "stats": {"hp": 100, "speed": 59, "yin_atk": 35, "yang_atk": 58, "yin_def": 124, "yang_def": 124},
+    "stats": {
+      "hp": 100,
+      "speed": 59,
+      "yin_atk": 35,
+      "yang_atk": 58,
+      "yin_def": 124,
+      "yang_def": 124
+    },
     "signature_move": "wood_root_spear",
     "trait": "trait_wood_photosynthesis",
     "field_utility": "immune_rainforest",
     "concept": {
-      "base": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠",
-      "stage_look": "羽翼舒展的熱帶孔雀型錦鳥，背負流線捲紋蔓藤，雙爪覆蓋金屬木質硬鱗",
+      "base": "變色龍樹蜥 × 蔓生藤蔓棘背",
+      "stage_look": "背脊延伸出捲紋藤蔓棘冠的樹棲翠蜥，趾間覆蓋木質硬鱗與花萼護腕",
       "archetype": "arch_sarimanok",
       "region": "東南亞",
       "motifs_used": [
-        "流線捲紋羽冠",
-        "雙重虹彩長尾",
-        "黃銅雕花底座"
+        "變色皮膜棘背",
+        "捲紋藤蔓冠",
+        "黃銅雕花木飾"
       ],
       "role": "中排輸出：高精神縮短 CD，遠距直線射擊，上場時自我治療",
-      "palette": "翡翠綠、孔雀藍、琉璃金"
+      "palette": "翡翠綠、孔雀藍、琉璃金",
+      "design_prototypes": [
+        "葉尾守宮",
+        "變色龍",
+        "藤蔓冠"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-nature",
+      "morphology_secondary": [
+        "bio-totem"
+      ],
+      "sensitivity": "review"
     }
   },
   {
@@ -252,7 +400,20 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_fruit_disperser", "weight": 3}, {"niche": "niche_edge_browser", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_fruit_disperser",
+        "weight": 3
+      },
+      {
+        "niche": "niche_edge_browser",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -270,22 +431,40 @@
     "mastery": {
       "wood": 40
     },
-    "stats": {"hp": 120, "speed": 71, "yin_atk": 71, "yang_atk": 43, "yin_def": 148, "yang_def": 147},
+    "stats": {
+      "hp": 120,
+      "speed": 71,
+      "yin_atk": 71,
+      "yang_atk": 43,
+      "yin_def": 148,
+      "yang_def": 147
+    },
     "signature_move": "wood_canopy_crush",
     "trait": "trait_wood_photosynthesis",
     "field_utility": "return_village",
     "concept": {
-      "base": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠",
-      "stage_look": "盤踞巨木頂端的七彩神禽，雙重虹彩長尾如垂藤流光，周身綻放翠玉繁花",
+      "base": "葉尾巨蜥 × 蔓冠虹彩藤盾",
+      "stage_look": "盤踞古木高枝的華麗翠蜥，葉脈雙尾化作半透明琉璃彩葉扇，周身綻放翠玉繁花",
       "archetype": "arch_sarimanok",
       "region": "東南亞",
       "motifs_used": [
-        "流線捲紋羽冠",
-        "雙重虹彩長尾",
-        "黃銅雕花底座"
+        "流線捲紋葉冠",
+        "琉璃葉脈扇尾",
+        "黃銅雕花木飾"
       ],
       "role": "中排輸出：高精神，中距指定點範圍爆發，上場時自我治療",
-      "palette": "翡翠綠、孔雀藍、琉璃金"
+      "palette": "翡翠綠、孔雀藍、琉璃金",
+      "design_prototypes": [
+        "葉尾守宮",
+        "變色龍",
+        "藤蔓冠"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-nature",
+      "morphology_secondary": [
+        "bio-totem"
+      ],
+      "sensitivity": "review"
     }
   },
   {
@@ -294,7 +473,20 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_detritivore", "weight": 3}, {"niche": "niche_understory_insectivore", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_detritivore",
+        "weight": 3
+      },
+      {
+        "niche": "niche_understory_insectivore",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "water_skiff_eel",
     "evolution": {
       "level": 22,
@@ -321,7 +513,14 @@
     "mastery": {
       "water": 15
     },
-    "stats": {"hp": 56, "speed": 67, "yin_atk": 64, "yang_atk": 107, "yin_def": 53, "yang_def": 53},
+    "stats": {
+      "hp": 56,
+      "speed": 67,
+      "yin_atk": 64,
+      "yang_atk": 107,
+      "yin_def": 53,
+      "yang_def": 53
+    },
     "signature_move": "water_crest_slicer",
     "trait": "trait_water_torrent_flow",
     "field_utility": "fishing",
@@ -336,7 +535,17 @@
         "季風海浪"
       ],
       "role": "中距輸出：直線水刃，連續施放水招縮短 CD",
-      "palette": "潮汐碧藍、白沫銀、陶土赭紅"
+      "palette": "潮汐碧藍、白沫銀、陶土赭紅",
+      "design_prototypes": [
+        "潮汐海鰻",
+        "雙體陶船",
+        "蟹爪風帆"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "bio-element"
+      ]
     }
   },
   {
@@ -345,7 +554,20 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_ambush_predator", "weight": 3}, {"niche": "niche_detritivore", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_ambush_predator",
+        "weight": 3
+      },
+      {
+        "niche": "niche_detritivore",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "water_catamaran_serpent",
     "evolution": {
       "level": 38,
@@ -372,7 +594,14 @@
     "mastery": {
       "water": 25
     },
-    "stats": {"hp": 70, "speed": 88, "yin_atk": 131, "yang_atk": 79, "yin_def": 66, "yang_def": 66},
+    "stats": {
+      "hp": 70,
+      "speed": 88,
+      "yin_atk": 131,
+      "yang_atk": 79,
+      "yin_def": 66,
+      "yang_def": 66
+    },
     "signature_move": "water_torrent_burst",
     "trait": "trait_water_torrent_flow",
     "field_utility": "immune_deep_sea",
@@ -387,7 +616,17 @@
         "季風海浪"
       ],
       "role": "中距輸出：扇形水流，連續施放水招縮短 CD",
-      "palette": "潮汐碧藍、白沫銀、陶土赭紅"
+      "palette": "潮汐碧藍、白沫銀、陶土赭紅",
+      "design_prototypes": [
+        "潮汐海鰻",
+        "雙體陶船",
+        "蟹爪風帆"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "bio-element"
+      ]
     }
   },
   {
@@ -396,7 +635,20 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
-    "niches": [{"niche": "niche_patrol_hunter", "weight": 3}, {"niche": "niche_ambush_predator", "weight": 2}, {"niche": "niche_carrion_scavenger", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_patrol_hunter",
+        "weight": 3
+      },
+      {
+        "niche": "niche_ambush_predator",
+        "weight": 2
+      },
+      {
+        "niche": "niche_carrion_scavenger",
+        "weight": 1
+      }
+    ],
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -415,7 +667,14 @@
       "water": 40,
       "wind": 15
     },
-    "stats": {"hp": 84, "speed": 105, "yin_atk": 158, "yang_atk": 95, "yin_def": 79, "yang_def": 79},
+    "stats": {
+      "hp": 84,
+      "speed": 105,
+      "yin_atk": 158,
+      "yang_atk": 95,
+      "yin_def": 79,
+      "yang_def": 79
+    },
     "signature_move": "water_deluge_crater",
     "trait": "trait_water_torrent_flow",
     "field_utility": "dive",
@@ -430,7 +689,17 @@
         "季風海浪"
       ],
       "role": "遠距砲台：高力量，遠距指定點範圍爆發，連續施放水招縮短 CD",
-      "palette": "潮汐碧藍、白沫銀、陶土赭紅"
+      "palette": "潮汐碧藍、白沫銀、陶土赭紅",
+      "design_prototypes": [
+        "潮汐海鰻",
+        "雙體陶船",
+        "蟹爪風帆"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "bio-element"
+      ]
     }
   },
   {
@@ -439,7 +708,16 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_opportunistic_omnivore", "weight": 3}, {"niche": "niche_carrion_scavenger", "weight": 2}],
+    "niches": [
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 3
+      },
+      {
+        "niche": "niche_carrion_scavenger",
+        "weight": 2
+      }
+    ],
     "evolves_to": "fire_mane_stalker",
     "evolution": {
       "level": 26,
@@ -466,22 +744,39 @@
     "mastery": {
       "fire": 15
     },
-    "stats": {"hp": 78, "speed": 47, "yin_atk": 62, "yang_atk": 104, "yin_def": 55, "yang_def": 54},
+    "stats": {
+      "hp": 78,
+      "speed": 47,
+      "yin_atk": 62,
+      "yang_atk": 104,
+      "yin_def": 55,
+      "yang_def": 54
+    },
     "signature_move": "fire_ember_lash",
     "trait": "trait_fire_thermal_recharge",
     "field_utility": "cook_fire",
     "concept": {
-      "base": "烈焰雄獅 × 砂岩熔核甲胄",
-      "stage_look": "滾燙赤褐小獅，頸圈生有一圈暗紅餘燼絨毛，爪尖踏出微小火星",
+      "base": "沙漠羱羊羔 × 砂岩餘燼短角",
+      "stage_look": "滾燙赤褐小羊羔，額前冒出兩枚微光炭紅短彎角，四蹄踏出微小火星",
       "archetype": "arch_apedemak",
       "region": "非洲",
       "motifs_used": [
-        "三首四臂雄獅像",
-        "盤蛇綻放蓮花",
-        "陡頂砂岩金字塔"
+        "玫瑰砂岩角紋",
+        "方塊聖石額印",
+        "玄武岩蹄甲"
       ],
       "role": "近戰輸出：近距橫掃，受火屬性攻擊後縮短火招 CD",
-      "palette": "赭石紅、熾金黃、玄武岩暗灰"
+      "palette": "赭石紅、熾金黃、玄武岩暗灰",
+      "design_prototypes": [
+        "沙漠羱羊",
+        "砂岩熔爐甲",
+        "電漿彎角"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-element",
+      "morphology_secondary": [
+        "bio-nature"
+      ]
     }
   },
   {
@@ -490,7 +785,20 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "charge",
-    "niches": [{"niche": "niche_patrol_hunter", "weight": 3}, {"niche": "niche_ambush_predator", "weight": 2}, {"niche": "niche_carrion_scavenger", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_patrol_hunter",
+        "weight": 3
+      },
+      {
+        "niche": "niche_ambush_predator",
+        "weight": 2
+      },
+      {
+        "niche": "niche_carrion_scavenger",
+        "weight": 1
+      }
+    ],
     "evolves_to": "fire_pyre_monarch",
     "evolution": {
       "level": 44,
@@ -517,22 +825,39 @@
     "mastery": {
       "fire": 25
     },
-    "stats": {"hp": 97, "speed": 57, "yin_atk": 78, "yang_atk": 130, "yin_def": 69, "yang_def": 69},
+    "stats": {
+      "hp": 97,
+      "speed": 57,
+      "yin_atk": 78,
+      "yang_atk": 130,
+      "yin_def": 69,
+      "yang_def": 69
+    },
     "signature_move": "fire_blaze_charge",
     "trait": "trait_fire_thermal_recharge",
     "field_utility": "immune_volcano",
     "concept": {
-      "base": "烈焰雄獅 × 砂岩熔核甲胄",
-      "stage_look": "肌肉結實的烈焰荒原獅，鬃毛如翻騰火浪，額前凝結三道熔岩裂紋",
+      "base": "砂岩羱羊 × 熔核甲胄",
+      "stage_look": "肌肉結實的荒原羱羊，彎角刻滿發光裂隙火紋，肩胛嵌著玫瑰砂岩護盾",
       "archetype": "arch_apedemak",
       "region": "非洲",
       "motifs_used": [
-        "三首四臂雄獅像",
-        "盤蛇綻放蓮花",
-        "陡頂砂岩金字塔"
+        "砂岩熔爐肩甲",
+        "電漿彎角弧紋",
+        "玄武岩蹄甲"
       ],
       "role": "突擊手：中距直線突進，受火屬性攻擊後縮短火招 CD",
-      "palette": "赭石紅、熾金黃、玄武岩暗灰"
+      "palette": "赭石紅、熾金黃、玄武岩暗灰",
+      "design_prototypes": [
+        "沙漠羱羊",
+        "砂岩熔爐甲",
+        "電漿彎角"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-element",
+      "morphology_secondary": [
+        "bio-nature"
+      ]
     }
   },
   {
@@ -541,7 +866,20 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
-    "niches": [{"niche": "niche_apex_predator", "weight": 4}, {"niche": "niche_ambient_energy_feeder", "weight": 1}, {"niche": "niche_carrion_scavenger", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_apex_predator",
+        "weight": 4
+      },
+      {
+        "niche": "niche_ambient_energy_feeder",
+        "weight": 1
+      },
+      {
+        "niche": "niche_carrion_scavenger",
+        "weight": 1
+      }
+    ],
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -559,22 +897,39 @@
     "mastery": {
       "fire": 40
     },
-    "stats": {"hp": 117, "speed": 68, "yin_atk": 91, "yang_atk": 152, "yin_def": 86, "yang_def": 86},
+    "stats": {
+      "hp": 117,
+      "speed": 68,
+      "yin_atk": 91,
+      "yang_atk": 152,
+      "yin_def": 86,
+      "yang_def": 86
+    },
     "signature_move": "fire_inferno_cataclysm",
     "trait": "trait_fire_thermal_recharge",
     "field_utility": "egg_hatch_boost",
     "concept": {
-      "base": "烈焰雄獅 × 砂岩熔核甲胄",
-      "stage_look": "威儀萬丈的三面烈火霸獅，鬃毛化為熊熊金紅蓮華火冠，每聲咆哮皆引動砂岩爆震",
+      "base": "沙漠巨羱羊 × 玫瑰砂岩熔爐甲胄",
+      "stage_look": "背負玫瑰砂岩火口甲胄的威嚴巨羱羊，雙目方塊聖石閃爍熾光，電漿彎角引動岩漿噴湧",
       "archetype": "arch_apedemak",
       "region": "非洲",
       "motifs_used": [
-        "三首四臂雄獅像",
-        "盤蛇綻放蓮花",
-        "陡頂砂岩金字塔"
+        "玫瑰砂岩火口甲",
+        "高溫電漿雙彎角",
+        "方塊聖石雙瞳"
       ],
       "role": "重砲手：高力量，遠距指定點範圍爆發，受火屬性攻擊後縮短火招 CD",
-      "palette": "赭石紅、熾金黃、玄武岩暗灰"
+      "palette": "赭石紅、熾金黃、玄武岩暗灰",
+      "design_prototypes": [
+        "沙漠羱羊",
+        "砂岩熔爐甲",
+        "電漿彎角"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-element",
+      "morphology_secondary": [
+        "bio-nature"
+      ]
     }
   },
   {
@@ -583,7 +938,20 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_mineral_feeder", "weight": 4}, {"niche": "niche_detritivore", "weight": 1}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_mineral_feeder",
+        "weight": 4
+      },
+      {
+        "niche": "niche_detritivore",
+        "weight": 1
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "earth_gilded_warden",
     "evolution": {
       "level": 30,
@@ -610,22 +978,39 @@
     "mastery": {
       "earth": 15
     },
-    "stats": {"hp": 97, "speed": 32, "yin_atk": 35, "yang_atk": 59, "yin_def": 89, "yang_def": 88},
+    "stats": {
+      "hp": 97,
+      "speed": 32,
+      "yin_atk": 35,
+      "yang_atk": 59,
+      "yin_def": 89,
+      "yang_def": 88
+    },
     "signature_move": "earth_pebble_shot",
     "trait": "trait_earth_tectonic_rebound",
     "field_utility": "drop_rate_up",
     "concept": {
-      "base": "黃金礦脈人形 × 儀典岩鎧石偶（人形）",
-      "stage_look": "圓潤敦實的小石偶，周身覆蓋薄金微粒，胸膛嵌有一顆微光綠寶石晶核",
+      "base": "重甲幼犰狳 × 聖湖金箔鱗片",
+      "stage_look": "圓滾敦實的小犰狳，背殼覆蓋初生金箔砂岩帶，胸甲嵌著微光翡翠小稜柱",
       "archetype": "arch_el_dorado_muisca",
       "region": "美洲",
       "motifs_used": [
-        "金粉覆身",
-        "高山聖湖綠寶石",
-        "黃金祭偶"
+        "聖湖金箔九節甲",
+        "翡翠稜柱晶核",
+        "蘆葦幾何金紋"
       ],
       "role": "中排：中距直線投石，受擊後提高土專精",
-      "palette": "鎏金黃、翡翠綠、陶土赭褐"
+      "palette": "鎏金黃、翡翠綠、陶土赭褐",
+      "design_prototypes": [
+        "重甲犰狳",
+        "金箔雕甲",
+        "翡翠稜柱"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-nature",
+      "morphology_secondary": [
+        "bio-artifact"
+      ]
     }
   },
   {
@@ -634,7 +1019,16 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_mineral_feeder", "weight": 4}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_mineral_feeder",
+        "weight": 4
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "earth_auric_sovereign",
     "evolution": {
       "level": 50,
@@ -661,22 +1055,39 @@
     "mastery": {
       "earth": 25
     },
-    "stats": {"hp": 120, "speed": 42, "yin_atk": 74, "yang_atk": 44, "yin_def": 110, "yang_def": 110},
+    "stats": {
+      "hp": 120,
+      "speed": 42,
+      "yin_atk": 74,
+      "yang_atk": 44,
+      "yin_def": 110,
+      "yang_def": 110
+    },
     "signature_move": "earth_seismic_slam",
     "trait": "trait_earth_tectonic_rebound",
     "field_utility": "immune_cave",
     "concept": {
-      "base": "黃金礦脈人形 × 儀典岩鎧石偶（人形）",
-      "stage_look": "佩帶幾何金面甲的岩土行者，肩背覆蓋層疊板狀黏土與生長金晶",
+      "base": "黃金甲犰狳 × 儀典金盾背帶",
+      "stage_look": "四足穩健的儀典金甲犰狳，肩背覆蓋九節鎏金陶板與蘆葦幾何雕紋",
       "archetype": "arch_el_dorado_muisca",
       "region": "美洲",
       "motifs_used": [
-        "金粉覆身",
-        "高山聖湖綠寶石",
-        "黃金祭偶"
+        "聖湖金箔九節甲",
+        "翡翠稜柱晶核",
+        "蘆葦幾何金紋"
       ],
       "role": "前排：自身周圍近距震波，受擊後提高土專精",
-      "palette": "鎏金黃、翡翠綠、陶土赭褐"
+      "palette": "鎏金黃、翡翠綠、陶土赭褐",
+      "design_prototypes": [
+        "重甲犰狳",
+        "金箔雕甲",
+        "翡翠稜柱"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-nature",
+      "morphology_secondary": [
+        "bio-artifact"
+      ]
     }
   },
   {
@@ -685,7 +1096,20 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "charge",
-    "niches": [{"niche": "niche_mineral_feeder", "weight": 3}, {"niche": "niche_ambient_energy_feeder", "weight": 1}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_mineral_feeder",
+        "weight": 3
+      },
+      {
+        "niche": "niche_ambient_energy_feeder",
+        "weight": 1
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -703,22 +1127,39 @@
     "mastery": {
       "earth": 40
     },
-    "stats": {"hp": 146, "speed": 50, "yin_atk": 86, "yang_atk": 51, "yin_def": 134, "yang_def": 133},
+    "stats": {
+      "hp": 146,
+      "speed": 50,
+      "yin_atk": 86,
+      "yang_atk": 51,
+      "yin_def": 134,
+      "yang_def": 133
+    },
     "signature_move": "earth_rampart_rush",
     "trait": "trait_earth_tectonic_rebound",
     "field_utility": "open_obstacle",
     "concept": {
-      "base": "黃金礦脈人形 × 儀典岩鎧石偶（人形）",
-      "stage_look": "巍然屹立的重岩金祭聖偶，雙臂如立柱，通體鎏金結晶與翡翠石脈共鳴",
+      "base": "四足重裝金甲犰狳 × 翡翠稜柱冠甲",
+      "stage_look": "身披九節鎏金陶甲與聖湖金盾的重裝巨犰狳，背脊翡翠稜柱隨地脈震動共鳴",
       "archetype": "arch_el_dorado_muisca",
       "region": "美洲",
       "motifs_used": [
-        "金粉覆身",
-        "高山聖湖綠寶石",
-        "黃金祭偶"
+        "九節鎏金穹頂甲",
+        "高山聖湖翡翠柱",
+        "蘆葦紋金盾"
       ],
       "role": "前排：遠距直線突進，受擊後提高土專精",
-      "palette": "鎏金黃、翡翠綠、陶土赭褐"
+      "palette": "鎏金黃、翡翠綠、陶土赭褐",
+      "design_prototypes": [
+        "重甲犰狳",
+        "金箔雕甲",
+        "翡翠稜柱"
+      ],
+      "base_entity": "natural-bio",
+      "morphology_primary": "bio-nature",
+      "morphology_secondary": [
+        "bio-artifact"
+      ]
     }
   },
   {
@@ -727,7 +1168,20 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "hold",
-    "niches": [{"niche": "niche_ground_grazer", "weight": 3}, {"niche": "niche_ground_granivore", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_ground_grazer",
+        "weight": 3
+      },
+      {
+        "niche": "niche_ground_granivore",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "ice_rime_strider",
     "evolution": {
       "level": 25,
@@ -754,7 +1208,14 @@
     "mastery": {
       "ice": 15
     },
-    "stats": {"hp": 74, "speed": 85, "yin_atk": 41, "yang_atk": 68, "yin_def": 66, "yang_def": 66},
+    "stats": {
+      "hp": 74,
+      "speed": 85,
+      "yin_atk": 41,
+      "yang_atk": 68,
+      "yin_def": 66,
+      "yang_def": 66
+    },
     "signature_move": "ice_shard_flurry",
     "trait": "trait_ice_flash_freeze",
     "field_utility": "prevent_escape",
@@ -769,7 +1230,19 @@
         "永凍冰塚"
       ],
       "role": "中距輸出：扇形冰霜，上場時暫時提高冰抗",
-      "palette": "霜雪白、冰川淡藍、凍鐵古金"
+      "palette": "霜雪白、冰川淡藍、凍鐵古金",
+      "design_prototypes": [
+        "極北鹿角獸",
+        "鍛鐵關節",
+        "毛氈鞍軛"
+      ],
+      "base_entity": "supernatural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "bio-element",
+        "bio-totem"
+      ],
+      "sensitivity": "review"
     }
   },
   {
@@ -778,7 +1251,20 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "keep_distance",
-    "niches": [{"niche": "niche_patrol_hunter", "weight": 3}, {"niche": "niche_ground_grazer", "weight": 2}, {"niche": "niche_carrion_scavenger", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_patrol_hunter",
+        "weight": 3
+      },
+      {
+        "niche": "niche_ground_grazer",
+        "weight": 2
+      },
+      {
+        "niche": "niche_carrion_scavenger",
+        "weight": 1
+      }
+    ],
     "evolves_to": "ice_tundra_dreadnought",
     "evolution": {
       "level": 43,
@@ -805,7 +1291,14 @@
     "mastery": {
       "ice": 25
     },
-    "stats": {"hp": 93, "speed": 107, "yin_atk": 51, "yang_atk": 85, "yin_def": 82, "yang_def": 82},
+    "stats": {
+      "hp": 93,
+      "speed": 107,
+      "yin_atk": 51,
+      "yang_atk": 85,
+      "yin_def": 82,
+      "yang_def": 82
+    },
     "signature_move": "ice_glacier_lance",
     "trait": "trait_ice_flash_freeze",
     "field_utility": "mount",
@@ -820,7 +1313,19 @@
         "永凍冰塚"
       ],
       "role": "遠距輸出：高敏捷，遠距直線冰槍，上場時暫時提高冰抗",
-      "palette": "霜雪白、冰川淡藍、凍鐵古金"
+      "palette": "霜雪白、冰川淡藍、凍鐵古金",
+      "design_prototypes": [
+        "極北鹿角獸",
+        "鍛鐵關節",
+        "毛氈鞍軛"
+      ],
+      "base_entity": "supernatural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "bio-element",
+        "bio-totem"
+      ],
+      "sensitivity": "review"
     }
   },
   {
@@ -829,7 +1334,20 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
-    "niches": [{"niche": "niche_apex_predator", "weight": 3}, {"niche": "niche_patrol_hunter", "weight": 2}, {"niche": "niche_carrion_scavenger", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_apex_predator",
+        "weight": 3
+      },
+      {
+        "niche": "niche_patrol_hunter",
+        "weight": 2
+      },
+      {
+        "niche": "niche_carrion_scavenger",
+        "weight": 1
+      }
+    ],
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -848,7 +1366,14 @@
       "ice": 40,
       "metal": 15
     },
-    "stats": {"hp": 112, "speed": 128, "yin_atk": 61, "yang_atk": 101, "yin_def": 99, "yang_def": 99},
+    "stats": {
+      "hp": 112,
+      "speed": 128,
+      "yin_atk": 61,
+      "yang_atk": 101,
+      "yin_def": 99,
+      "yang_def": 99
+    },
     "signature_move": "ice_blizzard_vortex",
     "trait": "trait_ice_flash_freeze",
     "field_utility": "immune_ice_cap",
@@ -863,7 +1388,19 @@
         "永凍冰塚"
       ],
       "role": "遠距砲台：高敏捷，遠距指定點範圍爆發，上場時暫時提高冰抗",
-      "palette": "霜雪白、冰川淡藍、凍鐵古金"
+      "palette": "霜雪白、冰川淡藍、凍鐵古金",
+      "design_prototypes": [
+        "極北鹿角獸",
+        "鍛鐵關節",
+        "毛氈鞍軛"
+      ],
+      "base_entity": "supernatural-bio",
+      "morphology_primary": "bio-artifact",
+      "morphology_secondary": [
+        "bio-element",
+        "bio-totem"
+      ],
+      "sensitivity": "review"
     }
   },
   {
@@ -872,7 +1409,20 @@
     "stage": "juvenile",
     "size_class": "S",
     "ai_style": "flank",
-    "niches": [{"niche": "niche_nectar_visitor", "weight": 3}, {"niche": "niche_ambient_energy_feeder", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_nectar_visitor",
+        "weight": 3
+      },
+      {
+        "niche": "niche_ambient_energy_feeder",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "wind_flute_cruiser",
     "evolution": {
       "level": 20,
@@ -899,7 +1449,14 @@
     "mastery": {
       "wind": 15
     },
-    "stats": {"hp": 43, "speed": 122, "yin_atk": 51, "yang_atk": 86, "yin_def": 49, "yang_def": 49},
+    "stats": {
+      "hp": 43,
+      "speed": 122,
+      "yin_atk": 51,
+      "yang_atk": 86,
+      "yin_def": 49,
+      "yang_def": 49
+    },
     "signature_move": "wind_gale_claw",
     "trait": "trait_wind_tailwind_glide",
     "field_utility": "weather_control",
@@ -914,7 +1471,18 @@
         "幾何刺繡披肩"
       ],
       "role": "游擊手：最高敏捷，近距橫掃，換手上場時加速",
-      "palette": "茜草絳紅、竹青綠、暖沙金"
+      "palette": "茜草絳紅、竹青綠、暖沙金",
+      "design_prototypes": [
+        "排笛飛舟",
+        "刺繡滑翔帆",
+        "氣流風管"
+      ],
+      "base_entity": "non-bio",
+      "morphology_primary": "inanimate-biomimic",
+      "morphology_secondary": [
+        "bio-artifact",
+        "bio-element"
+      ]
     }
   },
   {
@@ -923,7 +1491,20 @@
     "stage": "adolescent",
     "size_class": "M",
     "ai_style": "keep_distance",
-    "niches": [{"niche": "niche_ambient_energy_feeder", "weight": 3}, {"niche": "niche_nectar_visitor", "weight": 2}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_ambient_energy_feeder",
+        "weight": 3
+      },
+      {
+        "niche": "niche_nectar_visitor",
+        "weight": 2
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": "wind_monsoon_galeon",
     "evolution": {
       "level": 35,
@@ -950,7 +1531,14 @@
     "mastery": {
       "wind": 25
     },
-    "stats": {"hp": 54, "speed": 153, "yin_atk": 64, "yang_atk": 107, "yin_def": 61, "yang_def": 61},
+    "stats": {
+      "hp": 54,
+      "speed": 153,
+      "yin_atk": 64,
+      "yang_atk": 107,
+      "yin_def": 61,
+      "yang_def": 61
+    },
     "signature_move": "wind_vacuum_blade",
     "trait": "trait_wind_tailwind_glide",
     "field_utility": "levitate",
@@ -965,7 +1553,18 @@
         "幾何刺繡披肩"
       ],
       "role": "游擊手：最高敏捷，遠距直線風刃，換手上場時加速",
-      "palette": "茜草絳紅、竹青綠、暖沙金"
+      "palette": "茜草絳紅、竹青綠、暖沙金",
+      "design_prototypes": [
+        "排笛飛舟",
+        "刺繡滑翔帆",
+        "氣流風管"
+      ],
+      "base_entity": "non-bio",
+      "morphology_primary": "inanimate-biomimic",
+      "morphology_secondary": [
+        "bio-artifact",
+        "bio-element"
+      ]
     }
   },
   {
@@ -974,7 +1573,20 @@
     "stage": "adult",
     "size_class": "L",
     "ai_style": "keep_distance",
-    "niches": [{"niche": "niche_ambient_energy_feeder", "weight": 3}, {"niche": "niche_patrol_hunter", "weight": 1}, {"niche": "niche_opportunistic_omnivore", "weight": 1}],
+    "niches": [
+      {
+        "niche": "niche_ambient_energy_feeder",
+        "weight": 3
+      },
+      {
+        "niche": "niche_patrol_hunter",
+        "weight": 1
+      },
+      {
+        "niche": "niche_opportunistic_omnivore",
+        "weight": 1
+      }
+    ],
     "evolves_to": null,
     "evolution": null,
     "resist": {
@@ -992,7 +1604,14 @@
     "mastery": {
       "wind": 40
     },
-    "stats": {"hp": 64, "speed": 183, "yin_atk": 131, "yang_atk": 78, "yin_def": 72, "yang_def": 72},
+    "stats": {
+      "hp": 64,
+      "speed": 183,
+      "yin_atk": 131,
+      "yang_atk": 78,
+      "yin_def": 72,
+      "yang_def": 72
+    },
     "signature_move": "wind_tempest_sphere",
     "trait": "trait_wind_tailwind_glide",
     "field_utility": "immune_space",
@@ -1007,7 +1626,18 @@
         "幾何刺繡披肩"
       ],
       "role": "游擊砲台：最高敏捷，遠距指定點範圍爆發，換手上場時加速",
-      "palette": "茜草絳紅、竹青綠、暖沙金"
+      "palette": "茜草絳紅、竹青綠、暖沙金",
+      "design_prototypes": [
+        "排笛飛舟",
+        "刺繡滑翔帆",
+        "氣流風管"
+      ],
+      "base_entity": "non-bio",
+      "morphology_primary": "inanimate-biomimic",
+      "morphology_secondary": [
+        "bio-artifact",
+        "bio-element"
+      ]
     }
   }
 ]

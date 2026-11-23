@@ -18,11 +18,11 @@
     },
     {
       "id": "water_coral_serpent",
-      "name_zh": "銀潮珊瑚巨鰻",
-      "name_en": "Corallanguilla",
-      "naming_note": "取珊瑚（coral）與海鰻（anguilla）之意象。",
-      "dex_zh": "盤踞於深海暗礁的銀鱗巨鰻，頭冠嵌有三孔珍珠珊瑚殼，能以高速迴旋的水流長槍貫穿目標。",
-      "dex_en": "A silver-scaled abyssal eel crowned with a three-pored coral shell, piercing deep-sea currents with spinning maelstrom lances."
+      "name_zh": "銀潮珊瑚巨鱝",
+      "name_en": "Corallamanta",
+      "naming_note": "取珊瑚（coral）與鬼蝠鱝（manta）之意象。",
+      "dex_zh": "展翼寬廣的銀鱗深海巨蝠鱝，頭冠嵌有三孔珊瑚殼並能折射微弱生物電，雙翼捲起暗流凝聚為旋轉水渦長槍。",
+      "dex_en": "A silver-scaled abyssal manta crowned with a three-pored coral shell, piercing deep-sea currents with spinning maelstrom lances."
     },
     {
       "id": "fire_basalt_drake",
@@ -34,35 +34,35 @@
     },
     {
       "id": "earth_citadel_lion",
-      "name_zh": "岩門石獅獸",
-      "name_en": "Litholeo",
-      "naming_note": "取巨岩（litho-）與雄獅（leo）之意象。",
-      "dex_zh": "由紅褐花崗岩雕琢而成的礦窟巨獅，前爪如山門石柱般厚重，鬃毛間鑲嵌著古老礦脈晶石與壁畫陶片。",
-      "dex_en": "A cave-guarding lion sculpted from red-brown granite with pillar-like forepaws and mineral fresco plates set into its mane."
+      "name_zh": "岩門赤岩巨熊",
+      "name_en": "Lithoursus",
+      "naming_note": "取岩石（litho-）與熊（ursus）之意象。",
+      "dex_zh": "由紅褐花崗岩與礦脈晶石構成的山門巨熊，雙前掌如石雕廊柱落地生根，肩甲嵌有彩繪壁畫陶片，從地底喚出巨岩柱震裂敵陣。",
+      "dex_en": "A cave-guarding bear sculpted from red-brown granite with pillar-like forepaws and mineral fresco plates across its shoulders."
     },
     {
       "id": "ice_sextant_leviathan",
-      "name_zh": "冰桅六分鯨",
-      "name_en": "Cryonaviga",
-      "naming_note": "取冰霜（cryo-）與航海（naviga）之意象。",
-      "dex_zh": "背脊高聳如冰封三桅帆船的極地巨鯨，額前黃銅六分儀角能折射極光並掃出封凍一切的極地暴雪。",
-      "dex_en": "A polar whale whose frozen three-masted ridge and brass sextant horn refract aurora light into sweeping subzero gales."
+      "name_zh": "冰桅六分海象",
+      "name_en": "Cryowalrus",
+      "naming_note": "取冰霜（cryo-）與極地海象（walrus）之意象。",
+      "dex_zh": "背脊高聳如冰封三桅帆船龍骨的極地巨海象，雙長牙化為黃銅六分儀冰晶角，能折射極光並掃出封凍一切的極地暴雪。",
+      "dex_en": "A polar walrus whose frozen three-masted ridge and brass sextant tusks refract aurora light into sweeping subzero gales."
     },
     {
       "id": "thunder_obelisk_chimera",
-      "name_zh": "塔紋方尖獸",
+      "name_zh": "塔紋方尖巨蜥",
       "name_en": "Obelivolt",
       "naming_note": "取方尖碑（obelisk）與伏特（volt）之意象。",
-      "dex_zh": "身披多層假窗花崗岩甲的雷電巨獸，額頂懸浮的新月金盤不斷匯聚高塔電漿，化作閃電直線突刺。",
-      "dex_en": "An armored thunder beast clad in carved granite obelisk plates, channeling high-voltage tower plasma through its floating crescent disc."
+      "dex_zh": "身披多層假窗花崗岩甲的雷電巨蜥，額頂懸浮的新月金盤不斷匯聚高塔電漿，化作閃電直線突刺。",
+      "dex_en": "An armored thunder monitor clad in carved granite obelisk plates, channeling high-voltage tower plasma through its floating crescent disc."
     },
     {
       "id": "wind_tristar_albatross",
-      "name_zh": "三翼星航鵬",
-      "name_en": "Tristaroc",
-      "naming_note": "取三引擎（tristar）與巨鵬（roc）之意象。",
-      "dex_zh": "具備三具氣流推進渦輪的平流層藍翼巨禽，尾羽牽引著南十字星羅盤軌跡，能無視稀薄大氣高速俯衝。",
-      "dex_en": "A stratospheric blue-winged albatross driven by three airflow turbines, trailing a Southern Cross compass wake through orbital facilities."
+      "name_zh": "三翼星航巨蜓",
+      "name_en": "Tristarodon",
+      "naming_note": "取三引擎（tristar）與巨蜓（odonata）之意象。",
+      "dex_zh": "具備三具氣流推進渦輪的平流層機械巨蜻蜓，尾端牽引著南十字星羅盤軌跡，能無視稀薄大氣高速俯衝。",
+      "dex_en": "A stratospheric turbine-driven dragonfly automaton with triple thrusters, trailing a Southern Cross compass wake at high altitude."
     },
     {
       "id": "shadow_lantern_kraken",
@@ -74,11 +74,11 @@
     },
     {
       "id": "light_seal_unicorn",
-      "name_zh": "印紋聖角獸",
-      "name_en": "Sigilicorn",
-      "naming_note": "取方印（sigil）與獨角獸（unicorn）之意象。",
-      "dex_zh": "身披滑石方印金紋與菩提葉光甲的單角聖牛，額前長角托舉著鏤空聖光香爐，以純淨光槍鎮守神廟。",
-      "dex_en": "A single-horned temple guardian etched with steatite seal patterns and bodhi-leaf armor, firing zenith light lances from its censer horn."
+      "name_zh": "印紋聖角劍羚",
+      "name_en": "Sigiloryx",
+      "naming_note": "取方印（sigil）與劍羚（oryx）之意象。",
+      "dex_zh": "身披滑石方印金紋與菩提葉光甲的單角劍羚，額前長直螺旋角托舉著鏤空聖光香爐，以純淨光槍鎮守神廟。",
+      "dex_en": "A single-horned temple oryx etched with steatite seal patterns and bodhi-leaf armor, firing zenith light lances from its censer horn."
     }
   ],
   "moves": [

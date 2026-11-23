@@ -18,6 +18,16 @@ window.COSMI_DESIGNED = {
           "金白、暖黃光暈、淡粉",
           "橘紅、熔金、炭黑邊緣"
         ],
+        "design_prototypes": [
+          "大白鷺",
+          "太陽鏡陣",
+          "磁軌砲陣列"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "生物·鳥類",
           "器械·天文/測量儀器",
@@ -260,6 +270,16 @@ window.COSMI_DESIGNED = {
           "深紫、墨黑、幽藍邊光",
           "冰藍、霜白、淡紫折射"
         ],
+        "design_prototypes": [
+          "灰狼",
+          "極光電離層",
+          "光學機獸"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-element",
+        "morphology_secondary": [
+          "bio-artifact"
+        ],
         "base_parents": [
           "生物·哺乳類",
           "自然·星體",
@@ -498,6 +518,17 @@ window.COSMI_DESIGNED = {
           "電紫、亮黃、白色閃光",
           "薄荷綠、雲白、淡青流線"
         ],
+        "design_prototypes": [
+          "駿馬",
+          "飛馬翼",
+          "超導軌道"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "multi-bio",
+        "morphology_secondary": [
+          "bio-element",
+          "bio-artifact"
+        ],
         "base_parents": [
           "生物·哺乳類",
           "幻想生物·歐洲奇幻",
@@ -734,6 +765,16 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "青銅綠、黃銅金、玄鐵黑"
         ],
+        "design_prototypes": [
+          "巨象",
+          "青銅發條",
+          "水力浮碗"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "inanimate-biomimic"
+        ],
         "base_parents": [
           "科幻機械·機甲/外骨骼",
           "器械·鐘錶/計時儀器",
@@ -959,7 +1000,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_wood_vinecrest",
       "code_zh": "木",
       "element": "wood",
-      "title_zh": "蔓冠雛 → 蔓冠翎 → 蔓冠虹禽",
+      "title_zh": "蔓冠守宮 → 蔓冠棘龍 → 蔓冠翠蜥",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_wood_vinecrest",
@@ -969,32 +1010,42 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "翡翠綠、孔雀藍、琉璃金"
         ],
+        "design_prototypes": [
+          "葉尾守宮",
+          "變色龍",
+          "藤蔓冠"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-totem"
+        ],
         "base_parents": [
-          "生物·鳥類",
+          "生物·爬蟲類",
           "植物·草本/藤蔓",
           "物質·珠寶"
         ],
         "bases": [
-          "熱帶彩翼錦禽",
-          "蔓生藤蔓羽冠",
-          "黃銅雕花底座"
+          "葉尾守宮與變色龍",
+          "蔓生藤蔓棘冠",
+          "黃銅雕花木飾"
         ],
         "appearance_palette": [
           "翡翠綠",
           "孔雀藍",
           "琉璃金"
         ],
-        "timeline": "遠古神話（東南亞口傳）",
+        "timeline": "遠古神話（東南亞林冠傳說）",
         "region": "東南亞",
         "archetype": "arch_sarimanok",
-        "archetype_name": "薩里馬諾克彩鳳",
-        "archetype_type": "P5-02 考據庫·神話神獸",
-        "meaning": "銜魚守護福佑、羽翼流淌雙重虹彩的熱帶祥鳥",
-        "motifs": "流線捲紋羽冠、雙重虹彩長尾、黃銅雕花底座",
-        "sensitivity": "ok",
+        "archetype_name": "蔓冠林蜥",
+        "archetype_type": "P5-02 考據庫·東南亞自然傳說",
+        "meaning": "與林冠蕨蔓共生、以琉璃葉脈扇尾感應氣流的擬態翠蜥",
+        "motifs": "流線捲紋葉冠、琉璃葉脈扇尾、黃銅雕花木飾",
+        "sensitivity": "review",
         "role": "中排輸出：高精神，中距指定點範圍爆發，上場時自我治療",
         "habit": "territorial",
-        "disposition": "高貴敏銳、警覺守望",
+        "disposition": "敏銳擬態、林間伏襲",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
@@ -1021,16 +1072,16 @@ window.COSMI_DESIGNED = {
         "height_length": "2.10 m",
         "weight": "65 kg",
         "body_fat": "11%",
-        "formula": "wood（木） × 熱帶彩翼錦禽 + 蔓生藤蔓羽冠 + 黃銅雕花底座 × 薩里馬諾克彩鳳",
+        "formula": "wood（木） × 葉尾守宮與變色龍 + 蔓生藤蔓棘冠 + 黃銅雕花木飾 × 蔓冠林蜥",
         "locked": {
           "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "juvenile",
               "creature_id": "wood_fern_chick",
-              "name_zh": "蔓冠雛",
-              "name_en": "Virellet",
-              "naming_note": "初萌蕨葉捲成小小蔓冠。",
+              "name_zh": "蔓冠守宮",
+              "name_en": "Virecko",
+              "naming_note": "初萌蕨葉捲成葉尾守宮的小小蔓冠。",
               "size_class": "S",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -1051,9 +1102,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.42 m",
               "weight": "2.2 kg",
               "body_fat": "14%",
-              "look": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠；蓬鬆翠綠幼鳥，頭頂生出初萌的捲曲蕨葉冠羽，雙足踏著金木雕花底座",
-              "dex_zh": "蓬鬆的翠綠幼鳥站在雕花底座上，頭頂蕨葉捲成柔軟的冠羽。牠平時依偎在夥伴身邊，遇險便裹著荊棘短距直衝。",
-              "dex_en": "Curled fern leaves crown this fluffy green chick as it perches on a carved base. It stays close to its companions, darting forward a short distance through danger wrapped in briars.",
+              "look": "葉尾守宮 × 初萌蕨葉藤蔓冠；翠綠圓潤的小葉尾守宮，頭頂生出捲曲嫩蕨冠，扁平尾葉隨呼吸輕晃",
+              "dex_zh": "翠綠圓潤的小守宮站穩枝頭，頭頂蕨葉捲成柔軟冠羽，扁平尾葉輕輕擺動。遇險時會裹著荊棘短距撲擊。",
+              "dex_en": "A plump emerald leaf-tailed gecko crowned with a curled fern crest. When threatened, it darts forward cloaked in briars.",
               "signature_move": {
                 "move_id": "wood_briar_dash",
                 "name_zh": "棘芽突",
@@ -1071,9 +1122,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "wood_plume_peafowl",
-              "name_zh": "蔓冠翎",
+              "name_zh": "蔓冠棘龍",
               "name_en": "Virelume",
-              "naming_note": "蔓冠舒展，捲紋隨羽翼流動。",
+              "naming_note": "蔓冠舒展，藤棘沿樹蜥背脊生長。",
               "size_class": "M",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -1094,9 +1145,9 @@ window.COSMI_DESIGNED = {
               "height_length": "1.15 m",
               "weight": "18 kg",
               "body_fat": "12%",
-              "look": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠；羽翼舒展的熱帶孔雀型錦鳥，背負流線捲紋蔓藤，雙爪覆蓋金屬木質硬鱗",
-              "dex_zh": "舒展的彩翼下，捲紋藤蔓沿著背脊生長，雙爪覆著堅硬的木質金屬鱗。牠留在隊伍中段，讓根槍沿直線刺向遠敵。",
-              "dex_en": "Curled vines trail down its back beneath colorful wings, and hard scales cover its claws. From the middle of the group, it sends a root spear in a straight line toward distant threats.",
+              "look": "變色龍樹蜥 × 蔓生藤蔓棘背；背脊延伸出捲紋藤蔓棘冠的樹棲翠蜥，趾間覆蓋木質硬鱗與花萼護腕",
+              "dex_zh": "樹棲翠蜥背脊生出捲紋藤蔓棘冠，趾間覆著木質金屬鱗片。牠留在隊伍中段，沿直線射出貫穿敵陣的根槍。",
+              "dex_en": "An arboreal lizard whose vine-crest unfurls along a thorny spine. Holding mid-rank, it fires linear root lances at distant foes.",
               "signature_move": {
                 "move_id": "wood_root_spear",
                 "name_zh": "根紋槍",
@@ -1114,9 +1165,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adult",
               "creature_id": "wood_canopy_regent",
-              "name_zh": "蔓冠虹禽",
+              "name_zh": "蔓冠翠蜥",
               "name_en": "Vireloria",
-              "naming_note": "蔓冠長尾映出雙重虹彩。",
+              "naming_note": "琉璃彩葉扇尾綻放出雙重虹光。",
               "size_class": "L",
               "ai_style": "hold",
               "grip_mode": "one_hand_shield",
@@ -1137,9 +1188,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.10 m",
               "weight": "65 kg",
               "body_fat": "11%",
-              "look": "熱帶彩翼錦禽 × 蔓生藤蔓羽冠；盤踞巨木頂端的七彩神禽，雙重虹彩長尾如垂藤流光，周身綻放翠玉繁花",
-              "dex_zh": "七彩羽翼覆住巨木頂端，兩道虹彩長尾如垂藤般輕晃，翠玉色花朵在身旁盛開。牠遙望中距離的敵人，令枝葉在目標周圍壓落。",
-              "dex_en": "Perched atop a great tree, it trails twin iridescent tails like hanging vines amid jade-green blossoms. It watches the middle distance and brings a canopy crashing down around its chosen target.",
+              "look": "葉尾巨蜥 × 蔓冠虹彩藤盾；盤踞古木高枝的華麗翠蜥，葉脈雙尾化作半透明琉璃彩葉扇，周身綻放翠玉繁花",
+              "dex_zh": "盤踞古木高枝的華麗翠蜥，葉脈雙尾化作琉璃七彩葉扇，翠玉繁花在身旁盛開，引導枝葉朝中距目標壓落。",
+              "dex_en": "A regal forest lizard perched high in the canopy, fanning twin iridescent leaf-tails to call down emerald boughs from mid-range.",
               "signature_move": {
                 "move_id": "wood_canopy_crush",
                 "name_zh": "翠冠墜",
@@ -1158,17 +1209,17 @@ window.COSMI_DESIGNED = {
               "stage": "overload",
               "creature_id": "wood_canopy_sovereign",
               "habit": "dominant",
-              "disposition": "神聖祥和、庇蔭萬木",
-              "name_zh": "蔓冠虹禽",
+              "disposition": "靈動神秘、庇蔭萬木",
+              "name_zh": "蔓冠翠蜥",
               "name_en": "Vireloria",
-              "naming_note": "四階段統一命名；雙虹耀天，萬木來朝。",
+              "naming_note": "四階段統一命名；琉璃雙尾映彩，林冠繁花齊綻。",
               "size_class": "XL",
               "height_length": "4.6 m",
               "weight": "850 kg",
               "body_fat": "9%",
-              "look": "薩里馬諾克熱帶彩鳳超載爆發；頭頂蔓冠舒展為通天巨樹般的光質翡翠神木，雙重虹彩長羽化作如極光瀑布般的七色光帶，足下黃銅底座完全熔鑄為凌空懸浮的符文靈盤，口銜的神話光靈之魚化為高能以太光核",
-              "dex_zh": "超載激發的翠玉生機使天際化作七彩祥雲。振翅間灑落的翡翠光塵能活化整片林海，口中光魚引導的蒼穹虹光更可將一切侵蝕生機的邪穢淨化殆盡。",
-              "dex_en": "Overloaded life energy paints the heavens in iridescent aurorae. Gliding on radiant rainbow plumage, it showers forests with revitalizing emerald spores and focuses a purifying solar beam through its sacred spirit fish.",
+              "look": "葉尾翠蜥超載爆發；頭頂蔓冠舒展為光質翡翠蕨林冠，雙重葉脈彩尾化作極光瀑布般的七色琉璃葉扇，四爪踏在凌空懸浮的黃銅符文枝架上",
+              "dex_zh": "超載激發的翠玉生機使林冠化作七彩光幕。蔓冠翠蜥展開琉璃葉尾灑落翡翠光塵，能在一瞬間催生巨型藤蔓將來犯之敵徹底淨化。",
+              "dex_en": "Overloaded life energy turns the forest canopy into an iridescent prism. Fanning twin stained-glass leaf tails, Vireloria showers emerald spores that purify corruption across the woods.",
               "signature_move": {
                 "move_id": "wood_aurora_canopy_bloom",
                 "name_zh": "虹彩天幕森羅綻",
@@ -1190,7 +1241,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "初陽滋養",
             "idea_zh": "召喚上場時汲取光能，立即恢復自身最大生命值的百分之八。"
           },
-          "overload": "蔓冠虹禽（wood_canopy_sovereign · XL）：薩里馬諾克熱帶彩鳳超載爆發；頭頂蔓冠舒展為通天巨樹般的光質翡翠神木，雙重虹彩長羽化作如極光瀑布般的七色光帶，足下黃銅底座完全熔鑄為凌空懸浮的符文靈盤，口銜的神話光靈之魚化為高能以太光核"
+          "overload": "蔓冠翠蜥（wood_canopy_sovereign · XL）：葉尾翠蜥超載爆發；頭頂蔓冠舒展為光質翡翠蕨林冠，雙重葉脈彩尾化作極光瀑布般的七色琉璃葉扇，四爪踏在凌空懸浮的黃銅符文枝架上"
         }
       }
     },
@@ -1207,6 +1258,16 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "潮汐碧藍、白沫銀、陶土赭紅"
+        ],
+        "design_prototypes": [
+          "潮汐海鰻",
+          "雙體陶船",
+          "蟹爪風帆"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "bio-element"
         ],
         "base_parents": [
           "生物·魚類/水生",
@@ -1437,7 +1498,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_fire_blazelion",
       "code_zh": "火",
       "element": "fire",
-      "title_zh": "燼鬃仔 → 燼鬃獅 → 燼鬃焰獅 → 焰角羱羊",
+      "title_zh": "燼角羔 → 燼角羱 → 熔岩羱羊 → 焰角岩殿羱",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_fire_blazelion",
@@ -1446,6 +1507,16 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "玫瑰砂岩紅、熾金黃、玄武岩暗灰"
+        ],
+        "design_prototypes": [
+          "沙漠羱羊",
+          "砂岩熔爐甲",
+          "電漿彎角"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-element",
+        "morphology_secondary": [
+          "bio-nature"
         ],
         "base_parents": [
           "生物·哺乳類",
@@ -1468,7 +1539,7 @@ window.COSMI_DESIGNED = {
         "archetype_name": "杜沙拉·佩特拉玫瑰岩殿",
         "archetype_type": "P5-02 考據庫·神話戰神",
         "meaning": "背負玫瑰砂岩神殿火口與雙目方塊聖石、以電漿彎角引動岩漿噴湧的沙漠羱羊",
-        "motifs": "三首四臂雄獅像、盤蛇綻放蓮花、陡頂砂岩金字塔",
+        "motifs": "玫瑰砂岩火口甲、高溫電漿雙彎角、方塊聖石雙瞳",
         "sensitivity": "ok",
         "role": "重砲手：高力量，遠距指定點範圍爆發，受火屬性攻擊後縮短火招 CD",
         "habit": "dominant",
@@ -1506,9 +1577,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "fire_ember_cub",
-              "name_zh": "燼鬃仔",
+              "name_zh": "燼角羔",
               "name_en": "Cindrel",
-              "naming_note": "餘燼絨毛圍著幼獅頸邊。",
+              "naming_note": "玫瑰砂岩短角帶著初生餘燼。",
               "size_class": "S",
               "ai_style": "hold",
               "grip_mode": "one_hand_shield",
@@ -1525,9 +1596,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.50 m",
               "weight": "6.5 kg",
               "body_fat": "17%",
-              "look": "烈焰雄獅 × 砂岩熔核甲胄；滾燙赤褐小獅，頸圈生有一圈暗紅餘燼絨毛，爪尖踏出微小火星",
-              "dex_zh": "赤褐色的小獅頸邊圍著暗紅絨毛，每走一步都從爪尖迸出火星。牠喜歡搶在夥伴前頭，甩出火焰橫掃靠近的對手。",
-              "dex_en": "Dark red fluff circles this tawny cub's neck, and sparks spring from its paws with every step. It races ahead of its companions and lashes fire across enemies that come close.",
+              "look": "沙漠羱羊羔 × 砂岩餘燼短角；滾燙赤褐小羊羔，額前冒出兩枚微光炭紅短彎角，四蹄踏出微小火星",
+              "dex_zh": "赤褐小羱羊羔額前冒出微光炭紅短角，四蹄踏出細碎火星。牠喜歡搶在夥伴前頭，甩出火焰橫掃靠近的對手。",
+              "dex_en": "A russet ibex kid sprouting glowing ember horns and sparking hooves, leaping ahead to sweep foes with close-range flames.",
               "signature_move": {
                 "move_id": "fire_ember_lash",
                 "name_zh": "燼尾掃",
@@ -1545,9 +1616,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "fire_mane_stalker",
-              "name_zh": "燼鬃獅",
+              "name_zh": "燼角羱",
               "name_en": "Cindrava",
-              "naming_note": "燼鬃翻騰，額紋透出熔光。",
+              "naming_note": "電漿雙彎角與砂岩護盾成形。",
               "size_class": "M",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -1568,9 +1639,9 @@ window.COSMI_DESIGNED = {
               "height_length": "1.30 m",
               "weight": "68 kg",
               "body_fat": "15%",
-              "look": "烈焰雄獅 × 砂岩熔核甲胄；肌肉結實的烈焰荒原獅，鬃毛如翻騰火浪，額前凝結三道熔岩裂紋",
-              "dex_zh": "結實的荒原獅低伏身軀，火浪般的長鬃映亮額前三道熔岩裂紋。牠盯住前方的對手，裹著烈焰沿直線猛然衝去。",
-              "dex_en": "Three molten cracks glow across the brow of this powerful plains lion, whose mane rolls like a wave of fire. It fixes its gaze ahead and charges straight through the flames.",
+              "look": "砂岩羱羊 × 熔核甲胄；肌肉結實的荒原羱羊，彎角刻滿發光裂隙火紋，肩胛嵌著玫瑰砂岩護盾",
+              "dex_zh": "結實的荒原羱羊雙角刻滿熔岩火紋，玫瑰砂岩護甲覆滿雙肩。牠盯住前方的對手，裹著烈焰沿直線猛衝過去。",
+              "dex_en": "A sturdy canyon ibex armored in rose-sandstone shoulder plates, charging straight through enemy ranks behind blazing horns.",
               "signature_move": {
                 "move_id": "fire_blaze_charge",
                 "name_zh": "焰鬃突",
@@ -1588,9 +1659,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adult",
               "creature_id": "fire_pyre_monarch",
-              "name_zh": "燼鬃焰獅",
+              "name_zh": "熔岩羱羊",
               "name_en": "Cindraval",
-              "naming_note": "燼鬃盛開成三面獅的火冠。",
+              "naming_note": "玫瑰砂岩火口甲胄燃起高溫電漿。",
               "size_class": "L",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -1611,9 +1682,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.30 m",
               "weight": "310 kg",
               "body_fat": "13%",
-              "look": "烈焰雄獅 × 砂岩熔核甲胄；威儀萬丈的三面烈火霸獅，鬃毛化為熊熊金紅蓮華火冠，每聲咆哮皆引動砂岩爆震",
-              "dex_zh": "三面的雄獅昂首咆哮，金紅鬃毛如盛放蓮花，震響在砂岩間迴盪。牠與敵人保持距離，朝遠處目標引爆一團擴散的烈焰。",
-              "dex_en": "A golden-red crown of fire opens around this lion's three faces, and its roar echoes through sandstone. It keeps its distance and detonates a spreading blaze around a distant target.",
+              "look": "沙漠巨羱羊 × 玫瑰砂岩熔爐甲胄；背負玫瑰砂岩火口甲胄的威嚴巨羱羊，雙目方塊聖石閃爍熾光，電漿彎角引動岩漿噴湧",
+              "dex_zh": "沙漠巨羱羊背負玫瑰砂岩火口甲胄，方塊聖石雙瞳映出熾白電漿。牠與敵保持距離，朝目標引爆擴散烈焰。",
+              "dex_en": "A towering desert ibex bearing a rose-sandstone furnace carapace, detonating plasma-fire flares across distant battlegrounds.",
               "signature_move": {
                 "move_id": "fire_inferno_cataclysm",
                 "name_zh": "熾墜界",
@@ -1633,7 +1704,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "fire_sunpharaoh_lion",
               "habit": "dominant",
               "disposition": "焚天滅世、神威君臨",
-              "name_zh": "焰角羱羊",
+              "name_zh": "焰角岩殿羱",
               "name_en": "Pyribex",
               "naming_note": "四階段統一命名；玫瑰岩殿化熔爐，雙角引天火。",
               "size_class": "XL",
@@ -1664,7 +1735,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "受焰回充",
             "idea_zh": "受到火屬性攻擊後五秒內，火屬性主動技冷卻時間減少百分之二十五。"
           },
-          "overload": "焰角羱羊（fire_sunpharaoh_lion · XL）：玫瑰砂岩沙漠羱羊超載化身為峽谷熔岩聖獸；一對巨型後彎環節角展開為三千度耀白電漿弧拱，背脊神殿火口與雙目方塊聖石崩解重組為懸浮玫瑰岩熔爐冠環，四足岩蹄踏出沸騰岩漿"
+          "overload": "焰角岩殿羱（fire_sunpharaoh_lion · XL）：玫瑰砂岩沙漠羱羊超載化身為峽谷熔岩聖獸；一對巨型後彎環節角展開為三千度耀白電漿弧拱，背脊神殿火口與雙目方塊聖石崩解重組為懸浮玫瑰岩熔爐冠環，四足岩蹄踏出沸騰岩漿"
         }
       }
     },
@@ -1672,7 +1743,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_earth_gildedgolem",
       "code_zh": "土",
       "element": "earth",
-      "title_zh": "金塵偶 → 金塵衛 → 金塵岩偶 → 金甲犰狳",
+      "title_zh": "金殼仔 → 金甲滾犰 → 聖湖金甲犰 → 黃金聖甲巨犰",
       "source": "Data/_incoming/p5-03-creatures-draft-01",
       "concept": {
         "line_id": "line_earth_gildedgolem",
@@ -1681,6 +1752,16 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "鎏金黃、翡翠綠、陶土赭褐"
+        ],
+        "design_prototypes": [
+          "重甲犰狳",
+          "金箔雕甲",
+          "翡翠稜柱"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-artifact"
         ],
         "base_parents": [
           "生物·哺乳類",
@@ -1703,7 +1784,7 @@ window.COSMI_DESIGNED = {
         "archetype_name": "黃金國穆伊斯卡祭典",
         "archetype_type": "P5-02 考據庫·原住民祭典",
         "meaning": "身披九節鎏金陶甲與聖湖蘆葦紋金盾、背負翡翠稜柱的崇高四足金甲犰狳",
-        "motifs": "金粉覆身、高山聖湖綠寶石、黃金祭偶",
+        "motifs": "九節鎏金穹頂甲、高山聖湖翡翠柱、蘆葦紋金盾",
         "sensitivity": "ok",
         "role": "前排：遠距直線突進，受擊後提高土專精",
         "habit": "territorial",
@@ -1741,9 +1822,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "juvenile",
               "creature_id": "earth_pebble_pawn",
-              "name_zh": "金塵偶",
+              "name_zh": "金殼仔",
               "name_en": "Gilduma",
-              "naming_note": "金粉輕覆圓圓的小石偶。",
+              "naming_note": "聖湖金箔覆蓋初生小犰狳背甲。",
               "size_class": "S",
               "ai_style": "hold",
               "grip_mode": "one_hand_shield",
@@ -1764,9 +1845,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.48 m",
               "weight": "12 kg",
               "body_fat": "12%",
-              "look": "黃金礦脈人形 × 儀典岩鎧石偶（人形）；圓潤敦實的小石偶，周身覆蓋薄金微粒，胸膛嵌有一顆微光綠寶石晶核",
-              "dex_zh": "圓潤的小石偶沾滿細細金粉，胸前的綠寶石晶核泛著微光。牠慢吞吞地跟在隊伍前方，朝中距離敵人直射小石子。",
-              "dex_en": "Fine gold dust coats this round little stone figure, and a green crystal glimmers in its chest. It waddles near the front of the group, shooting pebbles straight toward threats at medium range.",
+              "look": "重甲幼犰狳 × 聖湖金箔鱗片；圓滾敦實的小犰狳，背殼覆蓋初生金箔砂岩帶，胸甲嵌著微光翡翠小稜柱",
+              "dex_zh": "圓滾敦實的小犰狳背甲沾滿金箔砂岩微粒，胸前嵌著微光翡翠。牠沉穩守在夥伴前方，震起碎岩守護同伴。",
+              "dex_en": "A stout little armadillo dusted with gold-leaf sandstone and an emerald core, raising protective stones before its allies.",
               "signature_move": {
                 "move_id": "earth_pebble_shot",
                 "name_zh": "礫紋彈",
@@ -1784,9 +1865,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "earth_gilded_warden",
-              "name_zh": "金塵衛",
-              "name_en": "Gildumant",
-              "naming_note": "金塵石偶戴上守陣面甲。",
+              "name_zh": "金甲滾犰",
+              "name_en": "Gildumaur",
+              "naming_note": "九節鎏金陶甲隨翻滾嵌合。",
               "size_class": "M",
               "ai_style": "hold",
               "grip_mode": "one_hand_shield",
@@ -1803,9 +1884,9 @@ window.COSMI_DESIGNED = {
               "height_length": "1.25 m",
               "weight": "95 kg",
               "body_fat": "10%",
-              "look": "黃金礦脈人形 × 儀典岩鎧石偶（人形）；佩帶幾何金面甲的岩土行者，肩背覆蓋層疊板狀黏土與生長金晶",
-              "dex_zh": "幾何金面甲遮住岩土行者的面容，層疊板狀黏土和金晶護著肩背。牠站在隊伍前方，猛擊地面使震波向身邊擴散。",
-              "dex_en": "A geometric gold mask covers its face, while layers of clay and growing crystals protect its shoulders. It stands near the front and strikes the ground, sending tremors outward around itself.",
+              "look": "黃金甲犰狳 × 儀典金盾背帶；四足穩健的儀典金甲犰狳，肩背覆蓋九節鎏金陶板與蘆葦幾何雕紋",
+              "dex_zh": "披覆九節鎏金陶甲與蘆葦紋金盾的金甲犰狳，以沉重身軀擋在陣前，重踏地脈沿直線震出岩層衝擊。",
+              "dex_en": "Clad in segmented gilded ceramic bands and reed-etched shields, this armored armadillo holds the line with linear earth shocks.",
               "signature_move": {
                 "move_id": "earth_seismic_slam",
                 "name_zh": "地脈震",
@@ -1823,9 +1904,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adult",
               "creature_id": "earth_auric_sovereign",
-              "name_zh": "金塵岩偶",
+              "name_zh": "聖湖金甲犰",
               "name_en": "Gildumara",
-              "naming_note": "金塵凝成巨偶身上的晶脈。",
+              "naming_note": "聖湖金甲與翡翠稜柱共鳴鎮嶽。",
               "size_class": "L",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -1846,9 +1927,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.25 m",
               "weight": "480 kg",
               "body_fat": "9%",
-              "look": "黃金礦脈人形 × 儀典岩鎧石偶（人形）；巍然屹立的重岩金祭聖偶，雙臂如立柱，通體鎏金結晶與翡翠石脈共鳴",
-              "dex_zh": "巨大的岩偶雙臂如柱，鎏金結晶與翡翠石脈在厚重身軀上交錯。牠屹立隊伍前方，必要時沿長長直線向敵陣衝去。",
-              "dex_en": "Golden crystals and green stone veins cross the massive body of this rock figure, whose arms resemble pillars. It stands before its companions and charges along a long straight path when pressed.",
+              "look": "四足重裝金甲犰狳 × 翡翠稜柱冠甲；身披九節鎏金陶甲與聖湖金盾的重裝巨犰狳，背脊翡翠稜柱隨地脈震動共鳴",
+              "dex_zh": "重裝金甲巨犰狳背負翡翠稜柱與金箔九節穹甲，能將萬鈞壓力化為正面衝鋒的崩山重擊，穩穩鎮壓戰線。",
+              "dex_en": "A massive gilded armadillo bearing emerald prisms on its nine-banded dome, anchoring the vanguard with seismic slams.",
               "signature_move": {
                 "move_id": "earth_rampart_rush",
                 "name_zh": "岩壘馳",
@@ -1868,7 +1949,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "earth_eldorado_colossus",
               "habit": "dominant",
               "disposition": "不動如山、威鎮八荒",
-              "name_zh": "金甲犰狳",
+              "name_zh": "黃金聖甲巨犰",
               "name_en": "Gildumara",
               "naming_note": "四階段統一命名；聖湖化金甲，萬仞鎮八荒。",
               "size_class": "XL",
@@ -1899,7 +1980,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "地脈回應",
             "idea_zh": "受到任意屬性攻擊後，土專精提高十五點，持續四秒。"
           },
-          "overload": "金甲犰狳（earth_eldorado_colossus · XL）：四足重裝金甲犰狳完全沉浸於黃金國祭典神能中；九節穹頂背殼生成千層高純黃金重甲與菱形祖母綠稜柱陣列，背脊聖湖蘆葦金筏化為懸浮引力星環，四足如金剛岩柱深植大地"
+          "overload": "黃金聖甲巨犰（earth_eldorado_colossus · XL）：四足重裝金甲犰狳完全沉浸於黃金國祭典神能中；九節穹頂背殼生成千層高純黃金重甲與菱形祖母綠稜柱陣列，背脊聖湖蘆葦金筏化為懸浮引力星環，四足如金剛岩柱深植大地"
         }
       }
     },
@@ -1916,6 +1997,17 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "霜雪白、冰川淡藍、凍鐵古金"
+        ],
+        "design_prototypes": [
+          "極北鹿角獸",
+          "鍛鐵關節",
+          "毛氈鞍軛"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "bio-element",
+          "bio-totem"
         ],
         "base_parents": [
           "生物·哺乳類",
@@ -1939,7 +2031,7 @@ window.COSMI_DESIGNED = {
         "archetype_type": "P5-02 考據庫·斯基泰金工",
         "meaning": "分叉金屬鹿角生長冰棘、鎮守永凍冰塚的極北獵獸",
         "motifs": "鳥首分叉巨鹿角、金箔毛氈鞍飾、永凍冰塚",
-        "sensitivity": "ok",
+        "sensitivity": "review",
         "role": "遠距砲台：高敏捷，遠距指定點範圍爆發，上場時暫時提高冰抗",
         "habit": "aggressive",
         "disposition": "傲骨凌霜、極地伏擊",
@@ -2155,6 +2247,17 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "茜草絳紅、竹青綠、暖沙金"
+        ],
+        "design_prototypes": [
+          "排笛飛舟",
+          "刺繡滑翔帆",
+          "氣流風管"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-artifact",
+          "bio-element"
         ],
         "base_parents": [
           "器械·樂器/聲學",
@@ -2396,15 +2499,26 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "青銅綠、古銅金、玄鐵黑"
         ],
+        "design_prototypes": [
+          "翼牛",
+          "猛禽",
+          "城門甲冑"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "multi-bio",
+        "morphology_secondary": [
+          "bio-totem",
+          "bio-artifact"
+        ],
         "base_parents": [
           "生物·哺乳類",
           "幻想生物·美索不達米亞神獸",
           "器械·城防/機關"
         ],
         "bases": [
-          "青銅翼牛",
-          "楔形護符胸甲",
-          "浮雕城門連桿"
+          "四足青銅翼牛",
+          "抽象髭紋青銅護面",
+          "幾何城門翼牆"
         ],
         "appearance_palette": [
           "黃銅金",
@@ -2415,11 +2529,11 @@ window.COSMI_DESIGNED = {
         "timeline": "遠古神話（美索不達米亞城邦）",
         "region": "西亞/中東",
         "archetype": "arch_lamassu",
-        "archetype_name": "拉瑪蘇神牛門衛",
+        "archetype_name": "城門翼牛門衛",
         "archetype_type": "P5-02 考據庫·神話守護神獸",
-        "meaning": "立於古城門扉兩側、以五足雙翼鎮守秩序的青銅人首翼牛",
-        "motifs": "蓄鬚人首角冠、五足石雕公牛、雙重雄鷹巨翼、亞述王城拱門",
-        "sensitivity": "ok",
+        "meaning": "立於古城門扉兩側、以四足雙翼與抽象青銅護面鎮守秩序的翼牛",
+        "motifs": "抽象髭紋青銅面具、四足青銅公牛、雙重雄鷹鋼翼、幾何城門拱框",
+        "sensitivity": "review",
         "role": "後排砲擊、控距：遠距定點範圍墜擊（高血量時縮短金招 CD）",
         "habit": "territorial",
         "disposition": "威嚴守禦、不動如山",
@@ -2449,7 +2563,7 @@ window.COSMI_DESIGNED = {
         "height_length": "2.80 m",
         "weight": "920 kg",
         "body_fat": "8%",
-        "formula": "metal（金） + earth（土，成年副專精） × 青銅翼牛 + 楔形護符胸甲 + 浮雕城門連桿 × 拉瑪蘇神牛門衛",
+        "formula": "metal（金） + earth（土，成年副專精） × 四足青銅翼牛 + 抽象髭紋青銅護面 + 幾何城門翼牆 × 城門翼牛門衛",
         "locked": {
           "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
           "stages": [
@@ -2458,7 +2572,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "metal_gate_calf",
               "name_zh": "城門鐵牛",
               "name_en": "Lamassugate",
-              "naming_note": "四階段統一命名；青銅門環化作幼牛雙角。",
+              "naming_note": "四階段統一命名；青銅門環化作四足幼牛雙角。",
               "size_class": "S",
               "ai_style": "hold",
               "grip_mode": "one_hand_shield",
@@ -2479,9 +2593,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.60 m",
               "weight": "28 kg",
               "body_fat": "11%",
-              "look": "青銅鑄造守護幼牛 × 城門浮雕銅環與小巧摺疊羽翼；四足短壯的青銅小牛，背脊嵌有迷你雙翼銅板與拱門紋章護額，踏步沉穩",
-              "dex_zh": "圓鈍的青銅幼牛肩上貼著浮雕翼板，額間嵌有微溫門環。牠穩穩守在夥伴身前，見敵靠近便以蝕紋銳角向前頂撞。",
-              "dex_en": "A stout bronze calf bearing relief wing-plates on its shoulders and a warm gate-ring on its brow. It holds the line before its allies and butts approaching foes with etched horns.",
+              "look": "青銅四足守護幼牛 × 城門銅環與摺疊銅翼板；四足短壯的青銅小牛，肩胛嵌有摺疊雙翼銅板與幾何門環護額，步伐沉穩",
+              "dex_zh": "四足圓鈍的青銅幼牛肩上貼著浮雕翼板，額間嵌有微溫門環。牠穩穩守在夥伴身前，見敵靠近便以蝕紋銳角向前頂撞。",
+              "dex_en": "A stout four-legged bronze calf bearing relief wing-plates on its shoulders and a warm gate-ring on its brow.",
               "signature_move": {
                 "move_id": "metal_corrosion_edge",
                 "name_zh": "蝕紋角突",
@@ -2501,7 +2615,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "metal_winged_bull",
               "name_zh": "城門鐵牛",
               "name_en": "Lamassugate",
-              "naming_note": "四階段統一命名；翼刃展開，門扉裝甲成形。",
+              "naming_note": "四階段統一命名；四足翼刃展開，抽象門扉裝甲成形。",
               "size_class": "M",
               "ai_style": "hold",
               "grip_mode": "one_hand_shield",
@@ -2522,7 +2636,7 @@ window.COSMI_DESIGNED = {
               "height_length": "1.55 m",
               "weight": "210 kg",
               "body_fat": "9%",
-              "look": "五足雕像級銅甲公牛 × 展開半幅的疊層鐵羽與城門鎖扣；肩甲化為拱門門楣造型，雙翼可彈射金屬破片，靜止時呈現五足浮雕姿態",
+              "look": "四足翼牛雕像甲冑 × 展開鐵羽與楔形護符胸甲；四足穩固站立，肩甲化為抽象拱門門楣，雙翼可彈射金屬破片，四肢膝關節留有暗鐵屈伸縫",
               "dex_zh": "雙翼由層層青銅羽片鍛成，胸甲刻滿楔形護符。牠守住陣線要衝，振動金屬翼片向四周拋灑銳利碎鐵。",
               "dex_en": "Forged bronze wing-blades unfold from its shoulders while cuneiform talismans line its breastplate. Anchoring the vanguard, it rattles its metal pinions to scatter razor scrap.",
               "signature_move": {
@@ -2544,7 +2658,7 @@ window.COSMI_DESIGNED = {
               "creature_id": "metal_citadel_colossus",
               "name_zh": "城門鐵牛",
               "name_en": "Lamassugate",
-              "naming_note": "四階段統一命名；五足神牛鎮守城門。",
+              "naming_note": "四階段統一命名；四足青銅翼牛鎮守城門。",
               "size_class": "XL",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -2565,9 +2679,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.80 m",
               "weight": "920 kg",
               "body_fat": "8%",
-              "look": "巨型銅岩王城翼獸 × 雙重雄鷹鋼翼與五足承重柱構裝；體型如城門巨像，額戴角冠與青銅髭紋假面，雙重鋼翼可高拋重鐵砧轟擊遠距目標",
-              "dex_zh": "巍峨的青銅翼牛如移動城門般矗立戰場，雙翼垂落如城牆垛口。牠與敵拉開距離後，引動巨型鐵砧般的高壓重擊鎮壓全場。",
-              "dex_en": "A towering bronze winged bull standing like a living citadel gate, its pinions draped like battlements. Keeping distance, it drops an anvil-weight kinetic slam across the field.",
+              "look": "四足青銅翼牛 × 雙重雄鷹鋼翼與幾何城門胸甲；四足穩立如城門巨像，額戴階梯拱門角冠與抽象青銅髭紋護面，雙重鋼翼展開且預留肩胛與背部構裝層次",
+              "dex_zh": "巍峨的四足青銅翼牛如移動城門般矗立戰場，雙翼垂落如城牆垛口。牠與敵拉開距離後，引動巨型鐵砧般的高壓重擊鎮壓全場。",
+              "dex_en": "A towering four-legged bronze winged bull standing like a living citadel gate, dropping an anvil-weight kinetic slam at range.",
               "signature_move": {
                 "move_id": "metal_anvil_drop",
                 "name_zh": "巨砧墜擊",
@@ -2589,12 +2703,12 @@ window.COSMI_DESIGNED = {
               "disposition": "萬鈞鎮嶽、不動城塞",
               "name_zh": "城門鐵牛",
               "name_en": "Lamassugate",
-              "naming_note": "四階段統一命名；五足青銅城塞完全展開。",
+              "naming_note": "四階段統一命名；四足青銅城塞完全展開。",
               "size_class": "XL",
               "height_length": "6.2 m",
               "weight": "7400 kg",
               "body_fat": "6%",
-              "look": "古城門扉裝甲徹底展開為移動青銅堡壘；五足踏地引動大地磁場，雙翼化作十二道楔形浮雕砲翼，額間太陽門環燃起熾白熔金光焰",
+              "look": "古城門扉裝甲徹底展開為移動青銅堡壘；四足如青銅重柱踏地引動大地磁場，雙翼化作十二道楔形浮雕砲翼，額間太陽門環燃起熾白熔金光焰",
               "dex_zh": "超載讓城門鐵牛化作無法撼動的活體城塞。其展開的青銅翼牆能彈開重砲轟擊，高壓鐵砧震波一落便足以粉碎整片岩層。",
               "dex_en": "Overload transforms Lamassugate into an immovable bronze bastion. Its unfurled wing-walls deflect heavy barrages before dropping a tectonic anvil shockwave.",
               "signature_move": {
@@ -2618,7 +2732,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "發條準律",
             "idea_zh": "金屬機關與城門軸承分毫不差，提升防禦穩定度與準確度。"
           },
-          "overload": "城門鐵牛（metal_citadel_overload · XL）：古城門扉裝甲徹底展開為移動青銅堡壘；五足踏地引動大地磁場，雙翼化作十二道楔形浮雕砲翼，額間太陽門環燃起熾白熔金光焰"
+          "overload": "城門鐵牛（metal_citadel_overload · XL）：古城門扉裝甲徹底展開為移動青銅堡壘；四足如青銅重柱踏地引動大地磁場，雙翼化作十二道楔形浮雕砲翼，額間太陽門環燃起熾白熔金光焰"
         }
       }
     },
@@ -2636,6 +2750,16 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "翡翠綠、象牙白、蓮粉紅"
+        ],
+        "design_prototypes": [
+          "濕地巨蛇",
+          "玉蓮冠冕",
+          "花藤羽飾"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-totem"
         ],
         "base_parents": [
           "生物·爬蟲類",
@@ -2660,7 +2784,7 @@ window.COSMI_DESIGNED = {
         "archetype_type": "P5-02 考據庫·神話靈蛇",
         "meaning": "頭戴七首蓮冠、盤踞濕地聖泉守護生機的翡翠龍蛇",
         "motifs": "七頭那伽冠冕、檳榔花枝、海底漩渦龍宮、絲綢披肩",
-        "sensitivity": "ok",
+        "sensitivity": "review",
         "role": "後排輸出、續戰：遠距範圍巨木墜落轟擊（施放木招回復自身生命）",
         "habit": "tolerant",
         "disposition": "謹慎優雅、守護水源",
@@ -2876,6 +3000,16 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "象牙白、深海靛藍、鹽晶銀"
+        ],
+        "design_prototypes": [
+          "象牙巨鯨",
+          "鹽晶脊柱",
+          "標槍繩索"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-artifact"
         ],
         "base_parents": [
           "生物·海洋哺乳類",
@@ -3113,6 +3247,16 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "赤木棕、炭火橘、玄武岩灰"
         ],
+        "design_prototypes": [
+          "陸行火蜥",
+          "猴麵包樹皮",
+          "火山爐心"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "生物·爬蟲類",
           "植物·巨木",
@@ -3335,7 +3479,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_earth_pillarbeast",
       "code_zh": "土",
       "element": "earth",
-      "title_zh": "石柱獠牙獸",
+      "title_zh": "石柱獠牙犀",
       "source": "Data/_incoming/p5-03-creatures-draft-02",
       "concept": {
         "line_id": "line_earth_pillarbeast",
@@ -3345,15 +3489,25 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "砂岩赭、花崗岩灰、玉石翠"
         ],
+        "design_prototypes": [
+          "神殿巨犀",
+          "浮雕石柱甲",
+          "玉石獨角"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-totem"
+        ],
         "base_parents": [
           "生物·哺乳類",
           "幻想生物·南亞神殿石獸",
           "物質·礦物/岩石"
         ],
         "bases": [
-          "獅象混合石獸",
-          "神殿千柱浮雕甲",
-          "玉石彎曲獠牙"
+          "神殿石雕巨犀",
+          "千柱浮雕肩甲",
+          "玉石獨角"
         ],
         "appearance_palette": [
           "大地赭石",
@@ -3364,11 +3518,11 @@ window.COSMI_DESIGNED = {
         "timeline": "古代建築想像（南亞石雕神殿）",
         "region": "南亞",
         "archetype": "arch_yali",
-        "archetype_name": "亞利神殿石柱獸",
+        "archetype_name": "神殿石柱犀",
         "archetype_type": "P5-02 考據庫·神殿建築神獸",
-        "meaning": "融合獅鬃、象鼻與千柱浮雕岩盤、鎮守南亞石殿的剛猛守護獸",
-        "motifs": "獅身象鼻長牙、神廟石雕廊柱、騰躍利爪、蓮座浮雕",
-        "sensitivity": "ok",
+        "meaning": "身披蓮座與千柱浮雕岩甲、以玉石雙角鎮守南亞石殿的剛猛巨犀",
+        "motifs": "巨犀獨角石鎧、神廟石雕廊柱、重裝衝角、蓮座浮雕領甲",
+        "sensitivity": "review",
         "role": "後排貫穿、控距：遠距直線地脈岩槍（施放土招提高移動速度）",
         "habit": "aggressive",
         "disposition": "剛猛威武、撼動地脈",
@@ -3398,16 +3552,16 @@ window.COSMI_DESIGNED = {
         "height_length": "2.50 m",
         "weight": "580 kg",
         "body_fat": "10%",
-        "formula": "earth（土） × 獅象混合石獸 + 神殿千柱浮雕甲 + 玉石彎曲獠牙 × 亞利神殿石柱獸",
+        "formula": "earth（土） × 神殿石雕巨犀 + 千柱浮雕肩甲 + 玉石獨角 × 神殿石柱犀",
         "locked": {
           "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "juvenile",
               "creature_id": "earth_lotus_cub",
-              "name_zh": "石柱獠牙獸",
+              "name_zh": "石柱獠牙犀",
               "name_en": "Yalipillar",
-              "naming_note": "四階段統一命名；浮雕蓮座托起幼獸四蹄。",
+              "naming_note": "四階段統一命名；短玉石角與蓮瓣領甲成形。",
               "size_class": "S",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -3428,9 +3582,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.52 m",
               "weight": "14 kg",
               "body_fat": "12%",
-              "look": "石雕幼獅 × 卷曲短象鼻與浮雕蓮瓣項圈；灰褐砂岩雕塑般的小獅獸，鼻尖翹起小巧象牙，四爪踩踏碎石迅速滑步",
-              "dex_zh": "結合獅首與象鼻特徵的砂岩幼獸，腳掌踩著碎石滑行自如。牠性格好戰果決，一聲低吼便踏碎石塊疾衝向前。",
-              "dex_en": "A sandstone cub blending lion mane and trunk-crest, skating smoothly across loose gravel. Bold by nature, it skims forward over stone to strike head-on.",
+              "look": "砂岩小犀 × 短玉石獨角與蓮瓣浮雕頸領；灰褐砂岩雕塑般的小犀牛，鼻尖豎起短玉石角，四足踩踏碎石迅速滑步",
+              "dex_zh": "結合巨犀獨角與蓮瓣浮雕頸甲的砂岩幼獸，四足踩著碎石滑行自如。牠性格好戰果決，低頭便踏碎石塊疾衝向前。",
+              "dex_en": "A sandstone rhino cub wearing a lotus-carved collar and short jade horn, skimming over gravel to charge head-on.",
               "signature_move": {
                 "move_id": "earth_stone_skate",
                 "name_zh": "滑石突進",
@@ -3448,9 +3602,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "earth_pillar_chimera",
-              "name_zh": "石柱獠牙獸",
+              "name_zh": "石柱獠牙犀",
               "name_en": "Yalipillar",
-              "naming_note": "四階段統一命名；神殿石柱與獠牙合而為一。",
+              "naming_note": "四階段統一命名；廊柱肩甲與修長玉石角伸展。",
               "size_class": "M",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -3471,9 +3625,9 @@ window.COSMI_DESIGNED = {
               "height_length": "1.35 m",
               "weight": "140 kg",
               "body_fat": "11%",
-              "look": "浮雕石獅象獸 × 肩胛鑲嵌廊柱石墩與修長石牙；雙肩扛著神廟石柱護甲，象鼻與利爪皆為硬質花崗岩構造，騰躍撲擊極具衝擊力",
-              "dex_zh": "花崗岩雕紋覆滿雙肩，顎側生出弧形玉石獠牙，如神殿門柱般威嚴。牠踏步震裂地表，沿斷層線發動猛烈突襲。",
-              "dex_en": "Temple-carved granite armors its shoulders while curved jade tusks frame its jaws. Splitting the ground underfoot, it dashes fiercely along the fault line.",
+              "look": "浮雕石甲犀 × 肩胛廊柱石墩與修長玉石角；雙肩扛著神廟石柱護甲的猛犀，硬質花崗岩鼻角與肩柱相連，直線衝撞極具威勢",
+              "dex_zh": "花崗岩廊柱覆滿雙肩，顎側生出弧形玉石角刃，如神殿門柱般威嚴。牠踏步震裂地表，沿斷層線發動猛烈突襲。",
+              "dex_en": "Temple-carved granite columns armor its shoulders while curved jade horns cleave the fault line in fierce dashes.",
               "signature_move": {
                 "move_id": "earth_fault_dash",
                 "name_zh": "斷層破襲",
@@ -3491,9 +3645,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adult",
               "creature_id": "earth_temple_tuskbeast",
-              "name_zh": "石柱獠牙獸",
+              "name_zh": "石柱獠牙犀",
               "name_en": "Yalipillar",
-              "naming_note": "四階段統一命名；百柱神獸，地動山搖。",
+              "naming_note": "四階段統一命名；神殿千柱石犀鎮壓地脈。",
               "size_class": "L",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -3514,9 +3668,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.50 m",
               "weight": "580 kg",
               "body_fat": "10%",
-              "look": "神廟守護巨雕獅象 × 蓮座浮雕肩盾與岩柱重砲象鼻；身披蓮座與神廟石柱雕刻的宏偉石獸，象牙如雙重岩槍向前延伸，能遠距貫穿岩脈",
-              "dex_zh": "背負千柱神殿浮雕與黃金寶輪的巨型土靈獸，每步皆伴隨沉悶地鳴。牠在遠處凝聚大地岩脈之力，轟出貫穿戰線的岩層長槍。",
-              "dex_en": "A colossal guardian sculpted like a living temple pillar with golden wheel reliefs. Channeling tectonic veins from afar, it hurls a massive lance of bedrock.",
+              "look": "神廟守護巨雕犀 × 蓮座浮雕肩盾與雙重玉石岩槍角；身披蓮座與神廟石柱雕刻的宏偉巨犀，額前雙重玉石長角如岩槍延伸，能遠距貫穿岩脈",
+              "dex_zh": "背負千柱神殿浮雕與黃金寶輪的巨型石犀，額前雙重玉石長角凝聚大地岩脈之力，在遠處轟出貫穿戰線的岩層長槍。",
+              "dex_en": "A colossal temple-carved rhino bearing golden wheel reliefs, hurling bedrock lances channeled from subterranean veins.",
               "signature_move": {
                 "move_id": "earth_tectonic_lance",
                 "name_zh": "岩脈長槍",
@@ -3536,15 +3690,15 @@ window.COSMI_DESIGNED = {
               "creature_id": "earth_pillarbeast_overload",
               "habit": "dominant",
               "disposition": "威震八方、地動山搖",
-              "name_zh": "石柱獠牙獸",
+              "name_zh": "石柱獠牙犀",
               "name_en": "Yalipillar",
               "naming_note": "四階段統一命名；千柱神殿化作移動山嶽。",
               "size_class": "XL",
               "height_length": "5.8 m",
               "weight": "5600 kg",
               "body_fat": "8%",
-              "look": "神殿千柱浮雕在超載中展開為懸浮黃金寶輪與花崗岩拱門，玉石獠牙延伸為丈長破岩巨刃，周身環繞浮空碎岩",
-              "dex_zh": "超載的石柱獠牙獸如一座甦醒的古代石殿，足踏地脈即可掀起百丈岩柱林海，令敵陣無從立足。",
+              "look": "神殿千柱浮雕在超載中展開為懸浮黃金寶輪與花崗岩拱門，玉石雙角延伸為丈長破岩巨刃，周身環繞浮空碎岩",
+              "dex_zh": "超載的石柱獠牙犀如一座甦醒的古代石殿，足踏地脈即可掀起百丈岩柱林海，令敵陣無從立足。",
               "dex_en": "In overload, Yalipillar awakens like a living stone temple, raising forests of monolithic pillars along subterranean fault lines.",
               "signature_move": {
                 "move_id": "earth_thousand_pillar_quake",
@@ -3567,7 +3721,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "崩岩重勢",
             "idea_zh": "如山崩岩柱般的厚重慣性，使每一次突進都伴隨震懾地鳴。"
           },
-          "overload": "石柱獠牙獸（earth_pillarbeast_overload · XL）：神殿千柱浮雕在超載中展開為懸浮黃金寶輪與花崗岩拱門，玉石獠牙延伸為丈長破岩巨刃，周身環繞浮空碎岩"
+          "overload": "石柱獠牙犀（earth_pillarbeast_overload · XL）：神殿千柱浮雕在超載中展開為懸浮黃金寶輪與花崗岩拱門，玉石雙角延伸為丈長破岩巨刃，周身環繞浮空碎岩"
         }
       }
     },
@@ -3584,6 +3738,17 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "冰川藍、原木棕、極夜雪白"
+        ],
+        "design_prototypes": [
+          "破冰木船",
+          "冰橇滑刃",
+          "測風桅杆"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-element",
+          "bio-artifact"
         ],
         "base_parents": [
           "裝備·載具/舟艇",
@@ -3825,6 +3990,16 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "海霧灰白、青銅綠、暴風眼青"
         ],
+        "design_prototypes": [
+          "遠洋信天翁",
+          "十字弓翼",
+          "航海星盤"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "生物·鳥類",
           "器械·航海羅盤/星盤",
@@ -4057,6 +4232,16 @@ window.COSMI_DESIGNED = {
         ],
         "element_palettes": [
           "赤紅砂礫、銅線圈橙、電漿紫藍"
+        ],
+        "design_prototypes": [
+          "戈壁沙蟲",
+          "銅質電容環",
+          "磁軌脊刺"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-element",
+        "morphology_secondary": [
+          "bio-artifact"
         ],
         "base_parents": [
           "生物·無脊椎/蟲類",
@@ -4299,6 +4484,17 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "純金箔黃、暖白核心、虹彩稜鏡光"
         ],
+        "design_prototypes": [
+          "折紙金箔環",
+          "粒子核球",
+          "稜鏡光扇"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "amorphous-astral",
+          "bio-element"
+        ],
         "base_parents": [
           "物質·金屬箔片",
           "器械·粒子加速器",
@@ -4521,7 +4717,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_shadow_ironsteed",
       "code_zh": "影",
       "element": "shadow",
-      "title_zh": "玄鐵幽駒",
+      "title_zh": "玄鐵幽貂熊",
       "source": "Data/_incoming/p5-03-creatures-draft-02",
       "concept": {
         "line_id": "line_shadow_ironsteed",
@@ -4531,15 +4727,25 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "啞光玄鐵黑、幽冥銀灰、極夜深藍"
         ],
+        "design_prototypes": [
+          "極北貂熊",
+          "寒鐵弧刃甲",
+          "幽影披風尾"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "生物·哺乳類",
-          "裝備·重甲戰馬具",
+          "裝備·重甲護具",
           "自然·極夜暮影"
         ],
         "bases": [
-          "極北玄鐵戰馬",
+          "極北玄鐵貂熊",
           "寒鐵弧刃護甲",
-          "幽影披風長鬃"
+          "幽影披風長尾"
         ],
         "appearance_palette": [
           "虛空深紫",
@@ -4550,14 +4756,14 @@ window.COSMI_DESIGNED = {
         "timeline": "遠古神話（薩哈／雅庫特英雄史詩）",
         "region": "中亞/北亞",
         "archetype": "arch_nyurgun_bootur",
-        "archetype_name": "紐爾貢·博圖爾黑鐵駿馬",
+        "archetype_name": "極夜玄鐵貂熊",
         "archetype_type": "P5-02 考據庫·北亞英雄史詩",
-        "meaning": "身披啞光玄鐵戰甲、在極夜雪原踏出幽影殘像的忠誠鐵騎",
-        "motifs": "玄鐵重鎧黑駒、繁枝世界巨樹、口簧琴音波、極寒凍土",
+        "meaning": "身披啞光玄鐵重甲、在極夜雪原踏出幽影殘像的伏襲貂熊",
+        "motifs": "玄鐵重鎧貂熊、繁枝世界巨樹、口簧琴音波、極寒凍土",
         "sensitivity": "ok",
         "role": "長距突進：遠距幽影直線衝鋒（施放影招短暫提高移動速度）",
         "habit": "territorial",
-        "disposition": "冷峻忠誠、無聲突襲",
+        "disposition": "冷峻潛伏、無聲突襲",
         "size_profile": "S→M→L→XL",
         "stage_dims": {
           "juvenile": {
@@ -4584,16 +4790,16 @@ window.COSMI_DESIGNED = {
         "height_length": "2.45 m",
         "weight": "490 kg",
         "body_fat": "12%",
-        "formula": "shadow（影） × 極北玄鐵戰馬 + 寒鐵弧刃護甲 + 幽影披風長鬃 × 紐爾貢·博圖爾黑鐵駿馬",
+        "formula": "shadow（影） × 極北玄鐵貂熊 + 寒鐵弧刃護甲 + 幽影披風長尾 × 極夜玄鐵貂熊",
         "locked": {
           "status": "已設計（Data/_incoming 草稿；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "juvenile",
               "creature_id": "shadow_tundra_foal",
-              "name_zh": "玄鐵幽駒",
-              "name_en": "Bootursteed",
-              "naming_note": "四階段統一命名；黑鐵蹄印在雪地化作幽影。",
+              "name_zh": "玄鐵幽貂熊",
+              "name_en": "Booturclaw",
+              "naming_note": "四階段統一命名；極北小貂熊披上啞光玄鐵細甲。",
               "size_class": "S",
               "ai_style": "flank",
               "grip_mode": "dual_wield",
@@ -4610,9 +4816,9 @@ window.COSMI_DESIGNED = {
               "height_length": "0.58 m",
               "weight": "16 kg",
               "body_fat": "15%",
-              "look": "玄鐵色幼駒 × 頸繫迷你銀製口簧琴護符；墨黑短毛覆著冷硬青灰鐵斑的小馬駒，奔跑時頸側發出低沉共鳴震音",
-              "dex_zh": "披著啞光黑鐵細甲的極北幼駒，鬃毛如夜間寒煙般輕輕飄散。牠善於繞行敵陣側翼，乘暮色掩護以暗影利齒突襲。",
-              "dex_en": "A northern foal clad in matte black-iron barding with a mane like drifting night smoke. Slipping along flanks, it strikes under dusk cover with shadow-edged fangs.",
+              "look": "極北小貂熊 × 銀製口簧琴護符與黑鐵爪甲；墨黑短毛覆著冷硬青灰鐵斑的敏捷幼貂熊，奔跑時頸側銀護符發出低沉共鳴音",
+              "dex_zh": "披著啞光黑鐵細甲的極北幼貂熊，肩頸垂落如夜間寒煙般的暗毛。牠善於繞行敵陣側翼，乘暮色掩護以暗影利爪突襲。",
+              "dex_en": "A northern wolverine kit clad in matte black-iron plates, slipping along flanks under dusk cover with shadow-edged claws.",
               "signature_move": {
                 "move_id": "shadow_dusk_fang",
                 "name_zh": "暮影噬咬",
@@ -4630,9 +4836,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adolescent",
               "creature_id": "shadow_reverb_charger",
-              "name_zh": "玄鐵幽駒",
-              "name_en": "Bootursteed",
-              "naming_note": "四階段統一命名；雙重影甲疊映，踏步無聲。",
+              "name_zh": "玄鐵幽貂熊",
+              "name_en": "Booturclaw",
+              "naming_note": "四階段統一命名；寒鐵弧刃護甲與幽影披風尾展開。",
               "size_class": "M",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -4653,9 +4859,9 @@ window.COSMI_DESIGNED = {
               "height_length": "1.45 m",
               "weight": "135 kg",
               "body_fat": "13%",
-              "look": "重甲黑戰馬 × 冰霜枝杈鬃飾與音波弦片肩鎧；披覆層疊玄鐵甲片的修長戰駒，鬃毛宛如世界巨樹枝枒結著黑霜，直線突進迅捷",
-              "dex_zh": "胸甲與護額鑄成寒鐵弧刃，奔馳時身後拖出數道半透明幽影殘像。牠在相位閃爍間穿越障礙，發動令敵防不勝防的突擊。",
-              "dex_en": "Forged black-iron crescents armor its chest and brow, trailing translucent afterimages at full gallop. Phasing between twilight shadows, it charges past defenses.",
+              "look": "重甲玄鐵貂熊 × 冰霜枝杈背鬃與音波弦片肩鎧；披覆層疊玄鐵甲片的伏擊貂熊，肩背寒鐵弧刃隨潛行拖出半透明幽影殘像",
+              "dex_zh": "胸甲與護額鑄成寒鐵弧刃的玄鐵貂熊，潛伏衝刺時身後拖出數道半透明幽影殘像，發動令敵防不勝防的突襲。",
+              "dex_en": "Armored with forged black-iron crescents, this prowling wolverine trails translucent twilight afterimages on every lunge.",
               "signature_move": {
                 "move_id": "shadow_twilight_phase",
                 "name_zh": "極夜相位衝",
@@ -4673,9 +4879,9 @@ window.COSMI_DESIGNED = {
             {
               "stage": "adult",
               "creature_id": "shadow_iron_cavalier",
-              "name_zh": "玄鐵幽駒",
-              "name_en": "Bootursteed",
-              "naming_note": "四階段統一命名；幽冥鐵騎，永夜不屈。",
+              "name_zh": "玄鐵幽貂熊",
+              "name_en": "Booturclaw",
+              "naming_note": "四階段統一命名；重裝玄鐵巨貂熊鎮守極夜邊界。",
               "size_class": "L",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -4696,9 +4902,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.45 m",
               "weight": "490 kg",
               "body_fat": "12%",
-              "look": "玄鐵重裝幽騎獸 × 凍土暗影鬃冠與共鳴琴弦鎧片；身披繁枝巨樹紋玄鐵重鎧的極寒黑馬，蹄踏霜影伴隨共鳴嘯音，發動超長距貫穿衝鋒",
-              "dex_zh": "身披重型玄鐵戰甲的蒼穹幽影天馬，披風般的暗影長鬃隨寒風獵獵作響。牠鎮守領地邊界，化作幽靈鐵騎貫穿所有敵陣。",
-              "dex_en": "An iron-armored shadow cavalier whose dark mantle-mane ripples in freezing winds. Guarding its territory, it leads a phantom charge that pierces any vanguard.",
+              "look": "玄鐵重裝幽影貂熊 × 凍土暗影披風尾與共鳴鎧片；身披繁枝巨樹紋玄鐵重鎧的極寒巨貂熊，蓬鬆影尾化作幽冥披風伴隨共鳴嘯音突襲",
+              "dex_zh": "身披繁枝巨樹紋玄鐵重鎧的極寒巨貂熊，披風般的幽影長尾隨寒風獵獵作響，化作無聲黑鐵疾風貫穿敵陣。",
+              "dex_en": "An iron-armored shadow wolverine whose dark mantle-tail ripples in freezing winds, cleaving vanguards with phantom speed.",
               "signature_move": {
                 "move_id": "shadow_wraith_charge",
                 "name_zh": "玄鐵幽騎衝",
@@ -4717,17 +4923,17 @@ window.COSMI_DESIGNED = {
               "stage": "overload",
               "creature_id": "shadow_ironsteed_overload",
               "habit": "dominant",
-              "disposition": "永夜鐵騎、孤高無雙",
-              "name_zh": "玄鐵幽駒",
-              "name_en": "Bootursteed",
-              "naming_note": "四階段統一命名；永夜玄鐵重騎降臨。",
+              "disposition": "永夜鐵獸、孤高無雙",
+              "name_zh": "玄鐵幽貂熊",
+              "name_en": "Booturclaw",
+              "naming_note": "四階段統一命名；永夜玄鐵重鎧降臨。",
               "size_class": "XL",
               "height_length": "5.5 m",
               "weight": "3900 kg",
               "body_fat": "10%",
-              "look": "啞光玄鐵戰甲與極夜暗影徹底融合，馬首生出雙重寒鐵戰角，身後展開如極夜極光般的墨黑影翼，四蹄踏過之處凝結黑霜",
-              "dex_zh": "超載的玄鐵幽駒如北亞史詩中踏破冥界的神駒，化作無聲黑鐵疾風貫穿戰場，將一切光芒吞入永夜。",
-              "dex_en": "In overload, Bootursteed becomes the mythic iron steed of the northern epics, galloping on black frost with shadowy wings.",
+              "look": "啞光玄鐵戰甲與極夜暗影徹底融合，貂熊肩甲豎起雙重寒鐵弧刃，身後展開如極夜極光般的墨黑影尾披風，四爪踏過之處凝結黑霜",
+              "dex_zh": "超載的玄鐵幽貂熊如北亞史詩中踏破冥界的影獸，化作無聲黑鐵疾風貫穿戰場，將一切光芒吞入永夜。",
+              "dex_en": "In overload, Booturclaw becomes the mythic iron wolverine of northern epics, streaking across black frost behind a shadowy mantle.",
               "signature_move": {
                 "move_id": "shadow_eternal_night_stampede",
                 "name_zh": "永夜玄鐵奔騰斬",
@@ -4749,7 +4955,7 @@ window.COSMI_DESIGNED = {
             "name_zh": "幽影隱步",
             "idea_zh": "在極夜與暮色中融入環境陰影，降低移動時被鎖定的機率。"
           },
-          "overload": "玄鐵幽駒（shadow_ironsteed_overload · XL）：啞光玄鐵戰甲與極夜暗影徹底融合，馬首生出雙重寒鐵戰角，身後展開如極夜極光般的墨黑影翼，四蹄踏過之處凝結黑霜"
+          "overload": "玄鐵幽貂熊（shadow_ironsteed_overload · XL）：啞光玄鐵戰甲與極夜暗影徹底融合，貂熊肩甲豎起雙重寒鐵弧刃，身後展開如極夜極光般的墨黑影尾披風，四爪踏過之處凝結黑霜"
         }
       }
     },
@@ -4768,6 +4974,16 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "黃銅金、玄鐵黑",
           "海圖羊皮米白、鈷藍"
+        ],
+        "design_prototypes": [
+          "黃銅星盤儀",
+          "羅盤準星環",
+          "雙桅砲台"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-artifact"
         ],
         "base_parents": [
           "器械·天文/測量儀器",
@@ -4879,6 +5095,16 @@ window.COSMI_DESIGNED = {
           "翡翠綠、青苔灰",
           "古銅金、碧波藍"
         ],
+        "design_prototypes": [
+          "翠玉靈龜",
+          "湖心石塔",
+          "翡翠木劍"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-totem"
+        ],
         "base_parents": [
           "生物·爬蟲類",
           "植物·蕨類/藤蔓",
@@ -4902,7 +5128,7 @@ window.COSMI_DESIGNED = {
         "archetype_type": "P5-02 考據庫·神話傳說",
         "meaning": "背負古石塔與翡翠水波紋木劍、鎮守雨林深處試煉場的巨型靈龜",
         "motifs": "浮水巨型金龜、順天寶劍、湖心古石塔、翠綠水波光紋",
-        "sensitivity": "ok",
+        "sensitivity": "review",
         "role": "雨林試煉 BOSS：高血量遠距木弩狙擊，高血線加速壓迫",
         "habit": "territorial",
         "disposition": "沉穩莊嚴、鎮守聖域",
@@ -4978,7 +5204,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_water_trial_boss",
       "code_zh": "水",
       "element": "water",
-      "title_zh": "銀潮珊瑚巨鰻",
+      "title_zh": "銀潮珊瑚巨鱝",
       "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
       "concept": {
         "line_id": "line_water_trial_boss",
@@ -4989,14 +5215,24 @@ window.COSMI_DESIGNED = {
           "銀白、深海湛藍",
           "珊瑚粉、珍珠光"
         ],
+        "design_prototypes": [
+          "深海蝠鱝",
+          "珍珠珊瑚冠",
+          "潮汐滑翔翼"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
-          "生物·魚類/海鰻",
+          "生物·魚類/軟骨魚",
           "自然·珊瑚/礁岩"
         ],
         "bases": [
-          "深海銀鱗巨鰻",
+          "深海銀鱗蝠鱝",
           "三孔珍珠珊瑚冠",
-          "半透明水流背鰭"
+          "半透明水幕鱝翼"
         ],
         "appearance_palette": [
           "銀白",
@@ -5007,10 +5243,10 @@ window.COSMI_DESIGNED = {
         "timeline": "大洋洲遠古口傳神話",
         "region": "大洋洲",
         "archetype": "arch_sina_and_eel",
-        "archetype_name": "西娜與椰樹銀鰻",
+        "archetype_name": "珊瑚銀潮巨鱝",
         "archetype_type": "P5-02 考據庫·神話傳說",
-        "meaning": "盤踞深海暗礁、頭冠嵌有三孔珊瑚殼的銀白深淵巨鰻",
-        "motifs": "清泉銀鰻、三孔椰果、高聳椰林、珊瑚潟湖",
+        "meaning": "盤踞深海暗礁、頭冠嵌有三孔珊瑚殼的銀白深淵巨蝠鱝",
+        "motifs": "珍珠珊瑚頭冠、流線深海鱝翼、半透明水幕鰭邊",
         "sensitivity": "ok",
         "role": "深海試煉 BOSS：高速遠距激流穿刺，連續施放水招延長射程",
         "habit": "aggressive",
@@ -5026,16 +5262,16 @@ window.COSMI_DESIGNED = {
         "height_length": "4.8 m",
         "weight": "820 kg",
         "body_fat": "10%",
-        "formula": "water（水） × 深海銀鱗巨鰻 + 三孔珍珠珊瑚冠 + 半透明水流背鰭 × 西娜與椰樹銀鰻",
+        "formula": "water（水） × 深海銀鱗蝠鱝 + 三孔珍珠珊瑚冠 + 半透明水幕鱝翼 × 珊瑚銀潮巨鱝",
         "locked": {
           "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "adult",
               "creature_id": "water_coral_serpent",
-              "name_zh": "銀潮珊瑚巨鰻",
-              "name_en": "Corallanguilla",
-              "naming_note": "取珊瑚（coral）與海鰻（anguilla）之意象。",
+              "name_zh": "銀潮珊瑚巨鱝",
+              "name_en": "Corallamanta",
+              "naming_note": "取珊瑚（coral）與鬼蝠鱝（manta）之意象。",
               "size_class": "XL",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -5056,9 +5292,9 @@ window.COSMI_DESIGNED = {
               "height_length": "4.8 m",
               "weight": "820 kg",
               "body_fat": "10%",
-              "look": "深海銀白巨鰻 × 三孔珊瑚冠與潟湖水膜；修長流線的銀鱗深海巨鰻，頭冠嵌有三孔珍珠珊瑚殼，背鰭如半透明水幕隨深海暗流起伏",
-              "dex_zh": "盤踞於深海暗礁的銀鱗巨鰻，頭冠嵌有三孔珍珠珊瑚殼，能以高速迴旋的水流長槍貫穿目標。",
-              "dex_en": "A silver-scaled abyssal eel crowned with a three-pored coral shell, piercing deep-sea currents with spinning maelstrom lances.",
+              "look": "深海銀潮蝠鱝 × 三孔珍珠珊瑚冠與滑翔水膜翼；展翼優雅的銀白深海巨蝠鱝，頭冠嵌有三孔珍珠珊瑚殼，雙翼邊緣如半透明水幕隨深海暗流起伏",
+              "dex_zh": "展翼寬廣的銀鱗深海巨蝠鱝，頭冠嵌有三孔珊瑚殼並能折射微弱生物電，雙翼捲起暗流凝聚為旋轉水渦長槍。",
+              "dex_en": "A silver-scaled abyssal manta crowned with a three-pored coral shell, piercing deep-sea currents with spinning maelstrom lances.",
               "signature_move": {
                 "move_id": "water_maelstrom_lance",
                 "name_zh": "渦流貫穿槍",
@@ -5098,6 +5334,16 @@ window.COSMI_DESIGNED = {
         "element_palettes": [
           "黑曜岩黑、熔岩赤紅",
           "熾金、古銅棕"
+        ],
+        "design_prototypes": [
+          "黑曜巨蚺",
+          "火油戰車輪",
+          "熔岩裂縫甲"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-element",
+        "morphology_secondary": [
+          "bio-artifact"
         ],
         "base_parents": [
           "生物·爬蟲類",
@@ -5197,7 +5443,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_earth_trial_boss",
       "code_zh": "土",
       "element": "earth",
-      "title_zh": "岩門石獅獸",
+      "title_zh": "岩門赤岩巨熊",
       "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
       "concept": {
         "line_id": "line_earth_trial_boss",
@@ -5208,15 +5454,25 @@ window.COSMI_DESIGNED = {
           "紅褐花崗岩、赭紅",
           "金砂、蒼青"
         ],
+        "design_prototypes": [
+          "花崗岩巨熊",
+          "山門石柱前掌",
+          "壁畫陶片甲"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [
+          "bio-totem"
+        ],
         "base_parents": [
           "自然·岩石/礦脈",
           "生物·哺乳類",
           "建築·石窟山門"
         ],
         "bases": [
-          "紅褐花崗岩雄獅",
-          "山門獅爪石柱前足",
-          "彩繪壁畫陶片鬃毛"
+          "紅褐花崗岩巨熊",
+          "山門石柱前掌",
+          "彩繪壁畫陶片肩甲"
         ],
         "appearance_palette": [
           "紅褐花崗岩",
@@ -5227,11 +5483,11 @@ window.COSMI_DESIGNED = {
         "timeline": "古代南亞岩壁宮殿文明",
         "region": "南亞",
         "archetype": "arch_kashyapa_sigiriya",
-        "archetype_name": "迦葉波與獅子岩",
+        "archetype_name": "岩壁山門巨熊",
         "archetype_type": "P5-02 考據庫·建築與文化遺產",
-        "meaning": "如絕壁山門巨獅般鎮守地底礦坑試煉場的花崗岩巨獸",
-        "motifs": "巨岩獅爪山門、絕壁雲宮、對稱蓮花水苑、彩繪壁畫廊",
-        "sensitivity": "ok",
+        "meaning": "如絕壁山門巨熊般鎮守地底礦坑試煉場的花崗岩巨獸",
+        "motifs": "山門石柱熊掌、壁畫陶板肩甲、花崗岩礦脈結晶、蓮花石紋",
+        "sensitivity": "review",
         "role": "礦坑試煉 BOSS：高防禦遠距岩柱爆破，常駐高額土抗",
         "habit": "territorial",
         "disposition": "威嚴沉重、寸步不讓",
@@ -5246,16 +5502,16 @@ window.COSMI_DESIGNED = {
         "height_length": "3.1 m",
         "weight": "1850 kg",
         "body_fat": "4%",
-        "formula": "earth（土） × 紅褐花崗岩雄獅 + 山門獅爪石柱前足 + 彩繪壁畫陶片鬃毛 × 迦葉波與獅子岩",
+        "formula": "earth（土） × 紅褐花崗岩巨熊 + 山門石柱前掌 + 彩繪壁畫陶片肩甲 × 岩壁山門巨熊",
         "locked": {
           "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "adult",
               "creature_id": "earth_citadel_lion",
-              "name_zh": "岩門石獅獸",
-              "name_en": "Litholeo",
-              "naming_note": "取巨岩（litho-）與雄獅（leo）之意象。",
+              "name_zh": "岩門赤岩巨熊",
+              "name_en": "Lithoursus",
+              "naming_note": "取岩石（litho-）與熊（ursus）之意象。",
               "size_class": "XL",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -5276,9 +5532,9 @@ window.COSMI_DESIGNED = {
               "height_length": "3.1 m",
               "weight": "1850 kg",
               "body_fat": "4%",
-              "look": "巨岩雕獅 × 絕壁雲宮石柱與彩繪壁畫甲片；由紅褐花崗岩與礦脈晶石構成的雄獅巨獸，雙前足如山門獅爪石柱落地生根，鬃毛間嵌有彩繪壁畫陶板與蓮花石紋",
-              "dex_zh": "由紅褐花崗岩雕琢而成的礦窟巨獅，前爪如山門石柱般厚重，鬃毛間鑲嵌著古老礦脈晶石與壁畫陶片。",
-              "dex_en": "A cave-guarding lion sculpted from red-brown granite with pillar-like forepaws and mineral fresco plates set into its mane.",
+              "look": "紅褐花崗岩巨熊 × 山門石柱前掌與彩繪壁畫肩甲；由紅褐花崗岩與礦脈晶石構成的雄渾巨熊，雙前掌如山門石柱落地生根，肩背嵌有彩繪壁畫陶板與蓮花石紋",
+              "dex_zh": "由紅褐花崗岩與礦脈晶石構成的山門巨熊，雙前掌如石雕廊柱落地生根，肩甲嵌有彩繪壁畫陶片，從地底喚出巨岩柱震裂敵陣。",
+              "dex_en": "A cave-guarding bear sculpted from red-brown granite with pillar-like forepaws and mineral fresco plates across its shoulders.",
               "signature_move": {
                 "move_id": "earth_monolith_quarry",
                 "name_zh": "岩柱採掘震爆",
@@ -5307,7 +5563,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_ice_trial_boss",
       "code_zh": "冰",
       "element": "ice",
-      "title_zh": "冰桅六分鯨",
+      "title_zh": "冰桅六分海象",
       "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
       "concept": {
         "line_id": "line_ice_trial_boss",
@@ -5318,15 +5574,25 @@ window.COSMI_DESIGNED = {
           "冰川藍白、雪白",
           "朽木棕、黃銅金"
         ],
+        "design_prototypes": [
+          "極地巨海象",
+          "三桅冰船背架",
+          "六分儀長牙"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "生物·海洋哺乳類",
           "載具·木造帆船",
           "器械·天文/測量儀器"
         ],
         "bases": [
-          "極地巨鯨",
-          "冰封三桅帆船龍骨脊",
-          "黃銅六分儀冰晶角"
+          "極地巨海象",
+          "冰封三桅帆船背架",
+          "黃銅六分儀長牙"
         ],
         "appearance_palette": [
           "冰川藍白",
@@ -5337,10 +5603,10 @@ window.COSMI_DESIGNED = {
         "timeline": "近代極地探險時代（20 世紀初南極遠征）",
         "region": "極地",
         "archetype": "arch_ernest_shackleton",
-        "archetype_name": "歐內斯特·沙克爾頓冰海遠征",
+        "archetype_name": "冰海六分海象",
         "archetype_type": "P5-02 考據庫·極地探險史",
-        "meaning": "背負三桅帆船冰脊與黃銅六分儀角、橫渡永久凍土的極地巨鯨",
-        "motifs": "冰封三桅木帆船、驚濤救生小艇、六分儀航跡、南極鋸齒冰山",
+        "meaning": "背負三桅帆船冰脊與黃銅六分儀長牙、橫渡永久凍土的極地巨海象",
+        "motifs": "結霜三桅船背架、黃銅六分儀長牙、南極鋸齒冰尾",
         "sensitivity": "ok",
         "role": "冰棚試煉 BOSS：重裝遠距極寒扇形掃射，極高冰霜抗性",
         "habit": "territorial",
@@ -5356,16 +5622,16 @@ window.COSMI_DESIGNED = {
         "height_length": "4.6 m",
         "weight": "2400 kg",
         "body_fat": "22%",
-        "formula": "ice（冰） × 極地巨鯨 + 冰封三桅帆船龍骨脊 + 黃銅六分儀冰晶角 × 歐內斯特·沙克爾頓冰海遠征",
+        "formula": "ice（冰） × 極地巨海象 + 冰封三桅帆船背架 + 黃銅六分儀長牙 × 冰海六分海象",
         "locked": {
           "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "adult",
               "creature_id": "ice_sextant_leviathan",
-              "name_zh": "冰桅六分鯨",
-              "name_en": "Cryonaviga",
-              "naming_note": "取冰霜（cryo-）與航海（naviga）之意象。",
+              "name_zh": "冰桅六分海象",
+              "name_en": "Cryowalrus",
+              "naming_note": "取冰霜（cryo-）與極地海象（walrus）之意象。",
               "size_class": "XL",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -5386,9 +5652,9 @@ window.COSMI_DESIGNED = {
               "height_length": "4.6 m",
               "weight": "2400 kg",
               "body_fat": "22%",
-              "look": "極地巨鯨 × 冰封三桅木帆船與黃銅六分儀；背脊隆起如結霜三桅帆船龍骨的巨鯨，額角為透明冰晶鑄成的黃銅六分儀，尾鰭如鋸齒冰山破開凍土",
-              "dex_zh": "背脊高聳如冰封三桅帆船的極地巨鯨，額前黃銅六分儀角能折射極光並掃出封凍一切的極地暴雪。",
-              "dex_en": "A polar whale whose frozen three-masted ridge and brass sextant horn refract aurora light into sweeping subzero gales.",
+              "look": "極地巨海象 × 三桅冰船背架與黃銅六分儀長牙；厚實如結霜三桅帆船船體的極地巨海象，雙長牙化為透明冰晶與黃銅六分儀構裝，尾鰭如鋸齒冰山破開凍土",
+              "dex_zh": "背脊高聳如冰封三桅帆船龍骨的極地巨海象，雙長牙化為黃銅六分儀冰晶角，能折射極光並掃出封凍一切的極地暴雪。",
+              "dex_en": "A polar walrus whose frozen three-masted ridge and brass sextant tusks refract aurora light into sweeping subzero gales.",
               "signature_move": {
                 "move_id": "ice_polar_sweep",
                 "name_zh": "極地霜潮橫掃",
@@ -5417,7 +5683,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_thunder_trial_boss",
       "code_zh": "雷",
       "element": "thunder",
-      "title_zh": "塔紋方尖獸",
+      "title_zh": "塔紋方尖巨蜥",
       "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
       "concept": {
         "line_id": "line_thunder_trial_boss",
@@ -5429,13 +5695,24 @@ window.COSMI_DESIGNED = {
           "灰花崗岩、電光紫",
           "金幣黃、湛藍電弧"
         ],
+        "design_prototypes": [
+          "雷電巨蜥",
+          "方尖碑脊塔",
+          "新月金環"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "bio-totem",
+        "morphology_secondary": [
+          "bio-element",
+          "bio-nature"
+        ],
         "base_parents": [
           "建築·方尖碑",
-          "生物·哺乳類"
+          "生物·爬蟲類"
         ],
         "bases": [
           "花崗岩假窗方尖碑脊塔",
-          "雷電獅獸身軀",
+          "雷電巨蜥身軀",
           "新月圓盤金環"
         ],
         "appearance_palette": [
@@ -5447,11 +5724,11 @@ window.COSMI_DESIGNED = {
         "timeline": "古代東非阿克蘇姆王國",
         "region": "非洲",
         "archetype": "arch_ezana_aksum",
-        "archetype_name": "埃扎納王與方尖碑",
+        "archetype_name": "方尖碑雷巨蜥",
         "archetype_type": "P5-02 考據庫·古代王國與碑銘",
-        "meaning": "背負多層假窗方尖碑導引高塔落雷、以新月金盤聚能突刺的電光巨獸",
-        "motifs": "多層假窗花崗岩方尖碑、新月圓盤金幣、麥穗浮雕、三語石碑",
-        "sensitivity": "ok",
+        "meaning": "背負多層假窗方尖碑導引高塔落雷、以新月金盤聚能突刺的電光巨蜥",
+        "motifs": "多層假窗花崗岩方尖碑、新月圓盤金幣、麥穗浮雕、巨蜥鱗甲",
+        "sensitivity": "review",
         "role": "高塔試煉 BOSS：高速電漿直線突進，常駐延伸技能射程",
         "habit": "aggressive",
         "disposition": "高傲迅捷、引雷為刃",
@@ -5466,14 +5743,14 @@ window.COSMI_DESIGNED = {
         "height_length": "2.4 m",
         "weight": "520 kg",
         "body_fat": "10%",
-        "formula": "thunder（雷） + metal（金，副專精） × 花崗岩假窗方尖碑脊塔 + 雷電獅獸身軀 + 新月圓盤金環 × 埃扎納王與方尖碑",
+        "formula": "thunder（雷） + metal（金，副專精） × 花崗岩假窗方尖碑脊塔 + 雷電巨蜥身軀 + 新月圓盤金環 × 方尖碑雷巨蜥",
         "locked": {
           "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "adult",
               "creature_id": "thunder_obelisk_chimera",
-              "name_zh": "塔紋方尖獸",
+              "name_zh": "塔紋方尖巨蜥",
               "name_en": "Obelivolt",
               "naming_note": "取方尖碑（obelisk）與伏特（volt）之意象。",
               "size_class": "L",
@@ -5496,9 +5773,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.4 m",
               "weight": "520 kg",
               "body_fat": "10%",
-              "look": "花崗岩方尖碑構裝 × 高塔避雷獅獸；四足矯健的雷電獅獸，脊背立著多層假窗刻紋的花崗岩方尖碑避雷塔，額頂懸浮新月金盤釋放高壓電弧",
-              "dex_zh": "身披多層假窗花崗岩甲的雷電巨獸，額頂懸浮的新月金盤不斷匯聚高塔電漿，化作閃電直線突刺。",
-              "dex_en": "An armored thunder beast clad in carved granite obelisk plates, channeling high-voltage tower plasma through its floating crescent disc.",
+              "look": "花崗岩方尖碑構裝 × 高塔避雷巨蜥；四足貼地的重甲雷電巨蜥，脊背立著多層假窗刻紋的花崗岩方尖碑避雷塔，額頂懸浮新月金盤釋放高壓電弧",
+              "dex_zh": "身披多層假窗花崗岩甲的雷電巨蜥，額頂懸浮的新月金盤不斷匯聚高塔電漿，化作閃電直線突刺。",
+              "dex_en": "An armored thunder monitor clad in carved granite obelisk plates, channeling high-voltage tower plasma through its floating crescent disc.",
               "signature_move": {
                 "move_id": "thunder_dynamo_charge",
                 "name_zh": "電漿驅動突進",
@@ -5527,7 +5804,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_wind_trial_boss",
       "code_zh": "風",
       "element": "wind",
-      "title_zh": "三翼星航鵬",
+      "title_zh": "三翼星航巨蜓",
       "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
       "concept": {
         "line_id": "line_wind_trial_boss",
@@ -5538,13 +5815,23 @@ window.COSMI_DESIGNED = {
           "深航藍、銀鋁白",
           "雲灰、星輝青"
         ],
+        "design_prototypes": [
+          "平流層巨蜻蜓",
+          "三引擎渦輪尾",
+          "南十字羅盤"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
-          "生物·鳥類",
+          "生物·昆蟲",
           "載具·跨洋飛行器"
         ],
         "bases": [
-          "平流層巨翼信天翁",
-          "三引擎渦輪推進器",
+          "平流層機械巨蜻蜓",
+          "三引擎渦輪尾翼",
           "南十字星羅盤尾跡"
         ],
         "appearance_palette": [
@@ -5556,10 +5843,10 @@ window.COSMI_DESIGNED = {
         "timeline": "近代跨洋航空開拓時代（1928 南十字星號）",
         "region": "大洋洲",
         "archetype": "arch_kingsford_smith",
-        "archetype_name": "查爾斯·金斯福德·史密斯跨洋航線",
+        "archetype_name": "星航渦輪巨蜓",
         "archetype_type": "P5-02 考據庫·航空開拓史",
-        "meaning": "搭載三具渦輪氣流引擎、沿南十字星航跡衝破平流層的太空試煉巨禽",
-        "motifs": "三引擎藍翼飛機、南十字星羅盤、跨洋無線電、暴風積雲",
+        "meaning": "搭載三具渦輪氣流引擎、沿南十字星航跡衝破平流層的太空試煉機械巨蜓",
+        "motifs": "三引擎藍翼蜻蜓、南十字星羅盤、跨洋無線電天線、雙層透明振翅",
         "sensitivity": "ok",
         "role": "太空設施試煉 BOSS：全場最高速俯衝切入，進場大幅縮短風招冷卻",
         "habit": "aggressive",
@@ -5575,16 +5862,16 @@ window.COSMI_DESIGNED = {
         "height_length": "3.6 m",
         "weight": "480 kg",
         "body_fat": "9%",
-        "formula": "wind（風） × 平流層巨翼信天翁 + 三引擎渦輪推進器 + 南十字星羅盤尾跡 × 查爾斯·金斯福德·史密斯跨洋航線",
+        "formula": "wind（風） × 平流層機械巨蜻蜓 + 三引擎渦輪尾翼 + 南十字星羅盤尾跡 × 星航渦輪巨蜓",
         "locked": {
           "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "adult",
               "creature_id": "wind_tristar_albatross",
-              "name_zh": "三翼星航鵬",
-              "name_en": "Tristaroc",
-              "naming_note": "取三引擎（tristar）與巨鵬（roc）之意象。",
+              "name_zh": "三翼星航巨蜓",
+              "name_en": "Tristarodon",
+              "naming_note": "取三引擎（tristar）與巨蜓（odonata）之意象。",
               "size_class": "XL",
               "ai_style": "charge",
               "grip_mode": "two_handed",
@@ -5605,9 +5892,9 @@ window.COSMI_DESIGNED = {
               "height_length": "3.6 m",
               "weight": "480 kg",
               "body_fat": "9%",
-              "look": "藍翼信天翁 × 三引擎軌道飛行器與南十字羅盤；展翼寬闊的深藍金屬羽翼巨鳥，胸前與雙翼嵌有三具旋風推進渦輪，尾羽浮現南十字星光軌羅盤",
-              "dex_zh": "具備三具氣流推進渦輪的平流層藍翼巨禽，尾羽牽引著南十字星羅盤軌跡，能無視稀薄大氣高速俯衝。",
-              "dex_en": "A stratospheric blue-winged albatross driven by three airflow turbines, trailing a Southern Cross compass wake through orbital facilities.",
+              "look": "平流層機械巨蜻蜓 × 三引擎渦輪尾與南十字羅盤；四片深藍金屬薄翼展幅驚人的跨洋巨蜻蜓構裝，胸尾嵌有三具旋風推進渦輪，尾端浮現南十字星光軌羅盤",
+              "dex_zh": "具備三具氣流推進渦輪的平流層機械巨蜻蜓，尾端牽引著南十字星羅盤軌跡，能無視稀薄大氣高速俯衝。",
+              "dex_en": "A stratospheric turbine-driven dragonfly automaton with triple thrusters, trailing a Southern Cross compass wake at high altitude.",
               "signature_move": {
                 "move_id": "wind_tailwind_dive",
                 "name_zh": "順風軌道俯衝",
@@ -5647,6 +5934,17 @@ window.COSMI_DESIGNED = {
           "墨夜黑、幽紫",
           "貝殼白、鬼火青"
         ],
+        "design_prototypes": [
+          "八腕巨蛸",
+          "貝殼面具",
+          "引魂幻燈"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "bio-totem",
+        "morphology_secondary": [
+          "amorphous-astral",
+          "bio-artifact"
+        ],
         "base_parents": [
           "生物·軟體動物/章魚",
           "器物·幻燈/珊瑚面具"
@@ -5669,7 +5967,7 @@ window.COSMI_DESIGNED = {
         "archetype_type": "P5-02 考據庫·民間傳說",
         "meaning": "在迷宮深處懸掛千盞幽藍幻燈、喚出重力奇點吞噬侵入者的墨影巨蛸",
         "motifs": "海上千燈幻影、珊瑚石海神廟、月夜黑浪、寶螺貝幣",
-        "sensitivity": "ok",
+        "sensitivity": "review",
         "role": "迷宮試煉 BOSS：超高陰攻奇點重力爆破，進場爆發暗影專精",
         "habit": "dominant",
         "disposition": "詭譎深邃、以幻惑敵",
@@ -5745,7 +6043,7 @@ window.COSMI_DESIGNED = {
       "line_id": "line_light_trial_boss",
       "code_zh": "光",
       "element": "light",
-      "title_zh": "印紋聖角獸",
+      "title_zh": "印紋聖角劍羚",
       "source": "Data/_incoming/p5-10-trial-bosses-draft-01",
       "concept": {
         "line_id": "line_light_trial_boss",
@@ -5757,12 +6055,22 @@ window.COSMI_DESIGNED = {
           "滑石象牙白、聖金",
           "暖琥珀、青銅綠"
         ],
+        "design_prototypes": [
+          "單角劍羚",
+          "滑石玉雕印",
+          "聖光香爐冠"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "bio-totem",
+        "morphology_secondary": [
+          "bio-artifact"
+        ],
         "base_parents": [
           "生物·哺乳類",
           "器物·方印/祭祀香爐"
         ],
         "bases": [
-          "滑石玉雕單角神牛",
+          "滑石玉雕單角劍羚",
           "菩提葉金紋護甲",
           "鏤空聖光香爐角冠"
         ],
@@ -5775,11 +6083,11 @@ window.COSMI_DESIGNED = {
         "timeline": "遠古印度河谷文明（哈拉帕印章意象）",
         "region": "南亞",
         "archetype": "arch_harappan_unicorn",
-        "archetype_name": "哈拉帕獨角聖獸",
+        "archetype_name": "印章獨角劍羚",
         "archetype_type": "P5-02 考據庫·遠古印章文明",
-        "meaning": "額前單角托舉鏤空光爐、以方印聖光貫穿神廟試煉場的古代聖牛",
-        "motifs": "滑石方印、單角神牛、鏤空祭祀香爐、菩提葉紋",
-        "sensitivity": "ok",
+        "meaning": "額前螺旋長角托舉鏤空光爐、以方印聖光貫穿神廟試煉場的古代聖羚",
+        "motifs": "滑石方印、單角玉雕劍羚、鏤空祭祀香爐、菩提葉紋",
+        "sensitivity": "review",
         "role": "神廟試煉 BOSS：極致直線光槍貫穿，常駐強化光屬性專精",
         "habit": "dominant",
         "disposition": "聖潔威嚴、審判迷障",
@@ -5794,16 +6102,16 @@ window.COSMI_DESIGNED = {
         "height_length": "2.4 m",
         "weight": "610 kg",
         "body_fat": "11%",
-        "formula": "light（光） + fire（火，副專精） × 滑石玉雕單角神牛 + 菩提葉金紋護甲 + 鏤空聖光香爐角冠 × 哈拉帕獨角聖獸",
+        "formula": "light（光） + fire（火，副專精） × 滑石玉雕單角劍羚 + 菩提葉金紋護甲 + 鏤空聖光香爐角冠 × 印章獨角劍羚",
         "locked": {
           "status": "已設計（P5-10 地形試煉 BOSS · 單一成年型態；id 與名稱照抄，不可改）",
           "stages": [
             {
               "stage": "adult",
               "creature_id": "light_seal_unicorn",
-              "name_zh": "印紋聖角獸",
-              "name_en": "Sigilicorn",
-              "naming_note": "取方印（sigil）與獨角獸（unicorn）之意象。",
+              "name_zh": "印紋聖角劍羚",
+              "name_en": "Sigiloryx",
+              "naming_note": "取方印（sigil）與劍羚（oryx）之意象。",
               "size_class": "L",
               "ai_style": "keep_distance",
               "grip_mode": "one_hand_shield",
@@ -5824,9 +6132,9 @@ window.COSMI_DESIGNED = {
               "height_length": "2.4 m",
               "weight": "610 kg",
               "body_fat": "11%",
-              "look": "單角神牛 × 滑石方印光紋與鏤空聖光香爐；潔白如滑石玉雕的單角神牛，體側浮現方印幾何金紋與菩提葉光甲，額前長角托舉著旋轉的鏤空光能香爐",
-              "dex_zh": "身披滑石方印金紋與菩提葉光甲的單角聖牛，額前長角托舉著鏤空聖光香爐，以純淨光槍鎮守神廟。",
-              "dex_en": "A single-horned temple guardian etched with steatite seal patterns and bodhi-leaf armor, firing zenith light lances from its censer horn.",
+              "look": "單角玉雕劍羚 × 滑石方印光紋與鏤空聖光香爐；潔白如滑石玉雕的修長單角劍羚，體側浮現方印幾何金紋與菩提葉光甲，額前長直螺旋角托舉著旋轉鏤空光能香爐",
+              "dex_zh": "身披滑石方印金紋與菩提葉光甲的單角劍羚，額前長直螺旋角托舉著鏤空聖光香爐，以純淨光槍鎮守神廟。",
+              "dex_en": "A single-horned temple oryx etched with steatite seal patterns and bodhi-leaf armor, firing zenith light lances from its censer horn.",
               "signature_move": {
                 "move_id": "light_zenith_lance",
                 "name_zh": "天頂聖光槍",
@@ -5866,6 +6174,16 @@ window.COSMI_DESIGNED = {
           "靈澤碧藍",
           "半透明水白",
           "珍珠泡沫銀"
+        ],
+        "design_prototypes": [
+          "水滴史萊姆",
+          "水母觸膜",
+          "氣泡核"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "amorphous-astral",
+        "morphology_secondary": [
+          "bio-element"
         ],
         "base_parents": [
           "幻想生物·史萊姆",
@@ -6064,6 +6382,16 @@ window.COSMI_DESIGNED = {
           "琺瑯白",
           "發條深棕"
         ],
+        "design_prototypes": [
+          "犀角甲蟲",
+          "航海懷錶",
+          "齒輪翼鞘"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "inanimate-biomimic"
+        ],
         "base_parents": [
           "生物·節肢昆蟲",
           "器械·鐘錶/計時儀器"
@@ -6261,6 +6589,17 @@ window.COSMI_DESIGNED = {
           "花崗岩灰",
           "苔蘚綠"
         ],
+        "design_prototypes": [
+          "陶土石偶",
+          "花崗岩塊",
+          "古文符印"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-totem",
+          "bio-nature"
+        ],
         "base_parents": [
           "物質·陶器/黏土",
           "自然·岩石/礦脈"
@@ -6282,7 +6621,7 @@ window.COSMI_DESIGNED = {
         "archetype_type": "Drive 實作宙獸系列",
         "meaning": "以千年窯火燒製的陶土與地脈厚岩凝結而成的忠誠守護偶",
         "motifs": "素燒陶土偶、厚實花崗岩塊、嵌石古文符印",
-        "sensitivity": "ok",
+        "sensitivity": "review",
         "role": "重裝坦衛",
         "habit": "territorial",
         "disposition": "鈍重忠厚、一步一印",
@@ -6457,6 +6796,17 @@ window.COSMI_DESIGNED = {
           "爐火橘紅",
           "木炭黑",
           "暖金白"
+        ],
+        "design_prototypes": [
+          "炭火火靈",
+          "鑄鐵火灶",
+          "火舌燈籠"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "amorphous-astral",
+        "morphology_secondary": [
+          "bio-element",
+          "inanimate-biomimic"
         ],
         "base_parents": [
           "自然·火焰/炭火",
@@ -6655,6 +7005,16 @@ window.COSMI_DESIGNED = {
           "深海藏青",
           "雪白"
         ],
+        "design_prototypes": [
+          "極地企鵝",
+          "競速冰刀",
+          "冰晶翼刃"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-artifact",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "生物·鳥類",
           "裝備·冰刀/競技護具"
@@ -6851,6 +7211,17 @@ window.COSMI_DESIGNED = {
           "純淨雪白",
           "冰晶藍",
           "圍巾赤紅"
+        ],
+        "design_prototypes": [
+          "雪人",
+          "六角冰晶",
+          "編織圍巾"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-element",
+          "bio-artifact"
         ],
         "base_parents": [
           "自然·積雪/冰晶",
@@ -7049,6 +7420,17 @@ window.COSMI_DESIGNED = {
           "宣紙素白",
           "硃砂印紅"
         ],
+        "design_prototypes": [
+          "浮空石碑帖",
+          "松煙墨煙",
+          "硃砂印章"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-totem",
+          "amorphous-astral"
+        ],
         "base_parents": [
           "器物·碑帖/書法",
           "自然·墨煙/陰影"
@@ -7070,7 +7452,7 @@ window.COSMI_DESIGNED = {
         "archetype_type": "Drive 實作宙獸系列",
         "meaning": "吸納千年書法筆意與松煙墨韻而甦醒的無形碑帖之靈",
         "motifs": "浮空石碑帖、流動松煙墨跡、硃砂印章核",
-        "sensitivity": "ok",
+        "sensitivity": "review",
         "role": "法術干擾",
         "habit": "vigilant",
         "disposition": "沉靜孤高、惜墨如金",
@@ -7246,6 +7628,16 @@ window.COSMI_DESIGNED = {
           "青金石藍",
           "象牙白"
         ],
+        "design_prototypes": [
+          "聖甲蟲",
+          "太陽日輪",
+          "青金石甲"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "bio-totem",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "生物·節肢昆蟲",
           "幻想生物·古埃及太陽象徵"
@@ -7267,7 +7659,7 @@ window.COSMI_DESIGNED = {
         "archetype_type": "Drive 實作宙獸系列",
         "meaning": "雙足推動黎明太陽金輪升起、象徵新生與永恆光輝的聖甲蟲",
         "motifs": "黃金聖甲蟲、太陽日輪球體、青金石鑲嵌甲",
-        "sensitivity": "ok",
+        "sensitivity": "review",
         "role": "輔助 / 光砲",
         "habit": "tolerant",
         "disposition": "莊嚴虔誠、向光而行",
@@ -7442,6 +7834,16 @@ window.COSMI_DESIGNED = {
           "工業灰鐵",
           "警示琥珀黃",
           "裝甲軍綠"
+        ],
+        "design_prototypes": [
+          "摺疊貨櫃",
+          "液壓機甲",
+          "防爆門盾"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-artifact"
         ],
         "base_parents": [
           "科幻機械·重工模組",
@@ -7640,6 +8042,16 @@ window.COSMI_DESIGNED = {
           "星雲品紅",
           "幽冥銀"
         ],
+        "design_prototypes": [
+          "浮空魔眼",
+          "星雲黑洞",
+          "黑霧觸鬚"
+        ],
+        "base_entity": "supernatural-bio",
+        "morphology_primary": "amorphous-astral",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "幻想生物·虛空魔眼",
           "自然·星雲/黑洞"
@@ -7836,6 +8248,16 @@ window.COSMI_DESIGNED = {
           "熾金紅",
           "象牙白",
           "太陽金"
+        ],
+        "design_prototypes": [
+          "草原雄獅",
+          "太陽日冕鬃",
+          "黃金爪甲"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-element",
+        "morphology_secondary": [
+          "bio-artifact"
         ],
         "base_parents": [
           "生物·哺乳類",
@@ -8034,6 +8456,16 @@ window.COSMI_DESIGNED = {
           "航空鈦白",
           "碳纖黑"
         ],
+        "design_prototypes": [
+          "多旋翼無人機",
+          "超導電容環",
+          "電漿尾翼"
+        ],
+        "base_entity": "non-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-element"
+        ],
         "base_parents": [
           "科幻機械·無人飛行載具",
           "器械·電容/線圈"
@@ -8231,6 +8663,14 @@ window.COSMI_DESIGNED = {
           "原木深棕",
           "金秋琥珀"
         ],
+        "design_prototypes": [
+          "高空金雕",
+          "蕨葉羽翼",
+          "橡木枝角"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-nature",
+        "morphology_secondary": [],
         "base_parents": [
           "生物·鳥類",
           "植物·蕨葉/橡木"
@@ -8428,6 +8868,14 @@ window.COSMI_DESIGNED = {
           "雲絮白",
           "薄荷綠"
         ],
+        "design_prototypes": [
+          "鳴禽雲雀",
+          "積雲尾羽",
+          "氣旋風環"
+        ],
+        "base_entity": "natural-bio",
+        "morphology_primary": "bio-element",
+        "morphology_secondary": [],
         "base_parents": [
           "生物·鳥類",
           "自然·積雲/氣流"
@@ -8624,6 +9072,17 @@ window.COSMI_DESIGNED = {
           "胡桃木棕",
           "翡翠絲線",
           "象牙白"
+        ],
+        "design_prototypes": [
+          "懸絲木偶",
+          "十字翼架",
+          "發芽靈木"
+        ],
+        "base_entity": "humanoid-bio",
+        "morphology_primary": "inanimate-biomimic",
+        "morphology_secondary": [
+          "bio-nature",
+          "bio-artifact"
         ],
         "base_parents": [
           "器物·懸絲木偶",

@@ -2,7 +2,7 @@
 // 改動規則見 README.md：新增選項 → minor；改既有 ID / 刪除 / 改動作事件 → major。
 // 權重 w 為相對值，不必加總為 100。
 window.COSMI_CATALOG = {
-  version: "2.10.0",
+  version: "2.11.0",
 
   ELEMENTS: [
     { v: "metal",   zh: "金", palette: "銀白、淡金、鋼藍高光" },
@@ -216,6 +216,76 @@ window.COSMI_CATALOG = {
         : 1;
       return Object.assign({}, e, { w: (e.w ?? 1) * (e.v === "未知" ? 0.5 : affinity) });
     });
+  },
+  getWeightedMorphologyPrimary(baseEntity) {
+    const boosts = {
+      "non-bio": { "inanimate-biomimic": 6, "amorphous-astral": 3, "bio-element": 1.4, "pure-stylized-bio": 0.25 },
+      "humanoid-bio": { "bio-artifact": 3.0, "bio-totem": 2.4, "bio-element": 1.4, "pure-stylized-bio": 0.6 },
+      "supernatural-bio": { "bio-element": 2.0, "amorphous-astral": 2.8, "bio-totem": 4.0, "multi-bio": 4.0, "pure-stylized-bio": 0.5 },
+      "natural-bio": { "bio-element": 1.6, "pure-stylized-bio": 1.8, "bio-nature": 1.6 }
+    }[baseEntity] || {};
+    return this.CREATURE.morphology_tags.map(t => Object.assign({}, t, { w: (t.w ?? 1) * (boosts[t.v] || 1) }));
+  },
+  getWeightedMorphologySecondary(primaryTag, baseEntity) {
+    const pool = this.CREATURE.morphology_tags;
+    const primary = pool.find(t => t.v === primaryTag);
+    const syn = new Set(primary?.synergies || []);
+    const entityBoosts = {
+      "non-bio": { "bio-element": 1.4, "amorphous-astral": 1.4, "bio-nature": 1.2 },
+      "humanoid-bio": { "bio-artifact": 1.4, "bio-totem": 1.3, "bio-element": 1.3 },
+      "supernatural-bio": { "bio-element": 1.4, "bio-totem": 1.4, "amorphous-astral": 1.3 },
+      "natural-bio": { "bio-nature": 1.3, "bio-element": 1.3 }
+    }[baseEntity] || {};
+    return pool
+      .filter(t => t.v !== primaryTag && t.v !== "pure-stylized-bio")
+      .map(t => Object.assign({}, t, {
+        w: (t.w ?? 1) * (syn.has(t.v) ? 3 : 1) * (entityBoosts[t.v] || 1)
+      }));
+  },
+  resolveMorphologyGuide(concept) {
+    if (!concept) return null;
+    const baseEntity = Array.isArray(concept.base_entity) ? concept.base_entity[0] : concept.base_entity;
+    const primaryId = Array.isArray(concept.morphology_primary) ? concept.morphology_primary[0] : concept.morphology_primary;
+    const rawSec = Array.isArray(concept.morphology_secondary)
+      ? concept.morphology_secondary
+      : (concept.morphology_secondary ? [concept.morphology_secondary] : []);
+    const secIds = [];
+    for (const id of rawSec) {
+      if (id && id !== primaryId && id !== "pure-stylized-bio" && !secIds.includes(id)) {
+        secIds.push(id);
+        if (secIds.length >= 2) break;
+      }
+    }
+    if (!baseEntity && !primaryId && !secIds.length) return null;
+    const baseDef = this.CREATURE.base_entities.find(b => b.v === baseEntity) || null;
+    const pool = this.CREATURE.morphology_tags;
+    const primary = primaryId ? (pool.find(t => t.v === primaryId) || { v: primaryId, zh: primaryId, skill: null, brief: "自訂主形態特徵" }) : null;
+    const secondaries = secIds.map(id => pool.find(t => t.v === id) || { v: id, zh: id, skill: null, brief: "自訂副形態特徵" });
+    const skills = ["agc-creature-design"];
+    [primary, ...secondaries].forEach(t => {
+      if (t?.skill && !skills.includes(t.skill)) skills.push(t.skill);
+    });
+    const sensitivityReview = [primary?.v, ...secondaries.map(s => s.v)].includes("bio-totem");
+    const summaryParts = [
+      baseDef ? baseDef.zh : (baseEntity || null),
+      primary ? ("主 60~70%：" + primary.zh) : null,
+      secondaries.length ? ("副 30~40%：" + secondaries.map(s => s.zh).join(" + ")) : null
+    ].filter(Boolean);
+    const summaryZh = summaryParts.join(" ｜ ");
+    const guidance = [primary?.brief, ...secondaries.map(s => s.brief)].filter(Boolean).join("；");
+    const promptLine = "- 形態標籤混搭（" + summaryZh + "）：主標籤主導輪廓與主骨架，副標籤僅作焦點錨點並維持 <=4 組 PBR 材質" +
+      (guidance ? "（" + guidance + "）" : "") +
+      (sensitivityReview ? "；含文化圖騰要素，須抽象幾何化轉譯並標記 sensitivity: review" : "") + "。";
+    return {
+      baseEntity: baseEntity || null,
+      baseEntityZh: baseDef ? baseDef.zh : (baseEntity || null),
+      primary,
+      secondaries,
+      skills,
+      sensitivityReview,
+      summaryZh,
+      promptLine
+    };
   },
 
   // 基礎單色系選項池（供角色服裝、頭髮與宙獸外觀多選組合，每項為單色，可多選組合成 1~4 色）
@@ -1318,6 +1388,22 @@ window.COSMI_CATALOG = {
   },
 
   CREATURE: {
+    base_entities: [
+      { v: "natural-bio",      zh: "自然生物（natural-bio）",      w: 55 },
+      { v: "supernatural-bio", zh: "超自然生物（supernatural-bio）", w: 22 },
+      { v: "humanoid-bio",     zh: "類人生物（humanoid-bio）",     w: 15 },
+      { v: "non-bio",          zh: "非生物／無機仿生（non-bio）",  w: 8 }
+    ],
+    morphology_tags: [
+      { v: "bio-element",        zh: "生物融合元素",       w: 36, skill: "agc-morph-bio-element",        synergies: ["bio-artifact", "bio-nature", "amorphous-astral"], brief: "元素附著於1~2個特化器官，自發光僅佔10%焦點色" },
+      { v: "pure-stylized-bio",  zh: "純生物風格化變形",   w: 24, skill: "agc-morph-pure-stylized-bio",  synergies: ["bio-nature", "bio-element"],                      brief: "以幾何形狀語言壓縮並誇張1~2個生物比例特徵，維持<=3組材質" },
+      { v: "bio-nature",         zh: "生物融合自然物",     w: 22, skill: "agc-morph-bio-nature",         synergies: ["bio-element", "bio-artifact", "pure-stylized-bio"], brief: "植物或礦石長於背脊/頸領等低變形區並做有機接縫過渡" },
+      { v: "bio-artifact",       zh: "生物融合服裝/人造物", w: 16, skill: "agc-morph-bio-artifact",       synergies: ["bio-element", "bio-nature", "bio-totem"],          brief: "從生態或時代取材冠領/披風/甲片，關節處留活動間隙與掀披風露背圖" },
+      { v: "amorphous-astral",   zh: "純能量／不定形／星界", w: 10, skill: "agc-morph-amorphous-astral",   synergies: ["bio-element", "bio-totem", "inanimate-biomimic"],  brief: "以1~2個高對比實體核心錨定流體/霧氣外緣，最多1~2層透明外膜" },
+      { v: "inanimate-biomimic", zh: "非生物仿生／活體器物", w: 6,  skill: "agc-morph-inanimate-biomimic", synergies: ["bio-element", "bio-nature", "amorphous-astral"],   brief: "保留原器物核心幾何與真實材質，只用1~2個節制靈動錨點與剛性樞紐" },
+      { v: "bio-totem",          zh: "生物融合文化圖騰",   w: 5,  skill: "agc-morph-bio-totem",          synergies: ["bio-element", "bio-artifact", "amorphous-astral"], brief: "將文化符號抽象為大型幾何面具或浮環，涉及神聖意象標記review" },
+      { v: "multi-bio",          zh: "多生物融合（嵌合體）", w: 5,  skill: "agc-morph-multi-bio",          synergies: ["bio-element", "bio-nature", "bio-totem"],          brief: "限1主底盤+1~2跨綱要特徵，以毛羽/鱗領橋接並明確宣告anatomy" }
+    ],
     // 宙獸外觀基底父類別（大幅擴充：拆解植物/古生物、追加星體/珠寶/礦物/積木/兵器/防具、幻想生物按文化分拆）
     base_parents: [
       // 生物類

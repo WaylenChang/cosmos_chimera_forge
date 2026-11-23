@@ -264,7 +264,7 @@
     },
 
     {
-      id: "creature-concept", version: "6.5.1", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
+      id: "creature-concept", version: "6.6.0", zh: "宙獸設計概念與型態立繪", prefix: "cr", platform: "chatgpt",
       needs: "creature", drop: "Art/_incoming",
       options: [
         { key: "stage", type: "select", label: "宙獸型態（四型態分開產出）", items: () => C.STAGES.map(s => ({ v: s.v, zh: s.zh + "（" + s.v + "）" })), def: "adult" },
@@ -305,9 +305,12 @@
         const isJuvenile = curStage === "juvenile";
 
         const elemZh = (c.elements || []).map(e => C.ELEMENTS.find(el => el.v === e)?.zh || e).join("、");
+        const morphGuide = C.resolveMorphologyGuide ? C.resolveMorphologyGuide(c) : null;
         const canonicalCreature = [
           "## 主體設定：【" + (lockedStage ? lockedStage.name_zh : (c.name_zh || "原創奇幻生物")) + "】（" + stageDef.zh + "型態）",
           "- 核心構造：非人形生物（獸形/幻獸/機獸），外觀基底【" + (c.bases ? c.bases.join(" + ") : "") + "】",
+          Array.isArray(c.design_prototypes) && c.design_prototypes.length ? ("- 設計原型標籤：" + c.design_prototypes.join("、")) : null,
+          morphGuide ? morphGuide.promptLine : null,
           elemZh || c.appearance_palette?.length ? ("- 屬性與配色：" + (elemZh ? "屬性【" + elemZh + "】，" : "") + "主色調【" + (c.appearance_palette || []).join("、") + "】") : null,
           "- 體態尺寸：身長/高約 " + curHeight + " · " + stageFeature,
           c.archetype ? ("- 原型意象：" + c.archetype + (c.motifs ? "（圖騰：" + c.motifs + "）" : "")) : null,
@@ -400,9 +403,12 @@
         ];
 
         const elemZh = (c.elements || []).map(e => C.ELEMENTS.find(el => el.v === e)?.zh || e).join("、");
+        const morphGuide = C.resolveMorphologyGuide ? C.resolveMorphologyGuide(c) : null;
         const body = [
           "## 主體設定：【" + (lockedStage ? lockedStage.name_zh : (c.name_zh || "原創奇幻生物")) + "】（" + stageDef.zh + "型態）",
           "- 核心構造：非人形生物（獸形/幻獸/機獸），外觀基底【" + (c.bases ? c.bases.join(" + ") : "") + "】",
+          Array.isArray(c.design_prototypes) && c.design_prototypes.length ? ("- 設計原型標籤：" + c.design_prototypes.join("、")) : null,
+          morphGuide ? morphGuide.promptLine : null,
           elemZh || c.appearance_palette?.length ? ("- 屬性與配色：" + (elemZh ? "屬性【" + elemZh + "】，" : "") + "主色調【" + (c.appearance_palette || []).join("、") + "】") : null,
           "- 體態尺寸：身長/高約 " + curHeight + " · " + stageFeature,
           c.archetype ? ("- 原型意象：" + c.archetype + (c.motifs ? "（圖騰：" + c.motifs + "）" : "")) : null,

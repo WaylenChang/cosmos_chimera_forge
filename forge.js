@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.9.1";
+  const TOOL_VERSION = "2.10.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -368,6 +368,9 @@
     ],
     creature: [
       { key: "elements", label: "屬性", options: s => C.getWeightedElements(s.creature.appearance_palette).concat(getCustom("creature.elements").map(v => ({ v, w: 1, zh: v }))), count: [{ n: 1, w: 2 }, { n: 2, w: 1 }], max: 2 },
+      { key: "base_entity", label: "基礎存在軸", options: () => CR.base_entities.map(b => ({ v: b.v, zh: b.zh, w: b.w })).concat(getCustom("creature.base_entity").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }] },
+      { key: "morphology_primary", label: "主形態標籤 (60~70%)", options: s => C.getWeightedMorphologyPrimary(s.creature.base_entity?.[0]).map(t => ({ v: t.v, zh: t.zh, w: t.w })).concat(getCustom("creature.morphology_primary").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 1 }], dep: "base_entity" },
+      { key: "morphology_secondary", label: "副形態標籤 (0~2，30~40%)", options: s => C.getWeightedMorphologySecondary(s.creature.morphology_primary?.[0], s.creature.base_entity?.[0]).map(t => ({ v: t.v, zh: t.zh, w: t.w })).concat(getCustom("creature.morphology_secondary").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 0, w: 55 }, { n: 1, w: 35 }, { n: 2, w: 10 }], max: 2, allowEmpty: true, dep: "morphology_primary" },
       { key: "base_parents", label: "外觀基底類別 (1~3)", options: () => CR.base_parents.map(b => ({ v: b.v, zh: b.zh || b.v, w: b.w })).concat(getCustom("creature.base_parents").map(v => ({ v, zh: v, w: 1 }))), count: [{ n: 1, w: 40 }, { n: 2, w: 45 }, { n: 3, w: 15 }], max: 3 },
       { key: "bases", label: "外觀基底 (1~3)", options: s => {
         const parents = (s.creature.base_parents || []).map(traceBaseParent);
@@ -493,7 +496,8 @@
       }
       const key = kind + "." + f.key;
       const locked = state.locks[key];
-      const valid = (state[kind][f.key] || []).length > 0 && (f.customGen || (state[kind][f.key] || []).every(v => f.options(state).some(o => o.v === v)));
+      const hasVal = f.allowEmpty ? Array.isArray(state[kind][f.key]) : (state[kind][f.key] || []).length > 0;
+      const valid = hasVal && (f.customGen || (state[kind][f.key] || []).every(v => f.options(state).some(o => o.v === v)));
       if (force ? !locked || !valid : !valid) rollField(kind, f, rng);
     });
   }
@@ -578,10 +582,16 @@
     if (d) return JSON.parse(JSON.stringify(d.concept));
     const c = state.creature, a = CR.archetypes.find(x => x.name === c.archetype?.[0]) || {};
     const parents = (c.base_parents || []).map(traceBaseParent);
+    const primMorph = c.morphology_primary?.[0] || "pure-stylized-bio";
+    const secMorph = (c.morphology_secondary || []).filter(v => v && v !== primMorph && v !== "pure-stylized-bio").slice(0, 2);
+    const morphSensitivity = (primMorph === "bio-totem" || secMorph.includes("bio-totem")) ? "review" : null;
     return {
       line_id: subjectId("creature"),
       elements: (c.elements || []).map(e => e + "（" + (zhOf(C.ELEMENTS, e) || e).split(" ")[0] + "）"),
       element_palettes: (c.elements || []).map(e => (C.ELEMENTS.find(x => x.v === e) || {}).palette || "自然色系"),
+      base_entity: c.base_entity?.[0] || "natural-bio",
+      morphology_primary: primMorph,
+      morphology_secondary: secMorph,
       base_parents: parents,
       bases: c.bases || [],
       appearance_palette: c.appearance_palette || [],
@@ -591,7 +601,7 @@
       archetype_type: a.type || "自由原型",
       motifs: a.motifs || "",
       meaning: a.meaning || "",
-      sensitivity: a.sensitivity || "ok", role: c.role?.[0] || "未知",
+      sensitivity: morphSensitivity || a.sensitivity || "ok", role: c.role?.[0] || "未知",
       niches: c.niches || [],
       disposition: c.disposition?.[0] || "沉穩",
       social_structure: c.social_structure?.[0] || "未知",
@@ -767,6 +777,9 @@
         weight: curWeight,
         body_fat: curFat,
         elements: c.elements || ["fire"],
+        ...(c.base_entity ? { base_entity: c.base_entity } : {}),
+        ...(c.morphology_primary ? { morphology_primary: c.morphology_primary } : {}),
+        ...(Array.isArray(c.morphology_secondary) && c.morphology_secondary.length ? { morphology_secondary: c.morphology_secondary } : {}),
         appearance_palette: c.appearance_palette || [],
         base_parents: c.base_parents || [],
         bases: c.bases || [],
@@ -2633,6 +2646,13 @@
           el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "光環配色"), el("div", { class: "v" }, (d.concept?.element_palettes || []).join("；") || "—")),
           el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "基底特徵"), el("div", { class: "v" }, (d.concept?.bases || []).join("；") || "—")),
           el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "親本來源"), el("div", { class: "v" }, (d.concept?.base_parents || []).join("；") || "—"))
+        ),
+        el("div", { class: "designed-detail-grid", style: "margin-top:8px" },
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "設計原型（多標籤）"), el("div", { class: "v" }, (d.concept?.design_prototypes || []).join("、") || "—")),
+          el("div", { class: "designed-prop-item" }, el("div", { class: "k" }, "分類維度（存在軸／形態標籤）"), el("div", { class: "v" }, (() => {
+            const mg = C.resolveMorphologyGuide?.(d.concept);
+            return (mg ? mg.summaryZh : [d.concept?.base_entity, d.concept?.morphology_primary, ...(d.concept?.morphology_secondary || [])].filter(Boolean).join(" ｜ ")) || "—";
+          })() + (d.concept?.sensitivity === "review" ? " · ⚠️ review" : "")))
         )
       );
       bodyEl.append(specCard);
@@ -3353,6 +3373,12 @@
         el("div", {}, el("b", {}, s.name_zh + " " + s.name_en), " ", el("code", {}, s.creature_id),
           el("div", { class: "muted" }, s.look), el("div", { class: "muted" }, "主動技 " + s.signature_move.name_zh + "（" + s.signature_move.move_id + "）")))));
       box.append(el("p", { class: "muted" }, "被動技：" + L.trait.name_zh + "（" + L.trait.trait_id + "）· 原型：" + d.concept.archetype + "（" + d.concept.region + "）· 超載：" + L.overload));
+      const dMorph = C.resolveMorphologyGuide?.(d.concept);
+      if (d.concept?.design_prototypes?.length || dMorph) {
+        box.append(el("p", { class: "muted", style: "font-size:11.5px" },
+          (d.concept?.design_prototypes?.length ? ("設計原型：" + d.concept.design_prototypes.join("、") + " · ") : "") +
+          (dMorph ? ("分類維度：" + dMorph.summaryZh + (d.concept?.sensitivity === "review" ? "（review）" : "")) : "")));
+      }
       const bgInfo = C.determineAgcBgColor(d.concept, false);
       box.append(el("div", { class: "field", style: "border-top:1px dashed var(--line);margin-top:6px;padding-top:6px" },
         el("label", {}, "2D AGC 立繪背景"),
@@ -3418,6 +3444,12 @@
       if (a) box.append(el("p", { class: "muted" }, "象徵意象：" + a.motifs + (a.meaning ? " · 精神意義：" + a.meaning : "")));
     }
     const curConcept = kind === "character" ? characterConcept() : creatureConcept();
+    const morphGuide = kind === "creature" && C.resolveMorphologyGuide ? C.resolveMorphologyGuide(curConcept) : null;
+    if (morphGuide) {
+      box.append(el("p", { class: "muted", style: "font-size:11.5px;margin-top:4px" },
+        "形態路由：" + morphGuide.summaryZh + " · Skill：" + morphGuide.skills.join(" + ") +
+        (morphGuide.sensitivityReview ? " · ⚠️ sensitivity: review（須人工審核）" : "")));
+    }
     const bgInfo = C.determineAgcBgColor(curConcept, kind === "character");
     box.append(
       el("div", { class: "field", style: "border-top:1px dashed var(--line);margin-top:6px;padding-top:6px" },
@@ -6140,6 +6172,17 @@
             el("div", { class: "prompt-kv" },
               el("span", { class: "prompt-k" }, "屬性"), el("span", { class: "prompt-v" }, formatArray(c.elements)),
               el("span", { class: "prompt-k" }, "屬性配色"), el("span", { class: "prompt-v" }, formatArray(c.element_palettes)),
+              ...(Array.isArray(c.design_prototypes) && c.design_prototypes.length ? [
+                el("span", { class: "prompt-k" }, "設計原型（多標籤）"), el("span", { class: "prompt-v" }, formatArray(c.design_prototypes))
+              ] : []),
+              ...(c.base_entity || c.morphology_primary ? [
+                el("span", { class: "prompt-k" }, "基礎存在軸"), el("span", { class: "prompt-v" }, (C.resolveMorphologyGuide?.(c)?.baseEntityZh || c.base_entity || "—")),
+                el("span", { class: "prompt-k" }, "形態標籤"), el("span", { class: "prompt-v" }, (() => {
+                  const mg = C.resolveMorphologyGuide?.(c);
+                  if (!mg) return [c.morphology_primary, ...(c.morphology_secondary || [])].filter(Boolean).join(" + ") || "—";
+                  return mg.summaryZh + " (" + mg.skills.join(" / ") + ")";
+                })())
+              ] : []),
               el("span", { class: "prompt-k" }, "外觀基底類別"), el("span", { class: "prompt-v" }, formatArray(c.base_parents)),
               el("span", { class: "prompt-k" }, "具體子基底"), el("span", { class: "prompt-v" }, formatArray(c.bases)),
               el("span", { class: "prompt-k" }, "外觀配色"), el("span", { class: "prompt-v" }, formatArray(c.appearance_palette)),
