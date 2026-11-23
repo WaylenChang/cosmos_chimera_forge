@@ -12,7 +12,8 @@
     syncing,
     busy = false,
     accountNamespace = "",
-    sessionGeneration = 0;
+    sessionGeneration = 0,
+    localDriveMode = false;
   // sessionStorage survives refreshes within the same browser tab, but not a closed session.
   // Never persist a full-Drive bearer token in localStorage or in a URL.
   const SESSION_KEY = "cosmi.drive.oauth.v1",
@@ -453,7 +454,49 @@
     return r;
   }
   const escapeQuery = (s) => s.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  function isLoopbackHost() {
+    const host = String(window.location?.hostname || "").toLowerCase();
+    return host === "localhost" || host === "127.0.0.1" || host === "::1";
+  }
+  async function localRequest(endpoint, options = {}) {
+    const r = await fetch("/__local_drive__/" + endpoint, {
+      ...options,
+      cache: "no-store",
+    });
+    if (!r.ok) {
+      const d = await r.json().catch(() => ({}));
+      throw Error(d.error || "本機 Drive HTTP " + r.status);
+    }
+    return r;
+  }
+  async function fetchFileResponse(id) {
+    if (localDriveMode) {
+      return localRequest("read?id=" + encodeURIComponent(id));
+    }
+    return request(API + "/" + encodeURIComponent(id) + "?alt=media");
+  }
+  function filterLocalEntries(files, extra = "") {
+    if (!extra) return files;
+    let out = files;
+    const nameMatch = /name\s*=\s*'((?:\\'|[^'])*)'/.exec(extra);
+    if (nameMatch) {
+      const expectedName = nameMatch[1].replace(/\\'/g, "'").replace(/\\\\/g, "\\");
+      out = out.filter((f) => f.name === expectedName);
+    }
+    const mimeMatch = /mimeType\s*=\s*'((?:\\'|[^'])*)'/.exec(extra);
+    if (mimeMatch) {
+      const expectedMime = mimeMatch[1].replace(/\\'/g, "'").replace(/\\\\/g, "\\");
+      out = out.filter((f) => f.mimeType === expectedMime);
+    }
+    return out;
+  }
   async function list(parent, extra = "") {
+    if (localDriveMode) {
+      const d = await (
+        await localRequest("list?id=" + encodeURIComponent(parent || "local:"))
+      ).json();
+      return filterLocalEntries(d.files || [], extra);
+    }
     const files = [];
     let pageToken = "";
     do {
@@ -475,6 +518,20 @@
     return files;
   }
   async function folder(path, create = false) {
+    if (localDriveMode) {
+      if (!path) return "local:";
+      const clean = relative(path).join("/");
+      if (!create && folders.has(clean)) return folders.get(clean);
+      const d = await (
+        await localRequest("folder", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ path: clean, create }),
+        })
+      ).json();
+      folders.set(clean, d.id);
+      return d.id;
+    }
     if (!path) return config.rootId;
     let parent = config.rootId,
       prefix = "";
@@ -536,6 +593,13 @@
     return { file: m[0], parent, name };
   }
   async function read(path) {
+    if (localDriveMode) {
+      const clean = relative(path).join("/");
+      return driveDownload(
+        async () => (await localRequest("read?path=" + encodeURIComponent(clean))).blob(),
+        100,
+      );
+    }
     const { file } = await find(path, false, { pickLatest: true });
     if (!file) throw Error(path + " 不存在");
     return driveDownload(
@@ -546,12 +610,26 @@
   async function readById(id) {
     if (!id) throw Error("缺少 Drive 檔案 ID");
     return driveDownload(
-      async () =>
-        (await request(API + "/" + encodeURIComponent(id) + "?alt=media")).blob(),
+      async () => (await fetchFileResponse(id)).blob(),
       100,
     );
   }
   async function write(path, blob) {
+    if (localDriveMode) {
+      const clean = relative(path).join("/");
+      const result = await (
+        await localRequest("write?path=" + encodeURIComponent(clean), {
+          method: "PUT",
+          headers: {
+            "Content-Type": blob.type || "application/octet-stream",
+          },
+          body: blob,
+        })
+      ).json();
+      void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+      recordPipelineWrite(path, result);
+      return result;
+    }
     const { file, parent, name } = await find(path, true),
       boundary = "cosmi_" + crypto.randomUUID();
     const body = new Blob([
@@ -593,6 +671,12 @@
       new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }),
     );
   async function walk(id, prefix = "", depth = 0) {
+    if (localDriveMode) {
+      const d = await (
+        await localRequest("walk?id=" + encodeURIComponent(id || "local:"))
+      ).json();
+      return d.files || [];
+    }
     if (depth > 12) throw Error("資產目錄超過 12 層");
     const folderNames = new Set(),
       filesByName = new Map(),
@@ -623,7 +707,7 @@
     }
     return file
       ? JSON.parse(
-          await (await request(API + "/" + file.id + "?alt=media")).text(),
+          await (await fetchFileResponse(file.id)).text(),
         )
       : null;
   }
@@ -917,7 +1001,7 @@
                   download(async () => {
                     raw[entry.name + "/" + f.path] = new Uint8Array(
                       await (
-                        await request(API + "/" + f.id + "?alt=media")
+                        await fetchFileResponse(f.id)
                       ).arrayBuffer(),
                     );
                   }, entryPriority),
@@ -994,6 +1078,18 @@
     ).json();
   }
   async function move(id, from, to) {
+    if (localDriveMode) {
+      const r = await (
+        await localRequest("move", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileId: id, fromParentId: from, toParentId: to }),
+        })
+      ).json();
+      void window.COSMI_DRIVE_CACHE?.clear(accountNamespace);
+      folders.clear();
+      return r;
+    }
     const m = await metadata(id);
     if (m.trashed || !m.parents?.includes(from))
       throw Error("來源已移動，請重新載入 Drive");
@@ -1744,7 +1840,7 @@
     }
   }
   async function syncPipelineIndex() {
-    if (!accessToken || Date.now() >= expiry - SESSION_SKEW) {
+    if (!localDriveMode && (!accessToken || Date.now() >= expiry - SESSION_SKEW)) {
       return pipelineIndexState;
     }
     const safeList = async (dirPath) => {
@@ -2115,16 +2211,54 @@
       }),
     );
     const saved = readSession();
-    if (saved) {
-      $("driveGateStatus").textContent = "正在恢復 Google Drive 登入…";
-      void authorize({ access_token: saved.accessToken }, saved);
+    const trySavedOrGate = () => {
+      if (saved) {
+        $("driveGateStatus").textContent = "正在恢復 Google Drive 登入…";
+        void authorize({ access_token: saved.accessToken }, saved);
+      } else {
+        $("driveGateStatus").textContent =
+          window.location?.protocol === "file:"
+            ? "本機請先以 http://localhost:8687 啟動網頁，不能直接開啟 HTML 檔。"
+            : config.clientId
+              ? "登入後可讀取你有權限的專案資產。"
+              : "尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";
+      }
+    };
+    if (isLoopbackHost()) {
+      void (async () => {
+        try {
+          const r = await fetch("/__local_drive__/status", { cache: "no-store" });
+          const d = r.ok ? await r.json() : null;
+          if (d?.available && d?.hasData) {
+            localDriveMode = true;
+            accountNamespace = "local:Drive";
+            if (!initialized) {
+              window.dispatchEvent(new Event("cosmi:authorized"));
+              initialized = true;
+            }
+            $("driveGate").hidden = true;
+            $("driveApp").hidden = false;
+            $("driveStatus").textContent = "已連結本機 Drive/ 目錄（讀寫優先於此）";
+            if (window.COSMI_PIPELINE) {
+              Promise.resolve()
+                .then(() => window.COSMI_PIPELINE.loadTemplates())
+                .then(() => window.COSMI_FORGE.refresh())
+                .catch((e) => {
+                  $("driveStatus").textContent += "；管線模板讀取失敗：" + e.message;
+                });
+            }
+            if (window.COSMI_DRIVE_CACHE?.preferences().autoSync !== false)
+              await run(() => syncPackages());
+            else
+              $("driveStatus").textContent =
+                "已連結本機 Drive/ 目錄（讀寫優先於此）；可手動重新載入。";
+            return;
+          }
+        } catch (_) {}
+        trySavedOrGate();
+      })();
     } else {
-      $("driveGateStatus").textContent =
-        window.location?.protocol === "file:"
-          ? "本機請先以 http://localhost:8687 啟動網頁，不能直接開啟 HTML 檔。"
-          : config.clientId
-            ? "登入後可讀取你有權限的專案資產。"
-            : "尚未設定 Google 登入，請設定 GOOGLE_OAUTH_CLIENT_ID 後部署。";
+      trySavedOrGate();
     }
   });
 })();

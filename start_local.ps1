@@ -46,7 +46,7 @@ if (-not $NoBrowser) {
 }
 
 if ([System.IO.Path]::GetFileNameWithoutExtension($python) -eq "py") {
-  & $python -3 -m http.server $Port
+  & $python -3 tools\local_server.py --port $Port
 } else {
-  & $python -m http.server $Port
+  & $python tools\local_server.py --port $Port
 }

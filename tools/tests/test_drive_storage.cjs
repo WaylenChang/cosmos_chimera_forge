@@ -867,5 +867,62 @@ test('syncPackages picks the latest modifiedTime when duplicate filenames exist 
   assert.equal(loaded[0].manifest.id, 'new-pkg');
 });
 
+test('localhost prioritizes local Drive/ API for read and write when local data exists', async () => {
+  const nodes = {}, localCalls = [];
+  const localFiles = new Map([['creatures/demo/demo_adult_05_wiki.md', '# Demo']]);
+  function node(id) {
+    return nodes[id] ||= { hidden: id === 'driveApp', textContent: '', value: '', listeners: {},
+      addEventListener(event, fn) { this.listeners[event] = fn; } };
+  }
+  const context = {
+    Blob, File, Headers, URLSearchParams, Event, crypto, Date,
+    sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+    setTimeout() { return 1; }, clearTimeout() {},
+    document: { getElementById: node, addEventListener(_, fn) { fn(); } },
+    COSMI_DRIVE_CONFIG: { clientId: '123-test.apps.googleusercontent.com', rootId: 'project-root', rootPath: 'project/cosmos_chimera_forge' },
+    COSMI_FORGE: { refresh() {}, loadZipFile() { throw Error('unexpected ZIP'); } },
+    dispatchEvent() {},
+    location: { protocol: 'http:', hostname: 'localhost', reload() {} },
+    google: { accounts: { oauth2: { initTokenClient: () => ({ requestAccessToken() {} }) } } },
+    async fetch(url, options = {}) {
+      localCalls.push(String(url));
+      if (String(url).startsWith('https://')) throw Error('Should not hit Google Drive when local Drive/ has data');
+      const parsed = new URL(url, 'http://localhost:8687');
+      if (parsed.pathname === '/__local_drive__/status') {
+        return Response.json({ available: true, hasData: true, entryCount: 1 });
+      }
+      if (parsed.pathname === '/__local_drive__/list') {
+        return Response.json({ files: [] });
+      }
+      if (parsed.pathname === '/__local_drive__/folder') {
+        const body = JSON.parse(options.body || '{}');
+        return Response.json({ id: 'local:' + (body.path || ''), name: body.path || 'Drive', mimeType: 'application/vnd.google-apps.folder' });
+      }
+      if (parsed.pathname === '/__local_drive__/read') {
+        const rel = parsed.searchParams.get('path') || parsed.searchParams.get('id').replace(/^local:/, '');
+        if (!localFiles.has(rel)) return Response.json({ error: rel + ' 不存在' }, { status: 404 });
+        return new Response(localFiles.get(rel));
+      }
+      if (parsed.pathname === '/__local_drive__/write') {
+        const rel = parsed.searchParams.get('path');
+        const text = await new Response(options.body).text();
+        localFiles.set(rel, text);
+        return Response.json({ id: 'local:' + rel, name: rel.split('/').pop(), size: String(text.length) });
+      }
+      return Response.json({ error: 'unexpected' }, { status: 404 });
+    },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(node('driveApp').hidden, false);
+  const content = await (await context.COSMI_DRIVE.read('creatures/demo/demo_adult_05_wiki.md')).text();
+  assert.equal(content, '# Demo');
+  await context.COSMI_DRIVE.write('creatures/demo/note.md', new Blob(['updated'], { type: 'text/markdown' }));
+  assert.equal(localFiles.get('creatures/demo/note.md'), 'updated');
+  assert.equal(localCalls.some((u) => u.startsWith('/__local_drive__/')), true);
+});
+
+
 
 

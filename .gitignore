@@ -20,6 +20,7 @@ crawl_*.py
 
 # Per-subject/asset data live in Google Drive only.
 # Existing tracked historical files require a separate verified migration.
+/Drive/
 /Data/_incoming/
 /palworld_data/
 /Logs/
