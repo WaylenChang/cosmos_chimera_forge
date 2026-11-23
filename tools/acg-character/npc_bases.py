@@ -1,23 +1,25 @@
 """Writes the NPC race base specs and gathers their bake reports (docs/design/npc-uma-looks.md#種族基底, ADR-0015).
 
   python tools/acg-character/npc_bases.py specs [--calibration <report.json>]
-      npc/race_bases.json (UmaRaceBaseTests.ExportRaceBases) + npc/template.json -> npc/bases/<id>.json, one per race
+      <game>/_UMA/Npc/race_bases.json (UmaRaceBaseTests.ExportRaceBases) + npc/template.json -> npc/bases/<id>.json, one per race
       and sex. The human bases are the template itself at the human means and need no calibration; the others need
       race.py's report on npc_human_male, which says how far one key moves each channel and so turns a race's
       departure from the human mean into target weights and spec values.
   python tools/acg-character/npc_bases.py bake --blender <blender.exe> [--jobs N] [--only <id>,...]
-      runs race.py on every npc/bases/<id>.json in parallel (outputs in Logs/npc/), then gathers the reports as `keys`.
+      runs race.py on every npc/bases/<id>.json in parallel (.blend/.json/.log in Logs/npc/, .fbx in <game>/_UMA/Npc/Bases/), then gathers the reports as `keys`.
   python tools/acg-character/npc_bases.py sheet <lineup dir> <out.png>
       npc_lineup.py renders -> one contact sheet: per base its front and side at one common scale, then its face.
   python tools/acg-character/npc_bases.py keys <report.json>...
-      race.py reports of the bases -> npc/race_keys.json, read by UmaRaceBaseTests.BakedKeysReachAndShowEveryResident.
+      race.py reports of the bases -> <game>/_UMA/Npc/race_keys.json, read by UmaRaceBaseTests.BakedKeysReachAndShowEveryResident.
 
-Pre: Python 3, no Blender needed. Post: outputs rewritten in full, sorted and LF. Side effects: writes files under npc/.
+Pre: Python 3, no Blender needed. Post: outputs rewritten in full, sorted and LF. Side effects: writes npc/bases/ here and the tables and FBX in the game repo (game_paths.py).
 """
 import argparse
 import copy
 import json
 import os
+
+from game_paths import GAME_BASES, GAME_NPC
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NPC = os.path.join(HERE, "npc")
@@ -86,8 +88,8 @@ def _shift(spec, channel, name, delta, report, clipped):
 
 
 def specs(calibration):
-    table = _load(os.path.join(NPC, "race_bases.json"))["bases"]
-    channels = _load(os.path.join(HERE, "race_channels.json"))["channels"]
+    table = _load(os.path.join(GAME_NPC, "race_bases.json"))["bases"]
+    channels = _load(os.path.join(GAME_NPC, "race_channels.json"))["channels"]
     template = _load(os.path.join(NPC, "template.json"))
     report = _load(calibration) if calibration else None
     notes = {}
@@ -123,7 +125,7 @@ def specs(calibration):
 
 
 def keys(reports):
-    channels = _load(os.path.join(HERE, "race_channels.json"))["channels"]
+    channels = _load(os.path.join(GAME_NPC, "race_channels.json"))["channels"]
     out = {}
     for path in reports:
         r = _load(path)
@@ -136,7 +138,7 @@ def keys(reports):
                 entry["mm_exempt"] = True
             bases.setdefault(name, {})[side] = entry
         out[r["spec"]] = bases
-    path = os.path.join(NPC, "race_keys.json")
+    path = os.path.join(GAME_NPC, "race_keys.json")
     old = _load(path)["bases"] if os.path.exists(path) else {}
     old.update(out)
     _write(path, {"_doc": "Per race base: for each baked DNA key, per = channel change of the whole key (weight 1), "
@@ -151,6 +153,7 @@ def bake(blender, jobs, only):
     root = os.path.dirname(os.path.dirname(HERE))
     out = os.path.join(root, "Logs", "npc")
     os.makedirs(out, exist_ok=True)
+    os.makedirs(GAME_BASES, exist_ok=True)
     ids = sorted(f[:-5] for f in os.listdir(os.path.join(NPC, "bases")) if f.endswith(".json"))
     if only:
         ids = [i for i in ids if i in only.split(",")]
@@ -158,7 +161,7 @@ def bake(blender, jobs, only):
     def one(bid):
         cmd = [blender, "-b", "--python", os.path.join(HERE, "race.py"), "--", "--spec",
                os.path.join(NPC, "bases", bid + ".json"), "--blend", os.path.join(out, bid + ".blend"),
-               "--fbx", os.path.join(out, bid + ".fbx"), "--report", os.path.join(out, bid + ".json")]
+               "--fbx", os.path.join(GAME_BASES, bid + ".fbx"), "--report", os.path.join(out, bid + ".json")]
         with open(os.path.join(out, bid + ".log"), "w", encoding="utf-8") as log:
             code = subprocess.call(cmd, stdout=log, stderr=subprocess.STDOUT)
         print("BAKED" if code == 0 else "FAILED", bid, flush=True)

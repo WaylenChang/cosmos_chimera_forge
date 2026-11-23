@@ -28,6 +28,7 @@ from mathutils import Vector
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import acg_measure  # noqa: E402
+from game_paths import GAME_NPC  # noqa: E402
 import build  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -158,7 +159,7 @@ def _sides(channel):
 
 def main():
     a = _args()
-    table = json.load(open(os.path.join(HERE, "race_channels.json"), encoding="utf-8"))["channels"]
+    table = json.load(open(os.path.join(GAME_NPC, "race_channels.json"), encoding="utf-8"))["channels"]
     spec = _freeze_head(_bare(json.load(open(a.spec, encoding="utf-8"))))
     wanted = set(a.only.split(",")) if a.only else None
     bakes = [(n, c) for n, c in table.items() if c["kind"] in ("target", "param") and (wanted is None or n in wanted)]
