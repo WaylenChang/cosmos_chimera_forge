@@ -11,6 +11,8 @@ description: >-
 
 Single Source of Truth for designing original, production-ready AGC creatures across 2D concept art and 3D topology/rigging. Select **one Base Entity**, route **one Primary + 0–2 Secondary morphology sub-skills**, and enforce the global laws below without repeating them in sub-skills.
 
+> **Mandatory Pre-Design Gate (Anti-Duplication)**: Before designing any new creature concept or evolution line, **always read** `Drive/creatures/_designed_prompts/_creature_feature_lookup_table.json` (or `.md`) first to check existing archetypes, morphology routes, palettes, and signature motifs (`Overlap Coefficient <= 60%`). Never duplicate an existing creature silhouette or concept.
+
 ---
 
 ## 1. Base Entity Axis & Anatomy Mapping

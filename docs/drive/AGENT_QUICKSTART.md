@@ -87,6 +87,7 @@
 4. **交付格式**：所有資產一律逐檔交付至對應展開目錄，**禁止交付 ZIP 壓縮檔**。
 5. **不跨資產混用**：只讀取當前 `subject_id`（與指定 `stage`）的資料，不得借用其他角色或進化階段的圖鑑或外觀。
 6. **Prompt 移轉追加與第三層精簡**：管線開始即把 `designed_prompts/` 對應 `.prompt.md` 移入 `<kind>/<id>/`；版本或步驟調整時將更改內容追加於該 `.prompt.md`；`<kind>/<id>/` 只保留 `*.prompt.md` 與當前審核階段或已通過的檔案，已結束步驟或舊有版本一律移至 `<kind>/<id>/<step>/[<ver>/]`。
+7. **設計新項目必先閱讀 `_feature_lookup_table`**：設計任何新宙獸、角色或招式前，**必須先閱讀**對應的檢索表（`creatures/_designed_prompts/_creature_feature_lookup_table.{json,md}`、`characters/_designed_prompts/_character_feature_lookup_table.{json,md}`、`moves/_designed_prompts_drive/_move_feature_lookup_table.json`），核對既有原型、配色、材質、剪影與特徵關鍵字（重疊率上限 `60%`），避免重複設計；新增或改寫後須重新產出對應 `_feature_lookup_table`。
 
 ---
 

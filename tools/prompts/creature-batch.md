@@ -30,6 +30,7 @@
 弱點屬性在本批內須讓每種屬性至多出現 {{WEAK_MAX}} 次。
 
 ### 輸入
+- **設計前必讀（防重複檢索表）**：`Drive/creatures/_designed_prompts/_creature_feature_lookup_table.json`（或 `.md`），先確認同屬性與同定位的既有原型、配色與紋樣，避免概念與視覺重疊超過 60%。
 - 已存在的 ID（不得重用；含 `Data/retired-ids.txt`）：{{EXISTING_IDS}}
 - 原型資料（只用上表指定的 ID，取**意象**，id／名稱不得含神祇或人物真名）：{{ARCHETYPE_ROWS}}
 - 可引用的主動技 ID（**未被任何宙獸使用**的）：{{FREE_MOVES}}
