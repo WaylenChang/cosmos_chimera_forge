@@ -5005,6 +5005,8 @@
   function disposeFourFormViewers(keep = new Set()) {
     for (const [slot, viewer] of reviewState.fourFormViewers) {
       if (keep.has(slot)) continue;
+      if (viewer.group?.animation?.reference === viewer) viewer.group.animation.reference = null;
+      if (viewer.group?.leader === viewer) viewer.group.leader = null;
       viewer.dispose();
       reviewState.fourFormViewers.delete(slot);
     }
@@ -5035,6 +5037,7 @@
 
   function syncFourFormPreset(group, orbit, source = null) {
     if (source) group.leader = source;
+    if (reviewState.fourFormSyncGroup !== group) return;
     const peers = source && !reviewState.fourFormSync ? [source] : fourFormSyncPeers(group);
     if (reviewState.fourFormSync) { group.camera = null; group.preset = orbit; }
     for (const peer of peers) peer.resetCamera(orbit);
@@ -5043,7 +5046,7 @@
   function syncFourFormAnimation(source, name, playing, phase = 0) {
     const group = source.group;
     group.leader = source;
-    const command = {name,playing,phase};
+    const command = {name,playing,phase,reference:source};
     if (!reviewState.fourFormSync || reviewState.fourFormSyncGroup !== group) {
       source.applyAnimation(command);
       return;
@@ -5071,7 +5074,11 @@
     const prior = reviewState.fourFormViewers.get(slot);
     keep.add(slot);
     if (prior?.key === key && prior.group === group) return prior.host;
-    if (prior) prior.dispose();
+    if (prior) {
+      if (prior.group?.animation?.reference === prior) prior.group.animation.reference = null;
+      if (prior.group?.leader === prior) prior.group.leader = null;
+      prior.dispose();
+    }
     const host = el("div", {class:"four-form-3d", "data-form":stage});
     const viewer = el("model-viewer", {
       "camera-controls":true, "touch-action":"pan-y", loading:"eager",
@@ -5106,6 +5113,7 @@
     };
     const record = {key,host,group,stage,viewer,ready:false,failed:false,
       animationName:()=>clips.value, isPlaying:()=>playing, phase,
+      resetAnimationRate:()=>{viewer.timeScale=1;},
       resetCamera:orbit=>{
         viewer.cameraOrbit = orbit;
         viewer.cameraTarget = "auto auto auto";
@@ -5126,9 +5134,14 @@
         animStatus.textContent = "";
         clips.value = match;
         viewer.animationName = match;
-        void Promise.resolve(viewer.updateComplete).then(()=>{
+        viewer.animationCrossfadeDuration = 0;
+        const reference=command.reference?.viewer;
+        void Promise.all([Promise.resolve(viewer.updateComplete),Promise.resolve(reference?.updateComplete)]).then(()=>{
           if (!live() || seq !== animationSeq) return;
-          viewer.currentTime = command.phase * (Number(viewer.duration) || 0);
+          const duration=Number(viewer.duration)||0;
+          const masterDuration=Number(reference?.duration)||0;
+          viewer.timeScale = reviewState.fourFormSync && duration>0 && masterDuration>0 ? duration/masterDuration : 1;
+          viewer.currentTime = command.phase * duration;
           updateSeek();
           playing = command.playing;
           play.textContent = playing ? "暫停" : "播放";
@@ -5136,7 +5149,9 @@
             viewer.play?.();
             if (typeof window.requestAnimationFrame === "function") seekRaf = window.requestAnimationFrame(tickSeek);
           }
-        }).catch(fail);
+        }).catch(error=>{
+          if (live() && seq===animationSeq) animStatus.textContent="動畫同步失敗："+(error?.message || "無法播放");
+        });
       },
       dispose:()=>{
         active = false;
@@ -5201,7 +5216,7 @@
         if (group.animation) {
           // A model that loads late joins the currently selected clip and phase.
           const peer = fourFormSyncPeers(group).find(p=>p!==record && p.animationName()===window.COSMI_MODEL_REVIEW.matchingReviewClip(p.viewer.availableAnimations || [],group.animation.name));
-          record.applyAnimation({...group.animation,phase:peer ? peer.phase() : group.animation.phase});
+          record.applyAnimation({...group.animation,reference:group.animation.reference || peer || record,phase:peer ? peer.phase() : group.animation.phase});
         }
       }
     });
@@ -5279,7 +5294,10 @@
       refreshSyncNote();
       sharedControls.hidden = noteControls.hidden = !locked.checked;
       if (locked.checked) alignFourFormGroup(syncGroup);
-      else { syncGroup.camera=null; syncGroup.preset=null; syncGroup.animation=null; }
+      else {
+        syncGroup.camera=null; syncGroup.preset=null; syncGroup.animation=null;
+        for (const peer of fourFormSyncPeers(syncGroup)) peer.resetAnimationRate();
+      }
       saveViewMemory();
     });
     header.replaceChildren(
@@ -5317,7 +5335,7 @@
       submit.textContent = reviewState.fourFormBusy ? "寫入 Drive 中…" : "送出本次審查 (" + count + "/4)";
     };
     const applyReviewLabel = value => {
-      if (reviewState.fourFormBusy) return;
+      if (reviewState.fourFormBusy || reviewState.fourFormSyncGroup !== syncGroup) return;
       for (const control of draftControls) {
         control.result.value=value;
         control.remember();
