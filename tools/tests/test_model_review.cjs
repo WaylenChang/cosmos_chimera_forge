@@ -362,3 +362,46 @@ test('four-form review defaults to family view and retains exact single-package 
   assert.match(forge,/function openSingleFormPackage[\s\S]*?reviewState\.creatureReviewMode = "single"/);
   assert.match(forge,/four-form-review-grid/);
 });
+
+function makeReviewGlb(json) {
+  const raw = Buffer.from(JSON.stringify(json));
+  const len = Math.ceil(raw.length / 4) * 4;
+  const buffer = Buffer.alloc(20 + len, 0x20);
+  buffer.writeUInt32LE(0x46546c67,0);
+  buffer.writeUInt32LE(2,4);
+  buffer.writeUInt32LE(buffer.length,8);
+  buffer.writeUInt32LE(len,12);
+  buffer.writeUInt32LE(0x4e4f534a,16);
+  raw.copy(buffer,20);
+  return buffer;
+}
+
+test('four-form viewer reads exactly the selected private GLB and verifies descriptor hash', async () => {
+  const {createHash,webcrypto} = require('node:crypto');
+  const bytes = makeReviewGlb({asset:{version:'2.0'}});
+  const descriptor = {spec:'cosmimera-model-review/1',model:{path:'models/actual.glb',sha256:createHash('sha256').update(bytes).digest('hex')},camera_orbit:'0deg 80deg auto'};
+  const pkg = {id:'cr_test_adult',driveFolderId:'folder',drivePath:'creatures/cr_test',glbFile:{path:'models/actual.glb',id:'actual-id'},driveFiles:[{path:'models/actual.glb',id:'actual-id'}],rawFiles:{'review_viewer.json':Buffer.from(JSON.stringify(descriptor))}};
+  const ids = [];
+  const drive = {readById:async id=>{ids.push(id);return new Blob([bytes]);},read:()=>{throw Error('wrong path');}};
+  const result = await review.readFourFormGlb(pkg,drive,webcrypto.subtle);
+  assert.deepEqual(ids,['actual-id']);
+  assert.deepEqual(Buffer.from(result.buffer),bytes);
+  assert.equal(result.orbit,'0deg 80deg auto');
+  descriptor.model.sha256='0'.repeat(64);
+  pkg.rawFiles['review_viewer.json']=Buffer.from(JSON.stringify(descriptor));
+  await assert.rejects(review.readFourFormGlb(pkg,drive,webcrypto.subtle),/SHA256/);
+  assert.throws(()=>review.validateReviewGlb(makeReviewGlb({asset:{version:'2.0'},images:[{uri:'https://example.com/private.png'}]})),/外部資源/);
+  assert.throws(()=>review.validateReviewGlb(new Uint8Array([1,2,3])),/無效/);
+});
+
+test('four-form review ships bundled interactive viewer with per-form lifetime and animation controls', () => {
+  const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const forge = fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(html,/type="module" src="vendor\/model-viewer\.min\.js"/);
+  assert.match(forge,/el\("model-viewer"/);
+  assert.match(forge,/"camera-controls":true/);
+  assert.match(forge,/viewer\.availableAnimations/);
+  assert.match(forge,/fourForm3dPreview\(entry\.key \+ ":" \+ row\.stage/);
+  assert.match(forge,/disposeFourFormViewers\(keepViewers\)/);
+  assert.match(forge,/URL\.revokeObjectURL\(url\)/);
+});
