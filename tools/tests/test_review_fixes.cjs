@@ -97,6 +97,18 @@ function makeNode(tag = 'div', id = '') {
   return node;
 }
 
+function enterSingleDesign(nodes) {
+  const find = node => {
+    if (!node) return null;
+    if (node.tagName === 'BUTTON' && collectText(node).trim() === '設計明細') return node;
+    for (const child of node.children || []) { const match = find(child); if (match) return match; }
+    return null;
+  };
+  const button = find(nodes.designedStageHeader);
+  assert.ok(button, 'default four-form review must offer single-form design details');
+  button.listeners.click[0]();
+}
+
 function collectText(node) {
   if (!node) return '';
   if (typeof node === 'string') return node;
@@ -247,7 +259,7 @@ test('creature-concept and character-concept mark front and turnaround as L2 img
   assert.match(forgeSrc, /turnaround\.png`, kind: "turnaround", level: "L2"/);
 });
 
-test('reviewDesignedDetails embeds creature 3D viewer defaulting to adult and switches stages inline without popup', async () => {
+test('single-form design detail embeds 3D viewer defaulting to adult and switches stages inline without popup', async () => {
   const { c, nodes } = createHarness();
   const f = c.COSMI_FORGE;
   const encode = x => new TextEncoder().encode(JSON.stringify(x));
@@ -279,6 +291,7 @@ test('reviewDesignedDetails embeds creature 3D viewer defaulting to adult and sw
   const creatureRow = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
   assert.ok(creatureRow, 'creature row should appear in review rail');
   creatureRow.listeners.click[0]();
+  enterSingleDesign(nodes);
 
   assert.equal(nodes.reviewDesignedDetails.style.display, 'block');
   assert.equal(nodes.stage3dView.classList.contains('stage3d-embedded'), true);
@@ -389,6 +402,7 @@ test('GLB animations populate designed 3D clip bar and count after model loads',
   await f.setViewMode('review');
   const creatureRow = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
   creatureRow.listeners.click[0]();
+  enterSingleDesign(nodes);
 
   // Flush the mountDesigned3dViewer rAF callback without looping animate3dLoop infinitely
   const pending = rafQueue.splice(0, rafQueue.length);
@@ -605,6 +619,7 @@ test('switching forms, creatures, and characters reuses one 3D viewer without re
 
   // 1. Select creature 1 (adult)
   nodes.railList.children.find(r => collectText(r).includes(creature1.line_id)).listeners.click[0]();
+  enterSingleDesign(nodes);
   await flushRaf();
   assert.deepEqual(parsedModels, [1]);
   styleDisplayHistory.length = 0;
@@ -752,6 +767,7 @@ test('Drive deferred GLBs load across creatures, characters, and refresh without
 
   // 1. Creature 1
   nodes.railList.children.find(r => collectText(r).includes(creature1.line_id)).listeners.click[0]();
+  enterSingleDesign(nodes);
   await flushRaf();
   await flushMicrotasks();
   assert.equal(isConnectedToViewport(nodes.stage3dView), true);
@@ -1002,6 +1018,7 @@ test('view memory persists active tab, creature form, 3D clip, and character 2D 
   const row = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
   assert.ok(row, 'creature row must exist');
   row.listeners.click[0]();
+  enterSingleDesign(nodes);
 
   const findBtn = (node, pred) => {
     if (!node) return null;
@@ -1064,4 +1081,27 @@ test('view memory persists active tab, creature form, 3D clip, and character 2D 
   assert.equal(badgeEl?.textContent.includes('cr_attack_01'), true, 'reload should restore remembered 3D clip, got: ' + badgeEl?.textContent);
   const restoredJuvBtn = findBtn(h2.nodes.designedDetailView, b => b['data-stage'] === 'juvenile');
   assert.equal(restoredJuvBtn?.classList.contains('on'), true, 'reload should restore juvenile form');
+});
+
+test('default creature overview creates four separate interactive model-viewer slots', async () => {
+  const {c,nodes}=createHarness();
+  const f=c.COSMI_FORGE, creature=c.DESIGNED[0];
+  const enc=x=>new TextEncoder().encode(JSON.stringify(x));
+  for (const stage of ['juvenile','adolescent','adult','overload']) {
+    const id='mdl-test-'+stage;
+    await f.loadAssetFiles({
+      [id+'/manifest.json']:enc({task_id:id,task_type:'creature-model-rig',subject_id:creature.line_id,stage,files:[{path:'models/a.glb',kind:'model',level:'L1'}]}),
+      [id+'/models/a.glb']:new Uint8Array([1,2,3])
+    },{name:id},{silent:true});
+  }
+  await f.setViewMode('review');
+  nodes.railList.children.find(r=>collectText(r).includes(creature.line_id)).listeners.click[0]();
+  const findAll=(node,pred,out=[])=>{if(!node)return out;if(pred(node))out.push(node);for(const child of node.children||[])findAll(child,pred,out);return out;};
+  const viewers=findAll(nodes.designedDetailView,n=>n.tagName==='MODEL-VIEWER');
+  assert.equal(viewers.length,4);
+  assert.equal(new Set(viewers.map(v=>v.alt)).size,4);
+  assert.ok(viewers.every(v=>v['camera-controls'] !== undefined));
+  const initial=viewers.slice();
+  f.refresh();
+  assert.deepEqual(findAll(nodes.designedDetailView,n=>n.tagName==='MODEL-VIEWER'),initial,'unchanged GLB slots should retain their elements across refresh');
 });
