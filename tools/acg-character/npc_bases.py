@@ -7,6 +7,9 @@
       departure from the human mean into target weights and spec values.
   python tools/acg-character/npc_bases.py bake --blender <blender.exe> [--jobs N] [--only <id>,...]
       runs race.py on every npc/bases/<id>.json in parallel (.blend/.json/.log in Logs/npc/, .fbx in <game>/_UMA/Npc/Bases/), then gathers the reports as `keys`.
+  python tools/acg-character/npc_bases.py hair --blender <blender.exe> [--blends <dir>] [--jobs N] [--only <id>,...]
+      runs npc_hair.py on the baked .blend (default Logs/npc/) of every base whose race grows hair (npc/hair_styles.json "races"), writing
+      <game>/_UMA/Npc/Hair/<id>.fbx (log <id>_hair.log beside the .blend).
   python tools/acg-character/npc_bases.py sheet <lineup dir> <out.png>
       npc_lineup.py renders -> one contact sheet: per base its front and side at one common scale, then its face.
   python tools/acg-character/npc_bases.py keys <report.json>...
@@ -176,6 +179,31 @@ def bake(blender, jobs, only):
         raise SystemExit("some bases failed; see Logs/npc/<id>.log")
 
 
+def hair(blender, jobs, only, blends):
+    import subprocess
+    from concurrent.futures import ThreadPoolExecutor
+    out = blends or os.path.join(os.path.dirname(os.path.dirname(HERE)), "Logs", "npc")
+    races = _load(os.path.join(NPC, "hair_styles.json"))["races"]
+    ids = sorted(f[:-5] for f in os.listdir(os.path.join(NPC, "bases")) if f.endswith(".json")
+                 and f.split("_")[1] in races)
+    if only:
+        ids = [i for i in ids if i in only.split(",")]
+    dest = os.path.join(GAME_NPC, "Hair")
+    os.makedirs(dest, exist_ok=True)
+
+    def one(bid):
+        cmd = [blender, "-b", os.path.join(out, bid + ".blend"), "--python", os.path.join(HERE, "npc_hair.py"), "--",
+               "--fbx", os.path.join(dest, bid + ".fbx")]
+        with open(os.path.join(out, bid + "_hair.log"), "w", encoding="utf-8") as log:
+            code = subprocess.call(cmd, stdout=log, stderr=subprocess.STDOUT)
+        print("HAIR" if code == 0 else "FAILED", bid, flush=True)
+        return code
+
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        if any(list(pool.map(one, ids))):
+            raise SystemExit("some hair bakes failed; see <id>_hair.log beside the .blend")
+
+
 def sheet(src, out):
     from PIL import Image, ImageDraw
     ids = sorted({f.rsplit("_", 1)[0] for f in os.listdir(src) if f.startswith("npc_") and f.endswith("_front.png")})
@@ -212,6 +240,11 @@ def main():
     c.add_argument("--blender", required=True)
     c.add_argument("--jobs", type=int, default=4)
     c.add_argument("--only")
+    h = sub.add_parser("hair")
+    h.add_argument("--blender", required=True)
+    h.add_argument("--jobs", type=int, default=4)
+    h.add_argument("--only")
+    h.add_argument("--blends")
     args = p.parse_args()
     if args.cmd == "specs":
         specs(args.calibration)
@@ -219,6 +252,8 @@ def main():
         sheet(args.src, args.out)
     elif args.cmd == "bake":
         bake(args.blender, args.jobs, args.only)
+    elif args.cmd == "hair":
+        hair(args.blender, args.jobs, args.only, args.blends)
     else:
         keys(args.reports)
 
