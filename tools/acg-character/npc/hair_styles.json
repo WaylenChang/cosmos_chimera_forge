@@ -238,7 +238,8 @@
      "wave": 0.08,
      "spread": 0.2,
      "jitter": 0.1,
-     "shell": 1.1
+     "shell": 1.1,
+     "swing": 3
     },
     {
      "name": "side_r",
@@ -266,7 +267,8 @@
      "wave": 0.08,
      "spread": 0.2,
      "jitter": 0.1,
-     "shell": 1.1
+     "shell": 1.1,
+     "swing": 3
     },
     {
      "name": "back",
@@ -298,7 +300,8 @@
      "wave": 0.08,
      "spread": 0.2,
      "jitter": 0.1,
-     "shell": 1.1
+     "shell": 1.1,
+     "swing": 3
     },
     {
      "name": "crown",
@@ -591,7 +594,8 @@
      "spread": 0.0,
      "jitter": 0.2,
      "shell": 1.1,
-     "flat": 0.35
+     "flat": 0.35,
+     "swing": 3
     }
    ]
   },
@@ -720,7 +724,8 @@
       0.2,
       0.3,
       -0.93
-     ]
+     ],
+     "swing": 3
     },
     {
      "name": "braid_r",
@@ -752,7 +757,8 @@
       -0.2,
       0.3,
       -0.93
-     ]
+     ],
+     "swing": 3
     }
    ]
   },
@@ -1092,5 +1098,6 @@
     }
    ]
   }
- }
+ },
+ "swing_comment": "Groups with \"swing\": n hang from n spring bones (acg_swing.hair, one chain per group along its mean strand, \"sw_hair_<group>_0_<i>\"); only strands longer than about a head radius swing, shorter ones move with the head."
 }

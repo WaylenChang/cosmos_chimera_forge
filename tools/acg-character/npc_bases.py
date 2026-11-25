@@ -10,6 +10,9 @@
   python tools/acg-character/npc_bases.py hair --blender <blender.exe> [--blends <dir>] [--jobs N] [--only <id>,...]
       runs npc_hair.py on the baked .blend (default Logs/npc/) of every base whose race grows hair (npc/hair_styles.json "races"), writing
       <game>/_UMA/Npc/Hair/<id>.fbx (log <id>_hair.log beside the .blend).
+  python tools/acg-character/npc_bases.py beard --blender <blender.exe> [--blends <dir>] [--jobs N] [--only <id>,...]
+      runs npc_beard.py on the male bases of the races in npc/beard_styles.json "races", writing <game>/_UMA/Npc/Beard/<id>.fbx
+      (log <id>_beard.log beside the .blend).
   python tools/acg-character/npc_bases.py sheet <lineup dir> <out.png>
       npc_lineup.py renders -> one contact sheet: per base its front and side at one common scale, then its face.
   python tools/acg-character/npc_bases.py keys <report.json>...
@@ -180,28 +183,37 @@ def bake(blender, jobs, only):
 
 
 def hair(blender, jobs, only, blends):
+    _worn("hair", "hair_styles.json", "npc_hair.py", "Hair", False, blender, jobs, only, blends)
+
+
+def beard(blender, jobs, only, blends):
+    _worn("beard", "beard_styles.json", "npc_beard.py", "Beard", True, blender, jobs, only, blends)
+
+
+def _worn(kind, styles, script, folder, males, blender, jobs, only, blends):
+    """Runs `script` on the baked .blend of every base whose race is in npc/<styles> "races" (males only if `males`)."""
     import subprocess
     from concurrent.futures import ThreadPoolExecutor
     out = blends or os.path.join(os.path.dirname(os.path.dirname(HERE)), "Logs", "npc")
-    races = _load(os.path.join(NPC, "hair_styles.json"))["races"]
+    races = _load(os.path.join(NPC, styles))["races"]
     ids = sorted(f[:-5] for f in os.listdir(os.path.join(NPC, "bases")) if f.endswith(".json")
-                 and f.split("_")[1] in races)
+                 and f.split("_")[1] in races and (not males or f[:-5].endswith("_male")))
     if only:
         ids = [i for i in ids if i in only.split(",")]
-    dest = os.path.join(GAME_NPC, "Hair")
+    dest = os.path.join(GAME_NPC, folder)
     os.makedirs(dest, exist_ok=True)
 
     def one(bid):
-        cmd = [blender, "-b", os.path.join(out, bid + ".blend"), "--python", os.path.join(HERE, "npc_hair.py"), "--",
+        cmd = [blender, "-b", os.path.join(out, bid + ".blend"), "--python", os.path.join(HERE, script), "--",
                "--fbx", os.path.join(dest, bid + ".fbx")]
-        with open(os.path.join(out, bid + "_hair.log"), "w", encoding="utf-8") as log:
+        with open(os.path.join(out, "%s_%s.log" % (bid, kind)), "w", encoding="utf-8") as log:
             code = subprocess.call(cmd, stdout=log, stderr=subprocess.STDOUT)
-        print("HAIR" if code == 0 else "FAILED", bid, flush=True)
+        print(kind.upper() if code == 0 else "FAILED", bid, flush=True)
         return code
 
     with ThreadPoolExecutor(max_workers=jobs) as pool:
         if any(list(pool.map(one, ids))):
-            raise SystemExit("some hair bakes failed; see <id>_hair.log beside the .blend")
+            raise SystemExit("some %s bakes failed; see <id>_%s.log beside the .blend" % (kind, kind))
 
 
 def sheet(src, out):
@@ -240,11 +252,12 @@ def main():
     c.add_argument("--blender", required=True)
     c.add_argument("--jobs", type=int, default=4)
     c.add_argument("--only")
-    h = sub.add_parser("hair")
-    h.add_argument("--blender", required=True)
-    h.add_argument("--jobs", type=int, default=4)
-    h.add_argument("--only")
-    h.add_argument("--blends")
+    for name in ("hair", "beard"):
+        h = sub.add_parser(name)
+        h.add_argument("--blender", required=True)
+        h.add_argument("--jobs", type=int, default=4)
+        h.add_argument("--only")
+        h.add_argument("--blends")
     args = p.parse_args()
     if args.cmd == "specs":
         specs(args.calibration)
@@ -254,6 +267,8 @@ def main():
         bake(args.blender, args.jobs, args.only)
     elif args.cmd == "hair":
         hair(args.blender, args.jobs, args.only, args.blends)
+    elif args.cmd == "beard":
+        beard(args.blender, args.jobs, args.only, args.blends)
     else:
         keys(args.reports)
 
