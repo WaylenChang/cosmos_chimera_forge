@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.11.1";
+  const TOOL_VERSION = "2.12.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -172,7 +172,7 @@
     reviews: {},
     creatureReviewMode: "all", // default: four-form family review; explicit package links remain single
     fourFormPicks: new Map(), fourFormDrafts: new Map(), fourFormFeedback: new Map(), fourFormBusy: false,
-    fourFormViewers: new Map(),
+    fourFormViewers: new Map(), fourFormSync: true, fourFormSyncGroup: null,
     three: {
       scene: null, camera: null, renderer: null, controls: null, mixer: null, clock: null,
       currentAction: null, currentClipName: "", clips: [], isPlaying: true, playbackSpeed: 1.0,
@@ -1383,6 +1383,7 @@
         filterQuery: reviewState.filterQuery,
         activeDesignedKey: reviewState.activeDesignedKey,
         creatureReviewMode: reviewState.creatureReviewMode,
+        fourFormSync: reviewState.fourFormSync,
         activePkgId: reviewState.activePkgId,
         activeStage: reviewState.activeStage,
         activeImgIdx: reviewState.activeImgIdx,
@@ -1410,6 +1411,7 @@
         reviewState.activeDesignedKey = vm.activeDesignedKey;
       }
       if (["all", "single"].includes(vm.creatureReviewMode)) reviewState.creatureReviewMode = vm.creatureReviewMode;
+      if (typeof vm.fourFormSync === "boolean") reviewState.fourFormSync = vm.fourFormSync;
       if (typeof vm.activePkgId === "string" || vm.activePkgId === null) {
         reviewState.activePkgId = vm.activePkgId;
       }
@@ -5006,16 +5008,69 @@
       viewer.dispose();
       reviewState.fourFormViewers.delete(slot);
     }
+    if (!keep.size && arguments.length === 0) reviewState.fourFormSyncGroup = null;
+  }
+
+  function getFourFormSyncGroup(entryKey) {
+    if (reviewState.fourFormSyncGroup?.key !== entryKey) {
+      reviewState.fourFormSyncGroup = {key:entryKey, camera:null, preset:"0deg 80deg auto", animation:null, leader:null};
+    }
+    return reviewState.fourFormSyncGroup;
+  }
+
+  function fourFormSyncPeers(group) {
+    return [...reviewState.fourFormViewers.values()].filter(record=>record.group===group && record.ready && !record.failed);
+  }
+
+  function syncFourFormCamera(source, camera) {
+    const group = source.group;
+    group.leader = source;
+    if (!reviewState.fourFormSync || reviewState.fourFormSyncGroup !== group || !camera) return;
+    group.camera = camera;
+    group.preset = null;
+    for (const peer of fourFormSyncPeers(group)) {
+      if (peer !== source) window.COSMI_MODEL_REVIEW.applyReviewCamera(peer.viewer,camera);
+    }
+  }
+
+  function syncFourFormPreset(group, orbit, source = null) {
+    if (source) group.leader = source;
+    const peers = source && !reviewState.fourFormSync ? [source] : fourFormSyncPeers(group);
+    if (reviewState.fourFormSync) { group.camera = null; group.preset = orbit; }
+    for (const peer of peers) peer.resetCamera(orbit);
+  }
+
+  function syncFourFormAnimation(source, name, playing, phase = 0) {
+    const group = source.group;
+    group.leader = source;
+    const command = {name,playing,phase};
+    if (!reviewState.fourFormSync || reviewState.fourFormSyncGroup !== group) {
+      source.applyAnimation(command);
+      return;
+    }
+    group.animation = command;
+    for (const peer of fourFormSyncPeers(group)) peer.applyAnimation(command);
+  }
+
+  function alignFourFormGroup(group) {
+    const peers = fourFormSyncPeers(group);
+    const leader = peers.includes(group.leader) ? group.leader : peers.find(p=>p.stage==="adult") || peers[0];
+    if (!leader) return;
+    const camera = window.COSMI_MODEL_REVIEW.captureReviewCamera(leader.viewer);
+    if (camera) syncFourFormCamera(leader,camera);
+    else syncFourFormPreset(group,"0deg 80deg auto",leader);
+    if (leader.animationName()) syncFourFormAnimation(leader,leader.animationName(),leader.isPlaying(),leader.phase());
   }
 
   // Each form owns its own <model-viewer>, camera and animation state. The
   // bundled viewer shares a renderer, unlike allocating four WebGL contexts.
   function fourForm3dPreview(slot, pkg, stage, keep) {
     const file = pkg.glbFile;
+    const group = reviewState.fourFormSyncGroup;
     const key = JSON.stringify([pkg.id, file.path, file.id || "", file.modifiedTime || "", file.id ? "" : file.url || ""]);
     const prior = reviewState.fourFormViewers.get(slot);
     keep.add(slot);
-    if (prior?.key === key) return prior.host;
+    if (prior?.key === key && prior.group === group) return prior.host;
     if (prior) prior.dispose();
     const host = el("div", {class:"four-form-3d", "data-form":stage});
     const viewer = el("model-viewer", {
@@ -5027,24 +5082,80 @@
     const clips = el("select", {"aria-label":STAGE_ZH[stage]+"動畫",disabled:true}, el("option",{},"載入動畫中…"));
     const play = el("button", {class:"btn ghost mini",type:"button",disabled:true,"aria-label":STAGE_ZH[stage]+"播放或暫停"}, "播放");
     const reset = el("button", {class:"btn ghost mini",type:"button",disabled:true,onclick:()=>{
-      viewer.cameraOrbit = initialOrbit;
-      viewer.cameraTarget = "auto auto auto";
-      viewer.fieldOfView = "auto";
-      viewer.jumpCameraToGoal?.();
+      syncFourFormPreset(group, reviewState.fourFormSync ? "0deg 80deg auto" : initialOrbit, record);
     }}, "重設視角");
-    let active = true, url = "", initialOrbit = "0deg 80deg auto", playing = false;
-    const record = {key,host,failed:false,dispose:()=>{
-      active = false;
-      viewer.pause?.();
-      viewer.removeAttribute?.("src");
-      if (url) URL.revokeObjectURL(url);
-      url = "";
-    }};
+    const seek = el("input",{type:"range",min:0,max:1000,step:1,value:0,disabled:true,
+      "aria-label":STAGE_ZH[stage]+"動畫進度",title:"動畫進度 (0–100%)"});
+    const animStatus = el("div",{class:"muted four-form-animation-status",role:"status"});
+    let active = true, url = "", initialOrbit = "0deg 80deg auto", playing = false, animationSeq = 0, seekRaf = null;
+    const phase = () => {
+      const duration = Number(viewer.duration);
+      return duration > 0 ? Math.min(1,Math.max(0,Number(viewer.currentTime || 0)/duration)) : 0;
+    };
+    const updateSeek = () => {
+      seek.value = String(Math.round(phase()*1000));
+    };
+    const stopSeekLoop = () => {
+      if (seekRaf !== null) window.cancelAnimationFrame?.(seekRaf);
+      seekRaf = null;
+    };
+    const tickSeek = () => {
+      if (!active || !playing) { seekRaf = null; return; }
+      updateSeek();
+      if (typeof window.requestAnimationFrame === "function") seekRaf = window.requestAnimationFrame(tickSeek);
+    };
+    const record = {key,host,group,stage,viewer,ready:false,failed:false,
+      animationName:()=>clips.value, isPlaying:()=>playing, phase,
+      resetCamera:orbit=>{
+        viewer.cameraOrbit = orbit;
+        viewer.cameraTarget = "auto auto auto";
+        viewer.fieldOfView = "auto";
+        viewer.jumpCameraToGoal?.();
+      },
+      applyAnimation:command=>{
+        const seq = ++animationSeq;
+        const match = window.COSMI_MODEL_REVIEW.matchingReviewClip(viewer.availableAnimations || [],command.name);
+        stopSeekLoop();
+        viewer.pause?.();
+        playing = false;
+        play.textContent = "播放";
+        if (!match) {
+          animStatus.textContent = "缺少同步動畫：" + command.name;
+          return;
+        }
+        animStatus.textContent = "";
+        clips.value = match;
+        viewer.animationName = match;
+        void Promise.resolve(viewer.updateComplete).then(()=>{
+          if (!live() || seq !== animationSeq) return;
+          viewer.currentTime = command.phase * (Number(viewer.duration) || 0);
+          updateSeek();
+          playing = command.playing;
+          play.textContent = playing ? "暫停" : "播放";
+          if (playing) {
+            viewer.play?.();
+            if (typeof window.requestAnimationFrame === "function") seekRaf = window.requestAnimationFrame(tickSeek);
+          }
+        }).catch(fail);
+      },
+      dispose:()=>{
+        active = false;
+        animationSeq++;
+        stopSeekLoop();
+        viewer.pause?.();
+        viewer.removeAttribute?.("src");
+        if (url) URL.revokeObjectURL(url);
+        url = "";
+      }};
     reviewState.fourFormViewers.set(slot, record);
     const live = () => active && reviewState.fourFormViewers.get(slot) === record && state.activeTab === "review";
     const fail = error => {
       if (!live()) return;
       record.failed = true;
+      record.ready = false;
+      animationSeq++;
+      stopSeekLoop();
+      playing = false;
       const current = reviewState.packages.find(p=>p.id===pkg.id);
       if (current) current.glbLoadError = true;
       message.textContent = "GLB 載入失敗：" + (error?.message || "請檢查模型或瀏覽器");
@@ -5052,21 +5163,22 @@
       viewer.removeAttribute?.("src");
       if (url) URL.revokeObjectURL(url);
       url = "";
-      clips.disabled = play.disabled = reset.disabled = true;
+      clips.disabled = play.disabled = reset.disabled = seek.disabled = true;
     };
-    const selectClip = () => {
-      if (!live() || !clips.value) return;
-      viewer.pause();
-      viewer.animationName = clips.value;
-      viewer.currentTime = 0;
-      if (playing) viewer.play();
-    };
-    clips.addEventListener("change", selectClip);
+    // Only actual mouse/touch interaction can lead the other cameras;
+    // programmatic camera-change events must not echo back.
+    viewer.addEventListener("camera-change", event=>{
+      if (!live() || !record.ready || event.detail?.source !== "user-interaction") return;
+      syncFourFormCamera(record,window.COSMI_MODEL_REVIEW.captureReviewCamera(viewer));
+    });
+    clips.addEventListener("change", () => {
+      if (live() && clips.value) syncFourFormAnimation(record,clips.value,playing,0);
+    });
     play.addEventListener("click", () => {
-      if (!live()) return;
-      playing = !playing;
-      if (playing) viewer.play(); else viewer.pause();
-      play.textContent = playing ? "暫停" : "播放";
+      if (live() && clips.value) syncFourFormAnimation(record,clips.value,!playing,phase());
+    });
+    seek.addEventListener("input", () => {
+      if (live() && clips.value) syncFourFormAnimation(record,clips.value,playing,Math.min(1,Math.max(0,Number(seek.value)/1000)));
     });
     viewer.addEventListener("load", () => {
       if (!live()) return;
@@ -5075,16 +5187,26 @@
       const names = viewer.availableAnimations || [];
       message.textContent = "GLB 已載入 · " + names.length + " 支動畫";
       clips.replaceChildren(...(names.length ? names.map(name=>el("option",{value:name},name)) : [el("option",{},"無動畫")]));
-      clips.disabled = play.disabled = names.length === 0;
+      clips.disabled = play.disabled = seek.disabled = names.length === 0;
+      record.ready = true;
       reset.disabled = false;
       if (names.length) {
         clips.value = names.find(n=>/idle/i.test(n)) || names[0];
         viewer.animationName = clips.value;
         viewer.pause();
       }
+      if (reviewState.fourFormSync && reviewState.fourFormSyncGroup === group) {
+        if (group.camera) window.COSMI_MODEL_REVIEW.applyReviewCamera(viewer,group.camera);
+        else if (group.preset) record.resetCamera(group.preset);
+        if (group.animation) {
+          // A model that loads late joins the currently selected clip and phase.
+          const peer = fourFormSyncPeers(group).find(p=>p!==record && p.animationName()===window.COSMI_MODEL_REVIEW.matchingReviewClip(p.viewer.availableAnimations || [],group.animation.name));
+          record.applyAnimation({...group.animation,phase:peer ? peer.phase() : group.animation.phase});
+        }
+      }
     });
     viewer.addEventListener("error", event=>fail(event.detail?.sourceError || event.detail?.error));
-    host.append(viewer, message, el("div",{class:"four-form-3d-controls"}, clips, play, reset));
+    host.append(viewer, message, el("div",{class:"four-form-3d-controls"}, clips, play, reset), seek, animStatus);
     // No binary download until the browser supports the bundled custom element.
     // In-flight completions from a previous form/version are ignored.
     if (window.customElements) {
@@ -5127,6 +5249,7 @@
     $("#stageCarousel").replaceChildren();
     $("#viewSeg").replaceChildren();
     const keepViewers = new Set();
+    const syncGroup = getFourFormSyncGroup(entry.key);
     const orderedRows = groups.rows.map(row => ({...row, packages:fourFormPackageOrder(row.packages)}));
     const choosePkg = row => {
       const key = entry.key + ":" + row.stage;
@@ -5143,6 +5266,22 @@
         renderReviewView();
       }
     };
+    const locked = el("input",{type:"checkbox",id:"fourFormSync",checked:reviewState.fourFormSync,"aria-label":"鎖定同步操作"});
+    const syncNote = el("span",{class:"muted"},"");
+    const refreshSyncNote = () => {
+      syncNote.textContent = reviewState.fourFormSync ? "視角、動畫、參考圖與審查標籤同步" : "各型態獨立操作";
+    };
+    refreshSyncNote();
+    const sharedControls = el("div",{class:"four-form-sync-bar"});
+    const noteControls = el("div",{class:"four-form-sync-bar"});
+    locked.addEventListener("change",()=>{
+      reviewState.fourFormSync = locked.checked;
+      refreshSyncNote();
+      sharedControls.hidden = noteControls.hidden = !locked.checked;
+      if (locked.checked) alignFourFormGroup(syncGroup);
+      else { syncGroup.camera=null; syncGroup.preset=null; syncGroup.animation=null; }
+      saveViewMemory();
+    });
     header.replaceChildren(
       el("b", {}, entry.label),
       el("div", {class:"seg",role:"group","aria-label":"宙獸審查模式"},
@@ -5153,9 +5292,17 @@
         reviewState.creatureReviewMode = "single";
         reviewState.activeDesignedKey = entry.key;
         renderReviewView();
-      }}, "設計明細") : null
+      }}, "設計明細") : null,
+      el("label",{class:"four-form-sync-toggle"},locked,"鎖定同步操作（預設）"),
+      syncNote
     );
-    body.replaceChildren(el("p", {class:"muted"}, "同一演化線四型態並列互動 3D 審查，可各自旋轉、縮放、切換與播放動畫。分別選擇交付版本及審查結果後一次送出；未選擇結果的型態不變更。"));
+    const draftControls = [];
+    const imageControls = [];
+    sharedControls.hidden = noteControls.hidden = !reviewState.fourFormSync;
+    sharedControls.append(el("span",{class:"muted"},"統一視角"),
+      [["正面","0deg 90deg auto"],["側面","90deg 90deg auto"],["背面","180deg 90deg auto"],["45°","45deg 75deg auto"],["重設","0deg 80deg auto"]].map(([label,orbit])=>
+        el("button",{class:"btn ghost mini",type:"button",onclick:()=>syncFourFormPreset(syncGroup,orbit)},label)));
+    body.replaceChildren(el("p", {class:"muted"}, "鎖定時操作任一型態即可同步其餘視窗，依模型尺寸對齊視角與縮放；切換動畫、播放／暫停與進度拖曳同步。審查標籤先暫存，確認送出後才寫入 Drive。"),sharedControls);
     const grid = el("div", {class:"four-form-review-grid"});
     const selected = () => orderedRows.flatMap(row => {
       const pkg = choosePkg(row);
@@ -5169,6 +5316,24 @@
       submit.disabled = reviewState.fourFormBusy || count === 0;
       submit.textContent = reviewState.fourFormBusy ? "寫入 Drive 中…" : "送出本次審查 (" + count + "/4)";
     };
+    const applyReviewLabel = value => {
+      if (reviewState.fourFormBusy) return;
+      for (const control of draftControls) {
+        control.result.value=value;
+        control.remember();
+      }
+    };
+    const bulkLabel = el("select",{"aria-label":"四型態共同審查標籤",disabled:reviewState.fourFormBusy},
+      [["","共同審查標籤（不變更）"],["ok","全部通過"],["provisional","全部暫時採用"],["reject","全部退回重建"],["pending","全部待決定"]].map(([value,label])=>el("option",{value},label)));
+    bulkLabel.addEventListener("change",()=>applyReviewLabel(bulkLabel.value));
+    const commonNote = el("textarea",{"aria-label":"共同審查意見",placeholder:"共同審查意見（選填）",rows:1});
+    const applyNote = el("button",{class:"btn ghost mini",type:"button",disabled:reviewState.fourFormBusy,onclick:()=>{
+      if (reviewState.fourFormBusy) return;
+      if (!confirm("將共同意見套用至目前可審查的型態？個別意見將被取代。")) return;
+      for (const control of draftControls) { control.note.value=commonNote.value; control.remember(); }
+    }},"套用共同意見");
+    noteControls.append(bulkLabel,commonNote,applyNote);
+    body.append(noteControls);
     for (const row of orderedRows) {
       const pkg = choosePkg(row);
       const card = el("section", {class:"designed-detail-card four-form-review-card","data-review-form":row.stage},
@@ -5180,10 +5345,12 @@
         grid.append(card);
         continue;
       }
-      const status = reviewStatusInfo(pkg.status);
+      const displayStatus = p => p.status === "missing" && isMissingSuperseded(p,row.packages)
+        ? {zh:"前置成果（已有下游）",badge:"前置成果（已有下游）",cls:"accent"} : reviewStatusInfo(p.status);
+      const status = displayStatus(pkg);
       const select = el("select", {"aria-label":STAGE_ZH[row.stage] + "交付版本",disabled:reviewState.fourFormBusy},
         row.packages.map(p => el("option", {value:p.id,selected:p.id === pkg.id},
-          (is3dType(p.type) || p.glbFile ? "3D" : "2D") + " · " + reviewStatusInfo(p.status).zh + " · " + p.id))
+          (is3dType(p.type) || p.glbFile ? "3D" : "2D") + " · " + displayStatus(p).zh + " · " + p.id))
       );
       select.addEventListener("change", () => {
         reviewState.fourFormPicks.set(entry.key + ":" + row.stage, select.value);
@@ -5200,14 +5367,30 @@
         el("span",{class:"muted"},row.packages.length + " 個交付包"),
         pkg.completed ? el("span",{class:"f-badge ok"},"已核准") : null
       ), select);
+      const imageControl = {
+        show:visible=>{preview.hidden=!visible;},
+        choose:view=>{
+          preview.hidden=false;
+          const match=images.find(im=>describeImg(im.path)===view);
+          preview.replaceChildren(match ? el("img",{src:match.url,alt:STAGE_ZH[row.stage]+" · "+view}) :
+            el("span",{class:"muted"},"此型態沒有 "+view+" 參考圖"));
+        }
+      };
+      imageControls.push(imageControl);
       if (pkg.glbFile) {
         card.append(fourForm3dPreview(entry.key + ":" + row.stage, pkg, row.stage, keepViewers));
-        if (images.length) card.append(el("button",{class:"btn ghost mini",type:"button",onclick:()=>{preview.hidden=!preview.hidden;}}, "切換靜態參考圖"));
+        if (images.length) card.append(el("button",{class:"btn ghost mini",type:"button",onclick:()=>{
+          const visible=preview.hidden;
+          for (const target of reviewState.fourFormSync ? imageControls : [imageControl]) target.show(visible);
+        }}, "切換靜態參考圖"));
       }
       card.append(preview);
-      if (images.length > 1) card.append(el("div",{class:"four-form-thumbnails"},
+      if (images.length) card.append(el("div",{class:"four-form-thumbnails"},
         images.map(im => el("button",{type:"button",class:"btn ghost mini",title:im.path,
-          onclick:()=>{preview.hidden=false;preview.replaceChildren(el("img",{src:im.url,alt:STAGE_ZH[row.stage] + " · " + describeImg(im.path)}));}}, describeImg(im.path)))
+          onclick:()=>{
+            const view=describeImg(im.path);
+            for (const target of reviewState.fourFormSync ? imageControls : [imageControl]) target.choose(view);
+          }}, describeImg(im.path)))
       ));
       const missing = isMissingSuperseded(pkg, row.packages) ? [] : getEffectiveMissing(pkg);
       if (missing.length) card.append(el("p",{class:"muted"}, "⚠️ 需補件：" + missing.map(m=>typeof m==="string"?m:m.item||m.path||JSON.stringify(m)).join("、")));
@@ -5224,12 +5407,18 @@
           reviewState.fourFormDrafts.set(pkg.id,{status:result.value,note:note.value});
           updateSubmit();
         };
-        result.addEventListener("change",remember);
+        draftControls.push({result,note,remember});
+        result.addEventListener("change",()=>{
+          if (reviewState.fourFormBusy) return;
+          if (reviewState.fourFormSync) applyReviewLabel(result.value);
+          else remember();
+        });
         note.addEventListener("input",remember);
         card.append(result,note);
       }
       grid.append(card);
     }
+    bulkLabel.disabled = applyNote.disabled = reviewState.fourFormBusy || draftControls.length === 0;
     body.append(grid);
     disposeFourFormViewers(keepViewers);
     if (groups.unassigned.length) body.append(el("div",{class:"designed-detail-card"},
@@ -5241,7 +5430,7 @@
       el("p",{class:"muted",role:"status"},reviewState.fourFormFeedback.get(entry.key) || "依型態逐筆執行既有 Drive 審查；若中途失敗會停止並顯示已完成／未完成筆數。")));
     if (entry.catalog?.kind === "creature") body.append(renderPipelineProgressCard(entry.catalog.id, "creature"));
     $("#panelBody").replaceChildren(el("h4",{},"四型態審查"),
-      el("p",{class:"muted"},"四個 GLB 可獨立操作與播放動畫，各型態的審查決定與意見各自保存。骨架、拓撲、時間軸與完整檔案驗收可進入單型態。"));
+      el("p",{class:"muted"},"預設鎖定同步視角、動畫、進度、參考圖及審查標籤。可解除鎖定獨立操作；共同意見須明確套用，各型態交付版本及審查紀錄仍各自保存。骨架、拓撲及完整檔案驗收可進入單型態。"));
   }
 
   // Single index for designed subjects and review packages.
