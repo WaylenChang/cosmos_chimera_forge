@@ -215,7 +215,14 @@
   #reviewDesignedDetails #designedStageHeader { display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px; }
   #reviewDesignedDetails #designedDetailView { overflow:visible !important;height:auto;min-height:0;padding:0 !important; }
   #reviewView.active { display: flex; }
-  .four-form-review-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;align-items:start; }
+  .four-form-review-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start; }
+  @media (max-width:600px) { .four-form-review-grid { grid-template-columns:1fr; } }
+  .four-form-3d { min-width:0;display:flex;flex-direction:column;gap:5px; }
+  .four-form-3d model-viewer { width:100%;height:clamp(190px,28vw,340px);background:#101319;border:1px solid var(--line);border-radius:6px; }
+  .four-form-3d-controls { display:flex;gap:4px;align-items:center;flex-wrap:wrap; }
+  .four-form-3d-controls select { flex:1;min-width:0;width:auto; }
+  .four-form-3d-message { min-height:1.3em;font-size:11px; }
+  .four-form-preview[hidden] { display:none !important; }
   .four-form-review-card { display:flex;flex-direction:column;gap:8px;min-width:0;margin:0; }
   .four-form-review-card h3 { margin:0;font-size:13px;overflow-wrap:anywhere; }
   .four-form-review-card select,.four-form-review-card textarea { width:100%;min-width:0;box-sizing:border-box; }
@@ -1270,6 +1277,7 @@
 <script src="pipeline.js"></script>
 <script src="drive-cache.js"></script>
 <script src="model-review.js"></script>
+<script type="module" src="vendor/model-viewer.min.js"></script>
 <script src="drive-storage.js"></script>
 <script src="settings.js"></script>
 <script src="vendor/three.min.js"></script>
