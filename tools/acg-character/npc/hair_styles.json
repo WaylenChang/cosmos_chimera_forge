@@ -1,0 +1,1103 @@
+{
+ "comment": "NPC hair slots (cosmos_chimera docs/design/npc-uma-looks.md, row 10). One entry per NpcMeshes HairStyle except bald; sizes in metres on the human male base head (ref_head_z), scaled per base by its head. Group fields: acg_hair._clump.",
+ "races": [
+  "angel",
+  "demon",
+  "dwarf",
+  "elf",
+  "goblin",
+  "human",
+  "orc",
+  "vampire",
+  "zombie"
+ ],
+ "races_comment": "Races that grow head hair: cosmos_chimera NpcMeshes.TraitsOf, Furred false. Unity's NpcUmaRaces.BuildHair fails on a haired race without its FBX.",
+ "ref_head_z": 0.1744,
+ "cap": [
+  48,
+  12
+ ],
+ "styles": {
+  "cropped": {
+   "seed": 31,
+   "hairline": {
+    "front": 42,
+    "side": 10,
+    "back": -38
+   },
+   "groups": [
+    {
+     "name": "bangs",
+     "count": 11,
+     "az": [
+      -72,
+      72
+     ],
+     "el": [
+      52,
+      76
+     ],
+     "flow_vec": [
+      0,
+      -0.3,
+      -0.95
+     ],
+     "lift": 0.25,
+     "gravity": 0.3,
+     "length": [
+      0.07,
+      0.1
+     ],
+     "width": [
+      0.032,
+      0.042
+     ],
+     "end_z": 0.01,
+     "flick": 0.12,
+     "wave": 0.05,
+     "jitter": 0.08,
+     "shell": 1.12
+    },
+    {
+     "name": "side_l",
+     "count": 5,
+     "az": [
+      72,
+      118
+     ],
+     "el": [
+      15,
+      52
+     ],
+     "flow": "down",
+     "lift": 0.6,
+     "gravity": 0.25,
+     "length": [
+      0.045,
+      0.065
+     ],
+     "width": [
+      0.034,
+      0.042
+     ],
+     "flick": 0.25,
+     "spread": 0.3,
+     "jitter": 0.08,
+     "shell": 1.12
+    },
+    {
+     "name": "side_r",
+     "count": 5,
+     "az": [
+      -118,
+      -72
+     ],
+     "el": [
+      15,
+      52
+     ],
+     "flow": "down",
+     "lift": 0.6,
+     "gravity": 0.25,
+     "length": [
+      0.045,
+      0.065
+     ],
+     "width": [
+      0.034,
+      0.042
+     ],
+     "flick": 0.25,
+     "spread": 0.3,
+     "jitter": 0.08,
+     "shell": 1.12
+    },
+    {
+     "name": "back",
+     "count": 18,
+     "az": [
+      115,
+      245
+     ],
+     "el": [
+      -15,
+      45
+     ],
+     "flow_vec": [
+      0,
+      0.4,
+      -0.92
+     ],
+     "lift": 0.3,
+     "gravity": 0.25,
+     "length": [
+      0.08,
+      0.11
+     ],
+     "width": [
+      0.045,
+      0.056
+     ],
+     "flick": 0.1,
+     "spread": 0.3,
+     "jitter": 0.08,
+     "shell": 1.12
+    },
+    {
+     "name": "crown",
+     "count": 16,
+     "az": [
+      0,
+      360
+     ],
+     "el": [
+      62,
+      88
+     ],
+     "flow": "back",
+     "lift": 0.7,
+     "gravity": 0.15,
+     "length": [
+      0.08,
+      0.11
+     ],
+     "width": [
+      0.045,
+      0.056
+     ],
+     "flick": 0.12,
+     "wave": 0.06,
+     "jitter": 0.08,
+     "shell": 1.16
+    }
+   ]
+  },
+  "long": {
+   "seed": 37,
+   "hairline": {
+    "front": 40,
+    "side": 6,
+    "back": -42
+   },
+   "groups": [
+    {
+     "name": "bangs",
+     "count": 12,
+     "az": [
+      -70,
+      70
+     ],
+     "el": [
+      50,
+      74
+     ],
+     "flow_vec": [
+      0,
+      -0.35,
+      -0.94
+     ],
+     "lift": 0.15,
+     "gravity": 0.35,
+     "length": [
+      0.11,
+      0.15
+     ],
+     "width": [
+      0.03,
+      0.04
+     ],
+     "end_z": -0.006,
+     "flick": 0.05,
+     "wave": 0.05,
+     "jitter": 0.08,
+     "shell": 1.1
+    },
+    {
+     "name": "side_l",
+     "count": 7,
+     "az": [
+      70,
+      125
+     ],
+     "el": [
+      5,
+      50
+     ],
+     "flow": "down",
+     "lift": 0.45,
+     "gravity": 0.5,
+     "length": [
+      0.28,
+      0.34
+     ],
+     "width": [
+      0.036,
+      0.046
+     ],
+     "flick": 0.08,
+     "wave": 0.08,
+     "spread": 0.2,
+     "jitter": 0.1,
+     "shell": 1.1,
+     "swing": 3
+    },
+    {
+     "name": "side_r",
+     "count": 7,
+     "az": [
+      -125,
+      -70
+     ],
+     "el": [
+      5,
+      50
+     ],
+     "flow": "down",
+     "lift": 0.45,
+     "gravity": 0.5,
+     "length": [
+      0.28,
+      0.34
+     ],
+     "width": [
+      0.036,
+      0.046
+     ],
+     "flick": 0.08,
+     "wave": 0.08,
+     "spread": 0.2,
+     "jitter": 0.1,
+     "shell": 1.1,
+     "swing": 3
+    },
+    {
+     "name": "back",
+     "count": 14,
+     "az": [
+      118,
+      242
+     ],
+     "el": [
+      -20,
+      55
+     ],
+     "flow_vec": [
+      0,
+      0.3,
+      -0.95
+     ],
+     "lift": 0.5,
+     "gravity": 0.5,
+     "length": [
+      0.32,
+      0.4
+     ],
+     "width": [
+      0.044,
+      0.056
+     ],
+     "flick": 0.06,
+     "wave": 0.08,
+     "spread": 0.2,
+     "jitter": 0.1,
+     "shell": 1.1,
+     "swing": 3
+    },
+    {
+     "name": "crown",
+     "count": 12,
+     "az": [
+      0,
+      360
+     ],
+     "el": [
+      60,
+      88
+     ],
+     "flow": "back",
+     "lift": 0.8,
+     "gravity": 0.3,
+     "length": [
+      0.12,
+      0.16
+     ],
+     "width": [
+      0.04,
+      0.05
+     ],
+     "wave": 0.05,
+     "jitter": 0.08,
+     "shell": 1.14
+    }
+   ]
+  },
+  "bun": {
+   "seed": 41,
+   "hairline": {
+    "front": 40,
+    "side": 6,
+    "back": -40
+   },
+   "groups": [
+    {
+     "name": "bangs",
+     "count": 10,
+     "az": [
+      -66,
+      66
+     ],
+     "el": [
+      52,
+      74
+     ],
+     "flow_vec": [
+      0,
+      -0.3,
+      -0.95
+     ],
+     "lift": 0.15,
+     "gravity": 0.3,
+     "length": [
+      0.08,
+      0.11
+     ],
+     "width": [
+      0.03,
+      0.038
+     ],
+     "end_z": 0.0,
+     "flick": 0.05,
+     "wave": 0.05,
+     "jitter": 0.08,
+     "shell": 1.1
+    },
+    {
+     "name": "swept",
+     "count": 20,
+     "az": [
+      95,
+      265
+     ],
+     "el": [
+      -15,
+      35
+     ],
+     "flow_vec": [
+      0,
+      0.5,
+      0.85
+     ],
+     "lift": 0.05,
+     "gravity": 0.2,
+     "length": [
+      0.07,
+      0.09
+     ],
+     "width": [
+      0.05,
+      0.062
+     ],
+     "flat": 0.15,
+     "jitter": 0.03,
+     "shell": 1.05,
+     "flick": 0.0
+    },
+    {
+     "name": "bun",
+     "count": 10,
+     "anchor": [
+      185,
+      64,
+      1.16
+     ],
+     "anchor_r": 0.02,
+     "flow_vec": [
+      -0.2,
+      0.3,
+      0.6
+     ],
+     "lift": 0.9,
+     "gravity": 0.05,
+     "curl": [
+      0,
+      0.3,
+      -0.6
+     ],
+     "length": [
+      0.07,
+      0.1
+     ],
+     "width": [
+      0.03,
+      0.038
+     ],
+     "flick": 0.08,
+     "jitter": 0.3,
+     "shell": 1.1
+    }
+   ]
+  },
+  "tail": {
+   "seed": 43,
+   "hairline": {
+    "front": 40,
+    "side": 6,
+    "back": -40
+   },
+   "groups": [
+    {
+     "name": "bangs",
+     "count": 12,
+     "az": [
+      -72,
+      72
+     ],
+     "el": [
+      48,
+      74
+     ],
+     "flow_vec": [
+      0.2,
+      -0.3,
+      -0.93
+     ],
+     "lift": 0.2,
+     "gravity": 0.35,
+     "length": [
+      0.1,
+      0.14
+     ],
+     "width": [
+      0.03,
+      0.036
+     ],
+     "end_z": -0.004,
+     "flick": 0.1,
+     "wave": 0.08,
+     "jitter": 0.1,
+     "shell": 1.1
+    },
+    {
+     "name": "side_l",
+     "count": 4,
+     "az": [
+      66,
+      100
+     ],
+     "el": [
+      15,
+      45
+     ],
+     "flow": "down",
+     "lift": 0.4,
+     "gravity": 0.5,
+     "length": [
+      0.11,
+      0.14
+     ],
+     "width": [
+      0.028,
+      0.034
+     ],
+     "flick": 0.1,
+     "wave": 0.08,
+     "spread": 0.3,
+     "jitter": 0.1,
+     "shell": 1.1
+    },
+    {
+     "name": "side_r",
+     "count": 4,
+     "az": [
+      -100,
+      -66
+     ],
+     "el": [
+      15,
+      45
+     ],
+     "flow": "down",
+     "lift": 0.4,
+     "gravity": 0.5,
+     "length": [
+      0.11,
+      0.14
+     ],
+     "width": [
+      0.028,
+      0.034
+     ],
+     "flick": 0.1,
+     "wave": 0.08,
+     "spread": 0.3,
+     "jitter": 0.1,
+     "shell": 1.1
+    },
+    {
+     "name": "swept",
+     "count": 18,
+     "az": [
+      95,
+      265
+     ],
+     "el": [
+      -15,
+      70
+     ],
+     "flow_vec": [
+      0,
+      0.9,
+      -0.15
+     ],
+     "lift": 0.05,
+     "gravity": 0.2,
+     "length": [
+      0.06,
+      0.08
+     ],
+     "width": [
+      0.05,
+      0.062
+     ],
+     "flat": 0.15,
+     "jitter": 0.03,
+     "shell": 1.05,
+     "flick": 0.0
+    },
+    {
+     "name": "ponytail",
+     "count": 16,
+     "anchor": [
+      180,
+      42,
+      1.1
+     ],
+     "anchor_r": 0.04,
+     "flow_vec": [
+      0,
+      0.45,
+      -0.89
+     ],
+     "lift": 0.3,
+     "gravity": 0.8,
+     "length": [
+      0.24,
+      0.3
+     ],
+     "width": [
+      0.045,
+      0.06
+     ],
+     "flick": 0.2,
+     "wave": 0.14,
+     "wave_freq": 1.2,
+     "spread": 0.0,
+     "jitter": 0.2,
+     "shell": 1.1,
+     "flat": 0.35,
+     "swing": 3
+    }
+   ]
+  },
+  "braids": {
+   "seed": 47,
+   "hairline": {
+    "front": 40,
+    "side": 6,
+    "back": -40
+   },
+   "groups": [
+    {
+     "name": "bangs",
+     "count": 11,
+     "az": [
+      -70,
+      70
+     ],
+     "el": [
+      50,
+      74
+     ],
+     "flow_vec": [
+      0,
+      -0.35,
+      -0.94
+     ],
+     "lift": 0.15,
+     "gravity": 0.35,
+     "length": [
+      0.09,
+      0.12
+     ],
+     "width": [
+      0.03,
+      0.038
+     ],
+     "end_z": 0.0,
+     "flick": 0.04,
+     "wave": 0.04,
+     "jitter": 0.08,
+     "shell": 1.1
+    },
+    {
+     "name": "swept",
+     "count": 16,
+     "az": [
+      80,
+      280
+     ],
+     "el": [
+      -15,
+      60
+     ],
+     "flow_vec": [
+      0,
+      0.3,
+      -0.95
+     ],
+     "lift": 0.15,
+     "gravity": 0.3,
+     "length": [
+      0.08,
+      0.1
+     ],
+     "width": [
+      0.05,
+      0.06
+     ],
+     "flat": 0.18,
+     "jitter": 0.05,
+     "shell": 1.06
+    },
+    {
+     "name": "crown",
+     "count": 10,
+     "az": [
+      0,
+      360
+     ],
+     "el": [
+      64,
+      88
+     ],
+     "flow": "back",
+     "lift": 0.6,
+     "gravity": 0.3,
+     "length": [
+      0.08,
+      0.11
+     ],
+     "width": [
+      0.04,
+      0.05
+     ],
+     "jitter": 0.08,
+     "shell": 1.12
+    },
+    {
+     "name": "braid_l",
+     "count": 3,
+     "anchor": [
+      125,
+      -8,
+      1.06
+     ],
+     "anchor_r": 0.01,
+     "flow": "down",
+     "lift": 0.25,
+     "gravity": 0.6,
+     "length": [
+      0.3,
+      0.32
+     ],
+     "width": [
+      0.022,
+      0.026
+     ],
+     "wave": 0.015,
+     "wave_freq": 5,
+     "taper": 3.0,
+     "flat": 0.9,
+     "jitter": 0.02,
+     "shell": 1.1,
+     "flow_vec": [
+      0.2,
+      0.3,
+      -0.93
+     ],
+     "swing": 3
+    },
+    {
+     "name": "braid_r",
+     "count": 3,
+     "anchor": [
+      -125,
+      -8,
+      1.06
+     ],
+     "anchor_r": 0.01,
+     "flow": "down",
+     "lift": 0.25,
+     "gravity": 0.6,
+     "length": [
+      0.3,
+      0.32
+     ],
+     "width": [
+      0.022,
+      0.026
+     ],
+     "wave": 0.015,
+     "wave_freq": 5,
+     "taper": 3.0,
+     "flat": 0.9,
+     "jitter": 0.02,
+     "shell": 1.1,
+     "flow_vec": [
+      -0.2,
+      0.3,
+      -0.93
+     ],
+     "swing": 3
+    }
+   ]
+  },
+  "crest": {
+   "seed": 53,
+   "hairline": {
+    "front": 72,
+    "side": 72,
+    "back": 64
+   },
+   "groups": [
+    {
+     "name": "crest",
+     "count": 13,
+     "roots": [
+      [
+       0,
+       60
+      ],
+      [
+       0,
+       67
+      ],
+      [
+       0,
+       74
+      ],
+      [
+       0,
+       81
+      ],
+      [
+       0,
+       87
+      ],
+      [
+       180,
+       87
+      ],
+      [
+       180,
+       81
+      ],
+      [
+       180,
+       74
+      ],
+      [
+       180,
+       67
+      ],
+      [
+       180,
+       60
+      ],
+      [
+       180,
+       52
+      ]
+     ],
+     "flow": "up",
+     "lift": 1.4,
+     "gravity": 0.0,
+     "curl": [
+      0,
+      0.35,
+      0
+     ],
+     "length": [
+      0.12,
+      0.16
+     ],
+     "width": [
+      0.05,
+      0.064
+     ],
+     "flat": 0.22,
+     "flick": 0.15,
+     "jitter": 0.05,
+     "shell": 1.06
+    }
+   ]
+  },
+  "topknot": {
+   "seed": 59,
+   "hairline": {
+    "front": 42,
+    "side": 10,
+    "back": -38
+   },
+   "groups": [
+    {
+     "name": "front",
+     "count": 10,
+     "az": [
+      -80,
+      80
+     ],
+     "el": [
+      45,
+      62
+     ],
+     "flow_vec": [
+      0,
+      0.8,
+      0.6
+     ],
+     "lift": 0.05,
+     "gravity": 0.2,
+     "length": [
+      0.06,
+      0.08
+     ],
+     "width": [
+      0.05,
+      0.06
+     ],
+     "flat": 0.15,
+     "jitter": 0.04,
+     "shell": 1.05
+    },
+    {
+     "name": "swept",
+     "count": 18,
+     "az": [
+      85,
+      275
+     ],
+     "el": [
+      -15,
+      35
+     ],
+     "flow_vec": [
+      0,
+      -0.1,
+      1
+     ],
+     "lift": 0.05,
+     "gravity": 0.2,
+     "length": [
+      0.07,
+      0.09
+     ],
+     "width": [
+      0.05,
+      0.062
+     ],
+     "flat": 0.15,
+     "jitter": 0.03,
+     "shell": 1.05,
+     "flick": 0.0
+    },
+    {
+     "name": "knot",
+     "count": 8,
+     "anchor": [
+      180,
+      84,
+      1.12
+     ],
+     "anchor_r": 0.015,
+     "flow": "up",
+     "lift": 1.0,
+     "gravity": 0.0,
+     "curl": [
+      0,
+      0.4,
+      -0.5
+     ],
+     "length": [
+      0.06,
+      0.08
+     ],
+     "width": [
+      0.028,
+      0.034
+     ],
+     "jitter": 0.3,
+     "shell": 1.1
+    }
+   ]
+  },
+  "volume": {
+   "seed": 61,
+   "hairline": {
+    "front": 40,
+    "side": 6,
+    "back": -42
+   },
+   "groups": [
+    {
+     "name": "bangs",
+     "count": 12,
+     "az": [
+      -72,
+      72
+     ],
+     "el": [
+      50,
+      74
+     ],
+     "flow_vec": [
+      0,
+      -0.3,
+      -0.95
+     ],
+     "lift": 0.35,
+     "gravity": 0.3,
+     "length": [
+      0.1,
+      0.13
+     ],
+     "width": [
+      0.034,
+      0.044
+     ],
+     "end_z": 0.0,
+     "flick": 0.18,
+     "wave": 0.1,
+     "jitter": 0.12,
+     "shell": 1.16
+    },
+    {
+     "name": "side_l",
+     "count": 8,
+     "az": [
+      70,
+      125
+     ],
+     "el": [
+      0,
+      50
+     ],
+     "flow": "down",
+     "lift": 1.0,
+     "gravity": 0.3,
+     "length": [
+      0.12,
+      0.16
+     ],
+     "width": [
+      0.04,
+      0.05
+     ],
+     "flick": 0.3,
+     "wave": 0.14,
+     "spread": 0.5,
+     "jitter": 0.14,
+     "shell": 1.2
+    },
+    {
+     "name": "side_r",
+     "count": 8,
+     "az": [
+      -125,
+      -70
+     ],
+     "el": [
+      0,
+      50
+     ],
+     "flow": "down",
+     "lift": 1.0,
+     "gravity": 0.3,
+     "length": [
+      0.12,
+      0.16
+     ],
+     "width": [
+      0.04,
+      0.05
+     ],
+     "flick": 0.3,
+     "wave": 0.14,
+     "spread": 0.5,
+     "jitter": 0.14,
+     "shell": 1.2
+    },
+    {
+     "name": "back",
+     "count": 16,
+     "az": [
+      115,
+      245
+     ],
+     "el": [
+      -20,
+      60
+     ],
+     "flow_vec": [
+      0,
+      0.4,
+      -0.92
+     ],
+     "lift": 1.0,
+     "gravity": 0.3,
+     "length": [
+      0.14,
+      0.18
+     ],
+     "width": [
+      0.045,
+      0.056
+     ],
+     "flick": 0.3,
+     "wave": 0.14,
+     "spread": 0.4,
+     "jitter": 0.14,
+     "shell": 1.2
+    },
+    {
+     "name": "crown",
+     "count": 20,
+     "az": [
+      0,
+      360
+     ],
+     "el": [
+      58,
+      88
+     ],
+     "flow": "back",
+     "lift": 1.4,
+     "gravity": 0.15,
+     "length": [
+      0.1,
+      0.14
+     ],
+     "width": [
+      0.045,
+      0.056
+     ],
+     "flick": 0.3,
+     "wave": 0.1,
+     "jitter": 0.12,
+     "shell": 1.3
+    }
+   ]
+  }
+ },
+ "swing_comment": "Groups with \"swing\": n hang from n spring bones (acg_swing.hair, one chain per group along its mean strand, \"sw_hair_<group>_0_<i>\"); only strands longer than about a head radius swing, shorter ones move with the head."
+}

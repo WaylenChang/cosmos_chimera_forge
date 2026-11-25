@@ -226,7 +226,8 @@ def build(h, rig, spec):
     head = Head(h)
     rng = random.Random(hs.get("seed", 1))
     verts, faces, us = [], [], []
-    _cap(head, _hairline(hs.get("hairline", {})), verts, faces, us)
+    # NPC hair trades cap density for the crowd's vertex budget; the cap sits under the clumps.
+    _cap(head, _hairline(hs.get("hairline", {})), verts, faces, us, *hs.get("cap", (96, 24)))
     look = spec["look"]
     mats = [_gradient_material("hair_" + spec["id"], look["hair_root"], look["hair"],
                                look.get("hair_tip", look["hair"]), hs.get("tip_from", 0.55))]

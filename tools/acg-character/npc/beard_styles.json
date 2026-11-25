@@ -1,0 +1,373 @@
+{
+ "comment": "NPC beard slots (cosmos_chimera docs/design/npc-uma-looks.md row 11). One entry per NpcMeshes BeardStyle; grown by npc_beard.py from the base's own jaw, lip and cheek skin. Lengths and widths in head radii (crown to chin / 1.98 on that base). A group's clumps are length + grow x (beard length - min_length) long; the basis is drawn at min_length and the npc_beard_length key at max_length, the range of Look.BeardLength.",
+ "races": [
+  "angel",
+  "demon",
+  "dwarf",
+  "elf",
+  "goblin",
+  "human",
+  "orc",
+  "vampire",
+  "zombie"
+ ],
+ "races_comment": "Male bases of the races that grow head hair: any of them may carry dwarf or human blood, and with it a beard (NpcMeshes Look.Draw).",
+ "min_length": 0.5,
+ "max_length": 2.4,
+ "regions_comment": "jaw: below the lips down to the underside of the chin, |az| <= az; chin: the jaw band within |x| <= x head radii; lip: between the upper lip and the nose, |x| <= x; cheek: in front of the ear from the eye line down to the lips, az between az_from and az_to.",
+ "styles": {
+  "full": {
+   "seed": 11,
+   "groups": [
+    {
+     "name": "jaw",
+     "region": "jaw",
+     "az": 88,
+     "count": 41,
+     "length": 0.32,
+     "grow": 1.0,
+     "width": 0.15,
+     "lift": 0.5,
+     "gravity": 0.45,
+     "flow_vec": [
+      0,
+      -0.3,
+      -1
+     ],
+     "jitter": 0.12,
+     "flat": 0.4,
+     "cap": 0.012
+    },
+    {
+     "name": "cheek",
+     "region": "cheek",
+     "az_from": 62,
+     "az_to": 92,
+     "count": 14,
+     "length": 0.28,
+     "grow": 0.2,
+     "width": 0.112,
+     "lift": 0.3,
+     "gravity": 0.4,
+     "flow": "down",
+     "jitter": 0.1,
+     "flat": 0.35,
+     "cap": 0.012
+    },
+    {
+     "name": "lip",
+     "region": "lip",
+     "x": 0.3,
+     "count": 8,
+     "length": 0.3,
+     "grow": 0.0,
+     "width": 0.085,
+     "lift": 0.6,
+     "gravity": 0.3,
+     "flow_vec": [
+      0.85,
+      -0.25,
+      -0.45
+     ],
+     "mirror_x": true,
+     "jitter": 0.06,
+     "flat": 0.35,
+     "cap": 0.012
+    }
+   ]
+  },
+  "trimmed": {
+   "seed": 12,
+   "groups": [
+    {
+     "name": "jaw",
+     "region": "jaw",
+     "az": 86,
+     "count": 48,
+     "length": 0.18,
+     "grow": 0.0,
+     "width": 0.135,
+     "lift": 0.2,
+     "gravity": 0.6,
+     "flow_vec": [
+      0,
+      -0.3,
+      -1
+     ],
+     "jitter": 0.06,
+     "flat": 0.3,
+     "taper": 1.0,
+     "cap": 0.012
+    },
+    {
+     "name": "cheek",
+     "region": "cheek",
+     "az_from": 62,
+     "az_to": 92,
+     "count": 14,
+     "length": 0.2,
+     "grow": 0.0,
+     "width": 0.112,
+     "lift": 0.2,
+     "gravity": 0.5,
+     "flow": "down",
+     "jitter": 0.05,
+     "flat": 0.3,
+     "cap": 0.012
+    },
+    {
+     "name": "lip",
+     "region": "lip",
+     "x": 0.3,
+     "count": 8,
+     "length": 0.22,
+     "grow": 0.0,
+     "width": 0.078,
+     "lift": 0.4,
+     "gravity": 0.4,
+     "flow_vec": [
+      0.85,
+      -0.3,
+      -0.45
+     ],
+     "mirror_x": true,
+     "jitter": 0.04,
+     "flat": 0.3,
+     "cap": 0.012
+    }
+   ]
+  },
+  "goatee": {
+   "seed": 13,
+   "groups": [
+    {
+     "name": "chin",
+     "region": "chin",
+     "x": 0.22,
+     "count": 15,
+     "length": 0.28,
+     "grow": 0.35,
+     "width": 0.112,
+     "lift": 0.5,
+     "gravity": 0.5,
+     "flow_vec": [
+      0,
+      -0.35,
+      -1
+     ],
+     "jitter": 0.08,
+     "flat": 0.4,
+     "cap": 0.012
+    },
+    {
+     "name": "lip",
+     "region": "lip",
+     "x": 0.3,
+     "count": 8,
+     "length": 0.3,
+     "grow": 0.0,
+     "width": 0.085,
+     "lift": 0.6,
+     "gravity": 0.35,
+     "flow_vec": [
+      0.85,
+      -0.25,
+      -0.5
+     ],
+     "mirror_x": true,
+     "jitter": 0.06,
+     "flat": 0.35,
+     "cap": 0.012
+    }
+   ]
+  },
+  "forked": {
+   "seed": 14,
+   "groups": [
+    {
+     "name": "jaw",
+     "region": "jaw",
+     "az": 88,
+     "count": 38,
+     "length": 0.3,
+     "grow": 0.25,
+     "width": 0.15,
+     "lift": 0.5,
+     "gravity": 0.45,
+     "flow_vec": [
+      0,
+      -0.3,
+      -1
+     ],
+     "jitter": 0.1,
+     "flat": 0.4,
+     "cap": 0.012
+    },
+    {
+     "name": "fork",
+     "region": "chin",
+     "x": 0.3,
+     "count": 15,
+     "length": 0.45,
+     "grow": 0.9,
+     "width": 0.14,
+     "lift": 0.5,
+     "gravity": 0.5,
+     "flow_vec": [
+      0.35,
+      -0.2,
+      -1
+     ],
+     "mirror_x": true,
+     "jitter": 0.05,
+     "flat": 0.5,
+     "cap": 0.012
+    },
+    {
+     "name": "cheek",
+     "region": "cheek",
+     "az_from": 62,
+     "az_to": 92,
+     "count": 14,
+     "length": 0.28,
+     "grow": 0.15,
+     "width": 0.112,
+     "lift": 0.3,
+     "gravity": 0.4,
+     "flow": "down",
+     "jitter": 0.1,
+     "flat": 0.35,
+     "cap": 0.012
+    },
+    {
+     "name": "lip",
+     "region": "lip",
+     "x": 0.3,
+     "count": 8,
+     "length": 0.32,
+     "grow": 0.0,
+     "width": 0.085,
+     "lift": 0.6,
+     "gravity": 0.3,
+     "flow_vec": [
+      0.85,
+      -0.25,
+      -0.45
+     ],
+     "mirror_x": true,
+     "jitter": 0.06,
+     "flat": 0.35,
+     "cap": 0.012
+    }
+   ]
+  },
+  "braided": {
+   "seed": 15,
+   "groups": [
+    {
+     "name": "jaw",
+     "region": "jaw",
+     "az": 88,
+     "count": 38,
+     "length": 0.3,
+     "grow": 0.2,
+     "width": 0.15,
+     "lift": 0.5,
+     "gravity": 0.45,
+     "flow_vec": [
+      0,
+      -0.3,
+      -1
+     ],
+     "jitter": 0.1,
+     "flat": 0.4,
+     "cap": 0.012
+    },
+    {
+     "name": "plait",
+     "region": "chin",
+     "x": 0.1,
+     "count": 3,
+     "length": 0.5,
+     "grow": 0.95,
+     "width": 0.14,
+     "lift": 0.4,
+     "gravity": 0.7,
+     "flow_vec": [
+      0,
+      -0.15,
+      -1
+     ],
+     "jitter": 0.0,
+     "flat": 0.8,
+     "wave": 0.06,
+     "wave_freq": 4.0,
+     "taper": 0.6,
+     "cap": 0.012
+    },
+    {
+     "name": "cheek",
+     "region": "cheek",
+     "az_from": 62,
+     "az_to": 92,
+     "count": 14,
+     "length": 0.28,
+     "grow": 0.15,
+     "width": 0.112,
+     "lift": 0.3,
+     "gravity": 0.4,
+     "flow": "down",
+     "jitter": 0.1,
+     "flat": 0.35,
+     "cap": 0.012
+    },
+    {
+     "name": "lip",
+     "region": "lip",
+     "x": 0.3,
+     "count": 8,
+     "length": 0.3,
+     "grow": 0.0,
+     "width": 0.085,
+     "lift": 0.6,
+     "gravity": 0.3,
+     "flow_vec": [
+      0.85,
+      -0.25,
+      -0.45
+     ],
+     "mirror_x": true,
+     "jitter": 0.06,
+     "flat": 0.35,
+     "cap": 0.012
+    }
+   ]
+  },
+  "moustache": {
+   "seed": 16,
+   "groups": [
+    {
+     "name": "lip",
+     "region": "lip",
+     "x": 0.34,
+     "count": 10,
+     "length": 0.36,
+     "grow": 0.0,
+     "width": 0.098,
+     "lift": 0.6,
+     "gravity": 0.3,
+     "flow_vec": [
+      0.85,
+      -0.25,
+      -0.45
+     ],
+     "mirror_x": true,
+     "jitter": 0.06,
+     "flat": 0.35,
+     "cap": 0.012
+    }
+   ]
+  }
+ },
+ "cap_comment": "cap: the region's own skin lifted this many head radii off itself under the clumps, so no skin shows between them."
+}
