@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.10.0";
+  const TOOL_VERSION = "2.11.0";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -170,6 +170,8 @@
     filterCat: "all", filterQuery: "", activeDesignedKey: null, viewMode: "single", // "single" | "compare" | "3d"
     zoomLevel: 1.0, panX: 0, panY: 0,
     reviews: {},
+    creatureReviewMode: "all", // default: four-form family review; explicit package links remain single
+    fourFormPicks: new Map(), fourFormDrafts: new Map(), fourFormFeedback: new Map(), fourFormBusy: false,
     three: {
       scene: null, camera: null, renderer: null, controls: null, mixer: null, clock: null,
       currentAction: null, currentClipName: "", clips: [], isPlaying: true, playbackSpeed: 1.0,
@@ -1782,6 +1784,7 @@
             title: im.path,
             style: "width:34px;height:34px;object-fit:cover;border-radius:4px;border:1px solid rgba(255,255,255,0.12);background:#101319;cursor:pointer",
             onclick: () => {
+              reviewState.creatureReviewMode = "single";
               reviewState.activeDesignedKey = null;
               reviewState.activePkgId = pkg.id;
               if (pkg.stage) reviewState.activeStage = pkg.stage;
@@ -1796,6 +1799,7 @@
         el("button", {
           class: "btn mini", type: "button",
           onclick: () => {
+            reviewState.creatureReviewMode = "single";
             reviewState.activeDesignedKey = null;
             reviewState.activePkgId = pkg.id;
             if (pkg.stage) reviewState.activeStage = pkg.stage;
@@ -2787,6 +2791,7 @@
   }
 
   async function jumpToReview(pkgIdOrSubject, stage = null) {
+    reviewState.creatureReviewMode = "single";
     reviewState.activeDesignedKey = null;
     await setViewMode("review");
     const s = (pkgIdOrSubject || "").trim().toLowerCase();
@@ -2822,6 +2827,7 @@
     }
 
     if (targetPkg) {
+      reviewState.activeDesignedKey = null;
       reviewState.activePkgId = targetPkg.id;
       if (stage) reviewState.activeStage = stage;
       else if (targetPkg.stage) reviewState.activeStage = targetPkg.stage;
@@ -4488,6 +4494,10 @@
     };
     addId(designedState.selectedId);
     addId(reviewState.activeDesignedKey);
+    if (reviewState.creatureReviewMode === "all" && reviewState.activeDesignedKey) {
+      const entry = reviewDeskEntries().find(e => e.key === reviewState.activeDesignedKey);
+      for (const pkg of entry?.packages || []) addPkg(pkg);
+    }
     addId(reviewState.activePkgId);
     addId(state.preset);
     addId(state.presetChar);
@@ -4879,6 +4889,9 @@
       header.append(el("b", {}, entry.label));
       body.append(el("div", {class:"designed-detail-card"}, "已採用 · 尚未建立完整設計資料"));
     }
+    if (window.COSMI_MODEL_REVIEW.creatureReviewGroups(entry)) {
+      header.append(el("button", {class:"btn mini",type:"button",onclick:() => openFourFormReview(entry)}, "四型態審查"));
+    }
     if (entry.packages.length && !entry.catalog) {
       const card = el("div", {class:"designed-detail-card"}, el("h3", {}, "相關交付成果"));
       const orderedPkgs = sortPackagesByPriority(entry.packages).sort((a, b) => stageRank(a.stage) - stageRank(b.stage));
@@ -4889,6 +4902,7 @@
         const note = missing.length ? " · ⚠️ 需補件：" +
           missing.map(m => typeof m === "string" ? m : m.item || m.path || JSON.stringify(m)).join("、") : "";
         card.append(el("button", {class:"btn mini",type:"button",onclick:() => {
+          reviewState.creatureReviewMode = "single";
           reviewState.activeDesignedKey = null;
           reviewState.activePkgId = p.id;
           if (p.stage) reviewState.activeStage = p.stage;
@@ -4909,11 +4923,210 @@
     $("#viewSeg").replaceChildren();
     $("#panelBody").replaceChildren(el("div",{class:"muted"},entry.star + " " + entry.starTitle));
   }
+  function openFourFormReview(entry) {
+    reviewState.creatureReviewMode = "all";
+    reviewState.activeDesignedKey = entry.key;
+    renderReviewView();
+  }
+
+  function openSingleFormPackage(pkg) {
+    if (!pkg) return;
+    reviewState.creatureReviewMode = "single";
+    reviewState.activeDesignedKey = null;
+    reviewState.activePkgId = pkg.id;
+    reviewState.activeStage = window.COSMI_MODEL_REVIEW.reviewStage(pkg) || pkg.stage || "adult";
+    reviewState.activeImgIdx = 0;
+    reviewState.viewMode = (is3dType(pkg.type) || pkg.glbFile || pkg.animSpec) ? "3d" : "single";
+    renderReviewView();
+  }
+
+  function fourFormPackageOrder(packages) {
+    const isModel = p => is3dType(p.type) || !!p.glbFile;
+    // Prefer an actionable model, then other actionable packages; retain all versions.
+    const rank = p => (p.completed ? 0 : 2) + (isModel(p) ? 1 : 0);
+    return sortPackagesByPriority(packages).sort((a, b) => rank(b) - rank(a));
+  }
+
+  async function submitFourFormReview(entry, selected) {
+    if (reviewState.fourFormBusy || !selected.length) return;
+    const allowed = ["ok", "provisional", "pending", "reject"];
+    const liveEntry = reviewDeskEntries().find(e => e.key === entry.key);
+    const liveGroups = window.COSMI_MODEL_REVIEW.creatureReviewGroups(liveEntry);
+    const work = [];
+    for (const item of selected) {
+      const pkg = liveGroups?.rows.find(r => r.stage === item.stage)?.packages.find(p => p.id === item.id);
+      if (!pkg || !pkg.driveFolderId || pkg.completed || !allowed.includes(item.status)) {
+        toast("成果已變更或無法審查，請重新確認型態與版本：" + item.id);
+        return;
+      }
+      work.push({ ...item, pkg });
+    }
+    const lines = work.map(item => STAGE_ZH[item.stage] + " · " + item.id + " → " + reviewStatusInfo(item.status).zh);
+    if (!confirm("確認送出以下 " + work.length + " 筆審查？退回重建會移至 Drive 備份區。\n" + lines.join("\n"))) return;
+    reviewState.fourFormBusy = true;
+    reviewState.fourFormFeedback.set(entry.key, "正在逐筆寫入 Drive…");
+    renderReviewView();
+    const done = [];
+    let error = "";
+    try {
+      for (const item of work) {
+        // Refresh may replace package objects after an earlier write. Resolve
+        // the exact ID again; never substitute another version or another form.
+        const pkg = reviewState.packages.find(p => p.id === item.id);
+        if (!pkg || pkg.completed || !pkg.driveFolderId ||
+            window.COSMI_MODEL_REVIEW.reviewStage(pkg) !== item.stage) {
+          error = item.id + "：成果已變更，停止後續審查";
+          break;
+        }
+        try {
+          await window.COSMI_DRIVE.review(pkg, item.status, item.note);
+          done.push(item.id);
+          reviewState.fourFormDrafts.delete(item.id);
+        } catch (e) {
+          error = item.id + "：" + e.message;
+          break;
+        }
+      }
+    } finally {
+      reviewState.fourFormBusy = false;
+      const message = "已完成 " + done.length + "/" + work.length + " 筆審查" +
+        (error ? "；未完成 " + (work.length - done.length) + " 筆。停止原因：" + error : "。");
+      reviewState.fourFormFeedback.set(entry.key, message);
+      renderReviewView();
+      toast(message);
+    }
+  }
+
+  function renderFourFormReview(entry, groups) {
+    restoreStage3dView();
+    const overlay = $("#reviewDesignedDetails");
+    const header = $("#designedStageHeader"), body = $("#designedDetailView");
+    if (!overlay || !header || !body) return;
+    overlay.style.display = "block";
+    if (header.parentNode !== overlay) overlay.append(header);
+    if (body.parentNode !== overlay) overlay.append(body);
+    for (const id of ["stageEmpty", "stageSingleView", "stageCompareView", "stageTag", "stage3dView", "stageBar", "panelTabs"]) {
+      const node = $("#" + id);
+      if (node) node.style.display = "none";
+    }
+    $("#stageCarousel").replaceChildren();
+    $("#viewSeg").replaceChildren();
+    const orderedRows = groups.rows.map(row => ({...row, packages:fourFormPackageOrder(row.packages)}));
+    const choosePkg = row => {
+      const key = entry.key + ":" + row.stage;
+      const picked = row.packages.find(p => p.id === reviewState.fourFormPicks.get(key));
+      return picked || row.packages[0] || null;
+    };
+    const single = () => {
+      const row = orderedRows.find(r => r.stage === reviewState.activeStage && r.packages.length) ||
+        orderedRows.find(r => r.stage === "adult" && r.packages.length) || orderedRows.find(r => r.packages.length);
+      if (row) openSingleFormPackage(choosePkg(row));
+      else if (entry.catalog) {
+        reviewState.creatureReviewMode = "single";
+        reviewState.activeDesignedKey = entry.key;
+        renderReviewView();
+      }
+    };
+    header.replaceChildren(
+      el("b", {}, entry.label),
+      el("div", {class:"seg",role:"group","aria-label":"宙獸審查模式"},
+        el("button", {class:"segb on",type:"button","aria-pressed":"true"}, "四型態（預設）"),
+        el("button", {class:"segb",type:"button","aria-pressed":"false",disabled:!entry.catalog && !orderedRows.some(r=>r.packages.length),onclick:single}, "單型態")
+      ),
+      entry.catalog && !["mdl","pending"].includes(reviewState.filterCat) ? el("button", {class:"btn ghost mini",type:"button",onclick:() => {
+        reviewState.creatureReviewMode = "single";
+        reviewState.activeDesignedKey = entry.key;
+        renderReviewView();
+      }}, "設計明細") : null
+    );
+    body.replaceChildren(el("p", {class:"muted"}, "同一演化線四型態並列審查。可切換各型態交付版本、開啟互動 3D 詳查，分別選擇結果後一次送出；未選擇結果的型態不變更。"));
+    const grid = el("div", {class:"four-form-review-grid"});
+    const selected = () => orderedRows.flatMap(row => {
+      const pkg = choosePkg(row);
+      const draft = pkg && reviewState.fourFormDrafts.get(pkg.id);
+      return pkg && draft?.status && !pkg.completed && pkg.driveFolderId
+        ? [{stage:row.stage,id:pkg.id,status:draft.status,note:draft.note ?? getReviewNote(pkg)}] : [];
+    });
+    const submit = el("button", {class:"btn",type:"button",onclick:() => submitFourFormReview(entry, selected())}, "送出本次審查");
+    const updateSubmit = () => {
+      const count = selected().length;
+      submit.disabled = reviewState.fourFormBusy || count === 0;
+      submit.textContent = reviewState.fourFormBusy ? "寫入 Drive 中…" : "送出本次審查 (" + count + "/4)";
+    };
+    for (const row of orderedRows) {
+      const pkg = choosePkg(row);
+      const card = el("section", {class:"designed-detail-card four-form-review-card"},
+        el("h3", {}, STAGE_ZH[row.stage] + (row.design?.name_zh ? " · " + row.design.name_zh : ""))
+      );
+      if (!pkg) {
+        card.append(el("div", {class:"four-form-preview muted"}, row.total ? "目前篩選條件下無交付包" : "尚未載入此型態交付成果"));
+        if (row.design?.look) card.append(el("p", {class:"muted"}, row.design.look));
+        grid.append(card);
+        continue;
+      }
+      const status = reviewStatusInfo(pkg.status);
+      const select = el("select", {"aria-label":STAGE_ZH[row.stage] + "交付版本",disabled:reviewState.fourFormBusy},
+        row.packages.map(p => el("option", {value:p.id,selected:p.id === pkg.id},
+          (is3dType(p.type) || p.glbFile ? "3D" : "2D") + " · " + reviewStatusInfo(p.status).zh + " · " + p.id))
+      );
+      select.addEventListener("change", () => {
+        reviewState.fourFormPicks.set(entry.key + ":" + row.stage, select.value);
+        renderReviewView();
+      });
+      const images = (pkg.images || []).filter(i => i.url);
+      const main = imageForView(images,"front") || imageForView(images,"main") || images[0];
+      const preview = el("div", {class:"four-form-preview"},
+        main ? el("img", {src:main.url,alt:STAGE_ZH[row.stage] + " · " + describeImg(main.path)})
+          : el("span",{class:"muted"}, pkg.glbFile ? "有 GLB · 請開啟互動 3D 檢視" : "尚無可用預覽圖")
+      );
+      card.append(el("div",{class:"four-form-status"},
+        el("span",{class:"f-badge " + status.cls},status.badge),
+        el("span",{class:"muted"},row.packages.length + " 個交付包"),
+        pkg.completed ? el("span",{class:"f-badge ok"},"已核准") : null
+      ), select, preview);
+      if (images.length > 1) card.append(el("div",{class:"four-form-thumbnails"},
+        images.map(im => el("button",{type:"button",class:"btn ghost mini",title:im.path,
+          onclick:()=>preview.replaceChildren(el("img",{src:im.url,alt:STAGE_ZH[row.stage] + " · " + describeImg(im.path)}))}, describeImg(im.path)))
+      ));
+      const missing = isMissingSuperseded(pkg, row.packages) ? [] : getEffectiveMissing(pkg);
+      if (missing.length) card.append(el("p",{class:"muted"}, "⚠️ 需補件：" + missing.map(m=>typeof m==="string"?m:m.item||m.path||JSON.stringify(m)).join("、")));
+      card.append(el("button",{class:"btn ghost mini",type:"button",onclick:()=>openSingleFormPackage(pkg)}, "詳細審查 / 互動檢視"));
+      if (!pkg.driveFolderId || pkg.completed) {
+        card.append(el("div",{class:"muted"},pkg.completed ? "已完成；需建立新版本才能重新審查" : "尚未儲存至 Drive，請先儲存交付包"));
+      } else {
+        const draft = reviewState.fourFormDrafts.get(pkg.id) || {status:"",note:getReviewNote(pkg)};
+        const result = el("select",{"aria-label":STAGE_ZH[row.stage]+"審查結果",disabled:reviewState.fourFormBusy},
+          [["","不變更"],["ok","通過"],["provisional","暫時採用"],["reject","退回重建"],["pending","待決定"]].map(([value,label]) =>
+            el("option",{value,selected:draft.status===value},label)));
+        const note = el("textarea",{"aria-label":STAGE_ZH[row.stage]+"審查意見",placeholder:"審查意見",rows:2,disabled:reviewState.fourFormBusy},draft.note);
+        const remember = () => {
+          reviewState.fourFormDrafts.set(pkg.id,{status:result.value,note:note.value});
+          updateSubmit();
+        };
+        result.addEventListener("change",remember);
+        note.addEventListener("input",remember);
+        card.append(result,note);
+      }
+      grid.append(card);
+    }
+    body.append(grid);
+    if (groups.unassigned.length) body.append(el("div",{class:"designed-detail-card"},
+      el("h3",{},"尚未識別型態的交付包（不列入批次審查）"),
+      groups.unassigned.map(p=>el("button",{class:"btn ghost mini",type:"button",onclick:()=>openSingleFormPackage(p)},p.id))
+    ));
+    updateSubmit();
+    body.append(el("div",{class:"four-form-submit"},submit,
+      el("p",{class:"muted",role:"status"},reviewState.fourFormFeedback.get(entry.key) || "依型態逐筆執行既有 Drive 審查；若中途失敗會停止並顯示已完成／未完成筆數。")));
+    $("#panelBody").replaceChildren(el("h4",{},"四型態審查"),
+      el("p",{class:"muted"},"各型態的審查決定與意見仍各自保存。完整檔案、3D 旋轉與動作驗收可從各卡片進入單型態。"));
+  }
+
   // Single index for designed subjects and review packages.
   function renderReviewView() {
     window.COSMI_DRIVE?.prioritize?.();
     const entries = reviewDeskEntries();
     const filtered = ["chr", "cr", "mdl", "fx", "pending"].includes(reviewState.filterCat);
+    for (const id of ["stageBar", "panelTabs"]) { const node = $("#" + id); if (node) node.style.display = ""; }
     // The rail and the stage must use the same category. Drive models may arrive
     // after a portrait or catalog row has already been selected.
     const focused = filtered
@@ -4924,12 +5137,18 @@
       if (focused.stage) reviewState.activeStage = focused.stage;
       if (is3dType(focused.type)) reviewState.viewMode = "3d";
     }
-    if (["mdl", "fx", "pending"].includes(reviewState.filterCat))
+    const selectedEntry = entries.find(e => e.key === reviewState.activeDesignedKey) ||
+      entries.find(e => e.visiblePackages.some(p => p.id === reviewState.activePkgId)) ||
+      (!reviewState.activePkgId ? entries[0] : null);
+    const fourGroups = reviewState.creatureReviewMode === "all" &&
+      window.COSMI_MODEL_REVIEW.creatureReviewGroups(selectedEntry);
+    if (fourGroups) reviewState.activeDesignedKey = selectedEntry.key;
+    else if (["mdl", "fx", "pending"].includes(reviewState.filterCat))
       reviewState.activeDesignedKey = null;
     else if (!reviewState.activeDesignedKey && !reviewState.activePkgId && entries[0]?.catalog)
       reviewState.activeDesignedKey = entries[0].key;
     const design = reviewState.activeDesignedKey &&
-      reviewDeskEntries("all", "").find(e => e.key === reviewState.activeDesignedKey);
+      entries.find(e => e.key === reviewState.activeDesignedKey);
     const pkg = design ? null : (filtered && !focused ? null : getActivePkg());
     const linkedPkg = getLinkedPackage(pkg);
     const railList = $("#railList");
@@ -4946,7 +5165,9 @@
       const image = representative?.images?.[0]?.url ||
         entry.packages.find(p => p.images?.[0]?.url)?.images[0]?.url;
       const row = el("div", {class:"rl" + (selected ? " on" : ""),onclick:() => {
+        reviewState.creatureReviewMode = "all";
         reviewState.activeDesignedKey = !representative ||
+          window.COSMI_MODEL_REVIEW.creatureReviewGroups(entry) ||
           (entry.catalog && !["mdl", "fx", "pending"].includes(reviewState.filterCat))
           ? entry.key : null;
         if (!reviewState.activeDesignedKey && representative) {
@@ -4976,11 +5197,7 @@
         const p = stageRepresentatives.get(stKey);
         stages.append(el("button",{class:"stage-pill",type:"button",title:p.id,onclick:event => {
           event.stopPropagation();
-          reviewState.activeDesignedKey = null;
-          reviewState.activePkgId = p.id;
-          reviewState.activeStage = p.stage;
-          if (is3dType(p.type)) reviewState.viewMode = "3d";
-          renderReviewView();
+          openSingleFormPackage(p);
         }}, STAGE_ZH[p.stage] || p.stage));
       }
       if (stages.children.length) detail.append(stages);
@@ -4999,6 +5216,7 @@
     }
     if (!entries.length) railList.append(el("div",{class:"muted"},"無符合條件的項目"));
     saveViewMemory();
+    if (fourGroups) { renderFourFormReview(selectedEntry, fourGroups); return; }
     if (design) { renderReviewDesigned(design); return; }
     restoreStage3dView();
     const overlay = $("#reviewDesignedDetails");
@@ -5045,15 +5263,21 @@
       (p.groupKey === pkg.groupKey || (pkg.subjectId && p.subjectId === pkg.subjectId)) &&
       (p.type === pkg.type || (is3dType(pkg.type) && is3dType(p.type)))
     );
-    if (siblingStages.length > 0 || (pkg.type === "creature-concept" || pkg.id.startsWith("cr-"))) {
+    const familyEntry = entries.find(e => e.visiblePackages.some(p => p.id === pkg.id));
+    const familyGroups = window.COSMI_MODEL_REVIEW.creatureReviewGroups(familyEntry);
+    if (familyGroups || siblingStages.length > 0 || (pkg.type === "creature-concept" || pkg.id.startsWith("cr-"))) {
       if (!stageSwitchSeg) {
         stageSwitchSeg = el("div", { class: "seg stage-switch-seg", id: "stageSwitchSeg" });
         $("#stageTag").append(stageSwitchSeg);
       }
       stageSwitchSeg.style.display = "inline-flex";
       stageSwitchSeg.replaceChildren();
+      if (familyGroups) stageSwitchSeg.append(el("button", {class:"segb",type:"button",onclick:()=>openFourFormReview(familyEntry)}, "四型態（預設）"));
       STAGE_KEYS.forEach(stKey => {
-        const found = siblingStages.find(p => p.stage === stKey);
+        const row = familyGroups?.rows.find(r => r.stage === stKey);
+        const found = familyGroups
+          ? fourFormPackageOrder(row?.packages || []).find(p => is3dType(p.type) === is3dType(pkg.type)) || fourFormPackageOrder(row?.packages || [])[0]
+          : siblingStages.find(p => p.stage === stKey);
         const isActive = (pkg.stage === stKey);
         const btn = el("button", {
           class: "segb" + (isActive ? " on" : ""),
@@ -5062,10 +5286,7 @@
           title: found ? `切換至 ${STAGE_ZH[stKey]} (${found.id})` : `尚未載入此型態交付包`,
           onclick: () => {
             if (!found) return;
-            reviewState.activeStage = stKey;
-            reviewState.activePkgId = found.id;
-            reviewState.activeImgIdx = 0;
-            renderReviewView();
+            openSingleFormPackage(found);
           }
         }, STAGE_ZH[stKey]);
         stageSwitchSeg.append(btn);
@@ -6747,7 +6968,7 @@
 
     // 鍵盤快速鍵支援 (空白鍵暫停/播放、[ ] 切換動作、B 骨架、W 拓撲、L 循環、R 重設)
     window.addEventListener("keydown", e => {
-      if (state.activeTab !== "review") return;
+      if (state.activeTab !== "review" || !isStage3dActive()) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT" || e.target.isContentEditable) return;
 
@@ -6796,6 +7017,7 @@
         document.querySelectorAll("#catSeg .segb").forEach(b => b.classList.remove("on"));
         btn.classList.add("on");
         reviewState.filterCat = btn.dataset.cat;
+        reviewState.creatureReviewMode = "all";
         reviewState.activeDesignedKey = null;
         if (reviewState.filterCat === "mdl") reviewState.viewMode = "3d";
         renderReviewView();
@@ -6918,6 +7140,7 @@
     loadAssetFiles, setViewMode,
     openReviewPackage: pkg => {
       if (!pkg) return;
+      reviewState.creatureReviewMode = "single";
       reviewState.activePkgId = pkg.id;
       reviewState.activeDesignedKey = null;
       if (pkg.stage) reviewState.activeStage = pkg.stage;
