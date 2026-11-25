@@ -1102,6 +1102,8 @@ test('default creature overview creates four separate interactive model-viewer s
   assert.equal(new Set(viewers.map(v=>v.alt)).size,4);
   assert.ok(viewers.every(v=>v['camera-controls'] !== undefined));
   const initial=viewers.slice();
-  f.refresh();
-  assert.deepEqual(findAll(nodes.designedDetailView,n=>n.tagName==='MODEL-VIEWER'),initial,'unchanged GLB slots should retain their elements across refresh');
+  await f.setViewMode('review');
+  const rerendered=findAll(nodes.designedDetailView,n=>n.tagName==='MODEL-VIEWER');
+  assert.equal(rerendered.length,4);
+  rerendered.forEach((viewer,i)=>assert.equal(viewer,initial[i],'unchanged GLB slots retain their elements across review rerender'));
 });
