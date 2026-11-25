@@ -1107,3 +1107,37 @@ test('default creature overview creates four separate interactive model-viewer s
   assert.equal(rerendered.length,4);
   rerendered.forEach((viewer,i)=>assert.equal(viewer,initial[i],'unchanged GLB slots retain their elements across review rerender'));
 });
+
+test('four-form review lock defaults on and labels all eligible drafts without writing Drive', async () => {
+  const {c,nodes}=createHarness();
+  const f=c.COSMI_FORGE, creature=c.DESIGNED[0];
+  const enc=x=>new TextEncoder().encode(JSON.stringify(x));
+  const pkgs=[];
+  for (const stage of ['juvenile','adolescent','adult','overload']) {
+    const id='mdl-lock-'+stage;
+    const pkg=await f.loadAssetFiles({[id+'/manifest.json']:enc({task_id:id,task_type:'creature-model-rig',subject_id:creature.line_id,stage})},{name:id},{silent:true});
+    pkg.driveFolderId='folder-'+stage;
+    pkgs.push(pkg);
+  }
+  pkgs[3].completed=true;
+  let writes=0;
+  c.COSMI_DRIVE={review:async()=>{writes++;}};
+  await f.setViewMode('review');
+  nodes.railList.children.find(r=>collectText(r).includes(creature.line_id)).listeners.click[0]();
+  const findAll=(node,pred,out=[])=>{if(!node)return out;if(pred(node))out.push(node);for(const child of node.children||[])findAll(child,pred,out);return out;};
+  const lock=findAll(nodes.designedStageHeader,n=>n.id==='fourFormSync')[0];
+  assert.ok(lock);
+  assert.notEqual(lock.checked,undefined,'default lock must render checked');
+  const results=findAll(nodes.designedDetailView,n=>n.tagName==='SELECT' && /審查結果$/.test(n['aria-label']||''));
+  assert.equal(results.length,3,'completed form must be excluded');
+  results[0].value='provisional';
+  results[0].listeners.change[0]();
+  assert.deepEqual(results.map(r=>r.value),['provisional','provisional','provisional']);
+  lock.checked=false;
+  lock.listeners.change[0]();
+  results[1].value='reject';
+  results[1].listeners.change[0]();
+  assert.deepEqual(results.map(r=>r.value),['provisional','reject','provisional']);
+  assert.equal(writes,0);
+  assert.equal(JSON.parse(c.localStorage.getItem('cosmimera.view-memory.v1')).fourFormSync,false);
+});
