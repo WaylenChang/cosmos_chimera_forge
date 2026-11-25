@@ -13,6 +13,9 @@
   python tools/acg-character/npc_bases.py beard --blender <blender.exe> [--blends <dir>] [--jobs N] [--only <id>,...]
       runs npc_beard.py on the male bases of the races in npc/beard_styles.json "races", writing <game>/_UMA/Npc/Beard/<id>.fbx
       (log <id>_beard.log beside the .blend).
+  python tools/acg-character/npc_bases.py head --blender <blender.exe> [--blends <dir>] [--jobs N] [--only <id>,...]
+      runs npc_beast_head.py on both bases of the races in npc/beast_heads.json "races", writing <game>/_UMA/Npc/Head/<id>.fbx
+      (log <id>_head.log beside the .blend).
   python tools/acg-character/npc_bases.py sheet <lineup dir> <out.png>
       npc_lineup.py renders -> one contact sheet: per base its front and side at one common scale, then its face.
   python tools/acg-character/npc_bases.py keys <report.json>...
@@ -190,6 +193,10 @@ def beard(blender, jobs, only, blends):
     _worn("beard", "beard_styles.json", "npc_beard.py", "Beard", True, blender, jobs, only, blends)
 
 
+def head(blender, jobs, only, blends):
+    _worn("head", "beast_heads.json", "npc_beast_head.py", "Head", False, blender, jobs, only, blends)
+
+
 def _worn(kind, styles, script, folder, males, blender, jobs, only, blends):
     """Runs `script` on the baked .blend of every base whose race is in npc/<styles> "races" (males only if `males`)."""
     import subprocess
@@ -252,7 +259,7 @@ def main():
     c.add_argument("--blender", required=True)
     c.add_argument("--jobs", type=int, default=4)
     c.add_argument("--only")
-    for name in ("hair", "beard"):
+    for name in ("hair", "beard", "head"):
         h = sub.add_parser(name)
         h.add_argument("--blender", required=True)
         h.add_argument("--jobs", type=int, default=4)
@@ -269,6 +276,8 @@ def main():
         hair(args.blender, args.jobs, args.only, args.blends)
     elif args.cmd == "beard":
         beard(args.blender, args.jobs, args.only, args.blends)
+    elif args.cmd == "head":
+        head(args.blender, args.jobs, args.only, args.blends)
     else:
         keys(args.reports)
 

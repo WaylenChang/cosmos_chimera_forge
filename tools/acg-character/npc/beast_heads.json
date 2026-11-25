@@ -1,0 +1,30 @@
+{
+ "comment": "NPC beast head slots (cosmos_chimera docs/design/npc-uma-looks.md#獸頭). One entry per race whose whole face is reshaped (NpcMeshes HeadSlotOf); npc_beast_head.py grows each on that race's two bases. Positions and sizes are the procedural head's (NpcMeshes.Head), in head radii from the head centre: x right, up, fwd forward. Rigid parts (ears, beak, horns, fins, crest, barbels, spines) stay procedural and ride on the slot.",
+ "races": {
+  "werewolf": {
+   "eye": {"x": 0.42, "up": 0.28, "size": 0.12},
+   "snout": {"from": [0, -0.2, 0.6], "drop": 0.12, "r0": 0.5, "r1": 0.26, "min": 0.76, "max": 1.0925, "tone": "muzzle"},
+   "nose": {"up": 0.06, "ahead": 0.05, "r": 0.16},
+   "ruff": {"min": 0.85, "max": 1.25}
+  },
+  "lizardfolk": {
+   "eye": {"x": 0.55, "up": 0.2, "size": 0.12},
+   "snout": {"from": [0, -0.2, 0.6], "drop": 0.08, "r0": 0.55, "r1": 0.3, "min": 0.75, "max": 1.05},
+   "jaw": {"at": [0, -0.3, 0.35], "r": [0.42, 0.2, 0.6]}
+  },
+  "dragonkin": {
+   "eye": {"x": 0.55, "up": 0.2, "size": 0.12},
+   "snout": {"from": [0, -0.2, 0.6], "drop": 0.08, "r0": 0.55, "r1": 0.3, "min": 0.95, "max": 1.25},
+   "jaw": {"at": [0, -0.3, 0.35], "r": [0.42, 0.2, 0.6]}
+  },
+  "avian": {
+   "eye": {"x": 0.6, "up": 0.05, "size": 0.15}
+  },
+  "merfolk": {
+   "eye": {"x": 0.4, "up": 0.05, "size": 0.16}
+  }
+ },
+ "eye_comment": "Eye centre on the skull's front at (x, up); size against the procedural default 0.12 scales the base's own eyeball, which keeps its eye.* keys.",
+ "snout_comment": "A tapering tube from `from` forward by the snout length (head radii), dropping `drop` per unit length, radius r0 at the root and r1 at the tip; the basis is drawn at min and the npc_snout key at max (Look's per-resident draw lies between). tone: the tube takes its own material (a resident's muzzle is lighter or darker than the skin); without it the tube is skin.",
+ "ruff_comment": "The werewolf ruff: the procedural neck ball (r.Neck, TrunkX x 1.02, 0.07 x height, TrunkZ x 1.5) at size min in the basis and max in the npc_ruff key."
+}
