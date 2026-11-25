@@ -172,6 +172,38 @@
     return shown.find(pkg => pkg.id === activeId) || shown[0] || null;
   }
 
+  const CREATURE_REVIEW_STAGES = Object.freeze(["juvenile", "adolescent", "adult", "overload"]);
+  const FORM_STAGE = { form1: "juvenile", form2: "adolescent", form3: "adult", form4: "overload" };
+  function reviewStage(pkg) {
+    for (const value of [pkg?.stage, pkg?.manifest?.stage, pkg?.concept?.stage]) {
+      const key = String(value || "").trim().toLowerCase();
+      const stage = FORM_STAGE[key] || key;
+      if (CREATURE_REVIEW_STAGES.includes(stage)) return stage;
+    }
+    const matches = [...String(pkg?.id || "").toLowerCase().matchAll(/(?:^|[-_])(juvenile|adolescent|adult|overload|form[1-4])(?=$|[-_.])/g)];
+    const stages = [...new Set(matches.map(m => FORM_STAGE[m[1]] || m[1]))];
+    return stages.length === 1 ? stages[0] : null;
+  }
+
+  // The unified entry is the only family boundary. Never infer a missing
+  // form from another family's package or copy an unstaged package to all forms.
+  function creatureReviewGroups(entry) {
+    if (!entry) return null;
+    const all = entry.packages || [];
+    if (entry.catalog ? entry.catalog.kind !== "creature" : !all.some(p => matchesCategory(p, "cr"))) return null;
+    const designs = entry.catalog?.item?.concept?.locked?.stages || [];
+    // Explicit single-form designs (e.g. trial bosses) retain the original review.
+    if (designs.length === 1 && !all.some(p => reviewStage(p) && reviewStage(p) !== designs[0].stage)) return null;
+    const visible = entry.visiblePackages || all;
+    const rows = CREATURE_REVIEW_STAGES.map(stage => ({
+      stage,
+      design: designs.find(s => s.stage === stage) || null,
+      packages: visible.filter(p => reviewStage(p) === stage),
+      total: all.filter(p => reviewStage(p) === stage).length
+    }));
+    return { rows, unassigned: visible.filter(p => !reviewStage(p)) };
+  }
+
   function exactBuffer(bytes) {
     if (ArrayBuffer.isView(bytes)) return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
     if (bytes instanceof ArrayBuffer) return bytes.slice(0);
@@ -267,7 +299,7 @@
 
   return Object.freeze({
     CHARACTER_ALIASES, isHighComplexityCharacterModel, isSimpleCharacterModel, preferHighComplexityCharacters,
-    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage,
+    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage, creatureReviewGroups, reviewStage,
     exactBuffer, relative, orbitFor, open, onPackagesChanged, install
   });
 });
