@@ -405,3 +405,41 @@ test('four-form review ships bundled interactive viewer with per-form lifetime a
   assert.match(forge,/disposeFourFormViewers\(keepViewers\)/);
   assert.match(forge,/URL\.revokeObjectURL\(url\)/);
 });
+
+test('locked camera aligns angles, relative zoom and pan for differently sized forms', () => {
+  const source = {
+    getDimensions:()=>({x:1,y:2,z:2}),getBoundingBoxCenter:()=>({x:0,y:1,z:0}),
+    getCameraOrbit:()=>({theta:Math.PI/2,phi:1,radius:6}),
+    getCameraTarget:()=>({x:1,y:1,z:0}),getFieldOfView:()=>35
+  };
+  let jumps=0;
+  const peer = {
+    getDimensions:()=>({x:3,y:6,z:6}),getBoundingBoxCenter:()=>({x:0,y:3,z:0}),
+    jumpCameraToGoal:()=>jumps++
+  };
+  const camera=review.captureReviewCamera(source);
+  assert.equal(camera.radius,2);
+  assert.equal(review.applyReviewCamera(peer,camera),true);
+  assert.equal(peer.cameraOrbit,Math.PI/2+'rad 1rad 18m');
+  assert.equal(peer.cameraTarget,'3m 3m 0m');
+  assert.equal(peer.fieldOfView,'35deg');
+  assert.equal(jumps,1);
+  assert.equal(review.captureReviewCamera({}),null);
+  assert.equal(review.applyReviewCamera(peer,{...camera,radius:NaN}),false);
+});
+
+test('synchronized clip selection never substitutes an unrelated or ambiguous animation', () => {
+  assert.equal(review.matchingReviewClip(['cr_idle','cr_attack'],'cr_attack'),'cr_attack');
+  assert.equal(review.matchingReviewClip(['cr_adult_idle','cr_adult_attack'],'cr_juvenile_attack'),'cr_adult_attack');
+  assert.equal(review.matchingReviewClip(['cr_adult_idle'],'cr_attack'),null);
+  assert.equal(review.matchingReviewClip(['cr_adult_idle','cr_overload_idle'],'cr_juvenile_idle'),null);
+});
+
+test('four-form sync is default on; only user camera events propagate and review labels remain drafts', () => {
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/fourFormSync: true/);
+  assert.match(forge,/event\.detail\?\.source !== "user-interaction"/);
+  assert.match(forge,/reviewState\.fourFormSync\) applyReviewLabel\(result\.value\)/);
+  assert.match(forge,/fourFormDrafts\.set\(pkg\.id/);
+  assert.match(forge,/if \(locked\.checked\) alignFourFormGroup\(syncGroup\)/);
+});
