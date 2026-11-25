@@ -204,6 +204,51 @@
     return { rows, unassigned: visible.filter(p => !reviewStage(p)) };
   }
 
+  // Normalize camera distance and pan against the bounding-box diagonal.
+  // Copying absolute metre coordinates would crop larger evolution forms.
+  function reviewCameraFrame(viewer) {
+    const size = viewer?.getDimensions?.(), center = viewer?.getBoundingBoxCenter?.();
+    if (!size || !center) return null;
+    const scale = Math.hypot(size.x, size.y, size.z);
+    if (!(scale > 0) || !Number.isFinite(scale) ||
+        ![center.x, center.y, center.z].every(Number.isFinite)) return null;
+    return {scale, center};
+  }
+
+  function captureReviewCamera(viewer) {
+    const frame = reviewCameraFrame(viewer);
+    const orbit = viewer?.getCameraOrbit?.(), target = viewer?.getCameraTarget?.();
+    const fov = viewer?.getFieldOfView?.();
+    if (!frame || !orbit || !target ||
+        ![orbit.theta, orbit.phi, orbit.radius, target.x, target.y, target.z, fov].every(Number.isFinite) ||
+        !(orbit.radius > 0) || !(fov > 0)) return null;
+    return {theta:orbit.theta, phi:orbit.phi, radius:orbit.radius/frame.scale, fov,
+      offset:["x","y","z"].map(k=>(target[k]-frame.center[k])/frame.scale)};
+  }
+
+  function applyReviewCamera(viewer, camera) {
+    const frame = reviewCameraFrame(viewer);
+    if (!frame || !camera || !Array.isArray(camera.offset) || camera.offset.length !== 3 ||
+        ![camera.theta,camera.phi,camera.radius,camera.fov,...camera.offset].every(Number.isFinite) ||
+        !(camera.radius > 0) || !(camera.fov > 0)) return false;
+    viewer.cameraOrbit = camera.theta + "rad " + camera.phi + "rad " + camera.radius*frame.scale + "m";
+    viewer.cameraTarget = ["x","y","z"].map((k,i)=>(frame.center[k]+camera.offset[i]*frame.scale)+"m").join(" ");
+    viewer.fieldOfView = camera.fov + "deg";
+    viewer.jumpCameraToGoal?.();
+    return true;
+  }
+
+  function matchingReviewClip(names, requested) {
+    if (!requested || !Array.isArray(names)) return null;
+    if (names.includes(requested)) return requested;
+    // Support form-specific prefixes/suffixes only when the remaining clip
+    // identity is unambiguous. Never guess an unrelated action.
+    const normalize = name => String(name).toLowerCase().split(/[-_.\s]+/)
+      .filter(part=>part && !CREATURE_REVIEW_STAGES.includes(part) && !/^form[1-4]$/.test(part)).join("_");
+    const matches = names.filter(name=>normalize(name) === normalize(requested));
+    return matches.length === 1 ? matches[0] : null;
+  }
+
   function exactBuffer(bytes) {
     if (ArrayBuffer.isView(bytes)) return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
     if (bytes instanceof ArrayBuffer) return bytes.slice(0);
@@ -350,6 +395,7 @@
   return Object.freeze({
     CHARACTER_ALIASES, isHighComplexityCharacterModel, isSimpleCharacterModel, preferHighComplexityCharacters,
     selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage, creatureReviewGroups, reviewStage,
+    captureReviewCamera, applyReviewCamera, matchingReviewClip,
     exactBuffer, validateReviewGlb, readFourFormGlb, relative, orbitFor, open, onPackagesChanged, install
   });
 });
