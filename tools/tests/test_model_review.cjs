@@ -316,3 +316,49 @@ test('physical Drive protagonist and creature folders unify with catalog rows wi
   assert.equal(entries.find(e => e.catalog?.id === 'starter_moon_line').packages.length, 1);
   assert.equal(entries.filter(e => /ch_1st_batch_|ch_starter_/i.test(e.key)).length, 0);
 });
+
+test('four-form review groups use the unified family and respect visible category packages', () => {
+  const creature = {line_id:'cr_family',concept:{locked:{stages:[
+    {stage:'juvenile',creature_id:'cr_family_juvenile',name_zh:'幼'},
+    {stage:'adolescent',creature_id:'cr_family_adolescent',name_zh:'少'},
+    {stage:'adult',creature_id:'cr_family_adult',name_zh:'成'},
+    {stage:'overload',creature_id:'cr_family_overload',name_zh:'超'}
+  ]}}};
+  const packages = [
+    {id:'asset_cr_family_juvenile',subjectId:'cr_family',stage:'juvenile',type:'creature-model-rig',status:'pending'},
+    {id:'asset_cr_family_form2',subjectId:'cr_family',manifest:{stage:'form2'},type:'creature-model-rig',status:'provisional'},
+    {id:'cr_family_adult_03a_colab_v2',subjectId:'cr_family',type:'creature-model-rig',status:'pending'},
+    {id:'cr_family_adult_01_portrait',subjectId:'cr_family',stage:'adult',type:'creature-concept',status:'pending'},
+    {id:'cr_family_undated',subjectId:'cr_family',type:'creature-model-rig',status:'pending'},
+    {id:'cr_other_overload',subjectId:'cr_other',stage:'overload',type:'creature-model-rig',status:'pending'}
+  ];
+  const entry = review.unifiedEntries(packages,[creature],[],'mdl').find(e=>e.catalog?.id==='cr_family');
+  const group = review.creatureReviewGroups(entry);
+  assert.deepEqual(group.rows.map(r=>r.stage),['juvenile','adolescent','adult','overload']);
+  assert.deepEqual(group.rows.map(r=>r.packages.map(p=>p.id)),[
+    ['asset_cr_family_juvenile'],['asset_cr_family_form2'],['cr_family_adult_03a_colab_v2'],[]
+  ]);
+  assert.equal(group.rows[2].total,2);
+  assert.deepEqual(group.unassigned.map(p=>p.id),['cr_family_undated']);
+  const pending = review.unifiedEntries(packages,[creature],[],'pending').find(e=>e.catalog?.id==='cr_family');
+  assert.equal(review.creatureReviewGroups(pending).rows[1].packages.length,0);
+  assert.equal(review.creatureReviewGroups(pending).rows[1].total,1);
+});
+
+test('four-form review excludes characters and explicit single-form designs', () => {
+  const single = {line_id:'cr_trial_boss',concept:{locked:{stages:[{stage:'adult',creature_id:'cr_trial_boss_adult'}]}}};
+  const rows = review.unifiedEntries([], [single], [{id:'chr_test'}]);
+  for (const row of rows) assert.equal(review.creatureReviewGroups(row),null);
+  const unknown = review.unifiedEntries([{id:'asset_cr_unlisted_form4',type:'creature-model-rig',status:'pending'}]);
+  assert.equal(review.creatureReviewGroups(unknown[0]).rows[3].packages.length,1);
+  assert.equal(review.reviewStage({id:'cr_juvenile_adult'}),null);
+});
+
+test('four-form review defaults to family view and retains exact single-package review', () => {
+  const forge = fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/creatureReviewMode: "all"/);
+  assert.match(forge,/if \(fourGroups\) \{ renderFourFormReview\(selectedEntry, fourGroups\); return; \}/);
+  assert.match(forge,/async function submitFourFormReview[\s\S]*?await window\.COSMI_DRIVE\.review\(pkg, item\.status, item\.note\)/);
+  assert.match(forge,/function openSingleFormPackage[\s\S]*?reviewState\.creatureReviewMode = "single"/);
+  assert.match(forge,/four-form-review-grid/);
+});
