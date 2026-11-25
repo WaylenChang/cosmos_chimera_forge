@@ -1,6 +1,6 @@
 // COSMIMERA prompt-forge · 介面與組裝 + 交付成果審查台
 (function () {
-  const TOOL_VERSION = "2.11.0";
+  const TOOL_VERSION = "2.11.1";
   const SPEC = "1";
   const C = window.COSMI_CATALOG, TASKS = window.COSMI_TASKS;
   if (C && !C.CLIPS && C.ACTIONS) C.CLIPS = C.ACTIONS;
@@ -172,6 +172,7 @@
     reviews: {},
     creatureReviewMode: "all", // default: four-form family review; explicit package links remain single
     fourFormPicks: new Map(), fourFormDrafts: new Map(), fourFormFeedback: new Map(), fourFormBusy: false,
+    fourFormViewers: new Map(),
     three: {
       scene: null, camera: null, renderer: null, controls: null, mixer: null, clock: null,
       currentAction: null, currentClipName: "", clips: [], isPlaying: true, playbackSpeed: 1.0,
@@ -1381,6 +1382,7 @@
         filterCat: reviewState.filterCat,
         filterQuery: reviewState.filterQuery,
         activeDesignedKey: reviewState.activeDesignedKey,
+        creatureReviewMode: reviewState.creatureReviewMode,
         activePkgId: reviewState.activePkgId,
         activeStage: reviewState.activeStage,
         activeImgIdx: reviewState.activeImgIdx,
@@ -1407,6 +1409,7 @@
       if (typeof vm.activeDesignedKey === "string" || vm.activeDesignedKey === null) {
         reviewState.activeDesignedKey = vm.activeDesignedKey;
       }
+      if (["all", "single"].includes(vm.creatureReviewMode)) reviewState.creatureReviewMode = vm.creatureReviewMode;
       if (typeof vm.activePkgId === "string" || vm.activePkgId === null) {
         reviewState.activePkgId = vm.activePkgId;
       }
@@ -4943,7 +4946,7 @@
   function fourFormPackageOrder(packages) {
     const isModel = p => is3dType(p.type) || !!p.glbFile;
     // Prefer an actionable model, then other actionable packages; retain all versions.
-    const rank = p => (p.completed ? 0 : 2) + (isModel(p) ? 1 : 0);
+    const rank = p => (p.glbFile ? 4 : isModel(p) ? 2 : 0) + (p.completed ? 0 : 1);
     return sortPackagesByPriority(packages).sort((a, b) => rank(b) - rank(a));
   }
 
@@ -4997,6 +5000,118 @@
     }
   }
 
+  function disposeFourFormViewers(keep = new Set()) {
+    for (const [slot, viewer] of reviewState.fourFormViewers) {
+      if (keep.has(slot)) continue;
+      viewer.dispose();
+      reviewState.fourFormViewers.delete(slot);
+    }
+  }
+
+  // Each form owns its own <model-viewer>, camera and animation state. The
+  // bundled viewer shares a renderer, unlike allocating four WebGL contexts.
+  function fourForm3dPreview(slot, pkg, stage, keep) {
+    const file = pkg.glbFile;
+    const key = JSON.stringify([pkg.id, file.path, file.id || "", file.modifiedTime || "", file.id ? "" : file.url || ""]);
+    const prior = reviewState.fourFormViewers.get(slot);
+    keep.add(slot);
+    if (prior?.key === key) return prior.host;
+    if (prior) prior.dispose();
+    const host = el("div", {class:"four-form-3d", "data-form":stage});
+    const viewer = el("model-viewer", {
+      "camera-controls":true, "touch-action":"pan-y", loading:"eager",
+      "interaction-prompt":"none", alt:STAGE_ZH[stage] + " · " + pkg.id,
+      "camera-orbit":"0deg 80deg auto", "shadow-intensity":"0.7"
+    });
+    const message = el("div", {class:"muted four-form-3d-message", role:"status"}, "正在準備互動 GLB…");
+    const clips = el("select", {"aria-label":STAGE_ZH[stage]+"動畫",disabled:true}, el("option",{},"載入動畫中…"));
+    const play = el("button", {class:"btn ghost mini",type:"button",disabled:true,"aria-label":STAGE_ZH[stage]+"播放或暫停"}, "播放");
+    const reset = el("button", {class:"btn ghost mini",type:"button",disabled:true,onclick:()=>{
+      viewer.cameraOrbit = initialOrbit;
+      viewer.cameraTarget = "auto auto auto";
+      viewer.fieldOfView = "auto";
+      viewer.jumpCameraToGoal?.();
+    }}, "重設視角");
+    let active = true, url = "", initialOrbit = "0deg 80deg auto", playing = false;
+    const record = {key,host,failed:false,dispose:()=>{
+      active = false;
+      viewer.pause?.();
+      viewer.removeAttribute?.("src");
+      if (url) URL.revokeObjectURL(url);
+      url = "";
+    }};
+    reviewState.fourFormViewers.set(slot, record);
+    const live = () => active && reviewState.fourFormViewers.get(slot) === record && state.activeTab === "review";
+    const fail = error => {
+      if (!live()) return;
+      record.failed = true;
+      const current = reviewState.packages.find(p=>p.id===pkg.id);
+      if (current) current.glbLoadError = true;
+      message.textContent = "GLB 載入失敗：" + (error?.message || "請檢查模型或瀏覽器");
+      viewer.pause?.();
+      viewer.removeAttribute?.("src");
+      if (url) URL.revokeObjectURL(url);
+      url = "";
+      clips.disabled = play.disabled = reset.disabled = true;
+    };
+    const selectClip = () => {
+      if (!live() || !clips.value) return;
+      viewer.pause();
+      viewer.animationName = clips.value;
+      viewer.currentTime = 0;
+      if (playing) viewer.play();
+    };
+    clips.addEventListener("change", selectClip);
+    play.addEventListener("click", () => {
+      if (!live()) return;
+      playing = !playing;
+      if (playing) viewer.play(); else viewer.pause();
+      play.textContent = playing ? "暫停" : "播放";
+    });
+    viewer.addEventListener("load", () => {
+      if (!live()) return;
+      const current = reviewState.packages.find(p=>p.id===pkg.id);
+      if (current) current.glbLoadError = false;
+      const names = viewer.availableAnimations || [];
+      message.textContent = "GLB 已載入 · " + names.length + " 支動畫";
+      clips.replaceChildren(...(names.length ? names.map(name=>el("option",{value:name},name)) : [el("option",{},"無動畫")]));
+      clips.disabled = play.disabled = names.length === 0;
+      reset.disabled = false;
+      if (names.length) {
+        clips.value = names.find(n=>/idle/i.test(n)) || names[0];
+        viewer.animationName = clips.value;
+        viewer.pause();
+      }
+    });
+    viewer.addEventListener("error", event=>fail(event.detail?.sourceError || event.detail?.error));
+    host.append(viewer, message, el("div",{class:"four-form-3d-controls"}, clips, play, reset));
+    // No binary download until the browser supports the bundled custom element.
+    // In-flight completions from a previous form/version are ignored.
+    if (window.customElements) {
+      void (async()=>{
+        let timer;
+        try {
+          await Promise.race([
+            window.customElements.whenDefined("model-viewer"),
+            new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error("3D 檢視器未載入")),12000);})
+          ]);
+          if (!live()) return;
+          const Viewer = window.customElements.get("model-viewer");
+          if (Viewer && "modelCacheSize" in Viewer) Viewer.modelCacheSize = 0;
+          const {buffer,orbit} = await window.COSMI_MODEL_REVIEW.readFourFormGlb(pkg, window.COSMI_DRIVE);
+          if (!live()) return;
+          initialOrbit = orbit;
+          viewer.setAttribute("camera-orbit", orbit);
+          url = URL.createObjectURL(new Blob([buffer],{type:"model/gltf-binary"}));
+          viewer.setAttribute("src",url);
+          message.textContent = "正在解析 GLB…";
+        } catch(e) { fail(e); }
+        finally { if (timer) clearTimeout(timer); }
+      })();
+    } else message.textContent = "此環境不支援互動 3D 檢視器";
+    return host;
+  }
+
   function renderFourFormReview(entry, groups) {
     restoreStage3dView();
     const overlay = $("#reviewDesignedDetails");
@@ -5011,6 +5126,7 @@
     }
     $("#stageCarousel").replaceChildren();
     $("#viewSeg").replaceChildren();
+    const keepViewers = new Set();
     const orderedRows = groups.rows.map(row => ({...row, packages:fourFormPackageOrder(row.packages)}));
     const choosePkg = row => {
       const key = entry.key + ":" + row.stage;
@@ -5039,7 +5155,7 @@
         renderReviewView();
       }}, "設計明細") : null
     );
-    body.replaceChildren(el("p", {class:"muted"}, "同一演化線四型態並列審查。可切換各型態交付版本、開啟互動 3D 詳查，分別選擇結果後一次送出；未選擇結果的型態不變更。"));
+    body.replaceChildren(el("p", {class:"muted"}, "同一演化線四型態並列互動 3D 審查，可各自旋轉、縮放、切換與播放動畫。分別選擇交付版本及審查結果後一次送出；未選擇結果的型態不變更。"));
     const grid = el("div", {class:"four-form-review-grid"});
     const selected = () => orderedRows.flatMap(row => {
       const pkg = choosePkg(row);
@@ -5055,7 +5171,7 @@
     };
     for (const row of orderedRows) {
       const pkg = choosePkg(row);
-      const card = el("section", {class:"designed-detail-card four-form-review-card"},
+      const card = el("section", {class:"designed-detail-card four-form-review-card","data-review-form":row.stage},
         el("h3", {}, STAGE_ZH[row.stage] + (row.design?.name_zh ? " · " + row.design.name_zh : ""))
       );
       if (!pkg) {
@@ -5075,18 +5191,23 @@
       });
       const images = (pkg.images || []).filter(i => i.url);
       const main = imageForView(images,"front") || imageForView(images,"main") || images[0];
-      const preview = el("div", {class:"four-form-preview"},
+      const preview = el("div", {class:"four-form-preview",hidden:!!pkg.glbFile},
         main ? el("img", {src:main.url,alt:STAGE_ZH[row.stage] + " · " + describeImg(main.path)})
-          : el("span",{class:"muted"}, pkg.glbFile ? "有 GLB · 請開啟互動 3D 檢視" : "尚無可用預覽圖")
+          : el("span",{class:"muted"}, "尚無可用預覽圖")
       );
       card.append(el("div",{class:"four-form-status"},
         el("span",{class:"f-badge " + status.cls},status.badge),
         el("span",{class:"muted"},row.packages.length + " 個交付包"),
         pkg.completed ? el("span",{class:"f-badge ok"},"已核准") : null
-      ), select, preview);
+      ), select);
+      if (pkg.glbFile) {
+        card.append(fourForm3dPreview(entry.key + ":" + row.stage, pkg, row.stage, keepViewers));
+        if (images.length) card.append(el("button",{class:"btn ghost mini",type:"button",onclick:()=>{preview.hidden=!preview.hidden;}}, "切換靜態參考圖"));
+      }
+      card.append(preview);
       if (images.length > 1) card.append(el("div",{class:"four-form-thumbnails"},
         images.map(im => el("button",{type:"button",class:"btn ghost mini",title:im.path,
-          onclick:()=>preview.replaceChildren(el("img",{src:im.url,alt:STAGE_ZH[row.stage] + " · " + describeImg(im.path)}))}, describeImg(im.path)))
+          onclick:()=>{preview.hidden=false;preview.replaceChildren(el("img",{src:im.url,alt:STAGE_ZH[row.stage] + " · " + describeImg(im.path)}));}}, describeImg(im.path)))
       ));
       const missing = isMissingSuperseded(pkg, row.packages) ? [] : getEffectiveMissing(pkg);
       if (missing.length) card.append(el("p",{class:"muted"}, "⚠️ 需補件：" + missing.map(m=>typeof m==="string"?m:m.item||m.path||JSON.stringify(m)).join("、")));
@@ -5110,6 +5231,7 @@
       grid.append(card);
     }
     body.append(grid);
+    disposeFourFormViewers(keepViewers);
     if (groups.unassigned.length) body.append(el("div",{class:"designed-detail-card"},
       el("h3",{},"尚未識別型態的交付包（不列入批次審查）"),
       groups.unassigned.map(p=>el("button",{class:"btn ghost mini",type:"button",onclick:()=>openSingleFormPackage(p)},p.id))
@@ -5117,8 +5239,9 @@
     updateSubmit();
     body.append(el("div",{class:"four-form-submit"},submit,
       el("p",{class:"muted",role:"status"},reviewState.fourFormFeedback.get(entry.key) || "依型態逐筆執行既有 Drive 審查；若中途失敗會停止並顯示已完成／未完成筆數。")));
+    if (entry.catalog?.kind === "creature") body.append(renderPipelineProgressCard(entry.catalog.id, "creature"));
     $("#panelBody").replaceChildren(el("h4",{},"四型態審查"),
-      el("p",{class:"muted"},"各型態的審查決定與意見仍各自保存。完整檔案、3D 旋轉與動作驗收可從各卡片進入單型態。"));
+      el("p",{class:"muted"},"四個 GLB 可獨立操作與播放動畫，各型態的審查決定與意見各自保存。骨架、拓撲、時間軸與完整檔案驗收可進入單型態。"));
   }
 
   // Single index for designed subjects and review packages.
@@ -5165,9 +5288,8 @@
       const image = representative?.images?.[0]?.url ||
         entry.packages.find(p => p.images?.[0]?.url)?.images[0]?.url;
       const row = el("div", {class:"rl" + (selected ? " on" : ""),onclick:() => {
-        reviewState.creatureReviewMode = "all";
         reviewState.activeDesignedKey = !representative ||
-          window.COSMI_MODEL_REVIEW.creatureReviewGroups(entry) ||
+          (reviewState.creatureReviewMode === "all" && window.COSMI_MODEL_REVIEW.creatureReviewGroups(entry)) ||
           (entry.catalog && !["mdl", "fx", "pending"].includes(reviewState.filterCat))
           ? entry.key : null;
         if (!reviewState.activeDesignedKey && representative) {
@@ -5217,6 +5339,7 @@
     if (!entries.length) railList.append(el("div",{class:"muted"},"無符合條件的項目"));
     saveViewMemory();
     if (fourGroups) { renderFourFormReview(selectedEntry, fourGroups); return; }
+    disposeFourFormViewers();
     if (design) { renderReviewDesigned(design); return; }
     restoreStage3dView();
     const overlay = $("#reviewDesignedDetails");
@@ -6681,6 +6804,7 @@
   // 視圖切換
   async function setViewMode(mode) {
     if (mode === "designed") mode = "review";
+    if (mode !== "review") disposeFourFormViewers();
     state.activeTab = mode;
     saveViewMemory();
     $("#gameDataView")?.classList.remove("active");
