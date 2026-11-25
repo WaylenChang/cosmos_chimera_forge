@@ -210,6 +210,56 @@
     throw Error("GLB 不是有效的二進位資料");
   }
 
+  // Inspect the GLB before passing a private blob URL to the renderer. External
+  // model/texture references must not escape the selected Drive package.
+  function validateReviewGlb(bytes) {
+    const buffer = exactBuffer(bytes);
+    const view = new DataView(buffer);
+    if (buffer.byteLength < 20 || view.getUint32(0, true) !== 0x46546c67 ||
+        view.getUint32(4, true) !== 2 || view.getUint32(8, true) !== buffer.byteLength)
+      throw Error("無效的 GLB 2.0 檔案");
+    const length = view.getUint32(12, true);
+    if (view.getUint32(16, true) !== 0x4e4f534a || length > buffer.byteLength - 20)
+      throw Error("GLB JSON 區塊無效");
+    const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buffer, 20, length)));
+    const resources = [...(json.buffers || []), ...(json.images || [])];
+    if (resources.some(r => r.uri && !String(r.uri).startsWith("data:")))
+      throw Error("GLB 包含外部資源，請交付自包含模型");
+    return buffer;
+  }
+
+  async function readFourFormGlb(pkg, drive, subtle = globalThis.crypto?.subtle) {
+    const file = pkg?.glbFile;
+    if (!file?.path) throw Error("尚無 GLB 成果");
+    const descriptor = descriptorFor(pkg);
+    const orbit = orbitFor(descriptor);
+    const path = relative(file.path);
+    if (descriptor?.model?.path) {
+      const expected = selectModelFile(packageFiles(pkg).length ? packageFiles(pkg) : [file], pkg.manifest || {}, descriptor);
+      if (expected?.path !== path) throw Error("GLB 與驗收描述檔指定版本不符");
+    }
+    let bytes = file.buffer || file.uint8 || null;
+    if (!bytes && pkg.driveFolderId) {
+      const blob = file.id && typeof drive?.readById === "function"
+        ? await drive.readById(file.id)
+        : await drive.read(relative(pkg.drivePath) + "/" + path);
+      bytes = await blob.arrayBuffer();
+    }
+    if (!bytes) {
+      const candidate = packageFiles(pkg).find(f => f.path === path);
+      bytes = candidate && pkg.rawFiles?.[candidate.key];
+    }
+    if (!bytes) throw Error("找不到選定版本的 GLB 原始檔");
+    const buffer = validateReviewGlb(bytes);
+    if (descriptor?.model?.sha256) {
+      const expected = String(descriptor.model.sha256).toLowerCase();
+      if (!/^[a-f0-9]{64}$/.test(expected) || !subtle) throw Error("無法驗證 GLB SHA256");
+      const digest = Array.from(new Uint8Array(await subtle.digest("SHA-256", buffer)), x => x.toString(16).padStart(2, "0")).join("");
+      if (digest !== expected) throw Error("GLB SHA256 與驗收描述檔不符");
+    }
+    return {buffer, orbit};
+  }
+
   function relative(path) {
     if (typeof path !== "string" || !path || /[\\:?#\x00-\x1f]/.test(path) ||
         path.split("/").some(p => !p || p === "." || p === "..")) throw Error("驗收資源必須使用包內相對路徑");
@@ -300,6 +350,6 @@
   return Object.freeze({
     CHARACTER_ALIASES, isHighComplexityCharacterModel, isSimpleCharacterModel, preferHighComplexityCharacters,
     selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage, creatureReviewGroups, reviewStage,
-    exactBuffer, relative, orbitFor, open, onPackagesChanged, install
+    exactBuffer, validateReviewGlb, readFourFormGlb, relative, orbitFor, open, onPackagesChanged, install
   });
 });
