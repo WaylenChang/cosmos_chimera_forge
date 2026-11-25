@@ -1,3 +1,8 @@
+## 2026-11-25 · tool@2.11.0 · 宙獸四型態審查（預設）
+
+- 成果審查台依同一演化線並列幼年、少年、成年、超載四型態，顯示交付版本、預覽、缺件與獨立狀態；保留單型態與互動 3D／動畫驗收。明確單型態設計維持原流程。
+- 可分別選擇四型態的審查結果與意見後一次送出；僅處理有明確選擇的 Drive 交付包，逐筆沿用原審查規則，遇錯停止並回報完成筆數。未識別型態不參與批次。
+
 ## 2026-11-23 · catalog@2.11.0 · tool@2.10.0 · 整合 AGC 宙獸形態標籤與混搭路由至鍛造台
 
 - 宙獸設計去重與表格強化：更換 11 條與已生成宙獸或彼此撞型之未生成草稿線原型並修正 `line_metal_citadelbull` 4 足翼牛構造，於 `Data/schemas/creature.schema.json`、`gen_designed.py`、`designed.js`、`forge.js`（已設計項目規格／審查預覽）與 `game-data.js`（宙獸列表／詳細卡）納入多標籤 `design_prototypes` 與 `base_entity`／`morphology_primary`／`morphology_secondary`，並新增全圖鑑對照表 `docs/design/creature-roster-table.md`；同步更新所有 27 條未生成宙獸 `creature-concept` 生圖 Prompt。
