@@ -9,7 +9,9 @@ and emit docs/design/field-utility-side-quests.md.
 from __future__ import annotations
 
 import glob
+import hashlib
 import json
+import re
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -1014,6 +1016,15 @@ def write_character_prompt(q: dict[str, Any], fu_kind: str) -> Path:
     vessel = "符籙卡片 (`talisman_card`)" if fu_kind == "move" else "琉璃珠 (`glass_bead`)"
     els_str = " / ".join(q["elements"])
     creature_id = q["creature"]["id"]
+    # Stable per-character choice prevents regenerating a different design each run.
+    cup = "ABCDE"[int.from_bytes(hashlib.sha256(cid.encode()).digest()[:8], "big") % 5] if c["gender"] == "女" and c["age"] >= 18 else None
+    existing = DRIVE / "characters" / "_designed_prompts" / f"{cid}.prompt.md"
+    if cup and existing.exists():
+        match = re.search(r"罩杯：([A-E]) Cup", existing.read_text(encoding="utf-8"))
+        if match:
+            cup = match.group(1)
+    cup_identity = f"；罩杯：{cup} Cup" if cup else ""
+    cup_front = f"成年女性體型為 {cup} Cup，與角色設定一致。" if cup else ""
 
     content = f"""# [{cid}] {c['name_zh']} ({c['name_en']})
 
@@ -1023,22 +1034,22 @@ def write_character_prompt(q: dict[str, Any], fu_kind: str) -> Path:
 - **任務目標**：{q['quest_name_zh']} — {q['quest_goal_zh']}
 - **關聯宙獸**：`{creature_id}`（屬性：{els_str}）
 - **地區文化 / 年代文化 / 外觀風格**：{c['region']} / {c['era']} / {c['style']}
-- **基本體貌**：{c['gender']}，{c['age']} 歲，{c['ethnicity']}，身高 {c['height_cm']} cm，{c['physique']}
+- **基本體貌**：{c['gender']}，{c['age']} 歲，{c['ethnicity']}，身高 {c['height_cm']} cm，{c['physique']}{cup_identity}
 - **髮型與瞳色**：{c['hair']}；{c['eyes']}
 - **服裝配色 (60-30-10)**：{c['palette']}
 - **剪影與隨身裝備**：{c['outfit']}；{c['gear']}；慣用收服道具：{vessel}
 
-## 2. 正面圖 Prompt（Front View / T-Pose 基準）
-原創日式 ACG 動畫風格全身角色設定正面基準圖，{c['age']} 歲{c['ethnicity']}{c['gender']}性「{c['name_zh']}」，身高 {c['height_cm']} cm，{c['physique']}，標準 T-pose 雙臂水平延伸掌心向下，雙腳略分、正交平視全身不裁切頭腳。{c['hair']}，{c['eyes']}。身穿{c['style']}：{c['outfit']}，隨身佩帶{c['gear']}與{vessel}。整體配色嚴格遵守 {c['palette']}。乾淨深色描邊，2–3 階柔和賽璐璐著色，中性灰 `#808080` 純色背景、均勻無投影平光。
+## 2. 正面圖 Prompt（Front View / T-Pose 基準） — `{cid}_01_portrait_front.png`
+{cup_front}原創日式 ACG 動畫風格全身角色設定正面基準圖，{c['age']} 歲{c['ethnicity']}{c['gender']}性「{c['name_zh']}」，身高 {c['height_cm']} cm，{c['physique']}，標準 T-pose 雙臂水平延伸掌心向下，雙腳略分、正交平視全身不裁切頭腳。{c['hair']}，{c['eyes']}。身穿{c['style']}：{c['outfit']}，隨身佩帶{c['gear']}與{vessel}。整體配色嚴格遵守 {c['palette']}。乾淨深色描邊，2–3 階柔和賽璐璐著色，中性灰 `#808080` 純色背景、均勻無投影平光。
 
-## 3. 三視圖 Prompt（Turnaround：正面 / 側面 / 背面 / 3/4 視角）
-同一角色「{c['name_zh']}」之正交等比例角色三視圖合圖（正面、正側面、背面、3/4 視角並列），嚴格鎖定面容、{c['hair']}、{c['outfit']}與{c['gear']}之左右位置及 {c['palette']} 配色完全一致。背面清楚呈現衣領、背帶與腰間道具掛載結構（無過長遮擋披風）。中性灰 `#808080` 純色背景、均勻平光、2–3 階賽璐璐著色。
+## 3. 三視圖 Prompt（Turnaround：正面 / 側面 / 背面 / 3/4 視角） — `{cid}_01_portrait_turnaround.png`
+參照第一張生成的正面圖，嚴格保持角色外觀一致。同一角色「{c['name_zh']}」之正交等比例角色三視圖合圖（正面、正側面、背面、3/4 視角並列），嚴格鎖定面容、{c['hair']}、{c['outfit']}與{c['gear']}之左右位置及 {c['palette']} 配色完全一致。背面清楚呈現衣領、背帶與腰間道具掛載結構（無過長遮擋披風）。中性灰 `#808080` 純色背景、均勻平光、2–3 階賽璐璐著色。嚴格禁止任何文字、標籤、字母、數字、標誌與浮水印。
 
-## 4. 主立繪 Prompt（Main Keyart：動態職業構圖）
-同一角色「{c['name_zh']}」之動態全身主立繪，展現「{q['quest_name_zh']}（{c['style']}）」的專業氣場與自信神情，單手持{vessel}或操作{c['gear']}的標誌性工作姿態，衣襬與髮絲帶動自然動態張力；保持與正面基準圖完全一致的五官、服裝版型與 {c['palette']} 配色，乾淨賽璐璐著色，透明或簡潔純色底，不含其他角色與文字浮水印。
+## 4. 主立繪 Prompt（Main Keyart：動態職業構圖） — `{cid}_01_portrait_main.png`
+參照第一張生成的正面圖，嚴格保持角色外觀一致。同一角色「{c['name_zh']}」之動態全身主立繪，展現「{q['quest_name_zh']}（{c['style']}）」的專業氣場與自信神情，單手持{vessel}或操作{c['gear']}的標誌性工作姿態，衣襬與髮絲帶動自然動態張力；保持與正面基準圖完全一致的五官、服裝版型與 {c['palette']} 配色，乾淨賽璐璐著色，完整不透明背景，不含其他角色與文字浮水印。描繪符合{c['region']}、{c['era']}、{c['style']}及角色任務的具體環境場景，包含相應建築、地景或工作設施。
 
 ## 5. 排除項目（Negative Constraints）
-不得出現背景建築、複雜風景、其他人物、宙獸本體、過長遮擋視線的斗篷、文字、標籤、浮水印、額外肢體或手指畸形、寫實攝影皮膚質感、左右裝備鏡像錯置。
+正面圖與三視圖不得出現背景建築、複雜風景；所有圖不得出現其他人物、宙獸本體、過長遮擋視線的斗篷、文字、標籤、浮水印、額外肢體或手指畸形、寫實攝影皮膚質感、左右裝備鏡像錯置。
 """
     out_path = DRIVE / "characters" / "_designed_prompts" / f"{cid}.prompt.md"
     out_path.write_text(content, encoding="utf-8")
