@@ -316,3 +316,130 @@ test('physical Drive protagonist and creature folders unify with catalog rows wi
   assert.equal(entries.find(e => e.catalog?.id === 'starter_moon_line').packages.length, 1);
   assert.equal(entries.filter(e => /ch_1st_batch_|ch_starter_/i.test(e.key)).length, 0);
 });
+
+test('four-form review groups use the unified family and respect visible category packages', () => {
+  const creature = {line_id:'cr_family',concept:{locked:{stages:[
+    {stage:'juvenile',creature_id:'cr_family_juvenile',name_zh:'幼'},
+    {stage:'adolescent',creature_id:'cr_family_adolescent',name_zh:'少'},
+    {stage:'adult',creature_id:'cr_family_adult',name_zh:'成'},
+    {stage:'overload',creature_id:'cr_family_overload',name_zh:'超'}
+  ]}}};
+  const packages = [
+    {id:'asset_cr_family_juvenile',subjectId:'cr_family',stage:'juvenile',type:'creature-model-rig',status:'pending'},
+    {id:'asset_cr_family_form2',subjectId:'cr_family',manifest:{stage:'form2'},type:'creature-model-rig',status:'provisional'},
+    {id:'cr_family_adult_03a_colab_v2',subjectId:'cr_family',type:'creature-model-rig',status:'pending'},
+    {id:'cr_family_adult_01_portrait',subjectId:'cr_family',stage:'adult',type:'creature-concept',status:'pending'},
+    {id:'cr_family_undated',subjectId:'cr_family',type:'creature-model-rig',status:'pending'},
+    {id:'cr_other_overload',subjectId:'cr_other',stage:'overload',type:'creature-model-rig',status:'pending'}
+  ];
+  const entry = review.unifiedEntries(packages,[creature],[],'mdl').find(e=>e.catalog?.id==='cr_family');
+  const group = review.creatureReviewGroups(entry);
+  assert.deepEqual(group.rows.map(r=>r.stage),['juvenile','adolescent','adult','overload']);
+  assert.deepEqual(group.rows.map(r=>r.packages.map(p=>p.id)),[
+    ['asset_cr_family_juvenile'],['asset_cr_family_form2'],['cr_family_adult_03a_colab_v2'],[]
+  ]);
+  assert.equal(group.rows[2].total,2);
+  assert.deepEqual(group.unassigned.map(p=>p.id),['cr_family_undated']);
+  const pending = review.unifiedEntries(packages,[creature],[],'pending').find(e=>e.catalog?.id==='cr_family');
+  assert.equal(review.creatureReviewGroups(pending).rows[1].packages.length,0);
+  assert.equal(review.creatureReviewGroups(pending).rows[1].total,1);
+});
+
+test('four-form review excludes characters and explicit single-form designs', () => {
+  const single = {line_id:'cr_trial_boss',concept:{locked:{stages:[{stage:'adult',creature_id:'cr_trial_boss_adult'}]}}};
+  const rows = review.unifiedEntries([], [single], [{id:'chr_test'}]);
+  for (const row of rows) assert.equal(review.creatureReviewGroups(row),null);
+  const unknown = review.unifiedEntries([{id:'asset_cr_unlisted_form4',type:'creature-model-rig',status:'pending'}]);
+  assert.equal(review.creatureReviewGroups(unknown[0]).rows[3].packages.length,1);
+  assert.equal(review.reviewStage({id:'cr_juvenile_adult'}),null);
+});
+
+test('four-form review defaults to family view and retains exact single-package review', () => {
+  const forge = fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/creatureReviewMode: "all"/);
+  assert.match(forge,/if \(fourGroups\) \{ renderFourFormReview\(selectedEntry, fourGroups\); return; \}/);
+  assert.match(forge,/async function submitFourFormReview[\s\S]*?await window\.COSMI_DRIVE\.review\(pkg, item\.status, item\.note\)/);
+  assert.match(forge,/function openSingleFormPackage[\s\S]*?reviewState\.creatureReviewMode = "single"/);
+  assert.match(forge,/four-form-review-grid/);
+});
+
+function makeReviewGlb(json) {
+  const raw = Buffer.from(JSON.stringify(json));
+  const len = Math.ceil(raw.length / 4) * 4;
+  const buffer = Buffer.alloc(20 + len, 0x20);
+  buffer.writeUInt32LE(0x46546c67,0);
+  buffer.writeUInt32LE(2,4);
+  buffer.writeUInt32LE(buffer.length,8);
+  buffer.writeUInt32LE(len,12);
+  buffer.writeUInt32LE(0x4e4f534a,16);
+  raw.copy(buffer,20);
+  return buffer;
+}
+
+test('four-form viewer reads exactly the selected private GLB and verifies descriptor hash', async () => {
+  const {createHash,webcrypto} = require('node:crypto');
+  const bytes = makeReviewGlb({asset:{version:'2.0'}});
+  const descriptor = {spec:'cosmimera-model-review/1',model:{path:'models/actual.glb',sha256:createHash('sha256').update(bytes).digest('hex')},camera_orbit:'0deg 80deg auto'};
+  const pkg = {id:'cr_test_adult',driveFolderId:'folder',drivePath:'creatures/cr_test',glbFile:{path:'models/actual.glb',id:'actual-id'},driveFiles:[{path:'models/actual.glb',id:'actual-id'}],rawFiles:{'review_viewer.json':Buffer.from(JSON.stringify(descriptor))}};
+  const ids = [];
+  const drive = {readById:async id=>{ids.push(id);return new Blob([bytes]);},read:()=>{throw Error('wrong path');}};
+  const result = await review.readFourFormGlb(pkg,drive,webcrypto.subtle);
+  assert.deepEqual(ids,['actual-id']);
+  assert.deepEqual(Buffer.from(result.buffer),bytes);
+  assert.equal(result.orbit,'0deg 80deg auto');
+  descriptor.model.sha256='0'.repeat(64);
+  pkg.rawFiles['review_viewer.json']=Buffer.from(JSON.stringify(descriptor));
+  await assert.rejects(review.readFourFormGlb(pkg,drive,webcrypto.subtle),/SHA256/);
+  assert.throws(()=>review.validateReviewGlb(makeReviewGlb({asset:{version:'2.0'},images:[{uri:'https://example.com/private.png'}]})),/外部資源/);
+  assert.throws(()=>review.validateReviewGlb(new Uint8Array([1,2,3])),/無效/);
+});
+
+test('four-form review ships bundled interactive viewer with per-form lifetime and animation controls', () => {
+  const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const forge = fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(html,/type="module" src="vendor\/model-viewer\.min\.js"/);
+  assert.match(forge,/el\("model-viewer"/);
+  assert.match(forge,/"camera-controls":true/);
+  assert.match(forge,/viewer\.availableAnimations/);
+  assert.match(forge,/fourForm3dPreview\(entry\.key \+ ":" \+ row\.stage/);
+  assert.match(forge,/disposeFourFormViewers\(keepViewers\)/);
+  assert.match(forge,/URL\.revokeObjectURL\(url\)/);
+});
+
+test('locked camera aligns angles, relative zoom and pan for differently sized forms', () => {
+  const source = {
+    getDimensions:()=>({x:1,y:2,z:2}),getBoundingBoxCenter:()=>({x:0,y:1,z:0}),
+    getCameraOrbit:()=>({theta:Math.PI/2,phi:1,radius:6}),
+    getCameraTarget:()=>({x:1,y:1,z:0}),getFieldOfView:()=>35
+  };
+  let jumps=0;
+  const peer = {
+    getDimensions:()=>({x:3,y:6,z:6}),getBoundingBoxCenter:()=>({x:0,y:3,z:0}),
+    jumpCameraToGoal:()=>jumps++
+  };
+  const camera=review.captureReviewCamera(source);
+  assert.equal(camera.radius,2);
+  assert.equal(review.applyReviewCamera(peer,camera),true);
+  assert.equal(peer.cameraOrbit,Math.PI/2+'rad 1rad 18m');
+  assert.equal(peer.cameraTarget,'3m 3m 0m');
+  assert.equal(peer.fieldOfView,'35deg');
+  assert.equal(jumps,1);
+  assert.equal(review.captureReviewCamera({}),null);
+  assert.equal(review.applyReviewCamera(peer,{...camera,radius:NaN}),false);
+});
+
+test('synchronized clip selection never substitutes an unrelated or ambiguous animation', () => {
+  assert.equal(review.matchingReviewClip(['cr_idle','cr_attack'],'cr_attack'),'cr_attack');
+  assert.equal(review.matchingReviewClip(['cr_adult_idle','cr_adult_attack'],'cr_juvenile_attack'),'cr_adult_attack');
+  assert.equal(review.matchingReviewClip(['cr_adult_idle'],'cr_attack'),null);
+  assert.equal(review.matchingReviewClip(['cr_adult_idle','cr_overload_idle'],'cr_juvenile_idle'),null);
+});
+
+test('four-form sync is default on; only user camera events propagate and review labels remain drafts', () => {
+  const forge=fs.readFileSync(path.join(root,'forge.js'),'utf8');
+  assert.match(forge,/fourFormSync: true/);
+  assert.match(forge,/event\.detail\?\.source !== "user-interaction"/);
+  assert.match(forge,/reviewState\.fourFormSync\) applyReviewLabel\(result\.value\)/);
+  assert.match(forge,/fourFormDrafts\.set\(pkg\.id/);
+  assert.match(forge,/if \(locked\.checked\) alignFourFormGroup\(syncGroup\)/);
+});

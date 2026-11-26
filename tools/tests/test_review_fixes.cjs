@@ -97,6 +97,18 @@ function makeNode(tag = 'div', id = '') {
   return node;
 }
 
+function enterSingleDesign(nodes) {
+  const find = node => {
+    if (!node) return null;
+    if (node.tagName === 'BUTTON' && collectText(node).trim() === '設計明細') return node;
+    for (const child of node.children || []) { const match = find(child); if (match) return match; }
+    return null;
+  };
+  const button = find(nodes.designedStageHeader);
+  assert.ok(button, 'default four-form review must offer single-form design details');
+  button.listeners.click[0]();
+}
+
 function collectText(node) {
   if (!node) return '';
   if (typeof node === 'string') return node;
@@ -247,7 +259,7 @@ test('creature-concept and character-concept mark front and turnaround as L2 img
   assert.match(forgeSrc, /turnaround\.png`, kind: "turnaround", level: "L2"/);
 });
 
-test('reviewDesignedDetails embeds creature 3D viewer defaulting to adult and switches stages inline without popup', async () => {
+test('single-form design detail embeds 3D viewer defaulting to adult and switches stages inline without popup', async () => {
   const { c, nodes } = createHarness();
   const f = c.COSMI_FORGE;
   const encode = x => new TextEncoder().encode(JSON.stringify(x));
@@ -279,6 +291,7 @@ test('reviewDesignedDetails embeds creature 3D viewer defaulting to adult and sw
   const creatureRow = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
   assert.ok(creatureRow, 'creature row should appear in review rail');
   creatureRow.listeners.click[0]();
+  enterSingleDesign(nodes);
 
   assert.equal(nodes.reviewDesignedDetails.style.display, 'block');
   assert.equal(nodes.stage3dView.classList.contains('stage3d-embedded'), true);
@@ -389,6 +402,7 @@ test('GLB animations populate designed 3D clip bar and count after model loads',
   await f.setViewMode('review');
   const creatureRow = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
   creatureRow.listeners.click[0]();
+  enterSingleDesign(nodes);
 
   // Flush the mountDesigned3dViewer rAF callback without looping animate3dLoop infinitely
   const pending = rafQueue.splice(0, rafQueue.length);
@@ -605,6 +619,7 @@ test('switching forms, creatures, and characters reuses one 3D viewer without re
 
   // 1. Select creature 1 (adult)
   nodes.railList.children.find(r => collectText(r).includes(creature1.line_id)).listeners.click[0]();
+  enterSingleDesign(nodes);
   await flushRaf();
   assert.deepEqual(parsedModels, [1]);
   styleDisplayHistory.length = 0;
@@ -752,6 +767,7 @@ test('Drive deferred GLBs load across creatures, characters, and refresh without
 
   // 1. Creature 1
   nodes.railList.children.find(r => collectText(r).includes(creature1.line_id)).listeners.click[0]();
+  enterSingleDesign(nodes);
   await flushRaf();
   await flushMicrotasks();
   assert.equal(isConnectedToViewport(nodes.stage3dView), true);
@@ -1002,6 +1018,7 @@ test('view memory persists active tab, creature form, 3D clip, and character 2D 
   const row = nodes.railList.children.find(r => collectText(r).includes(creature.line_id));
   assert.ok(row, 'creature row must exist');
   row.listeners.click[0]();
+  enterSingleDesign(nodes);
 
   const findBtn = (node, pred) => {
     if (!node) return null;
@@ -1064,4 +1081,135 @@ test('view memory persists active tab, creature form, 3D clip, and character 2D 
   assert.equal(badgeEl?.textContent.includes('cr_attack_01'), true, 'reload should restore remembered 3D clip, got: ' + badgeEl?.textContent);
   const restoredJuvBtn = findBtn(h2.nodes.designedDetailView, b => b['data-stage'] === 'juvenile');
   assert.equal(restoredJuvBtn?.classList.contains('on'), true, 'reload should restore juvenile form');
+});
+
+test('default creature overview creates four separate interactive model-viewer slots', async () => {
+  const {c,nodes}=createHarness();
+  const f=c.COSMI_FORGE, creature=c.DESIGNED[0];
+  const enc=x=>new TextEncoder().encode(JSON.stringify(x));
+  for (const stage of ['juvenile','adolescent','adult','overload']) {
+    const id='mdl-test-'+stage;
+    await f.loadAssetFiles({
+      [id+'/manifest.json']:enc({task_id:id,task_type:'creature-model-rig',subject_id:creature.line_id,stage,files:[{path:'models/a.glb',kind:'model',level:'L1'}]}),
+      [id+'/models/a.glb']:new Uint8Array([1,2,3])
+    },{name:id},{silent:true});
+  }
+  await f.setViewMode('review');
+  nodes.railList.children.find(r=>collectText(r).includes(creature.line_id)).listeners.click[0]();
+  const findAll=(node,pred,out=[])=>{if(!node)return out;if(pred(node))out.push(node);for(const child of node.children||[])findAll(child,pred,out);return out;};
+  const viewers=findAll(nodes.designedDetailView,n=>n.tagName==='MODEL-VIEWER');
+  assert.equal(viewers.length,4);
+  assert.equal(new Set(viewers.map(v=>v.alt)).size,4);
+  assert.ok(viewers.every(v=>v['camera-controls'] !== undefined));
+  const initial=viewers.slice();
+  await f.setViewMode('review');
+  const rerendered=findAll(nodes.designedDetailView,n=>n.tagName==='MODEL-VIEWER');
+  assert.equal(rerendered.length,4);
+  rerendered.forEach((viewer,i)=>assert.equal(viewer,initial[i],'unchanged GLB slots retain their elements across review rerender'));
+});
+
+test('four-form review lock defaults on and labels all eligible drafts without writing Drive', async () => {
+  const {c,nodes}=createHarness();
+  const f=c.COSMI_FORGE, creature=c.DESIGNED[0];
+  const enc=x=>new TextEncoder().encode(JSON.stringify(x));
+  const pkgs=[];
+  for (const stage of ['juvenile','adolescent','adult','overload']) {
+    const id='mdl-lock-'+stage;
+    const pkg=await f.loadAssetFiles({[id+'/manifest.json']:enc({task_id:id,task_type:'creature-model-rig',subject_id:creature.line_id,stage})},{name:id},{silent:true});
+    pkg.driveFolderId='folder-'+stage;
+    pkgs.push(pkg);
+  }
+  pkgs[3].completed=true;
+  let writes=0;
+  c.COSMI_DRIVE={review:async()=>{writes++;}};
+  await f.setViewMode('review');
+  nodes.railList.children.find(r=>collectText(r).includes(creature.line_id)).listeners.click[0]();
+  const findAll=(node,pred,out=[])=>{if(!node)return out;if(pred(node))out.push(node);for(const child of node.children||[])findAll(child,pred,out);return out;};
+  const lock=findAll(nodes.designedStageHeader,n=>n.id==='fourFormSync')[0];
+  assert.ok(lock);
+  assert.notEqual(lock.checked,undefined,'default lock must render checked');
+  const results=findAll(nodes.designedDetailView,n=>n.tagName==='SELECT' && /審查結果$/.test(n['aria-label']||''));
+  assert.equal(results.length,3,'completed form must be excluded');
+  results[0].value='provisional';
+  results[0].listeners.change[0]();
+  assert.deepEqual(results.map(r=>r.value),['provisional','provisional','provisional']);
+  lock.checked=false;
+  lock.listeners.change[0]();
+  results[1].value='reject';
+  results[1].listeners.change[0]();
+  assert.deepEqual(results.map(r=>r.value),['provisional','reject','provisional']);
+  assert.equal(writes,0);
+  assert.equal(JSON.parse(c.localStorage.getItem('cosmimera.view-memory.v1')).fourFormSync,false);
+});
+
+test('four-form viewer lock propagates user camera, animation phase, and unlock isolates peers', async () => {
+  const {c,nodes}=createHarness();
+  const f=c.COSMI_FORGE, creature=c.DESIGNED[0];
+  const enc=x=>new TextEncoder().encode(JSON.stringify(x));
+  for (const stage of ['juvenile','adult']) {
+    const id='mdl-sync-'+stage;
+    await f.loadAssetFiles({
+      [id+'/manifest.json']:enc({task_id:id,task_type:'creature-model-rig',subject_id:creature.line_id,stage,files:[{path:'models/a.glb',kind:'model',level:'L1'}]}),
+      [id+'/models/a.glb']:new Uint8Array([1,2,3])
+    },{name:id},{silent:true});
+  }
+  await f.setViewMode('review');
+  nodes.railList.children.find(r=>collectText(r).includes(creature.line_id)).listeners.click[0]();
+  const findAll=(node,pred,out=[])=>{if(!node)return out;if(pred(node))out.push(node);for(const child of node.children||[])findAll(child,pred,out);return out;};
+  const viewers=findAll(nodes.designedDetailView,n=>n.tagName==='MODEL-VIEWER');
+  assert.equal(viewers.length,2);
+  c.requestAnimationFrame=()=>1;
+  c.cancelAnimationFrame=()=>{};
+  for(const [i,v] of viewers.entries()) {
+    const scale=i===0?1:2;
+    v.availableAnimations=['cr_idle','cr_attack'];
+    v.getDimensions=()=>({x:scale,y:2*scale,z:2*scale});
+    v.getBoundingBoxCenter=()=>({x:0,y:scale,z:0});
+    v.getCameraOrbit=()=>({theta:1.2,phi:1,radius:6*scale});
+    v.getCameraTarget=()=>({x:scale,y:scale,z:0});
+    v.getFieldOfView=()=>35;
+    v.jumpCameraToGoal=()=>{};
+    v.pause=()=>{v.paused=true;};
+    v.play=()=>{v.paused=false;};
+    v.duration=2*scale;
+    v.currentTime=0;
+    v.updateComplete=Promise.resolve();
+    v.listeners.load[0]();
+  }
+  const [source,peer]=viewers;
+  source.listeners['camera-change'][0]({detail:{source:'user-interaction'}});
+  assert.equal(peer.cameraOrbit,'1.2rad 1rad 12m');
+  assert.equal(peer.cameraTarget,'2m 2m 0m');
+  const previous=source.cameraOrbit;
+  peer.listeners['camera-change'][0]({detail:{source:'none'}});
+  assert.equal(source.cameraOrbit,previous,'programmatic events must not echo');
+  const clip=findAll(nodes.designedDetailView,n=>n.tagName==='SELECT' && n['aria-label']==='幼年動畫')[0];
+  clip.value='cr_attack';
+  clip.listeners.change[0]();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(peer.animationName,'cr_attack');
+  const seek=findAll(nodes.designedDetailView,n=>n.tagName==='INPUT' && n['aria-label']==='幼年動畫進度')[0];
+  seek.value='500';
+  seek.listeners.input[0]();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(source.currentTime,1);
+  assert.equal(peer.currentTime,2);
+  const play=findAll(nodes.designedDetailView,n=>n.tagName==='BUTTON' && n['aria-label']==='幼年播放或暫停')[0];
+  play.listeners.click[0]();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(source.paused,false);
+  assert.equal(peer.paused,false);
+  assert.equal(peer.timeScale,2);
+  const lock=findAll(nodes.designedStageHeader,n=>n.id==='fourFormSync')[0];
+  lock.checked=false;
+  lock.listeners.change[0]();
+  assert.equal(peer.timeScale,1);
+  const previousPeer=peer.cameraOrbit;
+  source.getCameraOrbit=()=>({theta:2,phi:1,radius:3});
+  source.listeners['camera-change'][0]({detail:{source:'user-interaction'}});
+  assert.equal(peer.cameraOrbit,previousPeer);
+  clip.value='cr_idle';
+  clip.listeners.change[0]();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(peer.animationName,'cr_attack');
 });

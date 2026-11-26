@@ -215,6 +215,29 @@
   #reviewDesignedDetails #designedStageHeader { display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px; }
   #reviewDesignedDetails #designedDetailView { overflow:visible !important;height:auto;min-height:0;padding:0 !important; }
   #reviewView.active { display: flex; }
+  .four-form-review-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start; }
+  @media (max-width:600px) { .four-form-review-grid { grid-template-columns:1fr; } }
+  .four-form-3d { min-width:0;display:flex;flex-direction:column;gap:5px; }
+  .four-form-3d model-viewer { width:100%;height:clamp(190px,28vw,340px);background:#101319;border:1px solid var(--line);border-radius:6px; }
+  .four-form-3d-controls { display:flex;gap:4px;align-items:center;flex-wrap:wrap; }
+  .four-form-review-card .four-form-3d-controls select { flex:1;min-width:0;width:auto; }
+  .four-form-3d-message,.four-form-animation-status { min-height:1.3em;font-size:11px; }
+  .four-form-3d input[type=range] { width:100%; }
+  .four-form-sync-toggle { display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:600; }
+  .four-form-sync-toggle input { accent-color:var(--accent);width:auto; }
+  .four-form-sync-bar { display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px; }
+  .four-form-sync-bar[hidden] { display:none !important; }
+  .four-form-sync-bar textarea { flex:1;min-width:140px;resize:vertical; }
+  .four-form-preview[hidden] { display:none !important; }
+  .four-form-review-card { display:flex;flex-direction:column;gap:8px;min-width:0;margin:0; }
+  .four-form-review-card h3 { margin:0;font-size:13px;overflow-wrap:anywhere; }
+  .four-form-review-card select,.four-form-review-card textarea { width:100%;min-width:0;box-sizing:border-box; }
+  .four-form-status,.four-form-thumbnails,.four-form-submit { display:flex;align-items:center;gap:6px;flex-wrap:wrap; }
+  .four-form-preview { display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;background:#101319;border:1px solid var(--line);border-radius:6px;text-align:center;overflow:hidden; }
+  .four-form-preview img { width:100%;height:100%;object-fit:contain; }
+  .four-form-submit { margin-top:12px; }
+  .four-form-review-card .muted,.four-form-submit .muted { overflow-wrap:anywhere; }
+
 
   /* ==================== 設計項目詳情樣式 (嵌入成果審查台) ==================== */
   .designed-active-box {
@@ -1260,6 +1283,7 @@
 <script src="pipeline.js"></script>
 <script src="drive-cache.js"></script>
 <script src="model-review.js"></script>
+<script type="module" src="vendor/model-viewer.min.js"></script>
 <script src="drive-storage.js"></script>
 <script src="settings.js"></script>
 <script src="vendor/three.min.js"></script>

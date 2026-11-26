@@ -172,10 +172,137 @@
     return shown.find(pkg => pkg.id === activeId) || shown[0] || null;
   }
 
+  const CREATURE_REVIEW_STAGES = Object.freeze(["juvenile", "adolescent", "adult", "overload"]);
+  const FORM_STAGE = { form1: "juvenile", form2: "adolescent", form3: "adult", form4: "overload" };
+  function reviewStage(pkg) {
+    for (const value of [pkg?.stage, pkg?.manifest?.stage, pkg?.concept?.stage]) {
+      const key = String(value || "").trim().toLowerCase();
+      const stage = FORM_STAGE[key] || key;
+      if (CREATURE_REVIEW_STAGES.includes(stage)) return stage;
+    }
+    const matches = [...String(pkg?.id || "").toLowerCase().matchAll(/(?:^|[-_])(juvenile|adolescent|adult|overload|form[1-4])(?=$|[-_.])/g)];
+    const stages = [...new Set(matches.map(m => FORM_STAGE[m[1]] || m[1]))];
+    return stages.length === 1 ? stages[0] : null;
+  }
+
+  // The unified entry is the only family boundary. Never infer a missing
+  // form from another family's package or copy an unstaged package to all forms.
+  function creatureReviewGroups(entry) {
+    if (!entry) return null;
+    const all = entry.packages || [];
+    if (entry.catalog ? entry.catalog.kind !== "creature" : !all.some(p => matchesCategory(p, "cr"))) return null;
+    const designs = entry.catalog?.item?.concept?.locked?.stages || [];
+    // Explicit single-form designs (e.g. trial bosses) retain the original review.
+    if (designs.length === 1 && !all.some(p => reviewStage(p) && reviewStage(p) !== designs[0].stage)) return null;
+    const visible = entry.visiblePackages || all;
+    const rows = CREATURE_REVIEW_STAGES.map(stage => ({
+      stage,
+      design: designs.find(s => s.stage === stage) || null,
+      packages: visible.filter(p => reviewStage(p) === stage),
+      total: all.filter(p => reviewStage(p) === stage).length
+    }));
+    return { rows, unassigned: visible.filter(p => !reviewStage(p)) };
+  }
+
+  // Normalize camera distance and pan against the bounding-box diagonal.
+  // Copying absolute metre coordinates would crop larger evolution forms.
+  function reviewCameraFrame(viewer) {
+    const size = viewer?.getDimensions?.(), center = viewer?.getBoundingBoxCenter?.();
+    if (!size || !center) return null;
+    const scale = Math.hypot(size.x, size.y, size.z);
+    if (!(scale > 0) || !Number.isFinite(scale) ||
+        ![center.x, center.y, center.z].every(Number.isFinite)) return null;
+    return {scale, center};
+  }
+
+  function captureReviewCamera(viewer) {
+    const frame = reviewCameraFrame(viewer);
+    const orbit = viewer?.getCameraOrbit?.(), target = viewer?.getCameraTarget?.();
+    const fov = viewer?.getFieldOfView?.();
+    if (!frame || !orbit || !target ||
+        ![orbit.theta, orbit.phi, orbit.radius, target.x, target.y, target.z, fov].every(Number.isFinite) ||
+        !(orbit.radius > 0) || !(fov > 0)) return null;
+    return {theta:orbit.theta, phi:orbit.phi, radius:orbit.radius/frame.scale, fov,
+      offset:["x","y","z"].map(k=>(target[k]-frame.center[k])/frame.scale)};
+  }
+
+  function applyReviewCamera(viewer, camera) {
+    const frame = reviewCameraFrame(viewer);
+    if (!frame || !camera || !Array.isArray(camera.offset) || camera.offset.length !== 3 ||
+        ![camera.theta,camera.phi,camera.radius,camera.fov,...camera.offset].every(Number.isFinite) ||
+        !(camera.radius > 0) || !(camera.fov > 0)) return false;
+    viewer.cameraOrbit = camera.theta + "rad " + camera.phi + "rad " + camera.radius*frame.scale + "m";
+    viewer.cameraTarget = ["x","y","z"].map((k,i)=>(frame.center[k]+camera.offset[i]*frame.scale)+"m").join(" ");
+    viewer.fieldOfView = camera.fov + "deg";
+    viewer.jumpCameraToGoal?.();
+    return true;
+  }
+
+  function matchingReviewClip(names, requested) {
+    if (!requested || !Array.isArray(names)) return null;
+    if (names.includes(requested)) return requested;
+    // Support form-specific prefixes/suffixes only when the remaining clip
+    // identity is unambiguous. Never guess an unrelated action.
+    const normalize = name => String(name).toLowerCase().split(/[-_.\s]+/)
+      .filter(part=>part && !CREATURE_REVIEW_STAGES.includes(part) && !/^form[1-4]$/.test(part)).join("_");
+    const matches = names.filter(name=>normalize(name) === normalize(requested));
+    return matches.length === 1 ? matches[0] : null;
+  }
+
   function exactBuffer(bytes) {
     if (ArrayBuffer.isView(bytes)) return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
     if (bytes instanceof ArrayBuffer) return bytes.slice(0);
     throw Error("GLB 不是有效的二進位資料");
+  }
+
+  // Inspect the GLB before passing a private blob URL to the renderer. External
+  // model/texture references must not escape the selected Drive package.
+  function validateReviewGlb(bytes) {
+    const buffer = exactBuffer(bytes);
+    const view = new DataView(buffer);
+    if (buffer.byteLength < 20 || view.getUint32(0, true) !== 0x46546c67 ||
+        view.getUint32(4, true) !== 2 || view.getUint32(8, true) !== buffer.byteLength)
+      throw Error("無效的 GLB 2.0 檔案");
+    const length = view.getUint32(12, true);
+    if (view.getUint32(16, true) !== 0x4e4f534a || length > buffer.byteLength - 20)
+      throw Error("GLB JSON 區塊無效");
+    const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buffer, 20, length)));
+    const resources = [...(json.buffers || []), ...(json.images || [])];
+    if (resources.some(r => r.uri && !String(r.uri).startsWith("data:")))
+      throw Error("GLB 包含外部資源，請交付自包含模型");
+    return buffer;
+  }
+
+  async function readFourFormGlb(pkg, drive, subtle = globalThis.crypto?.subtle) {
+    const file = pkg?.glbFile;
+    if (!file?.path) throw Error("尚無 GLB 成果");
+    const descriptor = descriptorFor(pkg);
+    const orbit = orbitFor(descriptor);
+    const path = relative(file.path);
+    if (descriptor?.model?.path) {
+      const expected = selectModelFile(packageFiles(pkg).length ? packageFiles(pkg) : [file], pkg.manifest || {}, descriptor);
+      if (expected?.path !== path) throw Error("GLB 與驗收描述檔指定版本不符");
+    }
+    let bytes = file.buffer || file.uint8 || null;
+    if (!bytes && pkg.driveFolderId) {
+      const blob = file.id && typeof drive?.readById === "function"
+        ? await drive.readById(file.id)
+        : await drive.read(relative(pkg.drivePath) + "/" + path);
+      bytes = await blob.arrayBuffer();
+    }
+    if (!bytes) {
+      const candidate = packageFiles(pkg).find(f => f.path === path);
+      bytes = candidate && pkg.rawFiles?.[candidate.key];
+    }
+    if (!bytes) throw Error("找不到選定版本的 GLB 原始檔");
+    const buffer = validateReviewGlb(bytes);
+    if (descriptor?.model?.sha256) {
+      const expected = String(descriptor.model.sha256).toLowerCase();
+      if (!/^[a-f0-9]{64}$/.test(expected) || !subtle) throw Error("無法驗證 GLB SHA256");
+      const digest = Array.from(new Uint8Array(await subtle.digest("SHA-256", buffer)), x => x.toString(16).padStart(2, "0")).join("");
+      if (digest !== expected) throw Error("GLB SHA256 與驗收描述檔不符");
+    }
+    return {buffer, orbit};
   }
 
   function relative(path) {
@@ -267,7 +394,8 @@
 
   return Object.freeze({
     CHARACTER_ALIASES, isHighComplexityCharacterModel, isSimpleCharacterModel, preferHighComplexityCharacters,
-    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage,
-    exactBuffer, relative, orbitFor, open, onPackagesChanged, install
+    selectRootManifest, selectModelFile, descriptorFor, packageFiles, matchesCategory, unifiedEntries, preferredVisiblePackage, creatureReviewGroups, reviewStage,
+    captureReviewCamera, applyReviewCamera, matchingReviewClip,
+    exactBuffer, validateReviewGlb, readFourFormGlb, relative, orbitFor, open, onPackagesChanged, install
   });
 });
