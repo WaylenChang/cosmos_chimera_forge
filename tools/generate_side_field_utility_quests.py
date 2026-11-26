@@ -1024,6 +1024,8 @@ def write_character_prompt(q: dict[str, Any], fu_kind: str) -> Path:
         if match:
             cup = match.group(1)
     cup_identity = f"；罩杯：{cup} Cup" if cup else ""
+    strict_t_pose = "必須採用嚴格 T-pose：軀幹直立，雙臂在肩高向左右水平伸直，與軀幹各成 90°，雙肘伸直、手腕平直、掌心朝下、手指自然伸直，雙腿伸直、雙腳略分平行、腳尖朝前，重心均分。禁止 A-pose、垂臂、斜抬手臂、屈肘、彎腕、叉腰或動態站姿。道具固定於服裝、腰間或背部，雙手保持空手。"
+    turnaround_angles = "正面、正側面、背面及 3/4 視角均須鎖定同一全身姿勢，只改變正交相機的觀察方位。每格須完整呈現角色，側面依投影自然呈現手臂的縮短與重疊。"
     cup_front = f"成年女性體型為 {cup} Cup，與角色設定一致。" if cup else ""
 
     content = f"""# [{cid}] {c['name_zh']} ({c['name_en']})
@@ -1040,10 +1042,10 @@ def write_character_prompt(q: dict[str, Any], fu_kind: str) -> Path:
 - **剪影與隨身裝備**：{c['outfit']}；{c['gear']}；慣用收服道具：{vessel}
 
 ## 2. 正面圖 Prompt（Front View / T-Pose 基準） — `{cid}_01_portrait_front.png`
-{cup_front}原創日式 ACG 動畫風格全身角色設定正面基準圖，{c['age']} 歲{c['ethnicity']}{c['gender']}性「{c['name_zh']}」，身高 {c['height_cm']} cm，{c['physique']}，標準 T-pose 雙臂水平延伸掌心向下，雙腳略分、正交平視全身不裁切頭腳。{c['hair']}，{c['eyes']}。身穿{c['style']}：{c['outfit']}，隨身佩帶{c['gear']}與{vessel}。整體配色嚴格遵守 {c['palette']}。乾淨深色描邊，2–3 階柔和賽璐璐著色，中性灰 `#808080` 純色背景、均勻無投影平光。
+{cup_front}原創日式 ACG 動畫風格全身角色設定正面基準圖，{c['age']} 歲{c['ethnicity']}{c['gender']}性「{c['name_zh']}」，身高 {c['height_cm']} cm，{c['physique']}，{strict_t_pose}正交平視全身不裁切頭腳。{c['hair']}，{c['eyes']}。身穿{c['style']}：{c['outfit']}，隨身佩帶{c['gear']}與{vessel}。整體配色嚴格遵守 {c['palette']}。乾淨深色描邊，2–3 階柔和賽璐璐著色，中性灰 `#808080` 純色背景、均勻無投影平光。
 
 ## 3. 三視圖 Prompt（Turnaround：正面 / 側面 / 背面 / 3/4 視角） — `{cid}_01_portrait_turnaround.png`
-參照第一張生成的正面圖，嚴格保持角色外觀一致。同一角色「{c['name_zh']}」之正交等比例角色三視圖合圖（正面、正側面、背面、3/4 視角並列），嚴格鎖定面容、{c['hair']}、{c['outfit']}與{c['gear']}之左右位置及 {c['palette']} 配色完全一致。背面清楚呈現衣領、背帶與腰間道具掛載結構（無過長遮擋披風）。中性灰 `#808080` 純色背景、均勻平光、2–3 階賽璐璐著色。嚴格禁止任何文字、標籤、字母、數字、標誌與浮水印。
+參照第一張生成的正面圖，嚴格保持角色外觀一致。{strict_t_pose}{turnaround_angles}同一角色「{c['name_zh']}」之正交等比例角色三視圖合圖（正面、正側面、背面、3/4 視角並列），嚴格鎖定面容、{c['hair']}、{c['outfit']}與{c['gear']}之左右位置及 {c['palette']} 配色完全一致。背面清楚呈現衣領、背帶與腰間道具掛載結構（無過長遮擋披風）。中性灰 `#808080` 純色背景、均勻平光、2–3 階賽璐璐著色。嚴格禁止任何文字、標籤、字母、數字、標誌與浮水印。
 
 ## 4. 主立繪 Prompt（Main Keyart：動態職業構圖） — `{cid}_01_portrait_main.png`
 參照第一張生成的正面圖，嚴格保持角色外觀一致。同一角色「{c['name_zh']}」之動態全身主立繪，展現「{q['quest_name_zh']}（{c['style']}）」的專業氣場與自信神情，單手持{vessel}或操作{c['gear']}的標誌性工作姿態，衣襬與髮絲帶動自然動態張力；保持與正面基準圖完全一致的五官、服裝版型與 {c['palette']} 配色，乾淨賽璐璐著色，完整不透明背景，不含其他角色與文字浮水印。描繪符合{c['region']}、{c['era']}、{c['style']}及角色任務的具體環境場景，包含相應建築、地景或工作設施。一張完整直式的主角前景與背景立繪圖，畫面連續完整，不要分割成多圖、分格或拼貼。
