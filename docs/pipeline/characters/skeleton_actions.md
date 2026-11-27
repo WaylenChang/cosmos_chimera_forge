@@ -5,6 +5,10 @@
 
 ---
 
+## 人形基礎骨架與動捕庫
+
+共用來源位於 Google Drive 專案的 `characters/_motion_sources/humanoid_motion_library/`。庫內的 `game_actions.md` 依本頁 50 個動作 ID 列出對應素材、局部參考和需自製的部分。兩副 T-pose 模板位於 `rigs/`，ACCAD 與 CMU 實錄位於 `mocap/`，CC0 關鍵幀素材位於 `keyframed/`。原列為需自製的 11 支已完成，男女兩套 Blender Actions、姿勢預覽和驗證記錄位於 `authored/`。原列為局部參考的 21 支及其來源幀段位於 `hybrid/`。最後 18 支也已重定向，`complete/` 提供男、女各一份含 50 個可附加 Actions 的 Blender 庫，以及事件、幀數、根位移和循環驗證。`catalog.json` 記錄各素材的來源、採樣率、重定向骨名與遊戲動作對照。製作遊戲片段時，依本頁的幀數、循環、根位移和事件要求重定向並驗收。[開啟共用骨架庫](https://drive.google.com/drive/folders/1tHwde_PWFl3PARxx5Kz5zm6JQYG2KgqJ)
+
 ## 1. 骨架體系（Unity Humanoid）
 
 - **骨骼上限**：≤ 75 骨骼，採 Unity Humanoid 標準命名：
