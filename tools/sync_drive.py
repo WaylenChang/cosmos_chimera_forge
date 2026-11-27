@@ -15,8 +15,10 @@ import subprocess
 import sys
 import threading
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_LOCAL_DIR = REPO_ROOT / "Drive"
+if __package__:
+    from .project_drive import LEGACY_DRIVE_DIR, REPO_ROOT, mounted_drive_root
+else:
+    from project_drive import LEGACY_DRIVE_DIR, REPO_ROOT, mounted_drive_root
 DRIVE_CONFIG_PATH = REPO_ROOT / "drive-config.js"
 FOLDER_MIME = "application/vnd.google-apps.folder"
 GOOGLE_NATIVE_EXPORTS = {
@@ -336,15 +338,25 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Sync Google Drive cosmos_chimera_forge with local Drive/ directory.")
     parser.add_argument("mode", nargs="?", default="pull", choices=["pull", "push", "sync"], help="Sync direction")
     parser.add_argument("--root-id", default=read_default_root_id(), help="Google Drive root folder ID")
-    parser.add_argument("--local-dir", type=Path, default=DEFAULT_LOCAL_DIR, help="Local sync directory")
+    parser.add_argument("--local-dir", type=Path, help="Explicit export directory")
     parser.add_argument("--workers", type=int, default=6, help="Concurrent workers")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without modifying files")
     args = parser.parse_args()
 
+    mounted_root = mounted_drive_root()
+    if mounted_root is not None and args.local_dir is None:
+        parser.error("This checkout uses the mounted Drive directly. Use --local-dir for an independent export.")
+    local_dir = (args.local_dir or LEGACY_DRIVE_DIR).resolve()
+    if mounted_root is not None and any(
+        local_dir.is_relative_to(root) or root.is_relative_to(local_dir)
+        for root in (mounted_root, LEGACY_DRIVE_DIR.resolve())
+    ):
+        parser.error("The export directory must be separate from the mounted Drive and the checkout's Drive folder.")
+
     stats = sync_drive(
         mode=args.mode,
         root_id=args.root_id,
-        local_dir=args.local_dir.resolve(),
+        local_dir=local_dir,
         workers=max(1, args.workers),
         dry_run=args.dry_run,
     )

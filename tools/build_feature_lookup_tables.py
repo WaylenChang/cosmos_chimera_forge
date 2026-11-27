@@ -16,8 +16,12 @@ import re
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parent.parent
-DRIVE = ROOT / "Drive"
+if __package__:
+    from .project_drive import REPO_ROOT as ROOT, project_drive_root
+else:
+    from project_drive import REPO_ROOT as ROOT, project_drive_root
+
+DRIVE = project_drive_root()
 GAME_REPO = ROOT.parent / "cosmos_chimera"
 
 MAX_OVERLAP_PCT = 60.0

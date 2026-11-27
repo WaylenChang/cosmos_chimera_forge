@@ -16,8 +16,12 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-FORGE_ROOT = Path(__file__).resolve().parent.parent
-DRIVE = FORGE_ROOT / "Drive"
+if __package__:
+    from .project_drive import REPO_ROOT as FORGE_ROOT, project_drive_root
+else:
+    from project_drive import REPO_ROOT as FORGE_ROOT, project_drive_root
+
+DRIVE = project_drive_root()
 GAME_ROOT = FORGE_ROOT.parent / "cosmos_chimera"
 
 # 52 side-quest specifications

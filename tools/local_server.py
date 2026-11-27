@@ -15,8 +15,12 @@ import shutil
 import sys
 from urllib.parse import parse_qs, unquote, urlparse
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-LOCAL_DRIVE_ROOT = (REPO_ROOT / "Drive").resolve()
+if __package__:
+    from .project_drive import REPO_ROOT, project_drive_root
+else:
+    from project_drive import REPO_ROOT, project_drive_root
+
+LOCAL_DRIVE_ROOT = project_drive_root()
 FOLDER_MIME = "application/vnd.google-apps.folder"
 LOCAL_ID_PREFIX = "local:"
 

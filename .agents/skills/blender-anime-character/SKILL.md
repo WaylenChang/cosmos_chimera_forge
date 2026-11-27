@@ -7,7 +7,7 @@ description: 依立繪與轉面圖在 Blender 建立或精修可編輯的日系 
 
 ## 先找這次要改的部位
 
-- **頭部、材質或表情**。臉型、側面眼睛、鼻子、嘴巴、下巴、後髮、髮飾及帽子，讀 [頭部精修與形態鍵](references/head-and-expressions.md)。
+- **頭部、斜側眉眼、材質或表情**。臉型、側面眼睛、鼻子、嘴巴、下巴、後髮、髮飾及帽子，讀 [頭部精修與形態鍵](references/head-and-expressions.md)。
 - **新建人體或可換裝服裝**。比例、皮膚、裁片、鞋襪、懸掛件及接點，讀 [人體、服裝與配件](references/body-and-wardrobe.md)。需要判定髮根或扣件接觸時再讀 [接點驗證](references/contact-check.md)。
 - **遊戲角色動作**。製作整套動作、區分角色表演，或修正畏縮與開合過大時，依[逐段選參考與姿態幅度校正](references/motion-and-clearance.md#遊戲動作的逐段參考與角色表演)處理。多角色同動作比較見[並排 GIF](references/motion-preview.md#多角色同動作比較)。
 - **骨架、動畫或穿模**。處理顫抖、循環、四肢交疊及衣物變形時，讀 [動作與穿模驗收](references/motion-and-clearance.md)。多角色先以代表角色驗證臉部光影與次級動態，再逐角套用。全動作穿模任務依該章的逐幀流程，比對完整 GLB 與遊戲 LOD，並據驗收結果決定是否更新 3D 模型目錄。
