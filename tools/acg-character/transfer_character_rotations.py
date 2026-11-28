@@ -23,7 +23,15 @@ def transfer(original, staged):
     report = json.loads((staged/'performance.json').read_text())
     for path in original.glob('*.glb'):
         doc, binary = read(path)
-        ids = {node['name']:i for i,node in enumerate(doc['nodes']) if 'name' in node}
+        # Mesh nodes can share a name with the joint that deforms them.
+        joints = {index for skin in doc['skins'] for index in skin['joints']}
+        ids = {}
+        for index in joints:
+            name = doc['nodes'][index].get('name')
+            if name in ids:
+                raise ValueError(f"Ambiguous skin joint {name!r} in {path}")
+            if name is not None:
+                ids[name] = index
         cache = {}
         def accessor(i):
             if i in cache:
